@@ -17,6 +17,7 @@ abstraction, and endless possibilities for project expansion.
   Now, when disabling/enabling a date field, also de associated calendar icon is disabled/enabled
     - zentrack_2/includes/headerInc.php 1.55
     - zentrack_2/includes/templates/fields/date.template 1.2
+    - zentrack_2/www/behavior_js.php 1.20
     - zentrack_2/www/behavior_js.php 1.19
     - zentrack_2/www/images/disabled-cal.gif 1.1
 2005-02-10, cfalonso

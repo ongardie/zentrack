@@ -345,11 +345,9 @@ function executeBehavior( formObj, behaviorId, setid ) {
   fieldObj.disabled = behavior.disabled? true : false;
 
   // disable/enable calendar icon and popup as appropriate
-  var inputField=fieldObj;
-
-  if (inputField.getAttribute('hascalendar')) {
-    var calendarIcon=document.getElementById(inputField.getAttribute('hascalendar'));
-    if (inputField.disabled) {
+  if (fieldObj.getAttribute('hascalendar')) {
+    var calendarIcon=document.getElementById(fieldObj.getAttribute('hascalendar'));
+    if (fieldObj.disabled) {
       calendarIcon.src="images/disabled-cal.gif";
       calendarIcon.oldonclick=calendarIcon.onclick;
       calendarIcon.onclick=function() {return false;};
