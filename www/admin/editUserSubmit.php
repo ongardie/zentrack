@@ -55,9 +55,10 @@
       if( $res ) {
 	$msg = tr("User ? was updated successfully. ? to customize user ?'s access permissions.",
 		  array($user_id,
-			"<br><a href='$rootUrl/admin/access.php?user_id=$user_id'>"
+			"--link--",
 			.tr("Click Here")."</a>",
 			$user_id));
+	$msg = str_replace("--link--","<br><a href='$rootUrl/admin/access.php?user_id=$user_id'>");
       } else {
 	$errs[] = tr("System Error: Could not update ?, ?", array($lname, $fname));
       }
