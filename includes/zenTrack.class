@@ -137,7 +137,7 @@ class zenTrack extends zen {
 
   function get_projects( $params, $sort = 'priority, otime desc', $archive_flag =0 ) {
     // retrieves a list of projects
-    // see getTickets() for a list of valid params
+    // see get_tickets() for a list of valid params
     // (with the exception of 'type_id' which is set to
     // the id for projects)
     // note that this does not return an accurate result
