@@ -42,9 +42,9 @@
 	     print "<tr>\n";
 	     $i = ($v["bid"])? $v["bid"] : "-new-";
 	     print "$t$i$te";
-	     print "<input type='hidden' name='newID[$j]' value='$v[bid]'>\n";
+	     print "<input type='hidden' name='newID[$j]' value='".$zen->ffv($v['bid'])."'>\n";
 	     print "$t<input type='text' name='newBin[$j]' "
-	       ." value='$v[name]' size='20' maxlength='25'>$te";
+	       ." value='".$zen->ffv($v['name'])."' size='20' maxlength='25'>$te";
 	     print "$t<select name='newPri[$j]' "
 	       ." onChange='return checkBins($j, this)'>\n"
 	       .admin_number_pulldown( $num, $v["priority"] )."</select>\n$te";
