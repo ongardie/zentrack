@@ -7,6 +7,10 @@
 
 ----- V2.4 (development, see CVS) ----
 
+2003-04-16, Rob Hillis
+  Modified regexp when displaying logs to properly link entire URL, including punctuation
+    - zentrack/includes/templates/ticket_logBox.php 1.11
+	
 2003-04-15, Kato
   Added two new egate utilities to allow for simpler email ingestion
     - zentrack/includes/egate_check_create.php 1.1
