@@ -2,7 +2,7 @@
 
 /**
  * Holds the ZenSearchParms class.
- * @package Zen
+ * @package DB
  */
 
 /** 

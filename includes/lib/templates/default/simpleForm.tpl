@@ -11,7 +11,7 @@
    {$fieldText}
  {/foreach}
 {/if}
-<table width='500' class='simpleForm' cellpadding=3 cellspacing=1>
+<table class='simpleForm' cellpadding=3 cellspacing=1>
 {if $title != ""}
   <tr><th colspan='2' class='simpleFormTitle'>{$title|tr}</th></tr>
 {/if}
@@ -42,7 +42,7 @@
 
 {if count($rows[0].jsvals) gt 0}
  <script language='javascript'>
-  var jsFormVals["{$name}"] = [
+  jsFormVals["{$name}"] = [
   {foreach name=jsvals from=$rows[0].jsvals item=val}
     ['{$val[0]}', {$val[1]}, '{$val[2]}', '{$val[3]}', '{$val[4]}', '{$val[5]}']
     {if $smarty.foreach.jsvals.last ne true},{/if}

@@ -99,6 +99,13 @@ TD.simpleFormBreak {
   color: #000066;
 }
 
+/**
+ * Row headings in the rowForm.tpl page
+ */
+TH.rowFormHeading { 
+  background: #CCCCCC;
+  color: #000066;  
+}
 
 /**
  * ----------------------------------
@@ -234,6 +241,6 @@ I {
 }
 
 .debug { 
-  color: #AAAAAA;
+  color: #BBBBBB;
 }
 

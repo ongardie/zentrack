@@ -507,7 +507,7 @@ class Zen {
    *
    * @static
    * @param string $type represents the type, as listed in the description above
-   * @return array contains the data type list indexed by id and sorted by priority and name
+   * @return array mapped (integer)id -> (string)name
    */
   function loadDataTypeArray( $type ) {
     if( in_array($type, array("bin","priority","stage","system","task","type")) ) {

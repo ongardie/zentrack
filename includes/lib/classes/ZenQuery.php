@@ -145,34 +145,19 @@ class ZenQuery extends Zen {
   }
   
   /**
-   * Adds a field to the sorting clause (ORDER BY) for selects
+   * Adds a field to the sorting clause (ORDER BY) for selects.  Calling
+   * this function multiple times with different fields
+   * causes the results to be sorted in the order they set here.
    *
    * @access public
    * @since 1.0
-   * @param mixed $field can be a string or an array of fields
-   * @param mixed $descending can be a boolean or array
+   * @param string $field the field to sort values on
+   * @param boolean $descending if true, sort in reverse order (descending)
    */
   function sort( $field, $descending = false, $table = null ) {
-    if (is_array($field)) {
-      foreach ($field as $fieldIndex => $fieldName) {
-	if( $table ) {
-	  $fieldName = $this->_fixName($table,$fieldName);
-	}
-	if (is_array($descending)) {
-	  $order = ($descending[$fieldIndex])?(' DESC'):(' ASC');
-	}
-	else {
-	  $order = ($descending)?(' DESC'):(' ASC');
-	}
-	$this->_sorts[] = $fieldName . $order;
-      }
-    }
-    else {
-      if( $table )
-	$field = $this->_fixName($table,$field);
-      $order = ($descending)?(' DESC'):(' ASC');
-      $this->_sorts[] = $field . $order;
-    }
+    if( $table )
+      $field = $this->_fixName($table,$field);
+    $this->_sorts[] = $field . (($descending)? ' DESC' : ' ASC');
   }
 
   /**
@@ -534,7 +519,7 @@ class ZenQuery extends Zen {
    * @access public
    * @since 1.0
    * @param mixed $field the field to match on, if the value is set to array then all fields will be matched.
-   * @return 0=failure, 1=updated, 2=inserted
+   * @return integer 0=failure, 1=updated, 2=inserted
    */
   function replace($field) {
     $table = $this->_tables[0];
@@ -545,6 +530,17 @@ class ZenQuery extends Zen {
     }
     
     return $this->_dbobject->replace($table, $fieldsArray, $field);	
+  }
+
+  /**
+   * A debugging function used to build a query from this object and return it as a string
+   * without performing any db functions.
+   *
+   * @return string
+   */
+  function debugString() {
+    $this->_queryType = 'SELECT';
+    return $this->_buildQuery();
   }
 
   /**
@@ -696,7 +692,7 @@ class ZenQuery extends Zen {
    * @return string
    */
   function _whereClause() {
-    if( $this->_searchParms ) {
+    if( $this->_searchParms && count($this->_searchParms) > 1 ) {
       // open the clause
       $clause = ' WHERE ';
       // init the andor conditions
@@ -707,6 +703,7 @@ class ZenQuery extends Zen {
       foreach($this->_searchParms as $s) {
         if( !is_array($s) ) {
           // this is closing tag
+          // it will not be preceeded by an andor
           $clause .= "$s ";
           $andor = array_pop($andors);
           // insure that a junction appears after the ')'
@@ -714,11 +711,14 @@ class ZenQuery extends Zen {
         }
         else if( count($s) == 2 ) {
           // this is an opening tag and a new andor condition
-          $clause .= "{$s[0]} ";
-          $andor = $s[1];
+          if( $s[0] ) {
+            if( $add ) { $clause .= "$andor "; }
+            $clause .= "{$s[0]} ";
+            // we don't want to put a junction after a '('
+            $add = false;  
+          }
           array_push($andors, $andor);
-          // we don't want to put a junction after a '('
-          $add = false;  
+          $andor = $s[1];
         }
         else {
           // this is a match set

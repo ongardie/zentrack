@@ -28,7 +28,7 @@ class ZenAction extends ZenDataType {
     $query = Zen::getNewQuery();
     $query->table('ACTION_STEPS');
     $query->match('action_id', $action_id);
-    $query->sort('action_pri');
+    $query->sort('action_pri', true);
     $this->_steps = $query->select(Zen::getCacheTime(), true);
   }
 

@@ -191,12 +191,14 @@ class ZenUtils {
    */
   function tableNameFromClass( $class ) {
     if( is_object($class) ) {
-      $cname = get_class($class);
-      if( $cname == 'ZenList' || $cname == 'ZenDataType' ) {
-
+      $cname = strtolower(get_class($class));
+      if( $cname == 'zenlist' || $cname == 'zendatatype' ) {
+        $cname = $class->getDataType();
       }
     }
-    $cname = strtolower(is_object($class)? get_class($class) : $class);
+    else {
+      $cname = strtolower(is_object($class)? get_class($class) : $class);
+    }
     // remove Zen from beginning of name
     if( strpos( $cname, "zen" ) === 0 ) {
       $cname = substr($cname, 3);
@@ -235,8 +237,7 @@ class ZenUtils {
   function getDataType( $table, $id ) {
     $class = ZenUtils::classNameFromTable($table);
     if( !class_exists($class) ) {
-      ZenUtils::safeDebug("ZenUtils", "getDataType", "Class $class not found for table $table, unable to create", 105, LVL_WARN);
-      return null;
+      return ZenDataType::abstractDataType($table,$id);
     }
     return new $class($id);
   }

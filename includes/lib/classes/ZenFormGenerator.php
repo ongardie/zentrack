@@ -40,9 +40,12 @@ class ZenFormGenerator extends Zen {
                         0, LVL_DEBUG);
     $this->_vals = array();
     $this->_table = $table;
+    $this->_key = ZenUtils::getPrimaryKey($table->name());
     $this->setFormProp('title',$table->name());
     $this->setFormProp('description','');
-    $this->_template = 'simpleForm.tpl';
+    $this->setFormProp('showdescription', true);
+    $this->setFormProp('submit','Send');
+    $this->_template = $template;
     $this->_name = 'generatedForm';
     $this->_action = $_SERVER['SCRIPT_NAME'];
     $this->_method = 'POST';
@@ -51,16 +54,43 @@ class ZenFormGenerator extends Zen {
     $this->_props = array();
   }
 
-  
 
   /**
-   * Load a row of data into this form element
+   * Load data into this form element from search parms (criteria)
+   *
+   * The $sortOrder param is mapped (string)field -> (boolean)descending
+   * For instance, if you want to sort a table on name ASC, id DESC, you
+   * would use array( "name"=>false, "id"=>true )
+   *
+   * @param ZenSearchParms $searchParms
+   * @param array $sortOrder sort the results on the associative array (see description)
+   * @param integer $limit maximum number of entries to load
+   * @param integer $offset offset the entries (for next/last paging)
+   * @return integer number of rows loaded
+   */
+  function loadFromParms( $searchParms, $sortOrder = null, $limit = 0, $offset = 0 ) {
+    $this->_list = new ZenList();
+    $this->_list->loadAbstract( $this->_table->name() );
+    $this->_list->criteria($searchParms);
+    if( $sortOrder ) {
+      $this->_list->sort($sortOrder);
+    }
+    $this->_list->load($limit, $offset);
+    $this->_ids = $this->_list->listIds();
+  }
+
+  /**
+   * Load a row or several rows of data into this form element
    *
    * @param mixed $rowids primary key or array of primary keys for data to load
    * @return boolean if row loaded successfully
    */
   function loadData( $rowids ) {
     $this->_ids = is_array($rowids)? $rowids : array($rowids);
+    $this->_list = new ZenList();
+    $this->_list->loadAbstract( $this->_table->name() );
+    $this->_list->criteriaIdArray($this->_ids);
+    $this->_list->load();
   }
 
   /**
@@ -245,12 +275,8 @@ class ZenFormGenerator extends Zen {
     if( count($this->_ids) ) {
       // if there is data, create a row for each id with
       // the corresponding fields and values loaded up
-      $list = new ZenList();
-      $list->loadAbstract($this->_table->name());
-      $list->criteriaIdArray($this->_ids);
-      $list->load();
       foreach($this->_ids as $val) {
-        $vals['rows'][] = $this->_genDataRow($val, $list);
+        $vals['rows'][] = $this->_genDataRow($val);
       }
     }
     else {
@@ -269,17 +295,16 @@ class ZenFormGenerator extends Zen {
   }
 
   /**
-   * Generate a data row given a rowid
+   * Generate a data row from the loaded ZenList for this rowid
    *
    * @param integer $rowid -1 for empty row
-   * @param ZenList $list contains data for rowids (if any)
    */
-  function _genDataRow( $rowid, $list = null ) {
+  function _genDataRow( $rowid ) {
     $data = null;
-    if( $list && $rowid >= 0 ) {
-      $data = $list->get($rowid);
+    if( $this->_list && $rowid >= 0 ) {
+      $data = $this->_list->get($rowid);
     }
-    $row = array();
+    $row = array( "fields"=>array(), "hidden"=>array(), "jsvals"=>array() );
     foreach($this->_table->listFields() as $f) {
       // generate the field array
       $field = $this->_genFieldProps($f, $data);
@@ -339,7 +364,9 @@ class ZenFormGenerator extends Zen {
 
     // reduce notices/warnings
     $checkvals = array('default', 'description', 'len',
-                       'cols', 'rows', 'settext');
+                       'cols', 'rows', 'settext',
+                       'Blur', 'Change', 'Click', 'MouseOver', 'MouseOut',
+                       'options', 'settext', 'other');
     for($i=0; $i<count($checkvals); $i++) {
       $k = $checkvals[$i];
       if( !isset($field[$k]) ) { $field[$k] = null; }
@@ -432,6 +459,7 @@ class ZenFormGenerator extends Zen {
     if( !isset($field['criteria']) ) {
       return $this->_getArgsFromRef($field);
     }
+
     // if there is criteria, then we will
     // generate the list from this
     switch($field['criteria'][0]) { 
@@ -636,7 +664,8 @@ class ZenFormGenerator extends Zen {
         $val = Zen::getSetting($pts[2],$pts[3]);
         break;
       default:
-        ZenUtils::safeDebug($this, '_genHelperArgs', "The text $p was not a valid arg entry", 103, LVL_ERROR);
+        ZenUtils::safeDebug($this, '_genHelperArgs', 
+                            "The text $p was not a valid arg entry", 103, LVL_ERROR);
         $val = null;
         break;
       }
@@ -667,7 +696,12 @@ class ZenFormGenerator extends Zen {
   /** @var ZenMetaTable $_table */
   var $_table;
 
-  /** @var string $_template the template design used to render form */
+  /** @var string $_key the primary key for this table */
+  var $_key;
+
+  /** 
+   * @var string $_template the template design used to render form 
+   */
   var $_template;
 
   /** @var string $_name the name of the form */
@@ -679,17 +713,33 @@ class ZenFormGenerator extends Zen {
   /** @var string $_method the form post method */
   var $_method = 'POST';
 
-  /** @var array $_vals values to pass to template, mapped (string)name->(mixed)value */
+  /** 
+   * @var array $_vals values to pass to template, 
+   * mapped (string)name->(mixed)value 
+   */
   var $_vals;
 
   /** @var array $_rows the data rows to display (if any) */
   var $_rows;
 
-  /** @var array $_props special form field properties, mapped (string)field->array( (string)prop->(mixed)value ) */
+  /** 
+   * @var array $_props special form field properties, 
+   * mapped (string)field->array( (string)prop->(mixed)value ) 
+   */
   var $_props;
 
-  /** @var integer $_ids the row id in database loaded into this form (or null) */
+  /** 
+   * @var integer $_ids the row id in database loaded 
+   * into this form (or null) 
+   */
   var $_ids;
+
+  /** 
+   * @var ZenList $_list a list containing all the data rows 
+   * for this form's output (populated on demand) 
+   */
+  var $_list;
+
 }
 
 ?>

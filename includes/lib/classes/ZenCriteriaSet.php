@@ -56,7 +56,7 @@ class ZenCriteriaSet {
     $query = Zen::getNewQuery();
     $query->table('CRITERIA');
     $query->search($searchParms);
-    $query->sort('field_pri');
+    $query->sort('field_pri', true);
     $this->vals = $query->select( Zen::getCacheTime(), true );
     if( is_array($vals) && count($vals) ) {
       $ids = array();

@@ -66,20 +66,36 @@ class ZenMetaDb extends Zen {
   function _load() {
     ZenUtils::mark("ZenMetaDb[".$this->randomNumber."] _load");
     $this->_tables = array();
-    $tableInfo = Zen::simpleQuery('TABLE_DEFS',null,null);
-    $fieldInfo = Zen::simpleQuery('FIELD_DEFS',null,null);
+    // load info from the database
+    $tableInfo = Zen::simpleQuery('TABLE_DEFS');
+    $fieldInfo = Zen::simpleQuery('FIELD_DEFS',null,null,'field_order');
+
+    // store the xml field info for use later (done in this awkard way
+    // to facilitate sorting)
+    $xmlFields = array();
+
+    // construct the table info
     foreach( $tableInfo as $t ) {
       $table = $t['tbl_name'];
       $this->_tables[$table] = $this->_schema->getMergedTableArray($table);
+      // store the fields seperately, because they need to be sorted
+      $xmlFields[$table] = $this->_tables[$table]['fields'];
+      $this->_tables[$table]['fields'] = array();
       foreach( $t as $key=>$val ) {
         if( !is_null($val) ) {
           $this->_tables[$table][$this->mapTableDbToProp($key)] = $val;
         }
       }
     }
+
+    // construct the field info, adjusting for the order specified
+    // by the database
     foreach( $fieldInfo as $f ) {
       $field = strtolower($f['col_name']);
       $table = strtoupper($f['col_table']);
+      // merge in the xml info for fields, now that we have
+      // the correct sorting order in place
+      $this->_tables[$table]['fields'][$field] = $xmlFields[$table][$field];
       foreach( $f as $key=>$val ) {
         if( $key == 'col_criteria' ) {
           $val = $val? explode('=',$val) : null;
@@ -89,8 +105,21 @@ class ZenMetaDb extends Zen {
         }
       }
     }
-    Zen::debug($this, '_load', count($this->_tables)." tables were loaded, containing "
-               .count($fieldInfo)." fields", 01, LVL_DEBUG);
+
+    // if we are in develop mode, then run a safety check to insure none of the fields
+    // have been lost between the xml structure and the database
+    if( ZenUtils::getIni('debug','develop_mode') ) {
+      foreach( $xmlFields as $t=>$fields ) {
+        foreach( $fields as $f ) {
+          if( !array_key_exists($this->_tables[$t]['fields'][$f]) ) {
+            ZenUtils::safeDebug($this, '_load', "{$t}->{$f} was not loaded from DB!", 122, LVL_ERROR);
+          }
+        }
+      }
+    }
+    
+    ZenUtils::safeDebug($this, '_load', count($this->_tables)." tables were loaded, containing "
+                        .count($fieldInfo)." fields", 01, LVL_DEBUG);
     ZenUtils::unmark("ZenMetaDb[".$this->randomNumber."] _load");
   }
 

@@ -76,6 +76,7 @@ class ZenDataType extends Zen {
     // set the params
     $this->_id = $id;
     $this->_table = $table;
+    $this->_dataType = ZenUtils::classNameFromTable($table);
     $this->_primarykey = ZenUtils::getPrimaryKey($table);
     // load the data
     if( $id && is_object($list) ) {
@@ -130,6 +131,14 @@ class ZenDataType extends Zen {
    * @return boolean contain a system ID
    */
   function loaded() { return ($this->_id > 0 && count($this->_fields)); }
+
+  /**
+   * Returns the data class of this object, even if this is an abstract object
+   * (the class is not guaranteed to exist)
+   *
+   * @return string
+   */
+  function getDataType() { return $this->_dataType; }
 
   /**
    * Fetches a field in this object
@@ -256,6 +265,7 @@ class ZenDataType extends Zen {
    * @return boolean load succeeded, id was valid (actually returns $this->loaded())
    */
   function _load( $id ) {
+    $this->_dataType = ZenUtils::classNameFromTable($this->_table);
     $vals = Zen::getDataRow( $this->_table, $id );
     if( !is_array($vals) || !count($vals) ) {
       ZenUtils::safeDebug($this, '_load', "Invalid id: $id", 105, LVL_WARN);
@@ -277,9 +287,10 @@ class ZenDataType extends Zen {
    */
   function _loadFromListData( $zenlist, $id ) { 
     $fields = $zenlist->findData($id);
+    $this->_dataType = $zenlist->getDataType();
     if( !is_array($fields) || !count($fields) ) {
-      $class = $zenlist->getDataType();
-      ZenUtils::safeDebug($this, '_load', "ID ($id) not in List ($class)", 105, LVL_WARN);
+      ZenUtils::safeDebug($this, '_load', "ID ($id) not in List  (".
+                          $this->_dataType.")", 105, LVL_WARN);
       return false;
     }
     $this->_fields = $fields;
@@ -309,6 +320,7 @@ class ZenDataType extends Zen {
    */
   function abstractDataType( $table, $id, $list = null ) {
     $class = ZenUtils::classNameFromTable($table);
+    $this->_dataType = $class;
     if( class_exists($class) ) {
       return new $class($id, $list);
     }
@@ -340,6 +352,9 @@ class ZenDataType extends Zen {
 
   /** @var string $_primaryKey the column used for a primary key by this data type */
   var $_primaryKey;
+
+  /** @var string $_dataType stores the data class for this object (needed for abstract types) */
+  var $_dataType;
 
 }
 

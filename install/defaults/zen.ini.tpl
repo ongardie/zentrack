@@ -86,7 +86,7 @@ db_pass = "{$db_pass|default:"zentrack"}"
 ; On improves efficiency, if your db experiences problems
 ; with too many open connections, or not closing connections
 ; when you would like, turn this off (1=on, 0=off)
-db_persistent = {$db_persistent|default:"0"}
+db_persistent = {$db_persistent|default:"1"}
 
 ;the prefix for table names, keep in upper case, blank for none
 db_prefix = "{$db_prefix|default:"ZENTRACK_"}"

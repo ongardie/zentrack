@@ -29,7 +29,7 @@ class ZenParmList extends ZenList {
     $query = Zen::getNewQuery();
     $query->table('PARM_SET');
     $query->match('parm_set_id',$setId);
-    $query->sort('parm_pri');
+    $query->sort('parm_pri', true);
     $parmIds = $query->selectList('parm_id');
 
     // load data for the relevant ids

@@ -45,12 +45,6 @@ class ZenList extends Zen {
     // call Zen()
     $this->Zen();
 
-    // call the load method if we inherited a usable data type
-    $data_type = get_class($this);
-    if( strtolower($data_type) != "zenlist" ) {
-      $this->loadAbstract($data_type);
-    }
-
     // initialize params
     $this->_criteria = null;
     $this->_sortCriteria = array();
@@ -58,6 +52,13 @@ class ZenList extends Zen {
     $this->_position = -1;
     $this->_count = -1;
     $this->_loadParms = array(0,0);
+
+    // call the load method if we inherited a usable data type
+    $data_type = get_class($this);
+    if( strtolower($data_type) != "zenlist" ) {
+      $this->loadAbstract($data_type);
+    }
+
   }
 
   /**
@@ -122,17 +123,24 @@ class ZenList extends Zen {
   }
 
   /**
-   * sets the method used to sort the results.  Multiple calls on this
+   * Sets the method used to sort the results.  Multiple calls on this
    * method will sort on multiple fields, in the order they are set.
    *
-   * must be called before load() or loadAll()
+   * If $fields is an array, it is mapped (string)field->(boolean)descending.
+   * For instance, if you want to sort a table on name ASC, id DESC, you
+   * would use array( "name"=>false, "id"=>true )
    *
-   * @param string $field the field to sort on
-   * @param boolean $desc sort in reverse order(descending)?
+   * <b>Must be called before load() or loadAll()</b>
+   *
+   * @param mixed $fields associative array of fields/method or (string)field_name
+   * @param boolean $reverse if $fields is a string and this is true, sort in descending order
    */
-  function sort($field, $desc = false) { 
-    if( !array_key_exists($field, $this->_sortCriteria) ) {
-      $this->_sortCriteria[$field] = $desc;
+  function sort($fields, $reverse = false) {
+    if( !is_array($fields) ) {
+      $fields = array($fields => $reverse);
+    }
+    foreach($fields as $k=>$v) {
+      $this->_sortCriteria["$k"] = $v;
     }
   }
 
@@ -316,7 +324,10 @@ class ZenList extends Zen {
   }
   
   /**
-   * Get the data type this List is responsible for
+   * Get the data type (class name) this List is responsible for
+   * (the class is not guaranteed to exist)
+   *
+   * @return string
    */
   function getDataType() {
     return $this->_dataType;

@@ -1,17 +1,48 @@
 <debug_settings>
 
-  <!-- show all errors for all classes -->
-  <root level="4" />
+<!--**
+    ** THIS FILE CONTROLS THE DEBUGGING OUTPUT LOGGED TO SCREEN AND FILES
+    ** 
+    ** The root node controls the overall debugging setup, whereas the
+    ** individual class nodes override the debugging output for specific
+    ** classes or even methods of a class.
+    ** 
+    ** The numbers used correspond to the debugging levels as follows:
+    **   0 - no output
+    **   1 - errors only
+    **   2 - errors and warnings
+    **   3 - errors, warnings, and notes
+    **   4 - errors, warnings, notes, and debug (this is useful if develop_mode = true)
+    **   
+    ** For example, the following entry is a root node, which specifies that all
+    ** classes and methods should output errors and warnings:
+    **   <root level="2" />
+    **  
+    ** This example would override the root node and set output to everything
+    ** available for the ZenQuery class:
+    **   <class name="ZenQuery" level="4" />
+    ** 
+    ** This example would override the root node and set output for specific methods
+    ** in the Zen class: 
+    **   <class name="Zen">
+    **     <method name="getTicket" level="3" />
+    **     <method name="getSetting" level="2" />
+    **   </class>
+    ** 
+    ** This example would override the root node and turn off all debugging for the
+    ** ZenFormGenerator class:
+    **   <class name="ZenFormGenerator" level="0" />
+    **
+    **-->
 
-  <!-- show warnings and errors only for ZenDatabase  -->
-<!--  <class name="ZenDatabase" level="2" />  -->
+  <!-- show warnings and errors for all classes -->
+  <root level="2" />
 
-  <!-- show differing levels for certain methods -->
-<!--  <class name="Zen">
-    <method name="getTicket" level="3" />
-    <method name="getSetting" level="2" />
-  </class> -->
-
+<!--**
+    ** The format node controls the look and feel of the message output by
+    ** specifying the html entities and styles used to display the debug information.
+    **
+    **-->
   <format>
     <block>
       <open>

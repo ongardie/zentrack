@@ -22,6 +22,13 @@ function standardValidation( formName ) {
   // the jsFormVals container
   var fieldProps = jsFormVals[formName];
 
+  // assume that if we don't find any jsFormVals for this
+  // form, that we must not have anything to validate and
+  // allow the user to continue
+  if( !fieldProps ) {
+    return true;
+  }
+
   // a place to store errors
   var errors = new Array();
 
@@ -54,11 +61,11 @@ function standardValidation( formName ) {
 	  case 'decimal':
 	  case 'long':
 	    if( !isNumeric(fieldObj.value) ) {
-	      errors[] = ["Not a valid number: "+fieldProps[4], fieldObj];
+	      errors[errors.length] = ["Not a valid number: "+fieldProps[4], fieldObj];
 	    }
 	  case 'email':
 	    if( !fieldObj.value.match(/^[_a-z0-9]+(\.[_a-z0-9]+)*@([0-9a-z][0-9a-z-]*[0-9a-z]\.)+[a-z]+$/) ) {
-	      errors[] = ["Invalid email address: "+fieldProps[4], fieldObj];
+	      errors[errors.length] = ["Invalid email address: "+fieldProps[4], fieldObj];
 	    }
 	    break;
 	  case 'date':
@@ -66,7 +73,7 @@ function standardValidation( formName ) {
 	    //  errors[] = ["Invalid date format: "+fieldProps[4], fieldObj];
 	    //}
 	    if( !checkDate(fieldObj) ) {
-	      errors[] = ["Invalid date: "+fieldProps[4], fieldObj];
+	      errors[errors.length] = ["Invalid date: "+fieldProps[4], fieldObj];
 	    }
 	    break;
 	  default:
@@ -84,7 +91,7 @@ function standardValidation( formName ) {
       // to the first field with an error
       var str = "There were problems with your entries:\n-----------------\n";
       for(var i=0; i < errors.length; i++) {
-	var str += errors[i][0]+"\n";
+	str += errors[i][0]+"\n";
 	switchStyleDef(errors[i][1], 'highlight');
 	errors[i][1].onBlur = errors[i][1].onBlur? 
 	  errors[i][1].onBlur+";switchStyleDef(this,'normal')" : "switchStyleDef(this,'normal')";
