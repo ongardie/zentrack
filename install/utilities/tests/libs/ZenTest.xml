@@ -39,7 +39,7 @@
     <test1>
       <param name='cat'>directories</param>
       <param name='name'>dir_lib</param>
-      <param name='expected'>/web/phpzen/sub/z3/includes/lib</param>
+      <param name='expected'>/web/phpzen/sub/zentrack_3/includes/lib</param>
     </test1>
     <test2>
       <param name='cat'>debug</param>

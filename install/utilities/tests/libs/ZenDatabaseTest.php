@@ -155,7 +155,7 @@
       $query = $vals['statement'];
       if( $vals['table'] ) { $query = preg_replace("/\{table\}/", $this->_makeTableName($vals['table']), $query); }        
       //todo fix cache
-      $recordSet = $this->_dbo->executeGetOne($query, null); //$vals['cache']);
+      $recordSet = $this->_dbo->executeGetOne($query, $vals['cache']); //$vals['cache']);
       // check pass or fail results
       $bool = true;
       if( $vals['passfail'] && !$recordSet ) { $bool = false; }

@@ -1,7 +1,9 @@
 <?php
+global $ADODB_INCLUDED_CSV;
+$ADODB_INCLUDED_CSV = 1;
 
 /* 
-V3.00 6 Jan 2003  (c) 2000-2003 John Lim (jlim@natsoft.com.my). All rights reserved.
+  V4.01 23 Oct 2003  (c) 2000-2003 John Lim (jlim@natsoft.com.my). All rights reserved.
   Released under both BSD license and Lesser GPL library license. 
   Whenever there is any discrepancy between the two licenses, 
   the BSD license will take precedence. See License.txt. 
@@ -47,7 +49,7 @@ V3.00 6 Jan 2003  (c) 2000-2003 John Lim (jlim@natsoft.com.my). All rights reser
 		// column definitions
 		for($i=0; $i < $max; $i++) {
 			$o = $rs->FetchField($i);
-			$line .= urlencode($o->name).':'.$rs->MetaType($o->type,$o->max_length).":$o->max_length,";
+			$line .= urlencode($o->name).':'.$rs->MetaType($o->type,$o->max_length,$o).":$o->max_length,";
 		}
 		$text = substr($line,0,strlen($line)-1)."\n";
 		
@@ -81,10 +83,11 @@ V3.00 6 Jan 2003  (c) 2000-2003 John Lim (jlim@natsoft.com.my). All rights reser
 */
 	function &csv2rs($url,&$err,$timeout=0)
 	{
+		if( !@file_exists($url) ) { $err = $url." file/URL not found"; return false; }
 		$fp = @fopen($url,'r');
 		$err = false;
 		if (!$fp) {
-			$err = $url.'file/URL not found';
+			$err = $url.' file/URL not found';
 			return false;
 		}
 		flock($fp, LOCK_SH);
@@ -194,16 +197,14 @@ V3.00 6 Jan 2003  (c) 2000-2003 John Lim (jlim@natsoft.com.my). All rights reser
 		
 		// slurp in the data
 		$MAXSIZE = 128000;
-		$text = fread($fp,$MAXSIZE);
-		$cnt = 1;
-		while (strlen($text) == $MAXSIZE*$cnt) {
-			$text .= fread($fp,$MAXSIZE);
-			$cnt += 1;
+		
+		$text = '';
+		while ($txt = fread($fp,$MAXSIZE)) {
+			$text .= $txt;
 		}
 			
 		fclose($fp);
 		$arr = @unserialize($text);
-		
 		//var_dump($arr);
 		if (!is_array($arr)) {
 			$err = "Recordset had unexpected EOF (in serialized recordset)";
@@ -215,59 +216,4 @@ V3.00 6 Jan 2003  (c) 2000-2003 John Lim (jlim@natsoft.com.my). All rights reser
 		$rs->InitArrayFields($arr,$flds);
 		return $rs;
 	}
-	
-	/*
-	# The following code was an alternative method of saving 
-	# recordsets and  is experimental and was never used.
-	# It is faster, but provides very little error checking.
-	
-	//High speed rs2csv 10% faster 
-	function & xrs2csv(&$rs)
-	{
-		return time()."\n".serialize($rs);
-	}
-	function & xcsv2rs($url,&$err,$timeout)
-	{
-		$t = filemtime($url);// this is cached - should we clearstatcache() ?
-		if ($t === false) {
-			$err = 'File not found 1';
-			return false;
-		}
-		
-		if (time() > $t + $timeout){
-			$err = " Timeout 1";
-			return false;
-		}
-		
-		$fp = @fopen($url,'r');
-		if (!$fp) {
-			$err = ' file not found ';
-			return false;
-		}
-		
-		flock($fp,LOCK_SH);
-		$t = fgets($fp,100);
-		if ($t === false){
-			fclose($fp);
-			$err =  " EOF 1 ";
-			return false;
-		}
-		/*
-		if (time() > ((integer)$t) + $timeout){
-			fclose($fp);
-			$err = " Timeout 2";
-			return false;
-		}*   /
-		
-		$txt = &fread($fp,1999999); // Increase if EOF 2 error returned
-		fclose($fp);
-		$o = @unserialize($txt);
-		if (!is_object($o)) {
-			$err = " EOF 2";
-			return false;
-		}
-		$o->timeCreated = $t;
-		return $o;
-	}
-	*/
 ?>

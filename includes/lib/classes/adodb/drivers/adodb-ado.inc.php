@@ -1,6 +1,6 @@
 <?php
 /* 
-V3.00 6 Jan 2003  (c) 2000-2003 John Lim (jlim@natsoft.com.my). All rights reserved.
+V4.01 23 Oct 2003  (c) 2000-2003 John Lim (jlim@natsoft.com.my). All rights reserved.
   Released under both BSD license and Lesser GPL library license. 
   Whenever there is any discrepancy between the two licenses, 
   the BSD license will take precedence. 
@@ -34,6 +34,7 @@ class ADODB_ado extends ADOConnection {
 		
 	function ADODB_ado() 
 	{ 	
+		$this->_affectedRows = new VARIANT;
 	}
 
 	function ServerInfo()
@@ -44,7 +45,7 @@ class ADODB_ado extends ADOConnection {
 	
 	function _affectedrows()
 	{
-			return $this->_affectedRows;
+			return $this->_affectedRows->value;
 	}
 	
 	// you can also pass a connection string like this:
@@ -139,7 +140,7 @@ class ADODB_ado extends ADOConnection {
 
 */
 	
-	function MetaTables()
+	function &MetaTables()
 	{
 		$arr= array();
 		$dbc = $this->_connectionID;
@@ -161,7 +162,7 @@ class ADODB_ado extends ADOConnection {
 		return $arr;
 	}
 	
-	function MetaColumns($table)
+	function &MetaColumns($table)
 	{
 		$table = strtoupper($table);
 		$arr= array();
@@ -516,7 +517,10 @@ class ADORecordSet_ado extends ADORecordSet {
 	function _fetch()
 	{	
 		$rs = $this->_queryID;
-		if (!$rs or $rs->EOF) return false;
+		if (!$rs or $rs->EOF) {
+			$this->fields = false;
+			return false;
+		}
 		$this->fields = array();
 	
 		if (!$this->_tarr) {
@@ -568,7 +572,7 @@ class ADORecordSet_ado extends ADORecordSet {
 		@$rs->MoveNext(); // @ needed for some versions of PHP!
 		
 		if ($this->fetchMode & ADODB_FETCH_ASSOC) {
-			$this->fields = $this->GetRowAssoc(ADODB_ASSOC_CASE);
+			$this->fields = &$this->GetRowAssoc(ADODB_ASSOC_CASE);
 		}
 		return true;
 	}

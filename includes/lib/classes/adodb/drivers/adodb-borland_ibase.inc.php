@@ -1,6 +1,6 @@
 <?php
 /* 
-V3.00 6 Jan 2003  (c) 2000-2003 John Lim (jlim@natsoft.com.my). All rights reserved.
+V4.01 23 Oct 2003  (c) 2000-2003 John Lim (jlim@natsoft.com.my). All rights reserved.
   Released under both BSD license and Lesser GPL library license. 
   Whenever there is any discrepancy between the two licenses, 
   the BSD license will take precedence. 
@@ -22,12 +22,27 @@ class ADODB_borland_ibase extends ADODB_ibase {
 		$this->ADODB_ibase();
 	}
 	
+	function ServerInfo()
+	{
+		$arr['dialect'] = $this->dialect;
+		switch($arr['dialect']) {
+		case '': 
+		case '1': $s = 'Interbase 6.5, Dialect 1'; break;
+		case '2': $s = 'Interbase 6.5, Dialect 2'; break;
+		default:
+		case '3': $s = 'Interbase 6.5, Dialect 3'; break;
+		}
+		$arr['version'] = '6.5';
+		$arr['description'] = $s;
+		return $arr;
+	}
+	
 	// Note that Interbase 6.5 uses ROWS instead - don't you love forking wars!
 	// 		SELECT col1, col2 FROM table ROWS 5 -- get 5 rows 
 	//		SELECT col1, col2 FROM TABLE ORDER BY col1 ROWS 3 TO 7 -- first 5 skip 2
 	// Firebird uses
 	//		SELECT FIRST 5 SKIP 2 col1, col2 FROM TABLE
-	function &SelectLimit($sql,$nrows=-1,$offset=-1,$inputarr=false, $arg3=false,$secs2cache=0)
+	function &SelectLimit($sql,$nrows=-1,$offset=-1,$inputarr=false,$secs2cache=0)
 	{
 		if ($nrows > 0) {
 			if ($offset <= 0) $str = " ROWS $nrows "; 
@@ -44,9 +59,9 @@ class ADODB_borland_ibase extends ADODB_ibase {
 		$sql .= $str;
 		
 		return ($secs2cache) ? 
-				$this->CacheExecute($secs2cache,$sql,$inputarr,$arg3)
+				$this->CacheExecute($secs2cache,$sql,$inputarr)
 			:
-				$this->Execute($sql,$inputarr,$arg3);
+				$this->Execute($sql,$inputarr);
 	}
 	
 };

@@ -1,6 +1,6 @@
 <?php
 /* 
-V3.00 6 Jan 2003  (c) 2000-2003 John Lim (jlim@natsoft.com.my). All rights reserved.
+V4.01 23 Oct 2003  (c) 2000-2003 John Lim (jlim@natsoft.com.my). All rights reserved.
   Released under both BSD license and Lesser GPL library license. 
   Whenever there is any discrepancy between the two licenses, 
   the BSD license will take precedence. See License.txt. 
@@ -28,11 +28,19 @@ class  ADODB_access extends ADODB_odbc {
 	
 	function ADODB_access()
 	{
+	global $ADODB_EXTENSION;
+	
+		$ADODB_EXTENSION = false;
 		$this->ADODB_odbc();
 	}
 	
 	function BeginTrans() { return false;}
 	
+	function IfNull( $field, $ifNull ) 
+	{
+		return " IIF(IsNull($field), $ifNull, $field) "; // if Access
+	}
+/*
 	function &MetaTables()
 	{
 	global $ADODB_FETCH_MODE;
@@ -47,14 +55,14 @@ class  ADODB_access extends ADODB_odbc {
 		$rs->_has_stupid_odbc_fetch_api_change = $this->_has_stupid_odbc_fetch_api_change;
 		
 		$arr = &$rs->GetArray();
-		
+		//print_pre($arr);
 		$arr2 = array();
 		for ($i=0; $i < sizeof($arr); $i++) {
-			if ($arr[$i][2] && substr($arr[$i][2],0,4) != 'MSys')
+			if ($arr[$i][2] && $arr[$i][3] != 'SYSTEM TABLE')
 				$arr2[] = $arr[$i][2];
 		}
 		return $arr2;
-	}
+	}*/
 }
 
  
@@ -66,6 +74,6 @@ class  ADORecordSet_access extends ADORecordSet_odbc {
 	{
 		return $this->ADORecordSet_odbc($id,$mode);
 	}
-}
-} // class
+}// class
+} 
 ?>

@@ -13,6 +13,7 @@
 
   /** @var array $classes_standard a list of the standard classes, these are included automagically when this page is called */
   $classes_standard = array(
+                            "db/DbTypeInfo.php",
                             "Zen.php",
                             "ZenDatabase.php",
                             "ZenList.php",
@@ -24,6 +25,7 @@
                             "ZenQuery.php",
                             "ZenTemplate.php",
                             "ZenUtils.php",
+                            "ZenXMLParser.php",
                             "adodb/adodb.inc.php" );
 
   /** @var array $classes_data_types the DataType classes */
@@ -62,11 +64,9 @@
   /** @var array $classes_other the other/misc classes we don't use very often */
   $classes_other = array(
                          "ZenDBXML.php",
-                         "db/DbTypeInfo.php",
                          "ZenEmail.php",
                          "ZenFormGenerator.php",
-                         "ZenTranslator.php",
-                         "ZenXMLParser.php"
+                         "ZenTranslator.php"
                          );
 
   /** @var array $classes_all all available libraries */
