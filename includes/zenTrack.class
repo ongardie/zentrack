@@ -1121,6 +1121,11 @@ class zenTrack extends zen {
     *  USER ADMINISTRATION
     */
    
+   function check_user_login( $login ) {
+     // check for duplicate login names
+     $query = "SELECT user_id FROM ".$this->table_users." WHERE login = '$login'";
+     return $this->db_get($query);
+   }
    
    function add_user( $params ) {
      // creates a new user entry in the db

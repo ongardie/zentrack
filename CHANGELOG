@@ -4,9 +4,12 @@
  Clean, simple interface, fully adaptable administration,
  100 percent object oriented and database abstracted. 
 
------ V2.2.2 (not released) -----
+----- V2.2.2 (2003-02-10) -----
 2003-02-09, Kato
-  Header Redirects (blank pages)
+  Ability to reopen tickets from pending status
+    - includes/zenTrack.class v1.42
+    - www/actions/reopen.php v1.4
+  Header Redirects (blank pages with IIS) removed
     - includes/editTicketSubmit.php v1.3
     - www/addProjectSubmit.php v1.8
     - www/addSubmit.php v1.11
@@ -15,7 +18,7 @@
     - www/admin/admin_header.php v1.6
     - www/admin/editTicketSubmit.php v1.4
     - www/actions/*.php
-  Email corrections
+  Email notification enhancements
     - includes/zenTrack.class v1.39 & v1.40
     - www/actions/close.php v1.8
   Fixed some postgres sql bugs

@@ -21,6 +21,9 @@
   if( !$access_level ) {
     $access_level = 0;
   }
+  if( $zen->check_user_login($login) > 0 ) {
+    $errs[] = "That login name already exists.  Please choose another.";
+  }
 
   if( !$errs ) {
     foreach(array_keys($user_fields) as $k) {

@@ -18,6 +18,10 @@
       $errs[] = ucfirst($u)." is required";
     }
   }
+  $check = $zen->check_user_login($login);
+  if( $check && $check != $user_id  ) {
+    $errs[] = "That login name is in use by another account";
+  }
   if( !$access_level ) {
     $access_level = 0;
   }

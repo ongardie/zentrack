@@ -60,7 +60,7 @@
 </tr>
 <tr>
   <td class="bars">
-    User Login Name*
+    Login Name*
   </td>
   <td class="bars">
     <input type="text" name="login" value="<?=strip_tags($login)?>" size="20" maxlength="25">
