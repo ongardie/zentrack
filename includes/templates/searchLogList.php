@@ -1,12 +1,18 @@
 <?
   
-if( is_array($logs) ) {
- 
-   $link = $zen->settings["url_view_ticket"];   
-   $c = count($logs);
-      ?>
-        <table width="100%" cellspacing='1' cellpadding='2' bgcolor='<?=$zen->settings["color_alt_background"]?>'>
-        <tr><td class='titleCell' colspan="8" align='center'><?=($c>1)? tr("? Matches",array($c)) : tr("1 Match");?></td></tr>
+if( is_array($tickets) && count($logs) ) {
+
+  $link = $zen->settings["url_view_ticket"];
+  $c = count($tickets);
+  $pageNumber = array_key_exists('pageNumber', $_GET)?
+                $zen->checkNum($_GET['pageNumber']) : 0;
+  $first = ($zen->settings['paging_max_rows'] * $pageNumber) + 1; //added line
+  $last = $c + $ll - 1; //added line
+  if( $last > $zen->total_records ) { $last = $zen->total_records; }
+  $c = tr("Matches ?-? of ?", array($first,$last,$zen->total_records)); //added line
+     ?>
+       <table width="100%" cellspacing='1' cellpadding='2' bgcolor='<?=$zen->settings["color_alt_background"]?>'>
+       <tr><td class='titleCell' colspan="8" align='center'><?=$c?></td></tr>
    <tr bgcolor="<?=$zen->settings["color_title_background"]?>">
    <td width="32" height="25" valign="middle" title="<?=tr("ID of the ticket")?>">
      <div align="center"><span style="color:<?=$zen->settings["color_title_txt"]?>"><b><span class="small"><?=tr("ID")?></span></b></span></div>

@@ -27,6 +27,7 @@
      if( is_array($params) )
        $tickets = $zen->get_tickets($params);
      include("$templateDir/listTickets.php");
+     include("$libDir/paging.php"); //Addition for paging
   } else {
      print "<p class='hot'>" . tr("You do not have access to any existing bins") . "</p>\n";
   }

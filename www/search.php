@@ -15,12 +15,13 @@
   $expand_search = 1;
   include("$libDir/nav.php");
 
-  if( $TODO == 'SEARCH' ) {
-     include("$templateDir/searchResults.php");
-     if( is_array($tickets) ) {
-	include("$templateDir/searchList.php");
-     } else {
-       if( $errs ) {
+if( $TODO == 'SEARCH' ) {
+    include("$templateDir/searchResults.php");
+    if( is_array($tickets) ) {
+       include("$templateDir/searchList.php");
+       include("$libDir/paging.php"); //Addition for paging
+    } else {
+      if( $errs ) {
 	 $zen->printErrors($errs);
        } else {
 	 print "<p><b>" . tr("There were no results for your search.") . "</b></p>\n";

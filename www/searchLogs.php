@@ -16,11 +16,12 @@
   include("$libDir/nav.php");
 
   if( $TODO == 'SEARCH' ) {
-     include("$templateDir/searchLogResults.php");
-     if( is_array($logs) ) {
-	include("$templateDir/searchLogList.php");
-     } else {
-       if( $errs ) {
+    include("$templateDir/searchLogResults.php");
+    if( is_array($logs) ) {
+       include("$templateDir/searchLogList.php");
+       include("$libDir/paging.php"); //Addition for paging
+    } else {
+      if( $errs ) {
 	 $zen->printErrors($errs);
        } else {
 	 print "<p><b>" . tr("There were no logs matching your search.") . "</b></p>\n";
