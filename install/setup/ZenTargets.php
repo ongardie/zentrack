@@ -23,7 +23,8 @@ class ZenTargets {
     foreach($this->_ini['paths'] as $val) { $paths[] = $val; }
     foreach( $paths as $key=>$val ) {
       $val = ZenUtils::cleanPath($val);
-      $this->_pathExps[] = '|^'.$val.'|';
+      $val = str_replace('\\', '\\\\', $val);      
+      $this->_pathExps[] = '|^'.$val.'|i';
     }   
   }
 
@@ -463,7 +464,7 @@ class ZenTargets {
       list($sect,$var,$name,$is_tmplt,$permissions,$default) = $c;
 
       // set up source
-      $source = $this->_ini[$sect][$var];
+      $source = ZenUtils::cleanPath($this->_ini[$sect][$var]);
       
       // create the destination
       $dest = preg_replace( $this->_pathExps, "", $source );
@@ -491,13 +492,8 @@ class ZenTargets {
     // get base backups directory
     $base = $this->_getBackupLocation();
 
-    // create directory tree and 
-    // remove windows root references(i.e. c:)
-    if( strpos($dest,'\\') === 0 || strpos($dest,'/') === 0 ) {
-      $dest = substr($dest,1);
-    }
-    $des = preg_split('#[\\\\/]#', preg_replace("#^$base#", "", $dest));
-    if( preg_match('#[a-zA-Z]:#', $des[0]) ) { array_shift($des); }
+    $des = preg_split('#[\\\\/]#', $dest);
+    if( preg_match('#[a-zA-Z]:#', $des[0]) || $des[0] == null ) { array_shift($des); }
 
     // make sure the subdirectory exists
     // by getting each piece and
@@ -511,12 +507,9 @@ class ZenTargets {
     }
 
     // put it together into complete directory
-    $dest = $dest? $base.DIRECTORY_SEPARATOR.$dest : $base;
-    
-
-    // create the destination file
     if( !$newname ) { $newname = $name; }
-    $dest = ZenUtils::cleanPath($dest).DIRECTORY_SEPARATOR.$newname;
+    $dest = $dest? $base.DIRECTORY_SEPARATOR.$dest : $base;
+    $dest .= DIRECTORY_SEPARATOR.$newname;
     
     // create the source file
     $source = ZenUtils::cleanPath($source).DIRECTORY_SEPARATOR.$name;
@@ -1282,7 +1275,7 @@ class ZenTargets {
       list($sect,$var,$file,$is_tmplt,$permissions,$source,$default) = $c;
 
       // set up destination directory
-      $dest = $this->_ini[$sect][$var];
+      $dest = ZenUtils::cleanPath($this->_ini[$sect][$var]);
 
       // get source directory
       // this will be installs/defaults unless

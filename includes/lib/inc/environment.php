@@ -30,8 +30,10 @@
   $ft = lastConfigUpdate();
   if( $_SESSION['configLastUpdated'] == null ) {
     /** @global string $_SESSION['configLastUpdated'] */
-    $_SESSION['configLastUpdated'] = $ft;
+    $_SESSION['configLastUpdated'] = 0;
   }
+  // update the session info any time the config changes
+  // or every time the page loads in develop mode
   if( $ft > $_SESSION['configLastUpdated'] || $ft < 1 ) {
     ZenUtils::prep("ZenMetaDb");
     clearZenSessionCache();

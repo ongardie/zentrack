@@ -35,6 +35,10 @@ class ZenFormGenerator extends Zen {
   function ZenFormGenerator($table, $template) {
     ZenUtils::prep("ZenMetaField");
     ZenUtils::prep("ZenTemplate");
+    ZenUtils::printArray($table);//debug
+    ZenUtils::safeDebug('ZenFormGenerator', 'constructor', 
+                        "template=".$template.", table=".$table->name(),
+                        0, LVL_DEBUG);
     $this->_table = $table;
     $this->_template = $template;
     $this->_name = 'aForm';
@@ -261,6 +265,9 @@ class ZenFormGenerator extends Zen {
     $vals["choices"] = array();    
     foreach($this->_table->listFields() as $f) {
       $metafield = $this->_table->getMetaField($f);
+      ZenUtils::safeDebug( $this, "render",
+                           "field is: ".$f.", type is: ".$metafield->type()."<br>\n",
+                           0, LVL_DEBUG);//debug
       $field = $metafield->getFieldArray();
       if( !isset($field['default']) ) { $field['default'] = null; }
       //$field['default'] = ZenUtils::ffv($field['default']); //probably not needed (using smarty escape)

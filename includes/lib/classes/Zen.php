@@ -342,6 +342,7 @@ class Zen {
    */
   function getMetaData( $class ) {
     $table = ZenUtils::tableNameFromClass( $class );
+    ZenUtils::safeDebug('Zen','getMetaData',$table,0,LVL_DEBUG);
     $metaDb = Zen::getMetaDb();
     return $metaDb->getMetaTable($table);
   }
@@ -513,9 +514,17 @@ class Zen {
       $vars = ZenUtils::findGlobal('cache','data_types');
       if( !isset($vars[$type]) ) {
         $vals = array();
-        $name = Zen::mapTypeToClass($type)."List";
-        ZenUtils::prep($name);
-        $list = new $name();
+        $dataType = Zen::mapTypeToClass($type); 
+        $name = "{$dataType}List";
+        if( !class_exists($name) ) { 
+          ZenUtils::prep("ZenList");
+          $list = new ZenList();
+          $list->loadAbstract($dataType);
+        }
+        else {
+          ZenUtils::prep($name);
+          $list = new $name();
+        }
         $list->sort('field_pri');
         $list->sort('field_name');
         $list->load();

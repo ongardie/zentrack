@@ -1,6 +1,6 @@
 <?php
 /* 
-V4.01 23 Oct 2003  (c) 2000-2003 John Lim. All rights reserved.
+V4.20 22 Feb 2004  (c) 2000-2004 John Lim. All rights reserved.
   Released under both BSD license and Lesser GPL library license. 
   Whenever there is any discrepancy between the two licenses, 
   the BSD license will take precedence. 
@@ -32,13 +32,10 @@ class ADODB_sybase extends ADOConnection {
 	where o.name='%s'";
 	*/
 	var $concat_operator = '+'; 
-	var $sysDate = 'GetDate()';
 	var $arrayClass = 'ADORecordSet_array_sybase';
 	var $sysDate = 'GetDate()';
 	var $leftOuter = '*=';
 	var $rightOuter = '=*';
-	
-	
 	
 	function ADODB_sybase() 
 	{			
@@ -115,6 +112,8 @@ class ADODB_sybase extends ADOConnection {
 	// returns true or false
 	function _connect($argHostname, $argUsername, $argPassword, $argDatabasename)
 	{
+		if (!function_exists('sybase_connect')) return false;
+		
 		$this->_connectionID = sybase_connect($argHostname,$argUsername,$argPassword);
 		if ($this->_connectionID === false) return false;
 		if ($argDatabasename) return $this->SelectDB($argDatabasename);
@@ -123,6 +122,8 @@ class ADODB_sybase extends ADOConnection {
 	// returns true or false
 	function _pconnect($argHostname, $argUsername, $argPassword, $argDatabasename)
 	{
+		if (!function_exists('sybase_connect')) return false;
+		
 		$this->_connectionID = sybase_pconnect($argHostname,$argUsername,$argPassword);
 		if ($this->_connectionID === false) return false;
 		if ($argDatabasename) return $this->SelectDB($argDatabasename);
@@ -143,14 +144,15 @@ class ADODB_sybase extends ADOConnection {
 	// See http://www.isug.com/Sybase_FAQ/ASE/section6.2.html#6.2.12
 	function &SelectLimit($sql,$nrows=-1,$offset=-1,$inputarr=false,$secs2cache=0) 
 	{
-		if ($secs2cache > 0) // we do not cache rowcount, so we have to load entire recordset
-			return ADOConnection::SelectLimit($sql,$nrows,$offset,$inputarr,$secs2cache);
-		
+		if ($secs2cache > 0) {// we do not cache rowcount, so we have to load entire recordset
+			$rs =& ADOConnection::SelectLimit($sql,$nrows,$offset,$inputarr,$secs2cache);
+			return $rs;
+		}
 		$cnt = ($nrows > 0) ? $nrows : 0;
 		if ($offset > 0 && $cnt) $cnt += $offset;
 		
 		$this->Execute("set rowcount $cnt"); 
-		$rs = &ADOConnection::SelectLimit($sql,$nrows,$offset,$inputarr,$secs2cache);
+		$rs =& ADOConnection::SelectLimit($sql,$nrows,$offset,$inputarr,$secs2cache);
 		$this->Execute("set rowcount 0"); 
 		
 		return $rs;

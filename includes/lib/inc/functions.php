@@ -34,7 +34,11 @@
    * Returns the unix timestamp representing the last config update
    */
   function lastConfigUpdate() {
-    return @filemtime( getini('directories','dir_cache').'/last_config_update');
+    $file = getini('directories','dir_cache').'/last_config_update';
+    if( !@file_exists( $file ) ) {
+      touch($file);
+    }
+    return @filemtime( $file );
   }
 
   /**

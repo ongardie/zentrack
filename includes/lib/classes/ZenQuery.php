@@ -451,7 +451,7 @@ class ZenQuery extends Zen {
    * @param string $cacheTime the amount of time to leave query in the cache
    * @param string $field is the field to be selected
    */
-  function list($field, $cacheTime = null) {
+  function selectList($field, $cacheTime = null) {
     $this->_fields = array($field);
     $vals = $this->select($cacheTime, false);
     $vars = array();

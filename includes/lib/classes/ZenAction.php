@@ -103,7 +103,7 @@ class ZenAction extends ZenDataType {
     // print some useful debug info
     $debugTxt = "Running $debugName:";
     foreach($args as $k=>$v) {
-      $v = strlen($v) > 10? substring($v,0,7).'...';
+      $v = strlen($v) > 10? substring($v,0,7).'...' : $v;
       $debugTxt .= " [$k=$v]";
     }
     $this->debug($this, "activate", $txt, 0, LVL_DEBUG);
@@ -164,6 +164,24 @@ class ZenAction extends ZenDataType {
                  "Action step completed: $debugName",
                  621, LVL_NOTE);
     return true;
+  }
+
+  /**
+   * STATIC: Retreive an action by the name
+   *
+   * @param string $name name of the action to locate or null if not found
+   */
+  function getActionByName( $name ) {
+    $query = Zen::getNewQuery();
+    $query->table('ACTION');
+    $query->match('action_name', $name);
+    $query->field('action_id');
+    $vals = $query->selectRow(Zen::getCacheTime(), false);
+    if( is_array($vals) && isset($vals[0]) ) {
+      $id = $vals[0];
+      return new ZenAction($id);
+    }
+    return null;
   }
 
   /** @var array $_steps contains the steps to be completed for this action */

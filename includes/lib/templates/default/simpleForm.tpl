@@ -1,11 +1,11 @@
 
 <form name='{$name}' method='{$method}' action='{$action}' class='simpleForm'>
 <table width='500'>
-{if $title != "" )
+{if $title != ""}
   <tr><th colspan='2' class='simpleFormTitle'>{$title|tr}</th></tr>
 {/if}
 
-{if $description != "" )
+{if $description != ""}
   <tr><td colspan='2' class='simpleFormDescription'>{$description|tr}</td></tr>
 {/if}
 

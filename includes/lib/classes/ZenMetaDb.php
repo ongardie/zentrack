@@ -279,7 +279,7 @@ class ZenMetaDb extends Zen {
       unset($GLOBALS['tcache']['metaDb']);
       unset($GLOBALS['tcache']['dbSchema']);
     }
-    Zen::debug($this, 'clearDbSchema', "DB cache emptied", 00, LVL_DEBUG);
+    Zen::debug('ZenMetaDb', 'clearDbSchema', "DB cache emptied", 00, LVL_DEBUG);
   }
 
   /**
