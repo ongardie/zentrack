@@ -7,6 +7,10 @@
 
 ----- V2.4.3 (RC2 Released: 2003-08-27) ----
 
+2003-11-10, Kato
+  Fixed bug caused by level_create > level_edit
+    - zentrack_2/includes/templates/newTicketForm.php 1.27
+
 2003-09-02, Kato
   Enhanced debugging output (two settings now, some help messages)
     - zentrack_2/includes/footer.php 1.21
