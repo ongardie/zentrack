@@ -70,7 +70,7 @@ CREATE TABLE ZENTRACK_ACCESS (
 --
 
 CREATE TABLE ZENTRACK_ATTACHMENTS (
-  attachment_id int8 default nextval('"attachment_id_seq"') NOT NULL PRIMARY KEY,
+  attachment_id int8 default nextval('"attachments_id_seq"') NOT NULL PRIMARY KEY,
   log_id int8 default NULL,
   ticket_id int8 default NULL,
   name varchar(25) default NULL,
@@ -84,7 +84,7 @@ CREATE TABLE ZENTRACK_ATTACHMENTS (
 --
 
 CREATE TABLE ZENTRACK_BINS (
-  bid int8 default nextval('"bid_seq"') NOT NULL PRIMARY KEY,
+  bid int8 default nextval('"bins_id_seq"') NOT NULL PRIMARY KEY,
   name varchar(25) NOT NULL default '',
   priority int8 default NULL,
   active int2 default '1'
@@ -95,7 +95,7 @@ CREATE TABLE ZENTRACK_BINS (
 --
 
 CREATE TABLE ZENTRACK_LOGS (
-  lid int8  default nextval('"lid_seq"') NOT NULL PRIMARY KEY,
+  lid int8  default nextval('"logs_id_seq"') NOT NULL PRIMARY KEY,
   ticket_id int8 NOT NULL default '0',
   user_id int8 NOT NULL default '0',
   bin_id int8 NOT NULL default '0',
@@ -137,7 +137,7 @@ CREATE TABLE ZENTRACK_PREFERENCES (
 --
 
 CREATE TABLE ZENTRACK_PRIORITIES (
-  pid int8 default nextval('"pid_seq"') NOT NULL PRIMARY KEY,
+  pid int8 default nextval('"priorities_id_seq"') NOT NULL PRIMARY KEY,
   name varchar(25) NOT NULL default '',
   priority int8 default NULL,
   active int2 default NULL
@@ -148,7 +148,7 @@ CREATE TABLE ZENTRACK_PRIORITIES (
 --
 
 CREATE TABLE ZENTRACK_SETTINGS (
-  setting_id int8 default nextval('"setting_id_seq"') NOT NULL PRIMARY KEY,
+  setting_id int8 default nextval('"settings_id_seq"') NOT NULL PRIMARY KEY,
   name varchar(25) default NULL,
   value varchar(100) default NULL,
   description varchar(200) default NULL
@@ -160,7 +160,7 @@ CREATE TABLE ZENTRACK_SETTINGS (
 --
 
 CREATE TABLE ZENTRACK_SYSTEMS (
-  sid int8 default nextval('"sid_seq"') NOT NULL PRIMARY KEY,
+  sid int8 default nextval('"systems_id_seq"') NOT NULL PRIMARY KEY,
   name varchar(25) NOT NULL default '',
   priority int8 default NULL,
   active int2 default NULL
@@ -171,7 +171,7 @@ CREATE TABLE ZENTRACK_SYSTEMS (
 --
 
 CREATE TABLE ZENTRACK_TASKS (
-  task_id int8 default nextval('"task_id_seq"') NOT NULL PRIMARY KEY,
+  task_id int8 default nextval('"tasks_id_seq"') NOT NULL PRIMARY KEY,
   name varchar(25) NOT NULL default '',
   priority int8 default NULL,
   active int2 default NULL
@@ -182,7 +182,7 @@ CREATE TABLE ZENTRACK_TASKS (
 --
 
 CREATE TABLE ZENTRACK_TICKETS (
-  id int8 default nextval('"id_seq"') NOT NULL PRIMARY KEY,
+  id int8 default nextval('"tickets_id_seq"') NOT NULL PRIMARY KEY,
   title varchar(50) NOT NULL default 'untitled',
   priority int2 NOT NULL default '0',
   status varchar(25) NOT NULL default 'OPEN',
@@ -205,30 +205,11 @@ CREATE TABLE ZENTRACK_TICKETS (
 );
 
 --
--- Table structure for table 'ZENTRACK_TICKETS_ARCHIVED'
---
-
-CREATE TABLE ZENTRACK_TICKETS_ARCHIVED (
-  id int8 default NULL,
-  title varchar(50) default NULL,
-  priority int2 default NULL,
-  description text,
-  otime int8 default NULL,
-  ctime int8 default NULL,
-  type_id varchar(25) default NULL,
-  system_id int8 default NULL,
-  relations varchar(255) default NULL,
-  project_id int8 default NULL,
-  est_hours decimal(10,2) default NULL,
-  wkd_hours decimal(10,2) default NULL
-);
-
---
 -- Table structure for table 'ZENTRACK_TRANSLATION_STRINGS'
 --
 
 CREATE TABLE ZENTRACK_TRANSLATION_STRINGS (
-  trans_id int8 default nextval('"trans_id_seq"') NOT NULL PRIMARY KEY,
+  trans_id int8 default nextval('"translation_strings_id_seq"') NOT NULL PRIMARY KEY,
   language varchar(25) default NULL,
   identifier varchar(25) default NULL,
   string varchar(255) default NULL
@@ -240,7 +221,7 @@ CREATE TABLE ZENTRACK_TRANSLATION_STRINGS (
 --
 
 CREATE TABLE ZENTRACK_TRANSLATION_WORDS (
-  word_id int8 default nextval('"word_id_seq"') NOT NULL PRIMARY KEY,
+  word_id int8 default nextval('"translation_words_id_seq"') NOT NULL PRIMARY KEY,
   language varchar(25) default NULL,
   identifier varchar(50) default NULL,
   translation varchar(50) default NULL
@@ -253,7 +234,7 @@ CREATE TABLE ZENTRACK_TRANSLATION_WORDS (
 --
 
 CREATE TABLE ZENTRACK_TYPES (
-  type_id int8 default nextval('"type_id_seq"') NOT NULL PRIMARY KEY,
+  type_id int8 default nextval('"types_id_seq"') NOT NULL PRIMARY KEY,
   name varchar(25) NOT NULL default '',
   priority int8 default NULL,
   active int2 default NULL
@@ -264,7 +245,7 @@ CREATE TABLE ZENTRACK_TYPES (
 --
 
 CREATE TABLE ZENTRACK_USERS (
-  user_id int8 default nextval('"user_id_seq"') NOT NULL PRIMARY KEY,
+  user_id int8 default nextval('"users_id_seq"') NOT NULL PRIMARY KEY,
   login varchar(25) default NULL,
   access_level int2 default NULL,
   passphrase varchar(32) default NULL,
@@ -330,12 +311,10 @@ CREATE TABLE ZENTRACK_REPORTS_TEMP (
    chart_type varchar(25) default NULL, 
    chart_options text, 
    data_set text, 
-   created datetime NOT NULL default '0000-00-00 00:00:00', 
+   created timestamp default NULL,
    chart_combine int2 default NULL, 
    text_output int2 default NULL, 
    show_data_vals int2 default NULL, 
    PRIMARY KEY (report_id)
 );
-
-
 
