@@ -123,6 +123,7 @@ echo tr("Select a contact");
 </td>
 </tr>
 
+<? if( $people || $companies ) { ?>
 <tr>
   <td class="titleCell" colspan='<?=$colspan?>'>
     <?=tr("Click button to add contact")?>
@@ -133,17 +134,12 @@ echo tr("Select a contact");
     <input type="submit" value="<?=uptr("Add")?>" class="submit" >
   </td>
 </tr>
+<? } ?>
 <tr>
 </table>
 </form>
 
-<?
-  if( $people || $companies ) {
-?>
-  <p>&nbsp;
-  <form action='<?=$rootUrl?>/newContact.php'>
-    <input type='submit' class='actionButton' value=' <?=tr("New Contact")?> '>
-  </form>
-<?
-  }
-?>
+<p>&nbsp;
+<form action='<?=$rootUrl?>/newContact.php' target="_BLANK">
+  <input type='submit' class='actionButtonContact' value=' <?=tr("Create New Contact")?> '>
+</form>

@@ -227,9 +227,17 @@
         if( !$varfield['is_required'] && (count($opts)!=1 || strlen($opts[0]['field_value'])) ) {
           $inp .= "<option value=''>---</option>\n";
         }
+        $val_picked = false;
         foreach($opts as $o) {
-          $sel=($o['field_value']==$value)?" selected" : "";
+          if( strlen($value) && !$val_picked && $o['field_value'] == $value ) {
+            $val_picked = true;
+            $sel = " selected";
+          }
+          else { $sel = ""; }
           $inp .= "<option value='{$o['field_value']}'$sel>{$o['label']}</option>\n";
+        }
+        if( !$val_picked && strlen($value) ) {
+          $inp .= "<option value='".$zen->fixJsVal($value)."' selected>$value(invalid)</option>\n";
         }
         $inp .= "</select>\n";
         break;
@@ -291,7 +299,7 @@
     }
     closedir($dir);
     return $vals;
-  } 
+  }
   
   /*
   **  TICKET NAVIGATION TABS

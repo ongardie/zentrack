@@ -20,7 +20,8 @@
   
   // redirect to somewhere user can pick a ticket if no id was recieved
   if( !$id ) {
-    include("index.php");
+    $pt = $page_type == 'project'? 'projects.php' : 'index.php';
+    include("$rootWWW/$pt");
     exit;
     //header("Location: $rootUrl/index.php\n");
   }
@@ -58,6 +59,13 @@
     }
   }
   
+  if( !is_array($ticket) || !count($ticket) ) {
+    $pt = $page_type == 'project'? 'projects.php' : 'index.php';
+    $msg = tr("Invalid ? id requested", tr($page_type));
+    include("$rootWWW/$pt");
+    exit;
+  }
+  
   // allow creator of ticket to view (if setting is on) even if no access
   $is_creator = $zen->checkCreator($login_id, $id);
   
@@ -74,7 +82,6 @@
   if( !$is_creator && !$zen->checkAccess($login_id,$ticket["bin_id"]) ) {
     print "<p class='hot'>" . tr("You are not allowed to view the following in this bin") . ": {$page_type}s</p>\n";
   } else {
-    
     if( is_array($ticket) ) {
       extract($ticket);
       if( $type_id == $zen->projectTypeID() ) {
@@ -84,8 +91,7 @@
       }
     } else {
       print "<p class='error'>" . tr("That ticket doesn't exist") . "</p>\n";
-    }
-    
+    }    
   }
   
   include("$libDir/footer.php");

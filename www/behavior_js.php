@@ -176,7 +176,7 @@ if( is_array($behaviors) ) {
       print ','.$zen->fixJsVal($group['eval_type']);
       // encode the eval text to prevent corrupting
       // the javascript syntax
-      print ", '".rawurlencode($g['eval_text'])."'";
+      print ", '".rawurlencode($group['eval_text'])."'";
       print ");\n";
     }
 
@@ -222,7 +222,7 @@ var behaviorFlags = new Array();
 var behaviorDebugMessages = new Array();
 
 // loads debugging mode from header
-var useBehaviorDebug = <?= $Debug_Mode ?>;
+var useBehaviorDebug = <?= strlen($Debug_Mode)? $Debug_Mode : false  ?>;
 
 // stores a list of the most recently entered values for a given field
 // this prevents updating a list with the values it already contains
@@ -236,7 +236,7 @@ var behaviorHistoryMap = new Array();
  */
 function fieldChangedBehavior( fieldObject ) {
   // debugging
-  var fieldName = fieldObject? fieldObject.form.name+"."+fieldObject.name : "null";
+  var fieldName = fieldObject? fieldObject.form.getAttribute('name')+"."+fieldObject.name : "null";
   behaviorDebug(3, "(fieldChangedBehavior)"+fieldName);
 
   // clear any previously set flags
@@ -376,7 +376,7 @@ function setFormValsUsingGroup( fieldObj, group, setid ) {
     // we encode the eval text so it won't cause erros in js
     // so we unencode it here and then replace occurences
     // of {form} with the form name
-    var f = 'window.document.'+fieldObj.form.name;
+    var f = 'window.document.'+fieldObj.form.getAttribute('name');
     var s = unescape(group.evalText);
     var vals = evalJsString( unescape(group.evalText).replace( /{form}/ig, f) );
 
@@ -615,7 +615,7 @@ function matchBehaviorCriteria( formObject, behaviorMapField ) {
     break;
   case "js":
     // evaluate js code
-    var f = 'window.document.'+formField.form.name;
+    var f = 'window.document.'+formField.form.getAttribute('name');
     behaviorMapField.value = behaviorMapField.value.replace(/{form}/ig, f);
     behaviorMapField.value = behaviorMapField.value.replace(/{field}/ig, f+'.'+formField.name);
     res = eval(behaviorMapField.value);

@@ -7,6 +7,15 @@
 
 ----- V2.5.0(2004-10-12) -----
 
+2004-10-12, Kato
+  Updated version number in sql files
+    - install/*.sql
+  Fixed js bug with Javascript based behaviors
+    - behavior_js
+  Corrected syntax error in egate file
+  
+  Fixed problem with invalid ticket ids
+    
 2004-10-11, Kato
   Cleaned up email templates and doc files
     - zentrack_2/UPGRADE.readme 1.19

@@ -62,6 +62,9 @@
 	     }
 	     else {
 	       $c = count($v['fields']) > 0? count($v['fields']) : 0;
+         if( $v['include_none'] ) {
+           $c--; 
+         }
 	     }
 	     print $t.$c.$te;
 

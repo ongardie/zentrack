@@ -140,9 +140,11 @@ class zenTrack extends zen {
     $pid = $this->checkNum($pid);
     $query = "SELECT * FROM $table WHERE id = $pid";
     $vars = $this->db_quickIndexed($query);
-    list($vars["est_hours"], $vars["wkd_hours"]) = 
-      $this->getProjectHours($pid, $archive_flag);
-    $vars["children"] = $this->getProjectChildren($pid, NULL, $archive_flag);
+    if( is_array($vars) && count($vars) ) {
+      list($vars["est_hours"], $vars["wkd_hours"]) = 
+        $this->getProjectHours($pid, $archive_flag);
+        $vars["children"] = $this->getProjectChildren($pid, NULL, $archive_flag);
+    }
     return($vars);
   }
 
