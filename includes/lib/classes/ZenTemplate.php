@@ -207,6 +207,7 @@ class ZenTemplate {
     }
     if( file_exists($this->_template) ) {
       $this->_text = join("",file($this->_template));
+      $txt = preg_replace("/<!--.*-->/sm", "", $this->_text);
     }
     else {
       ZenUtils::safeDebug($this, "_get", 
@@ -222,8 +223,7 @@ class ZenTemplate {
    * @return string parsed contents
    */
   function _parse() {
-    $txt = preg_replace("/<!--.*-->/", "", $this->_text);
-    $txtArray = explode("\n",$txt);
+    $txtArray = explode("\n",$this->_text);
     for($i=0; $i<count($txtArray); $i++) {
       $txtArray[$i] = preg_replace("@[{]([^}]+)[}]@e", "''.\$this->_insert(\"\\1\").''",$txtArray[$i]);
     }
@@ -619,7 +619,7 @@ class ZenTemplate {
       // this is the foreach value with a key (assumed to be an array)
       else if( is_array($value) && preg_match('/^value\[([a-zA-Z0-9_]+)]$/', $v, $matches) ) {
         $key = $matches[1];
-        $str = isset($value[$key])? $value[$key] : '';
+        $str .= isset($value[$key])? $value[$key] : '';
       }
       // this is another variable
       else {        

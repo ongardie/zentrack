@@ -81,7 +81,7 @@ db_prefix = "{db_prefix="ZENTRACK_"}"
 
 ;the length time to cache queries in seconds
 ;use blank to disable caching
-cache_time = {cache_time=0}
+cache_time = {cache_time=""}
 
 ;;;;;;;;;;;;;;;;; PAGE DISPLAY ;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; The properties concerning how pages are displayed

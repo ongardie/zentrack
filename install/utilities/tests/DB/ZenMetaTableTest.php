@@ -54,15 +54,15 @@
       $newtable = new ZenMetaTable(null);
       $res = $newtable->copy($table);
       if( $vals['expected'] ) {
-        Assert::equalsTrue( $res, "The return result indicated failure for {$vals['table']}" );
+        Assert::equalsTrue( $res, "Copy failed for {$vals['table']} (should succeed)" );
         if( $res ) {
           $oldfields = $table->getTableArray();
           $newfields = $newtable->getTableArray();
           $eq = ZenUtils::arrayEquals($oldfields, $newfields);
           Assert::equalsTrue( $eq, "The values were not copied correctly" );
-          //if( !$eq ) {
+          if( !$eq ) {
             $this->printArrayComparisons( $oldfields, $newfields );
-            //}
+          }
         }
       }
       else {

@@ -150,8 +150,12 @@ class ZenUtils {
   function getIni( $category, $property = null ) {
     $ini = ZenUtils::findIni();
     if( !is_array($ini) ) { return null; }
-    else if( !strlen($property) ) { return $ini[$category]; }
-    else { return $ini[$category][$property]; }
+    else if( !strlen($property) ) { 
+      return isset($ini[$category])? $ini[$category] : null;
+    }
+    else { 
+      return isset($ini[$category][$property])? $ini[$category][$property] : null;
+    }
   }
 
   /**
@@ -163,7 +167,7 @@ class ZenUtils {
   function tableNameFromClass( $class ) { 
     $cname = strtolower(is_object($class)? get_class($class) : $class);
     // remove Zen from beginning of name
-    if( strpos( $cname, "Zen" ) === 0 ) {
+    if( strpos( $cname, "zen" ) === 0 ) {
       $cname = substr($cname, 3);    
     }
     // remove .class from end if necessary
@@ -258,7 +262,7 @@ class ZenUtils {
    * @return boolean
    */
   function safeEquals( $val1, $val2 ) {
-    if( !isset($val) xor !isset($val2) ) {
+    if( !isset($val1) xor !isset($val2) ) {
       // if only one is set
       return false;
     }

@@ -1,1 +1,2 @@
+
 {foreach:bob:"On Bob's "+index+" there is a "+value+".\n"}

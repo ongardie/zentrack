@@ -918,7 +918,10 @@ class ZenTargets {
         else {
           $v = $table->getProp($p);
           if( $p == 'is_abstract' && $v ) { 
-            $vals['is_abstract'] = true; 
+            $vals['is_abstract'] = true;
+          }
+          if( $p == 'description' ) {
+            $vals['description'] = $v;
           }
           if( in_array($p, array('is_abstract','has_custom_fields')) ) {
             $v = $v? "Yes" : "No";
@@ -927,6 +930,10 @@ class ZenTargets {
           $vals['properties'][$p] = $v;          
         }
       }
+
+      // set style
+      $vals['cellStyle'] = $vals['is_abstract']? 'abstractRow' : '';
+
       // get the field values
       $color = 'rowA';
       $vals['fields'] = array();
@@ -1028,7 +1035,7 @@ class ZenTargets {
     fputs($fp, $template->process());
     fclose($fp);
     print "   C menu.html\n";
-    
+
     // generate tables
     foreach($tables as $t) {
       $vals = $tableData[$t];
@@ -1190,7 +1197,7 @@ class ZenTargets {
       $sourcefile = ($is_tmplt)? $source."/$file.template" : $source."/$file";
       $destfile = $dest."/$file";
 
-      if( $sect == 'directories' && $var == 'dir_user' && file_exists($dest) ) {
+      if( $sect == 'directories' && $var == 'dir_user' && file_exists($destfile) ) {
         print "   S $file (files in user directory are not overwritten)\n";
         continue;
       }

@@ -46,15 +46,20 @@
       $template->values($vals);
 
       // check results
-      $templateResult = $template->process();
-      $expectedResult = join('',file( $GLOBALS['templateDir']."/".$vals['file'].".result" ));
-      Assert::equals( trim($templateResult), trim($expectedResult), 
-                      "Parsed file did not equal expected<hr width='200'><pre>$templateResult</pre>"
+      $templateResult = trim($template->process());
+      $expectedResult = trim(join('',file( $GLOBALS['templateDir']."/".$vals['file'].".result" )));
+      // fix windows linefeed vs template issues
+      $templateResult = preg_replace("/\r/", "", $templateResult);
+      $expectedResult = preg_replace("/\r/", "", $templateResult);
+      Assert::equals( $templateResult, $expectedResult, 
+                      "Parsed file did not equal expected ("
+                      .strlen($templateResult)." chars:".strlen($expectedResult)." chars)"
+                      ."<hr width='200'><pre>$templateResult</pre>"
                       ."<hr width='200'><pre>$expectedResult</pre>" );
     }
 
-    function moreTestsNeeded() {
-      Assert::equalsTrue( false, "Need to add a test for {zen:category:varname}" );
+    function testMoreTestsNeeded() {
+      Assert::equalsTrue( false, "Need to add tests for all the new template tags" );
     }
 
   }

@@ -210,7 +210,8 @@ class ZenDbSchema extends Zen {
     $t['is_abstract'] = $abstract;
 
     // see if table supports transactions
-    $t['has_transactions'] = ZenUtils::parseBoolean($node->child('transactions',0));
+    $tfnode = $node->child('transactions',0);
+    $t['has_transactions'] = $tfnode? ZenUtils::parseBoolean( $tfnode->data() ) : false;
 
     // the table may not have any columns (could simply inherit, or be an abstract with no columns)
     if( $node->count('columns') > 0 ) {
@@ -274,11 +275,12 @@ class ZenDbSchema extends Zen {
         $f[$t] = array($criteria->prop('type'), $criteria->data());
       }
       else if( $t == 'required' ) {
-        $val = ZenUtils::parseBoolean( $field->getChild($t,0) );
+        $tfnode = $field->child($t,0);
+        $val = $tfnode? ZenUtils::parseBoolean( $tfnode->data() ) : false;
         $f[$t] = $val? 1 : 0;
       }
       else {
-        $val = $field->getChild($t,0);
+        $val = $field->child($t,0);
         $f[$t] = $val? $val->data() : null;
       }
     }
@@ -294,7 +296,7 @@ class ZenDbSchema extends Zen {
    * @param ZenXNode $query
    */
   function _loadUpdateQuery($query) {
-    $this->_updateQueries[] = array($query->getChild('description',0), $query->getChild('sql',0));
+    $this->_updateQueries[] = array($query->child('description',0), $query->child('sql',0));
   }
 
   /**
@@ -308,7 +310,7 @@ class ZenDbSchema extends Zen {
    * @return boolean
    */
   function addTable( $name, $description, $is_abstract, $has_custom_fields, 
-                     $inherits, $has_transactions ) {
+                     $inherits, $has_transactions = false ) {
     $this->_tables[$name] = 
       compact( array('name', 'description', 'is_abstract', 'has_custom_fields', 
                      'inherits', 'has_transactions') );

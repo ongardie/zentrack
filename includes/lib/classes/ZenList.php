@@ -36,7 +36,7 @@ class ZenList extends Zen {
     $this->Zen();
 
     // find the meta info
-    $this->_dataType = preg_replace('/List$/', '', get_class(this));
+    $this->_dataType = preg_replace('/List$/', '', get_class($this));
     $this->_metaTable = Zen::getMetaData($this);
 
     /** @var integer $_thisid id of the currently indexed element */

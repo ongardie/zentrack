@@ -28,13 +28,6 @@ class ZenTicket extends ZenDataType {
    */
   function copy( $ticket_id = 0 ) { }
    
-   /**
-   * returns the notify object associated with this ticket
-   *
-   * @return NotifyObject the NotifyObject associated with this ticket
-   */
-  function getNotify() { }
-
   /**
    * returns a list of tickets related to this one
    *
@@ -43,7 +36,7 @@ class ZenTicket extends ZenDataType {
   function getRelations() { }
 
   /**
-   * returns a list of actions which are available to this ticket
+   * returns a list of actions which are available to this ticket 
    * 
    * @return ZenActionList list of actions (note that some of these actions may be disabled by ticket status)
    */

@@ -102,7 +102,8 @@
         // test each field
         foreach( $vals as $key=>$val ) {
           if( $key != 'expected' ) {
-            Assert::equals($val, $table[$key], "getTableArray '$val' != '".$table[$key]."' for field $key");
+            Assert::equals($val, $table[$key], 
+                           "getTableArray '$val' != '".$table[$key]."' for field $key");
           }
         }
       }

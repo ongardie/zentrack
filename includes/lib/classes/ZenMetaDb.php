@@ -55,28 +55,32 @@ class ZenMetaDb extends Zen {
     $tableInfo = Zen::simpleQuery('TABLE_DEFS',null,null);
     $fieldInfo = Zen::simpleQuery('FIELD_DEFS',null,null);
     foreach( $tableInfo as $t ) {
-      $table = $t['tbl_name'];
+      $table = strtoupper($t['tbl_name']);
       $this->_tables[$table] = $this->_schema->getTableArray($table);
       if( count($this->_tables[$table]['inherits']) > 0 ) {
         $newfields = $this->_schema->getInheritedFields($table);
         $this->_tables[$table]['fields'] = array_merge($this->_tables[$table]['fields'], $newfields);
       }
       foreach( $t as $key=>$val ) {
-        $this->_tables[$table][$this->mapTableDbToProp($key)] = $val;
+        if( !is_null($val) ) {
+          $this->_tables[$table][$this->mapTableDbToProp($key)] = $val;
+        }
       }
     }
     foreach( $fieldInfo as $f ) {
-      $field = $f['col_name'];
-      $table = $f['table_name'];
+      $field = strtolower($f['col_name']);
+      $table = strtoupper($f['table_name']);
       $this->_tables[$table]['fields'][$field] = $this->_tables[$table]['fields'][$field];
       foreach( $f as $key=>$val ) {
         if( $key == 'col_criteria' ) {
           $val = explode('=',$val);
         }
-        $this->_tables[$table]['fields'][$field][$this->mapFieldDbToProp($key)] = $val;
+        if( !is_null($val) ) {
+          $this->_tables[$table]['fields'][$field][$this->mapFieldDbToProp($key)] = $val;
+        }
       }
     }
-    Zen::debug($this, '_load', count($tableInfo)." tables were loaded, containing ".count($fieldInfo)." fields", 01, LVL_DEBUG);    
+    Zen::debug($this, '_load', count($this->_tables)." tables were loaded, containing ".count($fieldInfo)." fields", 01, LVL_DEBUG);    
   }
 
   /**
@@ -137,7 +141,10 @@ class ZenMetaDb extends Zen {
    * @param string $table
    * @return array
    */
-  function getTableArray( $table ) { return $this->_tables[$table]; }
+  function getTableArray( $table ) {
+    $table = strtoupper($table);
+    return isset($this->_tables[$table])? $this->_tables[$table] : null;
+  }
 
   /**
    * Return an array representing field schema
@@ -147,7 +154,14 @@ class ZenMetaDb extends Zen {
    * @param string $field
    * @return array
    */
-  function getFieldArray( $table, $field ) { return $this->_tables[$table]['fields'][$field]; }
+  function getFieldArray( $table, $field ) { 
+    $field = strtolower($field);
+    $table = $this->getTableArray($table);
+    if( $table && isset($table['fields'][$field]) ) {
+      return $table['fields'][$field];
+    }
+    return null;
+  }
 
   /**
    * Returns a meta table object representing the given table
@@ -156,8 +170,6 @@ class ZenMetaDb extends Zen {
    * @return ZenMetaTable
    */
   function getMetaTable( $table ) {
-    print "requested $table<br>\n";//debug
-    print "array: "+$this->getTableArray($table)."<br>\n";//debug
     return new ZenMetaTable( $this->getTableArray($table) );
   }
 
@@ -210,7 +222,10 @@ class ZenMetaDb extends Zen {
    * @param string $table
    * @return array
    */
-  function getFieldList( $table ) { return array_keys($this->_tables[$table]['fields']); }
+  function getFieldList( $table ) { 
+    $table = strtoupper($table);
+    return array_keys($this->_tables[$table]['fields']); 
+  }
 
   /**
    * Set the values of a db field by providing the ZenMetaField with the updated values

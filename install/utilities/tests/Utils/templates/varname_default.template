@@ -1,1 +1,1 @@
-There are no {val1/default} in this {val2/"happy "+default}.
+There are no {val1=default} in this {val2="happy "+default}.

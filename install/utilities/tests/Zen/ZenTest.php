@@ -72,12 +72,13 @@
         $obj = $vals['class'];
       }
       $res = Zen::getMetaData( $obj );
-      if( !is_object($res) || get_class($obj) != "ZenMetaTable" ) {
+      if( !ZenUtils::isInstanceOf("ZenMetaTable",$res) ) {
         Assert::equalsTrue( false, "Could not instantiate ZenMetaTable" );
       }
       else {
-        Assert::equals( $obj->getTableName(), ZenUtils::tableNameFromClass($vals['class']), 
-                        "Table name does not correspond with ZenUtils::tableNameFromClass()" );
+        $b = strtolower($res->name()) == strtolower(ZenUtils::tableNameFromClass($vals['class']));
+        Assert::equalsTrue( $b, "Table name ".$res->name()." != "
+                            .ZenUtils::tableNameFromClass($vals['class']) );
       }
     }
 
