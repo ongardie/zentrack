@@ -80,6 +80,7 @@
   }
 
   if( !$errs ) {
+     $setmode = "tasks";
      include("./project.php");
      exit;
      //header("Location:$rootUrl/project.php?id=$id");

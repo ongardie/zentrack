@@ -11,7 +11,7 @@
   }
 ?>     
 
-<form method="post" name=newProjectForm action="<?=($TODO=='EDIT')? "$rootUrl/admin/editProjectSubmit.php" : "$rootUrl/addProjectSubmit.php"?>">
+<form method="post" name="newProjectForm" action="<?=($TODO=='EDIT')? "$rootUrl/admin/editProjectSubmit.php" : "$rootUrl/addProjectSubmit.php"?>">
 <input type="hidden" name="id" value="<?=strip_tags($id)?>">
   
 <table width="640" align="left" cellpadding="2" cellspacing="2" bgcolor="<?=$zen->settings["color_background"]?>">
@@ -171,26 +171,30 @@ value="<?=strip_tags($title)?>">
 </tr>
 <tr>
   <td class="bars">
-    Deadline
-  </td>
-  <td class="bars">
-    <input type="text" name="deadline" size="12" maxlength="10"
-value="<?=($deadline)?$zen->showDate(strip_tags($deadline)):""?>">&nbsp;(mm/dd/yyyy)
-    &nbsp;&nbsp;
-    <input type="button" name="date_button" value="Select Date" onclick="popUpCalendar(this, newProjectForm.deadline, 'mm/dd/yyyy');">
-  </td>
-</tr>				   
-<tr>
-  <td class="bars">
     Start Date
   </td>
   <td class="bars">
     <input type="text" name="start_date" size="12" maxlength="10"
-value="<?=($start_date)?$zen->showDate(strip_tags($start_date)):""?>">&nbsp;(mm/dd/yyyy)
-    &nbsp;&nbsp;
-    <input type="button" name="date_button2" value="Select Date" onclick="popUpCalendar(this, newProjectForm.start_date, 'mm/dd/yyyy');">
+	value="<?=($start_date)?$zen->showDate(strip_tags($start_date)):""?>">
+    <img name="date_button" src='<?=$rootUrl?>/images/cal.gif' 
+	onClick="popUpCalendar(this,document.newProjectForm.start_date, 'mm/dd/yyyy')"
+	alt="Select a Date">
+    &nbsp;(optional)
   </td>
 </tr>
+<tr>
+  <td class="bars">
+    Deadline
+  </td>
+  <td class="bars">
+    <input type="text" name="deadline" size="12" maxlength="10"
+value="<?=($deadline)?$zen->showDate(strip_tags($deadline)):""?>">
+    <img name="date_button" src='<?=$rootUrl?>/images/cal.gif' 
+	onClick="popUpCalendar(this,document.newProjectForm.deadline, 'mm/dd/yyyy')"
+	alt="Select a Date">
+    &nbsp;(optional)
+  </td>
+</tr>				   
 <tr>
   <td class="bars">
     Testing Required

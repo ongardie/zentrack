@@ -9,6 +9,7 @@
   
   
   include("./admin_header.php");
+  $page_title = "Configuration Settings";
 
   $settings = $zen->getSettings(1);
   if( $TODO == 'Save' ) {

@@ -4,6 +4,8 @@
   
   $expand_admin = 1;
   $section = "Admin";
+  $page_title = "Administration";
+
   $system_name = $zen->settings["system_name"];
   if( $login_level < $zen->settings["level_settings"] ) {
      $page_tile = "Access Error";    

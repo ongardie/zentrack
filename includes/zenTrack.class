@@ -903,6 +903,28 @@ class zenTrack extends zen {
 			"bin_id"    =>   $params["bin_id"]
 			);
        $this->add_log($id,$lParams);
+       if( $this->settings["email_created"] == "on" ) {
+	 // send email
+	 $bin = $t["bin_id"];
+	 if( $params["user_id"] )
+	   $recipient[] = $params["user_id"];
+	 $vals = $this->get_bin_roles($params["bin_id"],"manager");
+	 if( is_array($vals) ) {
+	   foreach($vals as $v) {
+	     $recipient[] = $v["user_id"];
+	   }
+	 }
+	 if( is_array($recipient) ) {
+	   $recipient = array_unique($recipient);
+	   $subject = "[".$this->settings["system_name"]."] ticket #$id created";
+	   $emailParams["Open Time"] = $this->showDateTime($this->currTime);
+	   if( $comments )
+	     $emailParams["body"] = htmlentities($comments);
+	   $emailParams["tid"] = $id;
+	   $message = $this->formatEmailMessage($emailParams);
+	   $this->sendEmail($recipient,$subject,$message,$user_id);       
+	 }
+       } 
      }
      return $id;
    }
@@ -1422,7 +1444,7 @@ class zenTrack extends zen {
      $query = "SELECT $fields FROM ".$this->table_access
        ." WHERE $where";
      $vals = $this->db_queryIndexed($query);
-     $this->addDebug("fetch_bin_roles","result: ".count($vals).", query: $query",1);
+     $this->addDebug("fetch_bin_roles","result: ".count($vals).", query: $query",3);
      return( $vals );
    }
    
