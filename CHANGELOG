@@ -7,6 +7,21 @@
 
 ----- V2.4.1 (Development, See CVS) ----
 
+2003-05-01, Kato
+  Fixed issues with creating tickets via email (loss of spaces and returns)
+  Enhanced the email template parsing functions
+  Improved email error messages, fixed 'egate user not found' bug
+    - zentrack/includes/egate_utils.php 1.30
+    - zentrack/includes/zenTrack.class 1.97
+  Added highlighting for various priorities
+    - zentrack/includes/templates/ticket_detailsBox.php 1.8
+  Added postgres fix for return codes
+    - zentrack/includes/db.class 1.23
+  Improved gd_info messages
+    - zentrack/includes/footer.php 1.20
+  Removed notices for english (strings should be blank)
+    - zentrack/includes/translator.class 1.6
+
 2003-04-30, Kato
   Resolved issue with not being able to access tr() while
   using the egate_utils, causing an error
