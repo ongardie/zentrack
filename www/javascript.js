@@ -60,6 +60,14 @@ function mClk(src) {
 	    src.children.tags('A')[0].click();
 }
 
-
+function mClassX( obj, classname ) {
+  //refToElement.className = 'newclass', or refToElement.setAttribute('class', 'newclass')
+  if( obj.className ) {
+    obj.className = classname;
+  }
+  else {
+    obj.setAttribute('class',classname);
+  }
+}
 
 //-->

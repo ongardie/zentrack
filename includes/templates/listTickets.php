@@ -43,8 +43,12 @@ if( is_array($tickets) ) {
          $link = $ticketUrl;   
       }
 
+   $classxText = "class='priority{$t['priority']}' "
+	."onMouseOver='mClassX(this,\"priority{$t['priority']}Over\")' "
+	."onMouseOut='mClassX(this,\"priority{$t['priority']}\")'";
+
       ?>
-   <tr class="priority<?=$t[priority]?>">
+   <tr <?=$classxText?>>
    <td height="25" valign="middle" <?=$td_ttl?>>
     <a class="rowLink" href="<?=$link?>?id=<?=$t["id"]?>"><?=$t["id"]?></a>
    </td>

@@ -3196,7 +3196,7 @@ class zenTrack extends zen {
       $where = ($active)? " WHERE active = $active" : "";
       $query = "SELECT * FROM ".$this->table_types." $where ORDER BY priority DESC, name";
       return( $this->db_queryIndexed($query) );
-    }            
+    }
   }
 
   function getProjectChildren( $pid, $columns = '', $archive_flag = 0 ) {
