@@ -1,3 +1,4 @@
+
 #
 # Table structure for table 'ZENTRACK_ACCESS'
 #
@@ -55,20 +56,6 @@ CREATE TABLE ZENTRACK_LOGS (
 ) TYPE=MyISAM;
 
 #
-# Table structure for table 'ZENTRACK_LOGS_ARCHIVED'
-#
-
-CREATE TABLE ZENTRACK_LOGS_ARCHIVED (
-  lid int(12) default NULL,
-  ticket_id int(12) default NULL,
-  user_id int(12) default NULL,
-  bin_id int(12) default NULL,
-  created int(12) default NULL,
-  action varchar(25) default NULL,
-  entry text
-) TYPE=MyISAM;
-
-#
 # Table structure for table 'ZENTRACK_PREFERENCES'
 #
 
@@ -92,6 +79,68 @@ CREATE TABLE ZENTRACK_PRIORITIES (
   priority int(4) default NULL,
   active int(1) default NULL,
   PRIMARY KEY (pid)
+) TYPE=MyISAM;
+
+#
+# Table structure for table 'ZENTRACK_REPORTS'
+#
+
+CREATE TABLE ZENTRACK_REPORTS (
+  report_id int(12) NOT NULL auto_increment,
+  report_name varchar(100) default NULL,
+  report_type varchar(25) default NULL,
+  date_selector varchar(25) default NULL,
+  date_value int(3) default NULL,
+  date_range varchar(12) default NULL,
+  date_low int(12) default NULL,
+  chart_title varchar(255) default NULL,
+  chart_subtitle varchar(255) default NULL,
+  chart_add_ttl int(1) default NULL,
+  chart_add_avg int(1) default NULL,
+  chart_type varchar(25) default NULL,
+  chart_options text,
+  data_set text,
+  chart_combine int(1) default NULL,
+  text_output int(1) default NULL,
+  show_data_vals int(1) default NULL,
+  PRIMARY KEY (report_id)
+) TYPE=MyISAM;
+
+#
+# Table structure for table 'ZENTRACK_REPORTS_INDEX'
+#
+
+CREATE TABLE ZENTRACK_REPORTS_INDEX (
+  report_id int(12) default NULL,
+  bid int(12) default NULL,
+  user_id int(12) default NULL
+) TYPE=MyISAM;
+
+#
+# Table structure for table 'ZENTRACK_REPORTS_TEMP'
+#
+
+CREATE TABLE ZENTRACK_REPORTS_TEMP (
+  report_id int(12) NOT NULL auto_increment,
+  report_name varchar(100) default NULL,
+  report_type varchar(25) default NULL,
+  date_selector varchar(25) default NULL,
+  date_value int(3) default NULL,
+  date_range varchar(12) default NULL,
+  date_low int(12) default NULL,
+  chart_title varchar(255) default NULL,
+  chart_subtitle varchar(255) default NULL,
+  chart_add_ttl int(1) default NULL,
+  chart_add_avg int(1) default NULL,
+  chart_type varchar(25) default NULL,
+  chart_options text,
+  data_set text,
+  created datetime NOT NULL default '0000-00-00 00:00:00',
+  chart_combine int(1) default NULL,
+  text_output int(1) default NULL,
+  show_data_vals int(1) default NULL,
+  PRIMARY KEY (report_id),
+  KEY tempreports_created(created)
 ) TYPE=MyISAM;
 
 #
@@ -159,25 +208,6 @@ CREATE TABLE ZENTRACK_TICKETS (
 ) TYPE=MyISAM;
 
 #
-# Table structure for table 'ZENTRACK_TICKETS_ARCHIVED'
-#
-
-CREATE TABLE ZENTRACK_TICKETS_ARCHIVED (
-  id int(12) default NULL,
-  title varchar(50) default NULL,
-  priority int(2) default NULL,
-  description text,
-  otime int(12) default NULL,
-  ctime int(12) default NULL,
-  type_id varchar(25) default NULL,
-  system_id int(12) default NULL,
-  relations varchar(255) default NULL,
-  project_id int(12) default NULL,
-  est_hours decimal(10,2) default NULL,
-  wkd_hours decimal(10,2) default NULL
-) TYPE=MyISAM;
-
-#
 # Table structure for table 'ZENTRACK_TRANSLATION_STRINGS'
 #
 
@@ -234,3 +264,4 @@ CREATE TABLE ZENTRACK_USERS (
   active int(1) default '1',
   PRIMARY KEY (user_id)
 ) TYPE=MyISAM;
+
