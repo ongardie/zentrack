@@ -78,7 +78,7 @@ if( is_array($tickets) ) {
       if( $est > 0 )
    $per = round($zen->percentWorked($est,$wkd),1)."%";
    ?>
-   <tr style="background:<?=$row?>;color:<?=$text?>">
+   <tr <?=$classxText?>>
    <td height="25" valign="middle" <?=$td_ttl?> <?=$txt?>>
     <a class="rowLink" style="color:<?=$text?>" 
       href="<?=$link?>?id=<?=$t["id"]?>"><?=$t["id"]?></a>
