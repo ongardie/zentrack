@@ -23,7 +23,7 @@
     <b>General Information:</b>
     <ul>
       <a href='<?=$helpUrl?>/about.php'>About <?=$zen->settings["system_name"]?></a>
-      <br><a href='<?=$helpUrl?>/gpl.php'>GPL Liscence Agreement</a>
+      <br><a href='<?=$helpUrl?>/gpl.php'>GPL License Agreement</a>
       <br>Overview, Capabilities and Limitations
       <br><a href='<?=$helpUrl?>/future.php'>Future Plans</a>
       <br><a href='http://sourceforge.net/projects/zentrack'>The zenTrack Project</a>

@@ -34,7 +34,8 @@
     $page_type = "ticket";
   }
   $page_mode = "system";
-  if( !$zen->actionApplicable( $id, $action, $login_id ) )
+  $tf_creator = (($action == "print"||$action == "email")&&$zen->checkCreator($login_id,$tid));
+  if( !$zen->actionApplicable( $id, $action, $login_id ) && !$tf_creator )
     header("Location: $rootUrl/ticket.php?id=$id&setmode=details");
 
   // set up page paremeters

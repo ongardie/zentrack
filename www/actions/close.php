@@ -25,7 +25,7 @@
 	}
      }
 
-     if( $ticket["type_id"] == $zen->projectTypeID() ) {
+     if( $zen->inProjectTypeIDs($ticket["type_id"]) ) {
 	$children = $zen->getProjectChildren($id,'id,type,status');
 	if( is_array($children) ) {
 	   foreach($children as $c) {

@@ -1,4 +1,12 @@
 <?
+
+if( !$zen->checkAccess($login_id,$ticket["bin_id"],"edit") ) {
+  $errs[] = "You cannot edit a ticket in the "
+    .$zen->getBinName($ticket["bin_id"])." bin.";
+} else if( !$zen->actionApplicable($id,"edit",$login_id) ) {
+  $errs[] = "Ticket $id cannot be edited in its current status";
+}
+
   $page_tile = "Commit Edited Ticket";
   $expand_admin = 1;
 

@@ -528,7 +528,7 @@ class zenTrack extends zen {
 			       "entry"    =>  $entry
 			       );
 	    if( $user_id ) {
-	       $logParams["user_id"] = $name;
+	       $logParams["user_id"] = $user_id;
 	    }
 	    $logParams["bin_id"] = $t["bin_id"];
 	    if( $hours )
@@ -561,7 +561,7 @@ class zenTrack extends zen {
 			       "entry"    =>  $entry
 			       );
 	    if( $user_id ) {
-	       $logParams["user_id"] = $name;
+	       $logParams["user_id"] = $user_id;
 	    }
 	    $logParams["bin_id"] = $t["bin_id"];	    
 	    if( $hours )
@@ -910,7 +910,7 @@ class zenTrack extends zen {
       if( !$params["action"] )
 	$params["action"] = "LOG";
       if( !$params["user_id"] )
-	$params["user_id"] = $this->settings["bot_name"];
+	$params["user_id"] = 0;//$this->settings["bot_name"];
       if( !$params["bin_id"] ) {
 	 $ticket = $this->get_ticket($id);
 	 $params["bin_id"] = $ticket["bin_id"];
@@ -1335,9 +1335,11 @@ class zenTrack extends zen {
       // role. Returns the user_id and their role in an
       // indexed array
       
-      $where = ($role)? " bin_id = $bin_id and notes = '$role'" : " bin_id = $bin_id";
-      $fields = ($role)? " user_id " : " user_id, role ";
-      $query = "SELECT $fields FROM ".$this->table_access." WHERE $where ORDER BY priority";
+      $where = ($role)? " bin_id = $bin_id and notes = '$role'" : 
+	" bin_id = $bin_id";
+      $fields = ($role)? " user_id " : " user_id, notes ";
+      $query = "SELECT $fields FROM ".$this->table_access
+	." WHERE $where ORDER BY priority";
       return( $this->db_queryIndexed($query) );
    }
 									
@@ -1346,8 +1348,10 @@ class zenTrack extends zen {
       // if bin_id is given, returns only roles for that specific bin
       // returns the bin_id and role in an indexed array
       
-      $where = ($bin_id)? " user_id = $user_id AND bin_id = $bin_id " : " user_id = $user_id ";
-      $query = "SELECT bin_id, role FROM ".$this->table_access." WHERE $where ORDER BY priority";
+      $where = ($bin_id)? " user_id = $user_id AND bin_id = $bin_id " : 
+	" user_id = $user_id ";
+      $query = "SELECT bin_id, notes FROM "
+	.$this->table_access." WHERE $where ORDER BY priority";
       return( $this->db_queryIndexed($query) );
    }
    
@@ -1858,6 +1862,15 @@ class zenTrack extends zen {
      $this->addDebug("getUsersBins()results",$adp,3);
      return $this->lastUsersBins;
    }
+
+   function checkCreator( $user_id, $ticket_id ) {
+     // checks to see if the $user is the creator the ticket
+     // they have special priviledges
+     if( !$this->settings["allow_cview"] )
+       return false;
+     $ticket = $this->get_ticket($ticket_id);
+     return( $user_id == $ticket["creator_id"] );       
+   }
    
    function checkAccess( $user_id, $bin_id, $action = '' ) {
       // takes the user_id, the bin_id and the action in
@@ -1876,7 +1889,9 @@ class zenTrack extends zen {
 		       "reject"  =>  $this->settings["level_sup"],
 		       "reopen"  =>  $this->settings["level_sup"],
 		       "edit"    =>  $this->settings["level_edit"],
-		       "upload"  =>  $this->settings["level_user"]
+		       "upload"  =>  $this->settings["level_user"],
+		       "print"   =>  $this->settings["level_view"],
+		       "email"   =>  $this->settings["level_view"]
 		       );
       $level = $actions["$action"];
       if( !strlen($level) ) {
@@ -1924,7 +1939,9 @@ class zenTrack extends zen {
 		       "relate"  => array( 1, 1, 0,                       0 ),
 		       "reopen"  => array( 0, 1, array('CLOSED'),         0 ),
 		       "edit"    => array( 0, 1, array('OPEN','PENDING'), 0 ),
-		       "upload"  => array( 1, 1, 0,                       1 )		       
+		       "upload"  => array( 1, 1, 0,                       1 ),
+		       "print"   => array( 0, 1, 0,                       0 ),
+		       "email"   => array( 0, 1, 0,                       0 )
 		       );
       $n = "allow_$action";
       if( $this->settings["$n"] && $this->settings["$n"] != "on" )
@@ -1955,8 +1972,10 @@ class zenTrack extends zen {
 	 }	 
 	 if( $ticket["user_id"] != $user_id ) {
 	    if( !$c[3] 
-	       || ( strlen($access["$bin_id"]) && $access["bin_id"] < $this->settings["level_super"] )
-	       || ( !strlen($access["$bin_id"]) && $user["access_level"] < $this->settings["level_super"])
+	       || ( strlen($access["$bin_id"]) 
+		    && $access["bin_id"] < $this->settings["level_super"] )
+	       || ( !strlen($access["$bin_id"]) 
+		    && $user["access_level"] < $this->settings["level_super"])
 	       )
 	       return false;
 	 }
