@@ -1127,7 +1127,7 @@ class zenTrack extends zen {
        else {
           $fn = $f['field_name'];
        }
-       $possibleValues[$fn] = $this->getValsForTicketField( $fn, $validBins);
+       $possibleValues[$fn] = $this->getValsForTicketField( $fn, $validBins );
      }
      
      // blow up and burn in fiery death

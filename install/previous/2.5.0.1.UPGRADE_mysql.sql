@@ -182,6 +182,8 @@ CREATE TABLE ZENTRACK_RELATED_CONTACTS (
 );
 
 INSERT INTO ZENTRACK_VARFIELD_IDX (field_name,       field_label,       sort_order) 
+                           VALUES ('custom_menu1', 'Custom Menu 2', 1         );
+INSERT INTO ZENTRACK_VARFIELD_IDX (field_name,       field_label,       sort_order) 
                            VALUES ('custom_menu2', 'Custom Menu 2', 1         );
 
 INSERT INTO ZENTRACK_VARFIELD_IDX (field_name,       field_label,       sort_order) 
