@@ -21,7 +21,7 @@
     	<?=stripslashes($project["title"])?></a></td>
     <? } ?>
     <td class='altCellInv'>&nbsp;</td>
-    <td class='altCellInv'><?=($start_date)?$zen->showDate($start_date):"n/a"?></td>  
+    <td class='altCellInv'><?=($start_date)?$zen->showDateTime($start_date):"n/a"?></td>  
   </tr>
   <? if( $project_id ) { ?>
   <tr>

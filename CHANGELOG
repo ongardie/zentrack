@@ -11,6 +11,19 @@ and user experience, internationalization, platform and database
 abstraction, and endless possibilities for project expansion. 
 --------------------
 
+2004-11-19, cfalonso
+  Allow start_date and deadline to have date and time (TK 161)
+    - zentrack_2/includes/templates/newProjectForm.php 1.29
+    - zentrack_2/includes/templates/newTicketForm.php 1.36
+    - zentrack_2/install/UPGRADE_mssqlserver.sql 1.25
+    - zentrack_2/install/UPGRADE_mysql.sql 1.33
+    - zentrack_2/install/UPGRADE_oracle.sql 1.32
+    - zentrack_2/install/UPGRADE_postgres.sql 1.24
+    - zentrack_2/install/seed_mssqlserver.sql 1.29
+    - zentrack_2/install/seed_mysql.sql 1.40
+    - zentrack_2/install/seed_oracle.sql 1.35
+    - zentrack_2/install/seed_postgres.sql 1.31
+
 2004-11-16, cfalonso
   Added ticket properties to custom screen (TK 150)
     - zentrack_2/includes/zenTrack.class,v  1.164

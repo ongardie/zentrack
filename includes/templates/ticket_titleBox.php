@@ -20,7 +20,7 @@
 	  </tr>
 	  <tr>
 	   <td class="small"><?=$zen->showTimeElapsed($otime,$ctime,1,0)?></td>  
-	   <td class="small"><?=$zen->showDate($otime)?></td>
+	   <td class="small"><?=$zen->showDateTime($otime)?></td>
 	   <td class="small"><?=($deadline)?$zen->showDateTime($deadline):"n/a"?></td>
 	  </tr>
 	  <tr>
