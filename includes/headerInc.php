@@ -49,6 +49,8 @@
   **  CLASS OBJECTS
   */
 
+  // if these change, they will need to be changed
+  // in egate_utils.php as well!
   include_once("$libDir/translator.class");
   include_once("$libDir/zenTrack.class");
   include_once("$libDir/zenTemplate.class");
@@ -64,6 +66,7 @@
   }
 
   //Create the initialization array for the translator object
+  //this data set also appears in the egate_utils.php script
   $translator_init = array(
      'domain' => 'translator',
      'path' => "$libDir/translations",

@@ -243,7 +243,8 @@ class zenTrack extends zen {
     // returns a user's information by 
     // the login account
     $login = $this->checkSlashes($login);
-    $query = "SELECT * FROM ".$this->table_users." WHERE login = '$login'";
+    $query = "SELECT * FROM ".$this->table_users." WHERE login = $login";
+    egate_log("query: $query",2);//debug
     return( $this->db_quickIndexed($query) );
   }
 

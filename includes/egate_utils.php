@@ -163,6 +163,14 @@
   // include the zen objects
   include_once("$libDir/zenTrack.class");
   include_once("$libDir/zenTemplate.class");
+  include_once("$libDir/translator.class");
+  //Create the initialization array for the translator object
+  $translator_init = array(
+     'domain' => 'translator',
+     'path' => "$libDir/translations",
+     'locale' => $login_language
+  );
+  tr($translator_init);
   $zen = new zenTrack( $configFile );
 
   // include the mail decoding functions
