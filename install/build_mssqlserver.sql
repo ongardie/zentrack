@@ -234,5 +234,79 @@ CREATE TABLE ZENTRACK_REPORTS_TEMP (
 --  KEY tempreports_created(created) 
 );
 
-create nonclustered index tempreports_created on ZENTRACK_REPORTS_TEMP(created) ;
-create nonclustered index userprefs_user on ZENTRACK_PREFERENCES(user_id);
+
+CREATE TABLE ZENTRACK_BEHAVIOR (
+  behavior_id NUMERIC(12) IDENTITY(1,1) NOT NULL,
+  behavior_name VARCHAR(100),
+  group_id NUMERIC(12) NOT NULL,
+  is_enabled NUMERIC(1),
+  sort_order NUMERIC(3),
+  field_name varchar(100),
+  match_all NUMERIC(1),
+  PRIMARY KEY (behavior_id)
+);
+
+
+CREATE TABLE ZENTRACK_BEHAVIOR_DETAIL (
+  behavior_id NUMERIC(12) NOT NULL,
+  field_name VARCHAR(50),
+  field_operator VARCHAR(2),
+  field_value VARCHAR(255),
+  sort_order NUMERIC(3)
+);
+
+CREATE TABLE ZENTRACK_GROUP (
+  group_id NUMERIC(12) IDENTITY(1,1) NOT NULL,
+  table_name VARCHAR(50) NOT NULL,
+  group_name VARCHAR(100),
+  descript VARCHAR(255),
+  PRIMARY KEY (group_id)
+);
+
+CREATE TABLE ZENTRACK_GROUP_DETAIL (
+  group_id NUMERIC(12) NOT NULL,
+  field_value VARCHAR(255),
+  sort_order NUMERIC(3)
+);
+
+
+-- CHANGES HERE MUST BE REFLECTED IN the values for ZENTRACK_VARFIELD_IDX values
+CREATE TABLE ZENTRACK_VARFIELD (
+  ticket_id NUMERIC(12) NOT NULL,
+  custom_menu1 VARCHAR(255),
+  custom_menu2 VARCHAR(255),
+  custom_string1 VARCHAR(255),
+  custom_string2 VARCHAR(255),
+  custom_number1 NUMERIC(20),
+  custom_number2 NUMERIC(20),
+  custom_date1 NUMERIC(12),
+  custom_date2 NUMERIC(12),
+  custom_text1 TEXT
+);
+
+
+CREATE TABLE ZENTRACK_VARFIELD_IDX (
+  field_name VARCHAR(25) NOT NULL,
+  field_label VARCHAR(50),
+  field_value VARCHAR(200),
+  sort_order NUMERIC(3),
+  is_required NUMERIC(1) default 0,
+  use_for_project NUMERIC(1) default 0, 
+  use_for_ticket NUMERIC(1) default 0,
+  show_in_search NUMERIC(1) default 0,
+  show_in_list NUMERIC(1) default 0,
+  show_in_custom NUMERIC(1) default 0,
+  show_in_detail NUMERIC(1) default 0,
+  show_in_new    NUMERIC(1) default 0,
+  js_validation TEXT
+);
+
+CREATE NONCLUSTERED INDEX tempreports_created ON ZENTRACK_REPORTS_TEMP(created) ;
+CREATE NONCLUSTERED INDEX userprefs_user ON ZENTRACK_PREFERENCES(user_id);
+CREATE NONCLUSTERED INDEX group_idx ON ZENTRACK_GROUP (group_name);
+CREATE NONCLUSTERED INDEX grp_dtl_idx ON ZENTRACK_GROUP_DETAIL (group_id, sort_order);
+CREATE NONCLUSTERED INDEX varfield_tid_idx ON ZENTRACK_VARFIELD (ticket_id);
+CREATE NONCLUSTERED INDEX behavior_idx ON ZENTRACK_BEHAVIOR (is_enabled);
+CREATE NONCLUSTERED INDEX bdtl_idx ON ZENTRACK_BEHAVIOR_DETAIL (behavior_id);
+CREATE NONCLUSTERED INDEX var_idx_idx ON ZENTRACK_VARFIELD_IDX (sort_order, field_name);
+

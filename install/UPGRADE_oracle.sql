@@ -65,6 +65,7 @@ CREATE TABLE ZENTRACK_VARFIELD_IDX (
 );
 
 create sequence behavior_id_seq       start with 1001 nocache;
+create sequence group_id_seq          start with 1001 nocache;
 
 CREATE INDEX group_idx ON ZENTRACK_GROUP (group_name);
 CREATE INDEX grp_dtl_idx ON ZENTRACK_GROUP_DETAIL (group_id, sort_order);
@@ -102,3 +103,8 @@ INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (97,
 
 -- CREATE AN ENTRY FOR EACH EXISTING TICKET IN THE VARFIELDS TABLE
 INSERT INTO ZENTRACK_VARFIELD (ticket_id) SELECT id FROM ZENTRACK_TICKETS;
+
+-- Change the version number
+UPDATE ZENTRACK_SETTINGS SET value='2.5' WHERE setting_id=74;
+
+
