@@ -3,7 +3,7 @@
   **  Action: edit ticket
   */
   include_once("../header.php");
-  $page_title = tr("Agreement #?", $id);
+  $page_title = tr("Agreement #?", array($id));
   $expand_agreement = 1;
   
   
