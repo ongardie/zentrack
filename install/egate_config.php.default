@@ -83,4 +83,45 @@
   // $smtp_string = "{".$smtp_host.":".$smtp_port."/pop3/notls}INBOX";
   // $smtp_string = "{".$smtp_host.":".$smtp_port."/notls}INBOX";
 
+
+  /**
+   * You probably don't need to change this, unless you specifically want to disallow some fields
+   * from being settable.
+   */
+  
+  // allows users to customize the ticket properties by putting 'field:value' at the beginning of the email
+  // this is only used by the egate_create script (not the admin script)
+  $egate_create_overrides = 1;
+
+  // if $egate_create_overrides is on, this will determine which fields can be set
+  // this list also includes valid aliases.
+  //
+  // YOU CANNOT ADD ITEMS TO THIS ARRAY, and you should probably never edit it, 
+  // other than to comment out fields which you do not want the user to override
+  $egate_create_fields = array(
+			      "parent",
+			      "project",                //project name or id
+			      "bin",                    //bin name or id
+			      "priority",               //priority name or id
+			      "type",                   //type name or id
+                              "system",                 //system name or id
+			      "owner",                  //owner name, email, or id
+			      "start",
+			      "start date",
+			      "start_date",             //start date (any date format)
+			      "deadline",               //deadline for completion (any date format)
+			      "worked", 
+			      "wd_hours", 
+			      "hours worked",           //the number of hours worked so far (integer)
+			      "est_hours", 
+			      "estimated hours",
+			      "estimated",              //estimated hours (integer)
+			      "testing",
+			      "testing required",
+			      "testing_required",       //is testing required (1=yes)
+			      "approval"
+			      "approval required",
+			      "approval_required"       //is approval required (1=yes)
+  );
+
 ?>

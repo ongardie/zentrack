@@ -13,6 +13,12 @@ abstraction, and endless possibilities for project expansion.
 
 ----- VERSION 2.5.0.3 (development) -----
 
+2005-01-23, KATO
+  Added more configurability to the set properties
+  feature in egate_create (config file updated)
+
+  Updated install, help, and upgrade docs
+
 2005-01-22, kato
   Added ability to set properties(such as bin) via
   simple text in egate_create.php

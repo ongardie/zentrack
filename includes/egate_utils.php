@@ -516,6 +516,7 @@
       $v = trim($v);
       switch(strtolower($k)) {
       case "parent":
+      case "project":
 	if( strlen($v) ) 
 	  $vals["project_id"] = get_ticket_id($v);
 	break;
@@ -548,6 +549,8 @@
       case "priority":
 	$vals["priority"] = get_type_id("priorities",$v);
 	break;
+      case "start":
+      case "start_date":
       case "start date":
 	if( strlen($v) ) {
 	  $vals["start_date"] = strtotime($v);
@@ -558,7 +561,22 @@
 	  $vals["deadline"] = strtotime($v);
 	}
 	break;
+      case "worked":
+      case "wkd_hours":
+      case "hours worked":
+	if( strlen($v) ) {
+	  $vals['wkd_hours'] = $zen->checkNum($v);
+	}
+	break;
+      case "est_hours":
+      case "estimated hours":
+      case "estimated":
+	if( strlen($v) ) {
+	  $vals['est_hours'] = $zen->checkNum($v);
+	}
+      case "testing":
       case "testing required":
+      case "testing_required":
 	{
 	  if( $v == 1 )
 	    $vals["tested"] = 1;
@@ -567,6 +585,8 @@
 	}
 	break;
       case "approval required":
+      case "approval_required":
+      case "approval":
 	{
 	  if( $v == 1 )
 	    $vals["approved"] = 1;
@@ -1212,6 +1232,8 @@
     global $zen;
     global $egate_user;
     global $egate_default_options;
+    global $egate_create_fields;
+    global $egate_create_overrides;
 
     // decode the data
     $params = decode_contents($input);
@@ -1223,13 +1245,22 @@
     $body = $egate_default_options;
     $body["title"] = $params->headers["subject"];
     $body["details"] = trim($params->body);
-    $i=0;
-    while( pregi_match( '/^ *(bin|type|priority|system|approval required|testing required) *: *(.+)/', $body['details'], $matches) && $i < 1000 ) {
-      $body['details'] = trim(preg_replace('/^(bin|type|priority):(.*)/', '', $body['details']));
-      $body["{$matches[1]}"] = trim($matches[2]);
-      $i++;
-    }
     $body["creator_id"] = $egate_user["user_id"];
+
+    // add in overrides, if the user has specified any by putting
+    // 'field:value' entries at the top of the message body
+    if( $egate_create_overrides == 1 && count($egate_create_fields) > 0 ) {
+      $i=0;
+      $match = '/^ *('.join('|',$egate_create_fields).') *: *(.+)/';
+      while( pregi_match( $match, $body['details'], $matches) && $i < 1000 ) {
+	$body["{$matches[1]}"] = trim($matches[2]);
+	$body['details'] = trim(preg_replace($match, '', $body['details']));
+	$i++;
+      }
+    }
+
+    // determine who sent the email and make sure it has
+    // a return address
     list($name,$email) = get_name_and_email($params);
     $user_id = find_user_id($name,$email);
 

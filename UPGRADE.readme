@@ -1,7 +1,9 @@
 
-UPGRADE INSTRUCTIONS FOR 2.5.0.2
+UPGRADE INSTRUCTIONS FOR VERSION 2.5.0.3
 
+--------------------
 REQUIREMENTS
+--------------------
 
     PHP: 4.3 or greater
 
@@ -13,42 +15,130 @@ REQUIREMENTS
     GD: [optional] 2.0 or higher needed to use reports
     Freetype libraray required to view reports
 
+
+  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  !!!! ALWAYS MAKE BACKUPS          !!!!
+  !!!!    www/header.php            !!!!
+  !!!!    includes/egate_config.php !!!!
+  !!!!    database data             !!!!
+  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+--------------------
+UPGRADE FROM 2.5.0.2
+--------------------
+  
+  !!!!!!!!!!!!!!!!!!!!!!!!!!!
+  !!! VERY IMPORTANT NOTE !!!
+  !!!!!!!!!!!!!!!!!!!!!!!!!!!
+  
+  As of 2.5.0.2, there are now two ways to upgrade.  There
+  is a patch and a manual upgrade approach.  Please select
+  the method that meets your needs.
+
+  QUICK UPGRADE:
+  --------------
+    
+    -> Windows Users:  Unless you have and understand cygwin, use the manual upgrade.
+    -> '/web/zentrack' refers to your current ZT installation
+    -> '/tmp/zentrack_2.5.0.3' refers to your newly uncompressed install files. 
+    
+    1. Make backups of your files and database by whatever means you see fit:
+       (perhaps 'mysqldump zentrack > db_backup.sql' and 'tar -zcvf file_backup.tar.gz /web/zentrack')
+
+    2. Apply the patch:
+       cd /web/zentrack
+       patch --dry-run -p2 < /tmp/zentrack_2.5.0.3/install/2-5-0-3_upgrade.patch (test it first)
+       patch -p2 < /tmp/zentrack_2.5.0.3/install/2-5-0-3_upgrade.patch
+
+    3. Upgrade database:
+       Run the sql file install/UPGRADE_[yourdb].sql file using your favorite
+       sql interface (you may also open the file and run the statements directly if
+       this is easier for you).
+
+    4. See 'After Upgrade' below
+
+    ?. If you modified the directory structure during your installion (renamed or moved
+       your www/ or includes/ folders) you can make the patch work by simulating this structure:
+
+        For instance, if your directory structure looks like this:
+          /web/my_website/htdocs/zt (location of my www/ folder)
+          /usr/lib/zentrack/zt_includes (location of my includes/ folder)
+
+        Then you could use these links to make the patch work as expected:
+          mkdir /tmp/zentrack
+          ln -s /web/my_website/htdocs/zt /tmp/zentrack/www
+          ln -s /usr/lib/zentrack/zt_includes /tmp/zentrack/includes
+
+        Then run your patch as follows:
+          cd /tmp/zentrack
+          patch --dry-run -p2 < /tmp/zentrack_2.5.0.3/install/2-5-0-3_upgrade.patch (test it first)
+          patch -p2 < /tmp/zentrack_2.5.0.3/install/2-5-0-3_upgrade.patch
+    
+
+  MANUAL UPGRADE:
+  ---------------
+
+    -> Update includes/egate_config.php manually, it has changed, do not copy your old config file!
+
+    1. Make backups of your files and database by whatever means you see fit:
+       (perhaps 'mysqldump zentrack > db_backup.sql' and 'tar -zcvf file_backup.tar.gz /web/zentrack')
+
+    2. Overwrite old files:
+
+        Replace your zentrack directory structure with the included files: 
+          includes/ should overwrite your existing includes,
+          www/ should overwrite your existing www/
+
+    3. Set directory permissions (probably only necessary on unix)
+
+        chmod 777 includes/attachments (if using attachments)
+        chmod 777 includes/logs
+        chmod 777 includes/cache
+        chmod 777 includes/translations
+        chmod 755 includes/egate.php
+        chmod 755 includes/egate_create.php 
+
+    4. Upgrade your database:
+       Run the sql file install/UPGRADE_[yourdb].sql file using your favorite
+       sql interface (you may also open the file and run the statements directly if
+       this is easier for you).
+
+  AFTER UPGRADE:
+  --------------
+
+    Speak Up!
+       Let us know you are using zentrack, meet other users, 
+       and send us feedback on your install: http://www.zentrack.net
+
+    Consider a donation to the Open Source Community:
+       The developers spend a lot of their lives developing this product.  If you like it,
+       give something back to the open source community!  Might I recomment starting here:
+       http://sourceforge.net/project/project_donations.php?group_id=22724
+
+--------------------
 UPGRADE FROM 2.5.0.1
-
-  Be sure to BACKUP CONFIG FILES:
-      www/header.php
-      includes/egate_config.php
-
-  REPLACE Your entire zentrack directory structure with the
-  included files: includes/ should overwrite your existing includes,
-  www/ should overwrite your existing www/
+--------------------
 
   You must update header.php manually, you may not copy over your old
-  header.php file to this new build.
+  header.php file!
 
-  Set directory permissions (probably only necessary on unix)
-     -chmod 777 includes/attachments (if using attachments)
-     -chmod 777 includes/logs
-     -chmod 777 includes/cache
-     -chmod 777 includes/translations
-     -chmod 755 includes/egate.php
-     -chmod 755 includes/egate_create.php 
-
-  Run the sql file install/UPGRADE_[yourdb].sql file using your favorite
+  Run the sql file install/previous/2.5.0.2.UPGRADE_[yourdb].sql file using your favorite
   sql interface (you can open the file and run the statements directly if
-  this is easier for you).  This will upgrade you to 2.5.0.2 database.  
+  this is easier for you).  This will upgrade you to 2.5.0.2 database.
+
+  Follow instructions for 2.5.0.2
  
+--------------------
 UPGRADE FROM 2.5.0
+--------------------
 
   Follow instructions for 2.5.0.1 
 
   (2.5.0.1 contains only bug fixes from version 2.5.0, they are essentially the same)
 
+--------------------
 UPGRADE FROM 2.4.4
-
-  Be sure to BACKUP CONFIG FILES:
-      www/header.php
-      includes/egate_config.php
+--------------------
 
   REPLACE Your entire zentrack directory structure with the
   included files: includes/ should overwrite your existing includes,
@@ -69,23 +159,23 @@ UPGRADE FROM 2.4.4
 
   Follow install instructions for 2.5.0  
   
+--------------------
 UPGRADE FROM 2.4.3
+--------------------
   
   Follow install instructions for 2.4.4
 
   (Because there are no database changes between 2.4.3 and 2.4.4, the
   install procedure for 2.4.3 is exactly the same as 2.4.4.)
 
+--------------------
 UPGRADE FROM 2.4.2
+--------------------
 
   IMPORTANT USAGE NOTE:
     The ability to create new projects is now controlled by a separate access level
     than ticket creation, see level_create and level_create_proj in the admin->config menu
     for more details
-
-  Be sure to BACKUP CONFIG FILES:
-      www/header.php
-      includes/egate_config.php
 
   Run the sql file install/previous/2.4.3.UPGRADE_[yourdb].sql file using your favorite
   sql interface (you can open the file and run the statements directly if
@@ -93,7 +183,9 @@ UPGRADE FROM 2.4.2
 
   Follow upgrade instructions for version 2.4.3
 
+--------------------
 UPGRADE FROM EALIER THAN 2.4.2
+--------------------
 
   Please contact the ZT Team so that they can assist you in importing
   your existing data from past versions.

@@ -1,18 +1,15 @@
 
-  THIS IS A RELEASE CANDIDATE!!
-  This release probably has bugs.  If you aren't interested in
-  helping us test this new RC, then we suggest that you wait
-  for the live release in a couple weeks.  If you cannot wait,
-  then download the last live release instead.
-
-
   Welcome to zenTrack!
 
-  If you checked this version out from the CVS repository you will need
-	run ./setup_from_cvs from the zentrack/ install directory, or
-        run setup_from_cvs.cmd if you are on windows
+  If you checked this version out from the CVS repository you will need to
+  run ./setup_from_cvs from the zentrack/ install directory, or
+  run setup_from_cvs.cmd if you are on windows
 
+  If that paragraph didn't make sense to you, you can probably ignore it.
+ 
+  --------------
   REQUIREMENTS
+  --------------
     Basic Install
        PHP 4.3 or greater
        Mysql, Oracle, Postgres, or SqlServer
@@ -28,48 +25,67 @@
        GD >= 2.0
        Freetype support enabled
 
+  --------------
   PHP.INI CONFIGURATION NOTES (for newbies)
+  --------------
     - Make sure you turn off notices in your php.ini file: 
         error_reporting = E_ALL & ~E_NOTICE
     - Insure that you have set session.save_path to a valid directory
     - Ensure that short_open_tag = On
 
+  --------------
   QUICK AND DIRTY INSTALL INSTRUCTIONS:
-     -if installing from cvs, run setup_from_cvs from the install directory
-     -place www/ in the htdocs/wwwroot directory tree
-     -place includes/ in a non-httpd directory (for security)
-     
-     -configure the header file:
-   	www/header.php
-	   look through this file carefully
-	   you must configure $libDir and $rootUrl or nothing will work
+  --------------
+     0. CVS Installs:
+        - If you did not check this out from CVS (or don't know what that means)
+          then skip this step!  r
+        - run ./setup_from_cvs (or setup_from_cvs.cmd)
+          from the root directory
 
-     -build the database
-        create a database instance and a user with access to this DB
-        locate install/build_[yourdb].sql and run in SQL interface
+     1. Place files where you want them:
+        - place www/ in the htdocs/wwwroot directory tree
+        - place includes/ in a non-httpd directory (for security)
+     
+     2. Configure the header file:
+   	- open www/header.php
+	- look through this file carefully
+	- you must configure $libDir and $rootUrl or nothing will work
+
+     3. Build the database:
+        - create a database instance and a user with access to this DB
+        - locate install/build_[yourdb].sql and run in SQL interface
           this will create your db tables
-        locate install/seed_[yourdb].sql and run in SQL interface
+        - locate install/seed_[yourdb].sql and run in SQL interface
           this will populate your db
 	
-     -chmod 777 includes/attachments (if using attachments)
-     -chmod 777 includes/logs
-     -chmod 777 includes/cache
-     -chmod 777 includes/translations
+     4. Check permissions:
+        - chmod 777 includes/attachments (if using attachments)
+        - chmod 777 includes/logs
+        - chmod 777 includes/cache
+        - chmod 777 includes/translations
      
-     -log in as Administrator/Administrator and configure the system to taste.
-     -a guest account exists as Guest/Guest and a user account as User/User.
+     5. Log in and configure:
+        - log in as Administrator/Administrator and configure the system to taste.
+        - a guest account exists as Guest/Guest, you may wish to delete/edit permissions
+        - a user account exists as User/User, you may wish to delete/edit permissions
 
-     -if you intend to use the email gateway, please read the online docs
+     6. If you intend to use the email gateway, please read the online docs
         which give a thorough overview of how to set this up:
         you must have some admin and smtp knowledge to do this (it is not trivial!)
-        http://zendocs.phpzen.net/bin/view/Zentrack/ManualInstallation#Setting_Up_Email_Gateway
+        (you can find the docs through the home page:  http://www.zentrack.net)
  
-     -please let us know!  
-        send an email or use our feedback page:  http://www.zentrack.net/feedback
-        and tell us what platform your install was successful on.  
-        We can also add your company/url to our user list upon request.
-   
+     7. Speak Up!
+        Let us know you are using zentrack, meet other users, 
+        and send us feedback on your install: http://www.zentrack.net
+
+     8. Consider a donation to the Open Source Community:
+        The developers spend a lot of their lives developing this product.  If you like it,
+        give something back to the open source community!  Might I recomment starting here:
+        http://sourceforge.net/project/project_donations.php?group_id=22724
+
+  --------------
   TROUBLESHOOTING
+  --------------
 
     SUPPORT
       -Check the HELP file in this directory for more info about obtaining support.
@@ -118,9 +134,6 @@
 
     POSTGRES USERS
       -Please report any postgres nuisances... we just released postgres in 2.4
-
-    SQL SERVER USERS
-      - Submit any problems and we will correct.  Fairly well tested in SQL Server
 
     OTHER DATABASE USERS
       -We can support, upon request, DB2, Sybase, or other

@@ -4,8 +4,9 @@
   See INSTALL.README for install instructions.
 
   Documentation
-    Docs - http://docs.zentrack.net
-    FAQ - http://www.zentrack.net
+    Documentation is available on the website:
+    http://www.zentrack.net/modules/documentation
+    http://docs.zentrack.net
 	
   Troubleshooting:
         Open includes/configVars.php and set $this->debug = 1,2, or 3;  
@@ -21,17 +22,12 @@
                 far, THEN YOU MUST SUBMIT YOUR VERSION INFO for zenTrack, your OS,
                 your Browser, and your Server, so that we can re-create the error.
 
+    website - The zentrack website is a feature-rich place to seek help.  Check out
+             the community forums!  http://www.zentrack.net
 
     mailing list - zentrack-users is a great place to get help.  Answers usually
              within an hour.  http://sourceforge.net/mail/?group_id=22724, never
              ignored.
-
-    website - Registered testers and people we like can reach the zentrack team 
-              by visiting the website: http://www.zentrack.net/feedback/.  Note
-              that you should try the mailing list first if you are not a registered
-              tester.
-
-
 
 
 
