@@ -18,12 +18,25 @@
 class ZenParmList extends ZenList {
 
   /**
-   * CONSTRUCTOR
+   * CONSTRUCTOR: Prepares the parm list by collecting a list of ids which are
+   * relevant to this list and loading the data for each parm.
    */
   function ZenParmList( $setId ) {
-    //todo
-    //todo use $setId
+    ZenUtils::prep("ZenParm");
     $this->ZenList();
+
+    // retrieve ids of parms belonging to this list
+    $query = Zen::getNewQuery();
+    $query->table('PARM_SET');
+    $query->match('parm_set_id',$setId);
+    $query->sort('parm_pri');
+    $parmIds = $query->list('parm_id');
+
+    // load data for the relevant ids
+    // and make sure that the data is sorted
+    // in the order of this array
+    $this->criteriaIdArray($parmIds, true);
+    $this->load();
   }
 
 }

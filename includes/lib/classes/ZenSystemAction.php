@@ -36,9 +36,13 @@ class ZenSystemAction extends Zen {
   function loadUrl( $newUrl, $args ) { }
 
   /**
-   * STATIC: Create an entry into a standard data type table (ticket, user, log, priority, etc)
+   * STATIC: Create an entry into a standard data type table 
+   * (ticket, user, log, priority, etc)
    *
-   * @static
+   * This method should check each value of args against the meta data
+   * for the given table and ignore arguments which don't correspond
+   * to field names (because the action args may include other values too)
+   *
    * @param string $table the database table to insert to
    * @param array $args the values to be inserted
    */
@@ -47,7 +51,11 @@ class ZenSystemAction extends Zen {
   /**
    * STATIC: Edit the values of a row of data in the database.
    *
-   * @static
+   * This method should check each value of $vals against the
+   * meta data for this table and discard any arguments which
+   * do not correspond to fields in the table. (extra arguments
+   * might exist)
+   * 
    * @param Array $vals mapped (String)field => (mixed)value
    * @param String $table is the tablename without prefix (prefix is defined in zen.ini->db->db_prefix)
    * @param mixed $id is the value of the primary key for this row or the unique field defined by $keyname
@@ -74,7 +82,6 @@ class ZenSystemAction extends Zen {
   /**
    * STATIC: Delete an entry from a standard data type table
    *
-   * @static
    * @param string $table the database table to insert to
    * @param int $rowid the primary key for this table
    */
@@ -85,7 +92,6 @@ class ZenSystemAction extends Zen {
    * is launched which is deemed appropriate to notify users who are
    * monitoring this ticket.
    *
-   * @static
    * @param integer $ticket_id for the ticket modified
    * @param integer $action_id the action which occurred
    * @param integer $user_id the user performing the event
@@ -103,7 +109,6 @@ class ZenSystemAction extends Zen {
   /**
    * STATIC: Send an email message   
    *
-   * @static
    * @param array $to contains valid email addresses for recipients of email
    * @param string $subject contains the subject of the email
    * @param string $from contains the sender
@@ -131,7 +136,6 @@ class ZenSystemAction extends Zen {
    * can be used by the action calling this, and no validation is done
    * by this method.
    *
-   * @static
    * @param string $userFxn the function to run
    * @param array $args contains any arguments to pass to the method
    * @return mixed whatever is returned by the user function
@@ -145,10 +149,9 @@ class ZenSystemAction extends Zen {
    *
    * Note that this script runs with permissions of the 
    * web server user.  Any action this script will take 
-   * must be allowed to the user, and this script
-   * must be executable by the user.
+   * must be allowed to the server process(nobody/apache), 
+   * and this script must be executable by the server process.
    *
-   * @static
    * @param string $script the script/command to execute
    * @param array $args contains (String)argument values to be passed
    * @return mixed if the script returns a value, this value is returned here too
@@ -160,13 +163,12 @@ class ZenSystemAction extends Zen {
   /**
    * STATIC: Executes another user defined action
    *
-   * @static
    * @param integer $action_id id of action to run
    * @param array $args any arguments to pass to the action
    * @param ZenActionList $list if provided, will be used to create action (for db efficiency)
    * @return the return value of the action
    */
-  function runAction( $action_id, $args = null, $list = null ) {
+  function runAction( $action_id, $list = null ) {
     $act = new ZenAction($action_id);
     $act->activate($args);
   }
@@ -174,7 +176,6 @@ class ZenSystemAction extends Zen {
   /**
    * STATIC: Runs a helper script
    *
-   * @static
    * @param string $name name of helper.. it will translate to lib/helpers/action_$name.php
    * @param array $args contains (String)argument values to be passed to helper
    * @return mixed value returned by helper

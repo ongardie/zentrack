@@ -276,7 +276,14 @@ class ZenList extends Zen {
    */
   function _makeObject( $id ) {
     $n = $this->getDataType();
-    return new $n( $id, $this );
+    if( class_exists($n) ) {
+      return new $n( $id, $this );
+    }
+    else {
+      $obj = new ZenDataType();
+      $obj->loadAbstract($id, $this);
+      return $obj;
+    }
   }
 
   /**

@@ -52,6 +52,13 @@ class ZenParm extends ZenDataType {
   }
 
   /**
+   * Return the name of this param
+   */
+  function name() {
+    return $this->getField('parm_name');
+  }
+
+  /**
    * Load data for this parm
    */
   function _load() {
@@ -77,6 +84,10 @@ class ZenParm extends ZenDataType {
     case "form":
       $this->_val = ZenUtils::getFormData($p2);
       break;
+    case "formfields":
+      $this->_val = array();
+      $t = Zen::getMetaData($p1);
+      $this->_val = $t->listFields();
     case "helper":
       $this->_val = ZenUtils::runHelper($p2, array("parm"=>$this));
       break;

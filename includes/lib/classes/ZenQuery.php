@@ -445,6 +445,23 @@ class ZenQuery extends Zen {
   }
 
   /**
+   * Performs a select statement and returns a simple (non-indexed)array containing one 
+   * value for each row selected.
+   *
+   * @param string $cacheTime the amount of time to leave query in the cache
+   * @param string $field is the field to be selected
+   */
+  function list($field, $cacheTime = null) {
+    $this->_fields = array($field);
+    $vals = $this->select($cacheTime, false);
+    $vars = array();
+    foreach($vals as $v) {
+      $vars[] = $v[0];
+    }
+    return $vars;
+  }
+
+  /**
    * Peforms an insert with the given criteria.
    *
    * Note that this only works properly properly 

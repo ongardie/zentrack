@@ -337,7 +337,7 @@ class Zen {
    *
    * This function caches meta data for the life of the page using $GLOBALS
    *
-   * @param mixed $class a $this reference or a string containing the classname
+   * @param mixed $class a $this reference or a string containing the classname or table name
    * @return ZenMetaTable object
    */
   function getMetaData( $class ) {
