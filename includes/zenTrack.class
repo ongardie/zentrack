@@ -811,7 +811,7 @@ class zenTrack extends zen {
     else if( $this->settings["email_pending"] == "on" ) {
       $recipients = $this->get_notify_recipients($id);
       // make sure testers get notification      
-      $vals = $this->get_bin_role_emails($t['bin_id'], $this->getRoleId("tester"));
+      $vals = $this->fetch_bin_role_emails($t['bin_id'], $this->getRoleId("tester"));
       $this->checkIncludedRecipients($recipients,$vals);
       // create email
       if( is_array($recipients) && count($recipients) ) {
