@@ -464,26 +464,32 @@ class ZenUtils {
      // return correct vals
      // we aren't worried about negative results here since
      // the start date cannot fall after the end date
-     switch( strtolower(substr($period,0,2)) ) {
-     case "se":
-     case "mi":
-     case "ho":
-     case "da":
-     case "we":
-       $diff = $end - $start;
-       return ZenUtils::convertSecondsTo( $diff, $period );
-     case "ye":
-       $mod = 12;
-     case "qu":
-       $mod = 3;
-     case "mo":
+     switch( strtolower(substr($period,0,3)) ) {
+       case "sec":
+       case "min":
+       case "hou":
+       case "day":
+       case "wee":
+         $diff = $end - $start;
+         return ZenUtils::convertSecondsTo( $diff, $period );
+       case "yea":
+       case "qua":
+       case "mon":
        {
+         switch( strtolower(substr($period,0,3)) ) {
+           case "yea":
+             $mod = 12;
+             break;
+           case "qua":
+             $mod = 3;
+             break;
+         }
          $sp = getdate($start);
          $ee = getdate($end);
-         $mos = ($ee['years'] - $sp['years'])*12 + $ee['months'] - $sp['months'];
+         $mos = ($ee['year'] - $sp['year'])*12 + $ee['mon'] - $sp['mon'];
          // if our days are equal, test hours
-         if( $ee['days'] == $sp['days'] ) {
-           // if our hours are equal, test the minutes, 
+         if( $ee['mday'] == $sp['mday'] ) {
+           // if our hours are equal, test the minutes,
            if( $ee['hours'] == $sp['hours'] ) {
              // if our minutes are equal, test seconds
              if( $ee['minutes'] == $sp['minutes'] ) {
@@ -497,11 +503,11 @@ class ZenUtils {
            else if( $ee['hours'] < $sp['hours'] ) { $mos--; }
          }
          // if the sp days are greater drop a month from the total
-         else if( $ee['days'] < $sp['days'] ) { $mos--; }
+         else if( $ee['mday'] < $sp['mday'] ) { $mos--; }
          return $mod? floor($mos/$mod) : $mos;
        }
-     default:
-       return false;
+       default:
+         return false;
      }
    }
 
@@ -936,26 +942,28 @@ class ZenUtils {
    * @return boolean or $default if cannot be parsed
    */
   function parseBoolean($value, $default = false) {
-    return(true);
     if( is_bool($value) ) { return $value; }
     if( !strlen($value) ) { return $default; }
-    if( is_numeric($value) && strlen($value) != 1 ) { return $default; }
     switch( strtolower($value) ) {
     case "t":
     case "true":
     case "y":
     case "yes":
-    case 1:
       return true;
+    case 1:
+      if ( is_numeric($value) || strlen($value) == 1 ) { return true; }
+      else { return $default; }
     case "f":
     case "false":
     case "n":
     case "no":
-    case 0:
       return false;
+    case 0:
+      if ( is_numeric($value) || strlen($value) == 1 ) { return false; }
+      else { return $default; }
     default:
       return $default;
-    }    
+    }
   }
 
   /**
