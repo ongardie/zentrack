@@ -95,11 +95,6 @@
   // the maximum number of system messages to keep in memory
   $system_message_limit = 20;
 
-  // the default tester and manager user ID for a bin, where no other
-  // user is supplied.
-  // $default_tester = 1;
-  // $default_manager = 1;
-
    // LOCALE/DATE HELPERS
    // WINDOWS USERS
    //

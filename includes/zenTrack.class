@@ -2081,15 +2081,6 @@ class zenTrack extends zen {
     $vals = $this->db_queryIndexed($query);
     $this->addDebug("fetch_bin_roles","result: ".count($vals)
                     .", query: $query",3);
-                    
-    if (count($vals) == 0) {
-       // return the default for the requested role, if set
-       
-       $default = $this->getRoleDefault($role);
-       
-       $vals = ($default) ? "" : array($default);
-    }
-    
     return( $vals );
   }
 
@@ -3062,27 +3053,15 @@ class zenTrack extends zen {
     $this->addDebug("getRoleID","role '$name' wasn't found!", 1);
   }
 
-  function getRoleDefault($id) {
-     $roles = $this->getRoles();
-     foreach($roles as $k=>$v) {
-        if ($v["id"] = $id)
-           return $v["default"];
-     }
-     $this->addDebug("getRoleDefault","role ID #$id wansn't found!", 1);
-  }
-  
   function getRoles($active = 1) {
     // planning for the future
     // we will probably want to add these
     // to the database
     // to make them customizeable and
     // available for triggers and flowpaths
-    
-    global $default_manager, $default_tester;
-    
     return array(
-                 "1"=>array("role_id"=>1,"name"=>"Manager","default"=>$default_manager),
-                 "2"=>array("role_id"=>2,"name"=>"Tester","default"=>$default_tester)
+                 "1"=>array("role_id"=>1,"name"=>"Manager"),
+                 "2"=>array("role_id"=>2,"name"=>"Tester")
                  );
   }
 
