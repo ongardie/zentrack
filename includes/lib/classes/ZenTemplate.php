@@ -81,7 +81,6 @@ class ZenTemplate extends Smarty {
   function fetch( $template, $cache_id = null, $compile_id = null ) {
     $u = microtime();
     ZenUtils::mark("ZenTemplate->fetch($template:{$this->randomNumber}:$u)");
-    print "fetching $template with dir: ".$this->template_dir."\n";//debug
     $text = parent::fetch($template);
     ZenUtils::unmark("ZenTemplate->fetch($template:{$this->randomNumber}:$u)");
     return $text;
