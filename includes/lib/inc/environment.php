@@ -2,6 +2,11 @@
 
   startPTime("environment.php");
 
+  // check php version and cli binary
+  if( !version_compare( phpversion(), "4.3.0", ">=" ) ) {
+    die("This product requires PHP >= 4.3.0, you have ".phpversion());
+  }
+
   // see if the ini file exists, if not, quit here
   if( !file_exists($ini_file) ) {
     die("The ini file specified in header.php is not readable or missing.  Unable to continue");

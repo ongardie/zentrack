@@ -12,6 +12,17 @@
   /****************************************************
    ***** ENVIRONMENT
    ***************************************************/
+
+  // check php version
+  if( !version_compare( phpversion(), "4.3.0", ">=" ) ) {
+    die("This product requires PHP >= 4.3.0, you have ".phpversion());
+  }
+
+  // insure we are using the cli sapi
+  if( !preg_match("/cli/", php_sapi_name()) ) {
+    die("You must use the CLI(command line) binary to execute this script, you are trying to use a ".php_sapi_name()." binary.");
+  }
+
   // check the include path
   $p = get_include_path();
   if( !preg_match("/^\.:/", $p) && !preg_match("/:\.:/", $p) ) {

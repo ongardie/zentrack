@@ -242,6 +242,7 @@ class ZenTargets {
    * Back up database files
    */
   function _backup_database() {
+    //todo
     print "- Backing up database contents\n";
     print "   NOT YET FUNCTIONAL\n";
     return true;
@@ -422,7 +423,7 @@ class ZenTargets {
    */
   function _clean_cache_data( $subdir = null ) {
     $success = true;
-    print "- Cleaning cache data\n";
+    print "- Cleaning cache data (you may need a superuser login to do this successfully)\n";
 
     // get a list of directories
     $dh = @opendir($this->_ini['directories']['dir_cache']);
@@ -487,6 +488,25 @@ class ZenTargets {
       }
     }
     return $success;
+  }
+
+  /**
+   * Merges config files with existing settings.. copies config files for all regular files
+   * all template files will be parsed and the existing values substituted where possible
+   */
+  function _merge_config_files() {
+    print "- Merge config files not ready for use\n";
+    return false;
+    //todo
+    //todo use the merge_ini_file concept for this
+    //todo rename the merge_ini_file to be merge_template_file and make it take a source and destination
+    //todo the merge_template_file method will then write the template contents into the destination file,
+    //todo keeping any settings in the destination file... add a default= property to template parser
+    //todo so that all of the default values can be provided in the template file, in the case that the destination
+    //todo file doesn't exist, or new settings are added
+    //todo call that method for each config file as in copy_config_files... note that only files with
+    //todo templates get merged, others are assumed to not contain changes we want to keep and simply
+    //todo overwritten
   }
 
   /**
@@ -596,20 +616,20 @@ class ZenTargets {
       return false;
     }
 
+    // backup data
+    if( !$this->_backup_all() ) { return false; }
+
     // test directory structures and permissions
     if( !$this->_check_directories( true ) ) { return false; }
     
     // check the permissions
     if( !$this->_check_permissions() ) { return false; }
 
-    // backup data
-    if( !$this->_backup_all() ) { return false; }
-
     // copy the class files
     if( !$this->_copy_class_files() ) { $success = false; }
 
     // copy config files if flag set
-    if( !$this->_copy_config_files($overwrite) ) { $success = false; }
+    if( !$this->_merge_config_files() ) { $success = false; }
     
     // delete cache data and touch cache/last_config_update??
     if( !$this->_clean_cache_data() ) { return false; }
@@ -638,6 +658,7 @@ class ZenTargets {
    * @return boolean success
    */
   function _full_install( ) {
+    //todo
     print "- full_install not ready for use yet\n";
     return true;
 
@@ -734,6 +755,8 @@ class ZenTargets {
       return false;
     }
 
+    //todo
+
     print "- prepare_install_files not ready for use yet\n";
     return true;
 
@@ -765,20 +788,34 @@ class ZenTargets {
     return true;
 
     // confirm
+    //todo
+    //todo
 
-    // check directories
+    // backup data
+    if( !$this->_backup_all() ) { return false; }
 
-    // check permissions
+    // test directory structures and permissions
+    if( !$this->_check_directories( true ) ) { return false; }
+    
+    // check the permissions
+    if( !$this->_check_permissions() ) { return false; }
 
-    // copy files
+    // copy the class files
+    if( !$this->_copy_class_files() ) { $success = false; }
 
-    // check config files
+    // copy config files if flag set
+    if( !$this->_merge_config_files() ) { $success = false; }
+    
+    // delete cache data and touch cache/last_config_update??
+    if( !$this->_clean_cache_data() ) { return false; }
 
-    // check db connections
+    // compare and update db schema
+    if( !$this->_update_db_schema( true ) ) { return false; }
 
-    // update db schema
-
-    // delete cache data and touch cache/last_config_update
+    // notify user of any manual updates required or config files
+    // which were backed up/replaced
+    //todo
+    //todo
 
   }
 
@@ -818,6 +855,8 @@ class ZenTargets {
   function _update_db_schema( $source, $perform = true ) {
     print "- update_db_schema is not ready for use\n";
     return false;
+
+    //todo
 
     // confirm
     

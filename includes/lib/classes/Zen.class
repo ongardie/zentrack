@@ -72,12 +72,12 @@ class Zen {
       Zen::debug("Zen", "getDbConnection", "Creating database connection (cache empty)", 0, 3);
       if( isset($_SESSION['zen']) ) {
         $db = $_SESSION['zen']['db'];
-        $dir_cache = $_SESSION['zen']['directories']['dir_cache'];
+        $dir_cache = $_SESSION['zen']['directories']['dir_dbcache'];
         $prefix = $_SESSION['zen']['db']['table_prefix'];
       }
       else {
         $db = $GLOBALS['zen']['db'];
-        $dir_cache = $GLOBALS['zen']['directories']['dir_cache'];
+        $dir_cache = $GLOBALS['zen']['directories']['dir_dbcache'];
         $prefix = $GLOBALS['zen']['db']['table_prefix'];
       }
       $GLOBALS['dbConnection'] = new ZenDatabase($db['db_type'], 

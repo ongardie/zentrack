@@ -9,11 +9,10 @@ class ZenAccess extends ZenDataType {
    *
    * Loads a ZenAccess object for use
    *
-   * @param array $group_ids is the group_ids to obtain access priviledges for
-   * @param integer $user_id is the user to obtain access privileges for (optional)
-   * @param ZenAccessList $list (optional)loads the access from a ZenAccessList rather than database
+   * @param Object $group_user_or_list is one of the following:
+   *   A ZenUserGroup object, a ZenUserGroupList, a ZenUser object, a ZenUserList, or a ZenAccessList.  This will be the basis for making determinations.
    */
-  function ZenAccess( $group_ids, $user_id = 0, $list = null ) { }
+  function ZenAccess( $group_user_or_list ) { }
 
   /**
    * Checks a specific action and bin to see if this group/user qualifies

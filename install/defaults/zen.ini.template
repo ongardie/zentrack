@@ -97,7 +97,9 @@ develop_mode = {develop_mode}
 dir_cache         = "{dir_cache}"
 dir_lib           = "{dir_lib}"
 
+dir_dbcache       = "{dir_dbcache}"
 dir_attachments   = "{dir_attachments}"
+
 dir_backups       = "{dir_backups}"
 dir_classes       = "{dir_classes}"
 dir_config        = "{dir_config}"
