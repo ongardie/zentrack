@@ -427,6 +427,29 @@ function setFormValsUsingGroup( fieldObj, group, setid ) {
   }
   behaviorDebug(3, "(setFormValsUsingGroup)updating "+fieldObj.name
 		+" using "+group.name+"["+fieldObj.type+"] with setid="+setid+" and values=["+v+"]");
+  // To be used for hidden, text, etc: set the oldPos value if the fieldObj.value is in the list
+  // (unless we do it, the first element of the list will always be assigned to the field, no matter if the fieldObj.value is in the list)
+  var oldPos = -1;
+  if ( !isNaN(parseInt(fieldObj.value)) ) {
+    for(var i=0; i < fields.length && oldPos == -1; i++) {
+      if (parseInt(fields[i].value) == parseInt(fieldObj.value)) {
+        oldPos=i;
+      }
+    }
+  }
+  if ( oldPos == -1) {
+    for(var i=0; i < fields.length && oldPos == -1; i++) {
+      if (fields[i].label == fieldObj.value) {
+        oldPos=i;
+      }
+    }
+  }
+  if ( oldPos == -1) {
+    oldPos=0;
+    behaviorDebug(3, "(setFormValsUsingGroup)Did not recognize field value for "+fieldObj.name+" ("+fieldObj.value+")");
+  } else {
+    behaviorDebug(3, "(setFormValsUsingGroup)Recognized field value for "+fieldObj.name+" as ["+fields[i].value+"]"+fields[i].label);
+  }
   switch( fieldObj.type ) {
     case "checkbox":
       if( fields[0].value ) {
@@ -436,13 +459,13 @@ function setFormValsUsingGroup( fieldObj, group, setid ) {
     case "hidden":
       var labelText = document.getElementById(fieldObj.name+"LabelText");
       if( labelText ) {
-        labelText.innerHTML = fields[0].value;
+        labelText.innerHTML = fields[oldPos].value;
       }
     case "button":
     case "submit":
     case "text":
     case "textarea":
-      fieldObj.value = fields[0].value;
+      fieldObj.value = fields[oldPos].value;
       break;
     case "select":
     case "select-one":
@@ -451,6 +474,7 @@ function setFormValsUsingGroup( fieldObj, group, setid ) {
         // store the currently selected value and try to reproduce in a minute
         var oldValue = fieldObj.options[ fieldObj.selectedIndex ].value;
       }
+      behaviorDebug(3, "(setFormValsUsingGroup)storing oldValue="+oldValue); 
       fieldObj.length = 0;
       for(var i=0; i < fields.length; i++) {
         var f = fields[i];
@@ -460,7 +484,8 @@ function setFormValsUsingGroup( fieldObj, group, setid ) {
         fieldObj.options[i].value = f.value;
         // try to set to the same value if possible
         if( f.value == oldValue ) {
-          fieldObj.options[i].selected = true;
+//          fieldObj.options[i].selected = true;
+          fieldObj.selectedIndex=i;
         }
       }
       break;
