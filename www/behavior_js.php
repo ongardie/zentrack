@@ -434,6 +434,10 @@ function setFormValsUsingGroup( fieldObj, group, setid ) {
       }
       break;
     case "hidden":
+      var labelText = document.getElementById(fieldObj.name+"LabelText");
+      if( labelText ) {
+        labelText.innerHTML = fields[0].value;
+      }
     case "button":
     case "submit":
     case "text":

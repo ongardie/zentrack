@@ -2824,6 +2824,7 @@ class zenTrack extends zen {
                                break;
             case "otime":
             case "ctime":
+            case "deadline":
             case "start_date": $v1=$this->showDateTime($v1);
                                $v2=$this->showDateTime($v2);
             default:           $d1 = "";
@@ -4463,7 +4464,7 @@ class zenTrack extends zen {
                                 "owner"    => 1,
                                 "access"   => 1,
                                 "status"   => array('OPEN'),
-                                "override" => 0,
+                                "override" => 1,
                                 "egate"    => 1,
                                 "level"    => $this->settings["level_user"]
                                 );
@@ -4583,7 +4584,7 @@ class zenTrack extends zen {
                                "owner"    => 0,
                                "access"   => 1,
                                "status"   => array('PENDING'),
-                               "override" => 0,
+                               "override" => 1,
                                "egate"    => 1,
                                "level"    => $this->settings["level_test"]
                                );

@@ -59,7 +59,7 @@
   // option tags for the access levels
   function opt_lvls( $selected = '' ) {
     print "<option value=''>---</option>\n";
-    for( $i=0; $i<6; $i++ ) {
+    for( $i=0; $i<11; $i++ ) {
       $sel = (strlen($selected) && $i==$selected)? 
 	" selected" : "";
       print "<option$sel>$i</option>\n";
