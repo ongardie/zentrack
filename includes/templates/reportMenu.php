@@ -23,11 +23,32 @@
   </td>
 </tr>
 <tr>
-  <td class='titleCell' align='center'>Modify Reports</td>
+  <td class='titleCell' align='center'>Manage Reports</td>
+</tr>
+<tr>
+  <td class='subTitle' align='center'>Modify Reports</td>
 </tr>
 <tr>
   <td class='bars' height='40' valign='top'>
     <form method='get' action='custom.php'>
+      <select name='repid'><?
+   if( is_array($reps) && count($reps) ) {
+     foreach($reps as $r) {
+       print "<option value='{$r['report_id']}'>{$r['report_name']}</option>\n";
+     }
+   } else {
+     print "<option value=''>--none available--</option>\n";
+   } 
+?></select>&nbsp;<input type='submit' class='submit' value='Modify'>
+    </form>
+  </td>
+</tr>
+<tr>
+  <td class='subTitle'>Delete Reports</td>
+</tr>
+<tr>
+  <td class='bars'>
+    <form method='get' action='drop.php'>
       <select name='repid'>
 <?
    if( is_array($reps) && count($reps) ) {
@@ -39,12 +60,9 @@
    } 
 ?>
      </select>
-     &nbsp; <input type='submit' class='submit' value='Modify'>
+     &nbsp; <input type='submit' class='submit' value='Delete' onClick='return confirm("Are you sure you want to PERMANENTLY delete this template?")'>
     </form>
   </td>
-</tr>
-<tr>
-  <td class='titleCell' align='center'>Manage Reports</td>
 </tr>
 <tr>
   <td class='subTitle'>Create Reports</td>
@@ -56,29 +74,10 @@
     </form>
   </td>
 </tr>
-<tr>
-  <td class='subTitle'>Delete Reports</td>
-</tr>
-<tr>
-  <td class='bars'>
-    <form method='get' action='custom.php'>
-      <select name='repid'>
-<?
-   if( is_array($reps) && count($reps) ) {
-     foreach($reps as $r) {
-       print "<option value='{$r['report_id']}'>{$r['report_name']}</option>\n";
-     }
-   } else {
-     print "<option value=''>--none available--</option>\n";
-   } 
-?>
-     </select>
-     &nbsp; <input type='submit' class='submit' value='Delete'>
-    </form>
-  </td>
-</tr>
-<tr>
-  <td class='subTitle'>Purge Reports</td>
-</tr>
 </table>
+
+
+
+
+
 
