@@ -2850,6 +2850,7 @@ class zenTrack extends zen {
     // this returns a formatted string representing the
     // name of this row: i.e. for users, last_name, first_name
     // and for bins, the name field
+    switch( strtoupper($table) ) {
     case "ZENTRACK_BINS":
     case "ZENTRACK_PRIORITIES":
     case "ZENTRACK_SYSTEMS":
