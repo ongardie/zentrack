@@ -5,7 +5,7 @@
   }
 ?>
 
-<form method="post" action="<?=$SCRIPT_NAME?>">
+<form method="post" action="<?=$rootUrl?>/misc/pwc.php">
 <blockquote>
 <table width="300" cellpadding="5">
 <tr>

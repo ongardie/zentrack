@@ -12,9 +12,12 @@
 
   // if there is no login id then include the form
   // or process the form results
-  if( $login_level == 'first_login' && !ereg("pwc\.php",$SCRIPT_NAME) )
-      header("Location:$rootUrl/misc/pwc.php?var=2");
-
+  if( $login_level == 'first_login' && !ereg("pwc\.php",$SCRIPT_NAME) ) {
+   include("$libDir/nav.php");
+   include("$templateDir/pwcForm.php");
+   include("$libDir/footer.php");
+   exit;    
+  }
   if( !$login_id ) {
      if( isset($username) && $username && isset($passphrase) ) {
    $login_id = $zen->login_user( $username, $passphrase );

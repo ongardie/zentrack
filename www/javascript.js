@@ -1,7 +1,7 @@
 <!--
   
 function placeFocus(newFocalPoint) {
-	eval(newFocalPoint+".focus();");
+	eval(newFocalPoint.focus());
 }
 
 function eLink(address, domain) {
