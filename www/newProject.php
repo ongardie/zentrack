@@ -9,7 +9,7 @@
   
   include("header.php");
 
-  $page_tile = "Create a New Project";
+  $page_tile = tr("Create a New Project");
   $expand_projects = 1;
   include("$libDir/nav.php");
 

@@ -14,7 +14,7 @@
 		  "status"  => array("OPEN","PENDING"),
 		  "user_id"  => $login_id
 		  );
-  $page_tile = "Projects";
+  $page_tile = tr("Projects");
   $page_section = "Projects";
   if( $login_bin ) {
      $page_section .= " - ".$zen->bins["$login_bin"];

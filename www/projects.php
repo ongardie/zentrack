@@ -12,7 +12,7 @@
 		  "type_id"  => $zen->projectTypeIDs(),
 		  "status"  => array("OPEN","PENDING")
 		  );
-  $page_tile = "Projects";
+  $page_tile = tr("Projects");
   $page_section = "Projects";
   if( $login_bin ) {
      $page_section .= " - ".$zen->bins["$login_bin"];
@@ -23,7 +23,7 @@
   $userBins = $zen->getUsersBins($login_id);
 
   if( !is_array($userBins) || count($userBins) < 1 ) {
-     print "<p class='hot'>You do not have access to any existing bins</p>\n";     
+     print "<p class='hot'>" . tr("You do not have access to any existing bins") . "</p>\n";     
   } else {
      if( $login_bin ) {
 	$params["bin_id"] = $login_bin;

@@ -8,7 +8,7 @@
   
   
   include("reports_header.php");
-  $page_tile = "Save Template";
+  $page_tile = tr("Save Template");
   include("$libDir/nav.php");
 
   // get bins this user can access, then all templates available
@@ -22,7 +22,7 @@ if( $tempid ) {
 
 // make sure we are valid
 if( !$tempid || !is_array($template)) {
-  print "<span class='error'>Processing error: template not found.";
+  print "<span class='error'>" . tr("Processing error: template not found.");
 } else {
   $title = $template["chart_title"];
 ?>
@@ -30,13 +30,13 @@ if( !$tempid || !is_array($template)) {
 <?=$zen->hiddenField("tempid",$tempid);?>
 <table width='500' class='cell'>
 <tr>
-  <td class='titleCell' colspan='2' align='center'>Save Report</td>
+  <td class='titleCell' colspan='2' align='center'><?php echo tr("Save Report"); ?></td>
 </tr>
 <? if( is_array($templates) && count($templates) ) { ?>
 <tr>
   <td class='bars'>
     <input type='radio' name='save_method' value='overwrite'>
-    &nbsp;Modify Existing
+    &nbsp;<?php echo tr("Modify Existing"); ?>
   </td>
   <td class='bars'>
     <select name='report_id'>
@@ -52,7 +52,7 @@ if( !$tempid || !is_array($template)) {
 <tr>
   <td class='bars'>
     <input type='radio' name='save_method' value='new' checked>
-    &nbsp;New Template
+    &nbsp;<?php echo tr("New Template"); ?>
   </td>
   <td class='bars'>
     <input type='text' name='report_name' value='<?=$zen->ffv($title)?>'>
@@ -60,12 +60,12 @@ if( !$tempid || !is_array($template)) {
 </tr>
 <tr>
   <td class='subtitle' colspan='2' align='center'>
-    Make Visible To
+    <?php echo tr("Make Visible To"); ?>
   </td>
 </tr>
 <tr>
   <td class='bars'>
-    Bin(s)
+    <?php echo tr("Bin(s)"); ?>
   </td>
   <td class='bars'>
     <select name="select_bins[]" size='5' multiple>
@@ -81,16 +81,16 @@ if( !$tempid || !is_array($template)) {
        }
      }
    } else {
-     print "<option value=''>--no bins--</option>\n";
+     print "<option value=''>--" . tr("no bins") . "--</option>\n";
    }
 ?>
     </select>
-    <br><span class='note'>Optional.  Use control or shift to select multiples</span>
+    <br><span class='note'><?php echo tr("Optional.  Use control or shift to select multiples"); ?></span>
   </td>
 </tr>
 <tr>
   <td class='bars'>
-    User(s)
+    <?php echo tr("User(s)"); ?>
   </td>
   <td class='bars'>
 <?
@@ -101,15 +101,15 @@ if( !$tempid || !is_array($template)) {
 	."(\"$rootUrl/helpers/userSearchbox.php?return_form=saveTemplateForm"
 	."&return_field=select_users\",\"popupHelper\",375,400)'";
      print "&nbsp;<input type='button' class='searchbox' value=' ... ' $onclick>\n";
-     print "<br><span class='note'>Type ids separated by "
-	."commas, or click on the button.</span>\n";
+     print "<br><span class='note'>" . tr("Type ids separated by "
+	."commas, or click on the button.") . "</span>\n";
 ?>
-    <br><span class='note'>Optional. You do not need to select yourself</span>
+    <br><span class='note'><?php echo tr("Optional. You do not need to select yourself"); ?></span>
   </td>
 </tr>
 <tr>
   <td class='subtitle' colspan='2' align='center'>
-    <input type='submit' class='submit' value='Save'>
+    <input type='submit' class='submit' value='<?php echo tr("Save"); ?>'>
   </td>
 </tr>
 <?

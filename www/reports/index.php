@@ -8,7 +8,7 @@
   
   
   include("reports_header.php");
-  $page_tile = "Usage Reports";
+  $page_tile = tr("Usage Reports");
   include("$libDir/nav.php");
 
   include("$templateDir/reportMenu.php");

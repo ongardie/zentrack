@@ -10,14 +10,14 @@
   include_once("./header.php");
 
   if( !$zen->checkAccess($login_id,$bin_id,"create") ) {
-     $page_tile = "Access Error";
-     $msg = "<p class='hot'>You do not have permission to create tickets in this bin.</p>\n"; 
+     $page_tile = tr("Access Error");
+     $msg = "<p class='hot'>" . tr("You do not have permission to create tickets in this bin.") . "</p>\n"; 
      include("$libDir/nav.php");     
      include("$libDir/footer.php");
      exit;
   }
 
-  $page_tile = "Commit New Ticket";
+  $page_tile = tr("Commit New Ticket");
   $expand_tickets = 1;
 
   // initiate default values
@@ -60,7 +60,7 @@
   // check for required fields
   foreach($required as $r) {
      if( !$$r ) {
-	$errs[] = ucfirst($r)." is a required field";
+	$errs[] = tr("Required field missing:") . " " . ucfirst($r);
      }
   }
   if( !$errs ) {
@@ -75,7 +75,7 @@
      $id = $zen->add_ticket($params);
      // check for errors
      if( !$id ) {
-	$errs[] = "Could not create ticket. ".$zen->db_error;
+	$errs[] = tr("Could not create ticket."). " ".$zen->db_error;
      }
   }
 

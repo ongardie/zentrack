@@ -8,12 +8,12 @@
   
   
   include("reports_header.php");
-  $page_tile = "Save Submit";
+  $page_tile = tr("Save Submit");
 
   include("$libDir/nav.php");
 
   if( !$tempid ) {
-    $errs[] = "Processing error: tempid not found\n";
+    $errs[] = tr("Processing error: tempid not found\n");
   } else {
     $select_users = preg_replace("@[^0-9]+@", ",", trim($select_users));    
     if( strlen($select_users) ) {
@@ -34,13 +34,13 @@
       $zen->deleteReport($report_id);
     }
     if( !$report_name ) {
-      $errs[] = "Report Name is required";
+      $errs[] = tr("Report Name is required");
     }
     $res = $zen->saveReport($report_name,$tempid,$select_bins,$users);
     if( $res ) {
-      print "<b>Your chart has been saved successfully saved with title: $report_name</b>\n";
+      print "<b>" . tr("Your chart has been saved successfully saved with title: $report_name") . "</b>\n";
     } else {
-      $errs[] = "Chart could not be saved. "
+      $errs[] = tr("Chart could not be saved.") . " "
 	.(($zen->db_error)?$zen->db_errnum.":".$db_error:"");
     }
   }

@@ -14,7 +14,7 @@
   $users = $zen->get_users( $userBins, "level_view" );
 ?><html>
 <head>
-  <title>Search Projects</title>
+  <title><? echo tr("Search Projects"); ?></title>
   <LINK HREF="<?=$rootUrl?>/styles.php" REL="STYLESHEET" TYPE="text/css">
   <script language="javascript" src="<?=$rootUrl?>/javascript.js"></script>
 </head>
@@ -25,24 +25,24 @@
 <input type='hidden' name='return_form' value='<?=$zen->ffv($return_form)?>'>
 <input type='hidden' name='return_field' value='<?=$zen->ffv($return_field)?>'>
 <table width='<?=$table_width?>' align='center'>
-<tr><td class='titleCell' align='center' colspan='2'>Search Tickets</td></tr>
+<tr><td class='titleCell' align='center' colspan='2'><?php echo tr("Search Tickets"); ?></td></tr>
 <tr>
-  <td class='bars'>Project ID</td>
+  <td class='bars'><?php echo tr("Project ID"); ?></td>
   <td class='bars'><input type='text' name='search_param[ticket_id]' size='12' 
 	maxlength='10' value='<?=$zen->ffv($search_param["ticket_id"])?>'></td>
 </tr>
 <tr>
-  <td class='bars'>Title</td>
+  <td class='bars'><?php echo tr("Title"); ?></td>
   <td class='bars'><input type='text' name='search_param[title]' 
 	size='22' maxlength='20' value='<?=$zen->ffv($search_param["title"])?>'><td>
 </tr>
 <tr>
-  <td class='bars'>Description</td>
+  <td class='bars'><?php echo tr("Description"); ?></td>
   <td class='bars'><input type='text' name='search_param[description]' 
 	size='22' maxlength='20' value='<?=$zen->ffv($search_param["description"])?>'></td>
 </tr>
 <tr>
-  <td class='bars'>System</td>
+  <td class='bars'><?php echo tr("System"); ?></td>
   <td class='bars'>
     <select name="set_systems[]" size='5' multiple>
 <?
@@ -53,15 +53,15 @@
       print "<option $check value='$k'>$v</option>\n";
     }
   } else {
-    print "<option value=''>--no systems--</option>\n";
+    print "<option value=''>--" . tr("no systems") . "--</option>\n";
   }
 ?>
     </select>
-    <div class='note'>Select more than one by using control or shift</div>
+    <div class='note'><?php echo tr("Select more than one by using control or shift"); ?></div>
   </td>
 </tr>
 <tr>
-  <td class='bars'>Bin</td>
+  <td class='bars'><?php echo tr("Bin"); ?></td>
   <td class='bars'>
     <select name="set_bins[]" size='5' multiple>
 <?
@@ -75,15 +75,15 @@
        }
      }
    } else {
-     print "<option value=''>--no bins--</option>\n";
+     print "<option value=''>--" . tr("no bins") . "--</option>\n";
    }
 ?>
     </select>
-    <div class='note'>Select more than one by using control or shift</div>
+    <div class='note'><?php echo tr("Select more than one by using control or shift"); ?></div>
   </td>
 </tr>
 <tr>
-  <td class='bars'>Priority</td>
+  <td class='bars'><?php echo tr("Priority"); ?></td>
   <td class='bars'>
     <select name="set_priorities[]" size='5' multiple>
 <?
@@ -96,19 +96,19 @@
 	print "<option $check value='$k'>$v</option>\n";
       }
     } else {
-      print "<option value=''>--no priorities--</option>\n";
+      print "<option value=''>--" . tr("no priorities") . "--</option>\n";
     }
 ?>
     </select>
-    <div class='note'>Select more than one by using control or shift</div>
+    <div class='note'><?php echo tr("Select more than one by using control or shift"); ?></div>
   </td>
 </tr>
 <tr>
   <td class='bars' colspan='2'>
     <div align='center'><input type='submit' class='submit' name='dosearch'
-	 value='Search'></div>
-    <span class='note'>You may use * for a wildcard in the title or
-          description.. i.e. J* would match anything starting with J</span>
+	 value='<?php echo tr("Search"); ?>'></div>
+    <span class='note'><?php echo tr("You may use * for a wildcard in the title or
+          description.. i.e. J* would match anything starting with J"); ?></span>
   </td>
 </table>
 
@@ -207,15 +207,15 @@
 ?>
 <table width='<?=$table_width?>' align='center'>
 <tr>
-  <td class='titleCell' align='center' colspan='4'>Select Projects</td>
+  <td class='titleCell' align='center' colspan='4'><?php echo tr("Select Projects"); ?></td>
 </tr>
 <tr>
   <td class='bars' colspan='4' align='center'>
      <input type='button' 
-      class='submit' value='Select' <?=(is_array($results))?
+      class='submit' value='<?php echo tr("Select"); ?>' <?=(is_array($results))?
 	"onClick='return saveValues()'":""?>>
    &nbsp;&nbsp;&nbsp;&nbsp;
-    <input type='submit' class='submit' value='Modify Search'>
+    <input type='submit' class='submit' value='<?php echo tr("Modify Search"); ?>'>
   </td>
 </tr>
 <?
@@ -226,13 +226,13 @@
     <input type='checkbox' name='allcheck' value='skip' onClick='checkAll()' class='searchbox'>
   </td>
   <td class='subTitle'>
-    ID
+    <?php echo tr("ID"); ?>
   </td>
   <td class='subTitle'>
-    Title
+    <?php echo tr("Title"); ?>
   </td>
   <td class='subTitle'>
-    Bin
+    <?php echo tr("Bin"); ?>
   </td>
 <?
    $i=0;
@@ -250,7 +250,7 @@
  } else {
 ?>
 <tr>
-<td colspan='4' class='bars'>There were no results for your search</td>
+<td colspan='4' class='bars'><?php echo tr("There were no results for your search"); ?></td>
 </tr>
 <?
  }

@@ -9,7 +9,7 @@
   
   include("header.php");
 
-  $page_tile = "User Options";
+  $page_tile = tr("User Options");
   $expand_options = 1;
   include("$libDir/nav.php");
   include("$templateDir/optionsMenu.php");

@@ -10,7 +10,7 @@
   include("header.php");
 
 
-  $page_title = "Search Tickets";
+  $page_title = tr("Search Tickets");
   $page_section = $page_title;
   $expand_search = 1;
   include("$libDir/nav.php");
@@ -23,7 +23,7 @@
        if( $errs ) {
 	 $zen->printErrors($errs);
        } else {
-	 print "<p><b>There were no results for your search.</b></p>\n";
+	 print "<p><b>" . tr("There were no results for your search.") . "</b></p>\n";
        }
        include("$templateDir/searchForm.php");
      }

@@ -7,7 +7,7 @@
   */
   
   include("reports_header.php");
-  $page_tile = "Admin Section";
+  $page_tile = tr("Admin Section");
   include_once("$libDir/nav.php");
 
 // if we have a qry=xxxxx variable
@@ -18,7 +18,7 @@
 $zen->cleanInput($report_params);
 foreach($required_report_params as $k) {
   if( !isset($$k) || (is_array($$k)&&!count($$k)) || (!is_array($$k) && $$k == "") ) {
-    $errs[] = "$k: ".$report_params["$k"]." required... processing error";
+    $errs[] = "$k: ".$report_params["$k"]." " . tr("required... processing error");
   }
 }
 if( !is_array($errs) ) {
@@ -39,16 +39,16 @@ if( !is_array($errs) ) {
 <form method='post' action='<?=$rootUrl?>/reports/save.php'>
 <input type='hidden' name='tempid' value='<?=$zen->ffv($tempid)?>'>
   <td align='center' class='subTitle'><input 
-   type='submit' class='submit' value='Save Report'></td>
+   type='submit' class='submit' value='<?php echo tr("Save Report"); ?>'></td>
 </form>
 <form method='post' action='<?=$rootUrl?>/reports/custom.php'>
 <input type='hidden' name='tempid' value='<?=$zen->ffv($tempid)?>'>
   <td align='center' class='subTitle'><input 
-   type='submit' class='submit' value='Modify Report'></td>
+   type='submit' class='submit' value='<?php echo tr("Modify Report"); ?>'></td>
 </form>
 <form method='post' action='<?=$rootUrl?>/reports/custom.php'>
   <td align='center' class='subTitle'><input 
-   type='submit' class='submit' value='New Report'></td>
+   type='submit' class='submit' value='<?php echo tr("New Report"); ?>'></td>
 </form>
 </tr>
 <tr>

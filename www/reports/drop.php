@@ -7,13 +7,13 @@
   */
   
   include("reports_header.php");
-  $page_tile = "Drop Template";
+  $page_tile = tr("Drop Template");
   include("$libDir/nav.php");
 
 if( $repid ) {
   // fetch the template so we have some params to use
   $res = $zen->deleteReport($repid);
-  print "<b>Report Deleted</b>\n";
+  print "<b" . tr(">Report Deleted") . "</b>\n";
 }
 
   include("$templateDir/reportMenu.php");

@@ -22,7 +22,7 @@
   /*
   **  GET TICKET INFORMATION
   */
-  $page_title = "Ticket #$id";
+  $page_title = tr("Ticket") . " #$id";
 
   /*
   **  GET PARAMS FOR A PROJECT
@@ -56,7 +56,7 @@
   include_once("$libDir/nav.php");
 
   if( !$is_creator && !$zen->checkAccess($login_id,$ticket["bin_id"]) ) {
-     print "<p class='hot'>You are not allowed to view {$page_type}s in this bin</p>\n";
+     print "<p class='hot'>" . tr("You are not allowed to view the following in this bin") . ": {$page_type}s</p>\n";
   } else {
 
     if( is_array($ticket) ) {
@@ -67,7 +67,7 @@
 	include("$templateDir/ticketView.php");     
       }
     } else {
-      print "<p class='error'>That ticket doesn't exist</p>\n";
+      print "<p class='error'>" . tr("That ticket doesn't exist") . "</p>\n";
     }
      
   }

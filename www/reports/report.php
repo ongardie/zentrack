@@ -22,7 +22,7 @@
     $params = $zen->getReportParams($repid);
   }
   if( !is_array($params) && false ) {
-    die("report params incorrect, or id not found: $tempid/$repid");
+    die(tr("report params incorrect, or id not found") . ": $tempid/$repid");
   }
   $graph->graphTitle = "something";//$params["report_name"];
   $graph->graphSubtitle = "something";//$params["report_subtitle"];

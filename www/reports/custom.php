@@ -8,7 +8,7 @@
   
   
   include("reports_header.php");
-  $page_tile = "Admin Section";
+  $page_tile = tr("Admin Section");
   include("$libDir/nav.php");
 
    if( is_array($_POST) ) {
@@ -17,14 +17,14 @@
    if( $repid ) {
       $params = $zen->getReportParams($repid);
       if( !is_array($params) ) {
-	$errs[] = "Report ID not found";
+	$errs[] = tr("Report ID not found");
       }
       extract($params);
    }
    else if( $tempid ) {
      $params = $zen->getTempReport($tempid);
      if( !is_array($params) )
-       $errs[] = "That temporary report doesn't exist";
+       $errs[] = tr("That temporary report doesn't exist");
      extract($params);
    }
  

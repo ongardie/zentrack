@@ -6,7 +6,7 @@
   */
   
   include("reports_header.php");
-  $page_tile = "Show Report";
+  $page_tile = tr("Show Report");
   include_once("$libDir/nav.php");
 
 //security
@@ -15,7 +15,7 @@ $tempid = $zen->checkNum($tempid);
 
 // check for contents
 if( !$repid ) {
-  print "<span class='error'>Processing Error: Report ID Missing</span>\n";
+  print "<span class='error'>" . tr("Processing Error: Report ID Missing") . "</span>\n";
 } else {
   // retrieve the params of the report
   include_once("$libDir/reportDataParser.php");  

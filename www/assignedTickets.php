@@ -8,7 +8,7 @@
   
   include("header.php");
 
-  $page_title = "Tickets assigned to $login_name";
+  $page_title = . tr("Tickets assigned:") . " $login_name";
   $expand_tickets = 1;
   include("$libDir/nav.php");
 
