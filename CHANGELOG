@@ -5,6 +5,11 @@
  100 percent object oriented and database abstracted. 
 
 ----- V2.2.3 (development, see CVS) ----
+2003-02-15, Altman
+  Completed the get_notify_recipients($ticket_id) method of the zenTrack
+  class.  It has been tested and fits the give requirements.
+    - includes/zenTrack.class v1.48
+
 2003-02-14, Altman
   Stubbed out functions in zenTrack.class and added entry for new table
   in configVars.php.default.
