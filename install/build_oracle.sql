@@ -373,7 +373,7 @@ CREATE TABLE ZENTRACK_BEHAVIOR_DETAIL (
 
 CREATE TABLE ZENTRACK_GROUP (
   group_id NUMBER(12) CONSTRAINT groupid_notnull NOT NULL,
-  table_name varchar2(50) NOT NULL,
+  table_name varchar2(50),
   group_name varchar2(100),
   descript varchar2(255),
   eval_type VARCHAR2(10),

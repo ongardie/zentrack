@@ -377,7 +377,7 @@ CREATE TABLE ZENTRACK_BEHAVIOR_DETAIL (
 
 CREATE TABLE ZENTRACK_GROUP (
   group_id int(12) NOT NULL auto_increment,
-  table_name varchar(50) NOT NULL,
+  table_name varchar(50),
   group_name varchar(100),
   descript varchar(255),
   eval_type VARCHAR(10),

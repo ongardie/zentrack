@@ -332,45 +332,45 @@ function setFormValsUsingGroup( fieldObj, group ) {
   behaviorDebug(3, "(setFormValsUsingGroup)updating "+fieldObj.name
 		+" using "+group.name+"["+fieldObj.type+"]");
   switch( fieldObj.type ) {
-  case "checkbox":
-    if( group.fields[0].value ) {
-      fieldObj.checked = true;
-    }
-    break;
-  case "button":
-  case "submit":
-  case "text":
-  case "textarea":
-    fieldObj.value = group.fields[0].value;
-    break;
-  case "select":
-  case "select-one":
-  case "select-multiple":
-    if( fieldObj.selectedIndex ) {
-      // store the currently selected value and try to reproduce in a minute
-      var oldValue = fieldObj.options[ fieldObj.selectedIndex ].value;
-    }
-    fieldObj.length = 0;
-    for(var i=0; i < group.fields.length; i++) {
-      var f = group.fields[i];
-      behaviorDebug(3, "(setFormValsUsingGroup)Setting option "+i+" to ["+f.label+"]"+f.value);
-      fieldObj.options[i] = new Option();
-      fieldObj.options[i].text = f.label;
-      fieldObj.options[i].value = f.value;
-      // try to set to the same value if possible
-      if( f.value == oldValue ) {
-	fieldObj.options[i].selected = true;
+    case "checkbox":
+      if( group.fields[0].value ) {
+        fieldObj.checked = true;
       }
-    }
-    break;
-  //case "radio":
-  //case "file":
-  //case "hidden":
-  //case "password":
-  //case "reset":
-  default:
-    behaviorDebug(1, "(setFormValsUsingGroup)Invalid field type: "+fieldObj.name+"["+fieldObj.type+"]");
-    return false;
+      break;
+    case "button":
+    case "submit":
+    case "text":
+    case "textarea":
+      fieldObj.value = group.fields[0].value;
+      break;
+    case "select":
+    case "select-one":
+    case "select-multiple":
+      if( fieldObj.selectedIndex ) {
+        // store the currently selected value and try to reproduce in a minute
+        var oldValue = fieldObj.options[ fieldObj.selectedIndex ].value;
+      }
+      fieldObj.length = 0;
+      for(var i=0; i < group.fields.length; i++) {
+        var f = group.fields[i];
+        behaviorDebug(3, "(setFormValsUsingGroup)Setting option "+i+" to ["+f.label+"]"+f.value);
+        fieldObj.options[i] = new Option();
+        fieldObj.options[i].text = f.label;
+        fieldObj.options[i].value = f.value;
+        // try to set to the same value if possible
+        if( f.value == oldValue ) {
+    fieldObj.options[i].selected = true;
+        }
+      }
+      break;
+    //case "radio":
+    //case "file":
+    //case "hidden":
+    //case "password":
+    //case "reset":
+    default:
+      behaviorDebug(1, "(setFormValsUsingGroup)Invalid field type: "+fieldObj.name+"["+fieldObj.type+"]");
+      return false;
   }
 
   return true;

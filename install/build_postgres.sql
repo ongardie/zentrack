@@ -394,7 +394,7 @@ CREATE TABLE ZENTRACK_BEHAVIOR_DETAIL (
 
 CREATE TABLE ZENTRACK_GROUP (
   group_id int8 NOT NULL default nextval('"group_id_seq"') NOT NULL PRIMARY KEY,
-  table_name varchar(50) NOT NULL,
+  table_name varchar(50) default NULL,
   group_name varchar(100) default NULL,
   descript varchar(255) default NULL,
   eval_type VARCHAR(10) default NULL,
