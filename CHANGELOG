@@ -17,6 +17,9 @@ abstraction, and endless possibilities for project expansion.
   The field_type value wasn't evaluated in the field map form. Fixed (TK 68)
     - includes/templates/fieldMapForm.php 1.3
 
+  Fixed problem with long text fields (TK 67)
+    - includes/ZenFieldMap.class 1.2
+
 2005-02-01, cfalonso
   Fixed problem displaying fields in proper order after adding a section or moving an element (TK 66)
     - zentrack_2/includes/templates/fieldMapForm.php 1.2

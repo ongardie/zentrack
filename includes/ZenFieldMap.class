@@ -381,16 +381,10 @@ class ZenFieldMap {
       }
     }
     
-    // deal with fields that can have multiple rows by checking 
-    // the column count and the row count to make sure they are reasonable
-    if( $tprops["multiple_rows"] && $field['num_cols'] > 30 && $field['num_rows'] == 1 ) {
-      $vals['field_cols'] = 30;
-      $vals['field_rows'] =  1;
-    }
-    else {
-      $vals['field_rows'] = $field['num_rows'];
-      $vals['field_cols'] = $field['num_cols']; 
-    }
+    // deal with fields by checking 
+    // the row count to make sure it is reasonable
+    $vals['field_cols'] = ( $field['num_cols'] > 50 ) ? 50:$field['num_cols'];
+    $vals['field_rows'] = $field['num_rows'];
     
     // deal with special custom field problems
     if( strpos($field_name,'custom_')===0 ) {
