@@ -75,7 +75,7 @@
     <td class="smallTitleCell"><?=uptr("Hours Worked")?></td>  
   </tr>
    <tr>
-    <td><?=($ctime)?$zen->showDate($ctime):tr("n/a")?></td>    
+    <td><?=($ctime)?$zen->showDateTime($ctime):tr("n/a")?></td>    
     <td><? 
       switch($tested){
         case 1: 

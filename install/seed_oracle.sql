@@ -301,9 +301,9 @@ INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,w
 INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,which_view,default_val,sort_order,field_type,num_cols,num_rows,is_required) VALUES('271','custom_string1',NULL,'0','ticket_close',NULL,'21','text','200','1','0');
 INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,which_view,default_val,sort_order,field_type,num_cols,num_rows,is_required) VALUES('272','custom_string2',NULL,'0','ticket_close',NULL,'22','text','200','1','0');
 INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,which_view,default_val,sort_order,field_type,num_cols,num_rows,is_required) VALUES('273','custom_text1',NULL,'0','ticket_close',NULL,'23','text','50','4','0');
-INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,which_view,default_val,sort_order,field_type,num_cols,num_rows,is_required) VALUES('274','custom_number1',NULL,'0','ticket_close','0','24','text','10','1','1');
+INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,which_view,default_val,sort_order,field_type,num_cols,num_rows,is_required) VALUES('274','custom_number1',NULL,'0','ticket_close','0','24','text','10','1','0');
 INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,which_view,default_val,sort_order,field_type,num_cols,num_rows,is_required) VALUES('275','custom_number2',NULL,'0','ticket_close','0','25','text','10','1','0');
-INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,which_view,default_val,sort_order,field_type,num_cols,num_rows,is_required) VALUES('276','custom_boolean1',NULL,'0','ticket_close',NULL,'26','checkbox','1','1','1');
+INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,which_view,default_val,sort_order,field_type,num_cols,num_rows,is_required) VALUES('276','custom_boolean1',NULL,'0','ticket_close',NULL,'26','checkbox','1','1','0');
 INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,which_view,default_val,sort_order,field_type,num_cols,num_rows,is_required) VALUES('277','custom_boolean2',NULL,'0','ticket_close',NULL,'27','checkbox','1','1','0');
 INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,which_view,default_val,sort_order,field_type,num_cols,num_rows,is_required) VALUES('278','custom_menu1',NULL,'0','ticket_close',NULL,'28','menu','100','1','0');
 INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,which_view,default_val,sort_order,field_type,num_cols,num_rows,is_required) VALUES('279','custom_menu2',NULL,'0','ticket_close',NULL,'29','menu','100','1','0');
@@ -570,6 +570,7 @@ INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (108
 
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (109,'email_accept', 'on', 'Send email to users in the notify list when ticket is accepted');
 
+INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (110, 'ctime_on_pending', 'off', 'Set this to on if you want tickets to set ctime when changed to pending');
 
 
 

@@ -2068,22 +2068,22 @@ class zenTrack extends zen {
 	$this->add_log($id, $logParams);    
       }
       if( $this->settings["email_closed"] == "on" ) {
-	// send email
-	$recipients = $this->get_notify_recipients($id);
+	     // send email
+	     $recipients = $this->get_notify_recipients($id);
         // make sure the manager gets a notification
         $vals = $this->fetch_bin_role_emails($t['bin_id'],$this->getRoleId('manager'));
         $this->checkIncludedRecipients($recipients,$vals);
         // create email
-	if( is_array($recipients) && count($recipients) ) {
-	  $bin = $t["bin_id"];
-	  $subject = $this->ptrans("Ticket #?: closed",array($id));
-	  $emailParams["Close Time"] = $this->showDateTime($this->currTime);
-	  if( $comments )
-	    $emailParams["body"] = $comments;
-	  $emailParams["tid"] = $t;
-	  $message = $this->formatEmailMessage($emailParams);
-	  $this->sendEmail($recipients,$subject,$message,$user_id);       
-	}
+	     if( is_array($recipients) && count($recipients) ) {
+	       $bin = $t["bin_id"];
+	       $subject = $this->ptrans("Ticket #?: closed",array($id));
+	       $emailParams["Close Time"] = $this->showDateTime($this->currTime);
+	       if( $comments )
+	         $emailParams["body"] = $comments;
+	       $emailParams["tid"] = $t;
+	       $message = $this->formatEmailMessage($emailParams);
+	       $this->sendEmail($recipients,$subject,$message,$user_id);       
+	     }
       } 
     } else if( ($t["tested"] == 1 || $t["approved"] == 1) 
 	       && $t["status"] == "OPEN" ) {
@@ -2094,25 +2094,25 @@ class zenTrack extends zen {
 		      );
       $res = $this->update_ticket($id, $params);
       if( $this->settings["log_pending"] == "on" ) {
-	// make a log entry
-	$logParams = array(
+	     // make a log entry
+	     $logParams = array(
 			   "action"   =>  'PENDING',
 			   "ticket_id" =>  $id,
 			   "entry"    =>  $entry
 			   );
-	if( $user_id ) {
-	  $logParams["user_id"] = $user_id;
-	}
-	$logParams["bin_id"] = $t["bin_id"];      
-	if( $hours )
-	  $logParams["hours"] = $hours;
-	if( $comments )
-	  $logParams["entry"] = $comments;
-	$this->add_log($id, $logParams);    
+	     if( $user_id ) {
+	       $logParams["user_id"] = $user_id;
+	     }
+	     $logParams["bin_id"] = $t["bin_id"];      
+	     if( $hours )
+	       $logParams["hours"] = $hours;
+	     if( $comments )
+	       $logParams["entry"] = $comments;
+	     $this->add_log($id, $logParams);    
       }  
       if( $this->settings["email_pending"] == "on" ) {
-	// send an email
-	$recipients = $this->get_notify_recipients($id);
+  	     // send an email
+	     $recipients = $this->get_notify_recipients($id);
         // make sure the testers/managers gets a notification
         if( $t['tested'] == 1 ) {
           $vals = $this->fetch_bin_role_emails($t['bin_id'], $this->getRoleId('tester'));
@@ -2122,16 +2122,16 @@ class zenTrack extends zen {
         }        
         $this->checkIncludedRecipients($recipients, $vals);
         // create email
-	if( is_array($recipients) && count($recipients) ) {
-	  $bin = $t["bin_id"];
-	  $subject = $this->ptrans("Ticket #?: closed",array($id));
-	  $emailParams["Close Time"] = $this->showDateTime($this->currTime);
-	  if( $comments )
-	    $emailParams["body"] = $this->ffv($comments);
-	  $emailParams["tid"] = $id;
-	  $message = $this->formatEmailMessage($emailParams);
-	  $this->sendEmail($recipients,$subject,$message,$user_id);
-	} 
+	     if( is_array($recipients) && count($recipients) ) {
+	       $bin = $t["bin_id"];
+	       $subject = $this->ptrans("Ticket #?: closed",array($id));
+	       $emailParams["Close Time"] = $this->showDateTime($this->currTime);
+	       if( $comments )
+	         $emailParams["body"] = $this->ffv($comments);
+	       $emailParams["tid"] = $id;
+	       $message = $this->formatEmailMessage($emailParams);
+	       $this->sendEmail($recipients,$subject,$message,$user_id);
+	     } 
       } 
     }
     return($res);
@@ -2166,9 +2166,11 @@ class zenTrack extends zen {
     if( $this->check_status($t,"READY") ) {
       // if ticket is ready to close, then close it
       $params = array(
-            "status"  =>  'CLOSED',
-            "ctime"   =>  $this->currTime
+            "status"  =>  'CLOSED'
             );
+      if( ! $t["ctime"] ) {
+        $params["ctime"]=$this->currTime;
+      }
       if( $this->settings["retain_owner_closed"] != "on") {
         $params["user_id"] = NULL;
       }
@@ -2215,6 +2217,9 @@ class zenTrack extends zen {
       $params["status"]='PENDING';
       if( $this->settings["retain_owner_pending"] != "on") {
         $params["user_id"] = NULL;
+      }
+      if( ! $t["ctime"]  && $this->settings["ctime_on_pending"] == "on" ) {
+        $params["ctime"]=$this->currTime;
       }
       $res = $this->update_ticket($id, $params);
       if( $this->settings["log_pending"] == "on" ) {
@@ -2672,10 +2677,13 @@ class zenTrack extends zen {
       $this->set_notify_list($id,$notify_list);
 
       // create a log entry
+      $log_entry=$params["user_id"]?tr("Assigned to [?-?]",array($params["user_id"],$this->formatName($params["user_id"])))
+                                   :tr("Unassigned");
       $lParams = array(
                        "action"   =>   "CREATED",
                        "user_id"   =>   $params["creator_id"],
-                       "bin_id"    =>   $params["bin_id"]
+                       "bin_id"    =>   $params["bin_id"],
+                       "entry"     =>   $log_entry
                        );
       if( $log_notes ) {
         $lParams["entry"] = $log_notes;
