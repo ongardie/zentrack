@@ -463,7 +463,7 @@ class zen extends zenDate {
 
    function addDebug( $title, $msg, $lvl = 3 ) {
      if( $lvl <= $this->debug )
-       $this->debugMessages[] = ((is_array($msg))?
+       $this->debugMessages[] = (is_array($msg))?
 	  array($title,$msg,$lvl) :
 	  array($title,htmlentities($msg),$lvl);
    }
