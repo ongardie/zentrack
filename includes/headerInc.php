@@ -16,10 +16,17 @@
   ** to the site
   */
 
+  /**
+   * ERROR REPORTING (security)
+   */
+  error_reporting(E_ALL ^ E_NOTICE);
+  if( !$Debug_Mode ) {
+    ini_set("display_errors", false);
+  }
+
   /*
   ** SESSION MANAGEMENT
   */
-
   include_once("$libDir/session_start.php");
 
   /*

@@ -9,7 +9,7 @@
       if( strlen($v) ) {
 	switch($k) {
 	case "priority":
-	  $params[] = array($k,"<=",$v,1);
+	  $params[] = array($zen->table_tickets.".$k","<=",$v,1);
 	  break;
 	default: 
 	  $params[] = array($k,"=",$v,1);

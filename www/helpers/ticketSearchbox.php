@@ -91,12 +91,12 @@
     <select name="set_bins[]" size='5' multiple>
 <?
    if( is_array($userBins) ) {
-     foreach($userBins as $k=>$v) {
-       if( $k ) {
-         $check = (is_array($set_bins)&&in_array($k,$set_bins) )? 
+     foreach($userBins as $v) {
+       if( $v ) {
+         $check = (is_array($set_bins)&&in_array($v,$set_bins) )? 
 	   "selected" : "";
-         $n = $zen->bins["$k"];
-         print "<option $check value='$k'>$n</option>\n";
+         $n = $zen->bins["$v"];
+         print "<option $check value='$v'>$n</option>\n";
        }
      }
    } else {

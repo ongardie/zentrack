@@ -5,18 +5,18 @@
 <table width="640" align="left" cellpadding="2" cellspacing="2" bgcolor="<?=$zen->settings["color_background"]?>">
 <tr>
   <td colspan="2" width="640" class="titleCell" align="center">
-     Search For Tickets
+     <?=tr("Search For Tickets")?>
   </td>
 </tr>
 
 <tr>
   <td colspan="2" class="subTitle">
-    By Text Match
+    <?=tr("By Text Match")?>
   </td>
 </tr>
 <tr>
   <td class="bars">
-     Containing
+     <?=tr("Containing")?>
   </td>
   <td class="bars">
    <input type="text" name="search_text" 
@@ -25,7 +25,7 @@
 </tr>
 <tr>
   <td class="bars">
-     In any of these
+     <?=tr("In any of these")?>
   </td>
   <td class="bars">
   <?
@@ -35,21 +35,21 @@
    $sfd = (is_array($search_fields) && in_array("description",$search_fields));
   ?>
   <input type="checkbox" name="search_fields[title]" value="title"<?=($sft)?" checked":""?>>
-   &nbsp;Title
+   &nbsp;<?=tr("Title")?>
   <br>
   <input type="checkbox" name="search_fields[description]" value="description"<?=($sfd)?" checked":""?>>
-   &nbsp;Description
+   &nbsp;<?=tr("Description")?>
   </td>
 </tr>
 
 <tr>
   <td colspan="2" class="subTitle">
-    By Parameters
+    <?=tr("By Parameters")?>
   </td>
 </tr>
 <tr>
   <td class="bars">
-     Status
+     <?=tr("Status")?>
   </td>
   <td class="bars">
      <select name="search_params[status]">
@@ -68,7 +68,7 @@
 </tr>
 <tr>
   <td class="bars">
-     Owner
+     <?=tr("Owner")?>
   </td>
   <td class="bars">
      <select name="search_params[user_id]">
@@ -92,7 +92,7 @@
 </tr>
 <tr>
   <td class="bars">
-    Type
+    <?=tr("Type")?>
   </td>
   <td class="bars">
     <select name="search_params[type_id]">
@@ -114,7 +114,7 @@
 </tr>
 <tr>
   <td class="bars">
-    System
+    <?=tr("System")?>
   </td>
   <td class="bars">
     <select name="search_params[system_id]">
@@ -134,7 +134,7 @@
 </tr>
 <tr>
   <td class="bars">
-    Bin
+    <?=tr("Bin")?>
   </td>
   <td class="bars">
     <select name="search_params[bin_id]">
@@ -158,7 +158,7 @@
 </tr>
 <tr>
   <td class="bars">
-    Priority
+    <?=tr("Priority")?>
   </td>
   <td class="bars">
     <select name="search_params[priority]">
@@ -175,17 +175,17 @@
       print "<option value=''>--no priorities--</option>\n";
     }
 ?>
-    </select>&nbsp;<span class='small'>(or higher)</span>
+    </select>&nbsp;<span class='small'><?=tr("(or higher)")?></span>
   </td>
 </tr>
 <tr>
   <td colspan="2" class="subTitle">
-    Click 'Search' to execute the search
+	<?=tr("Click 'Search' to execute the search")?>
   </td>
 </tr>
 <tr>
   <td class="bars" colspan="2">
-     <input type="submit" class="submit" value="Search">
+     <input type="submit" class="submit" value="<?=tr("Search")?>">
   </td>
 </tr>
 

@@ -107,7 +107,7 @@
        <option value="">----</option>
 <?
     if( is_array($userBins) ) {
-    	foreach($userBins as $k=>$v) {
+    	foreach($userBins as $v) {
 	  if( $v ) {
 	    $check = ( $v == $search_params["bin_id"] )? "selected" : "";
 	    $n = $zen->bins["$v"];

@@ -9,7 +9,7 @@
 
   $tid = $ticket["type_id"];
   $user_id = $ticket["user_id"];
-  $title = ($zen->types["$tid"] == "Project")? strtoupper($zen->settings["system_name"])." PROJECT REPORT" : strtoupper($zen->settings["system_name"])." ".strtoupper($zen->types["$tid"])." REPORT";
+  $title = ($zen->types["$tid"] == "Project")? strtoupper($zen->settings["system_name"]). " PROJECT REPORT" : strtoupper($zen->settings["system_name"])." ".strtoupper($zen->types["$tid"]). " REPORT";
   $ticketroj = ($zen->types["$tid"] == "Project")? 1 : '';
   if( $ticket["project_id"] ) {
      $parent = $zen->get_ticket($ticket["project_id"] );
@@ -53,7 +53,7 @@
 <tr>
   <td colspan=4 height=10>&nbsp;</td>
 </tr>
-  
+<hr>  
 <? if( $ticketroj ) { ?>
 
 <tr>
@@ -118,13 +118,13 @@
 <? } ?>
 <tr>
   <td  width=50>
-    <b>Status:</b>
+    <b><?=tr("Status")?>:</b>
   </td>
   <td  width=150>
   <?=($ticket["status"])? $ticket["status"] : "ARCHIVED"; ?>
   </td>
   <td  width=50>
-    <b>Bin:</b>
+    <b><?=tr("Bin")?>:</b>
   </td>
   <td  width=250>
     <?=$zen->bins["$ticket[bin_id]"]?>
@@ -132,13 +132,13 @@
 </tr>
 <tr>
   <td >
-    <b>Priority:</b>
+    <b><?=tr("Priority")?>:</b>
   </td>
   <td>
   <?=($ticket["priority"])? $zen->priorities["$ticket[priority]"] : "none"; ?>
   </td>
   <td >
-    <b>Type:</b>
+    <b><?=tr("Type")?>:</b>
   </td>
   <td >
     <?=$zen->types["$ticket[type_id]"]?>
@@ -146,13 +146,13 @@
 </tr>
 <tr>
   <td >
-    <b>Created:</b>
+    <b><?=tr("Created")?>:</b>
   </td>
   <td>
   <?=($ticket["otime"])? $zen->showDateTime($ticket["otime"],'M') : "n/a"?>
   </td>
   <td >
-    <b>System:</b>
+    <b><?=tr("System")?>:</b>
   </td>
   <td >
     <?=$zen->systems["$ticket[system_id]"]?>
@@ -160,13 +160,13 @@
 </tr>
 <tr>
   <td >
-    <b>Elapsed:</b>
+    <b><?=tr("Elapsed")?>:</b>
   </td>
   <td>
   <?=round($zen->dateDiff($ticket["ctime"],$ticket["otime"],'hours'),1)?> hours
   </td>
   <td >
-    <b>Est. Hrs:</b>
+    <b><?=tr("Est Hrs")?>:</b>
   </td>
   <td >
     <?=($ticket["est_hours"] > 0)? "$ticket[est_hours]" : "n/a"; ?>
@@ -174,13 +174,13 @@
 </tr>
 <tr>
   <td>
-    <b>Worked:</b></td>
+    <b><?=tr("Worked")?>:</b></td>
   </td>
   <td>
     <?=($ticket["wkd_hours"]> 0)? "$ticket[wkd_hours]" : "n/a"; ?>
   </td>
   <td>
-    <b>% Est:</b>
+    <b>% <?=tr("Est Hrs")?>:</b>
   </td>
   <td>
     <?=$zen->percentWorked($ticket["est_hours"],$ticket["wkd_hours"])."% complete"; ?>
@@ -192,6 +192,7 @@
   
 <tr>
   <td  colspan=4>
+    <hr>
     <b><?php echo tr("DESCRIPTION"); ?></b>
     <ul>
       <?
@@ -209,6 +210,7 @@
   
 <tr>
   <td colspan=4>
+	<hr>
 	  <b><?php echo tr("RELATED TICKETS"); ?>:</b>
      <ul>
 <?

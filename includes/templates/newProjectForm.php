@@ -249,4 +249,3 @@ value="<?=($deadline)?$zen->showDate(strip_tags($deadline)):""?>">
   </td>
 </tr>
 </table>
-dd

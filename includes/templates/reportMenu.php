@@ -7,7 +7,7 @@
    <form action='<?=$rootUrl?>/reports/show.php' method='get'>
    <select name='repid'>
 <?
-   $usersBins = $zen->getUsersBins($login_id,'level_reports');
+$usersBins = $zen->getUsersBins($login_id,'level_reports');
    $reps = $zen->getReportTemplates($usersBins,$login_id);
    if( is_array($reps) && count($reps) ) {
      foreach($reps as $r) {
@@ -18,7 +18,7 @@
    } 
 ?>
    </select>
-   &nbsp;<input class='submit' type='submit' value='View'>
+   &nbsp;<input class='submit' type='submit' value='<?=tr("View")?>'>
        	</form>
   </td>
 </tr>

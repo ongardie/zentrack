@@ -33,7 +33,7 @@
   if( $Debug_Overview ) {
      print "<span class='note'>\n";
      print "<p>&nbsp;------DEBUG OVERVIEW-------&nbsp;</p>\n";
-     print "<i>To disable this output, set $Debug_Overview in header.php to 0.</i><br>\n";
+     print "<i>To disable this output, set \$Debug_Mode in header.php to null(not zero).</i><br>\n";
      print "<a href='$rootUrl/phpinfo.php'>click here to view phpinfo</a><br>\n";
      print "HTTP_USER_AGENT: $HTTP_USER_AGENT<br>\n";
      print "SCRIPT_NAME: $SCRIPT_NAME<br>\n";

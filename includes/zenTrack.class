@@ -926,7 +926,7 @@ class zenTrack extends zen {
     return( $res );
   }   
 
-  function attach_to_ticket( $id, $user_id, $params, $log_id = '' ) {
+  function attach_to_ticket( $id, $user_id, $params, $log_id = 0 ) {
     // creates an attachment to the given ticket and logs
     // the event if needed
     // the params array contains:
@@ -1601,7 +1601,7 @@ class zenTrack extends zen {
   }
 
   function add_attachment( $name, $filename, $filetype, 
-                           $ticket_id, $log_id = '', $description = '' ) {
+                           $ticket_id, $log_id = 0, $description = '' ) {
     // adds an attachment to the db for tracking
     // does not add the actual file, just it's associations
     // with logs and tickets, log_id is optional, the ticket_id is not
@@ -3016,7 +3016,7 @@ class zenTrack extends zen {
   function getDefaultValue( $field ) {
     if( $this->isDateFormatSetting($field) ) {
       // make a date
-      $val = (strlen($this->settings[$field]))?
+      $val = ($this->settings[$field])?
         strtotime($this->settings["$field"]) : "";
     }
     else if( $this->isOnOffSetting($field) ) {

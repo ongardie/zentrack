@@ -66,7 +66,7 @@
     <select name="set_bins[]" size='5' multiple>
 <?
    if( is_array($userBins) ) {
-     foreach($userBins as $k=>$v) {
+     foreach($userBins as $v) {
        if( $v ) {
          $check = (is_array($set_bins)&&in_array($v,$set_bins) )? 
 	   "selected" : "";

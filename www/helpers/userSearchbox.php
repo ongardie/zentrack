@@ -42,12 +42,12 @@
 <?
    $userBins = $zen->getUsersBins($login_id);
    if( is_array($userBins) ) {
-     foreach($userBins as $k=>$v) {
-       if( $k ) {
-         $check = (is_array($search_bins)&&in_array($k,$search_bins) )? 
+     foreach($userBins as $v) {
+       if( $v ) {
+         $check = (is_array($search_bins)&&in_array($v,$search_bins) )? 
 	   "selected" : "";
-         $n = $zen->bins["$k"];
-         print "<option $check value='$k'>$n</option>\n";
+         $n = $zen->bins["$v"];
+         print "<option $check value='$v'>$n</option>\n";
           }
      }
    } else {

@@ -5,7 +5,38 @@
  object oriented and database abstracted design lend to 
  endless possibilities for project expansion. 
 
------ V2.4.3 (RC2 Released: 2003-08-27) ----
+----- V2.4.4 (Released: 2004-02-27) ----
+
+2004-02-26, Kato
+  Updated error reporting (for security and more flexible configuration)
+    - zentrack_2/includes/headerInc.php 1.32
+  Fixed problems with bins not displaying correctly when some are disabled
+  (mentioned by several users)
+    - zentrack_2/www/helpers/userSearchbox.php 1.8
+    - zentrack_2/www/helpers/projectSearchbox.php 1.9
+    - zentrack_2/www/helpers/ticketSearchbox 1.7
+    - zentrack_2/includes/templates/searchLogForm 1.6
+  Removed random 'dd' text from project form.
+    - zentrack_2/includes/templates/newProjectForm.php 1.25
+  Fixed default date formatting on project pages
+    - zentrack_2/includes/templates/newProjectForm.php 1.25
+  Corrected attachment issue with postrges caused by integer defaulting(incorrectly) to string value.
+    - zentrack_2/www/actions/upload.php 1.11
+    - zentrack_2/includes/zenTrack.class 1.116
+    - zentrack_2/includes/db.class 1.24
+  Corrected problem with searches by priority (reported by C. Alonso and Djeryv Tar)
+    - zentrack_2/includes/templates/searchResults.php 1.5
+  Internationalization of several pages (now use translation strings, thanks to jasminl)
+    - zentrack_2/www/actions/print.php 1.11
+    - zentrack_2/includes/templates/reportMenu.php 1.6
+    - zentrack_2/includes/templates/searchForm.php 1.7
+  Translations updated
+    - zentrack_2/includes/translations/french.trans 1.5 (updated by jasminl)
+    - zentrack_2/includes/translations/german.trans 1.5 (updated by JonasMeier)
+    - zentrack_2/includes/translations/english.trans 1.5
+    
+
+----- V2.4.3 (Released: 2003-08-27) ----
 
 2003-11-10, Kato
   Fixed bug caused by level_create > level_edit

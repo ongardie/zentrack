@@ -34,6 +34,9 @@
      if( $log_id ) {
 	$input["log_id"] = "int";
      }
+     else {
+       $log_id = 0;
+     }
      $required = array_keys($input);
      $input["comments"] = "html";
      $zen->cleanInput($input);

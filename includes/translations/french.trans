@@ -76,7 +76,7 @@ msgstr "? doit être réglé à 'on' ou 'off'"
 #file "D:\zentrack\zentrack/www/admin/config.php"
 #args "array($k)"
 msgid "? must have a value, use zero instead of a blank"
-msgstr "? doit avoir une valeur, utiliser zéro au lieu de vide"
+msgstr "? doit avoir une valeur, utilisez zéro plutôt qu'un espace blanc"
 
 
 #file "D:\zentrack\zentrack/www/admin/config.php"
@@ -106,7 +106,7 @@ msgstr "? systèmes ont été sauvegardés dans la BD. Mises à jour terminées."
 #file "D:\zentrack\zentrack/www/admin/tasks.php"
 #args "array($j)"
 msgid "? tasks were saved to the database. Updates complete"
-msgstr "? taches ont été sauvegardées dans la BD. Mises à jour terminées."
+msgstr "? tâches ont été sauvegardées dans la BD. Mises à jour terminées."
 
 
 #file "D:\zentrack\zentrack/www/admin/types.php"
@@ -124,7 +124,7 @@ msgstr "? n'est pas un utilisateur valide"
 #file "D:\zentrack\zentrack/includes/templates/reportsOptionsMenu.php"
 #args ""
 msgid "A large number of elements will appear better in a line chart, bar charts tend to be more pleasing with smaller numbers."
-msgstr "Un grand nombre d'éléments seront mieux représentés dans un graphe linéaire. Les graphes à barre sont plus adaptés aux petits nombres."
+msgstr "Un grand nombre d'éléments seront mieux représentés par un graphe linéaire. Les graphes à barre sont mieux adaptés aux petits échantillons."
 
 
 #file "D:\zentrack\zentrack/includes/leftHelp.php"
@@ -268,7 +268,7 @@ msgstr "Administration"
 #file "D:\zentrack\zentrack/includes/templates/userSearchList.php"
 #args ""
 msgid "Administrative Options"
-msgstr "Réglages d'administration"
+msgstr "Réglages administratifs"
 
 
 #file "D:\zentrack\zentrack/www/admin/access.php"
@@ -322,7 +322,7 @@ msgstr "Archiver les tickets"
 #file "D:\zentrack\zentrack/includes/templates/reportMenu.php"
 #args ""
 msgid "Are you sure you want to permanently delete this template?"
-msgstr "Êtes-vous sûr de vouloir détruire ce modèle de manière permanente ?"
+msgstr "Êtes-vous certains de vouloir détruire ce modèle de manière permanente ?"
 
 
 #file "D:\zentrack\zentrack/includes/templates/actions/assign.php"
@@ -472,7 +472,7 @@ msgstr "Changer"
 #file "D:\zentrack\zentrack/includes/templates/configSettingsForm.php"
 #args ""
 msgid "Changing these settings can have a severe impact on the system.  Please consider this before making modifications."
-msgstr "Changer ces réglages peut avoir de graves impacts sur le système. Veuillez y prêter attention avant d'apporter ces modifications."
+msgstr "Changer ces réglages peut avoir de graves impacts sur le système. Veuillez y prêter attention avant d'apporter des modifications."
 
 
 #file "D:\zentrack\zentrack/includes/templates/configForm.php"
@@ -2709,7 +2709,8 @@ msgstr "Ceci pourrait être une longue liste! Procéder quand même ?"
 
 #file "D:\zentrack\zentrack/includes/templates/userAdd.php"
 #args ""
-msgid "This grants the user the specified level of  	access to all bins not otherwise indicated by 'user access'."
+msgid "This grants the user the specified level of 
+ 	access to all bins not otherwise indicated by 'user access'."
 msgstr "Ceci permet à l'utilisateur d'accéder au niveau spécifié de tous les casiers."
 
 
@@ -3207,7 +3208,8 @@ msgstr "Votre nouveau mot de passe doit contenir au moins un caractère qui n'est
 
 #file "D:\zentrack\zentrack/includes/templates/pwcForm.php"
 #args ""
-msgid "Your passphrase must be at least 6 characters long and      contain at least 1 non-letter character."
+msgid "Your passphrase must be at least 6 characters long and 
+     contain at least 1 non-letter character."
 msgstr "Votre mot de passe doit être d'au moins 6 caractères et contenir au moins un caractère qui n'est pas une lettre"
 
 
@@ -3298,25 +3300,25 @@ msgstr "n/a"
 #file "D:\zentrack\zentrack/www/helpers/projectSearchbox.php"
 #args ""
 msgid "no bins"
-msgstr "pas de casier"
+msgstr "pas de casiers"
 
 
 #file "D:\zentrack\zentrack/www/helpers/projectSearchbox.php"
 #args ""
 msgid "no priorities"
-msgstr "pas de priorité"
+msgstr "pas de priorités"
 
 
 #file "D:\zentrack\zentrack/www/helpers/projectSearchbox.php"
 #args ""
 msgid "no systems"
-msgstr "pas de système"
+msgstr "pas de systèmes"
 
 
 #file "D:\zentrack\zentrack/www/helpers/ticketSearchbox.php"
 #args ""
 msgid "no types"
-msgstr "pas de type"
+msgstr "pas de types"
 
 
 #file "D:\zentrack\zentrack/includes/templates/userSearchList.php"
@@ -3346,7 +3348,7 @@ msgstr "mot de passe"
 #file "D:\zentrack\zentrack/www/addProjectSubmit.php"
 #args ""
 msgid "required field missing:"
-msgstr "ficher requis manquant:"
+msgstr "champs requis manquant:"
 
 
 #file "D:\zentrack\zentrack/includes/templates/actions/close.php"
@@ -3364,7 +3366,7 @@ msgstr "requis... erreur de traitement"
 #file "D:\zentrack\zentrack/includes/templates/newTicketForm.php"
 #args ""
 msgid "save your changes"
-msgstr "sauver vos changement"
+msgstr "sauvegardez vos changement"
 
 
 #file "D:\zentrack\zentrack/includes/zenTrack.class"
@@ -3376,7 +3378,7 @@ msgstr "ticket #?: accepté par ?"
 #file "D:\zentrack\zentrack/includes/templates/newTicketForm.php"
 #args ""
 msgid "up to two decimal places, optional"
-msgstr "jusqu'à 2 décimales, optionnel"
+msgstr "jusqu'à 2 décimales, optionnelles"
 
 
 #file "D:\zentrack\zentrack/includes/templates/reportsDateMenu.php"
@@ -3401,119 +3403,129 @@ msgstr "version"
 #args ""
 msgid "yes"
 msgstr "oui"
-msgid "Less"
-msgstr ""
-
-
-msgid "Log On"
-msgstr ""
-
-
-msgid "Accept"
-msgstr ""
-
-
-msgid "Approve"
-msgstr ""
-
-
-msgid "Assign"
-msgstr ""
-
-
-msgid "Bins cannot be destroyed, to maintain data integrity."
-msgstr ""
-
-
-msgid "Changing the Bin Configuration has a large system impact."
-msgstr ""
-
-
-msgid "Create"
-msgstr ""
-
-
-msgid "Edit"
-msgstr ""
-
 
 msgid "Less"
-msgstr ""
+msgstr "Moin"
 
+msgid "Log On"
+msgstr "Se connecter"
+
+msgid "Accept"
+msgstr "Accepter"
+
+msgid "Approve"
+msgstr "Approuver"
+
+msgid "Assign"
+msgstr "Assigner"
+
+msgid "Bins cannot be destroyed, to maintain data integrity."
+msgstr "Les casiers ne peuvent êtres détruits pour maintenir l'intégrité des données"
+
+msgid "Changing the Bin Configuration has a large system impact."
+msgstr "Modifier la configuration des casiers peut avoir un impact important sur le systèmes"
+
+msgid "Create"
+msgstr "Creer"
+
+msgid "Edit"
+msgstr "Modifier"
+
+msgid "Less"
+msgstr "Moin"
 
 msgid "License"
-msgstr ""
-
+msgstr "Licence"
 
 msgid "Login and passphrase are case sensitive"
-msgstr ""
-
+msgstr "Les nom d'usager et les mots de passes sont sensibles à la casse"
 
 msgid "Notify"
-msgstr ""
-
+msgstr "Notifier"
 
 msgid "Print"
-msgstr ""
-
+msgstr "Imprimer"
 
 msgid "Related"
-msgstr ""
-
+msgstr "Relié"
 
 msgid "Settings Administration"
-msgstr ""
-
+msgstr "Administration des configurations"
 
 msgid "Support"
-msgstr ""
-
+msgstr "Support"
 
 msgid "System error: Ticket ? could not be emailed."
-msgstr ""
-
+msgstr "Erreur système: Le ticket ? n'as pus être envoyé par courriel"
 
 msgid "System error: Ticket ? hours could not be set"
-msgstr ""
-
+msgstr "Erreur système: Les heures du ticket ? n'ont pus être mises"
 
 msgid "Tasks"
-msgstr ""
-
+msgstr "Tâches"
 
 msgid "Test"
-msgstr ""
-
+msgstr "Test"
 
 msgid "The language could not be changed to ?"
-msgstr ""
-
+msgstr "La langue n'as pus être modifiée pour ?"
 
 msgid "This grants the user the specified level of access to all bins not otherwise indicated by 'user access'."
-msgstr ""
-
+msgstr "Ceci permet à l'utilisateur d'accéder au niveau spécifié de tous les casiers."
 
 msgid "Ticket ? has been reopened."
-msgstr ""
-
+msgstr "Le ticket ? à été réouvert"
 
 msgid "To remove a bin from use, uncheck the 'active' box."
-msgstr ""
-
+msgstr "Pour désactiver un casier, décochez la case 'active'."
 
 msgid "Visit the zenTrack development site"
-msgstr ""
-
+msgstr "Visitez le site de développement de zenTrack"
 
 msgid "Welcome"
-msgstr ""
-
+msgstr "Bienvenue"
 
 msgid "Your language has been changed to ?"
-msgstr ""
-
+msgstr "Votre langage à été modifiée pour ?"
 
 msgid "Your passphrase must be at least 6 characters long and contain at least 1 non-letter character."
-msgstr ""
+msgstr "Votre phrase-clé doit contenir au minimum 6 caractères et 1 chiffre."
 
+msgid "create your ticket"
+msgstr "créer votre ticket"
 
+msgid "Your passphrase is currently set to the system default. Please change it."
+msgstr "Votre mot de passe est celui par défaut, veuillez le changer svp."
+
+msgid "No open ?s in ?"
+msgstr "Aucuns ?s ouverts dans ?"
+
+msgid "Click here to view the ?"
+msgstr "Cliquez ici poir voir les ?"
+
+msgid "Search For Tickets"
+msgstr "Recherche de tickets"
+
+msgid "In any of these"
+msgstr "Dans n'importe quel"
+
+msgid "(or higher)"
+msgstr "(ou plus)"
+
+msgid "View"
+msgstr "Voir"
+
+msgid "Select multiples using control-click"
+msgstr "Sélectionnez-en plus d'un en tenant CTRL + Clic"
+
+msgid "Log Activity"
+msgstr "Activité du journal"
+
+msgid "Ticket Count"
+msgstr "Compte de ticket"
+
+msgid "Hours Estimated"
+msgstr "Heures estimées"
+
+msgid "Time Elapsed"
+msgstr "Temps écoulé"
