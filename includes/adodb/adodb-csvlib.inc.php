@@ -1,13 +1,19 @@
 <?php
 
+// security - hide paths
+if (!defined('ADODB_DIR')) die();
+
+global $ADODB_INCLUDED_CSV;
+$ADODB_INCLUDED_CSV = 1;
+
 /* 
-V3.00 6 Jan 2003  (c) 2000-2003 John Lim (jlim@natsoft.com.my). All rights reserved.
+  V4.52 10 Aug 2004  (c) 2000-2004 John Lim (jlim@natsoft.com.my). All rights reserved.
   Released under both BSD license and Lesser GPL library license. 
   Whenever there is any discrepancy between the two licenses, 
   the BSD license will take precedence. See License.txt. 
   Set tabs to 4 for best viewing.
   
-  Latest version is available at http://php.weblogs.com/
+  Latest version is available at http://adodb.sourceforge.net
   
   Library for CSV serialization. This is used by the csv/proxy driver and is the 
   CacheExecute() serialization format. 
@@ -40,31 +46,30 @@ V3.00 6 Jan 2003  (c) 2000-2003 John Lim (jlim@natsoft.com.my). All rights reser
 			
 			$text = "====-1,0,$sql\n";
 			return $text;
-		} else {
-			$tt = ($rs->timeCreated) ? $rs->timeCreated : time();
-			$line = "====0,$tt,$sql\n";
 		}
-		// column definitions
-		for($i=0; $i < $max; $i++) {
-			$o = $rs->FetchField($i);
-			$line .= urlencode($o->name).':'.$rs->MetaType($o->type,$o->max_length).":$o->max_length,";
-		}
-		$text = substr($line,0,strlen($line)-1)."\n";
+		$tt = ($rs->timeCreated) ? $rs->timeCreated : time();
 		
+		## changed format from ====0 to ====1
+		$line = "====1,$tt,$sql\n";
 		
-		// get data
 		if ($rs->databaseType == 'array') {
-			$text .= serialize($rs->_array);
+			$rows =& $rs->_array;
 		} else {
 			$rows = array();
 			while (!$rs->EOF) {	
 				$rows[] = $rs->fields;
 				$rs->MoveNext();
 			} 
-			$text .= serialize($rows);
 		}
-		$rs->MoveFirst();
-		return $text;
+		
+		for($i=0; $i < $max; $i++) {
+			$o =& $rs->FetchField($i);
+			$flds[] = $o;
+		}
+		
+		$rs =& new ADORecordSet_array();
+		$rs->InitArrayFields($rows,$flds);
+		return $line.serialize($rs);
 	}
 
 	
@@ -81,19 +86,19 @@ V3.00 6 Jan 2003  (c) 2000-2003 John Lim (jlim@natsoft.com.my). All rights reser
 */
 	function &csv2rs($url,&$err,$timeout=0)
 	{
-		$fp = @fopen($url,'r');
 		$err = false;
+		$fp = @fopen($url,'rb');
 		if (!$fp) {
-			$err = $url.'file/URL not found';
+			$err = $url.' file/URL not found';
 			return false;
 		}
 		flock($fp, LOCK_SH);
 		$arr = array();
 		$ttl = 0;
 		
-		if ($meta = fgetcsv ($fp, 32000, ",")) {
+		if ($meta = fgetcsv($fp, 32000, ",")) {
 			// check if error message
-			if (substr($meta[0],0,4) === '****') {
+			if (strncmp($meta[0],'****',4) === 0) {
 				$err = trim(substr($meta[0],4,1024));
 				fclose($fp);
 				return false;
@@ -102,7 +107,7 @@ V3.00 6 Jan 2003  (c) 2000-2003 John Lim (jlim@natsoft.com.my). All rights reser
 			// $meta[0] is -1 means return an empty recordset
 			// $meta[1] contains a time 
 	
-			if (substr($meta[0],0,4) ===  '====') {
+			if (strncmp($meta[0], '====',4) === 0) {
 			
 				if ($meta[0] == "====-1") {
 					if (sizeof($meta) < 5) {
@@ -118,26 +123,35 @@ V3.00 6 Jan 2003  (c) 2000-2003 John Lim (jlim@natsoft.com.my). All rights reser
 					}
 					$rs->fields = array();
 					$rs->timeCreated = $meta[1];
-					$rs = new ADORecordSet($val=true);
+					$rs =& new ADORecordSet($val=true);
 					$rs->EOF = true;
 					$rs->_numOfFields=0;
 					$rs->sql = urldecode($meta[2]);
 					$rs->affectedrows = (integer)$meta[3];
 					$rs->insertid = $meta[4];	
 					return $rs;
-				}
+				} 
 			# Under high volume loads, we want only 1 thread/process to _write_file
 			# so that we don't have 50 processes queueing to write the same data.
-			# Would require probabilistic blocking write 
+			# We use probabilistic timeout, ahead of time.
 			#
-			# -2 sec before timeout, give processes 1/16 chance of writing to file with blocking io
-			# -1 sec after timeout give processes 1/4 chance of writing with blocking
-			# +0 sec after timeout, give processes 100% chance writing with blocking
+			# -4 sec before timeout, give processes 1/32 chance of timing out
+			# -2 sec before timeout, give processes 1/16 chance of timing out
+			# -1 sec after timeout give processes 1/4 chance of timing out
+			# +0 sec after timeout, give processes 100% chance of timing out
 				if (sizeof($meta) > 1) {
 					if($timeout >0){ 
-						$tdiff = $meta[1]+$timeout - time();
+						$tdiff = (integer)( $meta[1]+$timeout - time());
 						if ($tdiff <= 2) {
 							switch($tdiff) {
+							case 4:
+							case 3:
+								if ((rand() & 31) == 0) {
+									fclose($fp);
+									$err = "Timeout 3";
+									return false;
+								}
+								break;
 							case 2: 
 								if ((rand() & 15) == 0) {
 									fclose($fp);
@@ -162,8 +176,30 @@ V3.00 6 Jan 2003  (c) 2000-2003 John Lim (jlim@natsoft.com.my). All rights reser
 					}// (timeout>0)
 					$ttl = $meta[1];
 				}
+				//================================================
+				// new cache format - use serialize extensively...
+				if ($meta[0] === '====1') {
+					// slurp in the data
+					$MAXSIZE = 128000;
+					
+					$text = fread($fp,$MAXSIZE);
+					if (strlen($text)) {
+						while ($txt = fread($fp,$MAXSIZE)) {
+							$text .= $txt;
+						}
+					}
+					fclose($fp);
+					$rs = unserialize($text);
+					if (is_object($rs)) $rs->timeCreated = $ttl;
+					else {
+						$err = "Unable to unserialize recordset";
+						//echo htmlspecialchars($text),' !--END--!<p>';
+					}
+					return $rs;
+				}
+				
 				$meta = false;
-				$meta = fgetcsv($fp, 16000, ",");
+				$meta = fgetcsv($fp, 32000, ",");
 				if (!$meta) {
 					fclose($fp);
 					$err = "Unexpected EOF 1";
@@ -180,7 +216,7 @@ V3.00 6 Jan 2003  (c) 2000-2003 John Lim (jlim@natsoft.com.my). All rights reser
 					$flds = false;
 					break;
 				}
-				$fld = new ADOFieldObject();
+				$fld =& new ADOFieldObject();
 				$fld->name = urldecode($o2[0]);
 				$fld->type = $o2[1];
 				$fld->max_length = $o2[2];
@@ -194,80 +230,75 @@ V3.00 6 Jan 2003  (c) 2000-2003 John Lim (jlim@natsoft.com.my). All rights reser
 		
 		// slurp in the data
 		$MAXSIZE = 128000;
-		$text = fread($fp,$MAXSIZE);
-		$cnt = 1;
-		while (strlen($text) == $MAXSIZE*$cnt) {
-			$text .= fread($fp,$MAXSIZE);
-			$cnt += 1;
+		
+		$text = '';
+		while ($txt = fread($fp,$MAXSIZE)) {
+			$text .= $txt;
 		}
 			
 		fclose($fp);
-		$arr = @unserialize($text);
-		
+		@$arr = unserialize($text);
 		//var_dump($arr);
 		if (!is_array($arr)) {
 			$err = "Recordset had unexpected EOF (in serialized recordset)";
 			if (get_magic_quotes_runtime()) $err .= ". Magic Quotes Runtime should be disabled!";
 			return false;
 		}
-		$rs = new ADORecordSet_array();
+		$rs =& new ADORecordSet_array();
 		$rs->timeCreated = $ttl;
 		$rs->InitArrayFields($arr,$flds);
 		return $rs;
 	}
 	
-	/*
-	# The following code was an alternative method of saving 
-	# recordsets and  is experimental and was never used.
-	# It is faster, but provides very little error checking.
-	
-	//High speed rs2csv 10% faster 
-	function & xrs2csv(&$rs)
-	{
-		return time()."\n".serialize($rs);
-	}
-	function & xcsv2rs($url,&$err,$timeout)
-	{
-		$t = filemtime($url);// this is cached - should we clearstatcache() ?
-		if ($t === false) {
-			$err = 'File not found 1';
-			return false;
-		}
-		
-		if (time() > $t + $timeout){
-			$err = " Timeout 1";
-			return false;
-		}
-		
-		$fp = @fopen($url,'r');
-		if (!$fp) {
-			$err = ' file not found ';
-			return false;
-		}
-		
-		flock($fp,LOCK_SH);
-		$t = fgets($fp,100);
-		if ($t === false){
-			fclose($fp);
-			$err =  " EOF 1 ";
-			return false;
-		}
-		/*
-		if (time() > ((integer)$t) + $timeout){
-			fclose($fp);
-			$err = " Timeout 2";
-			return false;
-		}*   /
-		
-		$txt = &fread($fp,1999999); // Increase if EOF 2 error returned
-		fclose($fp);
-		$o = @unserialize($txt);
-		if (!is_object($o)) {
-			$err = " EOF 2";
-			return false;
-		}
-		$o->timeCreated = $t;
-		return $o;
-	}
+
+	/**
+	* Save a file $filename and its $contents (normally for caching) with file locking
 	*/
+	function adodb_write_file($filename, $contents,$debug=false)
+	{ 
+	# http://www.php.net/bugs.php?id=9203 Bug that flock fails on Windows
+	# So to simulate locking, we assume that rename is an atomic operation.
+	# First we delete $filename, then we create a $tempfile write to it and 
+	# rename to the desired $filename. If the rename works, then we successfully 
+	# modified the file exclusively.
+	# What a stupid need - having to simulate locking.
+	# Risks:
+	# 1. $tempfile name is not unique -- very very low
+	# 2. unlink($filename) fails -- ok, rename will fail
+	# 3. adodb reads stale file because unlink fails -- ok, $rs timeout occurs
+	# 4. another process creates $filename between unlink() and rename() -- ok, rename() fails and  cache updated
+		if (strncmp(PHP_OS,'WIN',3) === 0) {
+			// skip the decimal place
+			$mtime = substr(str_replace(' ','_',microtime()),2); 
+			// getmypid() actually returns 0 on Win98 - never mind!
+			$tmpname = $filename.uniqid($mtime).getmypid();
+			if (!($fd = fopen($tmpname,'a'))) return false;
+			$ok = ftruncate($fd,0);			
+			if (!fwrite($fd,$contents)) $ok = false;
+			fclose($fd);
+			chmod($tmpname,0644);
+			// the tricky moment
+			@unlink($filename);
+			if (!@rename($tmpname,$filename)) {
+				unlink($tmpname);
+				$ok = false;
+			}
+			if (!$ok) {
+				if ($debug) ADOConnection::outp( " Rename $tmpname ".($ok? 'ok' : 'failed'));
+			}
+			return $ok;
+		}
+		if (!($fd = fopen($filename, 'a'))) return false;
+		if (flock($fd, LOCK_EX) && ftruncate($fd, 0)) {
+			$ok = fwrite( $fd, $contents );
+			fclose($fd);
+			chmod($filename,0644);
+		}else {
+			fclose($fd);
+			if ($debug)ADOConnection::outp( " Failed acquiring lock for $filename<br>\n");
+			$ok = false;
+		}
+	
+		return $ok;
+	}
 ?>

@@ -105,10 +105,10 @@ CREATE TABLE zentrack_related_contacts (
 --
 
 CREATE TABLE ZENTRACK_ACCESS (
- access_id int IDENTITY (1, 1) NOT NULL ,
- [user_id] int default NULL,
- bin_id int default NULL,
- lvl int default NULL,
+ access_id NUMERIC(12) IDENTITY (1, 1) NOT NULL ,
+ [user_id] NUMERIC(12) default NULL,
+ bin_id NUMERIC(12) default NULL,
+ lvl NUMERIC(12) default NULL,
  [notes] varchar(25) default NULL,
  PRIMARY KEY (access_id)
 );
@@ -118,9 +118,9 @@ CREATE TABLE ZENTRACK_ACCESS (
 --
 
 CREATE TABLE ZENTRACK_ATTACHMENTS (
- attachment_id int IDENTITY (1, 1) NOT NULL ,
- log_id int default NULL,
- ticket_id int default NULL,
+ attachment_id NUMERIC(12) IDENTITY (1, 1) NOT NULL ,
+ log_id NUMERIC(12) default NULL,
+ ticket_id NUMERIC(12) default NULL,
  name varchar(25) default NULL,
  filename varchar(250) default NULL,
  filetype varchar(250) default NULL,
@@ -133,10 +133,10 @@ CREATE TABLE ZENTRACK_ATTACHMENTS (
 --
 
 CREATE TABLE ZENTRACK_BINS (
- bid int IDENTITY (1, 1) NOT NULL ,
+ bid NUMERIC(12) IDENTITY (1, 1) NOT NULL ,
  [name] varchar(25) NOT NULL default '',
- priority int default NULL,
- active int default '1',
+ priority NUMERIC(12) default NULL,
+ active NUMERIC(12) default '1',
  PRIMARY KEY (bid)
 );
 
@@ -145,11 +145,11 @@ CREATE TABLE ZENTRACK_BINS (
 --
 
 CREATE TABLE ZENTRACK_LOGS (
- lid int IDENTITY (1, 1) NOT NULL ,
- ticket_id int NOT NULL default '0',
- [user_id] int NOT NULL default '0',
- bin_id int NOT NULL default '0',
- created int default NULL,
+ lid NUMERIC(12) IDENTITY (1, 1) NOT NULL ,
+ ticket_id NUMERIC(12) NOT NULL default '0',
+ [user_id] NUMERIC(12) NOT NULL default '0',
+ bin_id NUMERIC(12) NOT NULL default '0',
+ created NUMERIC(12) default NULL,
  [action] varchar(25) default NULL,
  hours decimal(10,2) default NULL,
  entry text,
@@ -157,11 +157,26 @@ CREATE TABLE ZENTRACK_LOGS (
 );
 
 --
+-- Table structure for 'ZENTRACK_NOTIFY_LIST'
+--
+
+CREATE TABLE ZENTRACK_NOTIFY_LIST (
+   notify_id NUMERIC(12) IDENTITY (1,1) NOT NULL,
+   ticket_id NUMERIC(12) NOT NULL,
+   user_id NUMERIC(12) default NULL,
+   name varchar(100) default NULL,
+   email varchar(150) default NULL,
+   priority NUMERIC(12) default NULL,
+   notes varchar(255) default NULL,
+   PRIMARY KEY (notify_id)
+);
+
+--
 -- Table structure for table 'ZENTRACK_PREFERENCES'
 --
 
 CREATE TABLE ZENTRACK_PREFERENCES (
- [user_id] int NOT NULL default '0',
+ [user_id] NUMERIC(12) NOT NULL default '0',
  prefname varchar(25) default NULL,
  prefval varchar(50) default NULL
 );
@@ -171,10 +186,10 @@ CREATE TABLE ZENTRACK_PREFERENCES (
 --
 
 CREATE TABLE ZENTRACK_PRIORITIES (
- pid int IDENTITY (1, 1) NOT NULL ,
+ pid NUMERIC(12) IDENTITY (1, 1) NOT NULL ,
  [name] varchar(25) NOT NULL default '',
- priority int default NULL,
- active int default NULL,
+ priority NUMERIC(12) default NULL,
+ active NUMERIC(12) default NULL,
  PRIMARY KEY (pid)
 );
 
@@ -183,7 +198,7 @@ CREATE TABLE ZENTRACK_PRIORITIES (
 --
 
 CREATE TABLE ZENTRACK_SETTINGS (
- setting_id int IDENTITY (1, 1) NOT NULL ,
+ setting_id NUMERIC(12) IDENTITY (1, 1) NOT NULL ,
  [name] varchar(25) default NULL,
  value varchar(100) default NULL,
  [description] varchar(200) default NULL,
@@ -195,10 +210,10 @@ CREATE TABLE ZENTRACK_SETTINGS (
 --
 
 CREATE TABLE ZENTRACK_SYSTEMS (
- sid int IDENTITY (1, 1) NOT NULL ,
+ sid NUMERIC(12) IDENTITY (1, 1) NOT NULL ,
  [name] varchar(25) NOT NULL default '',
- priority int default NULL,
- active int default NULL,
+ priority NUMERIC(12) default NULL,
+ active NUMERIC(12) default NULL,
  PRIMARY KEY (sid)
 );
 
@@ -207,10 +222,10 @@ CREATE TABLE ZENTRACK_SYSTEMS (
 --
 
 CREATE TABLE ZENTRACK_TASKS (
- task_id int IDENTITY (1, 1) NOT NULL ,
+ task_id NUMERIC(12) IDENTITY (1, 1) NOT NULL ,
  [name] varchar(25) NOT NULL default '',
- priority int default NULL,
- active int default NULL,
+ priority NUMERIC(12) default NULL,
+ active NUMERIC(12) default NULL,
  PRIMARY KEY (task_id)
 );
 
@@ -219,25 +234,25 @@ CREATE TABLE ZENTRACK_TASKS (
 --
 
 CREATE TABLE ZENTRACK_TICKETS (
- [id] int IDENTITY (1, 1) NOT NULL ,
+ [id] NUMERIC(12) IDENTITY (1, 1) NOT NULL ,
  title varchar(50) NOT NULL default 'untitled',
- priority int NOT NULL default '0',
+ priority NUMERIC(12) NOT NULL default '0',
  status varchar(25) NOT NULL default 'OPEN',
  [description] text,
- otime int default NULL,
- ctime int default NULL,
- bin_id int default NULL,
- type_id int default NULL,
- [user_id] int default NULL,
- system_id int default NULL,
- creator_id int default NULL,
- tested int default '0',
- approved int default '0',
+ otime NUMERIC(12) default NULL,
+ ctime NUMERIC(12) default NULL,
+ bin_id NUMERIC(12) default NULL,
+ type_id NUMERIC(12) default NULL,
+ [user_id] NUMERIC(12) default NULL,
+ system_id NUMERIC(12) default NULL,
+ creator_id NUMERIC(12) default NULL,
+ tested NUMERIC(12) default '0',
+ approved NUMERIC(12) default '0',
  relations varchar(255) default NULL,
- project_id int default NULL,
+ project_id NUMERIC(12) default NULL,
  est_hours decimal(10,2) default '0.00',
- deadline int default NULL,
- start_date int default NULL,
+ deadline NUMERIC(12) default NULL,
+ start_date NUMERIC(12) default NULL,
  wkd_hours decimal(10,2) default '0.00',
  PRIMARY KEY (id)
 );
@@ -247,10 +262,10 @@ CREATE TABLE ZENTRACK_TICKETS (
 --
 
 CREATE TABLE ZENTRACK_TYPES (
- type_id int IDENTITY (1, 1) NOT NULL ,
+ type_id NUMERIC(12) IDENTITY (1, 1) NOT NULL ,
  [name] varchar(25) NOT NULL default '',
- priority int default NULL,
- active int default NULL,
+ priority NUMERIC(12) default NULL,
+ active NUMERIC(12) default NULL,
  PRIMARY KEY (type_id)
 );
 
@@ -259,17 +274,17 @@ CREATE TABLE ZENTRACK_TYPES (
 --
 
 CREATE TABLE ZENTRACK_USERS (
- [user_id] int IDENTITY (1, 1) NOT NULL ,
+ [user_id] NUMERIC(12) IDENTITY (1, 1) NOT NULL ,
  login varchar(25) default NULL,
- access_level int default NULL,
+ access_level NUMERIC(12) default NULL,
  passphrase varchar(32) default NULL,
  lname varchar(50) default NULL,
  fname varchar(50) default NULL,
  initials varchar(5) default NULL,
  email varchar(100) default NULL,
  notes varchar(255) default NULL,
- homebin int default NULL,
- active int default '1',
+ homebin NUMERIC(12) default NULL,
+ active NUMERIC(12) default '1',
  PRIMARY KEY (user_id)
 );
 
@@ -278,23 +293,23 @@ CREATE TABLE ZENTRACK_USERS (
 -- 
 
 CREATE TABLE ZENTRACK_REPORTS ( 
-  report_id int IDENTITY (1, 1) NOT NULL ,
+  report_id NUMERIC(12) IDENTITY (1, 1) NOT NULL ,
   report_name varchar(100) default NULL, 
   report_type varchar(25) default NULL, 
   date_selector varchar(25) default NULL, 
-  date_value int default NULL, 
+  date_value NUMERIC(12) default NULL, 
   date_range varchar(12) default NULL, 
-  date_low int default NULL, 
+  date_low NUMERIC(12) default NULL, 
   chart_title varchar(255) default NULL, 
   chart_subtitle varchar(255) default NULL, 
-  chart_add_ttl int default NULL, 
-  chart_add_avg int default NULL, 
+  chart_add_ttl NUMERIC(12) default NULL, 
+  chart_add_avg NUMERIC(12) default NULL, 
   chart_type varchar(25) default NULL, 
   chart_options text, 
   data_set text, 
-  chart_combine int default NULL, 
-  text_output int default NULL, 
-  show_data_vals int default NULL, 
+  chart_combine NUMERIC(12) default NULL, 
+  text_output NUMERIC(12) default NULL, 
+  show_data_vals NUMERIC(12) default NULL, 
   PRIMARY KEY (report_id) 
 );
 
@@ -303,9 +318,9 @@ CREATE TABLE ZENTRACK_REPORTS (
 -- 
 
 CREATE TABLE ZENTRACK_REPORTS_INDEX ( 
-  report_id int default NULL, 
-  bid int default NULL, 
-  [user_id] int default NULL 
+  report_id NUMERIC(12) default NULL, 
+  bid NUMERIC(12) default NULL, 
+  [user_id] NUMERIC(12) default NULL 
 );
 
 -- 
@@ -313,24 +328,24 @@ CREATE TABLE ZENTRACK_REPORTS_INDEX (
 -- 
 
 CREATE TABLE ZENTRACK_REPORTS_TEMP ( 
-  report_id int IDENTITY (1, 1) NOT NULL ,
+  report_id NUMERIC(12) IDENTITY (1, 1) NOT NULL ,
   report_name varchar(100) default NULL, 
   report_type varchar(25) default NULL, 
   date_selector varchar(25) default NULL, 
-  date_value int default NULL, 
+  date_value NUMERIC(12) default NULL, 
   date_range varchar(12) default NULL, 
-  date_low int default NULL, 
+  date_low NUMERIC(12) default NULL, 
   chart_title varchar(255) default NULL, 
   chart_subtitle varchar(255) default NULL, 
-  chart_add_ttl int default NULL, 
-  chart_add_avg int default NULL, 
+  chart_add_ttl NUMERIC(12) default NULL, 
+  chart_add_avg NUMERIC(12) default NULL, 
   chart_type varchar(25) default NULL, 
   chart_options text, 
   data_set text, 
   created datetime NOT NULL default '0000-00-00 00:00:00', 
-  chart_combine int default NULL, 
-  text_output int default NULL, 
-  show_data_vals int default NULL, 
+  chart_combine NUMERIC(12) default NULL, 
+  text_output NUMERIC(12) default NULL, 
+  show_data_vals NUMERIC(12) default NULL, 
   PRIMARY KEY (report_id), 
 --  KEY tempreports_created(created) 
 );

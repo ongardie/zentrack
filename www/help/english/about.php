@@ -4,7 +4,8 @@
   **  HELP SECTION - ABOUT
   */
 
-  include("help_header.php");
+  $b = dirname(__FILE__);
+  include(dirname($b)."/help_header.php");
 
   $page_title = "About ".$zen->settings["system_name"];
   include("$libDir/nav.php");

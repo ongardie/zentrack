@@ -21,7 +21,11 @@ class DB {
     $recordSet = &$this->db_link->Execute($query);
     if ($recordSet) {
       $vars = $recordSet->RecordCount( );
+      $this->addDebug('db_getrowcount', "Results: $vars, Query: $query", 3);
       return($vars);
+    }
+    else {
+      $this->addDebug('db_getrowcount', "Error in query: $query  [" . $this->db_link->ErrorMsg()."]", 1);      
     }
   }
   
@@ -29,13 +33,16 @@ class DB {
   function db_getlimitedIndex($query,$nosofrows, $offset) {
     //retrieves an indexed array of results from $query which has a specified limit.
     $this->switchQueryMode(1);
-    $recordSet = &$this->db_link->SelectLimit($query,$nosofrows,$offset)or die("Error in query: $query.  " . $db->ErrorMsg());
+    $recordSet = &$this->db_link->SelectLimit($query,$nosofrows,$offset);
     if ( $recordSet ) {
-      $vars = $recordSet->getArray($nosofrows);
+      $vars = $recordSet->getArray();
       if( is_array($vars) && count($vars) ) {
         return $vars;
       }
     }
+    else {
+      $this->addDebug('db_getlimitedIndex', "Error in query: $query [" . $this->db_link->ErrorMsg() . "]", 1);
+    }      
   }  
   
   function db_queryIndexed( $query ) {
@@ -143,6 +150,7 @@ class DB {
       $id = $this->db_insertID($sequence);
       $fields = $this->db_get_fields($table);
       $id_field = $fields[0];
+      if( !$id_field ) { $id_field = ZenTrack::getTableId($table); }
       $params["$id_field"] = $id;
     }
     // this allows us to insert the generated id in sql server
@@ -155,6 +163,10 @@ class DB {
     $query = "INSERT INTO $table ($cols) VALUES($vals)";
     $this->addDebug("db_insert",$query,3);
     $res = $this->db_link->Execute($query);
+    if( !(strpos($this->database_type, 'mssql') === false) ) {
+      $query = "SET IDENTITY_INSERT $table OFF";
+      $this->db_result($query);
+    }
     if( $res && $this->database_type == "mysql" ) {
       $id = $this->db_insertID();
     }
@@ -242,6 +254,9 @@ class DB {
       $val = "(".$text.")";
     } else {
       $val = $this->db_link->qstr($val,get_magic_quotes_gpc());
+      if( $val == "''" ) {
+        $val = "NULL";
+      }
     }
     return $val;
   }   
@@ -444,8 +459,11 @@ class DB {
         }
         $p[2] = $this->checkSlashes($p[2]);
         if( !$p[3] && ereg("[a-zA-Z]",$p[2]) ) {
-          $p[0] = "lower($p[0])";
-          $p[2] = strtolower($p[2]);
+          if( !Zen::inString('mysql',$this->db_type) 
+            && !Zen::inString('mssql',$this->db_type) ) {
+            $p[0] = "lower($p[0])";
+            $p[2] = strtolower($p[2]);
+          }
         }
         if( ereg("^NULL$",$p[2]) ) {
           $p[1] = ($not)? "IS NOT" : "IS";
@@ -486,8 +504,7 @@ class DB {
     // create the object
     $this->db_link = &ADONewConnection($this->database_type);
     $ADODB_FETCH_MODE = ADODB_FETCH_ASSOC;      
-    if( $this->sql_debug == "on" )
-    $this->db_link->debug = true;
+    if( $this->sql_debug == "on" ) { $this->db_link->debug = true; }
     if( preg_match("/postgr/", $this->db_type) ) {
       $this->_returnsResult = false;
     }

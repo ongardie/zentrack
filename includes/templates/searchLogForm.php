@@ -81,18 +81,18 @@
      <select name="search_params[user_id]">
        <option value="">----</option>
 <?
-   $userBins = $zen->getUsersBins($login_id);
-   if( is_array($userBins) && $zen->settings["allow_assign"] == "on" ) {
-     $users = $zen->get_users($userBins);
-     if( is_array($users) ) {
-       asort($users);
-       foreach($users as $k=>$v) {
-	 $check = ( $search_params["user_id"] && $v["user_id"] == $search_params["user_id"] )? 
-	   "selected" : "";
-	 print "<option $check value='$v[user_id]'>$v[lname], $v[fname]</option>\n";
-       }
-     }
-   }
+  $userBins = $zen->getUsersBins($login_id);
+  if( is_array($userBins) && $zen->settings["allow_assign"] == "on" ) {
+    $users = $zen->get_users($userBins);
+    if( is_array($users) ) {
+      asort($users);
+      foreach($users as $k=>$v) {
+        $check = ( $search_params["user_id"] && $v["user_id"] == $search_params["user_id"] )? 
+        "selected" : "";
+        print "<option $check value='$v[user_id]'>$v[lname], $v[fname]</option>\n";
+      }
+    }
+  }
 ?>
      </select>
   </td>
@@ -106,17 +106,17 @@
     <select name="search_params[bin_id]">
        <option value="">----</option>
 <?
-    if( is_array($userBins) ) {
-    	foreach($userBins as $v) {
-	  if( $v ) {
-	    $check = ( $v == $search_params["bin_id"] )? "selected" : "";
-	    $n = $zen->bins["$v"];
-	    print "<option $check value='$v'>$n</option>\n";
-	  }
-	}
-    } else {
-      print "<option value=''>--no bins--</option>\n";
+  if( is_array($userBins) ) {
+    foreach($userBins as $v) {
+      if( $v ) {
+        $check = ( $v == $search_params["bin_id"] )? "selected" : "";
+        $n = $zen->bins["$v"];
+        print "<option $check value='$v'>$n</option>\n";
+      }
     }
+  } else {
+    print "<option value=''>--no bins--</option>\n";
+  }
 ?>
     </select>
   </td>

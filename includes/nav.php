@@ -48,7 +48,7 @@
   </td>
   </tr>
   <tr>
-  <td valign="top" height="400" style="background:<?=$zen->settings["color_bars"]?>;">
+  <td valign="top" height="400" class='mainContent'>
   
   <? 
     // print out any system messages

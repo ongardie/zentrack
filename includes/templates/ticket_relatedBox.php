@@ -8,6 +8,7 @@
    <tr>
      <td valign="top">
 <?
+  $tickets = false;
   if( $page_type == "ticket" ) {
     $ticket = $zen->get_ticket($id);
   } else {
@@ -15,8 +16,8 @@
   }
   if( $ticket["relations"] ) {
      $tids = explode(",", $ticket["relations"]);
+     $tickets = $zen->get_tickets( array("id"=>$tids) );
   }
-  $tickets = $zen->get_tickets( array("id"=>$tids) );
   if( is_array($tickets) && count($tickets) ) {
      include("$templateDir/listTickets.php");
   } else {

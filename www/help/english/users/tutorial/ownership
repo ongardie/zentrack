@@ -1,0 +1,20 @@
+<p align='center' class='bigbold'>Ownership of Tickets</p>
+
+<p>Most of the actions you will take to modify or complete a ticket can
+only be performed by the owner.  There are several ways to gain ownership:
+<ul>
+  <li>It can be assigned to you when it is created
+  <li>A manager can assign it to you
+  <li>You can accept it (if allowed by your administrator)
+  <li>Managers can also take away ownership if needed using the '<?=tr("Yank")?>' feature.
+</ul>
+
+<p>Some actions can be performed by a supervisor, even if they are not the owner
+ (such as moving the ticket to a new bin or closing the ticket).  Other actions
+ can be performed by anyone, not just the owner (such as creating log entries).
+
+<p>Accepting a ticket is done simply by clicking on the '<?=tr("Accept")?>' button in
+the ticket view.
+
+<p>Assigning a ticket requires higher access rights than accepting, and is
+performed by clicking on the '<?=tr('Assign')?>' button in the ticket view.

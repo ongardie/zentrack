@@ -1,0 +1,30 @@
+<p align='center' class='bigbold'>The Ticket Log</p>
+
+<p><b>Purpose</b></p>
+
+<p>The log is where notes, information, and labor are recorded for
+tickets.  
+
+<p>This screen is updated whenever the status of the ticket changes
+with the time, user, and action performed as well as any time worked and comments
+by the user.
+
+<p><b>How to View</b></p>
+
+<p>You can view the existing log entries for a ticket by browsing to it and
+then by opening the 'Log' tab in the ticket view.</p>
+
+<img src="<?=$imageUrl?>/help_screenshots/log_view.gif" 
+     alt="An image of the ticket log"
+     height="194" width="400" align='center'>
+
+<p>Anyone with access to view the bin where the ticket is located can view
+the log as well.
+
+<p><b>Creating Log Entries</b></p>
+
+<p>You can create a log entry (assuming you have sufficient access) by clicking
+on the '<?=tr('Log')?>' button in the ticket view.
+
+<p>Code or text you enter will be preserved in format and spacing.  When you place <b>hyperlinks</b>(web urls, such as www.yahoo.com) into the
+log, they will become active links that users can click to view that page.

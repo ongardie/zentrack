@@ -1,10 +1,10 @@
 <?
 
-if( !$zen->checkAccess($login_id,$ticket["bin_id"],"edit") ) {
-  $errs[] = tr("You cannot edit a ticket in this bin ");
-} else if( !$zen->actionApplicable($id,"edit",$login_id) ) {
-  $errs[] = $zen->ptrans("Ticket #? cannot be edited in its current status",array($id));
-}
+  if( !$zen->checkAccess($login_id,$ticket["bin_id"],"edit") ) {
+    $errs[] = tr("You cannot edit a ticket in this bin ");
+  } else if( !$zen->actionApplicable($id,"edit",$login_id) ) {
+    $errs[] = $zen->ptrans("Ticket #? cannot be edited in its current status",array($id));
+  }
 
   $page_tile = tr("Commit Edited Ticket");
   $expand_admin = 1;
@@ -69,58 +69,47 @@ if( !$zen->checkAccess($login_id,$ticket["bin_id"],"edit") ) {
        $errs[] = tr("System Error").": ".tr("Ticket could not be edited.")." ".$zen->db_error;
      }
      else {
+       // parse variable fields which appear in new ticket screen, 
+       // store them in $varfield_params
+       // insure that all requirements are met before proceeding
+       // with the ticket save process
+       $customFieldsArray = false;
        $x = $is_project? 'Project' : 'Ticket';
-       $cfvals = $zen->getCustomFields(1, $x);
-       $params = array();
-       foreach($cfvals as $key=>$label) {
-	 $v = $$key;
-	 $type = getVarfieldDataType($key);
-	 switch( $type ) {
-	 case 'boolean':
-	   $params[$key] = strlen($v)? 1 : 0;
-	   break;
-	 case 'date':
-	   $params[$key] = strlen($v)? $zen->dateParse($v) : 'NULL';
-	   break;
-	 case 'number':
-	   $params[$key] = $zen->checkNum($v);
-	   break;
-	 case 'text':
-	 case 'string':
-	 case 'menu':
-	   $params[$key] = $v;
-	   break;
-	 default:
-	   $zen->addDebug('editTicketSubmit', "Invalid varfield type: {$key}->{$type}", 3);
-	   break;
-	 }
+       if( !$errs ) {
+         $customFieldsArray = $zen->getCustomFields(0, $x, 'New');
+         if( $customFieldsArray && count($customFieldsArray) ) {
+           include("$libDir/parseVarfields.php");
+         }
        }
-       $res = $zen->updateVarfieldVals($id, $params, $login_id, $bin_id);
-       if( !$res ) {
-	 $errs[] = tr("Ticket updated, but variable fields could not be saved");
+       
+       if( $customFieldsArray && count($varfield_params) ) {
+         $res = $zen->updateVarfieldVals($id, $varfield_params, $login_id, $bin_id);
+         if( !$res ) {
+           $errs[] = tr("? updated, but variable fields could not be saved", tr($x));
+         }
        }
      }
   }
-
+  
   if( !$errs ) {
     add_system_messages(tr("Edited ticket #?", array($id)));
-     //header("Location:$rootUrl/ticket.php?id=$id&setmode=Details");
-     $setmode = "Details";
-     if( $is_project ) {
-       include("../project.php");
-     } else {
-       include("../ticket.php");
-     }
-     exit;
+    //header("Location:$rootUrl/ticket.php?id=$id&setmode=Details");
+    $setmode = "Details";
+    if( $is_project ) {
+      include("../project.php");
+    } else {
+      include("../ticket.php");
+    }
+    exit;
   } else {
-     $onLoad[] = "behavior_js.php?formset=ticketForm";
-     include_once("$libDir/nav.php");
-     $zen->print_errors($errs);
-     $TODO = 'EDIT';
-     if( $is_project ) {
-       include("$templateDir/newProjectForm.php");
-     }
-     else {
+    $onLoad[] = "behavior_js.php?formset=ticketForm";
+    include_once("$libDir/nav.php");
+    $zen->print_errors($errs);
+    $TODO = 'EDIT';
+    if( $is_project ) {
+      include("$templateDir/newProjectForm.php");
+    }
+    else {
        include("$templateDir/newTicketForm.php");
      }
      include("$libDir/footer.php");

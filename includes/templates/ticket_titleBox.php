@@ -43,14 +43,14 @@
 	 </table></td>
        <td valign="top" width='100'><?
        $actions = array(
-			"accept"  => 1,			
-			"assign"  => 0,		     
-			"reject"  => 1,
-			"yank"    => 0,
-			"reopen"  => 0,			
-			"print"   => 1,
-			"email"   => 1,
-			"edit"    => 0
+          "accept"  => 1,			
+          "assign"  => 0,		     
+          "reject"  => 1,
+          "yank"    => 0,
+          "reopen"  => 0,			
+          "print"   => 1,
+          "email"   => 1,
+          "edit"    => 0
 			);
        include("$templateDir/ticket_actionBar.php");
      ?></td>

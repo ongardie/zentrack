@@ -33,7 +33,11 @@
      font-weight:     bold;     
   }
 
-
+  .mainContent {
+      background: <?=$zen->settings["color_bars"]?>;
+      padding: 5px;
+  }
+  
   /*** LINK PROPERTIES ***/
 
 
@@ -119,9 +123,17 @@ else {
      background:  <?=$zen->settings["color_alt_background"]?>;
   }
 
-  .cell {
+  .cell, .invalidCell, .content {
      color:       <?=$zen->settings["color_alt_text"]?>;
      background:  <?=$zen->settings["color_background"]?>;     
+  }
+  
+  .content {
+     padding: 10px; 
+  }
+  
+  .invalidCell {
+    color:       <?=$zen->settings['color_hot']?>;
   }
 
   .bars {
@@ -179,8 +191,8 @@ else {
      print "padding-top: 2px;";
      print "padding-bottom: 2px;";
        }
-     ?>     
-     padding-left:   2px;
+     ?>
+     padding-left:   15px;
      border:         1px solid <?=$zen->settings["color_title_background"]?>;
   }
 

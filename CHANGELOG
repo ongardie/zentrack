@@ -9,6 +9,16 @@
 
 ----- V2.5 RC2 [Pre 2] (2004-08-30) -----
 
+2004-09-06, Kato
+  Repaired security issue with searching logs
+  
+  Cleaned up GUI appearance/functional issues
+  
+  Fixed problems with next/last paging features
+  
+  Corrected bugs with: get_user method, adding contacts,
+  editing tickets, others.
+  
 2004-09-03, Kato
   Prep for work on the paging features
     - zentrack_2/includes/db.class 1.29

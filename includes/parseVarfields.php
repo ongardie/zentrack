@@ -1,12 +1,12 @@
 <?{
   /**
-   * Parses form input and creates an array called $varfield_params which contains the values needed
-   * to run $zen->updateVarfieldVals()
-   *
-   * Depends on the following variables to determine which custom fields are used:
-   *   $customFieldsArray - the results of $zen->getCustomFields() call
-   */
-
+  * Parses form input and creates an array called $varfield_params which contains the values needed
+  * to run $zen->updateVarfieldVals()
+  *
+  * Depends on the following variables to determine which custom fields are used:
+  *   $customFieldsArray - the results of $zen->getCustomFields() call
+  */
+  
   $varfield_fields = array();
   foreach($customFieldsArray as $f) {
     $k = $f['field_name'];
@@ -14,26 +14,26 @@
     $r = $f['is_required'];
     $varfield_type = getVarfieldDataType($k);
     switch($varfield_type) {
-    case "number":
+      case "number":
       if( !strlen($$k) ) {
-	$cfv = 'NULL';
-	$cft = 'ignore';
+        $cfv = 'NULL';
+        $cft = 'ignore';
       } else {
-	$cfv = $$k;
-	$cft = "int";
+        $cfv = $$k;
+        $cft = "int";
       }
       break;
-    case "date":
+      case "date":
       if( !strlen($$k) ) {
-	$cfv = 'NULL';
-	$cft = "ignore";
+        $cfv = 'NULL';
+        $cft = "ignore";
       }
       else {
-	$cfv = $zen->dateParse($$k);
-	$cft = "int";
+        $cfv = $zen->dateParse($$k);
+        $cft = "int";
       }
       break;
-    default:
+      default:
       $cfv = $$k;
       $cft = "text";
       break;
@@ -45,7 +45,7 @@
       $errs[] = tr("? is required", array(ucfirst(tr($v))));
     }
   }
-
+  
   $varfield_params = array();
   if( !$errs ) {
     $zen->cleanInput($varfield_fields);

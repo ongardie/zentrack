@@ -4,7 +4,8 @@
   **  HELP SECTION - SUPPORT
   */
 
-  include("help_header.php");
+  $b = dirname(dirname(__FILE__));
+  include_once("$b/help_header.php");
 
   $page_title = "Support";
   include("$libDir/nav.php");

@@ -23,6 +23,9 @@
   if( !$Debug_Mode ) {
     ini_set("display_errors", false);
   }
+  
+  // fix problems with array indices and case of table columns
+  define('ADODB_ASSOC_CASE',0);
 
   /*
   ** SESSION MANAGEMENT
@@ -188,7 +191,8 @@
     case "boolean":
       $inp = "<input type='checkbox' name='{$key}' "
 	." value='1'";
-      $inp .= $value? ' checked>\n' : '>\n';
+      $inp .= $value? " checked>\n" : ">\n";
+      break;
     case "string":
       $inp = "<input type='text' name='{$key}' "
 	." value='{$value}' size='20' maxlength='250'{$onblur}>\n";

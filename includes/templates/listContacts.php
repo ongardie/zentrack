@@ -37,7 +37,7 @@ if( is_array($tickets) ) {
    
    foreach($tickets as $t) {      
       ?>
-   <tr  class='priority1' onclick='ticketClk("<?=$link?>?cid=<?=$t['company_id']?>")' onMouseOver='mClassX(this, "priority1Over", true)' onMouseOut='mClassX(this, "priority1", false)'>
+   <tr  class='bars' onclick='ticketClk("<?=$link?>?cid=<?=$t['company_id']?>")' onMouseOver='mClassX(this, "cell", "hand")' onMouseOut='mClassX(this, "bars")'>
    <td height="25" width="5%" valign="middle" <?=$td_ttl?>>
     <?=$t["company_id"]?>
    </td>

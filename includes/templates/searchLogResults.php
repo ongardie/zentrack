@@ -1,13 +1,23 @@
 <?{
 
   // integrity
-  unset($params);
+  $params = array();
+  $errs = array();
+  
+    // determine which bins user can view
+  $userBins = $zen->getUsersBins($login_id);
   
   // organize the search params
   if( is_array($search_params) ) {
     foreach($search_params as $k=>$v) {
       if( strlen($v) ) {
-	$params[] = array($k,"=",$v,1);
+        if( $k == 'bin_id' ) {
+          if( !in_array($v, $userBins) ) {
+            $errs[] = tr('You do not have permission to search this bin');  
+            continue;
+          }
+        }
+        $params[] = array($k,"=",$v,1);
       }
     }
   }
@@ -26,10 +36,19 @@
     $date = $zen->dateAnchor( "day", $zen->dateAdjust(-$search_date,"days") );
     $params[] = array("created",">=",$date);
   }
+  
+  if( !array_key_exists('bin_id', $params) ) {
+    if( is_array($userBins) && count($userBins) ) {
+      $params[] = array('bin_id', 'in', $userBins, 1); 
+    }
+    else {
+      $errs[] = tr('You do not have access to any bins.')." ".tr('A search was not authorized'); 
+    }
+  }
 
   // if there are any search params
   // then perform the query
-  if( is_array($params) && count($params) ) {
+  if( count($params) && !count($errs) ) {
     // debug
     unset($dp);
     foreach($params as $v) {

@@ -263,8 +263,8 @@
     foreach($zen->getBins(1) as $v) {
       $k = $v["bid"];      
       if (in_array($k, $userBins)) {
-	$check = ( $k == $search_params["bin_id"] )? " selected" : "";
-	print "<option $check value='$k' $check>$v[name]</option>";
+        $check = ( $k == $search_params["bin_id"] )? " selected" : "";
+        print "<option $check value='$k' $check>$v[name]</option>";
       }
     }
   } else {

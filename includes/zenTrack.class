@@ -258,33 +258,32 @@ class zenTrack extends zen {
     $pageNumber = array_key_exists('pageNumber', $_GET)? 
                 $this->checkNum($_GET['pageNumber']) : 0;
     
-    $tables = $this->table_tickets;
+    $tables = $this->table_tickets." t";
     if( $tf_pri ) {
       $tbl = $this->table_tickets;
       $tblpri = $this->table_priorities;
-      $tables .= ", ".$tblpri;
-      $sort = preg_replace("/priority/", "$tblpri.priority", $sort);
+      $tables .= ", $tblpri p";
+      $sort = str_replace("priority", "p.priority", $sort);
     }
 
     if( !is_array($columns) )
-      $columns = $tf_pri? array("$tbl.*") : array("*");
+      $columns = $tf_pri? array(" t.* ") : array(" * ");
 
-    $where = ($tf_pri)? " WHERE $tbl.priority = $tblpri.pid " : "";
+    $where = ($tf_pri)? " WHERE t.priority = p.pid " : "";
     if( is_array($params) ) {
       $where = $where? "$where AND " : "WHERE ";
       $where .= $this->simpleWhere($params);
     }
     $query = "SELECT ".join(",",$columns)." FROM $tables $where";
-    if( $sort )
-      $query .= " ORDER BY $sort";
-    $this->addDebug("get_tickets","numtoshow=".$numtoshow.",start=".$start.",query=".$query,3);
 
-    //return( $this->db_queryIndexed($query) );
-    //paging feature
     $numtoshow = $this->settings['paging_max_rows'];
     $start = $pageNumber * $numtoshow;
+    if( $sort )
+      $query .= " ORDER BY $sort";
     $this->total_records = $this->db_getrowcount($query);
-    return($this->db_getlimitedIndex($query,$numtoshow,$start));
+    $vals = $this->db_getlimitedIndex($query,$numtoshow,$start);
+    $this->addDebug("get_tickets","count(vals)=".count($vals).",numtoshow=".$numtoshow.",start=".$start.",total_records=".$this->total_records.",query=".$query,3);    
+    return $vals;
     //return( $this->db_queryIndexed($query) );
   }      
 
@@ -555,7 +554,7 @@ class zenTrack extends zen {
     $email = $this->checkSlashes($email);
     $query = "DELETE FROM {$this->table_notify_list} WHERE email = $email";
     if( $ticket_id )
-      $query .= " AND ticket_id = $ticket_id";
+    $query .= " AND ticket_id = $ticket_id";
     $res = $this->db_result($query);
     // get a list of users matching from users table
     // and delete those from notify too
@@ -563,9 +562,9 @@ class zenTrack extends zen {
     $ids = $this->db_list($query);
     if( is_array($ids) && count($ids) ) {
       $query = "DELETE FROM {$this->table_notify_list} WHERE user_id in(".
-        join(",",$ids).")";
+      join(",",$ids).")";
       if( $ticket_id )
-        $query .= " AND ticket_id = $ticket_id";
+      $query .= " AND ticket_id = $ticket_id";
       $res2 = $this->db_result($query);
     }
     return($res || $res2);
@@ -595,21 +594,21 @@ class zenTrack extends zen {
   function update_notify_list($old, $new) {
     $id = $old["id"];
     if( strlen($new["user_id"]) && $new["user_id"] != 'NULL' 
-	&& $this->settings["default_notify_owner"] == "on" ) {
+    && $this->settings["default_notify_owner"] == "on" ) {
       // modify the owner notification
       if( $this->settings["default_notify_owner"] == "on" ) {
-	// see if they changed
-	if( $old["user_id"] != $new["user_id"] ) {
-	  // drop the old user
-	  if( $old["user_id"] ) {
-	    $this->drop_notify_by_user($old["user_id"],$id);
-	  }
-	  // add the new user
-	  if( $new["user_id"] ) {
-	    $p = array("user_id"=>$new["user_id"]);
-	    $this->add_to_notify_list($id,$p);
-	  }
-	}
+        // see if they changed
+        if( $old["user_id"] != $new["user_id"] ) {
+          // drop the old user
+          if( $old["user_id"] ) {
+            $this->drop_notify_by_user($old["user_id"],$id);
+          }
+          // add the new user
+          if( $new["user_id"] ) {
+            $p = array("user_id"=>$new["user_id"]);
+            $this->add_to_notify_list($id,$p);
+          }
+        }
       }
     }
     // shorten up some settings for brevity
@@ -618,39 +617,39 @@ class zenTrack extends zen {
     if( isset($new["bin_id"]) && ($dnm || $dnt) ) {
       // check if bin has changed
       if( $old["bin_id"] != $new["bin_id"] ) {
-	$tester_id = $this->getRoleID("tester");
-	$mgr_id = $this->getRoleID("manager");
-	// drop the managers and testers from old bin
-	if( $old["bin_id"] ) {
-	  $vars = array();
-	  $roles = $this->fetch_bin_roles($old["bin_id"]);
-	  if( is_array($roles) ) {
-	    foreach($roles as $r) {
-	      if( $r["notes"] == $mgr_id && $dnm ) { 
-		$vars[] = $r["user_id"];
-	      }
-	      else if( $r["notes"] == $tester_id && $dnt ) {
-		$vars[] = $r["user_id"];
-	      }
-	    }
-	  }
-	  // remove the completed list
-	  foreach($vars as $v) {
-	    $this->drop_notify_by_user($v,$id);
-	  }
-	}
-	// add managers and testers for new bin
-	if( $new["bin_id"] ) {
-	  $roles = $this->fetch_bin_roles($new["bin_id"]);
-	  if( is_array($roles) ) {
-	    foreach($roles as $r) {
-	      if( ($r["notes"] == $tester_id && $dnt) ||
-		  ($r["notes"] == $mgr_id && $dnm) )
-		$this->add_to_notify_list($id,
-					  array("user_id"=>$r["user_id"]));
-	    }
-	  }
-	}
+        $tester_id = $this->getRoleID("tester");
+        $mgr_id = $this->getRoleID("manager");
+        // drop the managers and testers from old bin
+        if( $old["bin_id"] ) {
+          $vars = array();
+          $roles = $this->fetch_bin_roles($old["bin_id"]);
+          if( is_array($roles) ) {
+            foreach($roles as $r) {
+              if( $r["notes"] == $mgr_id && $dnm ) { 
+                $vars[] = $r["user_id"];
+              }
+              else if( $r["notes"] == $tester_id && $dnt ) {
+                $vars[] = $r["user_id"];
+              }
+            }
+          }
+          // remove the completed list
+          foreach($vars as $v) {
+            $this->drop_notify_by_user($v,$id);
+          }
+        }
+        // add managers and testers for new bin
+        if( $new["bin_id"] ) {
+          $roles = $this->fetch_bin_roles($new["bin_id"]);
+          if( is_array($roles) ) {
+            foreach($roles as $r) {
+              if( ($r["notes"] == $tester_id && $dnt) ||
+              ($r["notes"] == $mgr_id && $dnm) )
+              $this->add_to_notify_list($id,
+              array("user_id"=>$r["user_id"]));
+            }
+          }
+        }
       }
     }
   }
@@ -1651,9 +1650,9 @@ class zenTrack extends zen {
         $logParams["entry"] .= "--".$description;   
       if( $log_id )
         $logParams["entry"] .= "\nattached to log $log_id";
-      $r = $this->add_log( $id, $logParams );
-      if( !$r )
-        die("couldn't log it");
+      if( !$this->add_log( $id, $logParams ) ) {
+        $this->addDebug('attach_to_ticket', "couldn't log attachment!", 1);
+      }
     }
     return $res;
   }
@@ -3140,41 +3139,40 @@ class zenTrack extends zen {
     // than a user_id value (to send to non-zentrack users)
     // $recipients, $sender, and $cc can all be an array
     // if email is successful, no result is returned, otherwise error string returned
-
+    
     // grab the egate account
     $egate_email = "";
     $egate_user = $this->get_user_by_login("egate");
     if( is_array($egate_user) ) {
       $egate_email = $egate_user["email"];
     }
-
+    
     // add the obligatory email stuff
     $subject = "[".$this->settings["bot_name"]."] ".$subject;
-
+    
     // figure out who sent it
     $message = (get_magic_quotes_gpc())? stripslashes($message) : $message;
     $message = preg_replace(
                             array("#&lt;#", "#&gt;#", "#&quot;#", "#&amp;#"),
-                            array("<",">",'"',"&"),
-                            $message);
+                            array("<",">",'"',"&"), $message);
     if( !$sender ) {
       $sender_address = $this->settings["admin_email"];
     } else {
       if( eregi("^[0-9]+$", $sender) ) {
-	$s = $this->get_user($sender);
-	$sender_address = $s["email"];
+        $s = $this->get_user($sender);
+        $sender_address = $s["email"];
       } else {
-	$sender_address = $sender;
+        $sender_address = $sender;
       }
     }
-
+    
     // figure out who it is being set to
     if( !is_array($recipients) )
-      $recipients = array($recipients);
+    $recipients = array($recipients);
     foreach($recipients as $r) {      
       if( strlen($r) ) {
         if( $recipient_address )
-          $recipient_address .= ", ";
+        $recipient_address .= ", ";
         if( eregi("^[0-9]+$", $r) ) {
           $s = $this->get_user($r);
           if( $s["email"] && $s["email"] != $egate_email ) {
@@ -3182,7 +3180,7 @@ class zenTrack extends zen {
           }
         } else {
           if( $r != $egate_email )
-            $recipient_address .= $r;
+          $recipient_address .= $r;
         }
       }
     }
@@ -3191,19 +3189,19 @@ class zenTrack extends zen {
       // create headers and CC fields
       $headers .= "From: $sender_address\n";
       if( $cc ) {
-	if( !is_array($cc) )
-	  $cc = array($cc);
-	foreach($cc as $c) {
-	  if( $cc_address )
-	    $cc_address .= ", ";
-	  if( eregi("^[0-9]+$", $c) ) {
-	    $s = $this->get_user($c);
-	    $cc_address .= $s["email"];
-	  } else {
-	    $cc_address .= $c;
-	  }
-	}
-	$headers .= "cc: $cc_address\n";
+        if( !is_array($cc) )
+        $cc = array($cc);
+        foreach($cc as $c) {
+          if( $cc_address )
+          $cc_address .= ", ";
+          if( eregi("^[0-9]+$", $c) ) {
+            $s = $this->get_user($c);
+            $cc_address .= $s["email"];
+          } else {
+            $cc_address .= $c;
+          }
+        }
+        $headers .= "cc: $cc_address\n";
       }
       
       if( $this->settings["email_interface_enabled"] == "on" ) {
@@ -3215,7 +3213,7 @@ class zenTrack extends zen {
         }
         else {
           $sender = $s["email"];
-
+          
           // load the header and footer
           $hd_tmp = new zenTemplate($this->templateDir."/email/heading.template");
           $ft_tmp = new zenTemplate($this->templateDir."/email/footer.template");
@@ -3233,21 +3231,21 @@ class zenTrack extends zen {
         }
       }
       else {
-	$message = (get_magic_quotes_gpc())? $message : addslashes($message);
+        $message = (get_magic_quotes_gpc())? $message : addslashes($message);
       }
       $subject = (get_magic_quotes_gpc())? $subject : addslashes($subject);
       if (strtoupper(substr(PHP_OS, 0, 3)) == 'WIN') {
         $headers = str_replace("\n", "\r\n", $headers);
       }
       $this->addDebug("sendEmail","$recipient_address::$subject::$headers",3);
-      print 'mail('.$recipient_address.','.$subject.','.$message.','.$headers.");<br>\n";//debug
+      //print 'mail('.$recipient_address.','.$subject.','.$message.','.$headers.");<br>\n";//debug
       if( !mail( $recipient_address, $subject, $message, $headers ) ) {
         return "System error: send failed";
       }
     } else {
       $str = "recipient_address was blank... "
-        ."this could be that the email was sent to a user "
-        ."who doesn't have an email address";
+            ."this could be that the email was sent to a user "
+            ."who doesn't have an email address";
       $this->addDebug("sendEmail",$str,1);
       return $str;
     }
@@ -3401,27 +3399,57 @@ class zenTrack extends zen {
 
   function getDataTypeId( $table ) {
     // be careful using this, it's still limited
-    switch( strtoupper($table) ) {
-    case "ZENTRACK_BINS":
-    case "BINS":
-      return "bid";
-    case "ZENTRACK_PRIORITIES":
-    case "PRIORITIES":
-      return "pid";
-    case "ZENTRACK_SYSTEMS":
-    case "SYSTEMS":
-      return "sid";
-    case "ZENTRACK_TASKS":
-    case "TASKS":
-      return "task_id";
-    case "ZENTRACK_TYPES":
-    case "TYPES":
-      return "type_id";
-    case "ZENTRACK_USERS":
-    case "USERS":
-      return "user_id";
+    return ZenTrack::getTableId($table);
+  }
+  
+  function getTableId( $table ) {
+    $table = preg_replace('/^ZENTRACK_/i', '', strtoupper($table));
+    switch( $table ) {
+      case 'ACCESS':
+        return 'access_id';
+      case 'AGREEMENT':
+        return 'agree_id';
+      case 'AGREEMENT_ITEM':
+        return 'item_id';
+      case "ATTACHMENTS":
+        return 'attachment_id';
+      case 'BEHAVIOR':
+        return 'behavior_id';
+      case "BINS":
+        return 'bid';
+      case 'COMPANY':
+        return 'company_id';
+      case 'EMPLOYEE':
+        return 'person_id';
+      case 'GROUP':
+        return 'group_id';
+      case 'LOGS';
+        return 'lid';
+      case 'NOTIFY_LIST':
+        return 'notify_id';
+      case 'PRIORITIES':
+        return 'pid';
+      case 'RELATED_CONTACTS':
+        return 'clist_id';
+      case 'REPORTS':
+        return 'report_id';
+      case 'REPORTS_TEMP':
+        return 'report_id';
+      case 'SETTINGS':
+        return 'setting_id';
+      case 'SYSTEMS':
+        return 'sid';
+      case 'TASKS':
+        return 'task_id';
+      case 'TICKETS':
+        return 'id';
+      case 'TYPES':
+        return 'type_id';
+      case 'USERS':
+        return 'user_id';
+      default:
+        return '';
     }
-    return null;
   }
 
   function get_report_id( $n ) {
@@ -3573,13 +3601,13 @@ class zenTrack extends zen {
     // $noaccess can be used to override the access requirements
     // for the action (in the case of email interface)
 
-    $id = $this->checkNum($id);
+    // clean up input, don't do the id here, it is done below
     $action = $this->checkAlphaNum($action);
+    $action = strtolower($action);
     if( $user_id ) { $user_id = $this->checkNum($user_id); }
 
     // get a list of actions
     $actions = $this->getActions();
-    $action = strtolower($action);
 
     // look at the settings to make sure
     // this action is on
@@ -3587,15 +3615,16 @@ class zenTrack extends zen {
     // this should check the enabled field
     // for the action instead
     $n = "allow_$action";
-    if( $this->settings["$n"] && $this->settings["$n"] != "on" )
+    if( $this->settings["$n"] && $this->settings["$n"] != "on" ) {
+      $this->addDebug('actionApplicable', "Setting '$n' is off: disqualified",3);
       return false;
+    }
 
     // get the action's properties
     $c = $actions["$action"];
     // return an error if this fails
     if( !$c ) {
-      $this->addDebug("actionApplicable",
-                      "The action $action doesn't exist!",1);
+      $this->addDebug('actionApplicable', "[{$action}]Action does not exist!",1);
       return false;
     }
     // check for an access override
@@ -3607,7 +3636,7 @@ class zenTrack extends zen {
       // if it's already an array, we must
       // have passed the whole thing instead of
       // the array, so don't fetch it
-      $ticket = $id;
+      $ticket = $id;  
       $id = $ticket["id"];
       $bin_id = $ticket["bin_id"];
     } else { 
@@ -3615,25 +3644,35 @@ class zenTrack extends zen {
       $ticket = $this->get_ticket($id);
       $bin_id = $ticket["bin_id"];
     }
+    // clean up the id here so that we don't muck arrays
+    $id = $this->checkNum($id);
 
     // check to see if we meet ownership requirements
     if( $c["owner"] == 2 ) {
       // here we must not be the owner
-      if( $ticket["user_id"] == $user_id )
+      if( $ticket["user_id"] == $user_id ) {
+        $this->addDebug('actionApplicable', "[{$action}]Cannot be owner: disqualified", 3);
         return false;
+      }
     } else if( $c["owner"] == 3 ) {
       // here there must be no owner
-      if( $ticket["user_id"] )
+      if( $ticket["user_id"] ) {
+        $this->addDebug('actionApplicable', "[{$action}]Ticket cannot be owned: disqualified", 3);
         return false;
+      }
     } else if( $c["owner"] == 4 ) {
       // here it must be owned and we must not be
       // the owner
-      if( !$ticket["user_id"] || $ticket["user_id"] == $user_id )
+      if( !$ticket["user_id"] || $ticket["user_id"] == $user_id ) {
+        $this->addDebug('actionApplicable', "[{$action}]Ticket must be owned and cannot be the owner: disqualified", 3);
         return false;
+      }
     } else if( $c["owner"] == 5 ) {
       // here we must be the owner, or it is unowned
-      if( $ticket["user_id"] && $ticket["user_id"] != $user_id )
-	return false;
+      if( $ticket["user_id"] && $ticket["user_id"] != $user_id ) {
+        $this->addDebug('actionApplicable', "[{$action}]Must be owner or unowned: disqualified", 3);
+        return false;
+      }
     } else if( $c["owner"] > 0 ) {
       // here we must be the owner (or there is an override)
       // see if we can override this
@@ -3650,30 +3689,42 @@ class zenTrack extends zen {
                  && $access["bin_id"] < $this->settings["level_super"] )
             || ( !strlen($access["$bin_id"]) 
                  && $user["access_level"] < $this->settings["level_super"])
-            )
+                 ) {
+          $this->addDebug('actionApplicable', "[{$action}]must be owner or meet override", 3);                   
           return false;
+        }
       }
     }
     // check to see if there is an access requirement
     if( $c["access"] > 0 ) {
-      if( !$this->checkAccess($user_id, $bin_id, $action) ) 
+      if( !$this->checkAccess($user_id, $bin_id, $action) )  {
+        $this->addDebug('actionApplicable', "[{$action}]Check access failed: disqualified", 3);
         return false;
+      }
     }
     // check to see if there is a status requirement
     if( is_array($c["status"]) ) {
-      if( !in_array($ticket["status"],$c["status"]) )
+      if( !in_array($ticket["status"],$c["status"]) ) {
+        $this->addDebug('actionApplicable', "[{$action}]Status '{$ticket['status']}' not in (".join(',',$c['status'])."): disqualified", 3);
         return false;
+      }
     }
     // special conditions if it's an approval
     if( $action == "approve" 
-        && ($ticket["tested"] == 1 || $ticket["approved"] != 1) )
+      && ($ticket["tested"] == 1 || $ticket["approved"] != 1) ) {
+      $this->addDebug('actionApplicable', "[{$action}]Not flagged for approval: disqualified", 3);
       return false;  // it needs testing first
-    else if( $action == "reject" && !$this->getTicketSender($id) ) 
+    }
+    else if( $action == "reject" && !$this->getTicketSender($id) ) {
+      $this->addDebug('actionApplicable', "[{$action}]No one to reject to: disqualified", 3);
       return false;  // there's no one to reject to
-    else if( $action == "test" && $ticket["tested"] != 1 )
+    }
+    else if( $action == "test" && $ticket["tested"] != 1 ) {
+      $this->addDebug('actionApplicable', "[{$action}]Not flagged for testing: disqualified", 3);
       return false;  // ticket doesn't require testing
-
+    }
     // all checks passed, return true
+    $this->addDebug('actionApplicable', "[{$action}] qualified", 3);
     return true;
   }
 
@@ -4908,63 +4959,62 @@ class zenTrack extends zen {
   function get_links($option = "all", $show_blank = "off") {
 
      $numtoshow = $this->settings['paging_max_rows'];
-     $extra_vars = $this->build_geturl();
+     list($extra_vars, $file) = $this->build_geturl();
      $pageNumber = array_key_exists('pageNumber', $_GET)? 
                  $this->checkNum($_GET['pageNumber']) : 0;
-     $file = $this->file;
      $activePages = 10;
      $number_of_pages = ceil($this->total_records/ $numtoshow);
      $subscript = 0;
      $backnos = intval($activePages/2);
-     if ( $pageNumber > 0) {
-       if ( ($pageNumber - $backnos) < 1 )
-          $current = 0;
-       else
-       $current = $pageNumber - $backnos;
-     }
-     else {
-        $current = 0;
-        $maxrow = $activePages;
-     }
-     if ( $current == 0 )
-       $maxrow = $activePages;
-     elseif ( $pageNumber > 0)
-       $maxrow = $activePages + $pageNumber - $backnos ;
-
      $prev = tr('Prev');
      $next = tr('Next');
+     
+     $array = array();
+     if( $this->total_records == 0 ) { return $array; }
        
-     if ( ($maxrow  >= $number_of_pages) && ($number_of_pages > $activePages)  && ($pageNumber > 0 ) ) {
-        $maxrow = $number_of_pages ;
-        $current = $maxrow - $activePages;
-     } elseif ( $number_of_pages <= $activePages) {
-        $maxrow = $number_of_pages;
-        $current = 0;
+     if( $number_of_pages > $activePages ) {
+       // we have more pages than we will display at once
+       if( $pageNumber - $backnos > 0 ) {
+         // only calculate if we have passed the first half of the visible
+         // entries, otherwise just use zero for the starting point
+         $current = $pageNumber - $backnos; 
+       }
+       else { $current = 0; }
+       if( $current + $activePages >= $number_of_pages ) {
+         // if we are near the end, then back up the starting point to keep
+         // our visible entries consistent
+         $current = $number_of_pages - $activePages;
+       }
+     }
+     else {
+       // we will just display all of the pages
+       $maxrow = $number_of_pages;
+       $current = 0;
      }
      $this->addDebug("Total pages",$number_of_pages,3);
      $this->addDebug("Back Nos",$backnos,3);
      $this->addDebug("Max Row",$maxrow,3);
      $this->addDebug("Current",$current,3);
      $this->addDebug("Row",$pageNumber,3);
+     if ((($option == "all") || ($option == "sides")) ) {
+       if ($pageNumber != 0)
+         $array[] = '<A HREF="' . $file . '?pageNumber=' . ($pageNumber - 1) . $extra_vars . '">'.$prev.'</A>';
+       elseif (($pageNumber == 0) && ($show_blank == "on"))
+         $array[] = $prev;
+     }
      for ($current ; $current < $maxrow; $current++) {
-       if ((($option == "all") || ($option == "sides")) ) {
-         if ($pageNumber != 0)
-           $array[0] = '<A HREF="' . $file . '?pageNumber=' . ($pageNumber - 1) . $extra_vars . '">'.$prev.'</A>';
-         elseif (($pageNumber == 0) && ($show_blank == "on"))
-           $array[0] = $prev;
-       }
        if (($option == "all") || ($option == "pages")) {
          if ($pageNumber == $current)
-           $array[++$subscript] = ($current > 0 ? ($current + 1) : 1);
+           $array[] = ($current > 0 ? ($current + 1) : 1);
          else
-           $array[++$subscript] = '<A HREF="' . $file . '?pageNumber=' . $current . $extra_vars . '">' . ($current + 1) . '</A>';
+           $array[] = '<A HREF="' . $file . '?pageNumber=' . $current . $extra_vars . '">' . ($current + 1) . '</A>';
        }
-       if ((($option == "all") || ($option == "sides")) && ($current == ($maxrow - 1))) {
-         if ($pageNumber != ($maxrow - 1))
-           $array[++$subscript] = '<A HREF="' . $file . '?pageNumber=' . ($pageNumber + 1) . $extra_vars . '">' . $next . '</A>';
-         elseif (($pageNumber == ($maxrow - 1)) && ($show_blank == "on"))
-           $array[++$subscript] = $next;
-       }
+     }
+     if ((($option == "all") || ($option == "sides")) && ($pageNumber != ($maxrow - 1))) {
+       $array[] = '<A HREF="' . $file . '?pageNumber=' . ($pageNumber + 1) . $extra_vars . '">' . $next . '</A>';
+     }
+     else if ((($option == "all") || ($option == "sides")) && ($pageNumber == $maxrow-1) && $show_blank == 'on') {
+       $array[] = $next;
      }
      return $array;
   }  
@@ -5042,7 +5092,6 @@ class zenTrack extends zen {
 
   // paging feature
    var $total_records;
-   var $file;  
   
   // others
 

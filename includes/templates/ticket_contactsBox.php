@@ -10,7 +10,7 @@
 <table width="600" align="center" cellpadding="2" cellspacing="2">
 <tr>     
 <td align="right">
-     <form action="<?=$rootUrl?>/actions/addToContacts.php">
+     <form action="<?=$rootUrl?>/actions/addToContacts.php" name='contactForm'>
      <input type="hidden" name="id" value="<?=$zen->checkNum($id)?>">
      <input type="submit"
          value=" <?=tr("Add Contacts")?> " class="actionButton" 
@@ -67,13 +67,18 @@ if ($tickets){
 		 }
 		 
   	$u=$zen->get_contact($n["cp_id"],$table,$col);   
+    $tc = "onclick='ticketClk(\"$rootUrl/contact.php?$c1=$cpid\")'";
 ?>	
-      <tr>
-      <td onclick='ticketClk("<?=$rootUrl?>/contact.php?<?=$c1?>=<?=$cpid?>")'  onclick="mClk(this);" onmouseout="mOut(this,'#EAEAEA', '');" onmouseover="mOvr(this,'#FFFFFF', '');" class='bars'><?=$cpid?></td>
-      <td onclick='ticketClk("<?=$rootUrl?>/contact.php?<?=$c1?>=<?=$cpid?>")'  onclick="mClk(this);" onmouseout="mOut(this,'#EAEAEA', '');" onmouseover="mOvr(this,'#FFFFFF', '');" class='bars' align='center' ><? echo ucfirst($u[$n1])." "; if(!empty($u[$n2])){ echo stripslashes($u[$n2]);}?></td>
-      <td onclick='ticketClk("<?=$rootUrl?>/contact.php?<?=$c1?>=<?=$cpid?>")'  onclick="mClk(this);" onmouseout="mOut(this,'#EAEAEA', '');" onmouseover="mOvr(this,'#FFFFFF', '');" class='bars' align='center' ><?=$u["telephone"]?></td>
-      <td class='bars' align='center' ><A HREF="mailto:<?=stripslashes($u[email])?>"><?=stripslashes($u["email"])?></A></td>
-      <td class='bars'><input type='checkbox' name='drops[]' value='<?=$n['clist_id']?>'></td>
+      <tr class='bars' onMouseOver='mClassX(this, "cell", "hand")' onMouseOut='mClassX(this)'>
+      <td <?=$tc?>><?=$cpid?></td>
+      <td <?=$tc?>><? echo ucfirst($u[$n1])." "; if(!empty($u[$n2])){ echo stripslashes($u[$n2]);}?></td>
+      <td <?=$tc?>><?=$u["telephone"]?></td>
+      <td <?
+        if( !$u['email'] ) { print $tc; }
+      ?>><A id='link_<?=$cpid?>' HREF="mailto:<?=stripslashes($u['email'])?>"><?=stripslashes($u["email"])?></A></td>
+      <td onClick='checkMyBox("drops_<?=$n['clist_id']?>", event)'><input 
+          id='drops_<?=$n['clist_id']?>' type='checkbox' name='drops[]' 
+          value='<?=$n['clist_id']?>'></td>
       </tr>
 <?
     }
@@ -94,8 +99,6 @@ if ($tickets){
 	   print "<b>".tr("No related contacts")."</b>";
   }
 ?>     
-    
-     
-     </td>
-   </tr>
-   </table>
+  </td>
+</tr>
+</table>

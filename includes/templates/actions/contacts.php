@@ -16,40 +16,15 @@ location.href ="<?=$rootUrl.$zen->ffv($SCRIPT_NAME)?>?id=<?=$id?>&company_id="+v
 <input type='hidden' name='id' value='<?=$id?>'>
 <input type='hidden' name='actionComplete' value='1'>
 
-<table width="100%" cellpadding="4" cellspacing="1" border="0">
+<table width="50%" cellpadding="4" cellspacing="1" border="0">
 <tr>
  <td>
-   <span class="bigBold"><?=tr("Add Contact to list")?></span>
+   <span class="bigBold"><?=tr("Add a Contact")?></span>
  </td>
 </tr>
-<tr>
-<td>
 <?
-echo tr("Select only one contact.");
-?>
-</td>
-</tr>
-<tr>
-<td>
-<?
-echo tr("Company:");
-	$company = $zen->get_contact_all();
-	if (is_array($company)||count($company)) {
-	
-	?>
-
-		<select name="company_id" onChange="printpopup(document.forms['ContactsAddForm'].company_id.value)">
-  	<option value=''>--<?=tr("none")?>--</option>
-		<?
-		foreach($company as $p) {
-			$sel = ($p["company_id"] == $company_id)? " selected" : "";
-			$val =($p['office'])?strtoupper($p[title])." ,".$p[office]:strtoupper($p[title]);
-	  	print "<option value='$p[company_id]' $sel>".$val."</option>\n";
-		}
-	?>
-	</select>
-	<?
-	}
+  // collect contact data
+	$companies = $zen->get_contact_all();	
 	if (empty($company_id)) {
 		$parms = array(1 => array(1 => "company_id", 2 => "=", 3 => "0"),
 		);
@@ -57,31 +32,86 @@ echo tr("Company:");
 		$parms = array(1 => array(1 => "company_id", 2 => "=", 3 => $company_id),
 		);
 	}
-	
 	$sort = "lname asc";
-	$company = $zen->get_contacts($parms,"ZENTRACK_EMPLOYEE",$sort);
-	
-	if (is_array($company)||count($company)) {
-		echo tr("Or Person:");
-	?>
+	$people = $zen->get_contacts($parms,"ZENTRACK_EMPLOYEE",$sort);
 
+  $company_title = $company_id;
+  
+  // determine column span
+  $colspan = 1;
+  if( $companies || $people ) {
+    $colspan = 2;
+  }
+  
+  
+	if (is_array($companies)||count($companies)) {
+	?>
+<tr>
+<td class='titleCell' colspan='<?=$colspan?>'>
+<?
+echo tr("Select a contact");
+?>
+</td>
+</tr>
+<tr>
+
+   <td class='bars'><?=tr("Company")?></td>
+    <td class='bars'>
+
+		<select name="company_id" onChange="printpopup(document.forms['ContactsAddForm'].company_id.value)">
+  	<option value=''>--<?=tr("none")?>--</option>
+		<?
+		foreach($companies as $p) {
+      if( $p['company_id'] == $company_id ) {
+        $sel = " selected";
+        $company_title = $p['title'];
+      }
+      else {
+        $sel = ""; 
+      }
+			$val =($p['office'])? strtoupper($p['title'])." ,".$p['office'] : strtoupper($p['title']);
+	  	print "<option value='$p[company_id]' $sel>$val</option>\n";
+		}
+	?>
+	</select>
+  
+    </td>
+	<?
+	}
+	
+	if (is_array($people)||count($people)) {
+  ?>
+  </tr>
+  <tr>
+    <td class='bars'><?= tr("Person") ?></td>
+    <td class='bars'>
 		<select name="person_id">
   	<option value=''>--<?=tr("none")?>--</option>
 		<?
-		foreach($company as $p) {
+		foreach($people as $p) {
 			$val =($p['fname'])?ucfirst($p[lname])." ,".ucfirst($p[fname]):ucfirst($p[lname]);
 	  	print "<option value='$p[person_id]' >".$val."</option>\n";
 		}
 	?>
-	</select>
+	  </select>
+  <?
+    if( $company_id ) { print '<br>'.tr("(Employees of '?' only)", $company_title); } 
+  ?>
+    </td>
 	<?
 	}
+  
+  if( !$people && !$companies ) {
+    print tr("There are no contacts to add.");
+  }
 	?>
+  
+  <br>&nbsp;
 </td>
 </tr>
 
 <tr>
-  <td class="titleCell">
+  <td class="titleCell" colspan='<?=$colspan?>'>
     <?=tr("Click button to add contact")?>
   </td>
 </tr>
@@ -92,6 +122,15 @@ echo tr("Company:");
 </tr>
 <tr>
 </table>
-
-
 </form>
+
+<?
+  if( $people || $companies ) {
+?>
+  <p>&nbsp;
+  <form action='<?=$rootUrl?>/newContact.php'>
+    <input type='submit' class='actionButton' value=' <?=tr("New Contact")?> '>
+  </form>
+<?
+  }
+?>

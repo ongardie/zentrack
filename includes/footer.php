@@ -84,6 +84,10 @@
     // used by behavior_js.php
     print "<div id='behaviorDebugDiv'></div>\n";
   }
+  
+  //if( is_array($ticket) ) {
+  //  Zen::printArray($ticket, "Ticket Contents");
+  //}
 ?>
 
 </body>

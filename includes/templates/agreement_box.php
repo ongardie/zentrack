@@ -72,10 +72,11 @@ $items = $zen->get_contacts($parms,"ZENTRACK_AGREEMENT_ITEM",$sort);
 <?
 if (is_array($items)) {
   
-  
-  foreach($items as $t) {      
+  $class = '';
+  foreach($items as $t) {
+    $class = $class == 'bars'? 'cell' : 'bars';
     ?>
-    <tr  class='priority1'>
+    <tr class='<?=$class?>'>
     <td><?=$t["item_id"]?></td>
     <td height="25" width="50%" align="middle">
     <?=strtoupper($t["name1"])?>

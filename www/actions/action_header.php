@@ -38,7 +38,7 @@
   else if( !$action ) {
     $action = "view";
   }
-
+  
   // check to insure that this user has access
   // and this ticket allows the requested action
   // to be completed
@@ -52,7 +52,7 @@
   }  else {
     $page_type = "ticket";
   }
-  $page_mode = "system";
+  $setmode = "system";
 
   // find out if this is the ticket's creator (special conditions apply)
   $tf_creator = (($action=="view"||$action == "print"||$action == "email")

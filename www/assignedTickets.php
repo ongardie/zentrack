@@ -17,12 +17,10 @@
 		  "type_id" => $zen->notProjectTypeIDs());
   if( $login_bin ) {
     $params["bin_id"] = $login_bin;
-  } else {
-    $params["bin_id"] = $zen->getUsersBins($login_id);
   }
-  if( is_array($params) )
-    $tickets = $zen->get_tickets($params);
+  $tickets = $zen->get_tickets($params);
   include("$templateDir/listTickets.php");
+  include("$libDir/paging.php"); //Addition for paging
 
   include("$libDir/footer.php");
 ?>

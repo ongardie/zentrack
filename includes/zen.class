@@ -82,8 +82,8 @@ class zen extends zenDate {
      // converts special characters to ascii codes
      // to be used in <input> fields
      if( strlen($val) ) {
-       $val = str_replace('&amp;', '&', $val);
        $val = htmlspecialchars(stripslashes($val),ENT_QUOTES);
+       $val = str_replace('&amp;', '&', $val);
      }
      return $val;
    }
@@ -94,7 +94,7 @@ class zen extends zenDate {
      if( strlen($val) == 0 ) { return "''"; }
      return "'".str_replace("'", "\\'", str_replace("\\", "\\\\", $val))."'";
    }
-
+   
    function checkAlpha( $val = '', $special = '_' ) {
      // strips all chars not in a-z, A-Z and $special
      if( !strlen($val) )
@@ -595,6 +595,17 @@ class zen extends zenDate {
     if( $title ) { print "</div></p>\n"; }
     return true;
   }
+  
+  /**
+   * Determine if string contains a given substring
+   *
+   * @param string $pattern the text to search for
+   * @param string $text the string to be searched
+   * @return boolean
+   */
+   function inString( $pattern, $text ) {
+     return !strlen(strpos($text, $pattern));
+   }
    
    /**
     * Translate prepared strings using the translate class

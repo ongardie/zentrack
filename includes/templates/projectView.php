@@ -9,7 +9,7 @@
   */
   
   // add the "tasks" tab to the bar
-  array_unshift($tabs,"Tasks");
+  $tabs = array_merge(array('tasks'=>tr('Tasks')), $tabs);
 
   $page_type = "project";
 

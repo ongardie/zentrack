@@ -1,3 +1,20 @@
+<script language='javascript' type='text/javascript'>
+  function checkMyBox(fieldName, event) {
+    if( !event ) { event = window.event; }
+    if( document.getElementById ) {
+      var elem = document.getElementById(fieldName);
+      if( elem ) {
+        if( !event || !event.target || event.target.type != 'checkbox' ) {
+          elem.checked = elem.checked? false : true;
+        }
+      }
+      if( elem.parentNode ) { 
+        elem.parentNode.parentNode.oldStyle = elem.checked? 'invalidCell' : 'cell'; 
+      }    
+    }
+  }
+</script>
+
 <form method="post" name="agreementForm" action="<?=($skip)? "editAgreementSubmit.php" : "$rootUrl/addAgreementSubmit.php"?>">
 <input type="hidden" name="id" value="<?=$zen->ffv($id)?>">
 <input type='hidden' name='TODO' value='submit_form'>
@@ -91,8 +108,8 @@ value="<?=($stime)?$zen->showDate($zen->ffv($stime)):""?>">
     <input type="text" name="dtime" size="12" maxlength="10"
 value="<?=($dtime)?$zen->showDate($dtime):""?>">
     <img name="date_button" src='<?=$rootUrl?>/images/cal.gif' 
-  onClick="popUpCalendar(this,document.agreementForm.dtime, '<?=$zen->popupDateFormat()?>')"
-  alt="Select a Date">
+      onClick="popUpCalendar(this,document.agreementForm.dtime, '<?=$zen->popupDateFormat()?>')"
+      alt="Select a Date">
     &nbsp;(<?=tr("optional")?>)
   </td>
 </tr>
@@ -142,18 +159,17 @@ value="<?=($dtime)?$zen->showDate($dtime):""?>">
   }
   
 	$sort = "item_id asc";
-	
-	
-	
-
 	$contacts = $zen->get_contacts($parms,"ZENTRACK_AGREEMENT_ITEM",$sort);
 
   if (is_array($contacts)) {
 	 //print_r($contacts); 
 	
-	 foreach($contacts as $t) {      
+	 foreach($contacts as $t) {
       ?>
-   <tr  class='priority1' >
+   <tr class='cell'
+       onmouseover='mClassX(this, "altCellInv", "hand")' 
+       onmouseout='mClassX(this)'
+       onclick='checkMyBox("drops_<?=$t['item_id']?>", event)'>
    <td height="25" width="20" valign="middle">
     <?=$t["item_id"]?>
    </td>
@@ -163,7 +179,9 @@ value="<?=($dtime)?$zen->showDate($dtime):""?>">
    <td height="25"  width="400" valign="middle">
    <pre><?=$zen->ffv($t["description1"])?></pre>
    </td>
-   <td class='bars'><input type='checkbox' name='drops[]' value='<?=$t['item_id']?>'></td>
+   <td><input id='drops_<?=$t['item_id']?>' 
+          type='checkbox' name='drops[]' 
+          value='<?=$t['item_id']?>'></td>
    </tr>   
    <?   
    } ?>

@@ -1,5 +1,6 @@
 <?
-  include("help_header.php");
+  $b = dirname(dirname(__FILE__));
+  include_once("$b/help_header.php");
 
   $page_title = "GPL 2.0 License";
   include("$libDir/nav.php");

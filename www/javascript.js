@@ -83,6 +83,10 @@ function mClassX( obj, classname, hand ) {
   else {
      obj.style.cursor = 'default';
   }
+  
+  if( !classname && obj.oldStyle ) { classname = obj.oldStyle; }
+  if( obj.className ) { obj.oldStyle = obj.className; }
+  
   //refToElement.className = 'newclass', or refToElement.setAttribute('class', 'newclass')
   if( obj.setAttribute ) {
     obj.setAttribute('class',classname);
@@ -108,5 +112,20 @@ function mergeFunctions(fxn1, fxn2) {
     return fxn2;
   }
 }
+
+  function checkMyBox(fieldName, event) {
+    if( !event ) { event = window.event; }
+    if( document.getElementById ) {
+      var elem = document.getElementById(fieldName);
+      if( elem ) {
+        if( !event || !event.target || event.target.type != 'checkbox' ) {
+          elem.checked = elem.checked? false : true;
+        }
+      }
+      if( elem.parentNode ) { 
+        elem.parentNode.parentNode.oldStyle = elem.checked? 'invalidCell' : 'cell'; 
+      }    
+    }
+  }
 
 //-->
