@@ -40,7 +40,7 @@
   // check the include path
   $p = get_include_path();
   if( !preg_match("/^\.:/", $p) && !preg_match("/:\.:/", $p) ) {
-    @set_include_path( $p.":." );
+    @set_include_path( $p.(strlen($p)?':':'').'.' );
   }
   unset($p);
 

@@ -1,6 +1,7 @@
-<?php
+<? /* -*- Mode: C; c-basic-indent: 3; indent-tabs-mode: nil -*- ex: set tabstop=3 expandtab: */ 
+
 /**
- * @package Utils
+ * @package Zen 
  *
  * The translation function wrapper
  *
@@ -50,6 +51,9 @@ function tr($string, $vals = '') {
 }   
  
 /**
+ * @package Zen 
+ * @subpackage Utils
+ *
  * This class manages the translation of static strings. It uses translation
  * files that are located in directories specified in the bindDomain() function.
  * The format of these files is forthcoming.
@@ -61,7 +65,6 @@ function tr($string, $vals = '') {
  * $trans->setLocale('es') //Spanish
  * $trans->trans('Hello World'); //outputs 'Hola Mundo'
  */
-
 class ZenTranslator {
 /**
  * Creates an instance of the translator class.

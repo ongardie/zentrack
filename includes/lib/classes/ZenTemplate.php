@@ -1,6 +1,8 @@
-<?
+<? /* -*- Mode: C; c-basic-indent: 3; indent-tabs-mode: nil -*- ex: set tabstop=3 expandtab: */
 
   /**
+   * @package Zen
+   *
    *  TEMPLATE PROCESSING ENGINE
    *
    *  Essentially, the template engine works as follows
@@ -34,9 +36,6 @@
    *  <li>{if:field=something:"text to print"+field+"more text"} - inserts text if field = something
    *  <li>{if:field=something:%sub-template%} - inserts sub-template if field = something
    * </ul>
-   *
-   *  @package Utils
-   *
    */
 class zenTemplate {
 

@@ -1,14 +1,14 @@
 <?{ /* -*- Mode: C; c-basic-indent: 3; indent-tabs-mode: nil -*- ex: set tabstop=3 expandtab: */ 
 
-  // benchmarking
-  startPTime("classes.php");
-
   /**
    * @package Libs
    *
    * Provides simple means of including the appropriate classes for each page.  The 
    * methods of interest are {@link getAllClasses} and {@link getCommonClasses}.
    */
+
+  // benchmarking
+  startPTime("classes.php");
 
   /** Includes the standard classes */
   function getStandardClasses() {

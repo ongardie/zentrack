@@ -24,19 +24,20 @@
 
   <sqlInfo>
     <endline>;</endline>
-    <escapeCharacter>\</escapeCharacter>
-    <createSyntax>CREATE %table% {%columns%}</createSyntax>
-    <dropTableSyntax>DROP TABLE %table%</dropTableSyntax>
-    <primaryKey location="inline"> NOT NULL PRIMARY KEY</primaryKey>
-    <indexSyntax location="external" uniquelabel="UNIQUE">
+    <escapechar>\</escapechar>
+    <create>CREATE %table% {%columns%}</create>
+    <droptable>DROP TABLE %table%</droptable>
+    <primarykey location="inline"> NOT NULL PRIMARY KEY</primarykey>
+    <index location="external" uniquelabel="UNIQUE">
       CREATE INDEX %unique% %name% ON %table%(%columns%)
-    </indexSyntax>
-    <dropIndexSyntax></dropIndexSyntax>
-    <addColumnSyntax>ALTER TABLE %table% ADD COLUMN %name% (%properties%)</addColumnSyntax>
-    <dropColumnSyntax>ALTER TABLE %table% DROP COLUMN %name%</dropColumnSyntax>
-    <deleteSyntax><format>DELETE FROM %table% %where%</deleteSyntax>
-    <insertSyntax>INSERT INTO %table% COLUMNS(%columns%) VALUES(%values%)</insertSyntax>
-    <updateSyntax>UPDATE %table% SET %set% %where%</updateSyntax>
+    </index>
+    <dropindex></dropindex>
+    <tablecolumn uniquelabel="" notnull="NOT NULL">%name% %datatype% %attr% </tablecolumn>
+    <addcolumn>ALTER TABLE %table% ADD COLUMN %def%</addcolumn>
+    <dropColumn>ALTER TABLE %table% DROP COLUMN %name%</dropColumn>
+    <delete><format>DELETE FROM %table% %where%</delete>
+    <insert>INSERT INTO %table% COLUMNS(%columns%) VALUES(%values%)</insert>
+    <update>UPDATE %table% SET %set% %where%</update>
   </sqlInfo>
 
 </dbTypeInfo>

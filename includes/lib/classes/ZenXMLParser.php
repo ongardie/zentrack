@@ -1,10 +1,11 @@
 <? /* -*- Mode: C; c-basic-indent: 3; indent-tabs-mode: nil -*- ex: set tabstop=3 expandtab: */ 
 
  /**
-  * takes a string of xml data and parses it, creating ZenXNode objects 
+  * @package Utils
+  *
+  * Takes a string of xml data and parses it, creating ZenXNode objects 
   *
   * @see ZenXNode
-  * @package Utils
   */
  class ZenXMLParser {
 
@@ -71,7 +72,7 @@
 /**
  * contains a single xml node of data
  *
- * @package zen
+ * @package Utils
  */
 class ZenXNode {
   /**
@@ -210,28 +211,109 @@ class ZenXNode {
     return $vals;
   }
 
-  /** returns the name of this node */
-  function getName() { return $this->_name; }
-
-  /** returns a reference to the parent node of this node */
-  function getParent() { return $this->_parent; }
-
-  /** returns any data contained in this node: <node>...data...</node> */
-  function getData() { return $this->_data; }
-
-  /** returns properties from this node: <node property="prop..."> */
-  function getProps() { return $this->_props; }
-
-  /** returns child nodes from this node */
-  function getChildren() { return $this->_children; }
-
-  /** returns a single child node by name */
-  function getChild( $child ) { 
-    if( isset($this->_children["$child"]) )
-      return $this->_children["$child"]; 
+  /**
+   * Creates a ZenXNode object from an array (this is a recursive call, sub-elements are created as children
+   *
+   * This is how to create xml or schema data from an array.  The input array should be structured as follows:
+   *
+   * <pre>
+   *   nodeArray
+   *       props => [optional]array(..prop elements, indexed..)
+   *       name  => "name"
+   *       data  => [optional]"data"
+   *       children => [optional]array( "key" = array(child arrays, same structure), "key"... )
+   * </pre>
+   *
+   * Note that the children array is in the format: 
+   * <code>children = array( "Key1" = array( nodeArrayA, nodeArrayB, nodeArrayC ), "Key2"... ), 
+   * where the nodeArrays are structured exactly like this enclosing nodeArray
+   *
+   * @param array $vals represents the data structure to move to xml, see comments for more
+   * @return ZenXNode returns the root node
+   */
+  function createNodeFromArray( &$parent, $vals ) {
+    // create a new node, store parent reference
+    $node = new ZenXNode( &$parent, $vals['name'], $vals['props'] );
+    // add data if applicable
+    if( isset($vals['data']) ) {
+      $node->data( $vals['data'] );
+    }
+    // create child objects if applicable
+    if( isset($vals['children']) && is_array($vals['children']) ) {
+      foreach($vals['children'] as $k=>$nodes) {
+        for($i=0; $i<count($nodes); $i++) {
+          // create child and store reference in this node
+          $node->child( &$this->createNodeFromArray(&$node, $nodes[$i]) );
+        }
+      }
+    }
+    // return a reference to this object
+    return &$node;
   }
 
-  /** returns a single property by name */
+  /**
+   * STATIC: Parses and xml file and returns the root ZenXNode 
+   *
+   * @param string $xmlFile the path/filename to load
+   * @return ZenXNode results or null if unable to load/parse
+   */
+  function createNodeFromFile( $xmlFile ) {
+    if( !@file_exists($xmlFile) ) {
+      Zen::debug('ZenXMLParser', 'createNodeFromFile', 'Unable to load $xmlFile', 21, 1);
+      return null;
+    }
+    $xml = join("",file($xmlFile));
+    $parser = new ZenXMLParser();
+    return $parser->parse($xml);
+  } 
+
+  /** 
+   * @return string name of the node 
+   */
+  function getName() { return $this->_name; }
+
+  /** 
+   * @return ZenXNode parent object of this node or null (if this is root)
+   */
+  function getParent() { return $this->_parent; }
+
+  /** 
+   * @return String any data contained in this node: <code><node>...data...</node></code>
+   */
+  function getData() { return $this->_data; }
+
+  /** 
+   * @return array properties from this node: <code><node property="prop..."></code>
+   */
+  function getProps() { return $this->_props; }
+
+  /** 
+   * Returns the children of each node... note that the value of each array element is also an array, since
+   * there may be more than one child node with the same name
+   *
+   * @return array associative array of (string)name => array(ZenXNode) objects representing children of this node
+   */
+  function getChildren() { return $this->_children; }
+
+  /** 
+   * Returns a child object by name
+   *
+   * @param string $child the name of the child object to retrieve
+   * @param integer $index [optional] if provided, returns only the specific ZenXNode, otherwise array of matches
+   * @return mixed a single child ZenXNode, if the index is provided, or the array of children mathing this name
+   */
+  function getChild( $child, $index = null ) { 
+    if( isset($this->_children["$child"]) ) {
+      return ($index)? $this->_children[$child][$index] : $this->_children[$child]; 
+    }
+    else { return null; }
+  }
+
+  /** 
+   *
+   * @param string $prop is name of property to retrieve
+   * @return String value of a node property 
+   */
   function getProperty( $prop ) {
     if( isset($this->_props["$prop"]) )
       return $this->_props["$prop"];
@@ -246,10 +328,10 @@ class ZenXNode {
   /** @var string $_data any data from this node tag */
   var $_data;
 
-  /** @var array $_props the properties for the node tag */
+  /** @var array $_props associative array of (String)name => (String)value for the properties for the node tag */
   var $_props;
 
-  /** @var array $_children references to child nodes of this one */
+  /** @var array $_children associative array of (String)name => ZenXNode references to child nodes of this one */
   var $_children;
 
 }

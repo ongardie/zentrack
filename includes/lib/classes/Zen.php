@@ -173,12 +173,14 @@ class Zen {
    * @param string $message the message to store
    * @param intege $errnum the error number associated with message
    * @param integer $level the level of the message
+   * @return boolean true if message was valid and added successfully
    */
   function debug( $class, $method, $message, $errnum = 0, $level = 3 ) { 
     if( is_object($class) ) {
       $class = get_class($class);
     }
     $ml = &Zen::getMessageList();
+    return $ml->add($class,$method,$message,$errnum,$level);
   }
 
   /**
