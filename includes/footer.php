@@ -30,16 +30,22 @@
      print "<a href='$rootUrl/phpinfo.php'>phpinfo</a><br>\n";
      print "$HTTP_USER_AGENT<br>\n";
      print "page_browser: $page_browser<br>\n";
-     print "login_id: $login_id<br>\n";
-     print "login_level: $login_level<br>\n";
-     print "login_name: $login_name<br>\n";
-     print "login_bin: $login_bin<br>\n";
      print "bid: $bid<br>\n";
      print "id: $id<br>\n";
      print "uid: $uid<br>\n";
      print "databaseConnection: ".$zen->db_link."<br>\n";
      print "settings count: ".count($zen->settings)."<br>\n";
      print "bins: ".join(",",$zen->bins)."<br>\n";
+     print "types: ".join(",",$zen->types)."<br>\n";
+     print "priorities: ".join(",",$zen->priorities)."<br>\n";
+     print "systems: ".join(",",$zen->systems)."<br>\n";
+     if( $login_id ) {
+	print "login_id: $login_id<br>\n";
+	print "login_level: $login_level<br>\n";
+	print "login_name: $login_name<br>\n";
+	print "login_bin: $login_bin<br>\n";     
+	print "userBins: ".join(",",$zen->getUsersBins($login_id))."<br>\n";
+     }
      print "<p>&nbsp;------DEBUG-------&nbsp;</p>\n";
      print "</span>\n";
   }
