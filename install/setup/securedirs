@@ -19,7 +19,7 @@ paths:path_www::0550
 # user directories
 
 directories:dir_user::0550
-directories:dir_user:code:0550
+directories:dir_user:plugins:0550
 
 # cache directories
 

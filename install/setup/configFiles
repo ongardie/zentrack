@@ -5,25 +5,26 @@
 ## The parameters in this file are as follows:
 ##   0- ini file section
 ##   1- ini property
-##   2- filename
-##   3- template? if so, tacks .template onto filename and parses
-##   4- permissions to create with
-##   5- default behavior if file already exists:
+##   2- subdirectory (under the ini directory)
+##   3- filename
+##   4- template? if so, tacks .template onto filename and parses
+##   5- permissions to create with (don't forget the leading 0!)
+##   6- source directory
+##   7- default behavior if file already exists:
 ##       s = skip
 ##       m = merge (only valid for templates)
 ##       r = replace
-##   5- source directory
 
 # config files
 
-directories:dir_config:zen.ini:1:0744:defaults:m
-directories:dir_config:debug.xml:0:0744:defaults:r
-directories:dir_config:database.xml:0:0744:sampledata:r
+directories:dir_config::zen.ini:1:0744:defaults:m
+directories:dir_config::debug.xml:0:0744:defaults:r
+directories:dir_config::database.xml:0:0744:sampledata:r
 
 # header.php
 
-paths:path_www:header.php:1:0744:defaults:m
+paths:path_www::header.php:1:0744:defaults:m
 
 # user files
-directories:dir_user:user_functions.php:0:0744:defaults:s
-directories:dir_user:user_javascript.js:0:0755:defaults:s
+directories:dir_user:plugins:plugin.example.php:0:0744:defaults:s
+directories:dir_user::user_javascript.js:0:0755:defaults:s

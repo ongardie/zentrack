@@ -78,8 +78,8 @@ class ZenDataType extends Zen {
     $this->_table = $table;
     $this->_primarykey = ZenUtils::getPrimaryKey($table);
     // load the data
-    if( $id && is_object($zenlist) ) {
-      if( $zenlist->getTable() != $this->_table || !$this->_loadFromListData($zenlist,$id) ) {
+    if( $id && is_object($list) ) {
+      if( $list->getTable() != $this->_table || !$this->_loadFromListData($list,$id) ) {
         ZenUtils::safeDebug($this,"ZenDataType","Unable to constuct this object from list type "
                      .$zenlist->getD,102,LVL_ERROR);
       }
@@ -304,16 +304,17 @@ class ZenDataType extends Zen {
    * @static
    * @param string $table the db table it will be loaded from, MUST INHERIT ABSTRACT_DATA_TYPE!
    * @param integer $id the primary key for the data row to load
+   * @param ZenList $list a ZenList containing data for this object
    * @return Object of the appropriate ZenDataType
    */
-  function abstractDataType( $table, $id ) {
+  function abstractDataType( $table, $id, $list = null ) {
     $class = ZenUtils::classNameFromTable($table);
     if( class_exists($class) ) {
-      return new $class($id);
+      return new $class($id, $list);
     }
     else {
       $d = new ZenDataType;
-      $d->loadAbstract($table, $id);
+      $d->loadAbstract($table, $id, $list);
       return $d;
     }
   }

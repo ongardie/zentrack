@@ -172,6 +172,7 @@
   }
 
   // print performance time
-  print "\n-----------------\nCompleted: ".(time()-$stime)." seconds.\n\n";
+  $ctime = time()-$stime;
+  print "\n-----------------\nCompleted: ".($ctime)." seconds.\n\n";
 
 }?>

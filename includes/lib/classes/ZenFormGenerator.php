@@ -38,34 +38,29 @@ class ZenFormGenerator extends Zen {
     ZenUtils::safeDebug('ZenFormGenerator', 'constructor', 
                         "template=".$template.", table=".$table->name(),
                         0, LVL_DEBUG);
+    $this->_vals = array();
     $this->_table = $table;
     $this->setFormProp('title',$table->name());
     $this->setFormProp('description','');
-    $this->_template = $template;
-    $this->_name = 'aForm';
+    $this->_template = 'simpleForm.tpl';
+    $this->_name = 'generatedForm';
     $this->_action = $_SERVER['SCRIPT_NAME'];
     $this->_method = 'POST';
-    $this->_id = null;
+    $this->_ids = array();
+    $this->_rows = array();
+    $this->_props = array();
   }
+
+  
 
   /**
    * Load a row of data into this form element
    *
-   * @param integer $rowid is the primary key for this table corresponding to data row we want loaded
+   * @param mixed $rowids primary key or array of primary keys for data to load
    * @return boolean if row loaded successfully
    */
-  function loadData( $rowid ) {
-    $conn =& Zen::getDbConnection();
-    $key = $conn->getPrimaryKey($this->_table);
-    $this->_id = $rowid;
-    $fields = Zen::getDataRow($this->_table, $this->_id);
-    if( is_array($fields) && count($fields) ) {
-      foreach($fields as $key=>$val) {
-        $this->setValue($key, $val);
-      }
-      return true;
-    }
-    return false;
+  function loadData( $rowids ) {
+    $this->_ids = is_array($rowids)? $rowids : array($rowids);
   }
 
   /**
@@ -137,16 +132,6 @@ class ZenFormGenerator extends Zen {
   }
 
   /**
-   * Set the value to appear (selected or printed) for field
-   *
-   * @param string $field name of field
-   * @param mixed $value active value of field (could be an array for multiple selects)
-   */
-  function setValue($field, $value) {
-    $this->modifyField($field, array('default'=>$value));
-  }
-
-  /**
    * Set a special form property for the field
    *
    * The following special properties exist for form fields:
@@ -167,6 +152,12 @@ class ZenFormGenerator extends Zen {
    *      then this select will allow multiple entries up to the maximum.
    * </ul>
    *
+   * The following properties are reserved and may not be altered:
+   * <ul>
+   *   <li>settext - dynamically generated text from helpers or scripts
+   *   <li>choices - choices available to a select option (see {@link _generateChoices()})
+   * </ul>
+   *
    * @param string $field form field name
    * @param string $prop special property
    * @param mixed $value
@@ -181,17 +172,6 @@ class ZenFormGenerator extends Zen {
       return true;
     }
     return false;
-  }
-
-  /**
-   * Set many field values at once
-   *
-   * @param array $fields mapped (String)name -> (mixed)value
-   */
-  function setVals($fields) {
-    foreach($fields as $key=>$val) {
-      $this->setValue($key, $val);
-    }
   }
 
   /**
@@ -230,11 +210,10 @@ class ZenFormGenerator extends Zen {
    *   <li>name - name property of the &lt;form&gt; element
    *   <li>action - action property of the &lt;form&gt; element
    *   <li>method - method property of the &lt;form&gt; element
-   *   <li>fields - the form field info
+   *   <li>rows - the generated data rows to display
    *   <li>hiddenfields - the form fields which are hidden from view
-   *   <li>settext - dynamically generated text from helpers or scripts
+   *   <li>jsvals - special array for automatic js validation
    *   <li>showdescription - should field descriptions be printed on page (in addition to overlib)
-   *   <li>choices - choices available to a select option (see {@link _generateChoices()})
    *   <li>table - name of database table
    *   <li>template - name of template in use
    * </ul>
@@ -261,104 +240,22 @@ class ZenFormGenerator extends Zen {
     $vals["name"] = $this->_name;
     $vals["action"] = $this->_action;
     $vals["method"] = $this->_method;
-    $vals["fields"] = array();
-    $vals["hiddenfields"] = array();
-    $vals["settext"] = array();
-    $vals["choices"] = array();    
-    foreach($this->_table->listFields() as $f) {
-      $metafield = $this->_table->getMetaField($f);
-      $field = $metafield->getFieldArray();
-      if( !isset($field['default']) ) { $field['default'] = null; }
-      if( !isset($field['description']) ) { $field['description'] = null; }
-      //$field['default'] = ZenUtils::ffv($field['default']); //probably not needed (using smarty escape)
-      if( isset($this->_props[$f]) ) {
-        foreach($this->_props[$f] as $key=>$val) {
-          $field[$key] = $val;
-        }
+    $vals["rows"] = array();
+
+    if( count($this->_ids) ) {
+      // if there is data, create a row for each id with
+      // the corresponding fields and values loaded up
+      $list = new ZenList();
+      $list->loadAbstract($this->_table->name());
+      $list->criteriaIdArray($this->_ids);
+      $list->load();
+      foreach($this->_ids as $val) {
+        $vals['rows'][] = $this->_genDataRow($val, $list);
       }
-      switch( $field['ftype'] ) {
-      case 'skip':
-        continue; // do not process these
-      case 'checkbox':
-        if( !isset($field['checkval']) ) { $field['checkval'] = null; }
-        break;
-      case 'helper':
-        $vals['settext'] = $this->_getHelperResult($field);
-        break;
-      case 'radio':
-      case 'select':
-      case 'checklist':
-        $vals['choices'][$f] = $this->_generateChoices($field);
-        break;
-      case 'popselect':
-        //todo
-        //todo set source table and field
-        //todo set dest table and field
-        //todo pass criteria and reference
-        //todo set label or title... have
-        //todo popselect util take care of
-        //todo permissions, form generation
-        //todo and returning selected value
-        //todo
-        //todo use a standard format for our popup
-        //todo field types:
-        //todo    open new window,
-        //todo    pass source/dest table/field by session
-        //todo    pass calling form field via url
-        //todo    have popup return value to form by reading
-        //todo      field type and taking appropriate action
-        //todo
-        //todo probably include to handle javascript for returning
-        //todo value and reading the incoming parms.
-        //todo
-        break;
-      case 'yesno':
-        $field['ftype'] = 'select';
-        $vals['choices'][$f] = array('1'=>'Yes','0'=>'No');
-        break;
-      case 'datebox':
-        //todo
-        //todo
-        //todo: convert date, determine format
-        //todo
-        //todo
-        break;
-      case 'colorbox':
-        //todo
-        //todo
-        //todo: read criteria, set default
-        //todo
-        //todo
-        break;
-      case 'searchbox':
-        //todo
-        //todo pass source table and field
-        //todo pass criteria and reference
-        //todo pass dest table and field
-        //todo set label or title
-        //todo have searchbox take care of
-        //todo permissions and returning value
-        //todo
-        break;
-      case 'setting':
-        //todo
-        //todo
-        //todo: get field type from db criteria
-        //todo: get values and validation criteria
-        //todo
-        //todo
-        break;        
-      }
-      if( $field['ftype'] == 'hidden' ) {
-        $vals['hiddenfields'][] = $field;
-      }
-      else {
-        $vals["fields"][] = $field;
-      }
-      //todo
-      //todo set up js validation array
-      //todo have special php for creating this
-      //todo
+    }
+    else {
+      // if there is no data, load a single blank row
+      $vals['rows'][] = $this->_genDataRow(-1);
     }
     
     //ZenUtils::printArray($vals);//debug
@@ -372,12 +269,156 @@ class ZenFormGenerator extends Zen {
   }
 
   /**
+   * Generate a data row given a rowid
+   *
+   * @param integer $rowid -1 for empty row
+   * @param ZenList $list contains data for rowids (if any)
+   */
+  function _genDataRow( $rowid, $list = null ) {
+    $data = null;
+    if( $list && $rowid >= 0 ) {
+      $data = $list->get($rowid);
+    }
+    $row = array();
+    foreach($this->_table->listFields() as $f) {
+      // generate the field array
+      $field = $this->_genFieldProps($f, $data);
+      
+      // skip field if needed
+      if( $field['ftype'] == 'skip' ) { continue; }
+      
+      // add in special properties for enhanced fields
+      $field = $this->_processSpecialFtypes($field);
+      
+      // format date strings
+      if( $field['type'] == 'date' ) {
+        $field['default'] = strlen($field['default'])?
+          Zen::showDate($field['default']) : '';
+      }
+      // add the field to the appropriate array
+      if( $field['ftype'] == 'hidden' ) {
+        $row['hidden'][] = $field;
+      }
+      else {
+        $row['fields'][] = $field;
+        $row['jsvals'][] = array( $field['name'],
+                                   ($field['required']? 1 : 0),
+                                   $field['type'], 
+                                   $field['ftype'],
+                                   $field['label'],
+                                   ($field['settext']? $field['settext'] : '') );
+      }
+    }
+    return $row;
+  }
+  
+  /**
+   * Generate an array containing properties for this field.
+   * Modify the field by altering any values manually set during
+   * this objects life.
+   *
+   * @access private
+   * @param string $name name of the field
+   * @param ZenDataType $row the row data to use, if any
+   * @return array
+   */
+  function _genFieldProps( $name, $row = null ) {
+    // start with the meta info, if this is a field
+    $metafield = $this->_table->getMetaField($name);    
+    $field = is_object($metafield)?
+      $metafield->getFieldArray() : array();
+
+    // load value from row data, if any
+    if( $row != null ) {
+      $field['default'] = $row->getField($name);
+    }
+
+    // the required value is specially determines, it
+    // isn't simply the entry for the data
+    $field['required'] = $metafield->isRequired();
+
+    // reduce notices/warnings
+    $checkvals = array('default', 'description', 'len',
+                       'cols', 'rows', 'settext');
+    for($i=0; $i<count($checkvals); $i++) {
+      $k = $checkvals[$i];
+      if( !isset($field[$k]) ) { $field[$k] = null; }
+    }
+
+    // assign customized form vals
+    if( isset($this->_props[$name]) ) {
+      foreach($this->_props[$name] as $key=>$val) {
+        $field[$key] = $val;
+      }
+    }
+    return $field;
+  }
+
+  /**
+   * Create special properties needed for enhanced field types.
+   *
+   * If the field type passed is setting, the special field
+   * 'id' must be provided to allow for retrieving the
+   * field data.
+   *
+   * @access private
+   * @param array $field the field data array
+   * @return array the same array with new properties added
+   */
+  function _processSpecialFtypes( $field ) {
+    switch( $field['ftype'] ) {
+    case 'setting':
+      ZenUtils::safeDebug($this, '_processSpecialFtypes',
+                          "ftype 'setting' requires special processing!",
+                          105, LVL_ERROR);
+      break;
+    case 'checkbox':
+      if( !isset($field['checkval']) ) { $field['checkval'] = 1; }
+      break;
+    case 'helper':
+      $field['settext'] = $this->_getHelperResult($field);
+      break;
+    case 'radio':
+    case 'select':
+    case 'checklist':
+      $field['choices'] = $this->_generateArgs($field);
+      break;
+    case 'searchbox':
+    case 'popselect':
+      $ref = explode('.', $field['reference']);
+      $fxn = $field['ftype'] == 'searchbox'? 'searchBox' : 'popSelect';
+      if( !isset($field['showfield']) ) $field['showfield'] = $ref[1];
+      $l = str_replace("'", "\\'", $field['label']);
+      $field['Click'] = "{$fxn}(this, '{$l}', "
+        ."'{$ref[0]}', '{$ref[1]}', '{$field['showfield']}', "
+        ."'{$field['table']}', '{$field['name']}')";
+      break;
+    case 'yesno':
+      $field['ftype'] = 'select';
+      $field['choices'] = array( array('value'=>1,'label'=>'Yes'), 
+                                 array('value'=>0,'label'=>'No'));
+      break;
+    case 'datebox':
+      $field['settext'] = 
+        ZenUtils::dateFormatToDisplay(Zen::getSetting('dates','date_format_short'));
+      break;
+    case 'colorbox':
+      $field['click'] = "colorBox(this, '{$field['label']}')";
+      break;
+    }
+    return $field;
+  }
+
+  /**
    * Generate arguments from field criteria and reference info to be
    * used for choices and settext params.
    *
    * @access private
    * @param array $field properties of the field
-   * @return array (might be text for helpers)
+   * @return array this will return an array containing
+   *         the keys 'value', 'label', 'selected', and 'style'.. 
+   *         Note that there is nothing to force the helper/plugin
+   *          methods to do return a proper array.
    */
   function _generateArgs($field) {
     // if there is no criteria to process, there are no arguments
@@ -446,6 +487,10 @@ class ZenFormGenerator extends Zen {
 
   /**
    * Generate arguments for filter type criteria
+   *
+   * @return generally, this is an array containing ( label, value, selected, style )
+   *                    although the helper and plugin methods could return whatever
+   *                    they please (possibly a string, object, etc)
    */
   function _genFilterArgs($field) {
     $def = $field['default'];
@@ -599,7 +644,7 @@ class ZenFormGenerator extends Zen {
     }
     $parms['field'] = $field;
     $parms['template'] = $this->_template;
-    $helper = "{$this->_table}_{$f}_helper";
+    $helper = $this->_table->name()."_{$f}_helper";
     return ZenUtils::runHelper($helper, $parms);
   }
 
@@ -635,13 +680,16 @@ class ZenFormGenerator extends Zen {
   var $_method = 'POST';
 
   /** @var array $_vals values to pass to template, mapped (string)name->(mixed)value */
-  var $_vals = array();
+  var $_vals;
+
+  /** @var array $_rows the data rows to display (if any) */
+  var $_rows;
 
   /** @var array $_props special form field properties, mapped (string)field->array( (string)prop->(mixed)value ) */
-  var $_props = array();
+  var $_props;
 
-  /** @var integer $_id the row id in database loaded into this form (or null) */
-  var $_id;
+  /** @var integer $_ids the row id in database loaded into this form (or null) */
+  var $_ids;
 }
 
 ?>

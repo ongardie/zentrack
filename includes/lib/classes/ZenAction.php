@@ -38,7 +38,7 @@ class ZenAction extends ZenDataType {
    * @return boolean true if criteria was met and action ran normally
    */
   function activate() { 
-    $debugName = $this->getField('action_name');
+    $debugName = $this->name();
     ZenUtils::prep("ZenCriteriaSet");
     // check the action criteria and insure
     // that this action can be run
@@ -69,6 +69,13 @@ class ZenAction extends ZenDataType {
   }
 
   /**
+   * Returns the name of this action
+   *
+   * @return string
+   */
+  function name() { return $this->getField('action_name'); }
+
+  /**
    * Check criteria and execute a step, return whether we should continue or stop here
    *
    * @param array $parms contains the data for this step's execution (from database)
@@ -78,7 +85,7 @@ class ZenAction extends ZenDataType {
     ZenUtils::prep("ZenCriteriaSet");
 
     // just for easy reference
-    $debugName = $this->getField('action_name')."->{$parms['action_name']}";
+    $debugName = $this->name()."->{$parms['step_name']}";
 
     // check the criterie and return if criteria
     // is not met, indicating whether remaining steps
@@ -88,7 +95,7 @@ class ZenAction extends ZenDataType {
       if( !$crit->evaluate() ) {
         $this->debug($this, "activate", "Criteria not met for step: $debugName",
                      620, LVL_NOTE);
-        return $parms['action_fail']? true : false;
+        return $parms['step_fail']? true : false;
       }
     }
     
@@ -109,7 +116,7 @@ class ZenAction extends ZenDataType {
     $this->debug($this, "activate", $txt, 0, LVL_DEBUG);
     
     // run appropriate system action and evaluate results
-    switch($parms['action_type']) {
+    switch($parms['step_type']) {
     case "action":
       $result = ZenSystemAction::runAction($args['action_id']);
       break;
@@ -150,7 +157,7 @@ class ZenAction extends ZenDataType {
       break;
     default:
       $this->debug($this, '_step',
-                   "Invalid action type ({$parms['action_type']}): $debugName",
+                   "Invalid action step ({$parms['step_type']}): $debugName",
                    105, LVL_ERROR);
       $result = false;
     }
@@ -158,7 +165,7 @@ class ZenAction extends ZenDataType {
       $this->debug($this, '_step',
                    "System step failed: $debugName",
                    621, LVL_NOTE);
-      return $parms['action_fail']? true : false;
+      return $parms['step_fail']? true : false;
     }
     $this->debug($this, '_set',
                  "Action step completed: $debugName",

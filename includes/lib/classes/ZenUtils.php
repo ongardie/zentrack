@@ -189,7 +189,13 @@ class ZenUtils {
    * @param mixed $class is a $this object reference or a string containing class name
    * @param string name of table or false if none
    */
-  function tableNameFromClass( $class ) { 
+  function tableNameFromClass( $class ) {
+    if( is_object($class) ) {
+      $cname = get_class($class);
+      if( $cname == 'ZenList' || $cname == 'ZenDataType' ) {
+
+      }
+    }
     $cname = strtolower(is_object($class)? get_class($class) : $class);
     // remove Zen from beginning of name
     if( strpos( $cname, "zen" ) === 0 ) {
@@ -206,7 +212,6 @@ class ZenUtils {
     if( strpos( $cname, "." ) ) {
       $cname = substr($cname, 0, strpos($cname, '.') );
     }
-    
     return $cname;
   }
 
@@ -888,13 +893,19 @@ class ZenUtils {
    * @return mixed whatever the function is designed to generate
    */
   function callUserFunction( $function, $args ) {
+    // generate the function/file names
+    $fxn = "usr_fxn_{$function}";
+    $file = ZenUtils::getIni('directories','dir_user')."/plugins/plugin.{$function}.php";
+    
     // include the user functions
-    ZenUtils::prep("ZenUserFunctions", ZenUtils::getIni('directories','dir_user'));
-
-    $function = "ZenUserFunctions::{$function}";
-    if( !function_exists($function) ) {
-      ZenUtils::safeDebug("ZenUtils", "callUserFunction", "Specified user function ($function) does not exist!", 105, LVL_ERROR);
-      return null; 
+    if( !function_exists("$fxn") ) {
+      if( !file_exists($file) ) {
+        ZenUtils::safeDebug("ZenUtils", "callUserFunction",
+                          "Specified user function ($fxn) does not exist!", 
+                          105, LVL_ERROR);
+        return false;
+      }
+      include($file);
     }
     return $function($args);
   }
@@ -904,7 +915,8 @@ class ZenUtils {
    */
   function ZenUtils() { 
     ZenUtils::safeDebug("ZenUtils", "ZenUtils", 
-                        "Do not try to construct ZenUtils, it contains only static methods", 160, LVL_ERROR);
+                        "Do not try to construct ZenUtils, it contains only static methods", 
+                        160, LVL_ERROR);
   }
 
   /**
@@ -985,18 +997,21 @@ class ZenUtils {
    * @param string $dir directory where class resides, it will be loaded
    *                    from the dir_classes config setting if this variable
    *                    is blank.
+   * @param mixed $file provide this if the filename is not $class.php
    * @return integer representing number of classes loaded (classes already present are not counted)
    */
-  function prep( $class, $dir = '' ) {
+  function prep( $class, $dir = '', $file = '' ) {
     $classes = is_array($class)? $class : array($class);
+    $files = is_array($file)? $file : $file? array($file) : null;
     if( !$dir ) {
       $dir = ZenUtils::getIni('directories','dir_classes');
     }
     $count = 0;
     foreach( $classes as $c ) {
+      $f = $files? $files[$i] : "$c.php";
       if( !class_exists($c) ) {
         ZenUtils::mark("prep $c");
-        include("$dir".DIRECTORY_SEPARATOR."$c.php");
+        include("$dir".DIRECTORY_SEPARATOR."$f");
         $count++;
         ZenUtils::unmark("prep $c");
       }

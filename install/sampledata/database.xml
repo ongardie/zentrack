@@ -140,14 +140,21 @@
       <description>Access Priviledges</description>
       <columns>
         <column name="access_id" type="primarykey" ftype="hidden" />
-	<column name="bin_id" type="integer" ftype="select">
+        <column name="access_type" type="integer" ftype="select" label="Type">
+          <criteria type="list">[0]Login,[1]Email Gateway,[2]Restricted</criteria>
+          <description>
+            The access type is 
+          </description>
+        </column>
+	<column name="bin_id" type="integer" ftype="select" label="Bin">
 	  <reference>BIN.bin_id</reference>
 	</column>
-	<column name="role_id" type="integer" ftype="select">
+	<column name="role_id" type="integer" ftype="select" label="Role">
 	  <reference>ROLE.role_id</reference>
 	</column>
-	<column name="action_id" type="integer" ftype="select">
+	<column name="action_id" type="integer" ftype="select" label="Action ID">
 	  <reference>ACTION.action_id</reference>
+          <showfield>action_name</showfield>
 	</column>
 	<column name="yesorno" type="byte" ftype="checkbox" label="Active">
 	  <default>1</default>
@@ -168,6 +175,10 @@
       <inherit>ABSTRACT_DATA_NAMED</inherit>
       <columns>
         <column name="action_id" type="primarykey" ftype="hidden" />
+        <column name="action_shortname" type="string" ftype="text">
+          <size>12</size>
+          <description>A shortened name for use with action buttons</description>
+        </column>
 	<column name="is_button" type="byte" ftype="checkbox" />
 	<column name="icon_name" type="value" ftype="text" label="Icon">
 	  <description>Leave blank to disable icon</description>
@@ -193,7 +204,7 @@
       <columns>
         <column name="action_steps_id" type="primarykey" ftype="hidden" label="ID" />
 	<column name="action_id" type="integer" ftype="immutable" label="Action ID" />
-	<column name="action_type" type="value" ftype="select" label="Type">
+	<column name="step_type" type="value" ftype="select" label="Type">
 	  <criteria type="list">
              [action]Action
              [c_ticket]Create Ticket
@@ -217,7 +228,7 @@
              User Fxn - run a user defined function
 	   </description>
 	</column>
-	<column name="action_name" type="value" ftype="text" label="Name" />
+	<column name="step_name" type="value" ftype="text" label="Name" />
         <column name="criteria_set_id" type="integer" ftype="select" label="Criteria Set">
           <reference>CRITERIA_SET.criteria_set_id</reference>
           <showfield>field_name</showfield>
@@ -225,12 +236,12 @@
         <column name="parm_set_id" type="string" ftype="hidden" label="Param Set">
           <reference>PARM_SET.parm_set_id</reference>
         </column>        
-        <column name="action_fail" type="byte" ftype="checkbox" label="Continue on Fail" />
-        <column name="action_pri" type="shortint" ftype="text" label="Order" />
+        <column name="step_fail" type="byte" ftype="checkbox" label="Continue on Fail" />
+        <column name="step_pri" type="shortint" ftype="text" label="Order" />
       </columns>
       <indexList>
         <index name="act_steps_get">action_id</index>
-        <index name="act_steps_sort">action_pri,action_name</index>
+        <index name="act_steps_sort">step_pri,step_name</index>
       </indexList>
     </table>
 
@@ -899,7 +910,7 @@
       <columns>
         <column name="user_id" type="primarykey" ftype="hidden" />
 	<column name="auth_type" type="byte" ftype="select" label="Auth Type">
-	  <criteria type="list">[0]Normal,[1]LDAP,[2]Script</criteria>
+	  <criteria type="list">[0]Normal,[1]LDAP,[2]Plugin</criteria>
 	  <default>0</default>
 	  <description>Currently this is ignored, but should be implemented soon</description>
 	</column>

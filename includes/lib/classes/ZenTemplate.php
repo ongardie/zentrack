@@ -66,7 +66,7 @@ class ZenTemplate extends Smarty {
   function display( $template, $cache_id = null, $compile_id = null ) {
     $u = microtime();
     ZenUtils::mark("ZenTemplate->display($template:{$this->randomNumber}:$u)");
-    parent::display($template);
+    parent::display($template, $cache_id, $compile_id);
     ZenUtils::unmark("ZenTemplate->display($template:{$this->randomNumber}:$u)");
   }
 
@@ -77,11 +77,13 @@ class ZenTemplate extends Smarty {
    * @param string $template name of template to render
    * @param string $cache_id
    * @param string $compile_id
+   * @param boolean $display if true, output to stdout
+   * @return string containing parsed results
    */
-  function fetch( $template, $cache_id = null, $compile_id = null ) {
+  function fetch( $template, $cache_id = null, $compile_id = null, $display = false) {
     $u = microtime();
     ZenUtils::mark("ZenTemplate->fetch($template:{$this->randomNumber}:$u)");
-    $text = parent::fetch($template);
+    $text = parent::fetch($template, $cache_id, $compile_id, $display);
     ZenUtils::unmark("ZenTemplate->fetch($template:{$this->randomNumber}:$u)");
     return $text;
   }

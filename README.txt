@@ -9,24 +9,27 @@ check out the HELP file in the install directory.
 
 Visit zenTrack online at: http://zentrack.phpzen.net
 
-
 KNOWN BUGS/ISSUES
 
   This is a BETA RELEASE!  There will certainly be bugs.
 
-  Let us know right away when you encounter one and we
-  will help you patch it, and insure it doesn't make it
+  DO NOT USE THIS IN A PRODUCTION ENVIRONMENT!  Wait for the
+  official release, when any bugs which could potentially
+  disrupt production have been corrected.
+
+  Let us know right away when you encounter a bug and we
+  will help you patch it and make insure it doesn't make it
   to the live release.
  
   If this arrangement is uncomfortable for you, wait for
   the official release!
 
-  Reports:  Reports for version 3 will be released in 3.2
-  (they are going to be sweet)
-
   Email Gateway: The email gateway for version 3 will be
   released in 3.1, it is under development currently.
   
+  Reports:  Reports for version 3 will be released in 3.2
+  (they are going to be sweet)
+
 
 SUPPORT ZENTRACK
 

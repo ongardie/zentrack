@@ -58,6 +58,22 @@ class ZenNotifyList extends ZenList {
    */
   function sendNotification( $action_id, $user_id, $priority, $comments ) { }
 
+  /**
+   * Returns a list of email addresses which represent the recipients of this notification
+   *
+   * @param integer $priority the priority filter for users, if null, all users in this list are returned
+   */
+  function getRecipients( $priority = null ) {
+    $vals = array();
+    foreach($this->_ids as $id) {
+      $row = $this->get($id);
+      if( !$priority || $row->getField('field_pri') >= $priority ) {
+        $vals[] = $row->getField('email');
+      }
+    }
+    return $vals;
+  }
+
 }
 
 ?>

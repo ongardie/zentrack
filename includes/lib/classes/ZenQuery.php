@@ -763,7 +763,7 @@ class ZenQuery extends Zen {
       return 'ORDER BY ' . implode(', ', $this->_sorts);
     }
     else {
-      $this->debug($this, "_orderByClause", "No orderBy clause generated", LVL_DEBUG);
+      $this->debug($this, "_orderByClause", "No orderBy clause generated", 0, LVL_DEBUG);
       return '';
     }
   }

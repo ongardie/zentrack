@@ -17,8 +17,9 @@ paths:path_includes::0755
 paths:path_www::0755
 
 # user directories
-directories:dir_user::0755
-directories:dir_user:code:0755
+
+directories:dir_user::0750
+directories:dir_user:plugins:0750
 
 # cach directories
 

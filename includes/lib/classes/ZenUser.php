@@ -5,13 +5,23 @@
  * @package Zen
  */
 
+/**
+ * ZFMT_LASTFIRST display format for full name: Last_name, First_name
+ */
+define('ZFMT_LASTFIRST', 0);
+
+/**
+ * ZFMT_FIRSTLAST display format for full name: First_name Last_name
+ */
+define('ZFMT_FIRSTLAST', 1);
+
 /** 
  * User functions, this does not include access({@link ZenAccess}) or authentication({@link ZenAuthenticate})
  *
  * @package Zen 
  */
 class ZenUser extends ZenDataType {
-  
+
   /**
    * CONSTRUCTOR
    *
@@ -52,11 +62,33 @@ class ZenUser extends ZenDataType {
    */
   function getRoles() { }
 
+  /**
+   * Return the full name of the user, formatted for display
+   *
+   * The possible formatting options are:
+   * <ul>
+   *   <li>ZFMT_LASTFIRST - Last_name, First_name (default)
+   *   <li>ZFMT_FIRSTLAST - First_name Last_name
+   * </ul>
+   *
+   * @param integer string $format defaults to "Last, First", see above for details 
+   */
+  function getFullName( $format = null ) {
+    switch($format) {
+    case ZFMT_FIRSTLAST:
+      return $this->getField('fname')." ".$this->getField('lname');      
+    default:
+      return $this->getField('lname').", ".$this->getField('fname');
+    }
+  }
+  
   /* VARIABLES */
 
   /** @var ZenAccess $_access stores user's access priviledges */
   var $_access;
 
+  /** @var ZenRoleList $_roles stores the user's roles (loaded on demand) */
+  var $_roles;
 }
 
 ?>

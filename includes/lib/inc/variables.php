@@ -9,12 +9,6 @@
   // benchmarking
   startPTime('variables.php');
 
-  // check and set $GLOBALS['thisurl'] appropriately
-  //todo
-
-  // check and set $GLOBALS['thisfile'] appropriately
-  //todo
-
   /**
    * @var string $GLOBALS['templateDir'] is the directory location of the template directory to use for this build
    */
@@ -22,7 +16,6 @@
   $GLOBALS['templateDir'] = getini('directories','dir_templates')."/".getini('layout','template_set');
   $GLOBALS['styleSheet'] = getGlobal('rootUrl')."/styles/".getini('layout','template_set').".css";
   $GLOBALS['currentLocale'] = getini('layout','default_language');
-  //todo: add user prefs to these variables
 
   /**
    * @var array $GLOBALS['tcache'] temporary cache to store ZenDataTypes for life of page

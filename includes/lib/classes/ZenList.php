@@ -167,7 +167,7 @@ class ZenList extends Zen {
 
     // create search and sort criteria
     if( $this->_criteria ) {
-      $query->search($criteria);
+      $query->search($this->_criteria);
     }
     if( count($this->_sortCriteria) ) {
       foreach($this->_sortCriteria as $field=>$desc) {
@@ -276,13 +276,12 @@ class ZenList extends Zen {
    */
   function _makeObject( $id ) {
     $n = $this->getDataType();
-    if( class_exists($n) ) {
+    if( class_exists($n) 
+        && ZenUtils::tableNameFromClass($this) != "" ) {
       return new $n( $id, $this );
     }
     else {
-      $obj = new ZenDataType();
-      $obj->loadAbstract($id, $this);
-      return $obj;
+      return ZenDataType::abstractDataType($this->_table, $id, $this);
     }
   }
 

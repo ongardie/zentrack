@@ -1272,10 +1272,11 @@ class ZenTargets {
     // run through these files
     foreach( $this->_configFiles as $c) {
       // split up the array
-      list($sect,$var,$file,$is_tmplt,$permissions,$source,$default) = $c;
+      list($sect,$var,$subdir,$file,$is_tmplt,$permissions,$source,$default) = $c;
 
       // set up destination directory
-      $dest = ZenUtils::cleanPath($this->_ini[$sect][$var]);
+      $dest = $this->_ini[$sect][$var].($subdir? DIRECTORY_SEPARATOR.$subdir : '');
+      $dest = ZenUtils::cleanPath($dest);
 
       // get source directory
       // this will be installs/defaults unless
@@ -1522,7 +1523,8 @@ class ZenTargets {
 
     // load initial data
     if( !$this->_load_data($this->_ini['directories']['dir_config']
-                           .DIRECTORY_SEPARATOR."sampledata") ) { return false; }
+                           .DIRECTORY_SEPARATOR."sampledata",
+                           null, true, false) ) { return false; }
 
     return true;
   }
@@ -1774,8 +1776,9 @@ class ZenTargets {
    * @param string $dir the directory containing xml files that data is to be loaded from
    * @param string $table if provided, is a list of tables(comma separated) to load, otherwise all tables are loaded
    * @param boolean $dropOldData if true, all data in database will be dropped before loading new data
+   * @param boolean $suppressBackup used during full_install to prevent backing up data twice
    */
-  function _load_data( $dir, $table = null, $dropOldData = true ) {
+  function _load_data( $dir, $table = null, $dropOldData = true, $suppressBackup = false ) {
     // confirm data directory
     if( !@dir($dir) ) {
       $this->_printerr("_load_data", "$dir does not exist! Aborting");
@@ -1783,7 +1786,7 @@ class ZenTargets {
     }
 
     // backup existing data
-    if( !$this->_backup_database() ) {
+    if( !$suppressBackup && !$this->_backup_database() ) {
       return false;
     }
 
