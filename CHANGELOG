@@ -7,6 +7,23 @@
 
 ----- V2.4 (development, see CVS) ----
 
+2003-04-02, Kato
+  Enhanced Debugging Output
+    - zentrack/includes/footer.php 1.18
+    - zentrack/includes/zen.class 1.18
+    - zentrack/includes/translator.class 1.5
+  Added German translation
+    - zentrack/includes/translations/german.trans 1.1
+  Postgres Testing/Compatability
+    - zentrack/includes/db.class 1.22
+    - zentrack/includes/zenTrack.class 1.86
+    - zentrack/www/admin/bins.php 1.4
+    - zentrack/www/admin/editUserSubmit.php 1.8
+    - zentrack/www/admin/priorities.php 1.4
+    - zentrack/www/admin/systems.php 1.4
+    - zentrack/www/admin/tasks.php 1.5
+    - zentrack/www/admin/types.php 1.5
+
 2003-03-28, Kato
   Updated SQL files for new version
     - zentrack/install/UPGRADE_SEED_mysql.sql 1.9
