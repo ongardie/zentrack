@@ -51,22 +51,26 @@
   print "<td width='3'><img src='$rootUrl/images/empty.gif' width='3' height='1'></td>\n";
 
   $i = 1;
- 
+
+  $counts = $zen->get_ticket_stats($ticket);
   foreach( $tabs as $t ) {
-     if( $page_mode == strtolower($t) ) {
-	$class = 'tabOn';
-	$lclass = "tabsOn";
-     } else {
-	$class = 'tabOff';
-	$lclass = 'tabsOff';
-     }
-     $link = ($t == 'System')? $SCRIPT_NAME : $pageUrl;
-     print "<td class='$class' height='$height_num' width='55'>";
-     print "<a href='$link?id=$id&setmode=$t' class='$lclass'>$t</a></td>\n";
-     if( $i < count($tabs) ) {
-	print "<td width='3'><img src='$rootUrl/images/empty.gif' width='3' height='1'></td>\n";
-     }
-     $i++;
+    $lt = strtolower($t);
+    if( $page_mode == $tt ) {
+      $class = 'tabOn';
+      $lclass = "tabsOn";
+    } else {
+      $class = 'tabOff';
+      $lclass = 'tabsOff';
+    }
+    $txt = (isset($counts[$lt]) && $counts[$lt])?
+      "$t (".$counts["$lt"].")" : $t;
+    $link = ($t == 'System')? $SCRIPT_NAME : $pageUrl;
+    print "<td class='$class' height='$height_num' width='80'>";
+    print "<a href='$link?id=$id&setmode=$t' class='$lclass'>$txt</a></td>\n";
+    if( $i < count($tabs) ) {
+      print "<td width='3'><img src='$rootUrl/images/empty.gif' width='3' height='1'></td>\n";
+    }
+    $i++;
   }
 
   print "</tr></table>\n";

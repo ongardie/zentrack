@@ -161,6 +161,35 @@ class zenTrack extends zen {
     return( $this->db_quickIndexed($query) );
   }
 
+  /**
+   * returns a count of entries concerning this ticket
+   *
+   * @param integer $id the id of the ticket
+   * @return array indexed array of integers: attachments, logs, tasks
+   */
+  function get_ticket_stats( $id ) {
+    // if $id is an array, we probably have the ticket, so
+    // just use that
+    if( is_array($id) ) {
+      $t = $id;
+      $id = $t["id"];
+    }
+    else {
+      $t = $this->get_ticket($id);
+    }
+    $vals = array();
+    // get attachments
+    $query = "SELECT count(*) FROM ".$this->table_attachments." WHERE ticket_id = $id";
+    $vals["attachments"] = $this->db_get($query);
+    // get log entries
+    $query = "SELECT count(*) FROM ".$this->table_logs." WHERE ticket_id = $id";
+    $vals["log"] = $this->db_get($query);
+    // get related
+    $vals["related"] = count(explode(",",$t["relations"]));
+    $this->addDebug("get_ticket_stats","returning counts: ".implode(",",$vals),3);
+    return $vals;
+  }
+
   function get_tickets( $params = '', $sort = 'priority, otime desc', $columns = '', $archive_flag = 0 ) {
     // retrieves a list of tickets
     // $params can contain:

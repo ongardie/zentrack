@@ -1,7 +1,7 @@
 
   Welcome to zenTrack!
 
-  The installation instructions can be found:
+  The installation instructions can be found in formatted form:
 	locally - zentrack_diretory/www/help/install.html
         online  - http://zendocs.phpzen.net/zentrack/
 
@@ -29,7 +29,7 @@
      
      -configure the header file:
    	www/header.php
-	   you must configure $includesDir and $rootUrl or nothing will work!!!
+	   you must configure $libDir and $rootUrl or nothing will work!!!
 
      -build the database
         create a database instance and a user with access to this DB
@@ -41,6 +41,10 @@
      -chmod 777 includes/attachments (if using attachments)
      -log in as Administrator/admin and configure the system to taste.
      -the other test accounts are Guest/Guest and User/User
+ 
+     -please let us know!  send an email, log into irc.sourceforge.net #zentrack, 
+      or visit our forum and tell us what platform your install was successful on.  
+      We can also add your company/url to our user list.
 
    
   TROUBLESHOOTING
