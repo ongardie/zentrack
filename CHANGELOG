@@ -1,6 +1,15 @@
 
 --- V3.0 RC1 (beta,in CVS) ---	
 
+2003-05-20, MLively
+  Committed the Database Wrapper and supporting classes
+    - includes/lib/classes/ZenDatabase.class 1.2
+    - includes/lib/classes/ZenQuery.class 1.2
+  Initial commit of PHPUnit tests for DB Wrappers
+    - install/utilities/test/ZenDatabase_test.php 1.1
+    - install/utilities/test/ZenQuery_test.php 1.1
+    - install/utilities/test/test.php 1.2
+
 2003-03-27, Kato
   Created the initial CVS repository
   Set up some base classes to flesh out
