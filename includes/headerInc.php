@@ -64,9 +64,24 @@
    * this class needs to be available to the child classes
    * of zen.class
    */
-  function tr($string, $init = '') {
-    global $zen;
-    return $zen->trans($string,$init);
+  function tr($string, $vals = '') {
+    static $translator;
+    if (is_array($string)) {
+      $translator = new Translator;
+      $translator->bindZen($string['zen']);
+      $translator->bindDomain($string['domain'], $string['path']);
+      $translator->textDomain($string['domain']);
+      $translator->setLocale($string['locale']);
+      return true;
+    }
+    if( is_array($vals) ) {
+      return $translator->ptrans($string);
+    }
+    else {
+      return $translator->trans($string);
+    }
+    //global $zen;
+    //return $zen->trans($string,$init);
   }   
  
   /**
