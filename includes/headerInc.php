@@ -16,30 +16,21 @@
   ** to the site
   */
 
-
   /*
-  ** FIX REGISTER GLOBALS
+  ** SESSION MANAGEMENT
   */
 
-if( isset($_SERVER) ) {
-  extract($_SERVER);
-}
-if( isset($_POST) ) {
-  extract($_POST);
-}
-if( isset($_GET) ) {
-  extract($_GET);
-}
-  
+  include("$libDir/session_start.php");
+
+
   /*
   **  URL DETERMINATIONS
   */
-  
+ 
   $templateDir = "$libDir/templates";
   $listDir     = "$libDir/lists";
   $imageUrl    = "$rootUrl/images";
   $ticketUrl   = "$rootUrl/ticket.php";
-
 
   /*
   **  BROWSER DETERMINATIONS
@@ -63,35 +54,6 @@ if( isset($_GET) ) {
 
 
   /*
-  **  SESSION TRACKING AND MANAGEMENT
-  */
-
-  function start_session() {
-     // initiates the session, then
-     // checks for the existence of
-     // all the session variables to
-     // be used and registers them as
-     // required
-		 global $PHPSESSID;
-     session_start();     
-     $session_vars = array(
-			   "login_level",
-			   "login_id",
-			   "login_name",
-			   "login_inits",
-			   "login_bin",
-			   "login_mode",
-			   "login_messages"
-			   );
-     foreach($session_vars as $s) {
-			global $$s;
-			if( !session_is_registered("$s") )
-	  		session_register("$s");
-     }
-  }
-  start_session();
-
-  /*
   **  SOME FUNCTIONS FOR USE IN
   **  PAGE CONTENT
   **  
@@ -111,8 +73,7 @@ if( isset($_GET) ) {
      
      if( !is_array($msg) )
        $msg = array($msg);
-     
-     global $login_messages;
+     global $login_messages;     
      global $system_message_limit;
      
      if( count($msg) >= $system_message_limit ) {
@@ -137,6 +98,7 @@ if( isset($_GET) ) {
      global $zen;
      
      if( is_array($login_messages) ) {
+       $i = 0;
 	foreach( $login_messages as $v ) {
 	   if( $style != "smallGrey" && $v[2] ) {
 	      $style = "small$v[2]";
@@ -148,8 +110,8 @@ if( isset($_GET) ) {
 	   print "<br><span class='$style'>";
 	   print "[".$zen->showTime($v[1])."] ";
 	   print $v[0]."</span>\n";
-	}
-	$login_messages[0][2] = "Grey";
+	}	
+	$login_messages[$i][2] = "Grey";
      } else {
 	print "<span class='smallGrey'>No system messages</span>";
      }
@@ -174,18 +136,6 @@ if( isset($_GET) ) {
   $errs = "";
   $mode = "";
   $id = ereg_replace("[^0-9]", "", $id);
-
-  // set the page mode, for viewing tickets
-  // set it to tasks, assuming that it will be
-  // a project... if this is incorrect, then
-  // a check in ticket_box.php will correct
-  // this and make it default to 'details'
-  if( $setmode ) {
-     $login_mode = strtolower($setmode);
-  } else if( !$login_mode ) {
-     $login_mode = "tasks";
-  }
-
 
   /*
   **  USER AUTHENTICATION

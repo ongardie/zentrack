@@ -4,10 +4,23 @@
  Clean, simple interface, fully adaptable administration,
  100 percent object oriented and database abstracted. 
 
------ UPCOMING ADDITIONS -----
+----- v2.2.0 ------
 
-Email interface: Allow tickets to be created/closed/edited via email
-Graphs and Reports: 100% graphical user/project activity and hours reports
+php 4.2 compliant (register_globals fun)
+
+Added usage reports, graphical and html
+
+Fixed display issues between tickets and projects
+
+Added 'sticky tabs' for projects and tickets
+
+Fixed reject ticket bug
+
+----- v2.1.0 ------
+
+Minor bug fixes... some oracle problems corrected.
+
+Added Postgres build/seed files.  Thanks to jofry@users.sourceforge.net!
 
 ----- v2.0.3 Live () ------
 
@@ -18,8 +31,6 @@ Fixed several link bugs associated with ticketView.php and attachmentView.php
 
 Fixed -DEBUG OVERVIEW- in footer to include some highly valuable info
 for troubleshooting support requests.
-
-Added Postgres build/seed files.  Thanks to jofry@users.sourceforge.net!
 
 ----- v2.0.2 Beta (05-06-02) -----
 

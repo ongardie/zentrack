@@ -23,6 +23,9 @@
 </p>
 
 <?
+
+  include("$includesDir/session_save.php");
+
   /*
   **  This is the debugging section... please keep this intact, as
   **  we use it extensively for support questions

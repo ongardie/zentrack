@@ -3,12 +3,12 @@
 
   The installation instructions can be found:
 	locally - zentrack_diretory/www/help/install.html
-        online  - http://zentrack.phpzen.net/help/install.php
+        online  - http://zendocs.phpzen.net/bin/view/Zentrack/IndexPage
 
   QUICK AND DIRTY INSTALL INSTRUCTIONS:
 
      -place www/ in the httpd directory tree
-     -place includes/ in a non-httpd directory
+     -place includes/ in a non-httpd directory (safest method)
      
      -configure the following files:
 	includes/configVars.php
@@ -19,3 +19,5 @@
      -build the database
 	you must run both the build.sql and seed.sql file
 	they are in includes/misc
+
+   

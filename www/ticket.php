@@ -9,6 +9,8 @@
   // include the header file
   include("header.php");
 
+  if( $page != "project" )
+      $page = "ticket";
   // redirect to somewhere user can pick a ticket if no id was recieved
   if( !$id )
     header("Location: $rootUrl/index.php\n");
@@ -17,19 +19,21 @@
   **  GET TICKET INFORMATION
   */
   $page_title = "Ticket #$id";
-  $ticket = $zen->get_ticket($id);
 
   /*
   **  GET PARAMS FOR A PROJECT
   */
-  if( $ticket["type_id"] == $zen->projectTypeID() ) {
-     unset($ticket);
+  if( $page_type == "project" ) {
+     if( $_SESSION["project_mode"] == "" )
+	$_SESSION["project_mode"] = 'details';    
      $ticket = $zen->get_project($id);
      $page_section = "Project $id";
      $expand_projects = 1;
   } else {
-     if( strtolower($login_mode) == 'tasks' )
-	$login_mode = 'details';
+     $page_type = "ticket";
+     $ticket = $zen->get_ticket($id);
+     if( $_SESSION["ticket_mode"] == "" )
+	$_SESSION["ticket_mode"] = 'details';
      $page_section = $zen->types["$ticket[type_id]"]." #$id";
      $expand_tickets = 1;     
   }
@@ -43,7 +47,7 @@
   include("$libDir/nav.php");
 
   if( !$is_creator && !$zen->checkAccess($login_id,$ticket["bin_id"]) ) {
-     print "<p class='hot'>You are not allowed to view tickets in this bin</p>\n";
+     print "<p class='hot'>You are not allowed to view {$page_type}s in this bin</p>\n";
   } else {
 
      extract($ticket);

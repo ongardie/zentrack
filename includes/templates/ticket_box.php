@@ -14,6 +14,27 @@
   **  in accordance with incoming form data and 
   **  is a session variable
   */
+
+  /*
+  ** CHECK THE PAGE MODE
+  */
+
+  // set the page mode, for viewing tickets
+  if( !$_SESSION["project_mode"] ) 
+     $_SESSION["project_mode"] = "tasks";
+  if( !$_SESSION["ticket_mode"] )
+     $_SESSION["ticket_mode"] = "details";
+  if( $setmode ) {    
+    if( $page_type == "project" )
+      $_SESSION["project_mode"] = strtolower($setmode);
+    else
+      $_SESSION["ticket_mode"] = strtolower($setmode);
+  }
+  if( $page_type == "project" ) {
+    $page_mode = $_SESSION["project_mode"];
+  } else {
+    $page_mode = $_SESSION["ticket_mode"];
+  }
       
   /*
   ** SHOW THE NAVIGATION TABS
@@ -27,14 +48,14 @@
   $i = 1;
  
   foreach( $tabs as $t ) {
-     if( $login_mode == strtolower($t) ) {
+     if( $page_mode == strtolower($t) ) {
 	$class = 'tabOn';
 	$lclass = "tabsOn";
      } else {
 	$class = 'tabOff';
 	$lclass = 'tabsOff';
      }
-     $link = ($t == 'System')? $SCRIPT_NAME : $ticketUrl;
+     $link = ($t == 'System')? $_SERVER['SCRIPT_NAME'] : $ticketUrl;
      print "<td class='$class' height='$height_num' width='55'>";
      print "<a href='$link?id=$id&setmode=$t' class='$lclass'>$t</a></td>\n";
      if( $i < count($tabs) ) {
@@ -56,7 +77,7 @@
   ** DETERMINE WHICH SCREEN TO SHOW AND SHOW IT
   */
   
-  $name = "ticket_".$login_mode."Box.php";
+  $name = "ticket_".$page_mode."Box.php";
   $name = ereg_replace("[.]{2}", "", $name);
   include("$templateDir/$name");
 ?>

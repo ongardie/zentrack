@@ -1,7 +1,7 @@
 
   <tr>
   <td<?=($expand_projects)? " class='titleCell'" : " ".$nav_rollover_text?>>
-  <a class='menuLink' href="<?=$rootUrl?>/projects.php?setmode=Tasks"><?=$zen->prn("Projects")?></a>
+  <a class='menuLink' href="<?=$rootUrl?>/projects.php"><?=$zen->prn("Projects")?></a>
   </td>
   </tr>
 <? if( $expand_projects ) { ?>     
