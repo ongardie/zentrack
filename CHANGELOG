@@ -7,17 +7,200 @@
 
 ----- V2.5 LIVE (in testing) -----
 
------ V2.5 RC2 [Pre 2] (2004-08-30) -----
+----- V2.5 RC2 [Pre 2] (in development) -----
+
+2004-09-08, Kato
+  Added new documentation (still incomplete)
+    - zentrack_2/www/help/about.php 1.6
+    - zentrack_2/www/help/features.php 1.3
+    - zentrack_2/www/help/future.php 1.3
+    - zentrack_2/www/help/gpl.php 1.6
+    - zentrack_2/www/help/help_header.php 1.4
+    - zentrack_2/www/help/index.php 1.10
+    - zentrack_2/www/help/install.html 1.5
+    - zentrack_2/www/help/install.php 1.4
+    - zentrack_2/www/help/support.php 1.6
+    - zentrack_2/www/help/english/about.php 1.1
+    - zentrack_2/www/help/english/features.php 1.1
+    - zentrack_2/www/help/english/future.php 1.1
+    - zentrack_2/www/help/english/gpl.php 1.1
+    - zentrack_2/www/help/english/index.php 1.1
+    - zentrack_2/www/help/english/install.html 1.1
+    - zentrack_2/www/help/english/install.php 1.1
+    - zentrack_2/www/help/english/support.php 1.1
+    - zentrack_2/www/help/english/users/contacts.php 1.1
+    - zentrack_2/www/help/english/users/index.php 1.1
+    - zentrack_2/www/help/english/users/notify_lists.php 1.1
+    - zentrack_2/www/help/english/users/options.php 1.1
+    - zentrack_2/www/help/english/users/projects.php 1.1
+    - zentrack_2/www/help/english/users/reports.php 1.1
+    - zentrack_2/www/help/english/users/tickets.php 1.1
+    - zentrack_2/www/help/english/users/tutorial.php 1.1
+    - zentrack_2/www/help/english/users/user_header.php 1.1
+    - zentrack_2/www/help/english/users/tutorial/bins 1.1
+    - zentrack_2/www/help/english/users/tutorial/close_ticket 1.1
+    - zentrack_2/www/help/english/users/tutorial/introduction 1.1
+    - zentrack_2/www/help/english/users/tutorial/log_ticket 1.1
+    - zentrack_2/www/help/english/users/tutorial/login 1.1
+    - zentrack_2/www/help/english/users/tutorial/ownership 1.1
+    - zentrack_2/www/help/english/users/tutorial/view_tickets 1.1
+    - zentrack_2/www/images/help_screenshots/changepwd.gif 1.1
+    - zentrack_2/www/images/help_screenshots/current_bin.gif 1.1
+    - zentrack_2/www/images/help_screenshots/log_view.gif 1.1
+    - zentrack_2/www/images/help_screenshots/nav_tickets.gif 1.1
+    - zentrack_2/www/images/help_screenshots/ticket_list.gif 1.1
+    - zentrack_2/www/images/help_screenshots/ticket_view.gif 1.1
+  Updated ADODB library
+    - zentrack_2/includes/adodb/adodb-csvlib.inc.php 1.6
+    - zentrack_2/includes/adodb/adodb-datadict.inc.php 1.1
+    - zentrack_2/includes/adodb/adodb-error.inc.php 1.1
+    - zentrack_2/includes/adodb/adodb-errorhandler.inc.php 1.6
+    - zentrack_2/includes/adodb/adodb-errorpear.inc.php 1.6
+    - zentrack_2/includes/adodb/adodb-exceptions.inc.php 1.1
+    - zentrack_2/includes/adodb/adodb-iterator.inc.php 1.1
+    - zentrack_2/includes/adodb/adodb-lib.inc.php 1.6
+    - zentrack_2/includes/adodb/adodb-pager.inc.php 1.2
+    - zentrack_2/includes/adodb/adodb-pear.inc.php 1.6
+    - zentrack_2/includes/adodb/adodb-time.inc.php 1.1
+    - zentrack_2/includes/adodb/adodb-xmlschema.inc.php 1.1
+    - zentrack_2/includes/adodb/adodb.inc.php 1.6
+    - zentrack_2/includes/adodb/license.txt 1.6
+    - zentrack_2/includes/adodb/pivottable.inc.php 1.2
+    - zentrack_2/includes/adodb/readme.txt 1.5
+    - zentrack_2/includes/adodb/rsfilter.inc.php 1.2
+    - zentrack_2/includes/adodb/server.php 1.7
+    - zentrack_2/includes/adodb/toexport.inc.php 1.2
+    - zentrack_2/includes/adodb/tohtml.inc.php 1.6
+    - zentrack_2/includes/adodb/xmlschema.dtd 1.1
+    - zentrack_2/includes/adodb/datadict/datadict-access.inc.php 1.1
+    - zentrack_2/includes/adodb/datadict/datadict-db2.inc.php 1.1
+    - zentrack_2/includes/adodb/datadict/datadict-firebird.inc.php 1.1
+    - zentrack_2/includes/adodb/datadict/datadict-generic.inc.php 1.1
+    - zentrack_2/includes/adodb/datadict/datadict-ibase.inc.php 1.1
+    - zentrack_2/includes/adodb/datadict/datadict-informix.inc.php 1.1
+    - zentrack_2/includes/adodb/datadict/datadict-mssql.inc.php 1.1
+    - zentrack_2/includes/adodb/datadict/datadict-mysql.inc.php 1.1
+    - zentrack_2/includes/adodb/datadict/datadict-oci8.inc.php 1.1
+    - zentrack_2/includes/adodb/datadict/datadict-postgres.inc.php 1.1
+    - zentrack_2/includes/adodb/datadict/datadict-sybase.inc.php 1.1
+    - zentrack_2/includes/adodb/drivers/adodb-access.inc.php 1.6
+    - zentrack_2/includes/adodb/drivers/adodb-ado.inc.php 1.6
+    - zentrack_2/includes/adodb/drivers/adodb-ado_access.inc.php 1.6
+    - zentrack_2/includes/adodb/drivers/adodb-ado_mssql.inc.php 1.6
+    - zentrack_2/includes/adodb/drivers/adodb-borland_ibase.inc.php 1.6
+    - zentrack_2/includes/adodb/drivers/adodb-csv.inc.php 1.6
+    - zentrack_2/includes/adodb/drivers/adodb-db2.inc.php 1.6
+    - zentrack_2/includes/adodb/drivers/adodb-fbsql.inc.php 1.6
+    - zentrack_2/includes/adodb/drivers/adodb-firebird.inc.php 1.6
+    - zentrack_2/includes/adodb/drivers/adodb-ibase.inc.php 1.6
+    - zentrack_2/includes/adodb/drivers/adodb-informix.inc.php 1.6
+    - zentrack_2/includes/adodb/drivers/adodb-informix72.inc.php 1.2
+    - zentrack_2/includes/adodb/drivers/adodb-ldap.inc.php 1.1
+    - zentrack_2/includes/adodb/drivers/adodb-mssql.inc.php 1.6
+    - zentrack_2/includes/adodb/drivers/adodb-mssqlpo.inc.php 1.2
+    - zentrack_2/includes/adodb/drivers/adodb-mysql.inc.php 1.6
+    - zentrack_2/includes/adodb/drivers/adodb-mysqli.inc.php 1.1
+    - zentrack_2/includes/adodb/drivers/adodb-mysqlt.inc.php 1.6
+    - zentrack_2/includes/adodb/drivers/adodb-netezza.inc.php 1.1
+    - zentrack_2/includes/adodb/drivers/adodb-oci8.inc.php 1.7
+    - zentrack_2/includes/adodb/drivers/adodb-oci805.inc.php 1.2
+    - zentrack_2/includes/adodb/drivers/adodb-oci8po.inc.php 1.6
+    - zentrack_2/includes/adodb/drivers/adodb-odbc.inc.php 1.6
+    - zentrack_2/includes/adodb/drivers/adodb-odbc_mssql.inc.php 1.6
+    - zentrack_2/includes/adodb/drivers/adodb-odbc_oracle.inc.php 1.6
+    - zentrack_2/includes/adodb/drivers/adodb-odbtp.inc.php 1.1
+    - zentrack_2/includes/adodb/drivers/adodb-odbtp_unicode.inc.php 1.1
+    - zentrack_2/includes/adodb/drivers/adodb-oracle.inc.php 1.6
+    - zentrack_2/includes/adodb/drivers/adodb-pdo.inc.php 1.1
+    - zentrack_2/includes/adodb/drivers/adodb-postgres.inc.php 1.6
+    - zentrack_2/includes/adodb/drivers/adodb-postgres64.inc.php 1.2
+    - zentrack_2/includes/adodb/drivers/adodb-postgres7.inc.php 1.6
+    - zentrack_2/includes/adodb/drivers/adodb-proxy.inc.php 1.6
+    - zentrack_2/includes/adodb/drivers/adodb-sapdb.inc.php 1.1
+    - zentrack_2/includes/adodb/drivers/adodb-sqlanywhere.inc.php 1.6
+    - zentrack_2/includes/adodb/drivers/adodb-sqlite.inc.php 1.1
+    - zentrack_2/includes/adodb/drivers/adodb-sqlitepo.inc.php 1.1
+    - zentrack_2/includes/adodb/drivers/adodb-sybase.inc.php 1.6
+    - zentrack_2/includes/adodb/drivers/adodb-vfp.inc.php 1.6
+    - zentrack_2/includes/adodb/lang/adodb-bg.inc.php 1.1
+    - zentrack_2/includes/adodb/lang/adodb-bgutf8.inc.php 1.1
+    - zentrack_2/includes/adodb/lang/adodb-ca.inc.php 1.1
+    - zentrack_2/includes/adodb/lang/adodb-cn.inc.php 1.1
+    - zentrack_2/includes/adodb/lang/adodb-cz.inc.php 1.1
+    - zentrack_2/includes/adodb/lang/adodb-de.inc.php 1.1
+    - zentrack_2/includes/adodb/lang/adodb-en.inc.php 1.1
+    - zentrack_2/includes/adodb/lang/adodb-es.inc.php 1.1
+    - zentrack_2/includes/adodb/lang/adodb-fr.inc.php 1.1
+    - zentrack_2/includes/adodb/lang/adodb-it.inc.php 1.1
+    - zentrack_2/includes/adodb/lang/adodb-nl.inc.php 1.1
+    - zentrack_2/includes/adodb/lang/adodb-pl.inc.php 1.1
+    - zentrack_2/includes/adodb/lang/adodb-pt-br.inc.php 1.1
+    - zentrack_2/includes/adodb/lang/adodb-ro.inc.php 1.1
+    - zentrack_2/includes/adodb/lang/adodb-ru1251.inc.php 1.1
+    - zentrack_2/includes/adodb/lang/adodb-sv.inc.php 1.1
+    - zentrack_2/includes/adodb/session/adodb-compress-bzip2.php 1.1
+    - zentrack_2/includes/adodb/session/adodb-compress-gzip.php 1.1
+    - zentrack_2/includes/adodb/session/adodb-cryptsession.php 1.1
+    - zentrack_2/includes/adodb/session/adodb-encrypt-mcrypt.php 1.1
+    - zentrack_2/includes/adodb/session/adodb-encrypt-md5.php 1.1
+    - zentrack_2/includes/adodb/session/adodb-encrypt-secret.php 1.1
+    - zentrack_2/includes/adodb/session/adodb-sess.txt 1.1
+    - zentrack_2/includes/adodb/session/adodb-session-clob.php 1.1
+    - zentrack_2/includes/adodb/session/adodb-session.php 1.1
+    - zentrack_2/includes/adodb/session/adodb-sessions.mysql.sql 1.1
+    - zentrack_2/includes/adodb/session/adodb-sessions.oracle.clob.sql 1.1
+    - zentrack_2/includes/adodb/session/adodb-sessions.oracle.sql 1.1
+    - zentrack_2/includes/adodb/session/crypt.inc.php 1.1
+    - zentrack_2/includes/adodb/xsl/convert-0.1-0.2.xsl 1.1
+    - zentrack_2/includes/adodb/xsl/convert-0.2-0.1.xsl 1.1
+    - zentrack_2/includes/adodb/xsl/remove-0.2.xsl 1.1
 
 2004-09-06, Kato
   Repaired security issue with searching logs
-  
+    - zentrack_2/www/search.php 1.8
+    - zentrack_2/www/searchLogs.php 1.6
+    - zentrack_2/includes/zenTrack.class 1.146
+    - zentrack_2/includes/templates/searchForm.php 1.11
+    - zentrack_2/includes/templates/searchLogForm.php 1.8
+    - zentrack_2/includes/templates/searchLogList.php 1.10
+    - zentrack_2/includes/templates/searchLogResults.php 1.3
+    - zentrack_2/includes/templates/searchResults.php 1.8  
   Cleaned up GUI appearance/functional issues
-  
+    - zentrack_2/includes/editContactSubmit.php 1.1
+    - zentrack_2/includes/editContacteSubmit.php 1.1
+    - zentrack_2/includes/editTicketSubmit.php 1.9
+    - zentrack_2/includes/footer.php 1.25
+    - zentrack_2/includes/headerInc.php 1.45
+    - zentrack_2/includes/nav.php 1.12
+    - zentrack_2/includes/templates/agreement_box.php 1.4
+    - zentrack_2/includes/templates/listContacts.php 1.2
+    - zentrack_2/includes/templates/newAgreementForm.php 1.3
+    - zentrack_2/includes/templates/projectView.php 1.3
+    - zentrack_2/includes/templates/ticket_actionBar.php 1.10
+    - zentrack_2/includes/templates/ticket_contactsBox.php 1.3
+    - zentrack_2/includes/templates/ticket_notifyBox.php 1.4
+    - zentrack_2/includes/templates/ticket_relatedBox.php 1.5
+    - zentrack_2/includes/templates/ticket_titleBox.php 1.8
+    - zentrack_2/includes/templates/actions/contacts.php 1.2
+    - zentrack_2/www/styles.php 1.18
+    - zentrack_2/www/ticket.php 1.21
+    - zentrack_2/www/actions/action_header.php 1.13
+    - zentrack_2/www/actions/addToNotify.php 1.7
+    - zentrack_2/www/actions/upload.php 1.12  
   Fixed problems with next/last paging features
-  
+    - zentrack_2/includes/db.class 1.30
+    - zentrack_2/includes/paging.php 1.2
+    - zentrack_2/includes/parseVarfields.php 1.3
+    - zentrack_2/includes/zen.class 1.27
+    - zentrack_2/includes/zenTrack.class 1.146  
   Corrected bugs with: get_user method, adding contacts,
   editing tickets, others.
+    - zentrack_2/includes/db.class 1.30
+    - zentrack_2/includes/paging.php 1.2
+    - zentrack_2/includes/parseVarfields.php 1.3
+    - zentrack_2/includes/zen.class 1.27
+    - zentrack_2/includes/zenTrack.class 1.146
+    - zentrack_2/includes/zenTrack.class 1.146  
   
 2004-09-03, Kato
   Prep for work on the paging features
