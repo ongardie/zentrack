@@ -10,17 +10,18 @@
     <select name="newbin" onChange="document.newbin.submit()">
       <option value='all'>-All-</option>
     <?
-      foreach($zen->bins as $k=>$v) {
+      foreach($zen->getBins(1) as $v) {
+	 $k = $v["bid"];
 	 $zen->getAccess($login_id);
 	 if( (isset($zen->access["$k"]) && $zen->access["$k"] >= $zen->settings["level_view"])
 	       ||
 	     (!isset($zen->access["$k"]) && $login_level >= $zen->settings["level_view"])
 	    ) {
-	    if( $v > 18 )
+	    if( strlen($v["name"]) > 18 )
 	      $v = substr($v,0,15)."...";
 	    print ($k == $login_bin)? 
-	      "<option selected value='$k'>$v</option>" 
-	      : "<option value='$k'>$v</option>\n";
+	      "<option selected value='$k'>$v[name]</option>" 
+	      : "<option value='$k'>$v[name]</option>\n";
 	 }
       }
     ?>

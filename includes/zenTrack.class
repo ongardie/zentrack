@@ -1315,7 +1315,7 @@ class zenTrack extends zen {
       // project
       
       if( $etc > 0 ) {
-	 return( ($wkd/$etc*100) );
+	 return( round($wkd/$etc*100,1) );
       }
    }   
    
@@ -1530,6 +1530,8 @@ class zenTrack extends zen {
       // flag will need to be set to insure they are 
       // refreshed     
       
+      /*
+       *  DISABLED UNTIL 2.1
       if( !$language )
 	$language = $this->language;
       // prepare language strings
@@ -1581,6 +1583,8 @@ class zenTrack extends zen {
       } else {
 	 return( $new_words );
       }
+      */
+      return $words;
    }
    
    function getStrings( $language = '', $flag = 0 ) {
@@ -1595,7 +1599,7 @@ class zenTrack extends zen {
 	 if( !$language )
 	   $language = $this->language;
 	 $query = "SELECT identifier, string FROM "
-	   .$this->table_language_strings." WHERE language = '$language'";
+	   .$this->table_translation_strings." WHERE language = '$language'";
 	 $vars = $this->db_query($query);
 	 if( is_array($vars) )
 	   foreach($vars as $v)
@@ -1615,7 +1619,7 @@ class zenTrack extends zen {
       if( !$language )
 	$language = $this->language;
       $query = "SELECT identifier, translation FROM "
-	.$this->table_language_words
+	.$this->table_translation_words
 	." WHERE language = '$language'"
 	." AND identifier IN('".join("','",$words)."')";
       $vals = $this->db_query($query);
@@ -1670,6 +1674,36 @@ class zenTrack extends zen {
       }
       return( $this->access );
    }
+
+   function getUsersBins( $uid, $level = "level_view" ) {
+     // gets the users bins, compares those to the
+     // settings required to access $this->bins and 
+     // then checks against the users default level to
+     // return a simple list of binIDs that this user
+     // has access to
+     // $uid is the user's id
+     // $level is the access level to meet
+     // (i.e. could be set to level_user to only
+     // retrieve bins this uid is a "user" for,
+     // defaults to level_view)
+
+     $access = $this->getAccess($uid);
+     $user   = $this->getUser($uid);
+     if( is_array($this->bins) ) {
+       foreach($this->bins as $k=>$v) {
+	 if( strlen($access["$k"]) ) {
+	   if( $access["$k"] >= $this->settings["$level"] ) {
+	     $vars[] = $k;
+	   }
+	 } else {
+	   if( $user["access"] >= $this->settings["$level"] ) {
+	     $vars[] = $k;
+	   }
+	 }
+       }
+     }
+     return( $vars );
+   }
    
    function checkAccess( $uid, $binID, $action = '' ) {
       // takes the userID, the binID and the action in
@@ -1677,6 +1711,7 @@ class zenTrack extends zen {
       // user can perform it
       
       $actions = array(
+		       "create"  =>  $this->settings["level_create"],
 		       "move"    =>  $this->settings["level_move"],
 		       "log"     =>  $this->settings["level_user"],
 		       "accept"  =>  $this->settings["level_accept"],
@@ -1690,8 +1725,9 @@ class zenTrack extends zen {
 		       "upload"  =>  $this->settings["level_user"]
 		       );
       $level = $actions["$action"];
-      if( !$level ) {
-	 $level = $this->settings["level_view"];
+      if( !strlen($level) ) {
+	 $level = ($this->settings["$action"])? 
+	    $this->settings["$action"] : $this->settings["level_view"];
       }
       $access = $this->getAccess($uid);
       if( strlen($access["$binID"]) ) {
@@ -1795,7 +1831,7 @@ class zenTrack extends zen {
       
       if( !$flag ) {
 	 $query = "SELECT bid, name FROM ".$this->table_bins
-	   ." WHERE active = 1 ORDER BY priority, name";
+	   ." WHERE active = 1 ";
 	 $vars = $this->db_query($query);
 	 foreach($vars as $v) {
 	    $vals["$v[0]"] = $v[1];
@@ -1831,30 +1867,42 @@ class zenTrack extends zen {
       }
    }   
    
-   function getTasks() {
+   function getTasks($flag = 0) {
       // if flag is set, retrieves an
       // indexed array, otherwise, just
       // a list of names ordered by priority
       // and alphebetized      
 
       if( !$flag ) {
-	 $query = "SELECT name FROM ".$this->table_tasks." ORDER BY priority, name";
-	 return( $this->db_list($query) );
+	 $query = "SELECT taskID, name, priority FROM ".$this->table_tasks;
+	 $vars = $this->db_query($query);
+	 if( is_array($vars) ) {
+	    foreach($vars as $v) {
+	       $vals["$v[0]"] = $v[1];
+	    }
+	 }
+	 return $vals;
       } else {
 	 $query = "SELECT * FROM ".$this->table_tasks." ORDER BY priority, name";
 	 return( $this->db_queryIndexed($query) );
       }            
    }
    
-   function getSystems() {
+   function getSystems($flag = 0) {
       // if flag is set, retrieves an
       // indexed array, otherwise, just
       // a list of names ordered by priority
       // and alphebetized
       
       if( !$flag ) {
-	 $query = "SELECT name FROM ".$this->table_systems." ORDER BY priority, name";
-	 return( $this->db_list($query) );
+	 $query = "SELECT sid, name FROM ".$this->table_systems;
+	 $vars = $this->db_query($query);
+	 if( is_array($vars) ) {
+	    foreach($vars as $v) {
+	       $vals["$v[0]"] = $v[1];
+	    }
+	 }
+	 return($vals);
       } else {
 	 $query = "SELECT * FROM ".$this->table_systems." ORDER BY priority, name";
 	 return( $this->db_queryIndexed($query) );
@@ -1868,11 +1916,11 @@ class zenTrack extends zen {
       // list sorted by priority
       
       if( !$flag ) {
-	 $query = "SELECT priority,name FROM ".$this->table_priorities." ORDER BY priority desc, name";
+	 $query = "SELECT pid,priority,name FROM ".$this->table_priorities;
 	 $vars = $this->db_query($query);
 	 for($i=0; $i<count($vars); $i++) {
 	    $p = $vars[$i][0];
-	    $vals[$p] = $vars[$i][1];
+	    $vals[$p] = $vars[$i][2];
 	 }
 	 return($vals);
       } else {
@@ -1913,15 +1961,21 @@ class zenTrack extends zen {
       return($vals);
    }
    
-   function getTypes() {
+   function getTypes($flag = 0) {
       // if flag is set, retrieves an
       // indexed array, otherwise, just
       // a list of names ordered by priority
       // and alphebetized
       
       if( !$flag ) {
-	 $query = "SELECT name FROM ".$this->table_types." ORDER BY priority, name";
-	 return( $this->db_list($query) );
+	 $query = "SELECT typeID,name FROM ".$this->table_types;
+	 $vars = $this->db_query($query);
+	 if( is_array($vars) ) {
+	    foreach($vars as $v) {
+	       $vals["$v[0]"] = $v[1];
+	    }
+	 }
+	 return($vals);
       } else {
 	 $query = "SELECT * FROM ".$this->table_types." ORDER BY priority, name";
 	 return( $this->db_queryIndexed($query) );
@@ -2004,11 +2058,9 @@ class zenTrack extends zen {
       $this->zen();
       $this->DB( $this->database_host, $this->database_login, $this->database_password, $this->database_instance);
       
-      putenv( "ORACLE_SID=".$this->database_instance); //oracle specific requirement
-      
       $this->bins        = $this->getBins();
       $this->systems     = $this->getSystems();
-      $this->strings     = $this->getStrings($this->language);
+      //$this->strings     = $this->getStrings($this->language);
       $this->settings    = $this->getSettings();
       $this->settings["font_size_small"] = $this->settings["font_size"] - 2;
       $this->settings["font_size_large"] = $this->settings["font_size"] + 4;

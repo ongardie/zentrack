@@ -10,7 +10,7 @@
                                  // them to the project for others
 
    // see the php manual (http://www.php.net/manual/en/function.date.php) for all available date formatting
-   // options
+   // options [not yet implemented, planned for 2.1]
    $this->date_format_long = "M d, Y H:i";
    $this->date_format_short = "m-d-y";			     
    
@@ -47,6 +47,17 @@
    *  DATABASE SETTINGS
   */
 
+   // for oracle, the order of items may be changed
+   // it may be that the entry will be:
+   //      database_host: serverip:port#
+   //      database_login: scott
+   //      database_pass:  tiger
+   //      database_intance: servicename
+   // or:
+   //      database_host: ""
+   //      database_login: scott
+   //      database_pass:  tiger
+   //      database_intance: TNSName (try the TNSname here, then try the whole connection string!)      
    $this->database_type      = 'mysql';          //mysql,oracle,postgres,sqlserver
    $this->database_instance  = 'devtrack';	 //database name
    $this->database_login     = 'test';           //database login
@@ -68,6 +79,10 @@
    $this->table_tickets_archived = 'ZENTRACK_TICKETS_ARCHIVED'; //archived ticket table
    $this->table_types            = 'ZENTRACK_TYPES';            //ticket types
    $this->table_users            = 'ZENTRACK_USERS';            //users table   
+
+
+   // not yet implemented... but functional
+   // these will be fully added in 2.1
    
    $this->table_translation_strings = 'ZENTRACK_TRANSLATION_STRINGS'; //pre-constructed strings
    $this->table_translation_words = 'ZENTRACK_TRANSLATION_WORDS';  //language dictionary
@@ -77,6 +92,8 @@
    **  DEBUG HELP
    */
    
-   $this->debug = "On";  // set to "On" to show debug output
+   // not yet implemented (upcoming for 2.1)
+   $this->debug = "on";  // on/off (shows debug information)
+   $this->sql_debug = "off"; // on/off (shows all queries)
    
 }?>

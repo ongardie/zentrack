@@ -23,7 +23,7 @@
 </p>
 
 <?
-  if( $zen->debug == 'On' ) {
+  if( $zen->debug == 'on' ) {
      print "<span color='#666666'>\n";
      print "<p>&nbsp;------DEBUG-------&nbsp;</p>\n";
      print "<p>".$zen->settings["attachment_types_allowed"]."</p>\n";

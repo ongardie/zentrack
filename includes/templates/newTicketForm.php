@@ -19,6 +19,8 @@
 	}
      }  
   }
+  if( !$deadline )
+     $deadline = $zen->dateAdjust(1,"month",time());
 ?>     
 
 <form method="post" action="<?=($TODO=='EDIT')? "$rootUrl/actions/editSubmit.php" : "$rootUrl/addSubmit.php"?>">
@@ -40,6 +42,31 @@
   
 <tr>
   <td class="bars">
+    Project
+  </td>
+  <td class="bars">
+    <select name="projectID">
+    <option value=''>--none--</option>
+    <?
+      $bins = $zen->getUsersBins($login_id);
+      if( is_array($bins) ) {
+	 $params["binID"] = $bins;
+	 $params["status"] = "OPEN";
+	 $projects = $zen->get_projects($params,title);
+      } 
+      if( is_array($projects) ) {
+	 foreach($projects as $p) {
+	    $sel = ($p["id"] == $projectID)? " selected" : "";
+	    print "<option value='$p[id]'$sel>".stripslashes($p["title"])."</option>\n";
+	 }
+      }
+    ?>
+    </select>
+  </td>
+</tr>
+  
+<tr>
+  <td class="bars">
     Title
   </td>
   <td class="bars">
@@ -56,9 +83,15 @@ value="<?=strip_tags($title)?>">
     <select name="typeID">
 <?
     if( is_array($zen->types) ) {
-    	foreach($zen->types as $k=>$v) {
-	   $check = ( $k == $typeID )? "selected" : "";
-	   print "<option $check value='$k'>$v</option>\n";
+    	foreach($zen->getTypes(1) as $v) {
+	   $k = $v["typeID"];
+	   if( $k != $zen->projectTypeID() ) {
+	      // does not allow projects to be created here
+	      // user must use the "new project" link for this
+	      // task
+	      $check = ( $k == $typeID )? "selected" : "";
+	      print "<option $check value='$k'>$v[name]</option>\n";
+	   }
 	}
     } else {
       print "<option value=''>--no types--</option>\n";
@@ -97,6 +130,7 @@ value="<?=strip_tags($title)?>">
       <option value=''>--not assigned--</option>
 <?
     if( is_array($users) ) {
+        asort($users);
     	foreach($users as $k=>$v) {
 	   $check = ( $k == $userID )? "selected" : "";
 	   print "<option $check value='$k'>$v[lname], $v[fname]</option>\n";
@@ -114,6 +148,7 @@ value="<?=strip_tags($title)?>">
     <select name="binID">
 <?
     if( is_array($userBins) ) {
+        asort($userBins);
     	foreach($userBins as $k=>$v) {
 	   $check = ( $k == $binID )? "selected" : "";
 	   print "<option $check value='$k'>$v</option>\n";
@@ -149,7 +184,9 @@ value="<?=strip_tags($relations)?>">
     <select name="priority">
 <?
     if( is_array($zen->priorities) ) {
-    	foreach($zen->priorities as $k=>$v) {
+    	foreach($zen->getPriorities(1) as $v) {
+	   $k = $v["pid"];
+	   $v = $v["name"];
 	   $check = ( $k == $priority )? "selected" : "";
 	   print "<option $check value='$k'>$v</option>\n";
 	}
@@ -162,11 +199,29 @@ value="<?=strip_tags($relations)?>">
 </tr>
 <tr>
   <td class="bars">
+    Date of Commencement
+  </td>
+  <td class="bars">
+    <input type="text" name="start_date" size="12" maxlength="10"
+value="<?=$zen->showDate(strip_tags($start_date))?>">&nbsp;(mm/dd/yyyy, optional)
+  </td>
+</tr>
+<tr>
+  <td class="bars">
+    Estimated Hours to Complete
+  </td>
+  <td class="bars">
+    <input type="text" name="est_hours" size="12" maxlength="10"
+value="<?=strip_tags($est_hours)?>">&nbsp;(up to two decimal places, optional)
+  </td>
+</tr>
+<tr>
+  <td class="bars">
     Deadline
   </td>
   <td class="bars">
     <input type="text" name="deadline" size="12" maxlength="10"
-value="<?=$zen->showDate(strip_tags($deadline))?>">&nbsp;(mm/dd/yyyy)
+value="<?=$zen->showDate(strip_tags($deadline))?>">&nbsp;(mm/dd/yyyy, optional)
   </td>
 </tr>				   
 <tr>

@@ -16,7 +16,7 @@
   **  time elapsed over any of these ranges
   */
 
-  include_once("$libDir/db.class");
+  include_once("$libDir/dbnew.class");
   
 class zenDate extends DB {
 

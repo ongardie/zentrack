@@ -18,6 +18,8 @@
 	   $users["$n"] = $vars[$i];
 	}
      }  
+     asort($userBins);
+     asort($users);
   }
 ?>     
 
@@ -36,7 +38,32 @@
     Details
   </td>
 </tr>
-  
+
+  <tr>
+  <td class="bars">
+    Master Project
+  </td>
+  <td class="bars">
+    <select name="projectID">
+    <option value=''>--none--</option>
+    <?
+      $bins = $zen->getUsersBins($login_id);
+      if( is_array($bins) ) {
+	 $params["binID"] = $bins;
+	 $params["status"] = "OPEN";
+	 $projects = $zen->get_projects($params,title);
+      } 
+      if( is_array($projects) ) {
+	 foreach($projects as $p) {
+	    $sel = ($p["id"] == $projectID)? " selected" : "";
+	    print "<option value='$p[id]'$sel>".stripslashes($p["title"])."</option>\n";
+	 }
+      }
+    ?>
+    </select>
+  </td>
+</tr>
+ 
 <tr>
   <td class="bars">
     Title
@@ -54,7 +81,9 @@ value="<?=strip_tags($title)?>">
     <select name="systemID">
 <?
     if( is_array($zen->systems) ) {
-    	foreach($zen->systems as $k=>$v) {
+    	foreach($zen->getSystems(1) as $v) {
+	   $k = $v["sid"];
+	   $v = $v["name"];
 	   $check = ( $k == $systemID )? "selected" : "";	   
 	   print "<option $check value='$k'>$v</option>\n";
 	}
@@ -116,8 +145,10 @@ value="<?=strip_tags($title)?>">
   <td class="bars">
     <select name="priority">
 <?
-    if( is_array($zen->priorities) ) {
-    	foreach($zen->priorities as $k=>$v) {
+    if( is_array($zen->getPriorities(1)) ) {
+    	foreach($zen->getPriorities(1) as $v) {
+	   $k = $v["pid"];
+	   $v = $v["name"];
 	   $check = ( $k == $priority )? "selected" : "";
 	   print "<option $check value='$k'>$v</option>\n";
 	}
@@ -188,6 +219,3 @@ value="<?=$zen->showDate(strip_tags($deadline))?>">&nbsp;(mm/dd/yyyy)
   </td>
 </tr>
 </table>
-
-
-

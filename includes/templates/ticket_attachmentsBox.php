@@ -6,7 +6,7 @@
 ?>
   <table width="600" align="center" cellpadding="2" cellspacing="2">
   <tr> 
-     <form method="post" action="<?=$rootUrl?>/actions/upload.php">
+     <form action="<?=$rootUrl?>/actions/upload.php">
      <input type="hidden" name="id" value="<?=strip_tags($id)?>">
      <td align="right">
        <?
@@ -33,7 +33,7 @@
   // get attachments and display a list
   // of them
   $attachments = $zen->get_attachments($id);
-  if( is_array($attachments) ) {
+  if( is_array($attachments) && count($attachments) > 0) {
      ?>
        <table width="100%" cellpadding='2' cellspacing='1' border='0'>
        <tr>

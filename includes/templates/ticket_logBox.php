@@ -2,7 +2,7 @@
   <table width="600" align="center" cellpadding="2" cellspacing="2">
       <?
          $logs = $zen->get_logs($id);
-         if( is_array($logs) ) {
+         if( is_array($logs) && count($logs) > 0) {
 	    print "<tr><td class='titleCell'>Log Entries (".count($logs)." total)</td></tr>\n";
 	    $att = $zen->get_attachments($id,null,1);
 	    $i = 1;
