@@ -15,6 +15,23 @@
     array_shift($argv);
   }
 
+  // set the current directory
+  $thisdir = dirname(__FILE__);
+
+  // set default locations
+  $ini_file = "$thisdir/zen.ini";
+  $class_dir = "../includes/lib/classes";
+
+  // strip --ini_file and --classdir if found
+  for( $i=0; $i < count($argv); $i++ ) {
+    if( strpos(trim($argv[$i]), '--') === 0 ) {
+      $val = explode('=',substr(trim($argv[$i]),2));
+      unset($argv[$i]);      
+      if( $val[0] == 'ini_file' ) { $ini_file = $val[1]; }
+      else if( $val[0] == 'classdir' ) { $class_dir = $val[1]; }
+    }
+  }
+
   /****************************************************
    ***** ENVIRONMENT
    ***************************************************/
@@ -39,15 +56,6 @@
   // find out where class files are (check for a local file directing, or assume ../includes/lib/classes)
   //todo
 
-
-  // check and make sure we have a valid ini file
-  if( preg_match("/--ini_file=([^ ])/",$argv[0],$matches) ) {
-    $ini_file = $matches[1];
-  }
-  else {
-    $ini_file = "zen.ini";
-  }
-
   // find the ini file, if none exists, fail
   if( !file_exists($ini_file) || !is_readable($ini_file) ) {
     print "The ini file ($ini_file) could not be read.\n\n";
@@ -63,18 +71,20 @@
   // We include the classes in such a roundabout way because the first time we
   // call this install prog there may not be any class file, so we will have to
   // copy them.  This should only ever happen during development.
-  $thisdir = dirname(__FILE__);
-  $class_files = array('ZenTargets.php', 'ZenUtils.php');
+  $class_files = array('ZenTargets.class', 'ZenUtils.php');
   foreach($class_files as $c) {
     if( !@file_exists("$thisdir/setup/$c") ) {
-      if( $argv[0] != '-copy_class_files' &&
-	  ($argv[1] != '-copy_class_files' || !(strpos($argv[0], '--') === 0)) ) {
-	die("ERROR: The required class file $c was not found, try running 'install.php -copy_class_files'\n");
+      // try to locate the class files and copy them
+      if( @file_exists("$class_dir/$c") ) {
+	copy("$class_dir/$c", "$thisdir/setup/$c");
+      }
+      // fail if we couldn't find them
+      if( !@file_exists("$thisdir/setup/$c") ) {
+	die("ERROR: The required class file $c was not found. "
+	    ."Try using --classdir=source_dir/includes/lib/classes.\n");
       }
     }
-    else {
-      include("$thisdir/setup/$c");
-    }
+    include("$thisdir/setup/$c");
   }
 
   $ini_set = ZenUtils::read_ini($ini_file);
