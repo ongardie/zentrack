@@ -7,6 +7,10 @@
 
 ----- V2.5 (in development) ----
 
+2004-08-03, cfalonso
+  Fixed bad function call in editCustomSubmit.php
+    -zentrack_2/includes/editCustomSubmit.php 1.2
+
 2004-08-02, cfalonso
   Added new tab in ticket's display page: "Custom" tab.
   It allows user to edit custom fields for the current ticket.

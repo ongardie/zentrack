@@ -19,7 +19,7 @@
         $cft="int";
         break;
       case "custom_date":
-        $cfv=($$k)?$zen->parseDateTime($$k) : "n/a";
+        $cfv=($$k)?$zen->dateParse($$k) : "n/a";
         $cft="num";
         break;
       default:
