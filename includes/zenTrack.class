@@ -1840,6 +1840,7 @@ class zenTrack extends zen {
     return $res;
   }
 
+/*
   function close_ticket( $id, $user_id = '', $hours = '', $comments = '' ) {
     // closes the ticket (sets the status to CLOSED)
     // if there is testing or approval yet required, then
@@ -1864,7 +1865,7 @@ class zenTrack extends zen {
 		      "ctime"   =>  $this->currTime
 		      );
       if( strlen($user_id) ) {
-	$params["user_id"] = $user_id;
+	     $params["user_id"] = $user_id;
       }
       $res = $this->update_ticket($id, $params);
       if( $this->settings["log_close"] == "on" ) {
@@ -1954,6 +1955,132 @@ class zenTrack extends zen {
     }
     return($res);
   }
+*/
+
+
+    /**
+     * closes the ticket (sets the status to CLOSED)
+     * if there is testing or approval yet required, then
+     * simply sets status to pending.
+     * however, if both of these are completed, then
+     * closes out the ticket
+     *
+     * @param int $id Ticket's ID (can also be the an array with the whole information of the ticket (indexed by field names)
+     * @param int $user_id ID of the user who is closing the ticket
+     * @param float $hours Amount of time to be added to the ticket's worked hours
+     * @param string $comments Comments to add in the tickets log.
+     **/
+  function close_ticket( $id, $user_id = '', $hours = '', $comments = '' ) {
+    $id = $this->checkNum($id);
+    if( $user_id ) { $user_id = $this->checkNum($user_id); }
+
+    // get ticket info
+    if( is_array($id) ) {
+      $t = $id;
+      $id = $t["id"];
+    }
+    else {
+      $t = $this->get_ticket($id);
+    }
+    if( $this->check_status($t,"READY") ) {
+      // if ticket is ready to close, then close it
+      $params = array(
+            "status"  =>  'CLOSED',
+            "ctime"   =>  $this->currTime
+            );
+      if( $this->settings["retain_owner_closed"] != "on") {
+        $params["user_id"] = NULL;
+      }
+      $res = $this->update_ticket($id, $params);
+      if( $this->settings["log_close"] == "on" ) {
+        // create a log entry
+        $logParams = array(
+            "action"   =>  'CLOSED',
+            "ticket_id" =>  $id
+            );
+        // get the params
+        if( $user_id ) {
+          $logParams["user_id"] = $user_id;
+        }
+        $logParams["bin_id"] = $t["bin_id"];
+        if( $hours )
+          $logParams["hours"] = $hours;
+        if( $comments )
+          $logParams["entry"] = $comments;
+        // send the log
+        $this->add_log($id, $logParams);
+      }
+      if( $this->settings["email_closed"] == "on" ) {
+        // send email
+        $recipients = $this->get_notify_recipients($id);
+        // make sure the manager gets a notification
+        $vals = $this->fetch_bin_role_emails($t['bin_id'],$this->getRoleId('manager'));
+        $this->checkIncludedRecipients($recipients,$vals);
+        // create email
+        if( is_array($recipients) && count($recipients) ) {
+          $bin = $t["bin_id"];
+          $subject = $this->ptrans("Ticket #?: closed",array($id));
+          $emailParams["Close Time"] = $this->showDateTime($this->currTime);
+          if( $comments )
+            $emailParams["body"] = $comments;
+          $emailParams["tid"] = $t;
+          $message = $this->formatEmailMessage($emailParams);
+          $this->sendEmail($recipients,$subject,$message,$user_id);
+        }
+      }
+    } else if( ($t["tested"] == 1 || $t["approved"] == 1)
+              && $t["status"] == "OPEN" ) {
+      // update status to pending
+      $params["status"]='PENDING';
+      if( $this->settings["retain_owner_pending"] != "on") {
+        $params["user_id"] = NULL;
+      }
+      $res = $this->update_ticket($id, $params);
+      if( $this->settings["log_pending"] == "on" ) {
+        // make a log entry
+        $logParams = array(
+             "action"   =>  'PENDING',
+             "ticket_id" =>  $id,
+             "entry"    =>  $entry
+             );
+        if( $user_id ) {
+          $logParams["user_id"] = $user_id;
+        }
+        $logParams["bin_id"] = $t["bin_id"];
+        if( $hours )
+          $logParams["hours"] = $hours;
+        if( $comments )
+          $logParams["entry"] = $comments;
+        $this->add_log($id, $logParams);
+      }
+      if( $this->settings["email_pending"] == "on" ) {
+        // send an email
+        $recipients = $this->get_notify_recipients($id);
+        // make sure the testers/managers gets a notification
+        if( $t['tested'] == 1 ) {
+          $vals = $this->fetch_bin_role_emails($t['bin_id'], $this->getRoleId('tester'));
+        }
+        if( $t['tested'] != 1 || !is_array($vals) ) {
+          $vals = $this->fetch_bin_role_emails($t['bin_id'], $this->getRoleId('manager'));
+        }
+        $this->checkIncludedRecipients($recipients, $vals);
+        // create email
+        if( is_array($recipients) && count($recipients) ) {
+          $bin = $t["bin_id"];
+          $subject = $this->ptrans("Ticket #?: closed",array($id));
+          $emailParams["Close Time"] = $this->showDateTime($this->currTime);
+          if( $comments )
+            $emailParams["body"] = htmlentities($comments);
+          $emailParams["tid"] = $id;
+          $message = $this->formatEmailMessage($emailParams);
+          $this->sendEmail($recipients,$subject,$message,$user_id);
+        }
+      }
+    }
+    return($res);
+  }
+
+
   
   function log_ticket( $id, $user_id, $action = 'LOG', $hours = '', $comments = '' ) {
     // create an entry in the ticket log to track hours
@@ -2000,10 +2127,10 @@ class zenTrack extends zen {
     if( $user_id ) { $user_id = $this->checkNum($user_id); }
 
     $t = $this->get_ticket($id);      
-    $params = array(
-                    "bin_id"  => $newBin,
-                    "user_id" => 'NULL'
-                    );
+    $params["bin_id"] = $newBin;
+    if ($this->settings["retain_owner_move"]) {
+      $params["user_id"] = NULL;
+    }
     $res = $this->update_ticket($id, $params);
     if( $res && $this->settings["log_move"] == "on" ) {
       $logParams["action"] = "MOVED";
