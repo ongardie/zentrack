@@ -30,7 +30,8 @@
   <th>Notes</th>
 </tr>
 {foreach item=pval from=$fields}
-  {include file="schema/field.tpl" pval=$pval}
+  {include file="schema/field.tpl" pval=$pval assign="fieldText"}
+  {$fieldText}
 {/foreach}
 
 </table>
