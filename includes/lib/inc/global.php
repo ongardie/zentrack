@@ -23,6 +23,8 @@
   load_classes( $classes_standard, $dir_classes );
   load_classes( $classes_data_types, $dir_classes );
 
+  set_error_handler('zenErrorWrapper');
+
   // start the session information
   require_once("$dir_lib/inc/session.php");
 

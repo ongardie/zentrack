@@ -69,7 +69,7 @@ class zenTemplate {
    */
   function zenTemplate( $template ) {
     Zen::debug($this, "ZenTemplate", "initializing template '$template'", 0, LVL_NOTE);
-    if( $GLOBALS && $GLOBALS['templateDir'] ) {
+    if( isset($GLOBALS) && isset($GLOBALS['templateDir']) ) {
       $this->_templateDir = $GLOBALS['templateDir'];
     }
     $this->_template = $template;
@@ -122,7 +122,7 @@ class zenTemplate {
     for($i=0; $i<count($txt); $i++) {
       $txt[$i] = preg_replace("@[{]([^}]+)[}]@e", "''.\$this->_insert(\"\\1\").''",$txt[$i]);
     }
-    return join("",$txt);
+    return stripslashes(join("",$txt));
   }
 
   /**
@@ -211,7 +211,7 @@ class zenTemplate {
    */
   function _parseForeach($parts)
   {
-    $vars = $this->_getVar(trim($parts[1]));
+    $vars = $this->_vars[ trim($parts[1]) ];
     if( is_array($vars) ) {
       $txt = "";
       // make the string to show
@@ -233,6 +233,8 @@ class zenTemplate {
       return $txt;
     }
     else {
+      ZenUtils::printArray($this->_vars);//debug
+      Zen::debug($this, "_parseForeach", "The variable requested [{$parts[1]}] was not a valid array", 0, 2);
       return "";
     }
   }

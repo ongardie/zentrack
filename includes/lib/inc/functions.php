@@ -16,12 +16,7 @@
    * @param string $var if the first value was an array, then this one can specify which value (null=whole array)
    */
   function getGlobal( $name, $var = null ) {
-    if( isset($_SESSION[$name]) ) {
-      return ($var)? $_SESSION[$name][$var] : $_SESSION[$name];
-    }
-    else {
-      return ($var)? $GLOBALS[$name][$var] : $GLOBALS[$name];
-    }
+    return ZenUtils::findGlobal($name, $var);
   }
 
   /**
@@ -121,6 +116,13 @@
       print "</tr>\n";
     }
     print "</table>\n";
+  }
+
+  /**
+   * Catch php errors and redirect them to the messageList
+   */
+  function zenErrorWrapper( $no, $message, $file, $line ) {
+    Zen::debug( $file, $line, "$no: $message", 02, LVL_ERROR );
   }
 
   endPtime( "functions.php" );

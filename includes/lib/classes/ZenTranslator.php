@@ -169,13 +169,13 @@ class ZenTranslator {
       //Check for a cached copy
       if (!array_key_exists($translationFile, $this->_translationCache)) {
          //check for file
-         if (!is_file($translationFile)) {
+         if (!file_exists($translationFile)) {
             Zen::debug($this, "trans", "Translation File Does Not Exist: '$translationFile'\n", 21, LVL_WARN);
             $error = true;
          }
          else {
             //check for compiled file
-            if ((is_file($compiledFile)) && (filemtime($compiledFile) >= filemtime($translationFile))) {
+            if ((file_exists($compiledFile)) && (filemtime($compiledFile) >= filemtime($translationFile))) {
                $fh = fopen($compiledFile, 'r');
                $serializedArray = fread($fh, filesize($compiledFile));
                $transArray = unserialize($serializedArray);
@@ -224,7 +224,7 @@ class ZenTranslator {
  */
    function _parseTranslationFile($translationFile) {
       //Check for an error.
-      if (is_file($translationFile)) {
+      if (file_exists($translationFile)) {
          $status = 'none'; //Previous command
          $currentMsgID = '';
          $currentMsgStr = '';

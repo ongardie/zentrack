@@ -52,15 +52,6 @@ class Zen {
   }
 
   /**
-   * STATIC: wrapper for {@link ZenUtils::getIni()}
-   *
-   * @see ZenUtils::getIni()
-   */
-  function getIniVal( $cat, $setting = null ) {
-    return ZenUtils::getIni($cat, $setting);
-  }
-
-  /**
    * STATIC: loads system settings into memory
    *
    * This method should employ a static list from the GLOBAL settings to avoid
@@ -149,10 +140,10 @@ class Zen {
    * @param string $value the field value to match
    * @param string $sort the field to sort on(if any)
    */
-  function simpleQuery($table, $field, $value, $sort = null) {
+  function simpleQuery($table, $field = null, $value = null, $sort = null) {
     $query = Zen::getNewQuery();
     $query->table($table);
-    $query->match($field,$value);
+    if( $field ) { $query->match($field,$value); }
     if( $sort ) { $query->sort($sort); }
     return $query->select(Zen::getCacheTime(), true);
   }
@@ -279,7 +270,7 @@ class Zen {
    * @return ZenMetaTable object
    */
   function getMetaData( $class ) {
-    $cname = Zen::tableNameFromClass( $class );
+    $cname = ZenUtils::tableNameFromClass( $class );
     if( !isset($GLOBALS['tcache']) ) { $GLOBALS['tcache'] = array(); }
     if( !isset($GLOBALS['tcache']['metaTables']) ) { $GLOBALS['tcache']['metaTables'] = array(); }
     if( !isset($GLOBALS['tcache']['metaTables'][$cname]) ) {
@@ -346,6 +337,7 @@ class Zen {
     static $lcwords;
     static $states;
 
+    // get word lists
     if( $ucwords == null || $lcwords == null || $states == null ) {
       Zen::debug('Zen', 'titleCase', 'Generating static vars for this method', 0, LEVEL_DEBUG);
       $dir = Zen::getIniVal('directories','dir_lib');
@@ -353,9 +345,11 @@ class Zen {
       $lcwords = ZenUtils::parse_datafile( "$dir/lists/lcwords", null );
     }
 
+    // save this for later
+    preg_match('/(&[#a-zA-Z0-9];)/', $string, $entities);
+
     //todo tokenize the list of words and process
     if( strlen($string) ) {
-      $string = ucwords(strtolower($string));
       // fix lower case words
       foreach($lcwords as $l) {
         $string = preg_replace("/\b".ucfirst($l)."\b/", $l, $string);
@@ -370,13 +364,17 @@ class Zen {
       }
       // fix words with dashes
       $string = preg_replace("/([a-z])+-([A-Z])/", "'\\1-'.strtolower('\\2')", $string);
+      // fix html meta chars
+      if( count($entities) ) {
+        foreach($entities as $e) {
+          $string = preg_replace("/$e/i", $e, $string);
+        }
+      }
     }
 
     //todo join the list and return results
     return $string;
   }
-
-
 
   /********************************
    * SYSTEM UTILS

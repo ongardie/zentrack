@@ -30,7 +30,7 @@
    * @param string $xmlstring the xml text to be parsed or a file reference
    * @return ZenXNode xnode object containing root xml node
    */
-  function parse($xmlstring="") {
+  function &parse($xmlstring="") {
     if( strpos($xmlstring,"\n") === false && @file_exists($xmlstring) ) {
       $xmlstring = join("",file($xmlstring));
     }

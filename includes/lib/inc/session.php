@@ -24,14 +24,20 @@
     /** @global array $_SESSION['cache'] stores data types and settings to be used by all pages */
     $_SESSION['cache'] = array();
     
-    // set up the type data
+    /** @global array $_SESSION['cache']['data_types'] set up the type data */
     $_SESSION['cache']['data_types'] = null;
     
-    // store the common settings used by most pages
+    /** @global array $_SESSION['cache']['common_settings'] store the common settings used by most pages */
     $_SESSION['cache']['common_settings'] = null;    
     
-    // store the MessageListConfig (parsed from debug.xml)
+    /** @global array $_SESSION['cache']['messageListConfig'] store the MessageListConfig (parsed from debug.xml) */
     $_SESSION['cache']['messageListConfig'] = null;
+
+    /** @global array $_SESSION['cache']['dbSchema'] stores the database schema array */
+    $_SESSION['cache']['dbSchema'] = null;
+
+    /** @global array $_SESSION['cache']['metaSchema'] stores the database meta array */
+    $_SESSION['cache']['metaSchema'] = null;
   }
 
   if( !isset($_SESSION['cache']) || $_SESSION['cache'] == null ) clearZenSessionCache();

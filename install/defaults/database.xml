@@ -230,34 +230,30 @@
     </table>
     
     <table name="FIELD_DEFS">
-      <description>The information about tables and their fields</description>
+      <description>Meta information about tables and their fields</description>
       <columns>
-	<column name="col_unique" type="byte" ftype="hidden" />
-	<column name="col_ftype" type="value" ftype="hidden" />
-	<column name="col_notnull" type="byte" ftype="hidden" />
-	<column name="col_default" type="string" ftype="immutable" />
-	<column name="col_reference" type="string" ftype="hidden">
+	<column name="table_name" type="value" ftype="immutable" label="Table">
+	  <description>The table this field is in</description>
+	  <reference>TABLE_DEFS.tbl_name</reference>
+	</column>
+	<column name="col_name" type="value" ftype="immutable" label="Name" />
+	<column name="col_label" type="string" ftype="text" label="Label">
+	  <description>What to call this field when it is displayed</description>
 	  <size>50</size>
 	</column>
-        <column name="col_crit_type" type="value" ftype="hidden" />
-	<column name="col_criteria" type="text" ftype="hidden" />	
-        <column name="table_name" type="value" ftype="immutable" label="Table" />
-	<column name="col_name" type="value" ftype="immutable" label="Name">
-	  <description>The actual name of the column in the database</description>
+	<column name="col_form_type" type="value" ftype="select" label="Input Type">
+	   <description>Type of field to show on forms</description>
+	   <criteria type='standard'>ftypes</criteria>
 	</column>
-	<column name="col_type" type="value" ftype="immutable" label="Type" />
-	<!-- if this is a custom field, the status will be 1-visible or 2-hidden
-	     regular fields have a status of 0-permanent -->
-	<column name="col_status" type="byte" ftype="select" label="Visible">
-	  <criteria type="helper">field:col_name</criteria>
+	<column name="col_required" type="byte" ftype="checkbox" label="Required" />
+	<column name="col_criteria" type="string" ftype="textbox" label="Criteria" />
+	<column name="col_reference" type="value" ftype="text" label="Reference" />
+	<column name="col_default" type="string" ftype="text" label="Default Value" />
+	<column name="col_description" type="string" ftype="text" label="Description" />
+	<column name="col_order" type="integer" ftype="text" label="Display Order" />
+	<column name="col_unique" type="byte" ftype="checkbox" label="Unique">
+	   <description>If checked, then the value must be unique</description>
 	</column>
-	<column name="col_size" type="integer" ftype="immutable" label="Length" />
-	<column name="col_updated" type="date" ftype="immutable" label="Last Upated" />
-	<column name="col_order" type="smallint" ftype="text" label="Order" />
-	<column name="col_label" type="value" ftype="text" label="Label">
-	  <description>The name displayed for this column to users</description>
-	</column>
-	<column name="col_description" type="string" ftype="text" label="Description" />	
       </columns>
       <indexList>
         <index name="fldefs_tblname">table_name</index>
@@ -279,7 +275,7 @@
       <inherit>ABSTRACT_FILTER_TYPE</inherit>
       <columns>
         <column name="filter_id" type="integer" ftype="hidden">
-	  <reference>filter.filter_id</reference>
+	  <reference>FILTER.filter_id</reference>
 	</column>
       </columns>      
     </table>
@@ -323,8 +319,6 @@
 	  <description>Hours associated with this log entry, decimals are acceptable here</description>
 	</column>
 	<column name="entry" type="text" ftype="textarea" label="Details" />	  
-      </columns>
-      <customList>
 	<column name="action_id" type="integer">
 	  <default>{action_id}</default>
 	  <reference>action.action_id</reference>
@@ -334,7 +328,7 @@
 	  <default>{login_inits}</default>
 	  <size>5</size>
 	</column>
-      </customList>
+      </columns>
       <indexList>
         <index name="log_sort">ctime</index>
 	<index name="log_get">ticket_id</index>

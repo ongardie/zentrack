@@ -349,6 +349,23 @@ class ZenQuery extends Zen {
   }
 
   /**
+   * Performs a select statement and returns a single row of data
+   *
+   * @access public
+   * @since 1.0
+   * @param boolean $indexed whether results are returned in an associative (true) or plain array (false)
+   * @param int $cacheTime The amount of time to leave the query in the cache.
+   * @return array (empty array if query fails)
+   */
+  function selectRow($cacheTime = 0, $indexed = false) {
+    $vals = $this->select( $cacheTime, $indexed );
+    if( !count($vals) ) {
+      return array();
+    }
+    else { return $vals[0]; }
+  }
+
+  /**
    * Performs a select statement and returns results with the given criteria.
    *
    * Returns an array containing the results from the query. If the query fails, it will return an empty array
@@ -357,7 +374,7 @@ class ZenQuery extends Zen {
    * @since 1.0
    * @param boolean $indexed whether results are returned in an associative (true) or plain array (false)
    * @param int $cacheTime The amount of time to leave the query in the cache.
-   * @return array (empty array if query fails)
+   * @return array of rows(array mapped (string)field->(mixed)value) (empty array if query fails)
    */
   function select($cacheTime = 0, $indexed = false) {
     $this->_dbobject->setFetchMode($indexed);

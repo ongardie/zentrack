@@ -36,6 +36,7 @@
     clearZenSessionCache();
     $_SESSION['configLastUpdated'] = $ft;
     $_SESSION['zen'] = ZenUtils::read_ini( $ini_file );
+    ZenDbSchema::clearDbCacheInfo();
   }
   unset($ft);
 
@@ -52,10 +53,10 @@
   // setup develop mode params
   if( getIni('debug','develop_mode') > 0 ) {    
     // turn on on-screen error printing
-    @ini_set("display_errors", true);
+    ini_set("display_errors", true);
 
     // turn on most restrictive error_reporting (E_ALL)
-    @error_reporting(E_ALL);
+    error_reporting(E_ALL);
 
     // always reload debug.xml
     $_SESSION['cache']['messageListConfig'] = null;
@@ -64,8 +65,8 @@
     //todo
   }
   else {
-    @error_reporting(E_ALL ^ E_NOTICE);
-    @ini_set("display_errors", false);
+    error_reporting(E_ALL ^ E_NOTICE);
+    ini_set("display_errors", false);
   }
 
   endPTime( "environment.php" );

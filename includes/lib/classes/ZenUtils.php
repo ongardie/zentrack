@@ -23,6 +23,23 @@ class ZenUtils {
   }
 
   /**
+   * Attempts to locate a global value either in $_SESSION or $GLOBALS
+   *
+   * @param string $key is the variable to search for
+   * @param string $sub is an element of the $key array (if needed)
+   * @return mixed value found or null if none
+   */
+  function findGlobal( $key, $sub = null ) {
+    if( isset($_SESSION) && isset($_SESSION[$key]) ) {
+      return ($sub)? $_SESSION[$key][$sub] : $_SESSION[$key];
+    }
+    else if( isset($GLOBALS) ) {
+      return ($sub)? $GLOBALS[$key][$sub] : $GLOBALS[$key];
+    }
+    else { return null; }
+  }
+
+  /**
    * STATIC: Returns the parsed ini file array
    * <p>Retrieval is done as follows:
    * <ol>
@@ -51,7 +68,7 @@ class ZenUtils {
   }
 
   /**
-   * STATIC: Searches the global arras for zen.ini file data  and returns indexed value
+   * STATIC: Searches the global arrays for zen.ini file data  and returns indexed value
    *
    * @param String $category is the ini file category to look in
    * @param String $property is the ini file property to retrieve (if omitted, returns entire category)
@@ -72,7 +89,7 @@ class ZenUtils {
    * @param string name of table or false if none
    */
   function tableNameFromClass( $class ) { 
-    $cname = strtolower(is_object($class)? class_name($class) : $class);
+    $cname = strtolower(is_object($class)? get_class($class) : $class);
     // remove Zen from beginning of name
     if( strpos( $cname, "Zen" ) === 0 ) {
       $cname = substr($cname, 3);    
@@ -192,7 +209,7 @@ class ZenUtils {
    */
   function parseDate( $date, $eurodates = false ) { 
     // clean
-    $date = trim();
+    $date = trim($date);
 
     // validate
     if( !strlen($date) ) { return false; }
@@ -431,6 +448,38 @@ class ZenUtils {
   function printMemberMethods( $obj ) {
     if( !is_object($obj) ) { return false; }
     return ZenUtils::printArray( get_class_methods($obj) );    
+  }
+
+  /**
+   * Serialize and save data to a file
+   *
+   * @param string $file is the full path to access the writable file
+   * @param mixed $data is whatever data is to be saved
+   * @return boolean successful
+   */
+  function serializeDataToFile( $file, $data ) {
+    if( file_exists($file) ) {
+      $serializedData = serialize($data);
+      $fp = fopen($file);
+      fwrite($fp, $serializedData);
+      fclose($fp);
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * Unserialize and restore data from file
+   *
+   * @param string $file is the full path to access the writable file
+   * @return mixed whatever was in the file or false if failed
+   */
+  function unserializeFileToData( $file ) {
+    if( file_exists($file) ) {
+      $serializedData = join('',file($file));
+      return unserialize($serializedData);
+    }
+    return false; 
   }
 
 
