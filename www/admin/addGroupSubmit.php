@@ -40,7 +40,7 @@
       if( $group_id ) {
 	$vars = $zen->generateDataGroupInfo( array($group_id) );
 	$_SESSION['data_groups'][$group_id] = $vars[$group_id];
-        $msg = tr("Group '?' (ID=?) was added successfully. ? to customize this group's details.",
+        $msg = tr("Group '?' (ID=?) was added successfully. ? to edit this group's entries.",
                              array($NewGroupName, $group_id, "--link--" . tr("Click Here") . "</a>", $NewGroupName));
         $msg = str_replace("--link--", "<br><a href='$rootUrl/admin/editGroupDetails.php?group_id=$group_id'>", $msg);
       } else {

@@ -314,18 +314,15 @@ function setFormValsUsingGroup( fieldObj, group ) {
     
     // only bother if vals were returned
     if( vals != null && vals.length > 0 ) {
-      if( vals[0] && vals[0].value ) {
-	// if each value of the array is a label/value pair
-	// add the labels and values
-	for( k in vals ) {
-	  group.addField( vals[0].value, vals[0].label );
-	}
-      }
-      else {
-	// otherwise just set the values
-	for( var i=0; i < vals.length; i++ ) {
-	  group.addField( vals[i] );
-	}
+      for( var i=0; i < vals.length; i++ ) {
+         if( vals[i] && typeof vals[i] == 'object' ) {
+           // this is a label/value pair
+           group.addField( vals[i].value, vals[i].label );
+         }
+         else {
+           // this is just a value
+           group.addField( vals[i] );
+         }
       }
     }
   }
@@ -576,9 +573,9 @@ function pageLoadedBehavior() {
     if( $_GET['formset'] ) {
       $sep = false;
       foreach(explode(',',$_GET['formset']) as $b) {
-	if( $sep ) { print ","; }
-	print "window.document.".$zen->checkAlphaNum($b,'_.');
-	$sep = true;
+      if( $sep ) { print ","; }
+        print "window.document.".$zen->checkAlphaNum($b,'_.');
+        $sep = true;
       }
     }
   ?>);
@@ -653,8 +650,8 @@ function getFormFieldValue( formField, behaviorMapField ) {
     if( behaviorMapField.name.indexOf("_date") > 0 ) {
       //can't begin with this, so zero is not a concern
       if( formField.value.match(/[^0-9]/) >= 0 ) {
-	var val = Date.parse(formField.value);
-	if( val > 0 ) { return val; }
+        var val = Date.parse(formField.value);
+        if( val > 0 ) { return val; }
       }
     }
     return formField.value;

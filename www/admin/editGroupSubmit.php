@@ -45,7 +45,7 @@
 	$_SESSION['data_groups'][$group_id] = $vars[$group_id];
 
 	// print useful messages for user
-	$msg = tr("Group '?' was updated successfully. ? to customize group '?'s details.",
+	$msg = tr("Group '?' was updated successfully. ? to customize this group's entries.",
 		  array($NewGroupName,
 			"--link--",
 			$NewGroupName));
