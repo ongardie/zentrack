@@ -14,11 +14,10 @@
   <blockquote>
   <b>Welcome to <?=$zen->settings["system_name"]?> Help!</b>
 
-  <p>Thanks for downloading the 2.0 beta version!  The help menus are being developed, and 
-  will be refined and released with the live 2.0 install.  Until then, please use our 
+  <p>Thanks for downloading the <?=$zen->settings["version_xx"]?> beta version!  The help menus are being developed, and 
+  will be refined and released with the live <?=$zen->settings["version_xx"]?> install.  Until then, please use our 
   <a href='http://www.sourceforge.net/projects/zentrack/'>source forge project system</a> 
   to obtain assistance and report errors.
-
   <ul>
     <b>General Information:</b>
     <ul>
