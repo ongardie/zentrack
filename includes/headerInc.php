@@ -15,7 +15,21 @@
   ** This page contains functions and variables which are universal
   ** to the site
   */
-  
+
+
+  /*
+  ** FIX REGISTER GLOBALS
+  */
+
+if( isset($_SERVER) ) {
+  extract($_SERVER);
+}
+if( isset($_POST) ) {
+  extract($_POST);
+}
+if( isset($_GET) ) {
+  extract($_GET);
+}
   
   /*
   **  URL DETERMINATIONS

@@ -2,7 +2,7 @@
 <?
   // validation
   if( $chart_options && !is_array($chart_options) ) {
-    $chart_options = array($chart_options);
+    $chart_options = explode(",",$chart_options);
   }
   if( is_array($chart_options) ) {
     foreach($chart_options as $k=>$v) {
@@ -102,8 +102,8 @@
 <!-- onChange='document.reportOptionForm.submit()'> -->
       <option<?=($chart_type=="Line Chart")?" SELECTED":""?>>Line Chart</option>
       <option<?=($chart_type=="Bar Chart")?" SELECTED":""?>>Bar Chart</option>
-      <option<?=($chart_type=="Line Chart")?" SELECTED":""?>>Stack Chart</option>
-      <option<?=($chart_type=="Line Chart")?" SELECTED":""?>>Scatter Chart</option>
+      <option<?=($chart_type=="Stack Chart")?" SELECTED":""?>>Stack Chart</option>
+      <option<?=($chart_type=="Scatter Chart")?" SELECTED":""?>>Scatter Chart</option>
 <!--  <option<?=($chart_type=="Pie Chart")?" SELECTED":""?>>Pie Chart</option>  -->
     </select>
     <br><span class='note'>A large number of elements will appear better in a line chart, bar charts tend to be more pleasing with smaller numbers.</span>

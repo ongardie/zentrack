@@ -11,7 +11,7 @@
   $page_tile = "Usage Reports";
   include("$libDir/nav.php");
 
-  include("$reportMenu.php");
+  include("$templateDir/reportMenu.php");
 
   include("$libDir/footer.php");
 

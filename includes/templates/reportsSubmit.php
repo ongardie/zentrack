@@ -30,11 +30,15 @@
     }
     else if( $chart_type == "Bar Chart" ) {
       $zen->hiddenField("chart_type", "column" );
+    } else if( $chart_type == "Scatter Chart" ) {
+      $zen->hiddenField("chart_type", "scatter");
+    }
+    else if( $chart_type == "Stack Chart" ) {
+      $zen->hiddenField("chart_type","stack");
     }
     if( is_array($chart_options) ) {
       $zen->hiddenField("chart_options",$chart_options);
     }
-    //$zen->hiddenField($chart_view);
     $zen->hiddenField("show_data_vals",$show_data_vals);
 ?>
 <tr>

@@ -2286,6 +2286,7 @@ class zenTrack extends zen {
 	 " OR user_id IN(".join(",",$user_id).")" : " OR user_id = $user_id";
      }
      $query .= " ORDER BY name";
+     $this->addDebug("getReportTemplates",$query,3);
      return $this->db_listIndexed($query);
    }
    
@@ -2293,13 +2294,33 @@ class zenTrack extends zen {
     * saves a report format
     * from the temporary templates
     * to the permanent database
+    * $bins is optional list of bins who can view report
+    * $users is optional list of users who can view report
     */
-   function saveReport( $temp_id ) {
+   function saveReport( $temp_id, $bins = '', $users = '' ) {
+     // get the params
      $params = $this->getTempReport($temp_id);
      if( !is_array($params) || !count($params) )
        return false;
+     // get rid of extra tempid info
      unset($params["created"]);
-     return $this->db_insert($this->table_reports,$params);
+     unset($params["report_id"]);
+     $res = $this->db_insert($this->table_reports,$params);
+     // add indexes to bins
+     $t = $this->table_reports_index;
+     if( $res && is_array($bins) ) {
+       foreach($bins as $v) {
+	 $this->db_result("INSERT INTO $t (report_id,bid) VALUES($res,$v)");
+       }
+     }
+     // add indexes to users
+     if( $res && is_array($users) ) {
+       foreach($users as $v) {
+	 $this->db_result("INSERT INTO $t (report_id,user_id) VALUES($res,$v)");
+       }       
+     }
+     // return results
+     return $res;
    }
    
    /**
@@ -2327,6 +2348,7 @@ class zenTrack extends zen {
    function cleanTempReports( $days ) {
      $date = $this->dateSQL(strtotime("-$days days"));
      $query = "DELETE FROM ".$this->table_reports_temp." WHERE created < '$date'";
+     $this->addDebug("cleanTempReports",$query,3);
      return $this->db_result($query);
    }
 
@@ -2404,7 +2426,7 @@ class zenTrack extends zen {
        $diff = $this->dateDiff($v["ctime"],$v["otime"],$this->elapsed_unit);
        $tte += $diff;
      }
-     $this->addDebug("reportElapsed","result: $tte/params:".count($params)."/$query",2);
+     $this->addDebug("reportElapsed","result: $tte/params:".count($params)."/$query",3);
      return round($tte,1);
    }
 

@@ -72,11 +72,11 @@
     
   $params = array();
   foreach($search_param as $k=>$v) {
-    if( (is_array($v) && !count($v)) || (!is_array($v)&&!strlen($v)) )
+    if( (is_array($v) && !count($v)) || (!is_array($v)&&!strlen(trim($v))) )
 	continue; 
     if( $k == "homebin" ) {
       $params["homebin"] = array($k,"IN",preg_replace("@[^0-9,]@", "",join(",",$v)));
-      $params["homebin"] = preg_replace("@[^0-9]+@", ",", $params["homebin"]);
+      $params["homebin"][2] = preg_replace("@[^0-9]+@", ",", $params["homebin"][2]);
     } else {
       $v = strip_tags(trim($v));
       $v = preg_replace("@[*]@", "%", $v);
@@ -120,7 +120,7 @@
      var val = "";
      for(i=0; i<document.helperForm.elements.length; i++) {
        element = document.helperForm.elements[i];
-       if( element.type == "checkbox" && element.checked == true ) {
+       if( element.type == "checkbox" && element.checked == true && element.value != "skip" ) {
 	 if( val == "" )
 	   val = element.value;
 	 else
@@ -164,7 +164,7 @@
 ?>
 <tr>
   <td class='subTitle'>
-    <input type='checkbox' name='allcheck' value='1' onClick='checkAll()' class='searchbox'>
+    <input type='checkbox' name='allcheck' value='skip' onClick='checkAll()' class='searchbox'>
   </td>
   <td class='subTitle'>
     ID
@@ -203,3 +203,4 @@
 </form>
 
 <? } ?>
+

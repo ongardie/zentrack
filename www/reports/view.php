@@ -15,10 +15,6 @@
 // the database and show
 // otherwise, parse the viewing options and display
   
-if( is_array($_POST) ) {
-  extract($_POST);
-}
-
 $zen->cleanInput($report_params);
 foreach($required_report_params as $k) {
   if( !isset($$k) || (is_array($$k)&&!count($$k)) || (!is_array($$k) && $$k == "") ) {

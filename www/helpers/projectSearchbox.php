@@ -167,7 +167,7 @@
      var val = "";
      for(i=0; i<document.helperForm.elements.length; i++) {
        element = document.helperForm.elements[i];
-       if( element.type == "checkbox" && element.checked == true ) {
+       if( element.type == "checkbox" && element.checked == true && element.value != "skip" ) {
 	 if( val == "" )
 	   val = element.value;
 	 else
@@ -222,7 +222,7 @@
 ?>
 <tr>
   <td class='subTitle'>
-    <input type='checkbox' name='allcheck' value='1' onClick='checkAll()' class='searchbox'>
+    <input type='checkbox' name='allcheck' value='skip' onClick='checkAll()' class='searchbox'>
   </td>
   <td class='subTitle'>
     ID
