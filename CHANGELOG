@@ -12,6 +12,7 @@
     - zentrack/install/UPGRADE_SEED_mysql.sql 1.9
     - zentrack/install/UPGRADE_SEED_oracle.sql 1.8
     - zentrack/install/UPGRADE_SEED_postgres.sql 1.8
+    - zentrack/install/UPGRADE_SEED_mssqlserver.sql 1.1
     - zentrack/install/UPGRADE_mssqlserver.sql 1.1
     - zentrack/install/UPGRADE_mysql.sql 1.7
     - zentrack/install/UPGRADE_oracle.sql 1.8
