@@ -1,0 +1,162 @@
+<TestUnit>
+
+  <!-- 
+     **************************
+     test data for PHPUnit tests
+
+     An optional <setup> node can
+     appear in the list, if it exists
+     then it will be passed as the
+     ZenXNode to the (assumed to exist)
+     $this->load() method
+
+     The xml should contain nodes
+     named the same as the method the
+     data applies to.
+
+     Each method node can contain any
+     number of test nodes which will
+     each contain a set of <param>
+     nodes which will be passed back
+     to the test method
+
+     An optional eval='true' attribute
+     can be applied to any param tag
+     which will cause the data block to
+     be run using eval() (executed as code)
+     
+     This is useful for creating boolean vals,
+     for running functions, using variables, etc
+
+     IMPORTANT NOTE: the method names need
+     to be in all lower case here, since the
+     call uses get_class_methods, which returns
+     them entirely in lower case
+     **************************
+  -->
+
+  <setup>
+    <table>DBTEST</table>
+    <insert>
+       <param name='column_string'>row one</param>
+       <param name='column_value'>first value</param>
+       <param name='column_integer'>1</param>
+       <param name='column_byte'>0</param>
+    </insert>
+    <insert>
+       <param name='column_string'>row two</param>
+       <param name='column_value'>second value</param>
+       <param name='column_integer'>2</param>
+       <param name='column_byte'>0</param>
+    </insert>
+    <insert>
+       <param name='column_string'>row three</param>
+       <param name='column_value'>third value</param>
+       <param name='column_integer'>3</param>
+       <param name='column_byte'>1</param>
+    </insert>
+    <insert>
+       <param name='column_string'>row four</param>
+       <param name='column_value'>fourth value</param>
+       <param name='column_integer'>4</param>
+       <param name='column_byte'>1</param>
+    </insert>
+  </setup>
+
+  <testquery>
+   <!--
+   <test_example>
+      <param name='table'>table_name</param>
+      <param name='field'>field_name</param>
+      <param name='value'>field_name:the value of the field</param>
+      <param name='method'>{get|select|insert|update|delete|replace=field}</param>
+      <param name='passfail' eval='true'>boolean</param> (whether this query should succeed or fail)
+      <param name='limit'>integer</param> (optional)
+      <param name='offset'>integer</param> (optional, only useful with limit)
+      <param name='sort'>field_name</param> (optional)
+      <param name='rsort'>field_name</param> (sort in reverse)
+      <param name='match'>field_name:{ZEN_EQ|ZEN_CONTAINS|etc...}:string[:table_name]</match>
+      <param name='join'>table1,table2,field1[,field2]</param> (optional)
+      <param name='primarykey'[ eval='true']>field_name</param> (optional, use null and eval=true to test auto-generate)
+      <param name='expected'>value</param> (optional, required for method=get, return value of first row, first column)
+      <param name='count'>integer</param> (number of rows that should be returned, optional)
+    </test_example>
+    -->
+
+   <select_pass>
+      <param name='table'>DBTEST</param>
+      <param name='method'>select</param>
+      <param name='passfail' eval='true'>true</param>
+      <param name='sort'>column_value</param>
+      <param name='count'>4</param>
+   </select_pass>
+
+   <select_fail>
+      <param name='table'>DBTESTzz</param>
+      <param name='method'>select</param>
+      <param name='passfail' eval='true'>false</param>
+      <param name='sort'>column_value</param>
+      <param name='count'>0</param>
+   </select_fail>
+
+   <match_fail>
+      <param name='table'>DBTEST</param>
+      <param name='method'>select</param>
+      <param name='match'>column_string:ZEN_BEGINS:this_WONT_match</param>
+      <param name='passfail' eval='true'>true</param>
+      <param name='sort'>column_value</param>
+      <param name='count'>0</param>
+   </match_fail>
+
+   <match_pass>
+      <param name='table'>DBTEST</param>
+      <param name='field'>column_string</param>
+      <param name='method'>select</param>
+      <param name='passfail' eval='true'>true</param>
+      <param name='sort'>column_string</param>
+      <param name='match'>column_string:ZEN_CONTAINS:t:DBTEST</param>
+      <param name='count'>2</param>
+      <param name='expected'>row three</param>
+   </match_pass>
+
+   <exclude_pass>
+      <param name='table'>DBTEST</param>
+      <param name='field'>column_string</param>
+      <param name='method'>select</param>
+      <param name='passfail' eval='true'>true</param>
+      <param name='sort'>column_string</param>
+      <param name='exclude'>column_string:ZEN_CONTAINS:t:DBTEST</param>
+      <param name='count'>2</param>
+      <param name='expected'>row four</param>
+   </exclude_pass>
+
+   <get_pass>
+      <param name='table'>DBTEST</param>
+      <param name='field'>column_integer</param>
+      <param name='method'>get</param>
+      <param name='passfail' eval='true'>true</param>
+      <param name='rsort'>column_integer</param>
+      <param name='expected'>4</param>
+   </get_pass>
+
+   <get_pass>
+      <param name='table'>DBTEST</param>
+      <param name='field'>column_integer</param>
+      <param name='method'>get</param>
+      <param name='match'>column_integer:ZEN_GT:3</param>
+      <param name='passfail' eval='true'>true</param>
+      <param name='expected'>4</param>
+   </get_pass>
+
+   <get_fail>
+      <param name='table'>DBTEST</param>
+      <param name='field'>bad_COLUMN_name</param>
+      <param name='method'>get</param>
+      <param name='passfail' eval='true'>false</param>
+      <param name='rsort'>column_integer</param>
+      <param name='expected'>4</param>
+   </get_fail>
+
+  </testquery>
+
+</TestUnit>

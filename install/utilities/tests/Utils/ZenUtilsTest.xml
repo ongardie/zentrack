@@ -1,0 +1,133 @@
+<TestUnit>
+
+  <!--
+     **************************
+     test data for PHPUnit tests
+
+     An optional <setup> node can
+     appear in the list, if it exists
+     then it will be passed as the
+     ZenXNode to the (assumed to exist)
+     $this->load() method
+
+     The xml should contain nodes
+     named the same as the method the
+     data applies to.
+
+     Each method node can contain any
+     number of test nodes which will
+     each contain a set of <param>
+     nodes which will be passed back
+     to the test method
+
+     An optional eval='true' attribute
+     can be applied to any param tag
+     which will cause the data block to
+     be run using eval() (executed as code)
+
+     This is useful for creating boolean vals,
+     for running functions, using variables, etc
+
+     IMPORTANT NOTE: the method names need
+     to be in all lower case here, since the
+     call uses get_class_methods, which returns
+     them entirely in lower case
+     **************************
+  -->
+
+   <testclassnamefromtable>
+
+     <test1>
+       <param name="table">spiffy</param>
+       <param name="expected">ZenSpiffy</param>
+     </test1>
+
+     <test2>
+       <param name="table">HAPPY</param>
+       <param name="expected">ZenHappy</param>
+     </test2>
+
+     <test3>
+        <param name="table">ChEEse</param>
+        <param name="expected">ZenCheese</param>
+      </test3>
+
+   </testclassnamefromtable>
+
+   <testconvertsecondsto>
+
+     <testsec>
+       <param name="seconds">60</param>
+       <param name="period">seconds</param>
+       <param name="expected">60</param>
+     </testsec>
+
+     <testmin>
+       <param name="seconds">120</param>
+       <param name="period">minutes</param>
+       <param name="expected">2</param>
+     </testmin>
+
+     <testhours>
+       <param name="seconds">6500</param>
+       <param name="period">hours</param>
+       <param name="expected">1</param>
+     </testhours>
+
+     <testdays>
+       <param name="seconds">172808</param>
+       <param name="period">days</param>
+       <param name="expected">2</param>
+     </testdays>
+
+     <testweek>
+       <param name="seconds">120</param>
+       <param name="period">weeks</param>
+       <param name="expected">0</param>
+     </testweek>
+
+     <testweek2>
+       <param name="seconds">1209600</param>
+       <param name="period">weeks</param>
+       <param name="expected">2</param>
+     </testweek2>
+
+   </testconvertsecondsto> 
+
+
+   <testsecondsin>
+
+     <testsec>
+       <param name="period">seconds</param>
+       <param name="num">180</param>
+       <param name="expected">180</param>
+     </testsec>
+
+     <testmin>
+       <param name="period">minutes</param>
+       <param name="num">4</param>
+       <param name="expected">240</param>
+     </testmin>
+
+     <testhour>
+       <param name="period">hours</param>
+       <param name="num">1</param>
+       <param name="expected">3600</param>
+     </testhour>
+
+     <testdays>
+       <param name="period">days</param>
+       <param name="num">2</param>
+       <param name="expected">172800</param>
+     </testdays>
+
+     <testweek>
+       <param name="period">weeks</param>
+       <param name="num">1</param>
+       <param name="expected">604800</param>
+     </testweek>
+
+
+   </testsecondsin>
+
+</TestUnit>
