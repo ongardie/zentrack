@@ -9,23 +9,34 @@
      to copy includes/configVars.php.default and www/header.php.default
      to the working versions(no .default) to run this program.
 
+  REQUIREMENTS
+
+    PHP: 4.2.0 or greater 
+    GD: [optional] 2.0 or higher needed to use reports
+    Supported Servers: Apache 1.3, 2.0
+       Other Tested Servers: IIS 
+    Supported OS: Windows 2000, Linux 
+       Other Tested OS: FreeBSD, NT
+    Supported DBs: Mysql, Oracle 8i/9i
+       Other Tested DBs: Postgres, DB2, SQLServer
+
+
   QUICK AND DIRTY INSTALL INSTRUCTIONS:
      -place www/ in the httpd directory tree
      -place includes/ in a non-httpd directory (safest method)
      
-     -configure the following files:
-	includes/configVars.php
-	   particularly $this->database_type!!!!
+     -configure the header file:
    	www/header.php
 	   you must configure $includesDir and $rootUrl or nothing will work!!!
 
      -build the database
-	you must run both the build.sql and seed.sql file
-	they are in includes/misc
-
+        create a database instance and a user with access to this DB
+	locate installs/build_[yourdb].sql and run in SQL interface
+	   this will create your db tables
+	locate installs/seed_[yourdb].sql and run in SQL interface
+           this will populate your db
+	
      -chmod 777 includes/attachments (if using attachments)
-
-
 
    
   TROUBLESHOOTING
