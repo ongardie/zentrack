@@ -15,6 +15,7 @@ abstraction, and endless possibilities for project expansion.
 
 2005-03-09, cfalonso
   Enabled menu.template to display the current value as "selected" (TK 103)
+    - zentrack_2/includes/zenTemplate.class 1.6
     - zentrack_2/includes/zenTemplate.class 1.5
     - zentrack_2/includes/templates/fields/menu.template 1.2
     - zentrack_2/includes/templates/fields/checkbox.template 1.2 (No real change in this one)
