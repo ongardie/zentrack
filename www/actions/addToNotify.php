@@ -32,43 +32,43 @@
     if( !$errs ) {
       $i = 0;
       if( count($users) ) {
-	foreach($users as $u) {
-	  if( !$zen->check_user_id($u) ) {
-	    $errs[] = "$u was not a valid user id";
-	  } else {
-	    $params = array("user_id"   => $u,
-			    "priority"  => $priority,
-			    "ticket_id" => $ticket_id);
-	    $res = $zen->add_to_notify_list($ticket_id, $params);
-	    if( $res && $res != "duplicate" ) {
-	      $i++;
-	    }
-	    else if( $res && $res == "duplicate" ) {
-	      add_system_message("user_id $u already on notify "
-				 ."list for #$ticket-id");	      
-	    }
-	  }
-	}
+  foreach($users as $u) {
+    if( !$zen->check_user_id($u) ) {
+      $errs[] = "$u was not a valid user id";
+    } else {
+      $params = array("user_id"   => $u,
+          "priority"  => $priority,
+          "ticket_id" => $ticket_id);
+      $res = $zen->add_to_notify_list($ticket_id, $params);
+      if( $res && $res != "duplicate" ) {
+        $i++;
+      }
+      else if( $res && $res == "duplicate" ) {
+        add_system_message("user_id $u already on notify "
+         ."list for #$ticket-id");        
+      }
+    }
+  }
       }
       if( strlen($unreg_name) && strlen($unreg_email) ) {
-	$params = array("name"      => $unreg_name,
-			"email"     => $unreg_email,
-			"priority"  => $priority,
-			"ticket_id" => $ticket_id);
-	$res = $zen->add_to_notify_list($ticket_id,$params);
-	if( $res && $res != "duplicate" ) {
-	  $i++;
-	}
-	else if( $res && $res == "duplicate" ) {
-	  add_system_message("email $unreg_email already on notify "
-			     ."list for #$ticket-id");	      
-	}
+  $params = array("name"      => $unreg_name,
+      "email"     => $unreg_email,
+      "priority"  => $priority,
+      "ticket_id" => $ticket_id);
+  $res = $zen->add_to_notify_list($ticket_id,$params);
+  if( $res && $res != "duplicate" ) {
+    $i++;
+  }
+  else if( $res && $res == "duplicate" ) {
+    add_system_messages("email $unreg_email already on notify "
+           ."list for #$ticket-id");        
+  }
       }
       if( $i > 0 ) {
-	add_system_messages("$i entries added to #$ticket_id notification.");
-	$setmode = "notify";
+  add_system_messages("$i entries added to #$ticket_id notification.");
+  $setmode = "notify";
       } else {
-	$errs[] = "System error: Notify list could not be updated ".$zen->db_error;
+  $errs[] = "System error: Notify list could not be updated ".$zen->db_error;
       }
     }
     if( $errs )
