@@ -10,14 +10,17 @@
 <?
   $tickets = false;
   if( $page_type == "ticket" ) {
+    $view='ticket_list';
     $ticket = $zen->get_ticket($id);
   } else {
+    $view='project_list';
     $ticket = $zen->get_project($id);
   }
   if( $ticket["relations"] ) {
      $tids = explode(",", $ticket["relations"]);
      $tickets = $zen->get_tickets( array("id"=>$tids) );
   }
+  $fields=$map->getFieldMap($view);
   if( is_array($tickets) && count($tickets) ) {
      include("$templateDir/listTickets.php");
   } else {
