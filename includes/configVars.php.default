@@ -26,18 +26,12 @@
    //      database_host: serverip:port#
    //      database_login: scott
    //      database_pass:  tiger
-   //      database_instance: servicename
+   //      database_intance: servicename
    // or:
    //      database_host: ""
    //      database_login: scott
    //      database_pass:  tiger
-   //      database_instance: TNSName
-   // hints for oracle:
-   // - for Oracle 8 and later, use "oci8po"
-   // - if using an Oracle Names Server, leave database_instance blank and put
-   //   the database alias into database_host
-   // - to use a whole TNS connection string, act as with previous item
-   // - to connect to a local instance, you may leave the database_host blank
+   //      database_intance: TNSName (try the TNSname here, then try the whole connection string!)      
 
    $this->database_type      = 'mysql';
 	// the database types that can be used here are:
