@@ -1,10 +1,10 @@
 <?
   // set a toggle
   if( $report_type )
-     $report_type = $zen->checkAlphaNum($report_type);
+     $report_type = $zen->checkAlphaNum($report_type,"_ ");
   $tf_type = (isset($report_type) && $report_type != "");
 ?>
-<form method='post' action='<?=$rootUrl?>/reports/index.php'>
+<form method='post' action='<?=$rootUrl?>/reports/custom.php'>
 <tr>
   <td colspan="3" width="640" class="<?=(!$tf_type)?"titleCell":"subTitle"?>">
      Report Type

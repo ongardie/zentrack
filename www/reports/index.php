@@ -8,31 +8,67 @@
   
   
   include("./reports_header.php");
-  $page_tile = "Admin Section";
+  $page_tile = "Usage Reports";
   include("$libDir/nav.php");
 
-   if( is_array($_POST) ) {
-     extract($_POST);
-   }
-   if( $repid ) {
-      $params = $zen->getReportParams($repid);
-      if( !is_array($params) ) {
-	$errs[] = "Report ID not found";
-      }
-      extract($params);
-   }
-   else if( $tempid ) {
-     $params = $zen->getTempReport($tempid);
-     if( !is_array($params) )
-       $errs[] = "That temporary report doesn't exist";
-     extract($params);
-   }
- 
-   if( $errs ) {
-     $zen->printErrors($errs);
+?>
+<table width='300'>
+<tr>
+  <td class='titleCell' align='center'>View Reports</td>
+</tr>
+<tr>
+  <td class='bars' height='40' valign='top'>
+   <form action='<?=$rootUrl?>/reports/view.php' method='get'>
+   <select name='repid'>
+<?
+   $usersBins = $zen->getUsersBins($login_id);
+   $reps = $zen->getReportTemplates($usersBins,$login_id);
+   if( is_array($reps) && count($reps) ) {
+     foreach($reps as $r) {
+       print "<option value='$r'>".$zen->getBinName($r)."</option>\n";
+     }
    } else {
-     include("$templateDir/reportsMenu.php");
-   }
+     print "<option value=''>--none available--</option>\n";
+   } 
+?>
+   </select>
+   &nbsp;<input class='submit' type='submit' value='View'>
+       	</form>
+  </td>
+</tr>
+<tr>
+  <td class='titleCell' align='center'>Modify Reports</td>
+</tr>
+<tr>
+  <td class='bars' height='40' valign='top'>
+    <form method='get' action='list.php'>
+      <select name='repid'>
+<?
+   if( is_array($reps) && count($reps) ) {
+     foreach($reps as $r) {
+       print "<option value='$r'>".$zen->getBinName($r)."</option>\n";
+     }
+   } else {
+     print "<option value=''>--none available--</option>\n";
+   } 
+?>
+     </select>
+     &nbsp; <input type='submit' class='submit' value='Modify'>
+    </form>
+  </td>
+</tr>
+<tr>
+  <td class='titleCell' align='center'>New Report</td>
+</tr>
+<tr>
+  <td class='bars'>
+    <form method='get' action='custom.php'>
+      <input type='submit' class='submit' value='Create'>
+    </form>
+  </td>
+</tr>
+</table>
+<?
 
   include("$libDir/footer.php");
 

@@ -222,11 +222,11 @@
   **  PLOTTED VALUES
   */
   // 0-off 1-on, shows values on graph
-  $this->showValueOnGraph = 0;  
+  $this->showValueOnGraph = 1;  
   // size of plotted values
   $this->valueFontSize = $this->fontSize-2;
   // angle of plotted values
-  $this->valueFontAngle = 0;
+  $this->valueFontAngle = 45;
   // this can be a color value (#hhhhhh or array(rr,gg,bb))
   // or null which will set it to the color
   // of the plotted element
@@ -240,7 +240,7 @@
   //  0 - centered        (centered in the column)
   //  1 - left justified
   //  2 - right justified (on the tic mark)
-  $this->xLabelsCentered = 0;
+  $this->xLabelsCentered = 2;
 
   // labels for the x axis
   $this->xLabels = array("", "Jan", "Feb", "Mar", "Apr", "May");

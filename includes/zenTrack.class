@@ -36,7 +36,7 @@ class zenTrack extends zen {
       //  ( ["bin_id"] = $bin_level )
       
       $query = "SELECT * FROM ".$this->table_access." WHERE user_id = $user_id";
-      $this->addDebug("get_access()Query",$query,3); //debug
+      $this->addDebug("get_access()Query",$query,3);
       $vars = $this->db_queryIndexed($query);
       if( $flag ) {
 	 return $vars;
@@ -262,7 +262,8 @@ class zenTrack extends zen {
       return(  $this->db_queryIndexed($query) );
    }
    
-   function search_tickets( $params, $andor = 'AND', $archive_flag = 0 ) {
+   function search_tickets( $params, $andor = 'AND', 
+			    $archive_flag=0,$order_by='status DESC, priority' ) {
       // search through tickets for given text
       // acceptable params are:
       // params is an indexed array with two elements:
@@ -282,12 +283,12 @@ class zenTrack extends zen {
 	$tables = $this->table_tickets;
       $query = "SELECT * "
 	." FROM $tables WHERE $where"
-        ." ORDER BY status DESC, priority";
-      $this->addDebug("search_ticketsQuery:",$query,2); //debug
+        ." ORDER BY $order_by";
+      $this->addDebug("search_ticketsQuery:",$query,2);
       return(  $this->db_queryIndexed($query) );      
    }
 
-   function search_users( $params, $andor = "AND" ) {
+   function search_users( $params, $andor = "AND", $order_by = 'lname,fname' ) {
      // search for users and return a detailed list
      // of users who match the criteria given
      // see db.class->build_search_clause() for details about
@@ -296,8 +297,8 @@ class zenTrack extends zen {
      $table = $this->table_users;
      $where = $this->build_search_clause($params,$andor);
      $query = "SELECT * FROM $table WHERE $where"
-       ." ORDER BY lname, fname";
-     $this->addDebug("search_users()Query",$query,2);//debug
+       ." ORDER BY $order_by";
+     $this->addDebug("search_users()Query",$query,2);
      return( $this->db_queryIndexed($query) );
    }
    
@@ -1111,7 +1112,7 @@ class zenTrack extends zen {
 	" $field IN(".join(",",$id).")" :
         " $field = $id";      
       $query = "DELETE FROM ".$this->table_access." WHERE $where";
-      $this->addDebug("delete_access()Query",$query,2); //debug
+      $this->addDebug("delete_access()Query",$query,2);
       return( $this->db_result($query) );
    }
    
@@ -1932,6 +1933,13 @@ class zenTrack extends zen {
       
       return true;
    }
+
+   function getBinName($id) {
+     // returns the name of a bin
+     // from the given bin id
+     $bins = $this->getBins(0,0);
+     return($bins["$id"]);
+   }
    
    function getBins($flag = 0,$active = 1) {
      // if flag is set, retrieves a full
@@ -2267,7 +2275,8 @@ class zenTrack extends zen {
     */
    function getReportTemplates( $bin_id = '', $user_id = '' ) {
      $query = "SELECT id,name FROM ".$this->table_reports_index
-       ." WHERE ((bin_id IS 'NULL OR bin_id == '')AND(user_id IS 'null' or user_id == '') ";
+       ." WHERE ((bin_id IS 'NULL OR bin_id == '') "
+       ." OR (user_id IS 'null' or user_id == '') ";
      if( $bin_id ) {
        $query .= (is_array($bin_id))? 
 	 " OR bin_id IN(".join(",",$bin_id).")" : " OR bin_id = $bin_id";
@@ -2386,11 +2395,11 @@ class zenTrack extends zen {
        if( $v["ctime"] < 1 ) {
        	 $v["ctime"] = $this->currTime;
        }
-       $diff = $this->dateDiff($v["otime"],$v["ctime"],$this->elapsed_unit);
+       $diff = $this->dateDiff($v["ctime"],$v["otime"],$this->elapsed_unit);
        $tte += $diff;
      }
      $this->addDebug("reportElapsed","result: $tte/params:".count($params)."/$query",2);
-     return $tte;
+     return round($tte,1);
    }
 
    function reportHours($params) {
@@ -2461,6 +2470,7 @@ class zenTrack extends zen {
      $where = "WHERE ";
      $tables = $this->table_tickets." l";
      $where .= $this->complexWhere($params,"AND");
+     $where = preg_replace("@l\.ticket_id@","l.id",$where);
      return array($tables,$where);
    }
 
@@ -2536,6 +2546,7 @@ class zenTrack extends zen {
    
    // others
 
+   var $elapsed_unit;
    var $projectTypeID; 
    var $projectTypeIDs;
    var $demo_mode;

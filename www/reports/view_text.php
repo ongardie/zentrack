@@ -26,6 +26,7 @@
   }
 
   foreach($params["chart_options"] as $o) {
+    $row = '';
     $n = count($date_labels)+1;
     print "<table width='{$zen->reportImageWidth}'>\n";
     print "\t<tr>"      

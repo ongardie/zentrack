@@ -16,11 +16,14 @@
   else { 
     $chart_type = "";
   }
-  if( isset($chart_add_ttl) ) {
+  if( strlen($chart_add_ttl) ) {
     $chart_add_ttl = $zen->checkNum($chart_add_ttl);
   }
   if( isset($chart_add_avg) ) {
     $chart_add_avg = $zen->checkNum($chart_add_avg);
+  }
+  if( isset($chart_combine) ) {
+    $chart_combine = $zen->checkNum($chart_combine);
   }
   // set a toggle
   $tf_options = (isset($chart_type) && strlen($chart_type) 
@@ -35,7 +38,7 @@
 <?
   // set hidden fields
   if( $tf_data ) {
-    print "<form method='post' action='$rootUrl/reports/index.php' name='reportOptionForm'>\n";
+    print "<form method='post' action='$rootUrl/reports/custom.php' name='reportOptionForm'>\n";
     $zen->hiddenField("report_type",$report_type);
     for($i=0; $i<count($data_set); $i++) {
       $zen->hiddenField("data_set[$i]",$data_set[$i]);

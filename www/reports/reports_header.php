@@ -26,9 +26,10 @@
 			 "chart_type"     => "string",
 			 "chart_options"  => "array",
 			 "chart_combine"  => "int",
-			 "data_set"       => "array"
+			 "data_set"       => "array",
+			 "text_output"    => "int",
 			 );
-  $required_report_params = array("report_type","date_selector","date_range","date_value","chart_title","chart_type");
+  $required_report_params = array("report_type","date_selector","date_range","date_value","chart_title","chart_type","text_output","data_set","chart_options");
 
   $option_names = array(
 			"activity" => "Log Activity",

@@ -18,6 +18,11 @@
      font-family:      <?=$zen->settings["font_face"]?>;
      font-size:        <?=$zen->settings["font_size"]?>px;     
   }
+  
+  FORM {
+     margin-top: 0px;
+     margin-bottom: 0px;
+  }
 
   /*** PAGE COMPONENTS ***/
 

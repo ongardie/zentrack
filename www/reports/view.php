@@ -32,24 +32,25 @@ if( !is_array($errs) ) {
       $params["$k"] = join(",",$$k);
     } else if( strlen($$k) ) {
       $params["$k"] = $$k;
-    }
+    } else {
+}
   }
   $tempid = $zen->addTempReport( $params );
 
 ?>
 <table width='640'>
 <tr>
-<form method='post' action='save.php' name='viewForm'>
+<form method='post' action='<?=$rootUrl?>/reports/save.php'>
 <input type='hidden' name='tempid' value='<?=$zen->ffv($tempid)?>'>
   <td align='center' class='subTitle'><input 
    type='submit' class='submit' value='Save Report'></td>
 </form>
-<form method='post' action='index.php' name='viewForm'>
+<form method='post' action='<?=$rootUrl?>/reports/custom.php'>
 <input type='hidden' name='tempid' value='<?=$zen->ffv($tempid)?>'>
   <td align='center' class='subTitle'><input 
    type='submit' class='submit' value='Modify Report'></td>
 </form>
-<form method='post' action='index.php' name='viewForm'>
+<form method='post' action='<?=$rootUrl?>/reports/custom.php'>
   <td align='center' class='subTitle'><input 
    type='submit' class='submit' value='New Report'></td>
 </form>
@@ -72,12 +73,9 @@ if( !is_array($errs) ) {
 </table>
 <?
 
-  } else {
+  } else if( is_array($errs) ) {
     $zen->printErrors($errs);
   }
 
   include("$libDir/footer.php");
 ?>
-
-
-

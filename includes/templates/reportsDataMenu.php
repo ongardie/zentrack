@@ -2,7 +2,7 @@
 
 <?
   if( isset($data_set) && strlen($data_set) && !is_array($data_set) ) {
-    $data_set = split("[ \n,]",$data_set);
+    $data_set = split("[,]+",preg_replace("@[^0-9]+@",",",$data_set));
   }
   if( is_array($data_set) ) {
     for($i=0; $i<count($data_set);$i++) {
@@ -46,21 +46,21 @@
       break;
     }
 ?>
-<form method='post' action='<?=$rootUrl?>/reports/index.php' name='reportDataForm'>
+<form method='post' action='<?=$rootUrl?>/reports/custom.php' name='reportDataForm'>
 <input type='hidden' name='report_type' value='<?=$zen->ffv($report_type)?>'>
 <tr>
   <td class="bars">
-    Select <?=strip_tags($report_type)?>(s)
+    Select <?=$zen->ffv($report_type)?>(s)
   </td>
   <td class="bars">
 <?
    if( $searchbox ) {
-     print "<textarea cols='40' rows='2' name='data_set'>";
+     print "<textarea cols='20' rows='4' name='data_set'>";
      print (is_array($data_set))? join(",",$data_set) : "";
      print "</textarea>\n";
-     $onclick = "onClick='return popupWindowScrolls(\"/helpers/$searchbox.php\",\"popupHelper\",300,400)'";
-     print "<br><input type='button' value='Search' $onclick>\n";
-     print "<br><span class='note'>Type ids separated by spaces, or press 'search'</span>\n";
+     $onclick = "onClick='return popupWindowScrolls(\"/helpers/$searchbox.php?return_form=reportDataForm&return_field=data_set\",\"popupHelper\",375,400)'";
+     print "&nbsp;<input type='button' class='searchbox' value=' ... ' $onclick>\n";
+     print "<br><span class='note'>Type ids separated by commas, or press 'search'</span>\n";
    } else {
      print "<select name='data_set[]' multiple>\n";
      if( !is_array($type_list) || count($type_list) < 1 ) {

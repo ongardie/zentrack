@@ -219,9 +219,12 @@ class zenGraph extends Zen {
       $ps = $params["PointSize"];
       // create data and get ready for calculations
       for($i=0; $i<count($this->layers);$i++) {
-	$ln = ($this->layers[$i]["settings"]["name"] != "")?
-	  $this->layers[$i]["settings"]["name"] : "Level $i";
-	$data[] = array("Label"=>$ln,"PointShape"=>0,"PointSize"=>0);
+	// name the layer
+	if( count($this->layers) > 1 ) {
+	  $ln = ($this->layers[$i]["settings"]["name"] != "")?
+	    $this->layers[$i]["settings"]["name"] : "Level $i";
+	  $data[] = array("Label"=>$ln,"PointShape"=>0,"PointSize"=>0);
+	}
 	// here we set properties for calculations
 	$sub_count++;
 	$tmplen = $this->strLength($ln,$params["FontSize"],$params["FontFace"]);

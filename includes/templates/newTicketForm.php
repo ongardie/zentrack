@@ -121,7 +121,8 @@ value="<?=strip_tags($title)?>">
    if( is_array($users) && $zen->settings["allow_assign"] == "on" ) {
      foreach($users as $v) {
        $check = ( $v["user_id"] == $user_id )? "selected" : "";
-       print "<option $check value='$v[user_id]'>$v[lname], $v[fname]</option>\n";
+       print "<option $check value='$v[user_id]'>".$zen->formatName($v,1)
+	."</option>\n";
      }
    }
 ?>

@@ -155,10 +155,10 @@
 
   // security
      
-  unset($vars);
-  unset($msg);
-  unset($errs);
-  unset($mode);
+  $vars = array();
+  $msg = array();
+  $errs = "";
+  $mode = "";
   $id = ereg_replace("[^0-9]", "", $id);
 
   // set the page mode, for viewing tickets

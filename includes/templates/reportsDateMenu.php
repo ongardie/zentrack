@@ -33,7 +33,7 @@
 
 <? } else { ?>
  
-<form method='post' action='<?=$rootUrl?>/reports/index.php' name='reportDateForm'>
+<form method='post' action='<?=$rootUrl?>/reports/custom.php' name='reportDateForm'>
 <input type='hidden' name='report_type' value='<?=$zen->ffv($report_type)?>'>
 <? 
   for($i=0; $i<count($data_set); $i++) {
@@ -82,11 +82,17 @@
     <input type='radio' name='date_selector' value='value'<?=$chkd?>>&nbsp;Start From Date
   </td>
   <td class="bars">
-    <input type='text' name='date_start' maxlength='12' size='14' value='<?=$zen->ffv($date_start)?>'>
+    <input type='text' onFocus="moveReportSelector()" name='date_start' maxlength='12' size='14' value='<?=$zen->ffv($date_start)?>'>
     <span class='note'>&nbsp;mm/dd/yyyy hh:mm (time optional)</note>
   </td>
 </tr>
 </form>
+
+<script language='javascript'>
+  function moveReportSelector() {
+     document.reportDateForm.date_selector[1].checked = true;
+  }
+</script>
 
 <? } ?>
 

@@ -23,7 +23,7 @@
   $graph->graphSubtitle = $params["chart_subtitle"];
   $graph->yHeading = $params["report_type"];
   $graph->ySubHeading = "";
-  $graph->xHeading = $params["date_range"];
+  $graph->xHeading = ucwords($params["date_range"]);
   $graph->xSubHeading = "";
   //  $graph->yLabels = '';
 
@@ -57,9 +57,10 @@
   $layer_params = array(
 			"name" => "",
 			"depth" => 10,
-			"compact" => $compact,
 			"gap"     => 20
 			);
+  if( $compact > 1 )
+    $layer_params["compact"] = $compact;
 
   $colors = $graph->getColorScheme();
   function scam_a_color(&$colors) {
@@ -71,9 +72,12 @@
   }
 
   $colors = $graph->getColorScheme("default-30");
-  if( count($params["data_set"]) > 1 ) {
+  if( count($params["data_set"]) > 1 && !$params["chart_combine"] ) {
     foreach($chart_options as $o) {
-      $layer_params["name"] = $option_names["$o"];
+      if( count($chart_options) > 0 )
+	$layer_params["name"] = $option_names["$o"];
+      else
+	$layer_params["name"] = "";
       $graph->addLayer($layer_params);
       foreach($params["data_set"] as $d) {
 	$data = $data_array["$o"]["$d"];
@@ -83,7 +87,7 @@
     } 
   } else {
     foreach($params["data_set"] as $d) {
-      $layer_params["name"] = $set_index["$d"];
+      $layer_params["name"] = "";//$set_index["$d"];
       $graph->addLayer($layer_params);
       foreach($chart_options as $o) {
 	$data = $data_array["$o"]["$d"];
@@ -111,8 +115,3 @@
   $graph->drawGraph();
 
 }?>
-
-
-
-
-

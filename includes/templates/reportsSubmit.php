@@ -20,6 +20,7 @@
     $zen->hiddenField("chart_subtitle", $chart_subtitle);
     $zen->hiddenField("chart_add_ttl", $chart_add_ttl );
     $zen->hiddenField("chart_add_avg", $chart_add_avg );
+    $zen->hiddenField("chart_combine",$chart_combine);
     $zen->hiddenField("text_output",$text_output);
     if( $chart_type == "Pie Chart" ) {
       $zen->hiddenField("chart_type", "pie" );			     

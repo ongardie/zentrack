@@ -95,7 +95,6 @@ class DB {
       // .. in mysql, there is no SELECT nextval()
       // so it is easieast to run the query, then return
       // the mysql function mysql_insert_id()
-
       if( $this->database_type != 'mysql' ) {
 	 if( !$sequence ) {
 	    $sequence = ereg_replace("ZENTRACK_", "", $table);
@@ -108,6 +107,7 @@ class DB {
       }      
       list($cols,$vals) = $this->makeInsertVals($params);
       $query = "INSERT INTO $table ($cols) VALUES($vals)";
+      $this->addDebug("db_insert",$query,1);//debug
       $res = $this->db_link->Execute($query);
       if( $res && $this->database_type == "mysql" ) {
 	 $id = $this->db_insertID();
@@ -377,15 +377,15 @@ class DB {
 	   $p[3] = 1;
 	   break;
          }
+         $p[2] = $this->checkSlashes($p[2]);
          if( !$p[3] && ereg("[a-zA-Z]",$p[2]) ) {
            $p[0] = "lower($p[0])";
 	   $p[2] = strtolower($p[2]);
 	 }
-         $p[2] = $this->checkSlashes($p[2]);
          if( ereg("^NULL$",$p[2]) ) {
            $p[1] = ($not)? "IS NOT" : "IS";
          } else if($not) {
-           $p[1] = (ereg("[A-Z]",$p[1]))? "NOT " : "!";
+           $p[1] = (ereg("[A-Z]",$p[1]))? "NOT $p[1]" : "!$p[1]";
          }
          $text .= "$p[0] $p[1] $p[2]";
        }
