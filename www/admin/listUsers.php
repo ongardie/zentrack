@@ -14,7 +14,11 @@
   if( !$TODO ) {
     include("$templateDir/userSearchForm.php");
   } else {
-    include("$templateDir/userSearchResults.php");
+    if( $TODO == 'ALL' ) {
+      $users = $zen->get_users(null,0,0,'active desc,lname,fname');
+    } else {
+      include("$templateDir/userSearchResults.php");
+    }
     if( is_array($users) ) {
       include("$templateDir/userSearchList.php");
     } else {

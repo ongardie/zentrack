@@ -5,6 +5,18 @@
       <p class='smallBold'>To remove a bin from use, uncheck the 
 	 'active' box.</p>
 
+      <p>There are two special bin types, which can be set manually in 
+	the includes/configVars.php file (poor method), or set here (preferred
+	method) by naming a bin with either the word "project" or "note" in
+	the bin name.</p>
+
+     <p>Projects act as containers, which can hold multiple tickets as "tasks" 
+	which are part of the projects completion requirements.</p>
+
+     <p>Notes are special tickets which do not require any actions 
+	(they start their life closed, and do not need to be completed), 
+	and are used only for tracking and documentation</p>
+
       <ul>
       <form name='binForm' action='<?=$SCRIPT_NAME?>' method='post'>
       <table cellpadding="2" cellspacing="1" class='plainCell'>

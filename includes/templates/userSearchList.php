@@ -111,6 +111,8 @@ if( is_array($users) && count($users) ) {
         <?
 	   }
    }
+  
+   if( count($search_params) ) {
    ?>
     <tr>
      <form method="post" action="<?=$SCRIPT_NAME?>">
@@ -135,6 +137,7 @@ if( is_array($users) && count($users) ) {
      </td>
      </form>
     </tr>
+  <? } ?>
     </table>
    <?   
 }

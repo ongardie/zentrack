@@ -1,13 +1,30 @@
 
-<form action="<?=$SCRIPT_NAME?>">
-<input type="hidden" name="TODO" value="SEARCH">
-  
 <table width="640" align="left" cellpadding="2" cellspacing="2" bgcolor="<?=$zen->settings["color_background"]?>">
 <tr>
   <td colspan="2" width="640" class="titleCell" align="center">
     Search For Users
   </td>
 </tr>
+<tr>
+  <td colspan="2" class="subTitle">
+    Show All Users
+  </td>
+</tr>
+
+<form action="<?=$SCRIPT_NAME?>">
+<input type="hidden" name="TODO" value="ALL">
+
+<tr>
+  <td class="bars" colspan="2">
+   <input type="submit" class="submit" value="List All Users" 
+     onClick='return confirm("This could be a long list! Proceed anyways?")'>
+  </td>
+</tr>
+
+</form>
+<form action="<?=$SCRIPT_NAME?>">
+<input type="hidden" name="TODO" value="SEARCH">
+
 <tr>
   <td colspan="2" class="subTitle">
     By Text
@@ -19,7 +36,7 @@
   </td>
   <td class="bars">
    <input type="text" name="search_text" 
-      value="<?=htmlentities($search_text)?>" size="25" maxlength="50">
+      value="<?=htmlspecialchars($search_text)?>" size="25" maxlength="50">
   </td>
 </tr>
 <tr>
@@ -130,3 +147,4 @@
 </table>
   
 </form>
+

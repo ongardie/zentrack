@@ -271,6 +271,7 @@ INSERT INTO ZENTRACK_TYPES (type_id, name, priority, active) VALUES (5,'Event Lo
 INSERT INTO ZENTRACK_TYPES (type_id, name, priority, active) VALUES (6,'Feature Request',0,1);
 INSERT INTO ZENTRACK_TYPES (type_id, name, priority, active) VALUES (7,'Service',0,1);
 INSERT INTO ZENTRACK_TYPES (type_id, name, priority, active) VALUES (8,'Task',0,1);
+INSERT INTO ZENTRACK_TYPES (type_id, name, priority, active) VALUES (9,'Note',0,1);
 
 #
 # Dumping data for table 'ZENTRACK_USERS'

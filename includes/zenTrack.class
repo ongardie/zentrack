@@ -207,7 +207,7 @@ class zenTrack extends zen {
       if( $bins ) {
 	$query = "SELECT DISTINCT user_id FROM ".$this->table_access." WHERE bin_id IN(".join(",",$bins).") AND lvl >= $level";
 	$ids = $this->db_list($query);
-      }
+      } 
       if( is_array($ids) ) {
 	 $where = " (user_id IN(".join(",",$ids).") OR access_level >= $level) ";
       } else {
@@ -1009,7 +1009,7 @@ class zenTrack extends zen {
    
    function add_user( $params ) {
       // creates a new user entry in the db
-      // if $params["access_level"] is an array
+      // if $params["access"] is an array
       // then it will also run add_access()
       // with this array once the user has
       // been created
@@ -1019,9 +1019,9 @@ class zenTrack extends zen {
       // to the users last name until that user
       // logs into the system and changes it
       
-      if( $params["access_level"] ) {
-	 $access_level = $params["access_level"];
-	 unset($params["access_level"]);
+      if( $params["access"] ) {
+	 $access = $params["access"];
+	 unset($params["access"]);
       }
       $params["passwd"] = ($params["passwd"])?
 	$this->encval($params["passwd"]) : $this->encval($params["lname"]);
@@ -2098,19 +2098,33 @@ class zenTrack extends zen {
       return( $this->db_quickIndexed($query) );
    }
    
-   function projectTypeID() {
-      // returns the bin_id associated with projects
-      // this function prevents multiple calls for this
-      // id by storing it the first time it is called
-      if( !strlen($this->projectTypeID) ) {
-	 foreach( $this->types as $k=>$b ) {
-	    if( eregi("project",$b) ) {
-	       $this->projectTypeID = $k;
-	       break;
-	    }
+   function projectTypeID( ) {
+     // returns the bin id associated with projects
+     // this function prevents multiple calls for this
+     // id by storing it the first time it is called
+     if( !strlen($this->projectTypeID) ) {
+       foreach( $this->types as $k=>$b ) {
+	 if( preg_match("@project@i",$b) ) {
+	   $this->projectTypeID = $k;
+	   break;
 	 }
-      }
-      return $this->projectTypeID;
+       }
+     }
+     return $this->projectTypeID;
+   }
+
+   function noteTypeID( ) {
+     // returns the bin id associated with note
+     // types for use with the auto-close function
+     if( !strlen($this->noteTypeID) ) {
+       foreach( $this->types as $k=>$b ) {
+	 if( preg_match("@note@i",$b) ) {
+	   $this->noteTypeID = $k;
+	   break;
+	 }
+       }
+     }
+     return $this->noteTypeID;
    }
    
    /*
@@ -2132,8 +2146,6 @@ class zenTrack extends zen {
      // the root includes folder
      global $libDir;
      $this->libDir = $libDir;
-
-
 
       include("$file");
       
@@ -2232,6 +2244,8 @@ class zenTrack extends zen {
    var $systems;
    var $tasks;
    var $types;
+   var $noteTypeID;
+   var $projectTypeID;
    
    var $language;
    var $strings;

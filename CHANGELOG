@@ -4,7 +4,18 @@
  Clean, simple interface, fully adaptable administration,
  100 percent object oriented and database abstracted. 
 
------ next version -----
+----- this version -----
+
+Added feature to display "all users" for the user admin screen.
+
+Fixed bug with creating new users that caused their access level to
+be set to null instead of the value entered.
+
+Added title to the heading of the page for ticket and project views.
+
+Added the "note" type to the ticket types.  This type will auto-close
+when created, preventing the need for a user to close it.  Thus, it 
+is stored only for documentation.
 
 Fixed issue with the "first login" so that it will make users
 change their password from the default before they can continue

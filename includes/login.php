@@ -14,7 +14,7 @@
   if( !$login_id ) {
      if( $username && isset($password) ) {
 	$login_id = $zen->login_user( $username, $password );
-	if( $login_id && !$zen->demo_mode 
+	if( $login_id && $zen->demo_mode != "on" 
 			&& $zen->user["initials"] != "GUEST" 
 			&& $zen->encval($zen->user["lname"]) == $zen->encval($password) ) {
 	   // this will redirect the user

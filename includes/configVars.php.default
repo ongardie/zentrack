@@ -126,6 +126,14 @@
    */   
 
    $this->defaultHighlight = array("<span class='highlight'>","</span>");
+
+   // uncomment and set these to a typeID number to manually
+   // specify which type ID should be used for projects and notes
+   // two special instances in the database.  If nothing is specified
+   // zentrack will find a bin name which contains the word "project"
+   // and one which contains the word "note" and use those
+   // $this->noteTypeID    = 0;
+   // $this->projectTypeID = 0;
    
   /*
    *  DIRECTORY SETTINGS 
