@@ -9,6 +9,7 @@
 
   if( !$argv || count($argv) < 2 ) {
     echo "\nUsage:\n\n./locate_old_tickets.php older_than_date\n\twhere older than date is any valid date format\n\teven '-1 month' or '-7 days'\n\n";
+    exit;
   }
 
   // get the system settings
