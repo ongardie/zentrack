@@ -35,6 +35,9 @@
 	  " target='_blank'" : "";
 	print "<tr>\n<form name='$aForm' action='$rootUrl/actions/$a.php'$target>\n";
 	print "<td>\n";
+	
+  // Possible translations: (for the benefit of translation maintenance tools)
+  //  tr("Test"); tr("Approve"); tr("Accept"); tr("Assign"); tr("Print"); tr("Edit");
 	$a_name = ( $page_browser == 'ns' )?
 	  uptr(ucfirst($a)) : str_pad( uptr(ucfirst($a)) ,18," ",STR_PAD_RIGHT);
 	print "<input type='$button' class='actionButton' $style value='$a_name'>\n";

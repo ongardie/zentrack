@@ -1,21 +1,15 @@
       <br>
-      <p class='error'>Changing the Bin Configuration has a large system impact.  Please 
-	 consider this before making modifications.</p>
-      <p class='error'>Bins cannot be destroyed, to maintain data integrity.</p>
-      <p class='smallBold'>To remove a bin from use, uncheck the 
-	 'active' box.</p>
+      <p class='error'><?=tr("Changing the Bin Configuration has a large system impact.") . '  '
+          .tr("Please consider this before making modifications.")?></p>
+      <p class='error'><?=tr("Bins cannot be destroyed, to maintain data integrity.")?></p>
+      <p class='smallBold'><?=tr("To remove a bin from use, uncheck the 'active' box.")?></p>
 
-      <p>There are two special bin types, which can be set manually in 
-	the includes/configVars.php file (poor method), or set here (preferred
-	method) by naming a bin with either the word "project" or "note" in
-	the bin name.</p>
+      <p><?=tr('There are two special bin types, which can be set manually in the includes/configVars.php file (poor method), or set here (preferred	method) by naming a bin with either the word "project" or "note" in	the bin name.')?></p>
 
-     <p>Projects act as containers, which can hold multiple tickets as "tasks" 
-	which are part of the projects completion requirements.</p>
-
-     <p>Notes are special tickets which do not require any actions 
-	(they start their life closed, and do not need to be completed), 
-	and are used only for tracking and documentation</p>
+     <p><?=tr('Projects act as containers, which can hold multiple tickets as "tasks" which are part of the projects completion requirements.')?></p>
+     <p><?=tr('Notes are special tickets which do not require any actions.').'  '
+	       tr('They start their life closed, and do not need to be completed.').'  ' 
+	       tr('Use them only for tracking and documentation.')?></p>
 
       <ul>
       <form name='binForm' action='<?=$SCRIPT_NAME?>' method='post'>
@@ -74,13 +68,13 @@
     ?>
 <tr>
   <td class="titleCell" colspan="4">
-    Press MORE to create new bins
+    <?=tr('Press MORE to create new bins')?>
     <br>
-    Press LESS to remove blank rows
+    <?=tr('Press LESS to remove blank rows')?>
     <br>
-    Press Save to save changes
+    <?=tr('Press Save to save changes')?>
     <br>
-    Press Reset to return to original values
+    <?=tr('Press Reset to return to original values')?>
   </td>
 </tr>
       <tr>

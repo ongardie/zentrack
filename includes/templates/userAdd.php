@@ -73,8 +73,9 @@
   <td class="bars">
     <input type="text" name="access_level" value="<?=($access_level)? strip_tags($access_level) : 0?>" 
            size="3" maxlength="2">
-    <br><span class="small">(<?=tr("This grants the user the specified level of 
-	access to all bins not otherwise indicated by 'user access'.")?>  <?=tr("Use zero if unsure.")?>)</span>
+    <br><span class="small">
+      (<?=tr("This grants the user the specified level of access to all bins not otherwise indicated by 'user access'.")?>  <?=tr("Use zero if unsure.")?>)
+      </span>
   </td>
 </tr>
 <tr>

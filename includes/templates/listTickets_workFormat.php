@@ -151,9 +151,9 @@ if( is_array($tickets) ) {
    
 } else {
    if( $login_bin )
-     print "<p>&nbsp;</p><ul><b>".tr("No open ?s in ?",array($type_id,$bin_id))."</b></ul>";
+     print "<p>&nbsp;</p><ul><b>".tr("No open ?s in ?", array($type_id,$bin_id)).".</b></ul>";
    else
-     print "<p>&nbsp;</p><ul><b>".tr("No ?s were found.")."</b></ul>";
+     print "<p>&nbsp;</p><ul><b>".tr("No ?s were found", $type_id).".</b></ul>";
 }
   
 ?>

@@ -127,8 +127,8 @@
   }
   if( ( !is_array($bins)||!count($bins) ) && !$more ) {
     print "<tr><td colspan='3'>"
-      .tr("There are no custom defined bins for this user.")
-      ." Choose 'more' to add some.</td></tr>\n";
+      .tr("There are no custom defined bins for this user.")." "
+      .tr("Choose 'more' to add some.")."</td></tr>\n";
   }
 ?>
 <tr>

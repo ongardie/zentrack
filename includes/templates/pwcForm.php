@@ -18,8 +18,7 @@
 ?>
 <tr>
   <td colspan="2" class="bars">
-    <?=tr("Your passphrase must be at least 6 characters long and 
-    contain at least 1 non-letter character.")?>
+    <?=tr("Your passphrase must be at least 6 characters long and contain at least 1 non-letter character.")?>
   </td>
 <tr>
 <?

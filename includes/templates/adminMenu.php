@@ -15,7 +15,7 @@
     <br><span class="small">(<?=tr("Edit ticket information")?>)</span>
   </ul>
   
-  <b>Settings Administration</b>
+  <b><?=tr("Settings Administration")?></b>
   <ul>
       <b><a href='<?=$rootUrl?>/admin/bins.php'><?=tr("Edit Bins")?></a></b>
       <br><span class="small">(<?=tr("Edit the current bins")?>)</span>

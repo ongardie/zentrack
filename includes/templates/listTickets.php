@@ -34,7 +34,7 @@ if( is_array($tickets) ) {
    </tr>
       <?      
 
-   $td_ttl = "title='Click here to view the $page_type.'";
+   $td_ttl = "title='".tr("Click here to view the ?", $page_type)."'";
    foreach($tickets as $t) {
       $row = $zen->settings["color_background"];
       if( $zen->inProjectTypeIDs($t["type_id"]) ) {
@@ -99,9 +99,9 @@ if( is_array($tickets) ) {
    
 } else {
    if( $login_bin && $login_bin != -1 )
-     print "<p>&nbsp;</p><ul><b>No open {$page_type}s in ".$zen->bins["$login_bin"]."</b></ul>";
+     print "<p>&nbsp;</p><ul><b>".tr('No open ?s in ?', array($page_type,$zen->bins["$login_bin"])).".</b></ul>";
    else
-     print "<p>&nbsp;</p><ul><b>No {$page_type}s were found.</b></ul>";
+     print "<p>&nbsp;</p><ul><b>".tr("No ?s were found", $page_type).".</b></ul>";
 }
   
 ?>

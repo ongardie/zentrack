@@ -62,8 +62,11 @@
       $class = 'tabOff';
       $lclass = 'tabsOff';
     }
+    
+    // Possible translations: (for the benefit of translation maintenance tools)
+    // tr("Related"); tr("Notify"); tr("Tasks");
     $txt = (isset($counts[$lt]) && $counts[$lt])?
-      tr($t)." (".$counts["$lt"].")" : $t;
+      tr($t)." (".$counts["$lt"].")" : tr($t);
     $link = ($t == 'System')? $SCRIPT_NAME : $pageUrl;
     $w = ($lt == "attachments")? 85 : 60;
     print "<td class='$class' height='$height_num' width='$w'>";
