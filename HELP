@@ -8,9 +8,10 @@
     FAQ - http://zendocs.phpzen.net/bin/view/Zentrack/ZentrackFAQ
 	
   Troubleshooting:
-        Open includes/configVars.php and set $this->debug = 3;  This will produce
-        Highly useful output for debugging.  If you have trouble, send a support
-        request (see below) with the debug output pasted at the bottom of your message.
+        Open includes/configVars.php and set $this->debug = 1,2, or 3;  
+        This will produce highly useful output for debugging.  
+        If you have trouble, send a support request (see below) with 
+        the debug output pasted at the bottom of your message.
 
   Support
 
@@ -36,6 +37,14 @@
     email  - phpzen@users.sourceforge.net
              (if you are a registered tester, you will get a reply.. otherwise
               you may get a response if I'm bored, maybe in hours, maybe never)
+
+
+
+
+
+
+
+
 
 
 

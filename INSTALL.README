@@ -12,7 +12,7 @@
     Basic Install
        Basic knowledge of PHP
        PHP 4.2 or greater
-       Mysql, Oracle, Postgres, or SqlServer database
+       Mysql, Oracle, Postgres, or SqlServer(beta testing sqlserver)
     Email Gateway
        Some knowledge of SMTP and ability to set up email account
        PHP 4.3 or greater
@@ -49,11 +49,13 @@
      -chmod 777 includes/attachments (if using attachments)
      -chmod 777 includes/logs
      -chmod 777 includes/cache
+     -chmod 777 includes/translations
      -log in as Administrator/admin and configure the system to taste.
      -the other test accounts are Guest/Guest and User/User
 
      -if you intend to use the email gateway, please read the online docs
         which give a thorough overview of how to set this up:
+        you must have some admin and smtp knowledge to do this (it is not trivial!)
         http://zendocs.phpzen.net/bin/view/Zentrack/ManualInstallation#Setting_Up_Email_Gateway
  
      -please let us know!  
@@ -64,19 +66,7 @@
   TROUBLESHOOTING
 
     SUPPORT
-      -You may recieve support for any install or usage troubles... please
-       please please please please please please....
-       Try opening www/header.php and setting $Debug_Mode = 1,2,or 3
-       If this doesn't give you enough clues to fix your problem, please
-       set this to 3 and copy the debug information to the base of your
-       request for support.
-
-      -Via Sourceforge (recommended): 
-	http://www.sourceforge.net/projects/zentrack
-      -Via Mailing List (highly useful):
-        http://lists.sourceforge.net/lists/listinfo/zentrack-users
-      -Via Chat (also highly useful):
-        irc.sourceforge.net #zentrack
+      -Check the HELP file in this directory for more info about obtaining support.
 
     LOGIN PROBLEMS
       -Logins are case sensitive
@@ -115,7 +105,7 @@
       -Make sure that you have your egate scripts chmod to 755 (executable)
 
     POSTGRES USERS
-      - Not ready for production, but close.  A little more testing and debugging (you can help)
+      -Please report any postgres nuisances... we just released postgres in 2.4
 
     MS SQL SERVER USERS
       - Beta, give it a try (submit any problems, and we will correct them)
@@ -123,7 +113,4 @@
     OTHER DATABASE USERS
       -We can support, upon request, DB2, Sybase, or other
        install scripts, with some assistance from you.
-
-
-
 
