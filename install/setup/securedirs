@@ -1,0 +1,50 @@
+
+#################################
+### Secure directory setup
+#################################
+#
+#  The files listed here have the following format
+#  
+#  section:var:dir:permissions
+#    section - the section heading in zen.ini (containing root path)   
+#    var - the variable in zen.ini (root path)
+#    dir - the directory to create (if null, then the directory IS the variable in the previous list
+#    permissions - the write/read/execute access to give the directory
+
+# root directories
+
+paths:path_includes::0540
+paths:path_www::0550
+
+# cach directories
+
+directories:dir_cache::0770
+directories:dir_cache:db:0770
+directories:dir_cache:config:0770
+directories:dir_cache:translations:0770
+directories:dir_cache:attachments:0770
+
+# config directories
+
+directories:dir_config::0550
+directories:dir_config:setup:0550
+directories:dir_config:defaults:0550
+directories:dir_config:utilities:0550
+
+# backups
+
+directories:dir_backups::0700
+directories:dir_backups:attachments:0700
+directories:dir_backups:config:0700
+directories:dir_backups:db:0700
+
+# libs
+
+directories:dir_lib::0550
+directories:dir_lib:classes:0550
+directories:dir_lib:inc:0550
+directories:dir_lib:scripts:0500
+
+# logs
+
+directories:dir_logs::0730
