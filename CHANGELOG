@@ -13,6 +13,12 @@ abstraction, and endless possibilities for project expansion.
 
 ----- VERSION 2.5.0.3 (development) -----
 
+2005-01-18, kato
+  Added export to CVS feature to search page
+    - zentrack_2/includes/templates/searchList.php 1.15
+    - zentrack_2/www/exportSearch.php 1.1
+    - zentrack_2/www/search.php 1.9
+
 2004-11-26, cfalonso
   Worked on translations
     - zentrack_2/includes/editCustomSubmit.php 1.5

@@ -1223,6 +1223,12 @@
     $body = $egate_default_options;
     $body["title"] = $params->headers["subject"];
     $body["details"] = trim($params->body);
+    $i=0;
+    while( pregi_match( '/^ *(bin|type|priority|system|approval required|testing required) *: *(.+)/', $body['details'], $matches) && $i < 1000 ) {
+      $body['details'] = trim(preg_replace('/^(bin|type|priority):(.*)/', '', $body['details']));
+      $body["{$matches[1]}"] = trim($matches[2]);
+      $i++;
+    }
     $body["creator_id"] = $egate_user["user_id"];
     list($name,$email) = get_name_and_email($params);
     $user_id = find_user_id($name,$email);
