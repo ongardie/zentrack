@@ -29,6 +29,8 @@
       <br><span class="small">(<?=tr("Edit the types list")?>)</span>
       <br><b><a href='<?=$rootUrl?>/admin/editCustom.php'><?=tr("Edit Custom Fields")?></a></b>
       <br><span class="small">(<?=tr("Edit the customizable fields labels, position and behaviour.")?>)</span>
+      <br><b><a href='<?=$rootUrl?>/admin/groups.php'><?=tr("Edit Data Groups")?></a></b>
+      <br><span class="small">(<?=tr("Edit the data groups.")?>)</span>
       <br><b><a href='<?=$rootUrl?>/admin/config.php'><?=tr("Configuration Settings")?></a></b>
       <br><span class="small">(<?=tr("Edit the zenTrack settings.  Consult the documentation before using this feature.")?>)</span>
   </ul>  

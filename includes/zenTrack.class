@@ -790,6 +790,36 @@ class zenTrack extends zen {
    * DATA GROUP FUNCTIONS
    */
 
+
+  /**
+   * returns information about available data groups
+   *
+   * if flag is set, retrieves a full
+   * indexed array, otherwise, just
+   * a list of names, indexed by group_id,
+   *
+   * @param int $flag 1=return full info, 0=return group_ids and names
+   * @return array of data groups
+   */
+  function getDataGroups($flag = 0) {
+    if( !$flag ) {
+      $query = "SELECT group_id, group_name FROM ".$this->table_group;
+      $vars = $this->db_query($query);
+      foreach($vars as $v) {
+        $vals["$v[0]"] = $v[1];
+      }
+      return($vals);
+    } else {
+      $query = "SELECT * FROM ".$this->table_group;
+      $query .= " ORDER BY group_name";
+      return( $this->db_queryIndexed($query) );
+    }
+  }
+
+
+
+
+
   /**
    * Create a new group with the provided information
    *
@@ -798,15 +828,32 @@ class zenTrack extends zen {
    * @param array $vals the values as they would be passed to {@link ZenTrack::updateDataGroupDetails()}
    * @return integer
    */
-  function addDataGroup( $name, $table, $vals ) { 
+  function addDataGroup( $name, $table, $descript, $vals ) { 
     // create the group first
-    $id = $this->db_insert( $this->table_group, array("table_name"=>$table, "group_name"=>$name) );
+    $id = $this->db_insert( $this->table_group, array("table_name"=>$table, "group_name"=>$name, "descript"=>$descript) );
     if( $id ) {
       $this->_insertGroupDetails($id, $vals);
     }
     return $id;
   }
 
+
+  /**
+   * Get an array with the tables that are available for data groups
+   *
+   * @return array
+   */
+  function getDataGroupTablesArray() {
+    return array("Bins"           =>  $this->table_bins,
+                 "Priorities"     =>  $this->table_priorities,
+                 "Systems"        =>  $this->table_systems,
+                 "Tasks"          =>  $this->table_tasks,
+                 "Types"          =>  $this->table_types,
+                 "Users"          =>  $this->table_users,
+                 "Custom"         =>  "");
+  }
+
+  
   /**
    * Update an existing data group.  To update the detail values, use {@link ZenTrack::updateDataGroupDetails()}.
    *
@@ -814,9 +861,9 @@ class zenTrack extends zen {
    * @param string $name the updated name of the group
    * @param string $table the updated table for the group
    */
-  function updateDataGroup( $group_id, $name, $table ) { 
+  function updateDataGroup( $group_id, $name, $table, $descript ) { 
     return $this->db_update($this->table_group, "group_id", $group_id, 
-			    array("group_name"=>$name,"table_name"=>$table));
+			    array("group_name"=>$name,"table_name"=>$table,"descript"=>$descript));
   }
 
   /**
