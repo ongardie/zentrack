@@ -33,7 +33,7 @@ if( is_array($params) ) {
     foreach($params["data_set"] as $d) {
       $vals = $zen->$n($d);
       $k = $vals["$tbl_column"];
-      if( $d == "user" ) {
+      if( $tbl_column == "user_id" ) {
 	$val = $zen->formatName($vals,1);
       } else {
 	$val = substr($vals["title"],0,$title_length);

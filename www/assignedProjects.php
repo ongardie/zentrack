@@ -8,8 +8,9 @@
   
   include("header.php");
 
+  $page_type = "project";
   $params = array(
-		  "type_id"  => $zen->projectTypeID(),
+		  "type_id"  => $zen->projectTypeIDs(),
 		  "status"  => array("OPEN","PENDING"),
 		  "user_id"  => $login_id
 		  );

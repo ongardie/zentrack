@@ -19,10 +19,10 @@
 </tr>
 <tr>
  <td>
-<select name="action">
+<select name="log_action">
   <?
     foreach( $log_actions as $a ) {
-       print ($a == $action || (!$action && $a == 'LOG') )?
+       print ($a == $log_action || (!$log_action && $a == 'LOG') )?
 	 "<option selected>$a</option>\n" :
          "<option>$a</opton>\n";
     }  

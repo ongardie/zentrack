@@ -12,7 +12,9 @@
   $expand_tickets = 1;
   include("$libDir/nav.php");
 
-  $params = array("status"=>array('OPEN','PENDING'),"user_id"=>$login_id);
+  $params = array("status"  => array('OPEN','PENDING'),
+		  "user_id" => $login_id,
+		  "type_id" => $zen->notProjectTypeIDs());
   if( $login_bin ) {
     $params["bin_id"] = $login_bin;
   } else {

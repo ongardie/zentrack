@@ -279,7 +279,7 @@
 
 .note {
    color:  <?=$zen->settings["color_grey"]?>;
-   font-size: 10px;
+   font-size: <?=$zen->settings["font_size_small"]?>px;
 }
 
 .smallHighlight {

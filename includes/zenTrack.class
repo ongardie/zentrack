@@ -191,7 +191,7 @@ class zenTrack extends zen {
     $query = "SELECT count(*) FROM ".$this->table_logs." WHERE ticket_id = $id";
     $vals["log"] = $this->db_get($query);
     // get related
-    $vals["related"] = count(explode(",",$t["relations"]));
+    $vals["related"] = strlen($t["relations"])? count(explode(",",$t["relations"])) : 0;
     $this->addDebug("get_ticket_stats","returning counts: ".implode(",",$vals),3);
     // get notify
     $query = "SELECT count(*) FROM ".$this->table_notify_list
@@ -294,7 +294,7 @@ class zenTrack extends zen {
    */
   function get_users( $bins = '', $level = 'level_view', $active = 1 ) {
     // get our level
-    $lvl = ($level)? $this->settings[$level] : 0;
+    $lvl = ($level)? $this->settings["$level"] : 0;
 
     // get a list from the access table
     $outs = array();  //ones to skip
@@ -302,6 +302,7 @@ class zenTrack extends zen {
     if( $bins ) {
       $query = "SELECT user_id,bin_id,lvl FROM ".$this->table_access;      
       $query .= " WHERE bin_id IN(".join(",",$bins).")";
+      $query .= " AND lvl IS NOT NULL";
       $vals = $this->db_query($query);
       for($i=0; $i<count($vals); $i++) {
 	$v = $vals[$i];
@@ -318,10 +319,9 @@ class zenTrack extends zen {
     // add the users with bin specific access
     $query .= count($ins)? " OR user_id IN(".join(',',$ins)."))" : ")";    
     // remove the users with bin specific overrides
-    if( count($nots) ) {
-      $query .= " AND user_id NOT IN(".join(",",$nots).")";
+    if( count($outs) ) {
+      $query .= " AND user_id NOT IN(".join(",",$outs).")";
     }
-    // group the results for distinct
     $query .= " GROUP BY user_id";
     // set the ordering
     $query .= " ORDER BY lname,fname";
@@ -376,10 +376,22 @@ class zenTrack extends zen {
 
     // perform database inserts, and return ids
     $insert_ids = array();
+    // save what we insert to avoid duplicates
+    $done = array();
     foreach($list as $l) {
-      $new_id = $this->add_to_notify_list($ticket_id,$l);
-      if( $new_id )
-	$insert_ids[] = $new_id;
+      if( ($l["user_id"] && in_array($l["user_id"],$done))
+	  || (!$l["user_id"] && in_array($l["email"],$done)) ) {
+	$this->addDebug("set_notify_list","skipped "
+			.($l["user_id"]? "user {$l['user_id']}" : "email {$l['email']}")
+			.": duplicate");
+      }
+      else {
+	$new_id = $this->add_to_notify_list($ticket_id,$l);
+	if( $new_id ) {
+	  $insert_ids[] = $new_id;
+	  $done[] = $l["user_id"]? $l["user_id"] : $l["email"];
+	}
+      }
     }
     $this->addDebug("set_notify_list",count($insert_ids)
 		     ." inserts for ticket $ticket_id",3);
@@ -514,7 +526,7 @@ class zenTrack extends zen {
    */
   function update_notify_list($old, $new) {
     $id = $old["id"];
-    if( isset($new["user_id"])
+    if( strlen($new["user_id"]) && $new["user_id"] != 'NULL' 
 	&& $this->settings["default_notify_owner"] == "on" ) {
       // modify the owner notification
       if( $this->settings["default_notify_owner"] == "on" ) {
@@ -726,6 +738,13 @@ class zenTrack extends zen {
     // the bin_id is used for logging, if it is available, this just
     // saves a db query
 
+    // if we passed the ticket
+    // rather than the id then use it
+    if( is_array($id) ) {
+      $ticket = $id;
+      $id = $ticket["id"];
+    }
+
     $params = array( "user_id" => $user_id );
     $res = $this->update_ticket($id,$params);
     if( $res && $this->settings["log_accept"] == "on" ) {
@@ -735,7 +754,9 @@ class zenTrack extends zen {
 			 "ticket_id" =>  $id
 			 );
       if( !$bin_id ) {
-	$t = $this->get_ticket($id);
+	if( !is_array($ticket) ) {
+	  $ticket = $this->get_ticket($ticket);
+	}
 	$bin_id = $t["bin_id"];
       }
       $logParams["bin_id"] = $bin_id;
@@ -750,7 +771,7 @@ class zenTrack extends zen {
 	$emailParams["Assigned by"] = $this->formatName($user_id);
 	if( $comments )
 	  $emailParams["body"] = htmlentities($comments);
-	$emailParams["tid"] = $id;
+	$emailParams["tid"] = (is_array($ticket))? $ticket : $id;
 	$message = $this->formatEmailMessage($emailParams);
 	$this->sendEmail($recipients,$subject,$message,$user_id);
       }
@@ -763,7 +784,14 @@ class zenTrack extends zen {
     // if the ticket is ready for closure, then this function
     // will also close out the ticket
 
-    $t = $this->get_ticket($id);
+    // if we have the ticket array, use this instead
+    if( is_array($id) ) {
+      $t = $id;
+      $id = $t["id"];
+    }
+    else {
+      $t = $this->get_ticket($id);
+    }
     $params = array("approved"=>2);
     $res = $this->update_ticket($id,$params);
     if( $res && $this->settings["log_approve"] ) {
@@ -788,7 +816,7 @@ class zenTrack extends zen {
 	$emailParams["Close Time"] = $this->showDateTime($this->currTime);
 	if( $comments )
 	  $emailParams["body"] = htmlentities($comments);
-	$emailParams["tid"] = $id;
+	$emailParams["tid"] = $t;
 	$message = $this->formatEmailMessage($emailParams);
 	$this->sendEmail($recipients,$subject,$message,$user_id);
       }
@@ -802,19 +830,25 @@ class zenTrack extends zen {
     // sender
 
     $params = array( "user_id" => $recipient );
-    $res = $this->update_ticket($id, $params);
+    if( is_array($id) ) {
+      $ticket = $id;
+      $id = $ticket["id"];
+    }
+    else {
+      $ticket = $this->get_ticket($id);
+    }
+    $res = $this->update_ticket($ticket, $params);
     if( $res ) {
       // move the ticket somewhere that the user
       // will be able to access it, if required
-      $ticket = $this->get_ticket($id);
       $userBins = $this->getUsersBins($recipient,"level_user");
       if( is_array($userBins)&&!in_array($ticket["bin_id"],$userBins) ) {
 	$user = $this->get_user($recipient);
 	if( $user["homebin"] ) {
-	  $this->move_ticket($id,$user["homebin"]);
+	  $this->update_ticket($id,array("bin_id"=>$user["homebin"]));
 	}
 	else {
-	  $this->move_ticket($id,$userBins[0]);
+	  $this->update_ticket($id,array("bin_id"=>$userBins[0]));
 	}
       }
     }
@@ -824,8 +858,7 @@ class zenTrack extends zen {
 			 "action"   =>  'ASSIGNED',
 			 "user_id"   =>  $user_id
 			 );
-      $t = $this->get_ticket($id);
-      $logParams["bin_id"] = $t["bin_id"];
+      $logParams["bin_id"] = $ticket["bin_id"];
       $logParams["entry"] = "Assigned to $name";
       if( $comments )
 	$logParams["entry"] .= "\n\n".$comments;
@@ -841,7 +874,7 @@ class zenTrack extends zen {
 	$emailParams["Assigned to"] = $name;
 	if( $comments )
 	  $emailParams["body"] = htmlentities($comments);
-	$emailParams["tid"] = $id;
+	$emailParams["tid"] = (is_array($ticket))? $ticket : $id;
 	$message = $this->formatEmailMessage($emailParams);
 	$this->sendEmail($recipients,$subject,$message,$user_id);
       }
@@ -885,7 +918,13 @@ class zenTrack extends zen {
     // closes out the ticket
 
     // get ticket info
-    $t = $this->get_ticket($id);
+    if( is_array($id) ) {
+      $t = $id;
+      $id = $t["id"];
+    }
+    else {
+      $t = $this->get_ticket($id);
+    }
     if( $this->check_status($t,"READY") ) {
       // if ticket is ready to close, then close it
       $params = array(
@@ -924,7 +963,7 @@ class zenTrack extends zen {
 	  $emailParams["Close Time"] = $this->showDateTime($this->currTime);
 	  if( $comments )
 	    $emailParams["body"] = htmlentities($comments);
-	  $emailParams["tid"] = $id;
+	  $emailParams["tid"] = $t;
 	  $message = $this->formatEmailMessage($emailParams);
 	  $this->sendEmail($recipients,$subject,$message,$user_id);       
 	}
@@ -1037,7 +1076,7 @@ class zenTrack extends zen {
 			 );
 	if( $comments )
 	  $eParams["body"] = $comments;
-	$eParams["tid"] = $id;
+	$eParams["tid"] = $t;
 	$message = $this->formatEmailMessage($eParams);
 	$subject = "Ticket $id moved to ".$this->getBinName($newBin);
 	$this->sendEmail($recipients,$subject,$message,$user_id);
@@ -1321,15 +1360,15 @@ class zenTrack extends zen {
 	 $bin = $t["bin_id"];
 	 // set the recipient list
 	 $recipients = $this->get_notify_recipients($id);
-	 if( is_array($recipient) && count($recipients) ) {
-	   $recipient = array_unique($recipient);
+	 if( is_array($recipients) && count($recipients) ) {
+	   $recipient = array_unique($recipients);
 	   $subject = "Ticket #$id created";
 	   $emailParams["Open Time"] = $this->showDateTime($this->currTime);
 	   if( $comments )
 	     $emailParams["body"] = htmlentities($comments);
 	   $emailParams["tid"] = $id;
 	   $message = $this->formatEmailMessage($emailParams);
-	   $this->sendEmail($recipient,$subject,
+	   $this->sendEmail($recipients,$subject,
 			    $message,$params["creator_id"]);
 	 }
        } 
@@ -1358,9 +1397,16 @@ class zenTrack extends zen {
     * @return integer result value
     */
    function update_ticket( $id, $params ) {
+     if( is_array($id) ) {
+       $t = $id;
+       $id = $t["id"];
+     }
+     else {
+       $t = $this->get_ticket($id);
+     }
      $set = $this->makeInsertVals($params,1);
      $query = "UPDATE ".$this->table_tickets." SET $set WHERE id = $id";
-     $this->update_notify_list($this->get_ticket($id),$params);
+     $this->update_notify_list($t,$params);
      $this->addDebug("update_ticket",$query,3);
      return( $this->db_result($query) );
    }      
@@ -1826,8 +1872,7 @@ class zenTrack extends zen {
       $role = $this->getRoleID($role);
     }
     // set up the query parameters
-    $where = ($role)? " bin_id = $bin_id and notes = '$role'" : 
-      " bin_id = $bin_id";
+    $where = " bin_id = $bin_id";
     if( $role ) {
       $where .= " AND notes = '$role' ";
     }
@@ -1933,25 +1978,36 @@ class zenTrack extends zen {
       } else if( $k == 'tid' ) {
 	// print a summary of the ticket
 	$message .= "\n\n--- TICKET SUMMARY ---\n\n";
-	$t = $this->get_ticket($v);
+	if( !is_array($ticket) ) {
+	  // if we passed the ticket
+	  // then use it
+	  if( is_array($v) ) {
+	    $ticket = $v;
+	    $v = $ticket["id"];
+	  }
+	  // otherwise, retrieve it by the id
+	  else {
+	    $ticket = $this->get_ticket($v);
+	  }
+	}
 	$url = $this->settings["url_view_ticket"]."?id=$v";
-	$n = $t["bin_id"];
-	$u = $t["user_id"];
-	$s = $t["system_id"];
-	if( $t["user_id"] ) {
-	  $name = $this->formatName($t["user_id"]);
+	$n = $ticket["bin_id"];
+	$u = $ticket["user_id"];
+	$s = $ticket["system_id"];
+	if( $ticket["user_id"] ) {
+	  $name = $this->formatName($ticket["user_id"]);
 	} else {
 	  $name = "n/a";
 	}
-	$message .= "$t[title]\n\n";     
-	$message .= "ID:\t$t[id]\n";
-	$message .= "Status:\t$t[status]\n";
-	$message .= "Deadline:\t".$this->showDate($t["deadline"])."\n";
+	$message .= "{$ticket['title']}\n\n";     
+	$message .= "ID:\t{$ticket['id']}\n";
+	$message .= "Status:\t{$ticket['status']}\n";
+	$message .= "Deadline:\t".$this->showDate($ticket["deadline"])."\n";
 	$message .= "Bin:\t".$this->bins[$n]."\n";
 	$message .= "Owner:\t$name\n";
 	$message .= "URL:\t$url\n";
 	$des = preg_replace("#&quot;#",'"',
-			    preg_replace("#&amp;#","&",$t["description"]));
+			    preg_replace("#&amp;#","&",$ticket["description"]));
 	$des = preg_replace("@<br( /)?>@", "", $des);
       } else if( $k == "log" ) {
 	// print the log for the ticket
@@ -2005,6 +2061,7 @@ class zenTrack extends zen {
 	$message .= "$k:\t$v\n";
       }
     }
+
     return($message);
   }
 
@@ -2039,7 +2096,7 @@ class zenTrack extends zen {
     // figure out who it is being set to
     if( !is_array($recipients) )
       $recipients = array($recipients);
-    foreach($recipients as $r) {
+    foreach($recipients as $r) {      
       if( $recipient_address )
 	$recipient_address .= ", ";
       if( eregi("^[0-9]+$", $r) ) {

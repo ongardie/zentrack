@@ -19,11 +19,9 @@
 		     "test"    => 1,
 		     "approve" => 1
 		     );
-  if( !is_array($ticket) )
-    $ticket = $zen->get_ticket($id);
   foreach($actions as $a=>$v) {
      $flag = 1;
-     if( $zen->actionApplicable($id, $a, $login_id) ) {
+     if( $zen->actionApplicable($ticket, $a, $login_id) ) {
 	$style = "style='color:".$zen->settings["color_highlight"]."'";
 	$button = "submit";
      } else {

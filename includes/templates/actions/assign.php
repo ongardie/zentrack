@@ -20,9 +20,13 @@
  <td>
 <select name="user_id">
 <?
-  $bins = $zen->getUsersBins($login_id,"level_assign");
-  if( is_array($bins) ) {
-    foreach($zen->get_users($bins) as $v) {
+  //$bins = $zen->getUsersBins($login_id,"level_assign");
+  // ticket can only be assigned to users who may access
+  // the ticket's current bin
+  $bins = array($ticket["bin_id"]);
+  $users = $zen->get_users($bins,"level_user");
+  if( is_array($bins) && is_array($users) ) {
+    foreach($users as $v) {
       if( $v["user_id"] != $login_id ) {
 	$sel = ($v["user_id"] == $user_id)? "selected" : "";
 	print "<option value='$v[user_id]' $sel>".$zen->formatName($v,1)."</option>\n";
@@ -55,6 +59,7 @@
 <tr>
   <td>
     <input type="submit" value=" ASSIGN " class="submit">
+<p class='note'>Note: only users who have permission to work on tickets in the current bin are listed.</p>
   </td>
 </tr>
 <tr>

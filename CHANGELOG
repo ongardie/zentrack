@@ -7,6 +7,37 @@
 
 ----- V2.4 (development, see CVS) ----
 
+2003-03-12, MLively
+  Created Translation Engine 
+    - includes/tranlator.class 1.1
+    - includes/headerInc.php 1.20
+
+----- V2.3.1 (2003-03-19) ----
+
+2003-03-19, Kato
+  Fixed email notifications which were not working
+  (ticket create, assign, and close)
+  
+  Removed some extraneous queries by passing the ticket
+  array rather than the id
+
+  Fixed notify bug causing blank entries in notify list
+
+  Fixed error with assigning tickets to users who don't
+  have access to bin ticket is in. (Tickets can now only be
+  assigned to users with access to the ticket's current bin)
+
+  Fixed issue with tab counts: related always displaying 1, 
+  even if should be 0
+
+  Fixed problem with logs showing action as LOG, even if a different
+  one is chosen.
+
+  Corrected date shown in search log results.
+
+  Correcting user names not showing correctly in generated reports
+
+
 2003-03-13, Kato
   Adding more template forms missing in cvs
     - includes/templates/email/form_log.template
@@ -23,11 +54,6 @@
   Enhanced the subject parsing logic to try and deduce improperly formatted
   Subjects and get the right info out
     - includes/egate_utils.php 1.19
-
-2003-03-12, MLively
-  Created Translation Engine 
-    - includes/tranlator.class 1.1
-    - includes/headerInc.php 1.20
 
 ----- V2.3 (2003-03-12) ----
 

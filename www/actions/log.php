@@ -15,7 +15,7 @@
 		   "id"       => "int",
 		   "comments" => "html",
 		   "hours"    => "num",
-		   "action"   => "text"
+		   "log_action"   => "text"
 		   );
     $zen->cleanInput($input);
     $required = array("id","action");
@@ -24,7 +24,7 @@
 	$errs[] = " $r is required";
       }
     }     
-    if( $action == 'LABOR' ) {
+    if( $log_action == 'LABOR' ) {
       if( !$hours )
 	$errs[] = 'Hours must be entered if the activity is "LABOR"';
     } else if( !$comments ) {
@@ -33,7 +33,7 @@
     
     
     if( !$errs ) {
-      $res = $zen->log_ticket($id, $login_id, $action, $hours, $comments);
+      $res = $zen->log_ticket($id, $login_id, $log_action, $hours, $comments);
       if( $res ) {
 	add_system_messages("Activity has been logged.");
 	$setmode = "log";

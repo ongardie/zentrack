@@ -59,7 +59,7 @@ if( is_array($logs) ) {
 	</td>
 	<td height="25" valign="middle" <?=$td_ttl?> <?=$txt?>>
 	  <a class="rowLink" style="color:<?=$text?>" 
-	     href="<?=$link?>?id=<?=$t["ticket_id"]?>&setmode=log"><?=$zen->showDate($t["date"])?></a>
+	     href="<?=$link?>?id=<?=$t["ticket_id"]?>&setmode=log"><?=$zen->showDate($t["created"])?></a>
 	</td>
 	<? if( !$search_params["action"] || is_array($search_params["action"]) ) { ?>
 	<td height="25" valign="middle">
