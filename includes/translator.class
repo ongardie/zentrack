@@ -1,5 +1,53 @@
 <?php
 /**
+ * The translation function wrapper
+ *
+ * SPECIAL NOTE:
+ *   This function will be available in the global scope and should facilitate any necessary access to
+ *   a translator object. If more access is necessary this is the function that needs to be modified.
+ *
+ * This function manages all aspects of the translation engine. It performs three different functions.
+ *
+ * Initialization -
+ *   To initialize the engine you need to call this function with an associative array as the first
+ *   parameter. The keys for this array are
+ *     zen - A reference to a zenTrack object.
+ *     domain - A domain to translate from.
+ *     path - The path to the domain containing the translation files
+ *     locale - The locale to translate too
+ *
+ * String translation -
+ *   To translate a simple string just calling tr() with the string to translate will do the job
+ *
+ * String translation with variables -
+ *   To translate a string with variables that could change just call tr() with the string to translate
+ *   as the first parameter. In this string use the token '?' to represent where to place variables.
+ *   Then as the second argument pass an ordered array containing the values to substitute in.
+ * 
+ * @param $string string/array Either an initialization array or the string to translate.
+ * @param $vals array A list of values to substitute back into the translated string.
+ */
+function tr($string, $vals = '') {
+  static $translator;
+  if (is_array($string)) {
+    $translator = new Translator;
+    $translator->bindZen($string['zen']);
+    $translator->bindDomain($string['domain'], $string['path']);
+    $translator->textDomain($string['domain']);
+    $translator->setLocale($string['locale']);
+    return true;
+  }
+  if( is_array($vals) ) {
+    return $translator->ptrans($string,$vals);
+  }
+  else {
+    return $translator->trans($string);
+  }
+  //global $zen;
+  //return $zen->trans($string,$init);
+}   
+ 
+/**
  * This class manages the translation of static strings. It uses translation
  * files that are located in directories specified in the bindDomain() function.
  * The format of these files is forthcoming.
@@ -11,7 +59,7 @@
  * $trans->setLocale('es') //Spanish
  * $trans->trans('Hello World'); //outputs 'Hola Mundo'
  */
- 
+
 class Translator {
 /**
  * Creates an instance of the translator class.
