@@ -30,7 +30,6 @@ class ZenList extends Zen {
    * validation of the incoming params.
    *
    * @param DbQuery $dbquery a DbQuery object
-   * @param array $fields a list of fields that should be returned in the data rows
    */
   function ZenList( $dbquery ) { }
 
@@ -75,7 +74,7 @@ class ZenList extends Zen {
   function load($limit = 0, $offset = 0) { }
 
   /**
-   * gets the next result in the list
+   * gets the next result in the list (essentially an iterator)
    *
    * @return ZenTicket object or false if no more results
    */
@@ -85,6 +84,11 @@ class ZenList extends Zen {
    * resets the list counter to the first result
    */
   function reset() { }
+
+  /**
+   * returns the number of items in the list
+   */
+  function count() { }
 
 
   /* VARIABLES */

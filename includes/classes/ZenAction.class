@@ -1,0 +1,79 @@
+<? /* -*- Mode: C; c-basic-indent: 3; indent-tabs-mode: nil -*- ex: set tabstop=3 expandtab: */ 
+
+/** 
+ * The ZenAction class is a base class for actions
+ * 
+ * This is meant to be extended by TicketAction, UserAction, etc..
+ * those specific classes will provide the needed params to run activate()
+ * appropriately
+ * 
+ * This class should not be called directly for use
+ *
+ * @package zen 
+ */
+
+class ZenAction extends Zen {
+
+  /**
+   * CONSTRUCTOR
+   *
+   * Loads a ZenAction object for use
+   *
+   * @param integer $action_id is the id of the action (optional)
+   */
+  function ZenAction( $action_id ) { }
+
+  /**
+   * Fetches all triggers associated with this action
+   */
+  function getTriggers() { }
+
+  /**
+   * Performs this action, performs all associated triggers
+   *
+   * @param array $params specifies the required parameters for the action
+   */
+  function activate( $params ) { }
+
+  /**
+   * Fetches a field in this action
+   *
+   * @param string $field the field name to fetch
+   * @return mixed value of the field
+   */
+  function getField( $field ) { }
+
+  /**
+   * Sets the value of an Action field
+   * 
+   * @param string $field the field to set
+   * @param mixed $value the value to set
+   * @return boolean validated and set
+   */
+  function setField( $field, $value ) { }
+
+  /**
+   * Saves changes to database
+   *
+   * @return boolean succeeded
+   */
+  function save() { }
+
+
+  /* VARIABLES */
+
+  /** @var array $_fields the fields for the action */
+  var $_fields;
+
+  /** @var ZenTriggerList $_triggerList is a trigger list for this action */
+  var $_triggerList;
+
+  /** @var boolean $_changed tells if setField() has been used */
+  var $_changed;
+
+  /** @var integer $_id the id of the action */
+  var $_id;
+
+}
+
+?>

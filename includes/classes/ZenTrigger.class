@@ -1,0 +1,45 @@
+<? /* -*- Mode: C; c-basic-indent: 3; indent-tabs-mode: nil -*- ex: set tabstop=3 expandtab: */ 
+
+/** 
+ * The ZenTrigger class is a base class for triggers
+ * 
+ * There should be several properties associated with triggers:
+ * <ul>
+ *   <li>Catalyst Type
+ *   <ul>
+ *     <li>Time Based (when a time span is entered/exited)
+ *     <li>Value Based (when a value changes)
+ *     <li>Action Based (when an action is performed)
+ *   </ul>
+ *   <li>Fields - the time field, action or value field to reference
+ *   <li>Values - the value to check against
+ *   <li>Operator - how to check (>, <, >=, <=, =, !=, etc)
+ *   <li>Exceptions - times to ignore this trigger
+ * </ul>
+ *
+ * Triggers can be attached to:
+ * <ul>
+ *   <li>Ticket types
+ *   <li>Actions
+ *   <li>Triggers
+ *   <li>Specific Tickets
+ *   <li>User Groups
+ *   <li>Users
+ * </ul>
+ *
+ * The sub-classes to derive from this one
+ * <ul>
+ *    <li>ZenTimeTrigger
+ *    <li>ZenActionTrigger
+ *    <li>ZenFieldTrigger
+ * </ul>
+ * 
+ * @package zen 
+ */
+
+class ZenTrigger extends Zen {
+
+
+}
+
+?>
