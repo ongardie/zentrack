@@ -8,7 +8,7 @@
   
   
   include("admin_header.php");
-  $page_tile = "Search for Users";
+  $page_tile = tr("Search for Users");
   include("$libDir/nav.php");
 
   if( !$TODO ) {
@@ -22,7 +22,7 @@
     if( is_array($users) ) {
       include("$templateDir/userSearchList.php");
     } else {
-      print "<br><b>There were no results for your search</b>\n";
+      print "<br><b>" . tr("There were no results for your search") . "</b>\n";
       include("$templateDir/userSearchForm.php");
     }
   }

@@ -15,14 +15,14 @@
   $zen->cleanInput($user_fields);
   foreach($user_required as $u) {
     if( !strlen($$u) ) {
-      $errs[] = ucfirst($u)." is required";
+      $errs[] = tr("? is required", array(ucfirst($u)));
     }
   }
   if( !$access_level ) {
     $access_level = 0;
   }
   if( $zen->check_user_login($login) > 0 ) {
-    $errs[] = "That login name already exists.  Please choose another.";
+    $errs[] = tr("That login name already exists.  Please choose another.");
   }
 
   if( !$errs ) {
@@ -32,15 +32,14 @@
       }
     }
     if( $zen->demo_mode == "on" ) {
-      $msg = "Process completed successfully.  Account not added, because this is a demo site";
+      $msg = tr("Process completed successfully.  Account not added, because this is a demo site");
     } else {
       $user_id = $zen->add_user($params);
       if( $user_id ) {
-	$msg = "New user #$user_id was added successfully.  The password is the last name of the user."
-	  ."<br><a href='$rootUrl/admin/access.php?user_id=$user_id'>Click Here</a> "
-	  ." to customize user $user_id's access permissions.";
+	$msg = tr("User ? was added successfully. The password is the last name of the user. ? to customize user ?'s access permissions.",
+				array($user_id, "<br><a href='$rootUrl/admin/access.php?user_id=$user_id'>" . tr("Click Here") . "</a>", $user_id));
       } else {
-	$errs[] = "System Error: Could not add $lname, $fname to the system";
+	$errs[] = tr("System Error: Could not add ?, ? to the system", array($lname, $fname));
       }
     }
   }

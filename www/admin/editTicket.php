@@ -9,7 +9,7 @@
   
   
   include("admin_header.php");
-  $page_tile = "Edit Ticket";
+  $page_tile = tr("Edit Ticket");
   include("$libDir/nav.php");
 
   include("$templateDir/editTicketForm.php");

@@ -8,19 +8,19 @@
   */
   
   include("admin_header.php");
-  $page_tile = "Edit User Submit";
+  $page_tile = tr("Edit User Submit");
 
   if( !$active )
     $active = 0;
   $zen->cleanInput($user_fields);
   foreach($user_required as $u) {
     if( !strlen($$u) ) {
-      $errs[] = ucfirst($u)." is required";
+      $errs[] = tr("? is required", array(ucfirst($u)));
     }
   }
   $check = $zen->check_user_login($login);
   if( $check && $check != $user_id  ) {
-    $errs[] = "That login name is in use by another account";
+    $errs[] = tr("That login name is in use by another account");
   }
   if( !$access_level ) {
     $access_level = 0;
@@ -28,13 +28,13 @@
 
   // security checks for the root administrator account
   if( $user_id == 1 && $access_level < 5 ) {
-    $errs[] = "The root admin account must have access of 5 or greater";
+    $errs[] = tr("The root admin account must have access of 5 or greater");
   }
   if( $user_id == 1 && $access_level < $zen->settings["level_settings"] ) {
-    $errs[] = "The root admin access cannot be less than the level_settings parameter";
+    $errs[] = tr("The root admin access cannot be less than the level_settings parameter");
   }
   if( $user_id == 1 && !$active ) {
-    $errs[] = "The root admin account cannot be deactivated";
+    $errs[] = tr("The root admin account cannot be deactivated");
   } else if( $user_id == 1 ) {
     $active = 2;
   }
@@ -46,15 +46,14 @@
       }
     }
     if( $zen->demo_mode == "on" ) {
-      $msg = "Process successful.  User was not updated, because this is a demo site.";
+      $msg = tr("Process successful.  User was not updated, because this is a demo site.");
     } else {
       $res = $zen->update_user($user_id, $params);
       if( $res ) {
-	$msg = "User $user_id was updated successfully."
-	  ."<br><a href='$rootUrl/admin/access.php?user_id=$user_id'>Click Here</a> "
-	  ." to customize user $user_id's access permissions.";
+	$msg = tr("User ? was updated successfully. ? to customize user ?'s access permissions.",
+				array($user_id, "<br><a href='$rootUrl/admin/access.php?user_id=$user_id'>" . tr("Click Here") . "</a>", $user_id));
       } else {
-	$errs[] = "System Error: Could not update $lname, $fname";
+	$errs[] = tr("System Error: Could not update ?, ?", array($lname, $fname));
       }
     }
   }

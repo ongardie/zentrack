@@ -9,13 +9,13 @@
   
   
   include("admin_header.php");
-  $page_title = "Configuration Settings";
+  $page_title = tr("Configuration Settings");
 
   $settings = $zen->getSettings(1);
   if( $TODO ) {
     unset($newparams);
     if( !is_array($newSettings) ) {
-      $errs[] = "No settings were recieved";
+      $errs[] = tr("No settings were recieved");
     } else {
       foreach($settings as $s) {
 	// don't error check, or change things ending in _xx
@@ -24,12 +24,12 @@
 	$k = $s["setting_id"];
 	$newSettings["$k"] = $zen->stripPHP($newSettings["$k"]);
 	if( strlen($newSettings["$k"]) < 1 ) {
-	  $errs[] = "$k must have a value, use zero instead of a blank";
+	  $errs[] = tr("? must have a value, use zero instead of a blank", array($k));
 	} else if( ($s["value"] == "on" || $s["value"] == "off") 
 		   &&
 		   ($newSettings["$k"] != "on" && $newSettings["$k"] != "off") 
 		 ) {
-	  $errs[] = "$k must be set to 'on' or 'off'"; 
+	  $errs[] = tr("? must be set to 'on' or 'off'", array($k)); 
 	} else if( preg_match("#^url_#", $s["name"]) ) {
 	  $newSettings["$k"] = preg_replace("#^$rootUrl/?#i", "", $newSettings["$k"]);
 	  $v = preg_replace("#^$rootUrl/?#i", "", $s["value"]);
@@ -41,13 +41,13 @@
 	}
       }
       if( !is_array($newparams) ) {
-	$errs[] = "There were no changes made to the settings.  Procedure skipped.";
+	$errs[] = tr("There were no changes made to the settings.  Procedure skipped.");
       }
 
       if( !$errs ) {
 	$j = 0;
 	if( $zen->demo_mode == "on" ) {
-	  $msg = "Process completed successfully.  No changes were made, because this is a demo site.";
+	  $msg = tr("Process completed successfully.  No changes were made, because this is a demo site.");
 	  $skip = 1;
 	} else {
 	  foreach($newparams as $k=>$v) {
@@ -59,7 +59,7 @@
 	  }
 	  if( $j )
 	    $zen->settings = $zen->getSettings();
-	  $msg = "$j of ".count($newparams)." settings changed were successfully updated";
+	  $msg = tr("? of ? settings changed were successfully updated", array($j, count($newparams)));
 	  $skip = 1;
 	}
       }
@@ -67,7 +67,7 @@
   }
 
   if( !$skip ) {
-    $page_tile = $zen->settings["system_name"]." Settings";
+    $page_tile = tr("? Settings", array($zen->settings["system_name"]));
     include("$libDir/nav.php");
     $zen->printErrors($errs);
     include("$templateDir/configSettingsForm.php");

@@ -19,7 +19,7 @@
       foreach($binLevels as $k=>$v) {
         if( $k && (strlen($v) || strlen($binRoles["$k"])) ) {
 	  if( strlen($bins["$k"]) ) {
-	    $errs[] = "Two or more bins were submitted with the same name";
+	    $errs[] = tr("Two or more bins were submitted with the same name");
 	    break;
 	  }
           $bins["$k"] = (strlen($binRoles["$k"]))?
@@ -31,7 +31,7 @@
       $k = $newFields[$i];
       if( $k && (strlen($newVals[$i]) || strlen($newRoles[$i])) ) {
 	if( strlen($bins["$k"]) ) {
-	  $errs[] = "Two or more bins were submitted with the same name";
+	  $errs[] = tr("Two or more bins were submitted with the same name");
 	  break;
 	}
         $bins["$k"] = (strlen($newRoles[$i]))?
@@ -40,26 +40,23 @@
     }
     if( !$errs ) {
       if( $zen->demo_mode == "on" ) {
-	$msg = "Process completed successfully.  "
-	  ."No privileges were changed, because this is a demo site.";
+	$msg = tr("Process completed successfully. No privileges were changed, because this is a demo site.");
 	$skip = 1;
       } else if( !is_array($bins) || !count($bins) ) {
 	$res = $zen->delete_access($user_id);
 	if( !$res ) {
-	  $errs[] = "System Error: could not update access &#151; this is most "
-	    ."likely because no bins were set, and no bins previously "
-	    ."existed (i.e. nothing happened)";
+	  $errs[] = tr("System Error: could not update access &#151; this is most likely because no bins were set, and no bins previously existed (i.e. nothing happened)");
 	} else {
-	  $msg = "All bins were removed from access for user $user_id";
+	  $msg = tr("All bins were removed from access for user ?", array($user_id));
 	  $skip = 1;
 	}
       } else {
 	$res = $zen->update_access($user_id, $bins);
 	if( !$res ) {
-	  $errs[] = "System Error: could not update access for user $user_id";
+	  $errs[] = tr("System Error: could not update access for user ?", array($user_id));
 	} else {
 	  $skip = 1;
-	  $msg = "Custom Access priviledges updated for user $user_id";
+	  $msg = tr("Custom Access priviledges updated for user ?", array($user_id));
 	}
       }
     }
@@ -68,7 +65,7 @@
   }
 
   // show the page
-  $page_tile = "Admin Section";
+  $page_tile = tr("Admin Section");
   include("$libDir/nav.php");
   $zen->printErrors($errs);
   if( $user_id && !$skip ) {

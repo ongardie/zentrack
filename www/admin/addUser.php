@@ -9,7 +9,7 @@
   
   include("admin_header.php");
 
-  $page_tile = "New User";
+  $page_tile = tr("New User");
 
   include("$libDir/nav.php");
 

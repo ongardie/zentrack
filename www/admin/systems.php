@@ -32,9 +32,9 @@
     }
   } else if( $TODO == 'Save' ) {
     if( !is_array($newName) || !count($newName) ) {
-      $errs[] = "There was nothing provided to update";
+      $errs[] = tr("There was nothing provided to update");
     } else if( $zen->demo_mode == "on" ) {
-      $msg = "Process completed successfully.  Systems were not updated since this is a demo site.";
+      $msg = tr("Process completed successfully.  Systems were not updated since this is a demo site.");
       $skip = 1;
     } else {
 	$j = 0;
@@ -52,7 +52,7 @@
 	    $j++;
 	}
       }
-      $msg = "$j systems were saved to the database. Updates complete";
+      $msg = tr("? systems were saved to the database. Updates complete", array($j));
       $skip = 1;
     }
   } else {
@@ -65,7 +65,7 @@
     $more = 0;
   }
 
-  $page_title = ($skip)? "Admin Section" : "Update Systems";
+  $page_title = ($skip)? tr("Admin Section") : tr("Update Systems");
   include("$libDir/nav.php");
   $zen->printErrors($errs);
   if( !$skip ) {  
