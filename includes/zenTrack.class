@@ -158,7 +158,10 @@ class zenTrack extends zen {
     $table = ($archive_flag)? 
       $this->table_tickets_archived : $this->table_tickets;
     $query = "SELECT * FROM $table WHERE id = $id";
-    return( $this->db_quickIndexed($query) );
+    $vals = $this->db_quickIndexed($query);
+    $this->addDebug("get_ticket","result: ".(is_array($vals)?"success":"failed")
+		    ."/".$query,3);
+    return( $vals );
   }
 
   /**
@@ -337,6 +340,7 @@ class zenTrack extends zen {
    *
    * @param integer $ticket_id the id of the ticket
    * @param array $params indexed array of "column"=>"value"
+   * @return id if success, "duplicate" if failed on dup entry, false otherwise
    */
   function add_to_notify_list( $ticket_id, $params ) {
     // check for existing entry (avoid dups)
@@ -346,13 +350,13 @@ class zenTrack extends zen {
 	if( $params["user_id"] && $params["user_id"] == $l["user_id"] ) {
 	  $this->addDebug("add_to_notify_list",
 			  "Skipping {$paramsz['user_id']}/{$params['email']}, duplicate",2);
-	  return 0;
+	  return "duplicate";
 	}
 	else if( !$params["user_id"] && $l["email"] 
 		 && $l["email"] == $params["email"] ) {
 	  $this->addDebug("add_to_notify_list",
 			  "Skipping {$paramsz['user_id']}/{$params['email']}, duplicate",2);
-	  return 0;
+	  return "duplicate";
 	}
       }
     }
@@ -2674,6 +2678,25 @@ class zenTrack extends zen {
       $query .= " ORDER BY priority DESC, name";
       return( $this->db_queryIndexed($query) );
     }
+  }
+
+  /**
+   * returns default values for fields set in configuration settings
+   *
+   * @param string $field name of setting to check
+   * @return string value to insert into form
+   */
+  function getDefaultValue( $field ) {
+    if( $field == "default_start_date" 
+	|| $field == "default_deadline" ) {
+      $val = (strlen($this->settings[$field]))?
+	strtotime($this->settings[$field]) : "";
+    }
+    else {
+      $val = ($this->settings[$field] == "on")?
+	" checked " : "";
+    }
+    return $val;
   }
 
   function checkRelations( $relations, $id = '' ) {

@@ -32,7 +32,7 @@ To create a new ticket, simply reply to this email, and fill in the following in
 
 @Deadline:
 (*optional: the date can be any standard format, you may also use +1 week, +2 months, etc*)
-{default_end_date}
+{default_deadline}
 
 @Testing Required: [{default_test}]
 (*place an x in the box if testing will be needed before closing*)

@@ -9,10 +9,10 @@
     exit;
   }
   $td = ($TODO == 'EDIT');
-  if( !$deadline && !$td && $zen->settings["default_deadline"] )
-     $deadline = strtotime($zen->settings["default_deadline"]);
-  if( !$start_date && !$td && $zen->settings["default_start_date"] )
-     $start_date = strtotime($zen->settings["default_start_date"]);
+  if( !$deadline && !$td && )
+     $deadline = $zen->getDefaultValue("default_deadline");
+  if( !$start_date && !$td )
+     $start_date = $zen->getDefaultValue("default_start_date");
 ?>     
 
 <form method="post" name="ticketForm" action="<?=($td)? "editTicketSubmit.php" : "$rootUrl/addSubmit.php"?>">
@@ -234,11 +234,7 @@ value="<?=($deadline)?$zen->showDate(strip_tags($deadline)):""?>">
   </td>
   <td class="bars">
     <input type="checkbox" name="tested" value="1" 
-  <?
-    if( $tested || (!strlen($tested) && $zen->settings["default_test_checked"] == "on") ) {
-       print "checked";
-    }
-  ?>>
+  <?= $zen->getDefaultValue("default_tested_checked"); ?>>
   </td>
 </tr>          
 <tr>
@@ -247,11 +243,7 @@ value="<?=($deadline)?$zen->showDate(strip_tags($deadline)):""?>">
   </td>
   <td class="bars">
     <input type="checkbox" name="approved" value="1" 
-    <?
-    if( $approved || (!strlen($approved) && $zen->settings["default_aprv_checked"] == "on") ) {
-       print "checked";
-    } 
-  ?>>
+    <?= $zen->getDefaultValue("default_aprv_checked"); ?>>
   </td>
 </tr>
   

@@ -40,8 +40,13 @@
 			    "priority"  => $priority,
 			    "ticket_id" => $ticket_id);
 	    $res = $zen->add_to_notify_list($ticket_id, $params);
-	    if( $res )
+	    if( $res && $res != "duplicate" ) {
 	      $i++;
+	    }
+	    else if( $res && $res == "duplicate" ) {
+	      add_system_message("user_id $u already on notify "
+				 ."list for #$ticket-id");	      
+	    }
 	  }
 	}
       }
@@ -51,11 +56,16 @@
 			"priority"  => $priority,
 			"ticket_id" => $ticket_id);
 	$res = $zen->add_to_notify_list($ticket_id,$params);
-	if( $res )
+	if( $res && $res != "duplicate" ) {
 	  $i++;
+	}
+	else if( $res && $res == "duplicate" ) {
+	  add_system_message("email $unreg_email already on notify "
+			     ."list for #$ticket-id");	      
+	}
       }
       if( $i > 0 ) {
-	add_system_messages("Notify list for ticket $ticket_id has been updated.");
+	add_system_messages("$i entries added to #$ticket_id notification.");
 	$setmode = "notify";
       } else {
 	$errs[] = "System error: Notify list could not be updated ".$zen->db_error;
