@@ -579,7 +579,8 @@ class zen extends zenDate {
     * @return string the translated string
     */
     function ptrans( $string, $vals ) {
-      return $this->_translator->ptrans($string,$vals);    
+      //return $this->_translator->ptrans($string,$vals);    
+      return $this->trans($string, $vals);
     }
    
    /**
@@ -590,16 +591,17 @@ class zen extends zenDate {
     * @param array $init the indexed array of init params
     * @return string the translated text
     */
-    function trans( $string, $init = '' ) {
-      if (!is_a($this->_translator, 'Translator')) {
-         $this->_translator = new Translator;
-         $this->_translator->bindZen($init['zen']);
-         $this->_translator->bindDomain($init['domain'], $init['path']);
-         $this->_translator->textDomain($init['domain']);
-         $this->_translator->setLocale($init['locale']);
-         return true;
-      }
-      return $this->_translator->trans($string);    
+    function trans( $string, $vals = '' ) {
+      //if (!is_a($this->_translator, 'Translator')) {
+      //   $this->_translator = new Translator;
+      //   $this->_translator->bindZen($init['zen']);
+      //   $this->_translator->bindDomain($init['domain'], $init['path']);
+      //   $this->_translator->textDomain($init['domain']);
+      //   $this->_translator->setLocale($init['locale']);
+      //   return true;
+      // }
+      //return $this->_translator->trans($string);
+      return tr($string, $vals);
    }
    
 
@@ -621,7 +623,7 @@ class zen extends zenDate {
    var $defaultHighlight;
    var $_ucwords;
    var $_lcwords;
-   var $_translator;
+   //var $_translator;
    
 } 
   
