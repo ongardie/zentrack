@@ -12,15 +12,31 @@ class ZenEmail extends Zen {
    * @param string $subject the subject of the message
    * @param string $message the message body
    */
-  function ZenEmail( $from, $subject, $message ) { }
+  function ZenEmail( $from, $subject, $message ) { 
+    $this->_sender = $from;
+    $this->_subject = $subject;
+    $this->_message = $message;
+  }
 
   /**
    * Loads recipients, can either be a ZenUserList, array of email addresses, or a ZenNotifyList
    *
    * @param mixed $recipients a ZenUserList, array of email addresses or ZenNotifyList
+   * @param integer $priority (required if ZenNotifyList
    * @return boolean validated
    */
-  function setRecipients( $recipients ) { }
+  function setRecipients( $recipients ) { 
+    if( is_object($recipients) && is_a("ZenUserList") ) {
+      
+    }
+    if( is_object($recipients) && is_a("ZenNotifyList") ) {
+      
+    }
+    else if( is_array($recipients) ) {
+
+    }
+    else { return false; }
+  }
 
   /**
    * Loads templates (in order)
@@ -37,7 +53,9 @@ class ZenEmail extends Zen {
    * @param string $header the complete header minus \n
    * @return boolean valid and added
    */
-  function addHeader( $header ) { }
+  function addHeader( $header ) { 
+    $this->_headers[] = $header;
+  }
 
   /**
    * Sends the message
@@ -45,14 +63,6 @@ class ZenEmail extends Zen {
    * @return boolean message sent successfully
    */
   function send() { }
-
-  /**
-   * converts entries to valid email addresses, checks for duplicates
-   *
-   * @param mixed $entries the array, ZenUserList or ZenNotifyList to be added
-   * @return integer the number added (duplicates will not appear here)
-   */
-  function _addRecipients( $entries ) { }
 
   /**
    * formats text for use in email with proper escape characters
@@ -66,7 +76,7 @@ class ZenEmail extends Zen {
 
 
   /** @var array $_recipients the unique list of recipients */
-  var $_recipients;
+  var $_recipients = array();
 
   /** @var string $_sender the email sender */
   var $_sender;
@@ -76,6 +86,9 @@ class ZenEmail extends Zen {
 
   /** @var string $_message the message to send */
   var $_message;
+
+  /** @var array $_headers headers to send with message */
+  var $_headers = array();
 
 }
 

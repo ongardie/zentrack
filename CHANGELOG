@@ -1,6 +1,9 @@
 
 --- V3.0 RC1 (beta,in CVS) ---	
 
+2004-01-06, Kato
+  Completed db schema tools, install program, form generator
+
 2003-11-14, Kato
   Added db schema classes for maintining db structure
 

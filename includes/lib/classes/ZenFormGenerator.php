@@ -24,8 +24,9 @@ class ZenFormGenerator extends Zen {
    * CONSTRUCTOR: Create a ZenFormGenerator
    *
    * @param ZenMetaTable $table is the meta info for the table used to create form
+   * @param string $template the template file to use for creating form output
    */
-  function ZenFormGenerator($table) {
+  function ZenFormGenerator($table, $template) {
     $this->_table = $table;
     $this->_template = $template;
     $this->_name = 'aForm';
@@ -155,6 +156,7 @@ class ZenFormGenerator extends Zen {
     $vals["fields"] = array();
     foreach($this->_table->listFields as $f) {
       $field = $this->_table->getMetaField($f);
+      if( !isset($field['default']) ) { $field['default'] = null; }
       $vals["fields"][] = $field->getFieldArray();
       //todo
       //todo

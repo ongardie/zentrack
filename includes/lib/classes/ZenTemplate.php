@@ -45,6 +45,7 @@
    *  <li>{function:function_name:param1,param2,param3} - runs a global function and inserts the return value
    *  <li>{helper:file_name} - runs a helper script located in includes/lib/helpers and inserts results
    *  <li>{script:file_name} - runs a script located in includes/users/code and inserts results
+   *  <li>{form:table:template:afield=ftype,afield=ftype,afield=ftype} - create a form from a database table
    * </ul>
    *
    * <b>How strings work:</b>
@@ -153,6 +154,9 @@ class ZenTemplate {
     $parts = explode(":", $text);
     $parts = preg_replace('/&#58;/', ':', $parts);
     $index = strtolower(trim($parts[0]));
+    for($i=1; $i<count($parts); $i++) {
+      $parts[$i] = trim($parts[$i]);
+    }
     if( count($parts) == 1 ) {
       // {varname} - inserts value of varname
       return $this->_getVar($index);
@@ -220,11 +224,33 @@ class ZenTemplate {
         ZenUtils::safeDebug($this, "_insert", "using {script|helper:file_name} for '$text'", 0, LVL_DEBUG);
         return $this->_parseScript($parts);        
       }
+      case "form":
+        // {form:table_name:fields}
+        ZenUtils::safeDebug($this, "_insert", "using {form:table_name:fields} for '$text'", 0, LVL_DEBUG);
+        return $this->_parseForm($parts);
       }
     }
     // return something generic if we fall through
     ZenUtils::safeDebug($this, "_insert", "invalid tag: '$text'", 103, LVL_WARN);
     return "{invalid tag: $index}";
+  }
+
+  /**
+   * Parse a {form} call in a template
+   *
+   * @access private
+   * @return string the parsed text
+   */
+  function _parseForm( $parts ) {
+    $form = new ZenFormGenerator($parts[1], $parts[2]);
+    if( $parts[3] ) {
+      $set = explode(",",$parts[3]);
+      foreach( $set as $entry ) {
+        list($key,$val) = explode("=",$entry);
+        $form->modifyField( $key, array("ftype"=>$val) );
+      }
+    }
+    return $form->render();
   }
   
   /**
