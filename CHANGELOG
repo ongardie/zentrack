@@ -7,6 +7,10 @@
 
 ----- V2.4 (development, see CVS) ----
 
+2003-04-10, Kato
+  Reinstated the auto-close for "note" types
+    - zentrack/www/addSubmit.php 1.15
+
 2003-04-02, Kato
   Fixed buttons and tabs to translate properly
     - zentrack/includes/templates/ticket_actionBar.php 1.7
