@@ -4,96 +4,197 @@
  Clean, simple interface, fully adaptable administration,
  100 percent object oriented and database abstracted. 
 
------ v2.2.0 ------
+----- V2.2.1 (2003-01-27) ------
 
-php 4.2 compliant (register_globals fun)
+Altman, 2003-01-25
+ Fixed assignment problems on project create
+   - www/newProjectForm.php v1.8
 
-Added usage reports, graphical and html
+Kato, 2003-01-22
+ Cleaned up some form input
+   - includes/leftMain.php 
+   - includes/templates/ticketForm.php
 
-Fixed display issues between tickets and projects
+Kato, 2003-01-20
+ Corrected some blank page issues for IIS users
+   - www/action/action_header.php v1.6
+   - www/admin/admin_header.php v1.5
 
-Added 'sticky tabs' for projects and tickets
+----- v2.2.0 (2003-01-14) ------
 
-Fixed reject ticket bug
+Kato, 2003-01-17
+  Form input javascript errors
+    - www/javascript.js v1.5
+    - includes/templates/loginForm.php v
 
------ v2.1.0 ------
+Kato, 2003-01-15
+  Changed homebin behavior, no longer able to select "All" for homebin.
+    - www/misc/homebin.php v1.3
 
-Minor bug fixes... some oracle problems corrected.
+Kato, 2003-01-13
+  php 4.2 compliant (register_globals fun)
+    - includes/session_start.php v1.0
+    - includes/session_save.php v1.0
+    - includes/headerInc.php v1.8
 
-Added Postgres build/seed files.  Thanks to jofry@users.sourceforge.net!
+Kato, 2003-01-13
+  Fixed display issues between tickets and projects
+  also fixed sticky tabs (same code changes)
+    - includes/templates/ticket_*.php v1.?
+    - www/project.php v1.4
+    - www/ticket.php v1.4
+    - others?
 
------ v2.0.3 Live () ------
+Kato, 2003-01-13
+  Fixed reject ticket bug
+    - includes/zenTrack.class v1.33
 
-Created a zenTrack project with useful tickets to begin new users, and explain 
-to them how to configure their system accordingly.
+Kato, 2003-01-12
+  Added usage reports, graphical and html
+    - www/reports/* v1.0
+    - includes/zenGraph.php v1.0
+    - includes/reportsConfig.php v1.0
+    - includes/reportDataParser.php v1.0
+    - includes/colors/* v1.0
 
-Fixed several link bugs associated with ticketView.php and attachmentView.php
+----- v2.1.0 (not released) ------
 
-Fixed -DEBUG OVERVIEW- in footer to include some highly valuable info
-for troubleshooting support requests.
+Kato, 2002-05-30
+  Minor bug fixes... some oracle enhancements
 
------ v2.0.2 Beta (05-06-02) -----
+Kato, 2002-05-30
+  Added Postgres build/seed files.  Thanks to jofry@users.sourceforge.net!
+    - installs/build_postgres.sql
+    - installs/seed_postgres.sql
 
-Changed "password" to "passphrase" for Sybase compatibility.
+----- v2.0.3 Live (2002-06-03) ------
 
-Fixed $rootUrl issues with url_ticket_view and url_attachment_view
+Kato, 2002-06-03
+  Created a zenTrack project with useful tickets to begin 
+  new users, and explain to them how to configure their 
+  system accordingly.
 
-Fixed some issues with the "view all users" function in user admin
+Kato, 2002-06-03
+  Fixed several link bugs associated with ticketView.php 
+  and attachmentView.php
 
-Fixed issue with the "first login" so that it will make users
-change their passphrase from the default before they can continue
+Kato, 2002-06-03
+  Fixed -DEBUG OVERVIEW- in footer to include some highly 
+  valuable info for troubleshooting support requests.
 
-Comments added to configVars.php section to indicate
-better use of Oracle/adodb methods
+----- v2.0.2 Beta (2002-05-06) -----
 
-setenv() functions added for locale related issues, and for oracle
-fixes
+Kato, 2002-05-06
+  Changed "password" to "passphrase" for Sybase compatibility.
+
+Kato, 2002-05-06
+  Fixed $rootUrl issues with url_ticket_view and url_attachment_view
+
+Kato, 2002-05-06
+  Fixed some issues with the "view all users" function in user admin
+
+Kato, 2002-05-06
+  Fixed issue with the "first login" so that it will make users
+  change their passphrase from the default before they can continue
+
+Kato, 2002-05-06
+  Comments added to configVars.php section to indicate
+  better use of Oracle/adodb methods
+
+Kato, 2002-05-06
+  setenv() functions added for locale related issues, and for oracle
+  fixes
 
 
------ v2.0.1c beta (05-01-02) ------
+----- v2.0.1c beta (2002-05-01) ------
 
-All upper case column names changed to lower case 
-entries for oracle/adodb compatibility
+Kato, 2002-05-01
+  All upper case column names changed to lower case 
+  entries for oracle/adodb compatibility
 
-Fixed bug in new project form concerning the start date.
+Kato, 2002-05-01
+  Fixed bug in new project form concerning the start date.
 
------ v2.0.1 Beta (04-27-02) ------
+----- v2.0.1 Beta (2002-04-27) ------
   
-Oracle issue with uppercase column names (hopefully) overcome 
-with use of the ADODB function "oci8po"
+Kato, 2002-04-27
+  Oracle issue with uppercase column names (hopefully) overcome 
+  with use of the ADODB function "oci8po"
 
-Fix for ONAMES and HOSTNAMES provided by Izzy (thanks Izzy!)
+Kato, 2002-04-27
+  Fix for ONAMES and HOSTNAMES provided by Izzy (thanks Izzy!)
   
-Oracle build files tested and repaired.  Several bugs with
-reserved words and escape characters removed.
+Kato, 2002-04-27
+  Oracle build files tested and repaired.  Several bugs with
+  reserved words and escape characters removed.
 
-configVars.php and header.php files cleaned up, and better
-commented.
+Kato, 2002-04-27
+  configVars.php and header.php files cleaned up, and better
+  commented.
 
-Sybase bug with reserved word "role" fixed.
+Kato, 2002-04-27
+  Sybase bug with reserved word "role" fixed.
 
-INSTALL.README, and install.html files updated
+Kato, 2002-04-27
+  INSTALL.README, and install.html files updated
 
-CHANGELOG implemented (and needed)
+Kato, 2002-04-27
+  CHANGELOG implemented (and needed)
 
------ v2.0 Beta (04-23-02) ------
+----- v2.0 Beta (2002-04-23) ------
   
-Too many changes to list!
+Kato, 2002-04-23
+  Added ADODB abstraction, making zenTrack fully 
+  Database Compatible.
   
-Added ADODB abstraction, making zenTrack fully 
-Database Compatible.
-  
-Completely rewrote the zenTrack.class, much cleaner, 
+Kato, 2002-04-23
+  Completely rewrote the zenTrack.class, much cleaner, 
   more efficient, faster
 
-Added the zen.class for basic utilities
+Kato, 2002-04-23
+  Added the zen.class for basic utilities
   
-Added attachments
+Kato, 2002-04-23
+  Added attachments
   
-Rewrote the administrative tools, and completely 
+Kato, 2002-04-23
+  Rewrote the administrative tools, and completely 
   re-dedesigned the database structure to support
   a very dynamic base and adaptable design
   
-Began code changes to create a complete level based
+Kato, 2002-04-23
+  Began code changes to create a complete level based
   debugging tool and for report generation (planned for
   version 2.1)
+
+
+----- CHANGE LOG FORMAT ------
+The version should appear with dashes and indicated in the example, above all corresponding entries. 
+
+The username, and date should appear before any entry 
+
+The update comments should appear just after this. 
+
+A list of files changed, and the new version should be included with dashes under the comments. This can be used by other developers to quick-reference what has changed, and the versions to diff in CVS to find the changes.. for testing and bug tracking. 
+
+Example 
+
+----- Vx.x.y ------
+
+YourName, yyyy-mm-dd
+  Your comments about the update, indented 2 spaces, it can be
+  multiple lines and very long, and should be kept to about this
+  with, which is around 60-80 columns
+    - includes/subdir/filename2.php v 2.21
+    - www/subdir/filename2.php v 3.01
+
+MyName, yyyy-mm-dd
+  My comments about the update, indented 2 spaces, it can be
+  multiple lines and very long, and should be kept to about this
+  with, which is around 60-80 columns
+    - includes/subdir/filename.php v 1.21
+    - www/subdir/filename.php v 2.01 (tagged SPECIAL_TAG)
+
+----- Vx.x.x ------
+more......
+
