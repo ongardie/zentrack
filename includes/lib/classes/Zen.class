@@ -7,8 +7,11 @@ class Zen {
   /**
    * CONSTRUCTOR: constructs common vars and objects
    * 
-   * This method relies on the global array: $GLOBALS['zen']
+   * This method relies on the global array: $_SESSION['zen']
    * which is created in header.php in the www/ directory.
+   *
+   * Note that, for the sake of installation utils, this class also 
+   * checks $GLOBALS['zen'] if $_SESSION is not set.
    *
    * This method should be invoked by all child constructors
    * This should set up the following vars, pulled from the
@@ -60,35 +63,46 @@ class Zen {
   function _loadSettings( $cat ) { }
 
   /**
-   * returns a db connection / database object
-   *
-   * THIS SHOULD BE STATIC, only one db connection is necessary
+   * STATIC: returns a db connection / database object
    *
    * @return object databaseObject
    */
-  function getDbConnection() { 
+  function &getDbConnection() {
     if( !isset($GLOBALS['dbConnection']) || $GLOBALS['dbConnection'] == null ) {
-      $db = $GLOBALS['zen']['db'];
+      Zen::debug("Zen", "getDbConnection", "Creating database connection (cache empty)", 0, 3);
+      if( isset($_SESSION['zen']) ) {
+        $db = $_SESSION['zen']['db'];
+        $dir_cache = $_SESSION['zen']['directories']['dir_cache'];
+        $prefix = $_SESSION['zen']['db']['table_prefix'];
+      }
+      else {
+        $db = $GLOBALS['zen']['db'];
+        $dir_cache = $GLOBALS['zen']['directories']['dir_cache'];
+        $prefix = $GLOBALS['zen']['db']['table_prefix'];
+      }
       $GLOBALS['dbConnection'] = new ZenDatabase($db['db_type'], 
                                                   $db['db_host'],
                                                   $db['db_user'],
                                                   $db['db_pass'],
                                                   $db['db_instance']);
+      
+      $GLOBALS['dbConnection']->setCacheDirectory( $dir_cache );
+      $GLOBALS['dbConnection']->setPrefix( $prefix );
     }
     return $GLOBALS['dbConnection'];
   }
 
-  function getMessageList() {
+  function &getMessageList() {
     return ZenMessageList::getInstance();
   }
 
   /**
-   * Returns a ZenQuery object, db connection will be obtained automatically
+   * STATIC: Returns a ZenQuery object, db connection will be obtained automatically
    *
    * @return ZenQuery the query object, ready for use
    */
   function getNewQuery() {
-    $db = getDbConnection();
+    $db = &Zen::getDbConnection();
     return $db->newQuery();
   }
 
@@ -111,14 +125,14 @@ class Zen {
    * @param mixed $class the class object ($this) or a string representing the class/script name
    * @param string $method the method/section producing message
    * @param string $message the message to store
-   * @param integer $level the level of the message
    * @param intege $errnum the error number associated with message
+   * @param integer $level the level of the message
    */
-  function debug( $class, $method, $message, $level = 3, $errnum = 0 ) { 
-    if( !isset($this->_debug) ) {
-      $this->_debug &= ZenMessageList::getInstance();
+  function debug( $class, $method, $message, $errnum = 0, $level = 3 ) { 
+    if( is_object($class) ) {
+      $class = get_class($class);
     }
-    $this->_debug->add( $class, $method, $message, $errnum, $level );
+    $ml = &Zen::getMessageList();
   }
 
   /**
@@ -142,7 +156,7 @@ class Zen {
    *
    * @param string $template the name of the template (directory path will be added)
    * @param array $vars (optional) the variables to be inserted into the template
-   * @param string $path (optional) the path to the template (usually not necessary as long as $GLOBALS['zen'] has been created)
+   * @param string $path (optional) the path to the template (usually not necessary as long as $_SESSION['zen'] has been created)
    */
   function loadTemplate( $template, $vars = null, $path = '' ) {
     if( !$path ) {
@@ -152,7 +166,14 @@ class Zen {
       }
       else {
         // try to create a path
-        $path = $GLOBALS['zen']['directories']['dir_templates']."/".$GLOBALS['zen']['layout']['template_set'];
+        if( isset($_SESSION) ) {
+          $path = $_SESSION['zen']['directories']['dir_templates']."/"
+            .$_SESSION['zen']['layout']['template_set'];
+        }
+        else {
+          $path = $GLOBALS['zen']['directories']['dir_templates']."/"
+            .$GLOBALS['zen']['layout']['template_set'];
+        }
       }
     }
     $file = $path."/".$template;
@@ -239,6 +260,17 @@ class Zen {
       }
     }
     return $newvals;
+  }
+
+  /**
+   * STATIC: Prints an array out as formatted text
+   *
+   * @param array $vals can be key/value, multi-level, etc
+   */
+  function printArray( $vals ) {
+    print "<pre>\n";
+    print_r($vals);
+    print "</pre>\n";
   }
 
   /**
@@ -372,9 +404,6 @@ class Zen {
 
   /** @var array $_settings the system settings */
   var $_settings;
-
-  /** @var ZenMessageList $_debug is a static ZenMessageList instance */
-  var $_debug;
 
   /** @var array $_errorIndexByMethod contains an index of error objects by method */
   var $_errorIndexByMethod;

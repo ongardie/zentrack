@@ -31,8 +31,13 @@ class ZenDatabase extends Zen {
     $this->_dbinst = $dbinst;
     $this->_dbuser = $dbuser;
     $this->_dbpass = $dbpass;
-	ZenDatabase::_getDbConnection();
+    $this->debug( "ZenDatabase", "ZenDatabase", 
+                  "Initializing db: [host]".$dbhost.", [inst]".$dbinst
+                  .", [user]".$dbuser.", [pass hidden]", 0, 3);
+    $this->randomNumber = mt_rand(1,1000)."-".mt_rand(1,1000);
+    ZenDatabase::_getDbConnection();
   }
+  var $randomNumber;
   
   /**
    * Sets the Cache directory.
@@ -42,9 +47,35 @@ class ZenDatabase extends Zen {
    * @param string $directory The directory where cache files will be stored.
    */
   function setCacheDirectory($directory) {
-  	$GLOBALS['ADODB_CACHE_DIR'] = $directory;
+    $GLOBALS['ADODB_CACHE_DIR'] = $directory;
   }
 
+  /**
+   * Sets the prefix used to create table names
+   *
+   * @param string $pre is the prefix placed in front of all table names
+   */
+  function setPrefix( $pre ) {
+    $this->_prefix = $pre;
+  }
+
+  /**
+   * Returns the value of the table name prefix
+   *
+   * @return string
+   */
+  function getPrefix() { return $this->_prefix; }
+
+  /**
+   * Returns the preferred case for table names used by this db
+   *
+   * This should be expanded to use the DbTypeInfo object
+   */
+  function getPreferredCase() {
+    //todo: make this use the DbTypeInfo object
+    return "upper";
+  }  
+  
   /**
    * Returns a new query object that the user can manipulate and execute. 
    *
@@ -67,21 +98,29 @@ class ZenDatabase extends Zen {
    * @access public
    * @since 1.0
    * @param string $query the query object to be executed
-   * @param mixed $cacheTime The amount of time in seconds to cache the query. Set to 0 to not cache it. Set to boolean false if you want to ignore caching altogether.
+   * @param mixed $cacheTime The amount of time in seconds to cache the query. Set to 0 to override cache(reset). Set to boolean false if you want to ignore caching altogether.
    * @return resource
    */
-  function execute( $query, $cacheTime = 0 ) {
-  	if ($cacheTime === false) {
-      $result = &$this->_adodb->Execute($query);
-	}
-	else {
-	  $result = &$this->_adodb->cacheExecute($cacheTime, $query);
-	}
-	if (!$result) {
-	  $this->debug($this, 'execute', "There was an error in the query ($query): " . $this->_adodb->ErrorMsg(), 1);
-	  return false;
-	}
-	return $result;
+  function execute( $query, $cacheTime = 0, $limit = 0, $offset = 0 ) {
+    $this->debug($this, "execute", "[cachetime:$cacheTime]$query", 0, 3);
+    if ($cacheTime === false) {
+      if( $limit )
+        $result = &$this->_adodb->SelectLimit($query, $limit, $offset);
+      else
+        $result = &$this->_adodb->Execute($query);
+    }
+    else {
+      if( $limit )
+        $result = &$this->_adodb->CacheSelectLimit($cacheTime, $query, $limit, $offset);
+      else
+        $result = &$this->_adodb->cacheExecute($cacheTime, $query);
+    }
+    if (!$result) {
+      $this->debug($this, 'execute', "There was an error in the query ($query): " 
+                   . $this->_adodb->ErrorMsg(), 200, 1);
+      return false;
+    }
+    return $result;
   }
 
   /**
@@ -93,11 +132,11 @@ class ZenDatabase extends Zen {
    */
   function setFetchMode( $indexed = false ) {
     if ($indexed) {
-	  $this->_adodb->SetFetchMode(ADODB_FETCH_ASSOC);
-	}
-	else {
-	  $this->_adodb->SetFetchMode(ADODB_FETCH_NUM);
-	}
+      $this->_adodb->SetFetchMode(ADODB_FETCH_ASSOC);
+    }
+    else {
+      $this->_adodb->SetFetchMode(ADODB_FETCH_NUM);
+    }
   }
 
   /**
@@ -106,16 +145,17 @@ class ZenDatabase extends Zen {
    * @access public
    * @since 1.0
    * @param string $query the query object to be executed
-   * @param int $cacheTime The amount of time in seconds to cache the query. Set to 0 to not cache it.
+   * @param int $cacheTime The amount of time in seconds to cache the query. Set to 0 to clear cache(reset).
    * @return string
    */
   function executeGetOne( $query, $cacheTime = 0) {
     $result = $this->_adodb->cacheGetOne($cacheTime, $query);
-	if (!$result) {
-	  $this->debug($this, 'execute', "There was an error in the query ($query): " . $this->_adodb->ErrorMsg(), 1);
-	  return;
-	}
-	return $result;
+    if (!$result) {
+      $this->debug($this, 'executeGetOne', "There was an error in the query ($query): " 
+                   . $this->_adodb->ErrorMsg(), 200, 1);
+      return;
+    }
+    return $result;
   }
 
   /**
@@ -133,10 +173,10 @@ class ZenDatabase extends Zen {
    */
   function replace($table, $arrFields, $keyCols) {
     $result = $this->_adodb->Replace($table, $arrFields, $keyCols, true);
-	if (!$result) {
-		$this->debug($this, 'replace', $this->_adodb->ErrorMsg(), 1);
-	}
-	return $result;
+    if (!$result) {
+      $this->debug($this, 'replace', $this->_adodb->ErrorMsg(), 200, 1);
+    }
+    return $result;
   }
 
   /**
@@ -149,17 +189,20 @@ class ZenDatabase extends Zen {
    * @param mixed $text the text to quote, arrays converted to ('...','...',etc.)
    * @return string
    */
-  function quote( $text ) {
+  function quote( $text ) {    
+    $this->debug($this, "quote", "Quoting string: "+$text, 0, 3);
     if (is_array($text)) {
-	  $quotedText = array();
-	  foreach ($text as $name => $value) {
-	    $quotedText[$name] = $this->_adodb->qstr($value);
-	  }
-	  return $quotedText;
-	}
-	else {
-	  return $this->_adodb->qstr($text);
-	}
+      $quotedText = array();
+      foreach ($text as $name => $value) {
+        $quotedText[$name] = $this->_adodb->qstr($value);
+      }
+      return $quotedText;
+    }
+    else {
+      $res = $this->_adodb->qstr($text);
+      $this->debug($this, "quote", "Quoted string: "+$res, 0, 3);
+      return $res;
+    }
   }
 
   /**
@@ -198,11 +241,11 @@ class ZenDatabase extends Zen {
    * @return boolean
    */
   function _connect() {
-	if (!$this->_adodb->PConnect($this->_dbhost, $this->_dbuser, $this->_dbpass, $this->_dbinst)) {
-		$this->debug($this, "connect", $this->_adodb->ErrorMsg(), 1);
-		return false;
-	}
-	return true;
+    if (!$this->_adodb->Connect($this->_dbhost, $this->_dbuser, $this->_dbpass, $this->_dbinst)) {
+      $this->debug($this, "connect", $this->_adodb->ErrorMsg(), 202, 1);
+      return false;
+    }
+    return true;
   }
 
   /**
@@ -217,13 +260,13 @@ class ZenDatabase extends Zen {
    * @return object ADOConnection
    */
   function _getDbConnection() {
-  	static $dbConnection;
-	if (!isset($dbConnection)) {
-		$dbConnection = ADONewConnection($this->_dbtype);
-	}
-	$this->_adodb = $dbConnection;
-	$this->_connect();
-	return ($dbConnection);
+    static $dbConnection;
+    if (!isset($dbConnection)) {
+      $dbConnection = &ADONewConnection($this->_dbtype);
+    }
+    $this->_adodb = $dbConnection;
+    $this->_connect();
+    return ($dbConnection);
   }
 
   /**
@@ -289,6 +332,15 @@ class ZenDatabase extends Zen {
    * @since 1.0
    */
   var $_adodb;
+
+  /** 
+   * The prefix in front of table names 
+   * @var string 
+   * @access private
+   * @since 1.3 
+   */
+  var $_prefix = "";
+
 }
 
 ?>

@@ -1,5 +1,7 @@
 <?{ /* -*- Mode: C; c-basic-indent: 3; indent-tabs-mode: nil -*- ex: set tabstop=3 expandtab: */ 
 
+  startPTime("environment.php");
+
   // see if the ini file exists, if not, quit here
   if( !file_exists($ini_file) ) {
     die("The ini file specified in header.php is not readable or missing.  Unable to continue");
@@ -34,14 +36,23 @@
 
   // setup develop mode params
   if( getIni('debug','develop_mode') > 0 ) {    
+    // turn on on-screen error printing
+    ini_set("display_errors", true);
+
     // turn on most restrictive error_reporting (E_ALL)
     error_reporting(E_ALL);
+
+    // always reload debug.xml
+    $_SESSION['cache']['messageListConfig'] = null;
     
     // figure out what to do with magic quotes for testing
     //todo
   }
   else {
     @error_reporting(E_ALL ^ E_NOTICE);
+    @ini_set("display_errors", false);
   }
+
+  endPTime( "environment.php" );
 
 }?>

@@ -1,5 +1,7 @@
 <?{ /* -*- Mode: C; c-basic-indent: 3; indent-tabs-mode: nil -*- ex: set tabstop=3 expandtab: */ 
 
+  startPTime( "session.php" );
+
   // initialize all session data
   session_start();
 
@@ -21,7 +23,7 @@
     $_SESSION['cache']['common_settings'] = null;    
     
     // store the MessageListConfig (parsed from debug.xml)
-    $_SESSION['cache']['MessageListConfig'] = null;
+    $_SESSION['cache']['messageListConfig'] = null;
   }
   if( !isset($_SESSION['cache']) || $_SESSION['cache'] == null ) clearZenSessionCache();
 
@@ -37,5 +39,7 @@
                                "access" => array()
                                );
   }
+
+  endPTime('session.php');
 
 }?>

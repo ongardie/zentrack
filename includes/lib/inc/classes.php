@@ -1,4 +1,5 @@
 <?{ /* -*- Mode: C; c-basic-indent: 3; indent-tabs-mode: nil -*- ex: set tabstop=3 expandtab: */ 
+  startPTime("classes.php");
 
   // include all classes
   function getStandardClasses() {
@@ -18,7 +19,8 @@
                  "ZenQuery.class",
                  "ZenTemplate.class",
                  "ZenTranslator.class",
-                 "ZenXMLParser.class" );    
+                 "ZenXMLParser.class",
+                 "adodb/adodb.inc.php" );    
   }
 
   function getDataTypeClasses() {
@@ -85,4 +87,5 @@
     includeCommonClasses();
   }
 
+  endPTime("classes.php");
 }?>

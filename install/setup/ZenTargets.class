@@ -146,6 +146,20 @@ class ZenTargets {
         }
         return $this->_prepare_install_files( $p, $p2 );
       }
+    case "try_db_connection":
+      {
+	if( count($this->_targets[$target]) < 5 ) {
+          print_r($this->_targets);
+          print "   Usage: zen.php [--config_file=zen.ini] -$target type host instance user password\n";
+          print "   Where type is the db type, such as mysql, pgsql, oci8po, etc (see zen.ini for details)\n";
+          print "   Where host can be localhost or possibly '', and instance is the database name, or TNS file for oracle\n";
+	  return false;
+	}
+	return $this->_verify_db_connection( $p, $this->_getParm($target, 1),
+                                             $this->_getParm($target, 2), 
+                                             $this->_getParm($target, 3),
+                                             $this->_getParm($target, 4));
+      }
     case "update_db_schema":
       {
         if( !$p ) {
@@ -163,16 +177,6 @@ class ZenTargets {
           return false;
         }
         return $this->_update( $p );
-      }
-    case "verify_db_connection":
-      {
-	if( count($t[$target]) < 4 ) {
-          print "   Usage: zen.php [--config_file=zen.ini] -$target host instance user password\n";
-          print "   Where host can be localhost or possibly '', and instance is the database name, or TNS file for oracle\n";
-	  return false;
-	}
-	return $this->_verify_db_connection( $p, $this->_getParm($target, 1),
-                                             $this->_getParm($target, 2), $this->_getParm($target, 3));
       }
     default:
       {
@@ -299,11 +303,11 @@ class ZenTargets {
     $this->_check_permissions();
 
     // check database connection
-    //if( !$this->_verify_db_connection( $this->_ini['db']['db_host'], $this->_ini['db']['db_instance'],
-    //                                   $this->_ini['db']['db_user'], $this->_ini['db']['db_password'] ) ) {
-    //  $this->_printerr("_changed_config", "DB Connection failed, please check your settings");
-    //  return false;
-    // }
+    if( !$this->_verify_db_connection( $this->_ini['db']['db_host'], $this->_ini['db']['db_instance'],
+                                       $this->_ini['db']['db_user'], $this->_ini['db']['db_password'] ) ) {
+      $this->_printerr("_changed_config", "DB Connection failed, please check your settings");
+      return false;
+    }
 
     // parse and update header.php file
     print "   Creating new header.php file\n";
@@ -778,15 +782,31 @@ class ZenTargets {
 
   }
 
+  function _try_db_connection( $type, $host, $instance, $user, $passwd ) {
+    print "- Checking database connection\n";
+    $db = $GLOBALS['zen']['db'];
+    print "   Connecting to {$type}//{$user}@{$host}:{$instance}\n";
+    
+    $GLOBALS['zen']['db']['db_type'] = $type;
+    $GLOBALS['zen']['db']['db_host'] = $host;
+    $GLOBALS['zen']['db']['db_instance'] = $instance;
+    $GLOBALS['zen']['db']['db_user'] = $user;
+    $GLOBALS['zen']['db']['db_pass'] = $passwd;
+    $GLOBALS['dbConnection'] = null;
+    return $this->_verify_db_connection();
+  }
+
   /**
    * Verifies database connectivity
    *
    * @return boolean success
    */
-  function _verify_db_connection( $host, $instance, $user, $passwd ) {
-    print "- verify_db_connection not ready for use yet\n";
-    return false;
-
+  function _verify_db_connection() {
+    print "- Checking database connection\n";
+    $db = $GLOBALS['zen']['db'];
+    print "   Connecting to {$db['db_type']}//{$db['db_user']}@{$db['db_host']}:{$db['db_instance']}\n";
+    
+    return is_object(Zen::getDbConnection());
   }
 
   /**

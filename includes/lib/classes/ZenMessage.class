@@ -37,7 +37,7 @@ class ZenMessage extends Zen {
    * @return int zenError number
    */
   function getNumber() { 
-    return $this->_number;
+    return $this->_errnum;
   }
 
   /**

@@ -17,9 +17,10 @@ class ZenMessageList extends Zen {
    * @param String $config is the xml config file to use for creation (if needed)
    * @return ZenMessageList the static instance of the message list class
    */
-  function getInstance() {
-    if( !$GLOBALS['messageList'] ) {
-      $GLOBALS['messageList'] = new ZenMessageList( $GLOBALS['zen']['debug']['debug_configfile'] );
+  function &getInstance() {
+    if( !isset($GLOBALS['messageList']) || $GLOBALS['messageList'] == null ) {
+      $file = $_SESSION['zen']['directories']['dir_config']."/".$_SESSION['zen']['debug']['debug_configfile'];
+      $GLOBALS['messageList'] = new ZenMessageList( $file );
     }
     return $GLOBALS['messageList'];
   }
@@ -47,7 +48,7 @@ class ZenMessageList extends Zen {
     $this->_levels = array();
     $this->_levels["default"] = array( "default" => 0 );
 
-    $this->_loadConfig($config);    
+    $res = $this->_loadConfig($config);    
   }
 
   /**
@@ -97,7 +98,7 @@ class ZenMessageList extends Zen {
    */
   function outputHTML( $debug = false ) { 
     // open an outer block
-    $txt .= $this->_blockformat[0];
+    $txt = $this->_blockformat[0];
     
     foreach($this->_messages as $m) {
       if( $this->_show($m) ) {
@@ -125,6 +126,7 @@ class ZenMessageList extends Zen {
    * @return string containing formatted text with no html
    */
   function outputText( $debug ) {
+    $txt = "";
     foreach($this->_messages as $m) {
       if( $this->_show($m) ) {
         $l = $m->getLevel();      
@@ -176,7 +178,7 @@ class ZenMessageList extends Zen {
    */
   function _show( $msg ) {
     // don't bother if there are no filters
-    if( !is_array($this->filters) || !count($this->_filters) )
+    if( !is_array($this->_filters) || !count($this->_filters) )
       return true;
 
     // shorthand
@@ -288,14 +290,14 @@ class ZenMessageList extends Zen {
    * @return integer 0-failed, 1-loaded from session, 2-loaded from file
    */
   function _loadConfig( $xmlfile ) {
-    if( is_array($GLOBALS['cache']['MessageListConfig'])
-        && 
-        @filemtime($GLOBALS['zen']['cacheDir']."/last_config_update") <= $GLOBALS['configLastUpdated'] ) {
-      $this->_levels = $GLOBALS['cache']['MessageListConfig'];
+    if( is_array($_SESSION['cache']['messageListConfig']) ) {
+      $this->_levels = $_SESSION['cache']['messageListConfig'];
       return 1;
     }
     else {
-      return $this->_loadXMLConfig($xmlfile);
+      $res = $this->_loadXMLConfig($xmlfile);
+      if( $res > 0 ) $_SESSION['cache']['messageListConfig'] = $this->_levels;
+      return $res;
     }
   }
 
@@ -317,7 +319,7 @@ class ZenMessageList extends Zen {
     if( !isset($this->_levels["default"]) ) {
       $msgs[] = array(1, 143, "The &lt;root&gt; node was not found.  A root node is required");
     }
-    if( is_array($msgs) ) {
+    if( is_array($msgs) && count($msgs) ) {
       foreach($msgs as $m) {
         $this->add( get_class($this), "_loadXMLConfig", $m[2], $m[1], $m[0] );
       }
@@ -331,28 +333,34 @@ class ZenMessageList extends Zen {
   /**
    * Runs through each node and parses contents, performs basic validation
    *
-   * @param array $nodes to check
+   * @param array $vals the nodes to check
    * @return array containing any errors (returns empty array if no errors)
    */
   function _processNodes( $vals ) {
+    //    Zen::printArray($vals);
     $msgs = array();
     // run through the xml output
-    foreach($vals["children"] as $v) {
-      if( $v["name"] == "root" ) {
+    foreach($vals["children"] as $cat=>$vars) {
+      if( $cat == 'root' ) {
+        $v = $vars[0];
         if( isset($v["properties"]["level"]) ) {
           $this->_levels["default"] = array("default"=>$v["properties"]["level"]);
+        } 
+      }
+      else if( $cat == 'class' ) {
+        foreach($vars as $v) {
+          $r = $this->_processClassNode( $v );
+          $msgs = array_merge($msgs,$r);
         }
       }
-      else if( $v["name"] == "class" ) {
-        $r = $this->_processClassNode( $v );
-        $msgs = array_merge($msgs,$r);
-      }
-      else if( $v["name"] == "format" ) {
-        $r = $this->_processFormatNode($v);
-        $msgs = array_merge($msgs,$r);
+      else if( $cat == "format" ) {
+        foreach($vars as $v) {
+          $r = $this->_processFormatNode($v);
+          $msgs = array_merge($msgs,$r);
+        }
       }
       else {
-        $msgs[] = array(2, 141, "{$v['name']} invalid - ignored");
+        $msgs[] = array(2, 141, "{$cat} invalid node type -- ignored");
       }
     }
     return $msgs;
@@ -364,7 +372,7 @@ class ZenMessageList extends Zen {
    * @param array $node and children
    * @return array containing any errors
    */
-  function _loadClassNode( $node ) {
+  function _processClassNode( $node ) {
     $msgs = array();
     $n = $node["properties"]["name"];
     if( !isset($this->_levels[$n]) ) {
@@ -372,10 +380,12 @@ class ZenMessageList extends Zen {
       if( isset($node["properties"]["level"]) )
         $this->_levels[$n]["default"] = $node["properties"]["level"];
     }
-    foreach($node["children"] as $c) {
-      if( $c['name'] == "method" ) {
-        $cn = $c["properties"]["name"];
-        $this->_levels[$n][$cn] = $c["properties"]["level"]; 
+    foreach($node["children"] as $name=>$vals) {
+      if( $name == "method" ) {
+        foreach($vals as $c) {
+          $cn = $c["properties"]["name"];
+          $this->_levels[$n][$cn] = $c["properties"]["level"]; 
+        }
       }
       else { $msgs[] = array(2, 141, "{$n}->{$c['name']} invalid - ignored"); }
     }
@@ -390,19 +400,24 @@ class ZenMessageList extends Zen {
    */
   function _processFormatNode( $node ) {
     $msgs = array();
-    foreach($node["children"] as $c) {
-      $n = $c["name"];
+    foreach($node["children"] as $n=>$vals) {
+      $c = $vals[0];
       if( $n == "block" ) {
-        $this->_blockformat = array($c["children"]["open"]["data"], $c["children"]["close"]["data"]);
+        $this->_blockformat = array($c["children"]["open"][0]["data"], $c["children"]["close"][0]["data"]);
       }
       else if( preg_match("/^level([0-9]+)$/", $n, $matches) ) {
         $m = $matches[1];
-        $this->_msgformat[$m] = array($c["children"]["open"]["data"], $c["children"]["close"]["data"]);
+        $this->_msgformat[$m] = array($c["children"]["open"][0]["data"], $c["children"]["close"][0]["data"]);
       }
       else { $msgs[] = array(2, 141, "{$node['name']}->{$n} invalid - ignored"); }
     }
     return $msgs;
   }
+
+  /**
+   * Prints out the debug level settings in raw text format
+   */
+  function printDebugSettings() { $this->printArray($this->_levels); }
 
   /* VARIABLES */
 

@@ -38,19 +38,19 @@ url_www = "{url_www}"       ;browser path to zentrack www directory (this should
 
 ; the type of database
 ; mysql, postgres, oci8 (oracle)
-db_type = "{database_type}"
+db_type = "{db_type}"
 
 ;domain or ip for database server, sometimes blank is good
-db_host = "{database_host}"
+db_host = "{db_host}"
 
 ; the table set or instance to use for zentrack
-db_instance = "{database_instance}" 
+db_instance = "{db_instance}" 
 
 ; username for logging into db
-db_user = "{database_user}" 
+db_user = "{db_user}" 
 
 ; password for logging in, sometimes blank for postgres
-db_pass = "{database_pass}"
+db_pass = "{db_pass}"
 
 ;the prefix for table names, keep in upper case
 table_prefix = "{table_prefix}"
