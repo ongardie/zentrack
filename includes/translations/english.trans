@@ -7,9 +7,21 @@ msgid " ? is required"
 msgstr ""
 
 
+#file "D:\zentrack\zentrack/includes/templates/listTickets_workFormat.php"
+#args ""
+msgid "%"
+msgstr ""
+
+
 #file "D:\zentrack\zentrack/www/actions/upload.php"
 #args "array($file_type)"
 msgid "'?' is not an allowed file extension - See your systems administrator for more information"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/userAdd.php"
+#args ""
+msgid "* = required"
 msgstr ""
 
 
@@ -109,6 +121,18 @@ msgid "? was not a valid user id"
 msgstr ""
 
 
+#file "D:\zentrack\zentrack/includes/templates/reportsOptionsMenu.php"
+#args ""
+msgid "A large number of elements will appear better in a line chart, bar charts tend to be more pleasing with smaller numbers."
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/leftHelp.php"
+#args ""
+msgid "API"
+msgstr ""
+
+
 #file "D:\zentrack\zentrack/www/actions/print.php"
 #args ""
 msgid "ATC"
@@ -121,9 +145,93 @@ msgid "About ?"
 msgstr ""
 
 
+#file "D:\zentrack\zentrack/includes/leftHelp.php"
+#args ""
+msgid "About"
+msgstr ""
+
+
 #file "D:\zentrack\zentrack/www/addSubmit.php"
 #args ""
 msgid "Access Error"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/userSearchList.php"
+#args ""
+msgid "Access"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/optionsMenu.php"
+#args ""
+msgid "Account Options"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/userAdd.php"
+#args ""
+msgid "Account Settings"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/userSearchList.php"
+#args ""
+msgid "Account is Active"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/searchLogList.php"
+#args ""
+msgid "Action Taken"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/searchLogForm.php"
+#args ""
+msgid "Action"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/configForm.php"
+#args ""
+msgid "Active"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/ticket_attachmentsBox.php"
+#args ""
+msgid "Add Attachment"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/actions/notify.php"
+#args ""
+msgid "Add Notify Recipient"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/ticket_notifyBox.php"
+#args ""
+msgid "Add Recipient"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/reportsOptionsMenu.php"
+#args ""
+msgid "Add a total figure"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/reportsOptionsMenu.php"
+#args ""
+msgid "Add an average figure"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/actions/notify.php"
+#args ""
+msgid "Add recipients to the notify list for this ticket"
 msgstr ""
 
 
@@ -133,9 +241,21 @@ msgid "Add ticket to project"
 msgstr ""
 
 
+#file "D:\zentrack\zentrack/includes/templates/actions/notify.php"
+#args ""
+msgid "Add"
+msgstr ""
+
+
 #file "D:\zentrack\zentrack/www/admin/access.php"
 #args ""
 msgid "Admin Section"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/leftAdmin.php"
+#args ""
+msgid "Admin"
 msgstr ""
 
 
@@ -145,9 +265,21 @@ msgid "Administration"
 msgstr ""
 
 
+#file "D:\zentrack\zentrack/includes/templates/userSearchList.php"
+#args ""
+msgid "Administrative Options"
+msgstr ""
+
+
 #file "D:\zentrack\zentrack/www/admin/access.php"
 #args "array($user_id)"
 msgid "All bins were removed from access for user ?"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/configSettingsForm.php"
+#args ""
+msgid "All entries must contain a value."
 msgstr ""
 
 
@@ -157,9 +289,81 @@ msgid "All"
 msgstr ""
 
 
-#file "D:\zentrack\zentrack/www/actions/print.php"
+#file "D:\zentrack\zentrack/includes/templates/listTickets_workFormat.php"
+#args ""
+msgid "Amount of time worked"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/reportsDateMenu.php"
+#args ""
+msgid "Any valid date format"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/newProjectForm.php"
+#args ""
+msgid "Approval Required"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/ticket_detailsBox.php"
 #args ""
 msgid "Approval"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/leftAdmin.php"
+#args ""
+msgid "Archive Tickets"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/reportMenu.php"
+#args ""
+msgid "Are you sure you want to permanently delete this template?"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/actions/assign.php"
+#args ""
+msgid "Assign Ticket"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/actions/assign.php"
+#args ""
+msgid "Assign the ticket to a new user"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/leftTickets.php"
+#args ""
+msgid "Assigned to"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/actions/relate.php"
+#args ""
+msgid "Associate this ticket with others"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/actions/upload.php"
+#args ""
+msgid "Attach"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/ticket_attachmentsBox.php"
+#args ""
+msgid "Attachment"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/ticket_attachmentsBox.php"
+#args "array($page_type,$id)"
+msgid "Attachments on ? #?"
 msgstr ""
 
 
@@ -169,7 +373,25 @@ msgid "Attachments"
 msgstr ""
 
 
-#file "D:\zentrack\zentrack/includes/zenTrack.class"
+#file "D:\zentrack\zentrack/includes/templates/reportsOptionsMenu.php"
+#args ""
+msgid "Bar Chart"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/accessForm.php"
+#args ""
+msgid "Bin Name"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/searchList.php"
+#args ""
+msgid "Bin ticket is located in"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/listTickets.php"
 #args ""
 msgid "Bin"
 msgstr ""
@@ -181,15 +403,87 @@ msgid "Bin(s)"
 msgstr ""
 
 
-#file "D:\zentrack\zentrack/www/misc/homebin.php"
+#file "D:\zentrack\zentrack/includes/templates/searchLogForm.php"
+#args ""
+msgid "By Date"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/searchLogForm.php"
+#args ""
+msgid "By Parameters"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/searchLogForm.php"
+#args ""
+msgid "By Text Match"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/userSearchForm.php"
+#args ""
+msgid "By Text"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/optionsMenu.php"
 #args ""
 msgid "Change Default Bin"
 msgstr ""
 
 
-#file "D:\zentrack\zentrack/www/misc/pwc.php"
+#file "D:\zentrack\zentrack/includes/templates/optionsMenu.php"
+#args ""
+msgid "Change Language"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/optionsMenu.php"
 #args ""
 msgid "Change Password"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/pwcForm.php"
+#args ""
+msgid "Change User Password"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/homebinForm.php"
+#args ""
+msgid "Change Your Default Bin"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/languageForm.php"
+#args ""
+msgid "Change Your Language"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/reportsDataMenu.php"
+#args ""
+msgid "Change"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/configSettingsForm.php"
+#args ""
+msgid "Changing these settings can have a severe impact on the system.  Please consider this before making modifications."
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/configForm.php"
+#args ""
+msgid "Changing this configuration list has a large system impact."
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/reportsOptionsMenu.php"
+#args ""
+msgid "Chart Options"
 msgstr ""
 
 
@@ -199,9 +493,159 @@ msgid "Chart could not be saved."
 msgstr ""
 
 
+#file "D:\zentrack\zentrack/includes/templates/actions/email.php"
+#args ""
+msgid "Choose one of the following options"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/searchLogForm.php"
+#args ""
+msgid "Click 'Search' to execute the search"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/homebinForm.php"
+#args ""
+msgid "Click 'Update' to change your default bin"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/languageForm.php"
+#args ""
+msgid "Click 'Update' to change your language"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/userAdd.php"
+#args "array($button,$blurb)"
+msgid "Click ? to ?"
+msgstr ""
+
+
 #file "D:\zentrack\zentrack/www/admin/editUser.php"
 #args ""
 msgid "Click Here to search for users"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/translations/english.trans"
+#args ""
+msgid "Click Here"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/actions/notify.php"
+#args ""
+msgid "Click button to add recipients"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/actions/relate.php"
+#args ""
+msgid "Click button to assign relations"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/actions/assign.php"
+#args ""
+msgid "Click button to assign"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/actions/close.php"
+#args ""
+msgid "Click button to close"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/actions/log.php"
+#args ""
+msgid "Click button to create log"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/actions/move.php"
+#args ""
+msgid "Click button to move ticket"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/actions/reopen.php"
+#args ""
+msgid "Click button to open"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/actions/reject.php"
+#args ""
+msgid "Click button to reject"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/actions/email.php"
+#args ""
+msgid "Click button to send email"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/actions/estimate.php"
+#args ""
+msgid "Click button to set estimated hours to completion"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/actions/upload.php"
+#args ""
+msgid "Click button to upload file and attach to ticket"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/actions/yank.php"
+#args ""
+msgid "Click button to yank ticket"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/newProjectForm.php"
+#args ""
+msgid "Click button to"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/actions/close.php"
+#args ""
+msgid "Close Ticket"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/actions/close.php"
+#args ""
+msgid "Close"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/ticket_detailsBox.php"
+#args ""
+msgid "Closed"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/reportsOptionsMenu.php"
+#args "array(strip_tags($report_type))"
+msgid "Combine selected ?s"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/actions/assign.php"
+#args ""
+msgid "Comments or Instructions"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/actions/move.php"
+#args ""
+msgid "Comments"
 msgstr ""
 
 
@@ -229,15 +673,39 @@ msgid "Completed"
 msgstr ""
 
 
-#file "D:\zentrack\zentrack/www/admin/config.php"
+#file "D:\zentrack\zentrack/includes/templates/adminMenu.php"
 #args ""
 msgid "Configuration Settings"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/searchLogForm.php"
+#args ""
+msgid "Containing"
 msgstr ""
 
 
 #file "D:\zentrack\zentrack/www/addProjectSubmit.php"
 #args ""
 msgid "Could not create ticket."
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/leftTickets.php"
+#args ""
+msgid "Create New"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/reportMenu.php"
+#args ""
+msgid "Create Reports"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/ticket_tasksBox.php"
+#args ""
+msgid "Create Sub-Project"
 msgstr ""
 
 
@@ -253,6 +721,30 @@ msgid "Create a New Ticket"
 msgstr ""
 
 
+#file "D:\zentrack\zentrack/includes/templates/actions/log.php"
+#args ""
+msgid "Create a log entry, or log hours worked"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/adminMenu.php"
+#args ""
+msgid "Create a new user account"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/leftBins.php"
+#args ""
+msgid "Current Bin"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/searchList.php"
+#args ""
+msgid "Current status of the ticket"
+msgstr ""
+
+
 #file "D:\zentrack\zentrack/www/admin/access.php"
 #args "array($user_id)"
 msgid "Custom Access priviledges updated for user ?"
@@ -265,9 +757,63 @@ msgid "DESCRIPTION"
 msgstr ""
 
 
-#file "D:\zentrack\zentrack/includes/zenTrack.class"
+#file "D:\zentrack\zentrack/includes/templates/reportsOptionsMenu.php"
+#args ""
+msgid "Data Options"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/reportsDataMenu.php"
+#args ""
+msgid "Data Selection"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/reportsDateMenu.php"
+#args ""
+msgid "Date Range"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/searchLogList.php"
+#args ""
+msgid "Date log was created"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/searchLogList.php"
+#args ""
+msgid "Date"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/reportsDateMenu.php"
+#args ""
+msgid "Days"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/newProjectForm.php"
 #args ""
 msgid "Deadline"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/userAdd.php"
+#args ""
+msgid "Default Acces Level"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/userSearchForm.php"
+#args ""
+msgid "Default Access Level"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/reportMenu.php"
+#args ""
+msgid "Delete Reports"
 msgstr ""
 
 
@@ -277,9 +823,45 @@ msgid "Delete User"
 msgstr ""
 
 
-#file "D:\zentrack\zentrack/www/helpers/projectSearchbox.php"
+#file "D:\zentrack\zentrack/includes/templates/reportMenu.php"
+#args ""
+msgid "Delete"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/actions/upload.php"
+#args ""
+msgid "Description of Attachment"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/configSettingsForm.php"
 #args ""
 msgid "Description"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/newProjectForm.php"
+#args ""
+msgid "Details"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/userSearchForm.php"
+#args ""
+msgid "Disabled"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/reportsOptionsMenu.php"
+#args ""
+msgid "Display Values"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/ticket_notifyBox.php"
+#args ""
+msgid "Drop Recipients"
 msgstr ""
 
 
@@ -295,9 +877,51 @@ msgid "ETC"
 msgstr ""
 
 
+#file "D:\zentrack\zentrack/includes/templates/adminMenu.php"
+#args ""
+msgid "Edit Bins"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/adminMenu.php"
+#args ""
+msgid "Edit Priorities"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/configSettingsForm.php"
+#args ""
+msgid "Edit Settings"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/adminMenu.php"
+#args ""
+msgid "Edit Systems"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/adminMenu.php"
+#args ""
+msgid "Edit Tasks"
+msgstr ""
+
+
 #file "D:\zentrack\zentrack/www/actions/edit.php"
 #args ""
 msgid "Edit Ticket"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/leftAdmin.php"
+#args ""
+msgid "Edit Tickets"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/adminMenu.php"
+#args ""
+msgid "Edit Types"
 msgstr ""
 
 
@@ -307,15 +931,213 @@ msgid "Edit User Submit"
 msgstr ""
 
 
-#file "D:\zentrack\zentrack/www/helpers/userSearchbox.php"
+#file "D:\zentrack\zentrack/includes/leftAdmin.php"
+#args ""
+msgid "Edit Users"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/adminMenu.php"
+#args ""
+msgid "Edit Users/Access"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/configForm.php"
+#args "array(ucfirst($type))"
+msgid "Edit the Active ?s"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/adminMenu.php"
+#args ""
+msgid "Edit the current bins"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/adminMenu.php"
+#args ""
+msgid "Edit the priorities list"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/adminMenu.php"
+#args ""
+msgid "Edit the systems list"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/adminMenu.php"
+#args ""
+msgid "Edit the tasks list"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/adminMenu.php"
+#args ""
+msgid "Edit the types list"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/adminMenu.php"
+#args ""
+msgid "Edit the zenTrack settings.  Consult the documentation before using this feature."
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/adminMenu.php"
+#args ""
+msgid "Edit ticket information"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/ticket_titleBox.php"
+#args ""
+msgid "Elapsed"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/actions/email.php"
+#args ""
+msgid "Email Ticket"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/actions/email.php"
+#args ""
+msgid "Email"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/newProjectForm.php"
+#args ""
+msgid "Enter Project Information"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/actions/relate.php"
+#args ""
+msgid "Enter Ticket IDs"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/nav.php"
+#args ""
+msgid "Enter a ticket ID and press enter"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/actions/close.php"
+#args ""
+msgid "Enter any hours worked not previously accounted for"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/actions/test.php"
+#args ""
+msgid "Enter hours worked"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/newTicketForm.php"
+#args ""
+msgid "Enter multiple ids, separated by a comma"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/actions/notify.php"
+#args ""
+msgid "Enter registered users"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/actions/log.php"
+#args ""
+msgid "Enter the hours worked for this entry"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/actions/estimate.php"
+#args ""
+msgid "Enter the number of hours (can contain up to 2 decimal places)"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/actions/relate.php"
+#args ""
+msgid "Enter ticket ids, separated by commas"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/userSearchForm.php"
+#args ""
+msgid "Equals"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/listTickets_workFormat.php"
+#args ""
+msgid "Est Hrs"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/actions/estimate.php"
+#args ""
+msgid "Estimate Ticket Hours"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/newTicketForm.php"
+#args ""
+msgid "Estimated Hours to Complete"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/ticket_detailsBox.php"
+#args ""
+msgid "Estimated Hours"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/listTickets_workFormat.php"
+#args ""
+msgid "Estimated time to complete"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/userAdd.php"
 #args ""
 msgid "First Name"
 msgstr ""
 
 
-#file "D:\zentrack\zentrack/www/helpers/userSearchbox.php"
+#file "D:\zentrack\zentrack/includes/templates/userSearchForm.php"
+#args ""
+msgid "Greater Than"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/leftHelp.php"
+#args ""
+msgid "Help"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/userAdd.php"
 #args ""
 msgid "Home Bin"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/userSearchList.php"
+#args ""
+msgid "Home"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/ticket_detailsBox.php"
+#args ""
+msgid "Hours Worked"
 msgstr ""
 
 
@@ -325,9 +1147,63 @@ msgid "Hours must be entered if the activity is 'LABOR'"
 msgstr ""
 
 
-#file "D:\zentrack\zentrack/includes/zenTrack.class"
+#file "D:\zentrack\zentrack/includes/templates/reportsDateMenu.php"
+#args ""
+msgid "Hours"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/listTickets_workFormat.php"
+#args "array($page_type)"
+msgid "ID of the ?"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/searchList.php"
+#args ""
+msgid "ID of the ticket"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/configForm.php"
 #args ""
 msgid "ID"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/reportsOptionsMenu.php"
+#args ""
+msgid "Image Type"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/reportsOptionsMenu.php"
+#args ""
+msgid "Image"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/listTickets_workFormat.php"
+#args "array($page_type)"
+msgid "Importance of the ?"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/userAdd.php"
+#args ""
+msgid "Initials"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/leftHelp.php"
+#args ""
+msgid "Installation"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/configForm.php"
+#args ""
+msgid "Items in this list cannot be destroyed, to maintain data integrity."
 msgstr ""
 
 
@@ -337,15 +1213,75 @@ msgid "LOG"
 msgstr ""
 
 
-#file "D:\zentrack\zentrack/www/helpers/userSearchbox.php"
+#file "D:\zentrack\zentrack/includes/templates/userAdd.php"
 #args ""
 msgid "Last Name"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/userSearchForm.php"
+#args ""
+msgid "Less Than"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/configForm.php"
+#args ""
+msgid "Less"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/accessForm.php"
+#args ""
+msgid "Level"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/reportsOptionsMenu.php"
+#args ""
+msgid "Line Chart"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/userSearchForm.php"
+#args ""
+msgid "List All Users"
 msgstr ""
 
 
 #file "D:\zentrack\zentrack/includes/zenTrack.class"
 #args ""
 msgid "Log History")
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/ticket_attachmentsBox.php"
+#args ""
+msgid "Log ID"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/leftMain.php"
+#args ""
+msgid "Log Off"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/leftMain.php"
+#args ""
+msgid "Log On"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/actions/log.php"
+#args ""
+msgid "Log"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/userAdd.php"
+#args ""
+msgid "Login Name"
 msgstr ""
 
 
@@ -367,6 +1303,24 @@ msgid "Make ticket search that returns comma delimited list"
 msgstr ""
 
 
+#file "D:\zentrack\zentrack/includes/templates/reportMenu.php"
+#args ""
+msgid "Manage Reports"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/newProjectForm.php"
+#args ""
+msgid "Master Project"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/searchLogForm.php"
+#args ""
+msgid "Maximum Age"
+msgstr ""
+
+
 #file "D:\zentrack\zentrack/www/reports/save.php"
 #args ""
 msgid "Modify Existing"
@@ -379,21 +1333,93 @@ msgid "Modify Report"
 msgstr ""
 
 
-#file "D:\zentrack\zentrack/www/helpers/projectSearchbox.php"
+#file "D:\zentrack\zentrack/includes/templates/reportMenu.php"
+#args ""
+msgid "Modify Reports"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/searchList.php"
 #args ""
 msgid "Modify Search"
 msgstr ""
 
 
-#file "D:\zentrack\zentrack/www/helpers/userSearchbox.php"
+#file "D:\zentrack\zentrack/includes/templates/reportMenu.php"
+#args ""
+msgid "Modify"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/reportsDateMenu.php"
+#args ""
+msgid "Months"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/accessForm.php"
+#args ""
+msgid "More"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/reportsDateMenu.php"
+#args ""
+msgid "Most Current"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/actions/move.php"
+#args ""
+msgid "Move Ticket"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/actions/move.php"
+#args ""
+msgid "Move"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/listTickets_workFormat.php"
+#args "array($page_type)"
+msgid "Name of the ?"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/actions/notify.php"
 #args ""
 msgid "Name"
 msgstr ""
 
 
-#file "D:\zentrack\zentrack/www/reports/view.php"
+#file "D:\zentrack\zentrack/includes/templates/homebinForm.php"
+#args ""
+msgid "New Default Bin"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/languageForm.php"
+#args ""
+msgid "New Language"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/pwcForm.php"
+#args ""
+msgid "New Password"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/reportMenu.php"
 #args ""
 msgid "New Report"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/leftSearch.php"
+#args ""
+msgid "New Search"
 msgstr ""
 
 
@@ -403,7 +1429,7 @@ msgid "New Template"
 msgstr ""
 
 
-#file "D:\zentrack\zentrack/www/admin/addUser.php"
+#file "D:\zentrack\zentrack/includes/leftAdmin.php"
 #args ""
 msgid "New User"
 msgstr ""
@@ -493,6 +1519,30 @@ msgid "Not Required"
 msgstr ""
 
 
+#file "D:\zentrack\zentrack/includes/templates/actions/assign.php"
+#args ""
+msgid "Note"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/userAdd.php"
+#args ""
+msgid "Notes"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/ticket_notifyBox.php"
+#args ""
+msgid "Notify List"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/actions/email.php"
+#args ""
+msgid "OR manually enter email addresses, seperated by commas"
+msgstr ""
+
+
 #file "D:\zentrack\zentrack/includes/templates/configSettingsForm.php"
 #args ""
 msgid "Off"
@@ -511,6 +1561,18 @@ msgid "Only the root administrator can change the root administrator's passphras
 msgstr ""
 
 
+#file "D:\zentrack\zentrack/includes/templates/actions/reopen.php"
+#args ""
+msgid "Open ticket closed in error"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/listTickets.php"
+#args ""
+msgid "Opened"
+msgstr ""
+
+
 #file "D:\zentrack\zentrack/www/reports/save.php"
 #args ""
 msgid "Optional.  Use control or shift to select multiples"
@@ -523,7 +1585,25 @@ msgid "Optional. You do not need to select yourself"
 msgstr ""
 
 
-#file "D:\zentrack\zentrack/includes/zenTrack.class"
+#file "D:\zentrack\zentrack/includes/leftMain.php"
+#args ""
+msgid "Options"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/actions/notify.php"
+#args ""
+msgid "Or add an unregistered user"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/configForm.php"
+#args ""
+msgid "Order"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/listTickets.php"
 #args ""
 msgid "Owner"
 msgstr ""
@@ -541,9 +1621,57 @@ msgid "Password successfully changed"
 msgstr ""
 
 
+#file "D:\zentrack\zentrack/includes/templates/listTickets_workFormat.php"
+#args ""
+msgid "Percent completed"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/userSearchList.php"
+#args "array($u["user_id"])"
+msgid "Permanently remove user ??"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/searchList.php"
+#args ""
+msgid "Person ticket is assigned to"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/reportsTypeMenu.php"
+#args ""
+msgid "Pick a type"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/reportsOptionsMenu.php"
+#args ""
+msgid "Pie Chart"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/configForm.php"
+#args ""
+msgid "Please consider this before making modifications."
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/editTicketForm.php"
+#args ""
+msgid "Please enter a ticket ID"
+msgstr ""
+
+
 #file "D:\zentrack\zentrack/www/misc/pwc.php"
 #args ""
 msgid "Please fill in both of the fields"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/pwcForm.php"
+#args ""
+msgid "Please keep track of your new passphrase."
 msgstr ""
 
 
@@ -553,7 +1681,73 @@ msgid "Please log in to view the entire ticket."
 msgstr ""
 
 
-#file "D:\zentrack\zentrack/www/helpers/projectSearchbox.php"
+#file "D:\zentrack\zentrack/includes/templates/configSettingsForm.php"
+#args ""
+msgid "Press 'Reset' to restore the original values."
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/configSettingsForm.php"
+#args ""
+msgid "Press 'Save' when you are sure that the values are correct."
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/accessForm.php"
+#args ""
+msgid "Press LESS to remove blank fields"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/configForm.php"
+#args ""
+msgid "Press LESS to remove blank rows"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/accessForm.php"
+#args ""
+msgid "Press MORE to add more custom fields"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/configForm.php"
+#args ""
+msgid "Press MORE to create new rows"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/configForm.php"
+#args ""
+msgid "Press Reset to return to original values"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/accessForm.php"
+#args ""
+msgid "Press Reset to return to users existing values"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/configForm.php"
+#args ""
+msgid "Press Save to save changes"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/accessForm.php"
+#args ""
+msgid "Press Update to save changes"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/listTickets.php"
+#args ""
+msgid "Pri"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/newProjectForm.php"
 #args ""
 msgid "Priority"
 msgstr ""
@@ -637,27 +1831,105 @@ msgid "Processing error: template not found."
 msgstr ""
 
 
-#file "D:\zentrack\zentrack/www/helpers/projectSearchbox.php"
+#file "D:\zentrack\zentrack/includes/templates/reportsTypeMenu.php"
 #args ""
 msgid "Project ID"
 msgstr ""
 
 
-#file "D:\zentrack\zentrack/www/actions/print.php"
+#file "D:\zentrack\zentrack/includes/templates/newTicketForm.php"
 #args ""
 msgid "Project"
 msgstr ""
 
 
-#file "D:\zentrack\zentrack/www/assignedProjects.php"
+#file "D:\zentrack\zentrack/includes/leftTickets.php"
 #args ""
 msgid "Projects"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/actions/yank.php"
+#args ""
+msgid "Pull ticket from the current owner"
 msgstr ""
 
 
 #file "D:\zentrack\zentrack/www/actions/print.php"
 #args ""
 msgid "RELATED TICKETS"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/reportsDateMenu.php"
+#args ""
+msgid "Range"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/leftMain.php"
+#args ""
+msgid "Really log out of zenTrack?"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/actions/reject.php"
+#args ""
+msgid "Reason"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/actions/reject.php"
+#args ""
+msgid "Reject Ticket"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/actions/reject.php"
+#args ""
+msgid "Reject"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/actions/relate.php"
+#args ""
+msgid "Relate Ticket"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/actions/relate.php"
+#args ""
+msgid "Relate"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/ticket_relatedBox.php"
+#args "array($page_type)"
+msgid "Related ?s"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/newTicketForm.php"
+#args ""
+msgid "Related Tickets"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/optionsMenu.php"
+#args ""
+msgid "Remember My Password"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/actions/reopen.php"
+#args ""
+msgid "Reopen Ticket"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/actions/reopen.php"
+#args ""
+msgid "Reopen"
 msgstr ""
 
 
@@ -679,6 +1951,18 @@ msgid "Report Name is required"
 msgstr ""
 
 
+#file "D:\zentrack\zentrack/includes/templates/reportsTypeMenu.php"
+#args ""
+msgid "Report Type"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/leftReports.php"
+#args ""
+msgid "Reports"
+msgstr ""
+
+
 #file "D:\zentrack\zentrack/www/addSubmit.php"
 #args ""
 msgid "Required field missing:"
@@ -691,6 +1975,12 @@ msgid "Required"
 msgstr ""
 
 
+#file "D:\zentrack\zentrack/includes/templates/newProjectForm.php"
+#args ""
+msgid "Requirements"
+msgstr ""
+
+
 #file "D:\zentrack\zentrack/www/admin/resetPassword.php"
 #args ""
 msgid "Reset Password"
@@ -700,6 +1990,30 @@ msgstr ""
 #file "D:\zentrack\zentrack/includes/templates/userSearchList.php"
 #args "array($u["user_id"])"
 msgid "Reset the password for user ??"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/accessForm.php"
+#args ""
+msgid "Reset"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/actions/reject.php"
+#args ""
+msgid "Return ticket to sender"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/pwcForm.php"
+#args ""
+msgid "Retype New Password"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/accessForm.php"
+#args ""
+msgid "Role"
 msgstr ""
 
 
@@ -721,13 +2035,31 @@ msgid "Save Template"
 msgstr ""
 
 
-#file "D:\zentrack\zentrack/www/reports/save.php"
+#file "D:\zentrack\zentrack/includes/templates/configForm.php"
 #args ""
 msgid "Save"
 msgstr ""
 
 
-#file "D:\zentrack\zentrack/www/searchLogs.php"
+#file "D:\zentrack\zentrack/includes/templates/reportsOptionsMenu.php"
+#args ""
+msgid "Scatter Chart"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/searchLogForm.php"
+#args ""
+msgid "Search For Logs"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/userSearchForm.php"
+#args ""
+msgid "Search For Users"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/leftSearch.php"
 #args ""
 msgid "Search Logs"
 msgstr ""
@@ -757,9 +2089,15 @@ msgid "Search for Users"
 msgstr ""
 
 
-#file "D:\zentrack\zentrack/www/helpers/projectSearchbox.php"
+#file "D:\zentrack\zentrack/includes/leftSearch.php"
 #args ""
 msgid "Search"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/reportsDataMenu.php"
+#args "array($zen->ffv($report_type))"
+msgid "Select ?s"
 msgstr ""
 
 
@@ -775,6 +2113,30 @@ msgid "Select Tickets"
 msgstr ""
 
 
+#file "D:\zentrack\zentrack/includes/templates/actions/assign.php"
+#args ""
+msgid "Select a Recipient"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/actions/email.php"
+#args ""
+msgid "Select a User"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/actions/upload.php"
+#args ""
+msgid "Select a file to upload"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/actions/log.php"
+#args ""
+msgid "Select an activity"
+msgstr ""
+
+
 #file "D:\zentrack\zentrack/www/helpers/projectSearchbox.php"
 #args ""
 msgid "Select more than one by using control or shift"
@@ -787,15 +2149,141 @@ msgid "Select"
 msgstr ""
 
 
+#file "D:\zentrack\zentrack/includes/templates/actions/email.php"
+#args ""
+msgid "Send a link to this ticket only"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/actions/email.php"
+#args ""
+msgid "Send a summary of the ticket"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/actions/email.php"
+#args ""
+msgid "Send a summary, and the ticket's log"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/actions/move.php"
+#args ""
+msgid "Send ticket to another bin"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/actions/email.php"
+#args ""
+msgid "Send ticket to specified recipients"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/accessForm.php"
+#args "array($zen->formatName($user_id))"
+msgid "Set Access for ?"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/pwcForm.php"
+#args ""
+msgid "Set Password"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/actions/close.php"
+#args ""
+msgid "Set status to closed/pending"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/actions/test.php"
+#args ""
+msgid "Set testing to completed on ticket"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/actions/estimate.php"
+#args ""
+msgid "Set the expected hours this ticket will take to complete"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/actions/estimate.php"
+#args ""
+msgid "Set"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/leftAdmin.php"
+#args ""
+msgid "Settings"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/userSearchForm.php"
+#args ""
+msgid "Show All Users"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/reportsOptionsMenu.php"
+#args ""
+msgid "Show Both"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/reportsOptionsMenu.php"
+#args ""
+msgid "Show Graph"
+msgstr ""
+
+
 #file "D:\zentrack\zentrack/www/reports/show.php"
 #args ""
 msgid "Show Report"
 msgstr ""
 
 
-#file "D:\zentrack\zentrack/includes/zenTrack.class"
+#file "D:\zentrack\zentrack/includes/templates/reportsOptionsMenu.php"
+#args ""
+msgid "Show Tables"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/reportsOptionsMenu.php"
+#args ""
+msgid "Stack Chart"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/newProjectForm.php"
+#args ""
+msgid "Start Date"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/reportsDateMenu.php"
+#args ""
+msgid "Start From Date"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/listTickets_workFormat.php"
 #args ""
 msgid "Status"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/reportsSubmit.php"
+#args ""
+msgid "Submit Results"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/reportsOptionsMenu.php"
+#args ""
+msgid "Subtitle"
 msgstr ""
 
 
@@ -838,6 +2326,12 @@ msgstr ""
 #file "D:\zentrack\zentrack/www/admin/access.php"
 #args "array($user_id)"
 msgid "System Error: could not update access for user ?"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/ticket_systemBox.php"
+#args ""
+msgid "System History"
 msgstr ""
 
 
@@ -925,7 +2419,13 @@ msgid "System error: Ticket ? could not be yanked."
 msgstr ""
 
 
-#file "D:\zentrack\zentrack/www/helpers/projectSearchbox.php"
+#file "D:\zentrack\zentrack/includes/templates/searchList.php"
+#args ""
+msgid "System involved in ticket"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/leftMain.php"
 #args ""
 msgid "System"
 msgstr ""
@@ -937,9 +2437,39 @@ msgid "TASKS FOR COMPLETION"
 msgstr ""
 
 
-#file "D:\zentrack\zentrack/www/actions/print.php"
+#file "D:\zentrack\zentrack/includes/templates/ticket_tasksBox.php"
+#args ""
+msgid "Tasks for this project"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/actions/test.php"
+#args ""
+msgid "Test Ticket"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/actions/test.php"
+#args ""
+msgid "Tested"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/newProjectForm.php"
+#args ""
+msgid "Testing Required"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/ticket_detailsBox.php"
 #args ""
 msgid "Testing"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/reportsOptionsMenu.php"
+#args ""
+msgid "Text"
 msgstr ""
 
 
@@ -1033,6 +2563,36 @@ msgid "The file was not recieved. Check to insure it's size does not exceed ?KB"
 msgstr ""
 
 
+#file "D:\zentrack\zentrack/includes/templates/searchList.php"
+#args ""
+msgid "The importance of the ticket"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/www/misc/language.php"
+#args ""
+msgid "The language could not be changed to $newlang"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/www/misc/language.php"
+#args ""
+msgid "The language file chosen was not valid"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/searchList.php"
+#args ""
+msgid "The name of the ticket"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/userSearchList.php"
+#args ""
+msgid "The name of the user"
+msgstr ""
+
+
 #file "D:\zentrack\zentrack/www/admin/editUserSubmit.php"
 #args ""
 msgid "The root admin access cannot be less than the level_settings parameter"
@@ -1054,6 +2614,12 @@ msgstr ""
 #file "D:\zentrack\zentrack/www/admin/deleteUser.php"
 #args ""
 msgid "The root administrator account cannot be deleted"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/listTickets_workFormat.php"
+#args ""
+msgid "The type of ticket"
 msgstr ""
 
 
@@ -1084,6 +2650,12 @@ msgstr ""
 #file "D:\zentrack\zentrack/includes/zenTrack.class"
 #args ""
 msgid "There are more log entries."
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/configForm.php"
+#args ""
+msgid "There is already an entry with that value."
 msgstr ""
 
 
@@ -1126,6 +2698,18 @@ msgstr ""
 #file "D:\zentrack\zentrack/includes/templates/reportsOptionsMenu.php"
 #args ""
 msgid "These options aren't useful when only graphing one element."
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/userSearchForm.php"
+#args ""
+msgid "This could be a long list! Proceed anyways?"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/userAdd.php"
+#args ""
+msgid "This grants the user the specified level of  	access to all bins not otherwise indicated by 'user access'."
 msgstr ""
 
 
@@ -1201,9 +2785,21 @@ msgid "Ticket ? could not edit ticket. "
 msgstr ""
 
 
-#file "D:\zentrack\zentrack/www/helpers/ticketSearchbox.php"
+#file "D:\zentrack\zentrack/includes/templates/adminMenu.php"
+#args ""
+msgid "Ticket Administration"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/nav.php"
 #args ""
 msgid "Ticket ID"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/newTicketForm.php"
+#args ""
+msgid "Ticket Information"
 msgstr ""
 
 
@@ -1227,19 +2823,49 @@ msgstr ""
 
 #file "D:\zentrack\zentrack/www/assignedTickets.php"
 #args ""
-msgid "Tickets assigned:"
+msgid "Tickets assigned"
 msgstr ""
 
 
-#file "D:\zentrack\zentrack/www/actions/print.php"
+#file "D:\zentrack\zentrack/includes/leftTickets.php"
+#args ""
+msgid "Tickets"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/listTickets.php"
+#args ""
+msgid "Time"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/listTickets.php"
 #args ""
 msgid "Title"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/configForm.php"
+#args "array($type)"
+msgid "To remove a ? from use, uncheck the 'active' box."
 msgstr ""
 
 
 #file "D:\zentrack\zentrack/www/actions/print.php"
 #args ""
 msgid "Totals"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/leftMain.php"
+#args ""
+msgid "Tracker"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/reportsOptionsMenu.php"
+#args ""
+msgid "Try using Combine Selected with a very large number of elements, if you intend to view a graphical image."
 msgstr ""
 
 
@@ -1255,7 +2881,13 @@ msgid "Type ids separated by commas, or click on the button."
 msgstr ""
 
 
-#file "D:\zentrack\zentrack/www/helpers/ticketSearchbox.php"
+#file "D:\zentrack\zentrack/includes/templates/searchList.php"
+#args ""
+msgid "Type of ticket"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/listTickets.php"
 #args ""
 msgid "Type"
 msgstr ""
@@ -1264,6 +2896,12 @@ msgstr ""
 #file "D:\zentrack\zentrack/includes/zenTrack.class"
 #args ""
 msgid "URL"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/userAdd.php"
+#args ""
+msgid "Uncheck to disable this account."
 msgstr ""
 
 
@@ -1297,6 +2935,18 @@ msgid "Update Types"
 msgstr ""
 
 
+#file "D:\zentrack\zentrack/includes/templates/accessForm.php"
+#args ""
+msgid "Update"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/actions/upload.php"
+#args ""
+msgid "Upload Attachment"
+msgstr ""
+
+
 #file "D:\zentrack\zentrack/www/actions/upload.php"
 #args ""
 msgid "Uploaded file size 0 bytes"
@@ -1306,6 +2956,12 @@ msgstr ""
 #file "D:\zentrack\zentrack/www/reports/index.php"
 #args ""
 msgid "Usage Reports"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/userAdd.php"
+#args ""
+msgid "Use zero if unsure."
 msgstr ""
 
 
@@ -1321,9 +2977,21 @@ msgid "User ? was updated successfully. ? to customize user ?'s access permissio
 msgstr ""
 
 
-#file "D:\zentrack\zentrack/www/helpers/userSearchbox.php"
+#file "D:\zentrack\zentrack/includes/templates/adminMenu.php"
+#args ""
+msgid "User Administration"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/reportsTypeMenu.php"
 #args ""
 msgid "User ID"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/userAdd.php"
+#args ""
+msgid "User Information"
 msgstr ""
 
 
@@ -1333,15 +3001,105 @@ msgid "User Options"
 msgstr ""
 
 
+#file "D:\zentrack\zentrack/includes/templates/searchLogForm.php"
+#args ""
+msgid "User"
+msgstr ""
+
+
 #file "D:\zentrack\zentrack/www/reports/save.php"
 #args ""
 msgid "User(s)"
 msgstr ""
 
 
+#file "D:\zentrack\zentrack/includes/templates/userSearchList.php"
+#args ""
+msgid "Users Default Bin"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/userSearchList.php"
+#args ""
+msgid "Users Initials"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/userSearchList.php"
+#args ""
+msgid "Users System ID"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/userSearchList.php"
+#args ""
+msgid "Users email address"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/configSettingsForm.php"
+#args ""
+msgid "Value"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/reportsSubmit.php"
+#args ""
+msgid "View Chart"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/reportMenu.php"
+#args ""
+msgid "View Reports"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/reportsDateMenu.php"
+#args ""
+msgid "Weeks"
+msgstr ""
+
+
 #file "D:\zentrack\zentrack/www/index.php"
 #args ""
 msgid "Welcome to zenTrack"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/reportsOptionsMenu.php"
+#args ""
+msgid "What to Graph"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/listTickets_workFormat.php"
+#args "array($page_type)"
+msgid "Who the ? belongs to"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/listTickets_workFormat.php"
+#args ""
+msgid "Worked"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/actions/yank.php"
+#args ""
+msgid "Yank Ticket"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/actions/yank.php"
+#args ""
+msgid "Yank"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/reportsDateMenu.php"
+#args ""
+msgid "Years"
 msgstr ""
 
 
@@ -1435,9 +3193,21 @@ msgid "Your chart has been saved successfully saved with title: $report_name"
 msgstr ""
 
 
+#file "D:\zentrack\zentrack/www/misc/language.php"
+#args ""
+msgid "Your language has been changed to $newlang"
+msgstr ""
+
+
 #file "D:\zentrack\zentrack/www/misc/pwc.php"
 #args ""
 msgid "Your new passphrase must contain at least 1 non-letter character"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/pwcForm.php"
+#args ""
+msgid "Your passphrase must be at least 6 characters long and      contain at least 1 non-letter character."
 msgstr ""
 
 
@@ -1459,9 +3229,63 @@ msgid "Your request was successful, but this is a demo site, so the passphrase w
 msgstr ""
 
 
+#file "D:\zentrack\zentrack/includes/templates/actions/log.php"
+#args ""
+msgid "accepts up to 2 decimal places"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/userSearchList.php"
+#args ""
+msgid "access"
+msgstr ""
+
+
 #file "D:\zentrack\zentrack/includes/templates/ticket_detailsBox.php"
 #args ""
 msgid "completed"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/actions/upload.php"
+#args ""
+msgid "create an attachment for this ticket"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/userSearchList.php"
+#args ""
+msgid "delete"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/userSearchList.php"
+#args ""
+msgid "edit"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/adminMenu.php"
+#args ""
+msgid "edit,delete,change access"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/userSearchForm.php"
+#args ""
+msgid "enter a number"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/actions/email.php"
+#args ""
+msgid "hold control or shift to select multiple users"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/accessForm.php"
+#args ""
+msgid "less"
 msgstr ""
 
 
@@ -1501,9 +3325,33 @@ msgid "no"
 msgstr ""
 
 
+#file "D:\zentrack\zentrack/includes/templates/newProjectForm.php"
+#args ""
+msgid "none"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/actions/assign.php"
+#args ""
+msgid "optional"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/userSearchList.php"
+#args ""
+msgid "password"
+msgstr ""
+
+
 #file "D:\zentrack\zentrack/www/addProjectSubmit.php"
 #args ""
 msgid "required field missing:"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/actions/close.php"
+#args ""
+msgid "required"
 msgstr ""
 
 
@@ -1525,9 +3373,45 @@ msgid "ticket #?: accepted by ?"
 msgstr ""
 
 
+#file "D:\zentrack\zentrack/includes/templates/newTicketForm.php"
+#args ""
+msgid "up to two decimal places, optional"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/reportsDateMenu.php"
+#args ""
+msgid "use 4 digit year, time is optional"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/userSearchForm.php"
+#args ""
+msgid "user ID"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/leftMain.php"
+#args ""
+msgid "version"
+msgstr ""
+
+
 #file "D:\zentrack\zentrack/includes/templates/userSearchList.php"
 #args ""
 msgid "yes"
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/newTicketForm.php"
+#args ""
+msgid ($td
+msgstr ""
+
+
+#file "D:\zentrack\zentrack/includes/templates/languageForm.php"
+#args ""
+msgid ucwords($l)
 msgstr ""
 
 
