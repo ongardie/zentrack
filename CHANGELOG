@@ -6,6 +6,10 @@
 
 ----- V2.2.3 (development, see CVS) ----
 2003-02-14, Altman
+  Stubbed out functions in zenTrack.class and added entry for new table
+  in configVars.php.default.
+    - install/configVars.php.default v1.2
+    - includes/zenTrack.class v1.47
   Added schema changes to support Notify List feature addition.
     - install/UPGRADE_postgres.sql v1.5
     - install/UPGRADE_mysql.sql v1.4

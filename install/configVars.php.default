@@ -48,6 +48,7 @@
    $this->table_tickets_archived = 'ZENTRACK_TICKETS_ARCHIVED'; //archived ticket table
    $this->table_types            = 'ZENTRACK_TYPES';            //ticket types
    $this->table_users            = 'ZENTRACK_USERS';            //users table   
+   $this->table_notify_list      = 'ZENTRACK_NOTIFY_LIST';
 
    // not yet implemented... but functional
    // these will be fully added in 2.1

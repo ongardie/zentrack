@@ -224,7 +224,30 @@ class zenTrack extends zen {
       $this->addDebug("get_users()Query",$query,2);
       return( $this->db_queryIndexed($query) );
    }
-   
+
+   /*
+    * NOTIFY LIST FUNCTIONS
+    */
+
+   function get_notify_recipients( $ticket_id ) {
+
+   }
+
+   function get_notify_list( $ticket_id ) {
+
+   }
+
+   function set_notify_list( $ticket_id, $list ) {
+
+   }
+
+   function drop_notify_list( $ticket_id ) {
+
+   }
+
+   function delete_ticket( $ticket_id ) {
+
+   }   
    
    
    /*
@@ -2952,6 +2975,7 @@ class zenTrack extends zen {
    var $table_users;
    var $table_translation_strings;
    var $table_translation_words;
+   var $table_notify_list;
 
    var $cleanTempReports;
    var $reportImageWidth;
