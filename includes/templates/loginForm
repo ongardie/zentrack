@@ -1,15 +1,15 @@
 
 <blockquote><br>
   <p>&nbsp;</p>
-  <p><span class="big"><b>Welcome!  Please Log On.</b></span></p>
-  <p><b><i style="color:red">Login and passphrase are case sensitive!</i></b></p>
+  <p><span class="big"><b><?=tr("Welcome!  Please Log On.")?></b></span></p>
+  <p><b><i style="color:red"><?tr("Login and passphrase are case sensitive!")?></i></b></p>
   <form method="post" action="<?=$SCRIPT_NAME?><?=($id)? "?id=".strip_tags($id) : ""?>">
-  <input type=text name=username value='<?=strip_tags($zentrackUsername)?>' width=20 maxlength=20>&nbsp;Login Name
+  <input type=text name=username value='<?=strip_tags($zentrackUsername)?>' width=20 maxlength=20>&nbsp;<?=tr("Login Name")?>
   <br>
-  <input type="password" name="passphrase" width=20 maxlength=20>&nbsp;Password
+  <input type="password" name="passphrase" width=20 maxlength=20>&nbsp;<?=tr("Password")?>
   <p>
   <input type=hidden name=redirect value='<?=strip_tags($redirect)?>'>
-  <input type=submit name=TODO value="Log On">
+  <input type=submit name=TODO value=<?=tr("Log On")?>>
   </form>
 </blockquote>
 
