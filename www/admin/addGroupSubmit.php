@@ -29,7 +29,6 @@
     }
   }
 
-
   if( !$errs ) {
     if( $zen->demo_mode == "on" ) {
       $msg = tr("Process successful.  Group was not added, because this is a demo site.");
