@@ -1,0 +1,46 @@
+
+<TestUnit>
+
+  <!-- 
+     **************************
+     test data for PHPUnit tests
+
+     This data should contain nodes
+     named the same as the method the
+     data applies to.
+
+     Each method node can contain any
+     number of test nodes which will
+     each contain a set of <param>
+     nodes which will be passed back
+     to the test method
+
+     An optional eval='true' attribute
+     can be applied to any param tag
+     which will cause the data block to
+     be run using eval() (executed as code)
+     
+     This is useful for creating boolean vals,
+     for running functions, using variables, etc
+
+     IMPORTANT NOTE: the method names need
+     to be in all lower case here, since the
+     call uses get_class_methods, which returns
+     them entirely in lower case
+     **************************
+  -->
+
+  <testgetinival>
+    <test1>
+      <param name='cat'>directories</param>
+      <param name='name'>dir_lib</param>
+      <param name='expected'>/web/phpzen/sub/z3/includes/lib</param>
+    </test1>
+    <test2>
+      <param name='cat'>debug</param>
+      <param name='name'>develop_mode</param>
+      <param name='expected' eval='true'>true</param>
+    </testDevelopMode>
+  </test2>
+
+</TestUnit>
