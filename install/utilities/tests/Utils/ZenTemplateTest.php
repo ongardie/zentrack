@@ -42,11 +42,11 @@
       }
 
       // parse template
-      $template = new ZenTemplate( $vals['file'].".template" );    
-      $template->values($vals);
+      $template = new ZenTemplate();    
+      $template->assign($vals);
 
       // check results
-      $templateResult = trim($template->process());
+      $templateResult = trim($template->fetch($vals['file'].".template"));
       $expectedResult = trim(join('',file( $GLOBALS['templateDir']."/".$vals['file'].".result" )));
       // fix windows linefeed vs template issues
       $templateResult = preg_replace("/\r/", "", $templateResult);
