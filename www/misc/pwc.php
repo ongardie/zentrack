@@ -13,6 +13,7 @@
   $expand_options = 1;
 
   if( $TODO == 'SET' ) {
+    $settings = $zen->getSettings(1);
     if( !$newPass1 || !$newPass2 ) {
       $errs[] = "Please fill in both of the fields";
     } else if( $newPass1 != $newPass2 ) {
@@ -20,7 +21,7 @@
     } else {
       if( strlen($newPass1) < 6 ) 
 	$errs[] = "Your password must be at least 6 digits long";
-      if( !ereg("[^a-zA-Z]", $newPass1) )
+      if( ($settings["check_pwd_simple"]["value"]=="on") && !ereg("[^a-zA-Z]", $newPass1) )
 	  $errs[] = "Your new password must contain at least 1 non-letter character";
     }
     $user = $zen->getUser($login_id);
