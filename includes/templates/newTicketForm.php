@@ -1,15 +1,26 @@
 <?  
   unset($users);
-  $userBins = $zen->getUsersBins($login_id,"level_create");
+  $td = ($TODO == 'EDIT');
+  if( $td ) {
+    $userBins = $zen->getUsersBins($login_id,"level_edit");  
+  }
+  else {
+    $userBins = $zen->getUsersBins($login_id,"level_create");
+  }
   if( is_array($userBins) && count($userBins) ) {
     $users = $zen->get_users( $userBins, "level_user" );
   } else {
-    print "<span class='error'>"
-	.tr("You do not have permission to create tickets.")."</span>\n";
+    print "<span class='error'>";
+    if( $td ) {
+      print tr("You do not have permission to edit tickets.");
+    }
+    else {
+      print tr("You do not have permission to create tickets.");
+    }
+    print "</span>\n";
     include("$libDir/footer.php");
     exit;
   }
-  $td = ($TODO == 'EDIT');
   if( !$deadline && !$td )
      $deadline = $zen->getDefaultValue("default_deadline");
   if( !$start_date && !$td )
