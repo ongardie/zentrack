@@ -44,6 +44,8 @@ class ZenMessageList extends Zen {
   function &getInstance() {
     if( !isset($GLOBALS['messageList']) || !is_object($GLOBALS['messageList']) ) {
       $file = ZenUtils::getIni('directories','dir_config')."/".ZenUtils::getIni('debug','debug_configfile');
+      // if the ini file didn't contain values, don't send '/' as the filename
+      if( strlen($file) == 1 ) { $file = ""; }
       $GLOBALS['messageList'] = new ZenMessageList( $file );
     }
     return $GLOBALS['messageList'];
@@ -364,14 +366,24 @@ class ZenMessageList extends Zen {
   function _loadConfig( $xmlfile ) {
     if( isset($_SESSION['cache']) && is_array($_SESSION['cache']['messageListConfig'])
         && $_SESSION['cache']['messageListConfig']['configFileName'] == $xmlfile ) {
+      // try to get configuration from cached data
       $this->_levels = $_SESSION['cache']['messageListConfig'];
       return 1;
     }
-    else {
+    else if( file_exists($xmlfile) ) {
+      // generate configuration
       $res = $this->_loadXMLConfig($xmlfile);
       $this->_levels['configFileName'] = $xmlfile;
       if( $res > 0 ) $_SESSION['cache']['messageListConfig'] = $this->_levels;
       return $res;
+    }
+    else {
+      // if there is no config file, set up some default values rather than fail
+      // and print an error.  The default will be 1 (errors only) if we aren't in
+      // develop mode, otherwise it is 3 (errors,warnings,notes)
+      $lvl = ZenUtils::getIni('debug','develop_mode')? 3 : 1;
+      $this->_levels = array('default'=>array('default'=>$lvl));
+      Zen::debug($this,'_loadConfig',"The debug xml config ($xmlfile) was not found!",105,LVL_ERROR);
     }
   }
 

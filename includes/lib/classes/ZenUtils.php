@@ -60,7 +60,7 @@ class ZenUtils {
       return $GLOBALS['zen'];
     }
     if( $file ) {
-      if( !file_exists($file) && class_exists("Zen") ) {
+      if( !file_exists($file) ) {
         return null;
       }
       return ZenUtils::read_ini($file);
@@ -527,6 +527,59 @@ class ZenUtils {
     return false; 
   }
 
+  /**
+   * Provides debugging output which is safe to use during installation 
+   * (before config is generated).
+   *
+   * This is useful for classes which may be used during installation,
+   * but may also use {@link ZenMessageList} for debugging output during
+   * normal operations.
+   *
+   * @param boolean $install_mode whether we are in install mode or not
+   * @param mixed $class the class object ($this) or a string representing the class/script name
+   * @param string $method the method/section producing message
+   * @param string $message the message to store
+   * @param intege $errnum the error number associated with message
+   * @param integer $level the level of the message
+   * @return boolean true if message was valid and added successfully
+   */
+  function safeDebug( $install_mode, $class, $method, $message, $errnum, $level ) {    
+    if( $install_mode ) {
+      // we are in install mode, so don't use ZenMessageList
+      // determine the level of messages to show, normally this
+      // will be 1 (errors), in develop_mode we will relax this to 3(note)
+      $lvl = Zen::getIni('debug','develop_mode')? 3 : 1;
+      if( $lvl >= $level ) {
+        if( is_object($class) ) { $class = get_class($class); }
+        print "  (".ZenUtils::displayDebugLevel($level).") {$class}->{$method}: [$errnum]$message";
+      }
+    }
+    else {
+      // we are not in install mode, so send to ZenMessageList
+      Zen::debug($class, $method, $message, $errnum, $level);
+    }
+  }
+
+  /**
+   * Returns a human readable string representing the current debug level
+   *
+   * @param integer $level
+   * @return string
+   */
+  function displayDebugLevel( $level ) {
+    switch( $level ) {
+    case 1:
+      return "ERROR";
+    case 2:
+      return "WARNING";
+    case 3:
+      return "MESSAGE";
+    case 4:
+      return "DEBUG";
+    default:
+      return "";
+    }
+  }
 
 }
 

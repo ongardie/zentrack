@@ -9,7 +9,7 @@
    */
   
   /** @var The installation directory (determined by dropping two levels from here) */
-  $install_dir = preg_replace('#/utilities/tests/?#', '', dirname(__FILE__));
+  $install_dir = preg_replace('#[\\\\/]utilities[\\\\/]tests[\\\\/]?#', '', dirname(__FILE__));
   
   /** @var The location of the ini file(install/utilities) */
   $ini_file = $install_dir."/zen.ini";

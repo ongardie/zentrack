@@ -551,7 +551,7 @@ class ZenTargets {
         }
         else {
           // parse templates and write
-          $template = new ZenTemplate( $source );
+          $template = new ZenTemplate( $source, false );
           $template->values($bulk);
           $txt = $template->process();
           $fp = @fopen($dest, "w");
@@ -568,7 +568,7 @@ class ZenTargets {
         }
       }
       else {
-          print "   $dest exists: skipping(overwrite = false)\n";
+          print "   !!!$dest exists: skipping(overwrite = false), this file should be manually inspected for updates!\n";
       }
     }
     // update the last_config_update counter
