@@ -68,7 +68,7 @@
 </tr>
 <tr>
   <td class="bars">
-    <?=tr("Default Acces Level")?>
+    <?=tr("Default Access Level")?>
   </td>
   <td class="bars">
     <input type="text" name="access_level" value="<?=($access_level)? strip_tags($access_level) : 0?>" 

@@ -6,6 +6,10 @@
  endless possibilities for project expansion.
 
 ----- V2.4.1 (Development, See CVS) ----
+2003-04-27, Rob Hillis
+  Fix minor spelling error in add/edit user form.
+    - zentrack/includes/templates/userAdd.php 1.10
+
 2003-04-23, Rob Hillis
   Colour-code priorities for easy identification
     - zentrack/includes/templates/listTickets.php 1.11
