@@ -11,8 +11,20 @@ and user experience, internationalization, platform and database
 abstraction, and endless possibilities for project expansion. 
 --------------------
 
------ VERSION 2.5.0.2(development -----
+----- VERSION 2.5.0.2(development) -----
 
+2004-11-07, Kato
+  Added missing bugTo and bugFrom constants to configVars.php
+  
+
+2004-11-02, Kato
+  Added ability to use label or id for standard fields in data group files
+  Added validation for standard ticket fields to data group file entries
+  
+  Fixed "(invalid)" entry in custom_menu entries in project screen
+    [newProjectForm.php]
+    
+  
 2004-11-01, cfalonso
   Added character_set to ZENTRACK_SETTINGS. Used in function ffv. Modified files replacing htmlspecialchars and htmlentities with ffv.
     - zentrack_2/includes/zen.class 1.31
@@ -64,6 +76,14 @@ abstraction, and endless possibilities for project expansion.
     - zentrack_2/install/seed_oracle.sql 1.32
     - zentrack_2/install/seed_postgres.sql 1.28
 
+2004-10-20, Kato
+  Fixed db_listIndexed method
+    - zentrack_2/inclues/db.class 1.33
+  Fixed translation errors
+    - zentrack_2/includes/templates/listTickets.php 1.20
+    - zentrack_2/includes/templates/newTicketForm.php 1.35
+    - zentrack_2/www/projects.php 1.10
+    
 2004-10-19, cfalonso
   Added an option to delete data groups
     - zentrack_2/includes/zenTrack.class 1.156
@@ -73,8 +93,10 @@ abstraction, and endless possibilities for project expansion.
 
 2004-10-14, Kato
   Fixed missing -value_column- entry in behavior detail (only when using file groups)
-    - behaviorDetailForm
-    
+   - zentrack_2/includes/headerInc.php 1.50
+   - zentrack_2/includes/templates/behaviorDetailForm.php 1.7
+  Fixed problem with file based groups not showing more than one entry.
+   - zentrack_2/includes/zenTrack.class 1.155
 
 ----- VERSION 2.5.0.1(2004-10-14) -----
 
