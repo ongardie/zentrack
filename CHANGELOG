@@ -12,6 +12,9 @@ abstraction, and endless possibilities for project expansion.
 --------------------
 
 2004-11-16, cfalonso
+  Added ticket properties to custom screen (TK 150)
+    - zentrack_2/includes/zenTrack.class,v  1.164
+    - zentrack_2/includes/templates/ticket_customBox.php 1.7
   Don't show "click here to edit rules" after editing details of a Javascript or File data group (Bug #140)
     - zentrack_2/www/admin/addGroupSubmit.php 1.10
   Fix to log properly ticket edit's changes
