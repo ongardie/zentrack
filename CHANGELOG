@@ -7,6 +7,11 @@
 
 ----- V2.2.3 (development, see CVS) ----
 
+2003-03-07, Kato
+  Improved logoff functions
+  Thanks to roland spahn (rosp) for feedback
+    - includes/login.php 1.19
+
 2003-03-06, Kato
   Session enhancments: support for older versions of php, and hopefully
   will clear up problems for users experiencing multiple login requests
