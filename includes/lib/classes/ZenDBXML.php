@@ -424,7 +424,7 @@ class ZenDBXML {
     for($i=0; $i<count($fds['drop']); $i++) {
       $query = Zen::getNewQuery();
       $query->table('field_defs');
-      $query->match('table_name', ZEN_EQ, $fds['drop'][$i][0]);
+      $query->match('col_table', ZEN_EQ, $fds['drop'][$i][0]);
       $query->match('col_name', ZEN_EQ, $fds['drop'][$i][1]);
       $query->delete();
     }
@@ -594,16 +594,14 @@ class ZenDBXML {
     $root =& $parser->parse($file);
 
     // obtain all <dataRow> nodes
-    $dataRows = $root->getChild('dataRow');
+    $dataRows = $root->child('dataRow');
 
     // load dataRow vals into array
     $rows = array();
     $i=0;
     foreach($dataRows as $row) {
-      $set = $row->toArray(true);      
-      foreach( $set['children'] as $val ) {
-        $key = $val['name'];
-        $rows[$i][$key] = $val['data'];
+      foreach( $set->childSet() as $val ) {
+        $rows[$i][$val->name()] = $val->data();
       }
       $i++;
     }
@@ -630,10 +628,10 @@ class ZenDBXML {
    * Translates an array of field properties to field definitions for use in field_defs table
    */
   function _translatePropsToDefs( $table, $field, $props ) {
-    return array("table_name"      => $table,
+    return array("col_table"       => $table,
                  "col_name"        => $field,
                  "col_label"       => $props['label'],
-                 "col_form_type"   => $props['ftype'],
+                 "col_ftype"       => $props['ftype'],
                  "col_required"    => $props['required'],
                  "col_criteria"    => count($props['criteria'])?$props['criteria'][0]."=".$props['criteria'][1]:null,
                  "col_reference"   => $props['reference'],

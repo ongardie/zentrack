@@ -315,9 +315,9 @@ class ZenDbTypeInfo {
     $root =& $xp->parse($data);
 
     // obtain the dbinfo params
-    $dbinfo = $root->getChild("dbInfo",0);
-    foreach($dbinfo->getChildren() as $k=>$v) {
-      $this->_dbInfo[$k] = array('data'=>$v[0]->getData(), 'props'=>$v[0]->getProps());
+    $dbinfo = $root->child("dbInfo",0);
+    foreach($dbinfo->children() as $k=>$v) {
+      $this->_dbInfo[$k] = array('data'=>$v[0]->data(), 'props'=>$v[0]->props());
     }
     // validate dbinfo
     foreach($this->required_dbInfoNodes as $key) {
@@ -328,18 +328,18 @@ class ZenDbTypeInfo {
     }
 
     // obtain the data types
-    $types = $root->getChild("dataTypes",0);
-    foreach($types->getChild("dataType") as $v) {
+    $types = $root->child("dataTypes",0);
+    foreach($types->child("dataType") as $v) {
       // set data type info
-      $n = $v->getProperty('name');
-      $d = $v->getData();
+      $n = $v->prop('name');
+      $d = $v->data();
       // validate name
       if( isset($this->_dataTypes[$n]) || !$n ) {        
         $msg = $n? "Duplicate node $n detected" : "Name invalid/missing for dataType node";
         Zen::Debug($this, "_load", $msg, 103, LVL_WARN);
         $success = false;
       }
-      $this->_dataTypes[$n] = $v->getProps();
+      $this->_dataTypes[$n] = $v->props();
       // validate data type properties
       foreach($this->required_dataTypeProps as $key) {
         if( !isset($this->_dataTypes[$n][$key]) ) {
@@ -357,13 +357,13 @@ class ZenDbTypeInfo {
     }
 
     // get sqlInfo nodes
-    $sql = $root->getChild("sqlInfo",0);
+    $sql = $root->child("sqlInfo",0);
 
-    foreach($sql->getChildren() as $childArray) {
+    foreach($sql->children() as $childArray) {
       $child = $childArray[0];
-      $n = $child->getName();
-      $d = $child->getData();
-      $p = $child->getProps();
+      $n = $child->name();
+      $d = $child->data();
+      $p = $child->props();
       if( in_array($n,$this->_locations) && isset($p['location']) ) {
         $this->_locations[$n] = $p['location'];
       }

@@ -10,16 +10,18 @@ class ZenMetaField extends Zen {
   /**
    * CONSTRUCTOR
    *
-   * @param array $data is the schema array obtained from {@link ZenDbSchema::getColumnArray()}
+   * @param array $data is the schema array obtained from {@link ZenDbSchema::getColumnArray()} 
+   *   or null (for empty object)
    */
-  function ZenMetaField( $data ) {
+  function ZenMetaField( $data = null ) {
     // call Zen()
     $this->Zen();
     if( is_array($data) ) {
       $this->_load( $data );
     }
     else {
-      Zen::debug('ZenMetaField','ZenMetaField','No data provided, initializing empty field',0,LVL_DEBUG);      
+      Zen::debug('ZenMetaField','ZenMetaField','No data provided, initializing empty field',
+                 0,LVL_DEBUG);      
     }
   }
 
@@ -58,6 +60,10 @@ class ZenMetaField extends Zen {
    * @return mixed
    */
   function getProp( $property ) {
+    if( !$this->isProperty($property) ) {
+      ZenUtils::safeDebug($this, "getProp", "Requested invalid property: $property", 105, LVL_WARN);
+      return null;
+    }
     return $this->_data[$property];
   }
 
@@ -69,15 +75,17 @@ class ZenMetaField extends Zen {
    * @return boolean
    */
   function setProp( $property, $value ) {
-    if( $this->isProperty($property) ) {
-      $this->_updated = true;
-      $this->_data[$property] = $value;
-      return true;
+    if( !$this->isProperty($property) ) {
+      Zen::debug($this,'setProp','Not a property: $property', 105, LVL_WARN);      
+      return false;
     }
-    else {
-      Zen::debug($this,'setProp','Not a valid property: $property', 105, LVL_WARN);      
+    if( $this->immutable($property) ) {
+      ZenUtils::safeDebug($this, 'setProp', "Property $property cannot be edited", 105, LVL_WARN);
+      return false;
     }
-    return false;
+    $this->_updated = true;
+    $this->_data[$property] = $value;
+    return true;
   }
 
   /**
@@ -159,46 +167,47 @@ class ZenMetaField extends Zen {
     $query = Zen::getNewQuery();
     $query->table( 'FIELD_DEFS' );
     foreach( $this->_data as $k=>$v ) {
-      //todo
-      //todo
-      //todo
-      //todo come up with a better method
-      //todo to determine which fields go in db
-      //todo also, address problems with how to
-      //todo override xml vals, especially when
-      //todo desire is to override value with a blank
-      //todo
-      if( $this->immutable($k) ) {
-        $v = null;
-      }
       if( $k == 'criteria' ) {
-        $v = join("=",$v);
+        $v = is_array($v)? join("=",$v) : null;
       }
-      $query->field( ZenMetaDb::mapFieldPropToDb($k), $v );
+      if( !$this->immutable($k) ) {
+        $query->field( ZenMetaDb::mapFieldPropToDb($k), $v );
+      }
     }
-    $query->match( 'table_name', ZEN_EQ, $this->table() );
+    $query->match( 'col_table', ZEN_EQ, $this->table() );
     $query->match( 'col_name', ZEN_EQ, $this->name() );
     $res = $query->update();
     if( $res ) { $this->_updated = false; }
     Zen::debug($this, 'save', $this->name().": [$res] '".$query->getQueryString()."'", 0, LVL_DEBUG);
-    return $res;
+    return $res? true : false;
   }
 
   /**
-   * Determine if value provided is valid for db insertion
+   * Determine if value provided is valid for db insertion.
+   *
+   * It is important to note the possible return values when checking the return code
+   * from this function.
    *
    * @param mixed $value
    * @return mixed true if ok or a string containing the error
    */
   function validate( $value ) {
-    //todo
-    //todo
-    //todo
-    //todo deal with unique requirements
-
     // check empty vals
     if( $this->isRequired() && !strlen($value) ) {
       return "Field required";
+    }
+    else if( !strlen($value) ) {
+      return true;
+    }
+    
+    // check for unique constraints
+    if( $this->getProp('unique') && strlen($value) ) {
+      $query = Zen::getNewQuery();
+      $query->table( $this->table() );
+      $query->match( $this->name(), ZEN_EQ, $value );
+      if( $query->count() > 0 ) {
+        return "Is not unique";
+      }
     }
 
     // check data type
@@ -217,20 +226,8 @@ class ZenMetaField extends Zen {
     case "email":
       if( !preg_match("/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@([0-9a-z][0-9a-z.-]*[0-9a-z]\.)+[a-z]{2,3}$/i", $value) )
         return "Not an email address";
-      print "valid email\n";
       break;
     }
-
-    // deal with unique requirements
-    if( $this->getProp('unique') ) {
-      $query = Zen::getNewQuery();
-      $query->table( $this->table() );
-      $query->match( $this->name(), $value );
-      if( $query->count() > 0 ) {
-        return "Unique constraint violated (already an entry with this value)";
-      }
-    }
-
     return true;
   }
 
@@ -245,9 +242,11 @@ class ZenMetaField extends Zen {
     case 'ftype':
     case 'criteria':
     case 'reference':
-    case 'namefield':
+    case 'showfield':
     case 'required':
+    case 'unique':
       return $this->isCustom()? false : true;
+    case 'order':
     case 'label':
     case 'default':
     case 'description':
@@ -265,7 +264,7 @@ class ZenMetaField extends Zen {
   function listProperties() { 
     return array('name','label','size','type','ftype','notnull',
                  'required','criteria','reference','default','description',
-                 'custom','order','table','unique');
+                 'custom','order','table','unique','showfield');
   }
 
   /**

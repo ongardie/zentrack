@@ -47,7 +47,8 @@
       <notnull>1</notnull>
       <criteria type='zen'>bins</criteria>
       <reference>DBTEST.column_primarykey</reference>
-      <default>2</default>
+      <showfield>field_name</showfield>
+      <default></default>
       <description>a description</description>
       <custom>0</custom>
       <table>DATATYPE_TEST</table>
@@ -90,10 +91,32 @@
       <ftype>text</ftype>
       <notnull>1</notnull>
       <required>1</required>
+      <custom>1</custom>
       <description>a custom email description</description>
       <table>DATATYPE_TEST</table>
       <unique>1</unique>
     </field>
+    <load>
+      <field_name>test_field_1</field_name>
+      <isactive>1</isactive>
+      <field_pri>10</field_pri>
+      <syslock>0</syslock>
+      <descript>test 1 description</descript>
+    </load>
+    <load>
+      <field_name>test_field_2</field_name>
+      <isactive>1</isactive>
+      <field_pri>20</field_pri>
+      <syslock>0</syslock>
+      <descript>test 2 description</descript>
+    </load>
+    <load>
+      <field_name>test_field_3</field_name>
+      <isactive>0</isactive>
+      <field_pri>30</field_pri>
+      <syslock>1</syslock>
+      <descript>test 3 description</descript>
+    </load>
   </setup>
 
   <testdatatype>
@@ -267,6 +290,13 @@
       <param name='value'>Spifflock</param>
       <param name='expected' eval='true'>true</param>
     </pass_1>
+    <pass_2>
+      <param name='table'>DATATYPE_TEST</param>
+      <param name='field'>isactive</param>
+      <param name='set'>default</param>
+      <param name='value'>0</param>
+      <param name='expected' eval='true'>true</param>
+    </pass_2>
     <fail_1>
       <param name='table'>DATATYPE_TEST</param>
       <param name='field'>fjwefjewoi</param>
@@ -288,6 +318,124 @@
     </fail_3>
   </testsave>
 
-  
+  <testsetprop>
+    <pass_1>
+      <param name='name'>an_integer</param>
+      <param name='prop'>label</param>
+      <param name='newval'>spiffular</param>
+      <param name='expected' eval='true'>true</param>
+    </pass_1>
+    <pass_2>
+      <param name='name'>a_custom_email</param>
+      <param name='prop'>ftype</param>
+      <param name='newval'>select</param>
+      <param name='expected' eval='true'>true</param>
+    </pass_2>
+    <fail_1>
+      <param name='name'>a_primarykey</param>
+      <param name='prop'>ftype</param>
+      <param name='newval'>spiffular</param>
+      <param name='expected' eval='true'>false</param>
+    </fail_1>
+    <fail_2>
+      <param name='name'>a_custom_email</param>
+      <param name='prop'>type</param>
+      <param name='newval'>1</param>
+      <param name='expected' eval='true'>false</param>
+    </fail_2>
+  </testsetprop>
+
+  <testtable>
+    <test_1>
+      <param name='name'>an_integer</param>
+    </test_1>
+    <test_2>
+      <param name='name'>a_byte</param>
+    </test_2>
+    <test_3>
+      <param name='name'>a_string</param>
+    </test_3>
+    <test_4>
+      <param name='name'>a_primarykey</param>
+    </test_4>
+    <test_5>
+      <param name='name'>a_custom_email</param>
+    </test_5>    
+  </testtable>
+
+  <testupdated>
+    <pass_1>
+      <param name='name'>an_integer</param>
+      <param name='set'>label</param>
+      <param name='newval'>spiffular</param>
+      <param name='expected' eval='true'>true</param>
+    </pass_1>
+    <pass_2>
+      <param name='name'>a_custom_email</param>
+      <param name='set'>ftype</param>
+      <param name='newval'>select</param>
+      <param name='expected' eval='true'>true</param>
+    </pass_2>
+    <fail_1>
+      <param name='name'>a_primarykey</param>
+      <param name='set'>type</param>
+      <param name='newval'>spiffular</param>
+      <param name='expected' eval='true'>false</param>
+    </fail_1>
+    <fail_2>
+      <param name='name'>a_custom_email</param>
+      <param name='set'>type</param>
+      <param name='newval'>1</param>
+      <param name='expected' eval='true'>false</param>
+    </fail_2>
+  </testupdated>
+
+  <testvalidate>
+    <pass_1>
+      <param name='name'>an_integer</param>
+      <param name='newval'>24</param>
+      <param name='expected' eval='true'>true</param>
+    </pass_1>
+    <pass_2>
+      <param name='name'>a_byte</param>
+      <param name='newval'></param>
+      <param name='expected' eval='true'>true</param>
+    </pass_2>
+    <pass_3>
+      <param name='name'>a_string</param>
+      <param name='newval'>35</param>
+      <param name='expected' eval='true'>true</param>
+    </pass_3>
+    <pass_4>
+      <param name='name'>a_primarykey</param>
+      <param name='newval'>222</param>
+      <param name='expected' eval='true'>true</param>
+    </pass_4>
+    <pass_5>
+      <param name='name'>a_custom_email</param>
+      <param name='newval'>me-me_me128-24@here.tcc24.us.gov</param>
+      <param name='expected' eval='true'>true</param>
+    </pass_5>
+    <fail_1>
+      <param name='name'>an_integer</param>
+      <param name='newval'></param>
+      <param name='expected' eval='true'>false</param>
+    </fail_1>
+    <fail_2>
+      <param name='name'>a_byte</param>
+      <param name='newval'>2.5</param>
+      <param name='expected' eval='true'>false</param>
+    </fail_2>
+    <fail_3>
+      <param name='name'>a_primarykey</param>
+      <param name='newval'>0.1</param>
+      <param name='expected' eval='true'>false</param>
+    </fail_3>
+    <fail_4>
+      <param name='name'>a_custom_email</param>
+      <param name='newval'>memeeme@memememe</param>
+      <param name='expected' eval='true'>false</param>
+    </fail_4>
+  </testvalidate>
   
 </TestUnit>

@@ -74,7 +74,7 @@ class ZenMetaDb extends Zen {
       $this->_tables[$table]['fields'][$field] = array();
       foreach( $f as $key=>$val ) {
         if( $key == 'col_criteria' ) {
-          $val = explode('=',$val);
+          $val = $val? explode('=',$val) : null;
         }
         if( !is_null($val) ) {
           $this->_tables[$table]['fields'][$field][$this->mapFieldDbToProp($key)] = $val;
@@ -115,7 +115,6 @@ class ZenMetaDb extends Zen {
    * @return string
    */
   function mapFieldDbToProp( $column ) {
-    if( $column == 'table_name' ) { return 'table_name'; }
     return substr($column, 4);
   }
 
@@ -127,7 +126,6 @@ class ZenMetaDb extends Zen {
    * @return string
    */
   function mapFieldPropToDb( $property ) {
-    if( $property == 'table_name' ) { return 'table_name'; }
     return 'col_'.$property;
   }
   

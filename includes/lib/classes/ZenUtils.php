@@ -773,6 +773,7 @@ class ZenUtils {
    *  - helper: the text "helper"
    *  - subject: db table, form name, or type of helper(action,param,etc)
    *  - function: name of helper function
+   * </pre>
    *
    * The helper will be included from a file called helper_subject.php, this
    * will facilitate a means of including common functions without loading the

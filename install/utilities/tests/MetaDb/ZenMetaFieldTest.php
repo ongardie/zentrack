@@ -41,6 +41,11 @@
       $GLOBALS['testingSchemaOverride'] = dirname(dirname(__FILE__)).'/DB/'.$node->childData('xmlfile');
       $this->_schema = new ZenMetaDb( false, $GLOBALS['testingSchemaOverride'] );
 
+      // load some sample data to datatype_test table
+      foreach( $node->child('load') as $r ) {
+        Zen::simpleInsert('DATATYPE_TEST', $r->childSet());
+      }
+
       // load our sample fields
       $this->_fields = array();
       foreach( $node->child('field') as $f ) {
@@ -91,7 +96,7 @@
       $field = $this->_get($vals);
       $dat = $this->_dat($vals);
       $val = $field->getProp($p);
-      $exp = $dat[ $p ];
+      $exp = isset($dat[$p])? $dat[ $p ] : null;
       Assert::equals($val, $exp, "{$vals['name']}->{$p}: '$val' != '{$exp}'");
     }
 
@@ -105,7 +110,8 @@
     function testIsCustom( $vals ) {
       $field = $this->_get($vals);
       $dat = $this->_dat($vals);
-      Assert::equals($field->isCustom(), $dat['custom']);
+      $exp = isset($dat['custom'])? $dat['custom'] : null;
+      Assert::equals($field->isCustom(), $exp);
     }
 
     function testIsProperty( $vals ) {
@@ -117,56 +123,26 @@
 
     function testIsRequired( $vals ) {
       $field = $this->_get($vals);
-      $p = $vals['prop'];
-      Assert::equalsTrue($field->isRequired($p), $vals['expected'], 
+      Assert::equalsTrue($field->isRequired(), $vals['expected'], 
                          "{$vals['name']}: expected {$vals['expected']}");
     }
 
     function testName( $vals ) {
       $field = $this->_get($vals);
       $dat = $this->_dat($vals);     
-      Assert::equals($field->name(), $dat['name'], 
-                     "{$vals['name']}: '".$field->name()."' != '{$dat['name']}'");
-    }
-
-    function testSave( $vals ) {
-      $field = $this->_schema->getMetaField($vals['table'], $vals['field']);      
-      if( $vals['set'] ) {
-        $orig = $field->getProp($vals['set']);
-        $field->setProp($vals['set'], $vals['value']);
-      }
-      $res = $field->save();
-      Assert::equals($res, $vals['expected'], 
-                     "{$vals['name']}: return val $res != {$vals['expected']}");
-      if( $res ) {
-        // validate the entry in the database
-        $query = Zen::getNewQuery();
-        $query->table('FIELD_DEFS');
-        $query->match('table_name', $vals['table']);
-        $query->match('col_name', $vals['field']);
-        $vals = $query->selectRow(null, true);
-        foreach($vals as $key=>$val) {
-          Assert::equals($val, $field->prop($key), 
-                         "{$vals['name']}->{$key}: {$val} != ".$field->prop($key));
-        }
-        if( $vals['set'] ) {
-          // attempt to reset the database value to the original
-          $field->setProp($vals['set'], $orig);
-          $res = $field->save();
-          Assert::equalsTrue($res, "Unable to reset {$vals['table']}->{$vals['field']} to ".
-                             "$orig!!, this is a problem!!");
-        }
-      }
+      $exp = isset($dat['name'])? $dat['name'] : null;
+      Assert::assert($field->name() == $exp, 
+                     "{$vals['name']}: '".$field->name()."' != '{$exp}'");
     }
 
     function testSetProp( $vals ) {
       $field = $this->_get($vals);
-      $res = $field->setProp( $vals['field'], $vals['newval'] );
-      Assert::equals($res, $vals['expected'], 
+      $res = $field->setProp( $vals['prop'], $vals['newval'] );
+      Assert::assert($res == $vals['expected'], 
                      "{$vals['name']}->return_val: $res != {$vals['expected']}");
       if( $res ) {
-        Assert::equals($vals['newval'], $field->prop($vals['field']),
-                       "{$vals['name']}->prop: ".$field->prop($vals['field'])
+        Assert::assert($vals['newval'] == $field->getProp($vals['prop']),
+                       "{$vals['name']}->{$vals['prop']}: ".$field->getProp($vals['prop'])
                        ." != {$vals['expected']}");
       }
     }
@@ -174,30 +150,64 @@
     function testTable( $vals ) {
       $field = $this->_get($vals);      
       $dat = $this->_dat($vals);
-      Assert::equals($field->table(), $dat['table_name'], "{$vals['name']}: expected "
-                     .$dat['table_name'].", found ".$field->table());
+      Assert::assert($field->table() == $dat['table'], "{$vals['name']}: expected '"
+                     .$dat['table']."', found '".$field->table()."'");
     }
 
     function testUpdated( $vals ) {
       $field = $this->_get($vals);
       if( $vals['set'] ) {
-        $field->setProp($vals['field'], $vals['set']);
+        $field->setProp($vals['set'], $vals['newval']);
       }
-      Assert::equals($field->updated(), $vals['expected'], "{$vals['name']}: expected "
+      Assert::assert($field->updated() == $vals['expected'], "{$vals['name']}: expected "
                      .($vals['expected']? 'true' : 'false'));
     }
 
     function testValidate( $vals ) {
       $field = $this->_get($vals);
-      $res = $field->validate($vals['value']);
-      Assert::equals($res, $vals['expected'], "{$vals['name']}: expected "
-                     .($vals['expected']? 'true' : 'false') );
+      $res = $field->validate($vals['newval']);
+      Assert::assert( ($vals['expected'] && $res === true) || !$vals['expected'] && is_string($res), 
+                     "{$vals['name']}: expected ".($vals['expected']? 'true' : 'false')
+                     ." for value '{$vals['newval']}'" );
+      //todo: add a test for unique values
+    }
+
+    function testSave( $vals ) {
+      $field = $this->_schema->getMetaField($vals['table'], $vals['field']);      
+      if( isset($vals['set']) ) {
+        $orig = $field->getProp($vals['set']);
+        $field->setProp($vals['set'], $vals['value']);
+      }
+      $res = $field->save();
+      Assert::equals($res, $vals['expected'], 
+                     "{$vals['table']}->{$vals['field']}: return val $res != {$vals['expected']}");
+      if( $res ) {
+        // validate the entry in the database
+        $query = Zen::getNewQuery();
+        $query->table('FIELD_DEFS');
+        $query->match('table_name', ZEN_EQ, $vals['table']);
+        $query->match('col_name', ZEN_EQ, $vals['field']);
+        $vals = $query->selectRow(null, true);
+        foreach($vals as $key=>$val) {
+          Assert::assert($val == $field->getProp($key), 
+                         "{$vals['name']}->{$key}: {$val} != ".$field->getProp($key));
+        }
+        if( isset($vals['set']) ) {
+          // attempt to reset the database value to the original
+          $field->setProp($vals['set'], $orig);
+          $res = $field->save();
+          Assert::assert($res, "Unable to reset {$vals['table']}->{$vals['field']} to ".
+                             "$orig!!, this is a problem!!");
+        }
+      }
     }
 
     /** Clear out cached data and reset system */
     function unload() {
       // clear out any cached data
       ZenMetaDb::clearCacheInfo();
+      // clear data from test table
+      Zen::simpleDelete('DATATYPE_TEST');
     }
 
     /** Get a field from the loaded selection */

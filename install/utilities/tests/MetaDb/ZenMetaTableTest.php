@@ -28,7 +28,7 @@
 
     /** Load config file (gets params from <setup> node) */
     function load( $vals ) {
-      $vals = ZenXMLParser::getParmSet( $vals->getChild('param') );
+      $vals = ZenXMLParser::getParmSet( $vals->child('param') );
       // delete cache file to make sure it gets created with fresh data
       $this->unload();
       // load the schema

@@ -102,7 +102,7 @@ class Zen {
    * @param boolean $connect, if false, the adodb object is created, but not connected to db
    */
   function &getDbConnection( $connect = true ) {
-    if( !isset($GLOBALS['dbConnection']) || $GLOBALS['dbConnection'] == null ) {
+    if( !isset($GLOBALS['dbConnection']) ) {
       ZenUtils::safeDebug("Zen", "getDbConnection", "Creating database connection (cache empty)", 0, LVL_NOTE);
       $db = ZenUtils::getIni('db');
       $dir_cache = ZenUtils::getIni('directories','dir_dbcache');
@@ -116,6 +116,11 @@ class Zen {
                                                  $connect);
       $GLOBALS['dbConnection']->setCacheDirectory( $dir_cache );
       $GLOBALS['dbConnection']->setPrefix( $prefix );
+    }
+    // in the case that we call this once without a connect and again with one, we need to
+    // update the db connection accordingly
+    if( $connect && !$GLOBALS['dbConnection']->isConnected() ) {
+      $GLOBALS['dbConnection']->connect();
     }
     return $GLOBALS['dbConnection'];
   }

@@ -362,7 +362,7 @@ class ZenQuery extends Zen {
       $this->debug($this, 'count', 'There were entries in the field set, count() has cleared these values', 160, LVL_NOTE);
     }
     $this->_fields = array("count(*)");
-    return $this->_get($cacheTime);
+    return $this->get($cacheTime);
   }
   
   /**
@@ -475,8 +475,12 @@ class ZenQuery extends Zen {
    */
   function update() {
     $this->_queryType = 'UPDATE';
-    $this->_execute(false);
-    return $this->_dbobject->affectedRows();
+    if( $this->_execute(false) ) {
+      return $this->_dbobject->affectedRows();
+    }
+    else {
+      return 0;
+    }
   }
 
   /**
@@ -668,7 +672,7 @@ class ZenQuery extends Zen {
   function _whereClause() {
     if( $this->_searchParms ) {
       // open the clause
-      $clause = 'WHERE ';
+      $clause = ' WHERE ';
       // init the andor conditions
       $andors = array();
       // this says whether or not to add the andor condition 
@@ -710,7 +714,7 @@ class ZenQuery extends Zen {
       return $clause;
     }
     else if (count($this->_wheres) > 0) {
-      return 'WHERE ' . implode(' AND ', $this->_wheres);
+      return ' WHERE ' . implode(' AND ', $this->_wheres);
     }
     else {
       $this->debug($this, "_whereClause", "No where clause generated", 0, LVL_DEBUG);

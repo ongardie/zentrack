@@ -304,7 +304,7 @@
       <description>Meta information about tables and their fields</description>
       <columns>
         <column name="field_defs_id" type="primarykey" ftype="hidden" label="PrimeKey" />
-	<column name="table_name" type="value" ftype="immutable" label="Table">
+	<column name="col_table" type="value" ftype="immutable" label="Table">
           <notnull>true</notnull>
 	  <description>The table this field is in</description>
 	  <reference>TABLE_DEFS.tbl_name</reference>
@@ -316,7 +316,7 @@
 	  <description>What to call this field when it is displayed</description>
 	  <size>50</size>
 	</column>
-	<column name="col_form_type" type="value" ftype="select" label="Input Type">
+	<column name="col_ftype" type="value" ftype="select" label="Input Type">
 	   <description>Type of field to show on forms</description>
 	   <criteria type='standard'>ftypes</criteria>
            <notnull>true</notnull>
@@ -332,9 +332,9 @@
 	</column>
       </columns>
       <indexList>
-        <index name="fldefs_tblname">table_name</index>
+        <index name="fldefs_tblname">col_table</index>
 	<index name="fldefs_col">col_name</index>
-	<index name="fldefs_sort">table_name,col_name</index>
+	<index name="fldefs_sort">col_table,col_name</index>
       </indexList>
     </table>
 

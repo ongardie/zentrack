@@ -166,11 +166,11 @@ class ZenXNode {
    */
   function show() {
     $pad = "style='margin-left:20px'";
-    print "<li><span style='color:#009900'><b>".strtoupper($this->_name)."</b></span></li>\n";
+    print "<li><span style='color:#009900'><b>".strtoupper($this->name())."</b></span></li>\n";
     print "<ul $pad>\n";
-    if( count($this->_props) ) {
+    if( count($this->props()) ) {
       print "<li>Properties</li><ul $pad>\n";
-      foreach($this->_props as $k=>$v) {
+      foreach($this->props() as $k=>$v) {
         print "<li>$k: $v</li>\n";
       }
       print "</ul>\n";
@@ -388,14 +388,14 @@ class ZenXNode {
     $node = new ZenXNode( &$parent, $vals['name'], $vals['properties'] );
     // add data if applicable
     if( isset($vals['data']) ) {
-      $node->data( $vals['data'] );
+      $node->setData( $vals['data'] );
     }
     // create child objects if applicable
     if( isset($vals['children']) && is_array($vals['children']) ) {
       foreach($vals['children'] as $k=>$nodes) {
         for($i=0; $i<count($nodes); $i++) {
           // create child and store reference in this node
-          $node->child( $this->createNodeFromArray(&$node, $nodes[$i]) );
+          $node->setChild( $this->createNodeFromArray(&$node, $nodes[$i]) );
         }
       }
     }
@@ -422,12 +422,7 @@ class ZenXNode {
   /** 
    * @return string name of the node 
    */
-  function name() { return $this->getName(); }
-
-  /**
-   * Alias for {@link name()}
-   */
-  function getName() { return $this->_name; }
+  function name() { return $this->_name; }
 
   /**
    * Return the parent node for this one
@@ -436,15 +431,10 @@ class ZenXNode {
    */
   function &parent() { return $this->_parent; }
 
-  /**
-   * Alias for {@link parent()}
-   */
-  function &getParent() { return $this->parent(); }
-
   /** 
    * @return String any data contained in this node: <code><node>...data...</node></code>
    */
-  function data() { return $this->getData(); }
+  function data() { return $this->_data; }
 
   /**
    * Locates the child node and returns the getData() results from that node, or null
@@ -458,20 +448,10 @@ class ZenXNode {
     return $child? $child->data() : null;
   }
 
-  /**
-   * Alias for {@link data()}
-   */
-  function getData() { return $this->_data; }
-
   /** 
    * @return array properties from this node: <code><node property="prop..."></code>
    */
-  function props() { return $this->getProps(); }
-
-  /**
-   * Alias for {@link props()}
-   */
-  function getProps() { return $this->_props; }
+  function props() { return $this->_props; }
 
   /** 
    * Returns the children of each node... note that the value of each array element is also an array, since
@@ -482,11 +462,6 @@ class ZenXNode {
   function children() { return $this->_children; }
 
   /**
-   * Alias for {@link children()}
-   */
-  function getChildren() { return $this->children(); }
-
-  /**
    * Returns a unique array of children for this node.  If more than one child exists for any name, only
    * the first one will be returned
    *
@@ -494,10 +469,10 @@ class ZenXNode {
    * @return array associative array contains (string)name mapped to either (ZenXNode)child or (String)data 
    *         (based on value of $dataonly)
    */
-  function childSet() {
+  function childSet($dataonly = false) {
     $vals = array();
     foreach($this->_children as $k=>$n) {
-      $vals[$k] = $n[0];
+      $vals[$k] = $dataonly? $n[0]->data() : $n[0];
     }
     return $vals;
   }
@@ -507,33 +482,26 @@ class ZenXNode {
    *
    * @param string $child the name of the child object to retrieve
    * @param integer $index [optional] if provided, returns only the specific ZenXNode, otherwise array of matches
-   * @return mixed a single child ZenXNode, if the index is provided, or the array of children mathing this name
+   * @return mixed a single child ZenXNode, if the index is provided, or the array of children mathing this name 
+   *     (or null if not found)
    */
-  function child( $child, $index = null ) { return $this->getChild($child,$index); }
-
-  /**
-   * Alias for {@link child()}
-   */
-  function getChild( $child, $index = null ) { 
-    if( isset($this->_children["$child"]) ) {
+  function child( $child, $index = null ) { 
+    if( !isset($this->_children[$child]) || $index && !isset($this->_children[$child][$index]) ) {
+      return null;
+    }
+    else {
       return strlen($index)? $this->_children[$child][$index] : $this->_children[$child]; 
     }
-    else { return null; }
   }
 
   /**
    * Returns a count of children matching the keyname
+   *
+   * @return integer or null if child doesn't exist
    */
-  function count($child) { return $this->getChildCount($child); }
-
-  /**
-   * Alias for {@link count()}
-   */
-  function getChildCount( $child ) {
-    if( isset($this->_children["$child"]) ) {
-      return count($this->_children["$child"]);
-    }
-    return 0;
+  function count($child) {
+    $vals = $this->child($child); 
+    return $vals? count($vals) : null;
   }
 
   /**
@@ -541,16 +509,8 @@ class ZenXNode {
    * @param string $prop is name of property to retrieve
    * @return String value of a node property or null if not set
    */
-  function prop($prop) { return $this->getProperty($prop); }
-
-  /**
-   * Alias for {@link prop()}
-   */
-  function getProperty( $prop ) {
-    if( isset($this->_props["$prop"]) )
-      return $this->_props["$prop"];
-    else 
-      return null;
+  function prop($prop) { 
+    return isset($this->_props[$prop])? $this->_props[$prop] : null;
   }
 
   /** @var string $_name the name of this node */
