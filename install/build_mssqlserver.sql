@@ -61,12 +61,8 @@ CREATE TABLE ZENTRACK_LOGS (
 
 CREATE TABLE ZENTRACK_PREFERENCES (
  [user_id] int NOT NULL default '0',
- bin int default NULL,
- [log] varchar(255) default NULL,
- [time] varchar(255) default NULL,
- [close] varchar(255) default NULL,
- test varchar(255) default NULL,
- PRIMARY KEY (user_id)
+ prefname varchar(25) default NULL,
+ prefval varchar(50) default NULL
 );
 
 --
@@ -239,3 +235,4 @@ CREATE TABLE ZENTRACK_REPORTS_TEMP (
 );
 
 create nonclustered index tempreports_created on ZENTRACK_REPORTS_TEMP(created) ;
+create nonclustered index userprefs_user on ZENTRACK_PREFERENCES(user_id);

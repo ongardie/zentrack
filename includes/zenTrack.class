@@ -1680,21 +1680,60 @@ class zenTrack extends zen {
     return( $this->db_result($query) );
   }
 
-  function add_prefs( $user_id, $params ) {
-    // adds prefs for a user_id
-
-    $params["user_id"] = $user_id;
-    list($cols,$vals) = $this->makeInsertVals($params);
-    $query = "REPLACE INTO ".$this->table_preferences." ($cols) values($vals)";
-    return( $this->db_result($query) );
+  function get_prefs( $user_id, $pref = '' ) {
+    $query = "SELECT * FROM ".$this->table_preferences
+      ." WHERE user_id = $user_id";
+    if( $pref ) {
+      $query .= " AND prefname = '$prefname'";
+    }
+    $vals = array();
+    $vars = $this->db_queryIndexed($query);
+    if( is_array($vars) ) {
+      foreach($vars as $v) {
+	$n = $v["prefname"];
+	$vals["$n"] = $v["prefval"];
+      }
+    }
+    return $vals;
   }
 
-  function delete_prefs( $user_id ) {
+  function update_prefs( $user_id, $params, $prefname = '' ) {
+    $this->delete_prefs($user_id, $prefname);
+    return $this->add_prefs($user_id,$params);
+  }
+
+  function add_prefs( $user_id, $params ) {
+    // adds prefs for a user_id
+    
+    $i = 0;
+    foreach($params as $p) {
+      $vars = array("user_id"=>$user_id);
+      foreach($p as $k=>$v) {
+	$vars["prefname"] = $k;
+	$vars["prefval"] = $v;
+      }
+      list($cols,$vals) = $this->makeInsertVals($vars);
+      $query = "INSERT INTO ".$this->table_preferences
+	." ($cols) values($vals)";
+      $res = $this->db_result($query);
+      if( $res ) {
+	$i++;
+      }
+      $this->addDebug("add_prefs","$res/$query",3);
+    }
+    return( $i );
+  }
+
+  function delete_prefs( $user_id, $prefname = '' ) {
     // deletes prefs entries by user_id
     // user_id can be an array      
-
     $query = "DELETE FROM ".$this->table_preferences." WHERE user_id = $user_id";
-    return( $this->db_result($query) );
+    if( $prefname ) {
+      $query .= " AND prefname = '$prefname'";
+    }
+    $res = $this->db_result($query);
+    $this->addDebug("delete_prefs","$res/$query",3);
+    return( $res );
   }
 
   function reset_password( $user_id ) {

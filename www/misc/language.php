@@ -1,0 +1,55 @@
+<?{
+
+  /*
+  **  CHANGE LANGUAGE PREFERENCE
+  **  
+  **  Change the language of preference
+  **  logged in user.
+  **
+  */
+  
+  include("../header.php");
+
+  $page_tile = tr("Change Language");
+  $expand_options = 1;
+  $skip = 0;
+  if( isset($TODO) && $TODO == 'LANG' ) {
+    if( isset($newlang) ) {
+      $newlang = preg_replace("/[^0-9a-zA-Z_-]/", "", $newlang);
+    }
+    if( file_exists("$libDir/translations/$newlang.trans") ) {
+      $login_language = $newlang;
+      $params = array("language"=>$newlang);
+      $res = $zen->update_prefs($login_id, array($params), "language");
+      if( $res > 0 ) {
+	$msg[] = tr("Your language has been changed to $newlang");
+	$skip = 1;
+      }
+      else {
+	$errs[] = tr("The language could not be changed to $newlang");
+      }
+    } else {
+      $errs[] = tr("The language file chosen was not valid");
+    }
+  }
+
+  include("$libDir/nav.php");
+?>
+  <table width="600" align="center">
+  <tr><td>
+<?
+  if( is_array($errs) ) {
+    $zen->printErrors($errs);
+  }
+  if( isset($skip) && $skip ) {
+    include("$templateDir/optionsMenu.php");
+  } else {
+    include("$templateDir/languageForm.php");
+  }
+?>
+  </td></tr>
+  </table>
+<?
+  include("$libDir/footer.php");
+
+}?>

@@ -58,11 +58,16 @@
   /**
    * Translator Object Initialization (mlively)
    */
+  // set language to default if unspecified 
+  if( !$login_language ) {
+    $login_language = $zen->settings["language_default"];
+  }
+
   //Create the initialization array for the translator object
   $translator_init = array(
      'domain' => 'translator',
      'path' => "$libDir/translations",
-     'locale' => $lang
+     'locale' => $login_language
   );
   $translator_init['zen'] =& $zen;
   tr($translator_init);
@@ -120,28 +125,28 @@
      
      if( is_array($login_messages) ) {
        $i = 0;
-   foreach( $login_messages as $v ) {
-      if( $style != "smallGrey" && $v[2] ) {
-         $style = "small$v[2]";
-      } else if( $style != "smallGrey" ) {
-         $style = "smallBold";
-      }
-      $login_messages[$i][2] = "Grey";
-      if( $style == "smallGrey" && $flag )
-        break;
-      print "<br><span class='$style'>";
-      print "[".$zen->showTime($v[1])."] ";
-      print $v[0]."</span>\n";
-   }  
+       foreach( $login_messages as $v ) {
+	 if( $style != "smallGrey" && $v[2] ) {
+	   $style = "small$v[2]";
+	 } else if( $style != "smallGrey" ) {
+	   $style = "smallBold";
+	 }
+	 $login_messages[$i][2] = "Grey";
+	 if( $style == "smallGrey" && $flag )
+	   break;
+	 print "<br><span class='$style'>";
+	 print "[".$zen->showTime($v[1])."] ";
+	 print $v[0]."</span>\n";
+       }  
      } else {
-   print "<span class='smallGrey'>No system messages</span>";
+       print "<span class='smallGrey'>No system messages</span>";
      }
   }
 
   function clear_system_messages() {
-     // deletes all system messages
-     global $login_messages;
-     unset($login_messages);
+    // deletes all system messages
+    global $login_messages;
+    unset($login_messages);
   }
 
   if( isset($newbin) && $newbin == 'all' ) {
@@ -156,12 +161,26 @@
   $msg = array();
   $errs = "";
   $mode = "";
-  if( isset($id) )
+  if( isset($id) ) {
      $id = ereg_replace("[^0-9]", "", $id);
+  }
 
-  // used to set table cell padding (since netscape can't handle padding-top/bottom)
+  // used to set table cell padding (since netscape cant handle padding-top/bottom)
   $height_num = $zen->settings["font_size"]+4;
-  
+
+  // function to retrieve the available languages from the translations/ dir  
+  function get_languages_available() { 
+    global $libDir;
+    $dir = opendir("$libDir/translations");
+    $vals = array();
+    while( false !== ($file = readdir($dir)) ) {
+      if( preg_match("/\.trans$/",$file) ) {
+	$vals[] = basename($file, ".trans");
+      }
+    }
+    closedir($dir);
+    return $vals;
+  } 
   
   /*
   **  TICKET NAVIGATION TABS

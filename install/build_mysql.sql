@@ -74,13 +74,10 @@ CREATE TABLE ZENTRACK_LOGS (
 #
 
 CREATE TABLE ZENTRACK_PREFERENCES (
-  user_id int(12) NOT NULL default '0',
-  bin int(12) default NULL,
-  log varchar(255) default NULL,
-  time varchar(255) default NULL,
-  close varchar(255) default NULL,
-  test varchar(255) default NULL,
-  PRIMARY KEY (user_id)
+  user_id  int(12) NOT NULL default '0',
+  prefname varchar(25),
+  prefval  varchar(50),
+  index (user_id)
 ) TYPE=MyISAM;
 
 #

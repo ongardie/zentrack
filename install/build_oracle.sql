@@ -76,12 +76,8 @@ CREATE TABLE ZENTRACK_LOGS (
 
 CREATE TABLE ZENTRACK_PREFERENCES (
   user_id number(12) DEFAULT 0,
-  bin number(12) default NULL,
-  log varchar2(255) default NULL,
-  time varchar2(255) default NULL,
-  close varchar2(255) default NULL,
-  test varchar2(255) default NULL,
-  CONSTRAINT preferences_pk PRIMARY KEY (user_id)
+  prefname varchar2(25) default NULL,
+  prefval  varchar2(50) default NULL
 ) ;
 
 --
@@ -276,3 +272,4 @@ create sequence reports_temp_id_seq        start with 1001 nocache;
 --
 
 CREATE INDEX REPINDEX_COMB ON ZENTRACK_REPORTS_INDEX (user_id,bid);
+CREATE INDEX USERPREF_USER ON ZENTRACK_PREFERENCES (user_id);

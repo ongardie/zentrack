@@ -97,12 +97,9 @@ CREATE TABLE ZENTRACK_LOGS_ARCHIVED (
 --
 
 CREATE TABLE ZENTRACK_PREFERENCES (
-  user_id int8 default '0' NOT NULL PRIMARY KEY,
-  bin int8 default NULL,
-  log varchar(255) default NULL,
-  time varchar(255) default NULL,
-  "close" varchar(255) default NULL,
-  test varchar(255) default NULL
+  user_id int8 default '0' NOT NULL,
+  prefname varchar(25) default NULL,
+  prefval  varchar(50) default NULL
 );
 
 --

@@ -1,19 +1,9 @@
 
-# 
-# Table structure for table 'ZENTRACK_NOTIFY_LIST' 
-# 
+DROP TABLE ZENTRACK_PREFERENCES;
 
-CREATE TABLE ZENTRACK_NOTIFY_LIST (
-   notify_id int(12) NOT NULL auto_increment,
-   ticket_id int(12) NOT NULL,
-   user_id int(12) default NULL,
-   name varchar(100) default NULL,
-   email varchar(150) default NULL,
-   priority int(12) default NULL,
-   notes varchar(255) default NULL,
-   PRIMARY KEY (notify_id)
-);
-
-DROP TABLE ZENTRACK_TRANSLATION_STRINGS;
-DROP TABLE ZENTRACK_TRANSLATION_WORDS;
-
+CREATE TABLE ZENTRACK_PREFERENCES (
+  user_id  int(12) NOT NULL default '0',
+  prefname varchar(25),
+  prefval  varchar(50),
+  index (user_id)
+) TYPE=MyISAM;

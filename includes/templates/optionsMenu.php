@@ -8,5 +8,6 @@
     <br><b><a href="<?=$rootUrl?>/misc/cookie.php"><?=tr("Remember My Password")?></a></b>
     <? } ?>
     <br><b><a href="<?=$rootUrl?>/misc/homebin.php"><?=tr("Change Default Bin")?></a></b>
+    <br><b><a href="<?=$rootUrl?>/misc/language.php"><?=tr("Change Language")?></a></b>
   </ul>
 </ul>

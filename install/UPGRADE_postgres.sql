@@ -1,21 +1,9 @@
 
---
--- ID SEQUENCES
---
-CREATE SEQUENCE "notify_id_seq" start 1001 increment 1 maxvalue 2147483647 minvalue 1 cache 1;
+DROP TABLE ZENTRACK_PREFERENCES;
 
---
--- TABLE STRUCTURE FOR ZENTRACK_NOTIFY_LIST
--- 
-CREATE TABLE ZENTRACK_NOTIFY_LIST (
-   notify_id int8 default nextval('"notify_id_seq"') NOT NULL PRIMARY KEY,
-   ticket_id int(12) NOT NULL,
-   user_id int(12) default NULL,
-   name varchar(100) default NULL,
-   email varchar(150) default NULL,
-   priority int(12) default NULL,
-   notes varchar(255) default NULL
+CREATE TABLE ZENTRACK_PREFERENCES (
+  user_id int8 default '0' NOT NULL,
+  prefname varchar(25) default NULL,
+  prefval  varchar(50) default NULL
 );
 
-DROP TABLE ZENTRACK_TRANSLATION_STRINGS;
-DROP TABLE ZENTRACK_TRANSLATION_WORDS;

@@ -43,6 +43,7 @@ $session_vars = array("login_name",
 		      "login_bin",
 		      "login_mode",
 		      "login_messages",
+		      "login_language",
 		      "project_mode",
 		      "ticket_mode");
 
