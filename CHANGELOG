@@ -9,6 +9,11 @@
 
 ----- V2.5 RC2 [Pre 2] (2004-08-30) -----
 
+2004-09-03, Kato
+  Prep for work on the paging features
+
+  Some minor cleanup
+	
 2004-09-02, Kato
   Added contacts feature
     - zentrack_2/includes/headerInc.php 1.43

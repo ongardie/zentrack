@@ -44,11 +44,10 @@ class zenTrack extends zen {
     if( $flag ) {
       return $vars;  
     } else {
-      $bins = $this->getBins();
-      for($i=0; $i<count($vars); $i++) {
-        $n = $vars[$i]['bin_id'];
-        if( isset($bins["$n"]) ) {
-          $vals["$n"] = $vars[$i]['lvl'];
+      $vals = array();
+      if( is_array($vars) ) {
+        foreach($vars as $v) {
+          $vals["{$v['bin_id']}"] = $v['lvl'];
         }
       }
       return( $vals );
@@ -251,9 +250,14 @@ class zenTrack extends zen {
    * @param string $sort [optional] comma separated list for ORDER BY clause
    * @param string $columns [optional] comma separated list of columns to select 
    */
-  function get_tickets( $params = '', $sort = 'priority desc, otime desc', $columns = '', $archive_flag = 0 ) {
+  function get_tickets( $params = '', $sort = 'priority desc, otime desc', 
+                        $columns = '', $archive_flag = 0 ) {
     $tf_pri = preg_match("/priority/", $sort);
 
+    //added for paging feature
+    $pageNumber = array_key_exists('pageNumber', $_GET)? 
+                $this->checkNum($_GET['pageNumber']) : 0;
+    
     $tables = $this->table_tickets;
     if( $tf_pri ) {
       $tbl = $this->table_tickets;
@@ -273,8 +277,15 @@ class zenTrack extends zen {
     $query = "SELECT ".join(",",$columns)." FROM $tables $where";
     if( $sort )
       $query .= " ORDER BY $sort";
-    $this->addDebug("get_tickets",$query,3);
-    return( $this->db_queryIndexed($query) );
+    $this->addDebug("get_tickets","numtoshow=".$numtoshow.",start=".$start.",query=".$query,3);
+
+    //return( $this->db_queryIndexed($query) );
+    //paging feature
+    $numtoshow = $this->settings['paging_max_rows'];
+    $start = $pageNumber * $numtoshow;
+    $this->total_records = $this->db_getrowcount($query);
+    return($this->db_getlimitedIndex($query,$numtoshow,$start));
+    //return( $this->db_queryIndexed($query) );
   }      
 
   function get_user( $user_id ) {
@@ -1302,6 +1313,10 @@ class zenTrack extends zen {
     // if archive_flag = 1, then searches ticket archives as well
     // if archive_flag = 2, then searches archives only
 
+    //added for paging feature
+    $pageNumber = array_key_exists('pageNumber', $_GET)? 
+                $this->checkNum($_GET['pageNumber']) : 0;
+    
     $where = $this->build_search_clause($params, $andor);
     
     if( $archive_flag ) {
@@ -1337,7 +1352,12 @@ class zenTrack extends zen {
       ." WHERE $where"
       ." ORDER BY $order_by";
     $this->addDebug("search_ticketsQuery:",$query,3);
-    return(  $this->db_queryIndexed($query) );      
+    // return(  $this->db_queryIndexed($query) );      
+    //paging feature
+    $numtoshow = $this->settings['paging_max_rows'];
+    $start = $pageNumber * $numtoshow;
+    $this->total_records = $this->db_getrowcount($query);
+    return($this->db_getlimitedIndex($query,$numtoshow,$start));
   }
 
   function _hasCustomFields($params) {
@@ -2492,12 +2512,16 @@ class zenTrack extends zen {
       // encrypt the password
       $params["passphrase"] = $this->encval($params["passphrase"]);
     }
+    if ($params["homebin"] == 'all') {
+      // put the value as -1 for all bin
+      $params["homebin"] = -1;
+    }
     foreach($params as $k=>$v) {
       if( !strlen($v) ) {
-	if( $k == "active" )
-	  $params["$k"] = 1;
-	else
-	  $params["$k"] = "NULL";
+        if( $k == "active" )
+        $params["$k"] = 1;
+        else
+        $params["$k"] = "NULL";
       }
     }
     $set = $this->makeInsertVals($params,1);
@@ -2516,18 +2540,18 @@ class zenTrack extends zen {
     $user_id = $this->checkNum($user_id);
     foreach($params as $k=>$v) {
       if( !strlen($v[0]) )
-	$v[0] = 'NULL';
+      $v[0] = 'NULL';
       if( !strlen($v[1]) )
-	$v[1] = 'NULL';
+      $v[1] = 'NULL';
       else
-	$v[1] = "$v[1]";
+      $v[1] = "$v[1]";
       $arr = array( "user_id"=>$user_id,
-		    "bin_id"=>$k,
-		    "lvl"=>$v[0],
-		    "notes"=>$v[1] );
+      "bin_id"=>$k,
+      "lvl"=>$v[0],
+      "notes"=>$v[1] );
       $res = $this->db_insert($this->table_access,$arr);
       if( $res )
-	$i++;
+      $i++;
     }
     return($i);
   }
@@ -2548,7 +2572,7 @@ class zenTrack extends zen {
     //   1    - by bin_id
     //   2    - by access_id
     // $id can be an array
-
+    
     if( $flag == 1 )
       $field = "bin_id";
     else if( $flag == 2 )
@@ -2581,8 +2605,8 @@ class zenTrack extends zen {
     $vars = $this->db_queryIndexed($query);
     if( is_array($vars) ) {
       foreach($vars as $v) {
-	$n = $v["prefname"];
-	$vals["$n"] = $v["prefval"];
+        $n = $v["prefname"];
+        $vals["$n"] = $v["prefval"];
       }
     }
     return $vals;
@@ -2601,15 +2625,15 @@ class zenTrack extends zen {
     foreach($params as $p) {
       $vars = array("user_id"=>$user_id);
       foreach($p as $k=>$v) {
-	$vars["prefname"] = $k;
-	$vars["prefval"] = strlen($v)? $v : "NULL";
+        $vars["prefname"] = $k;
+        $vars["prefval"] = strlen($v)? $v : "NULL";
       }
       list($cols,$vals) = $this->makeInsertVals($vars);
       $query = "INSERT INTO ".$this->table_preferences
-	." ($cols) values($vals)";
+      ." ($cols) values($vals)";
       $res = $this->db_result($query);
       if( $res ) {
-	$i++;
+        $i++;
       }
       $this->addDebug("add_prefs","$res/$query",3);
     }
@@ -4829,6 +4853,111 @@ class zenTrack extends zen {
     return ($url);
   }
   
+  // added to the url string for the navigation links.
+  // This is specially important to have dynamic links,
+  // so if you want to add extra options to the queries,
+  // the class is going to add it to the navigation links
+  // dynamically.
+  //paging feature
+  function build_geturl()
+   {
+    list($fullfile, $voided) = explode("?", $_ENV['REQUEST_URI']);
+    $cgi = $_ENV['REQUEST_METHOD'] == 'GET' ? $_GET : $_POST;
+
+    reset ($cgi);
+    while (list($key, $value) = each($cgi)) {
+      if (( $key != "username" ) && ($key != "passphrase") ){
+        if (is_array($value)) {
+          foreach ($value as $key1 => $value1) {
+             $query_string .= "&" . $key . "%5B" . $key1 . "%5D" . "=" . $value1;
+          }
+       } elseif (($key != "pageNumber"))
+        $query_string .= "&" . $key . "=" . $value;
+      }
+    }
+    return array($query_string, $fullfile);
+   }
+
+  //fucntion for adding the paging feature
+  // This function creates an array of all the links for the
+  // navigation bar. This is useful since it is completely
+  // independent from the layout or design of the page.
+  // The function returns the array of navigation links to the
+  // caller php script, so it can build the layout with the
+  // navigation links content available.
+  //
+  // $option parameter (default to "all") :
+  //  . "all"   - return every navigation link
+  //  . "pages" - return only the page numbering links
+  //  . "sides" - return only the 'Next' and / or 'Previous' links
+  //
+  // $show_blank parameter (default to "off") :
+  //  . "off" - don't show the "Next" or "Previous" when it is not needed
+  //  . "on"  - show the "Next" or "Previous" strings as plain text when it is not needed
+  function get_links($option = "all", $show_blank = "off") {
+
+     $numtoshow = $this->settings['paging_max_rows'];
+     $extra_vars = $this->build_geturl();
+     $pageNumber = array_key_exists('pageNumber', $_GET)? 
+                 $this->checkNum($_GET['pageNumber']) : 0;
+     $file = $this->file;
+     $activePages = 10;
+     $number_of_pages = ceil($this->total_records/ $numtoshow);
+     $subscript = 0;
+     $backnos = intval($activePages/2);
+     if ( $pageNumber > 0) {
+       if ( ($pageNumber - $backnos) < 1 )
+          $current = 0;
+       else
+       $current = $pageNumber - $backnos;
+     }
+     else {
+        $current = 0;
+        $maxrow = $activePages;
+     }
+     if ( $current == 0 )
+       $maxrow = $activePages;
+     elseif ( $pageNumber > 0)
+       $maxrow = $activePages + $pageNumber - $backnos ;
+
+     $prev = tr('Prev');
+     $next = tr('Next');
+       
+     if ( ($maxrow  >= $number_of_pages) && ($number_of_pages > $activePages)  && ($pageNumber > 0 ) ) {
+        $maxrow = $number_of_pages ;
+        $current = $maxrow - $activePages;
+     } elseif ( $number_of_pages <= $activePages) {
+        $maxrow = $number_of_pages;
+        $current = 0;
+     }
+     $this->addDebug("Total pages",$number_of_pages,3);
+     $this->addDebug("Back Nos",$backnos,3);
+     $this->addDebug("Max Row",$maxrow,3);
+     $this->addDebug("Current",$current,3);
+     $this->addDebug("Row",$pageNumber,3);
+     for ($current ; $current < $maxrow; $current++) {
+       if ((($option == "all") || ($option == "sides")) ) {
+         if ($pageNumber != 0)
+           $array[0] = '<A HREF="' . $file . '?pageNumber=' . ($pageNumber - 1) . $extra_vars . '">'.$prev.'</A>';
+         elseif (($pageNumber == 0) && ($show_blank == "on"))
+           $array[0] = $prev;
+       }
+       if (($option == "all") || ($option == "pages")) {
+         if ($pageNumber == $current)
+           $array[++$subscript] = ($current > 0 ? ($current + 1) : 1);
+         else
+           $array[++$subscript] = '<A HREF="' . $file . '?pageNumber=' . $current . $extra_vars . '">' . ($current + 1) . '</A>';
+       }
+       if ((($option == "all") || ($option == "sides")) && ($current == ($maxrow - 1))) {
+         if ($pageNumber != ($maxrow - 1))
+           $array[++$subscript] = '<A HREF="' . $file . '?pageNumber=' . ($pageNumber + 1) . $extra_vars . '">' . $next . '</A>';
+         elseif (($pageNumber == ($maxrow - 1)) && ($show_blank == "on"))
+           $array[++$subscript] = $next;
+       }
+     }
+     return $array;
+  }  
+  
   /*
   **  VARIABLES TO CONFIGURE (in config file)
   */
@@ -4900,6 +5029,10 @@ class zenTrack extends zen {
   var $templateDir;
   var $attachmentsDir;
 
+  // paging feature
+   var $total_records;
+   var $file;  
+  
   // others
 
   var $elapsed_unit;

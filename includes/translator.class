@@ -37,7 +37,8 @@ function tr($string, $vals = '') {
     $translator->setLocale($string['locale']);
     return true;
   }
-  if( is_array($vals) ) {
+  if( $vals ) {
+    if( !is_array($vals) ) { $vals = array($vals); }
     return $translator->ptrans($string,$vals);
   }
   else {

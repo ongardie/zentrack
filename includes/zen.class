@@ -82,7 +82,8 @@ class zen extends zenDate {
      // converts special characters to ascii codes
      // to be used in <input> fields
      if( strlen($val) ) {
-       $val = htmlspecialchars($val,ENT_QUOTES);
+       $val = str_replace('&amp;', '&', $val);
+       $val = htmlspecialchars(stripslashes($val),ENT_QUOTES);
      }
      return $val;
    }

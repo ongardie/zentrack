@@ -69,27 +69,27 @@ $items = $zen->get_contacts($parms,"ZENTRACK_AGREEMENT_ITEM",$sort);
 </tr>
 <tr><td colspan="4"> 
 <table>
-	   <?
-	     if (is_array($items)) {
-
-		
-	 			 foreach($items as $t) {      
-      		?>
-   					<tr  class='priority1'>
-   					<td><?=$t["item_id"]?></td>
-   					<td height="25" width="50%" align="middle">
-    				<?=strtoupper($t["name1"])?>
-   					</td>
-   					<td height="25" width="50%" align="middle" >
-   					<?=strtolower($t["description1"])?>
-   					</td>
-   					</tr>   
-   				<?   
-   				} 
-   		
-  		} else {
-	 				echo "<tr><td colspan='4'>No items are set</td></tr>" ;
-  		}?>
+<?
+if (is_array($items)) {
+  
+  
+  foreach($items as $t) {      
+    ?>
+    <tr  class='priority1'>
+    <td><?=$t["item_id"]?></td>
+    <td height="25" width="50%" align="middle">
+    <?=strtoupper($t["name1"])?>
+    </td>
+    <td height="25" width="50%" align="middle" >
+    <?=strtolower($t["description1"])?>
+    </td>
+    </tr>   
+    <?   
+  } 
+  
+} else {
+  echo "<tr><td colspan='4'>No items are set</td></tr>" ;
+}?>
 </table>
 </td</tr>  	
 
@@ -102,39 +102,39 @@ $items = $zen->get_contacts($parms,"ZENTRACK_AGREEMENT_ITEM",$sort);
        
 <table width="120" cellpadding="0" cellspacing="0" border="0">
 <?
-			print "<tr>\n<form name='edit_form' action='$rootUrl/actions/agreement_edit.php'>\n";
-			print "<td>\n";
-			print "<input type='submit' class='actionButtonContact' value='EDIT'>\n";
-			print "<input type='hidden' name='id' value='$agree_id'>\n";
-			print "</td>\n</form>\n</tr>\n";
-			
-			if ($status=="1") {
-				$active = "0";
-				$value = "ARCHIVE";
-			} else {
-				$active = "1";
-				$value = "ACTIVATE";
-			}
-			
-			print "<tr>\n<form name='archief_form' action='$rootUrl/actions/agreement_archive.php'>\n";
-			print "<td>\n";
-			print "<input type='submit' class='actionButtonContact'  value='$value'";
-			print " onClick='return confirm(\"";
-	                print tr("Are you sure you want to archive this agreement?");
-	                print "\")'";
-			print ">\n";
-			print "<input type='hidden' name='id' value='$agree_id'>\n";
-			print "<input type='hidden' name='active' value='$active'>\n";
-			print "</td>\n</form>\n</tr>\n";
+print "<tr>\n<form name='edit_form' action='$rootUrl/actions/agreement_edit.php'>\n";
+print "<td>\n";
+print "<input type='submit' class='actionButtonContact' value='EDIT'>\n";
+print "<input type='hidden' name='id' value='$agree_id'>\n";
+print "</td>\n</form>\n</tr>\n";
 
-			
-  		print "<tr>\n<form name='delete_form' action='$rootUrl/actions/agreement_delete.php'>\n";
-			print "<td>\n";
-			print "<input type='submit' class='actionButtonContact'  value='".uptr('delete')."'";
-			print " onClick='return confirm(\"Are you sure you want to permanently delete this contact\")'";
-			print ">\n";
-			print "<input type='hidden' name='id' value='$agree_id'>\n";
-			print "</td>\n</form>\n</tr>\n";
+if ($status=="1") {
+  $active = "0";
+  $value = "ARCHIVE";
+} else {
+  $active = "1";
+  $value = "ACTIVATE";
+}
+
+print "<tr>\n<form name='archief_form' action='$rootUrl/actions/agreement_archive.php'>\n";
+print "<td>\n";
+print "<input type='submit' class='actionButtonContact'  value='$value'";
+print " onClick='return confirm(\"";
+print tr("Are you sure you want to archive this agreement?");
+print "\")'";
+print ">\n";
+print "<input type='hidden' name='id' value='$agree_id'>\n";
+print "<input type='hidden' name='active' value='$active'>\n";
+print "</td>\n</form>\n</tr>\n";
+
+
+print "<tr>\n<form name='delete_form' action='$rootUrl/actions/agreement_delete.php'>\n";
+print "<td>\n";
+print "<input type='submit' class='actionButtonContact'  value='".uptr('delete')."'";
+print " onClick='return confirm(\"Are you sure you want to permanently delete this contact\")'";
+print ">\n";
+print "<input type='hidden' name='id' value='$agree_id'>\n";
+print "</td>\n</form>\n</tr>\n";
 ?>
 </table>
      </td>

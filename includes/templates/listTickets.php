@@ -3,7 +3,7 @@
 if( !$page_type )
   $page_type = "ticket";
   
-if( is_array($tickets) ) {
+if( is_array($tickets) && count($tickets) ) {
       ?>
         <table width="100%" cellspacing='1' cellpadding='2' bgcolor='<?=$zen->settings["color_alt_background"]?>'>
    <tr bgcolor="<?=$zen->settings["color_title_background"]?>">
@@ -100,9 +100,9 @@ if( is_array($tickets) ) {
 } else {
   if( $login_bin && $login_bin != -1 ) {
     $viewbin = $login_bin? $zen->bins["$login_bin"] : "any bin";
-    print "<p>&nbsp;</p><ul><b>".tr('No open ?s in ?', array($page_type,$zen->bins["$login_bin"])).".</b></ul>";
+    print "<p>&nbsp;</p><ul><b>".tr('No open ?s in ?', array( tr($page_type), $zen->bins["$login_bin"])).".</b></ul>";
   } else {
-    print "<p>&nbsp;</p><ul><b>".tr("No ?s were found", $page_type).".</b></ul>";
+    print "<p>&nbsp;</p><ul><b>".tr("No ?s were found", tr($page_type) ).".</b></ul>";
   }
 }
   

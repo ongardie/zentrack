@@ -1,12 +1,13 @@
 <form method="post" name="agreementForm" action="<?=($skip)? "editAgreementSubmit.php" : "$rootUrl/addAgreementSubmit.php"?>">
-<input type="hidden" name="id" value="<?=strip_tags($id)?>">
+<input type="hidden" name="id" value="<?=$zen->ffv($id)?>">
+<input type='hidden' name='TODO' value='submit_form'>
 <?
 if(isset($creator_id)) { ?>
-<input type="hidden" name="creator_id" value="<?=strip_tags($creator_id)?>">	
+<input type="hidden" name="creator_id" value="<?=$zen->ffv($creator_id)?>">	
 <?
 }
 if(isset($create_time)) { ?>
-<input type="hidden" name="create_time" value="<?=strip_tags($create_time)?>">	
+<input type="hidden" name="create_time" value="<?=$zen->ffv($create_time)?>">	
 <?
 }
 ?>
@@ -27,11 +28,11 @@ if(isset($create_time)) { ?>
 
 <tr>
   <td class="bars" >
-    <?=tr("Contract nr:")?>:
+    <?=tr("Contract ID")?>:
   </td>
   <td class="bars">
     <input type="text" name="contractnr" size="20" maxlength="25"
-      value="<?=strip_tags($contractnr)?>">
+      value="<?=$zen->ffv($contractnr)?>">
   </td>
 </tr>  
 <?
@@ -64,7 +65,7 @@ $company = $zen->get_contact_all();
   </td>
   <td class="bars">
     <input type="text" name="title" size="30" maxlength="50"
-value="<?=strip_tags($title)?>">
+value="<?=$zen->ffv($title)?>">
   </td>
 </tr>          
 
@@ -74,7 +75,7 @@ value="<?=strip_tags($title)?>">
   </td>
   <td class="bars">
     <input type="text" name="stime" size="12" maxlength="10"
-value="<?=($stime)?$zen->showDate(strip_tags($stime)):""?>">
+value="<?=($stime)?$zen->showDate($zen->ffv($stime)):""?>">
     <img name="date_button" src='<?=$rootUrl?>/images/cal.gif' 
   onClick="popUpCalendar(this,document.agreementForm.stime, '<?=$zen->popupDateFormat()?>')"
   alt="Select a Date">
@@ -88,7 +89,7 @@ value="<?=($stime)?$zen->showDate(strip_tags($stime)):""?>">
   </td>
   <td class="bars">
     <input type="text" name="dtime" size="12" maxlength="10"
-value="<?=($dtime)?$zen->showDate(strip_tags($dtime)):""?>">
+value="<?=($dtime)?$zen->showDate($dtime):""?>">
     <img name="date_button" src='<?=$rootUrl?>/images/cal.gif' 
   onClick="popUpCalendar(this,document.agreementForm.dtime, '<?=$zen->popupDateFormat()?>')"
   alt="Select a Date">
@@ -104,7 +105,7 @@ value="<?=($dtime)?$zen->showDate(strip_tags($dtime)):""?>">
 <tr>
   <td colspan="2" class="bars">
     <textarea cols="60" rows="5" name="description"><?= 
-   ereg_replace("&","&amp;",stripslashes($description)); 
+	    $zen->ffv($description)
     ?></textarea>
   </td>
 </tr>
@@ -122,7 +123,6 @@ value="<?=($dtime)?$zen->showDate(strip_tags($dtime)):""?>">
    <br>
   </td>
 </tr>
-</form>
 
 <tr>
   <td colspan="2" class="subTitle">
@@ -131,9 +131,6 @@ value="<?=($dtime)?$zen->showDate(strip_tags($dtime)):""?>">
 </tr>
 <tr>
   <td colspan="2" class="bars">
-  <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
-  <input type="hidden" name="id" value="<?=$id?>">
-  <input type="hidden" name="test" value="test1">
   <table>
   <?
   if (!$id){
@@ -149,22 +146,22 @@ value="<?=($dtime)?$zen->showDate(strip_tags($dtime)):""?>">
 	
 	
 
-	$tickets = $zen->get_contacts($parms,"ZENTRACK_AGREEMENT_ITEM",$sort);
+	$contacts = $zen->get_contacts($parms,"ZENTRACK_AGREEMENT_ITEM",$sort);
 
-  if (is_array($tickets)) {
-	 //print_r($tickets); 
+  if (is_array($contacts)) {
+	 //print_r($contacts); 
 	
-	 foreach($tickets as $t) {      
+	 foreach($contacts as $t) {      
       ?>
    <tr  class='priority1' >
    <td height="25" width="20" valign="middle">
     <?=$t["item_id"]?>
    </td>
    <td height="25" width="200" valign="middle">
-    <?=ucfirst($t["name1"])?>
+    <?=$zen->ffv($t["name1"])?>
    </td>
    <td height="25"  width="400" valign="middle">
-   <?=ucfirst($t["description1"])?>
+   <pre><?=$zen->ffv($t["description1"])?></pre>
    </td>
    <td class='bars'><input type='checkbox' name='drops[]' value='<?=$t['item_id']?>'></td>
    </tr>   
@@ -173,7 +170,10 @@ value="<?=($dtime)?$zen->showDate(strip_tags($dtime)):""?>">
    <tr>
 	<td colspan="2">
          <input type="submit" 
-	  value=" <?=tr("Drop Items")?> " class="actionButton" style="width:125;color:#CCFFCC"> 
+	  value=" <?=tr("Drop Items")?> " 
+          class="actionButton"
+          onClick='return rerouteAgreementForm("removeItems")'
+         > 
 	</td>
 	</tr>
 	<?
@@ -185,13 +185,8 @@ value="<?=($dtime)?$zen->showDate(strip_tags($dtime)):""?>">
  
    </table>
   </td>
-  </form>
 </tr>
 
-
-<form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST">
-<input type="hidden" name="id" value="<?=strip_tags($id)?>">
-<input type="hidden" name="test" value="test">
 <tr>
   <td colspan="2" class="subTitle">
     <?=tr("Add Item")?>
@@ -209,9 +204,19 @@ value="<?=($dtime)?$zen->showDate(strip_tags($dtime)):""?>">
 </tr>
 <tr>
 <td>
-<input type="submit" value=" <?=tr("Add Item")?> " class="actionButton" style="width:125;color:#CCFFCC"> 
+<input type="submit" value=" <?=tr("Add Item")?> " 
+   onClick='return rerouteAgreementForm("addItems")'
+   class="actionButton">
 </td>
 </tr>
 </form>
 
 </table>
+
+<script language='javascript'>
+  function rerouteAgreementForm( action ) {
+    document.agreementForm.action = '<?=$_SERVER['PHP_SELF'];?>';
+    document.agreementForm.TODO.value = action;
+    return true;
+  }
+</script>
