@@ -69,6 +69,34 @@
   function characterData($parser, $data) {
     $this->_current->data( $data );
   }
+
+  /** 
+   * STATIC: Process a set of parm tags from an xml node 
+   *
+   * The parm tags must have a name="" attribute, which
+   * will be used to create the index for the return values
+   *
+   * and may optionally include an eval='true' attribute, which
+   * will cause the node data to be run with $param = eval(..data..)
+   * (thus it must include valid php code)
+   */
+  function getParmSet( $node ) {
+    $parms = array();
+    if( is_array($node) ) {
+      foreach($node as $parm) {
+        $key = $parm->getProperty('name');
+        if( $parm->getProperty('eval') == 'true' ) {
+          $val = $parm->getData();
+          eval("\$parms[\$key] = $val;");
+        }
+        else {
+          $parms[$key] = $parm->getData();
+        }
+      }
+    }
+    return $parms;
+  }
+
 }
 
 

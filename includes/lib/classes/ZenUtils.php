@@ -109,13 +109,16 @@ class ZenUtils {
    * STATIC: Prints an array out as formatted text (debug utility)
    *
    * @param array $vals can be key/value, multi-level, etc
+   * @param string $title printed as title of array
    * @return boolean true if the object was valid and printed
    */
-  function printArray( $vals ) {
+  function printArray( $vals, $title = null ) {
     if( !is_array($vals) ) { return false; }
+    if( $title ) { print "<p><b>$title</b><div style='font-size:11px'>\n"; }
     print "<pre>\n";
     print_r($vals);
     print "</pre>\n";
+    if( $title ) { print "</div>\n"; }
     return true;
   }
 

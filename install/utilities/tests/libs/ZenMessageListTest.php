@@ -23,40 +23,82 @@
    */
   class ZenMessageListTest extends Test {
 
+    /** @var ZenMessageList object */
     var $obj;
+
+    /** @var array of ZenXNode objects, each representing a message to add in the load method */
+    var $msgvals;
 
     function ZenMessageListTest() {
       $this->obj = new ZenMessageList( dirname(__FILE__)."/ZenMessageListTest_config.xml" );
-      $this->obj->add( $this, 'ZenMessageListTest', 'Constructed new list for testing', 00, 3 );
+    }
+    
+    function load( $node = null ) {
+      $this->obj->clearMessages();
+      if( $node ) { 
+        $this->msgvals = $node->getChild('message');
+      }
+      foreach($this->msgvals as $m) {
+        $parms = ZenXMLParser::getParmSet($m->getChild('param'));
+        $this->obj->add( $parms['class'], $parms['method'], $parms['message'], 
+                         $parms['errnum'], $parms['lvl'] );
+      }
     }
 
-    function testAddAMessage( $vals ) {
+    function testAddMessage( $vals ) {
+      // store the current count of messages in the list
+      $beforecount = $this->obj->count( $vals['lvl'] );
+      $beforetotal = $this->obj->count();
+      // try to add the item to the list
       $bool = $this->obj->add( $vals['class'], $vals['method'], $vals['message'], $vals['errnum'], $vals['lvl'] );
       if( $vals['expected'] == true ) {
-	Assert::equalsTrue( $bool, "{$vals['class']}->{$vals['method']}:{$vals['message']}" );
+        // check that counts have increased and the method returned true
+        $bool = ($bool == true 
+                 && $this->obj->count( $vals['lvl'] ) > $beforecount
+                 && $this->obj->count() > $beforetotal);
+	Assert::equalsTrue( $bool, "{$vals['class']}->{$vals['method']}[{$vals['lvl']}]: failed to add" );
       }
       else {
-	Assert::equalsFalse( $bool, "{$vals['class']}->{$vals['method']}:{$vals['message']}" );
+        // check that counts have not increased and that the method returned false
+        $bool = ($bool == false
+                 && $this->obj->count( $vals['lvl'] ) == $beforecount
+                 && $this->obj->count() == $beforetotal);
+	Assert::equalsTrue( $bool, "{$vals['class']}->{$vals['method']}[{$vals['lvl']}]:"
+                            ."failed to skip" );
       }
     }
 
-    function testFilter( $vals ) {
-      //todo
-
-      //todo clearFilters() when done
-    }
-
-    function testGetArray( $vals ) {
-      //todo
+    function testGetArray() {      
+      $this->load();
+      Assert::equals( count($this->obj->getArray()), count($this->msgvals) );
     }
 
     function testClearMessages() {
-      //todo
+      $this->load();
+      Assert::assert( $this->obj->count() > 0, "Messages did not load properly" );
+      $this->obj->clearMessages();
+      Assert::equals( $this->obj->count(), 0 );
     }
 
-    //todo
-    //todo create a test for each method... be sure to differentiate between static and non-static methods
+    function testFilter( $vals ) {
+      // make sure message list starts empty
+      $this->load();
 
+      // get count of messages loaded
+      $count1 = $this->obj->count();
+      Assert::assert( $this->obj->count() == count($this->msgvals), 
+                      "Messages not loaded, check setup node" );
+      
+      // add some filters and check new count
+      $this->obj->filter( $vals['lvl'], $vals['class'], $vals['method'], $vals['errnum'] );
+      Assert::equals( $this->obj->count(), $vals['expected'], "Filter count "
+                      .$this->obj->count()." != ".$vals['expected'] );
+      
+      // drop the filters and check count again
+      $this->obj->clearFilters();
+      Assert::equals( $this->obj->count(), count($this->msgvals),
+                      "Clear filters did not reset to start point" );
+    }
 
   }
 

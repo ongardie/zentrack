@@ -10,7 +10,7 @@
   <class name="Zen">
     <method name="getTicket" level="3" />
     <method name="getSetting" level="2" />
-  </clas
+  </class>
 
   <format>
     <block>

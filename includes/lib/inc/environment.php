@@ -33,7 +33,7 @@
   if( $ft > $_SESSION['configLastUpdated'] || $ft < 1 ) {
     clearZenSessionCache();
     $_SESSION['configLastUpdated'] = $ft;
-    $_SESSION['zen'] = Zen::read_ini( $ini_file );
+    $_SESSION['zen'] = ZenUtils::read_ini( $ini_file );
   }
   unset($ft);
 

@@ -5,7 +5,13 @@
      **************************
      test data for PHPUnit tests
 
-     This data should contain nodes
+     An optional <setup> node can
+     appear in the list, if it exists
+     then it will be passed as the
+     ZenXNode to the (assumed to exist)
+     $this->load() method
+
+     The xml file should contain nodes
      named the same as the method the
      data applies to.
 
@@ -30,7 +36,30 @@
      **************************
   -->
 
-  <!-- //todo: add other tests to this datafile -->
+  <!-- setup params are passed to the load() method to prepare the class -->
+  <setup>
+     <message>
+       <param name='class'>defaultclass</param>
+       <param name='method'>defaultmethod</param>
+       <param name='message'>A message not in config list, but matching root level</param>
+       <param name='errnum'>1</param>
+       <param name='lvl'>1</param>
+     </message>
+     <message>
+       <param name='class'>ZenDatabase</param>
+       <param name='method'>defaultmethod</param>
+       <param name='message'>A message matching a class but not a method</param>
+       <param name='errnum'>100</param>
+       <param name='lvl'>2</param>
+     </message>
+     <message>
+       <param name='class'>Zen</param>
+       <param name='method'>getTicket</param>
+       <param name='message'>A message mathcing a class and method</param>
+       <param name='errnum'>100</param>
+       <param name='lvl'>3</param>
+     </message>
+  </setup>
 
   <testaddmessage>
     <good_1>
@@ -84,4 +113,42 @@ should match root, "I'm putting some junk in these for fun\n!</param>
     </bad_3>
   </testaddmessage>
 
+  <testfilter>
+    <classtest>
+      <param name='class'>Zen</param>
+      <param name='method'></param>
+      <param name='errnum'></param>
+      <param name='lvl'></param>
+      <param name='expected'>1</param>
+    </classtest>
+    <methodtest>
+      <param name='class'></param>
+      <param name='method'>getTicket</param>
+      <param name='errnum'></param>
+      <param name='lvl'></param>
+      <param name='expected'>1</param>
+    </methodtest>
+    <errnumtest>
+      <param name='class'></param>
+      <param name='method'></param>
+      <param name='errnum'>100</param>
+      <param name='lvl'></param>
+      <param name='expected'>2</param>
+    </errnumtest>
+    <leveltest>
+      <param name='class'></param>
+      <param name='method'></param>
+      <param name='errnum'></param>
+      <param name='lvl'>2</param>
+      <param name='expected'>2</param>
+    </leveltest>
+  </testfilter>
+
 </TestUnit>
+
+
+
+
+
+
+

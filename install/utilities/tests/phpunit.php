@@ -10,13 +10,13 @@ function errorHandler($errno, $errstr, $errfile, $errline)
   switch($errno) 
     {
     case E_USER_ERROR:
-      echo "Fatal error: $errstr<br>";
+      echo "<span style='color:#660000'>Fatal error: $errstr</span><br>";
       echo "Skipping remaining tests for this unit...";
       $ERROR_FOUND    = true;
       $ERROR_CRITICAL = true;
       break;
     case E_USER_WARNING:
-      echo $errstr . '<br>';
+      echo "<span style='color:#660000'>$errstr</span><br>";
       $ERROR_FOUND = true;
       break;
     case E_WARNING:
@@ -29,6 +29,7 @@ function errorHandler($errno, $errstr, $errfile, $errline)
       break;
     case E_ERROR:
       echo "PHP ERROR on line <b>$errline</b> of file <b>$errfile</b>";
+      echo "$errstr<br>";
       echo "<br><b>Aborting...</b>";
       exit -1;
       break;
@@ -93,8 +94,11 @@ class Test {
     if( $xml ) {
       $parser = new ZenXMLParser();
       $xmlnode =& $parser->parse($xml);
+      if( $xmlnode ) {
+	$child = $xmlnode->getChild('setup');
+	if( $child ) { $this->load($child[0]); }
+      }
     }    
-    $node = null;    
 
     foreach ($methods as $method) {
       // Don't continue running tests if something really bad happened.
@@ -105,6 +109,7 @@ class Test {
       // Run a test if this method applies
       if (strlen($method) > 4 && substr($method, 0, 4) == 'test') {
 	$ERROR_FOUND = false;
+	$node = null;
 	if( $xmlnode ) {
 	  $n = $xmlnode->getChild($method); 
 	  if( $n ) {
@@ -116,20 +121,9 @@ class Test {
 	  foreach( $sets as $testname=>$valset ) {
 	    $ERROR_FOUND = false;
 	    $TESTS_TOTAL++;
-	    $parms = array();
-	    $children = $valset[0]->getChild('param');
-	    if( is_array($children) ) {
-	      foreach($children as $parm) {
-		$key = $parm->getProperty('name');
-		if( $parm->getProperty('eval') == 'true' ) {
-		  $val = $parm->getData();
-		  eval("\$parms[\$key] = $val;"); 
-		}
-		else {
-		  $parms[$key] = $parm->getData();
-		}
-	      }
-	    }
+	    $val = $valset[0];
+	    $children = $val->getChild('param');
+	    $parms = ZenXMLParser::getParmSet( $children );
 	    $this->_openRow( "{$method}->$testname" );
 	    $this->$method( $parms );
 	    if( !$ERROR_FOUND ) { $TESTS_COMPLETED++; }
@@ -146,16 +140,18 @@ class Test {
       }
     }
   }
-
+    
+  /** Print html for a new table row */
   function _openRow( $name ) {
     static $css;
     $css = ($css=='light')? 'dark' : 'light';
     echo "\t<tr>\n";
-    echo "\t  <td class=$css width=50 nowrap valign=top>";
+    echo "\t  <td class=$css width=200 nowrap valign=top>";
     echo "$name</td>\n";
     echo "\t  <td class=$css valign=top>";
   }
 
+  /**  Print html to close data row */
   function _closeRow( $err ) {
     if (!$err) {
       echo "<b>OK</b>";

@@ -1,0 +1,14 @@
+
+.error {
+  color: #990000;
+  font-weight: bold;
+}
+
+.warn {
+  color: #000000;
+}
+
+.msg {
+  color: #999999;
+}
+

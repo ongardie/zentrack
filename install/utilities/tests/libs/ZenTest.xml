@@ -1,11 +1,16 @@
-
 <TestUnit>
 
   <!-- 
      **************************
      test data for PHPUnit tests
 
-     This data should contain nodes
+     An optional <setup> node can
+     appear in the list, if it exists
+     then it will be passed as the
+     ZenXNode to the (assumed to exist)
+     $this->load() method
+
+     The xml should contain nodes
      named the same as the method the
      data applies to.
 
@@ -40,7 +45,7 @@
       <param name='cat'>debug</param>
       <param name='name'>develop_mode</param>
       <param name='expected' eval='true'>true</param>
-    </testDevelopMode>
-  </test2>
+    </test2>
+  </testgetinival>
 
 </TestUnit>

@@ -61,6 +61,7 @@ class ZenMessageList extends Zen {
    * @return boolean whether message was added or not
    */
   function add( $class, $method, $message, $errnum, $level = 3 ) { 
+    if( is_object($class) ) { $class = get_class($class); }
     if( !strlen($class) ) {
       $class = "default";
       $method = "default";
@@ -97,16 +98,14 @@ class ZenMessageList extends Zen {
    */
   function outputHTML( $debug = false ) { 
     // open an outer block
-    $txt = $this->_blockformat[0];
-    
-    foreach($this->_messages as $m) {
-      if( $this->_show($m) ) {
-        $l = $m->getLevel();      
-        $s = "[".$m->getNumber()."] ".$m->get();
-        if( $debug )
-          $s = $m->getClass()."->".$m->getMethod().": ".$s;
-        $txt .= $this->_msgformat[$l][0].$s.$this->_msgformat[$l][1];
-      }
+    $vars = $this->getArray();
+    $txt = $this->_blockformat[0]."\n";
+    foreach($vars as $m) {
+      $l = $m->getLevel();      
+      $s = "[".$m->getNumber()."] ".$m->get();
+      if( $debug )
+        $s = $m->getClass()."->".$m->getMethod().": ".$s;
+      $txt .= $this->_msgformat[$l][0].$s.$this->_msgformat[$l][1]."\n";
     }
 
     // close the outer block
@@ -150,11 +149,25 @@ class ZenMessageList extends Zen {
    * @return array of ZenMessage objects in an array (ordered as they were entered)
    */
   function getArray() { 
-    return $this->_messages;
+    $vals = array();
+    foreach($this->_messages as $m) {
+      if( $this->_show($m) ) {
+	$vals[] = $m;
+      }
+    }
+    return $vals;
   }
 
   /**
    * filters the current message objects by the given parameters
+   *
+   * The filters can all be either an array or string, behaviors as follows:
+   * <ul>
+   *   <li>level: (array)must be in this list, (integer)must be <= this integer
+   *   <li>class: (array)must be in this list, (string)must be this class
+   *   <li>method: (array)must be in this list, (string)must be this method
+   *   <li>errornum (array)must be in this list, (string)must be this error number
+   * </ul>
    *
    * @param integer $level is the error level to meet
    * @param mixed $class the class(es) to limit results to
@@ -164,9 +177,10 @@ class ZenMessageList extends Zen {
   function filter($level = null, $class = null, $method = null, $errnum = null) { 
     $this->_filters = array();    
     $this->_filters["level"] = $level;
-    $this->_filters["class"] = $class;
-    $this->_filters["method"] = $method;
+    $this->_filters["class"] = ($class)? strtolower($class) : null;
+    $this->_filters["method"] = ($method)? strtolower($method) : null;
     $this->_filters["errnum"] = $errnum;
+    $this->_recount();
   }
 
   /**
@@ -183,32 +197,36 @@ class ZenMessageList extends Zen {
     // shorthand
     $f = $this->_filters;
 
+    // calcs
+    $msgclass = strtolower($msg->getClass());
+    $msgmethod = strtolower($msg->getMethod());
+
     // check level
-    if( $f["level"] && ( 
-          (is_array($f["level"]) && in_array($msg->getLevel(),$f["level"]))
+    if( strlen($f["level"]) && ( 
+          (is_array($f["level"]) && !in_array($msg->getLevel(),$f["level"]))
             ||
-          (!is_array($f["level"]) && $f["level"] == $msg->getLevel())
+          (!is_array($f["level"]) && $f["level"] < $msg->getLevel())
        ) ) return false;
 
     // check class
     if( $f["class"] && ( 
-          (is_array($f["class"]) && in_array($msg->getClass(),$f["class"]))
+          (is_array($f["class"]) && !in_array($msgclass, $f["class"]))
             ||
-          (!is_array($f["class"]) && $f["class"] == $msg->getClass())
+          (!is_array($f["class"]) && $f["class"] != $msgclass)
        ) ) return false;
 
     // check method
     if( $f["method"] && ( 
-          (is_array($f["method"]) && in_array($msg->getMethod(),$f["method"]))
+          (is_array($f["method"]) && !in_array($msgmethod,$f["method"]))
             ||
-          (!is_array($f["method"]) && $f["method"] == $msg->getMethod())
+          (!is_array($f["method"]) && $f["method"] != $msgmethod)
        ) ) return false;
 
     // check error number
-    if( $f["errnum"] && ( 
-          (is_array($f["errnum"]) && in_array($msg->getErrnum(),$f["errnum"]))
+    if( strlen($f["errnum"]) && ( 
+          (is_array($f["errnum"]) && !in_array($msg->getErrnum(),$f["errnum"]))
             ||
-          (!is_array($f["errnum"]) && $f["errnum"] == $msg->getNumber())
+          (!is_array($f["errnum"]) && $f["errnum"] != $msg->getNumber())
        ) ) return false;
 
     // everything passed to return true
@@ -218,12 +236,18 @@ class ZenMessageList extends Zen {
   /**
    * resets all filter criteria
    */
-  function clearFilters() { $this->_filters = null; }
+  function clearFilters() { 
+    $this->_filters = array(); 
+    $this->_recount();
+  }
 
   /**
    * Clears all messages stored in list
    */
-  function clearMessages() { $this->_messages = array(); }
+  function clearMessages() { 
+    $this->_messages = array(); 
+    $this->_recount();
+  }
 
   /**
    * Tells if a message should be logged or ignored
@@ -268,6 +292,20 @@ class ZenMessageList extends Zen {
   }
 
   /**
+   * Recalculates the counts, used when filters are applied, etc
+   */
+  function _recount() {
+    $this->_counts = array("total"=>0);
+    $vals = $this->getArray();
+    foreach($vals as $v) {
+      $l = $v->getLevel();
+      $this->_counts['total']++;
+      if( !isset($this->_counts["level"][$l]) ) { $this->_counts["level"][$l] = 1; }
+      else { $this->_counts["level"][$l]++; }
+    }
+  }
+
+  /**
    * returns a count of ZenMessage objects stored
    *
    * note that this ignores the filter criteria which
@@ -277,9 +315,9 @@ class ZenMessageList extends Zen {
    * @return integer the count
    */
   function count( $level = null ) {
-    if( $level && isset($this->_counts["level"][$level]) )
+    if( strlen($level) && isset($this->_counts["level"][$level]) )
       return $this->_counts["level"][$level];
-    else if( $level )
+    else if( strlen($level) )
       return 0;
     else
       return $this->_counts["total"];
@@ -294,7 +332,7 @@ class ZenMessageList extends Zen {
    * @return integer 0-failed, 1-loaded from session, 2-loaded from file
    */
   function _loadConfig( $xmlfile ) {
-    if( is_array($_SESSION['cache']['messageListConfig']) ) {
+    if( isset($_SESSION['cache']) && is_array($_SESSION['cache']['messageListConfig']) ) {
       $this->_levels = $_SESSION['cache']['messageListConfig'];
       return 1;
     }
@@ -421,7 +459,11 @@ class ZenMessageList extends Zen {
   /**
    * Prints out the debug level settings in raw text format
    */
-  function printDebugSettings() { ZenUtils::printArray($this->_levels); }
+  function printDebugSettings() { 
+    ZenUtils::printArray($this->_levels, "Levels"); 
+    ZenUtils::printArray($this->_filters, "Filters"); 
+    ZenUtils::printArray($this->_counts, "Counts"); 
+  }
 
   /* VARIABLES */
 
@@ -450,9 +492,9 @@ class ZenMessageList extends Zen {
   var $_blockformat = array( "<ul>\n", "</ul>\n" ); 
 
   /** @var array $_msgformat how to format output messages @see show() */
-  var $_msgformat = array( 1 => array("<li class='error'>","</li>\n"),
-                           2 => array("<li class='warn'>","</li>\n"),
-                           3 => array("<li class='msg'>","</li>\n") );
+  var $_msgformat = array( 1 => array("<li class='err'>","</li>"),
+                           2 => array("<li class='warn'>","</li>"),
+                           3 => array("<li class='msg'>","</li>") );
 
 
 }
