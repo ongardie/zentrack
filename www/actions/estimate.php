@@ -33,7 +33,7 @@
 	   exit;
 	   //header("Location:$rootUrl/ticket.php?id=$id&setmode=details");
 	} else {
-	   $errs[] = "tr(System error: Ticket ? hours could not be set", array($id)).$zen->db_error;
+	   $errs[] = tr("System error: Ticket ? hours could not be set", array($id)).$zen->db_error;
 	}
      }
      if( $errs )
