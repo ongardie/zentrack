@@ -6,6 +6,13 @@
 
 ----- V2.2.2 (not released) -----
 
+2003-01-30, Kato
+  Fixed problem with display descriptions and newline chars
+  Thanks to Hitman for reporting this
+    - includes/templates/editTicketForm.php v1.2
+    - includes/templates/ticket_detailsBox.php v1.5
+    - www/addSubmit.php v1.10
+
 2003-01-28, Kato
   Fixed directory names in setup_from_cvs shell script
    - setup_from_cvs v1.2
