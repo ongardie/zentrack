@@ -13,6 +13,11 @@ abstraction, and endless possibilities for project expansion.
 
 ----- VERSION 2.5.0.3 (development) -----
 
+2005-01-22, kato
+  Added ability to set properties(such as bin) via
+  simple text in egate_create.php
+    - zentrack_2/includes/egate_utils.php 1.37
+
 2005-01-18, kato
   Added export to CVS feature to search page
     - zentrack_2/includes/templates/searchList.php 1.15
