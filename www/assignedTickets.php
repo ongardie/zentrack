@@ -8,6 +8,10 @@
   
   include("header.php");
 
+  $view = 'ticket_list';
+  $map = new ZenFieldMap($zen);
+  $fields = $map->getFieldMap($view);
+
   $page_title = tr("Tickets assigned") . ": $login_name";
   $expand_tickets = 1;
   include("$libDir/nav.php");
@@ -18,6 +22,7 @@
   if( $login_bin > 0 ) {
     $params["bin_id"] = $login_bin;
   }
+
   $tickets = $zen->get_tickets($params);
   include("$templateDir/listTickets.php");
   include("$libDir/paging.php"); //Addition for paging
