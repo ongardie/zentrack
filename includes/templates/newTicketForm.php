@@ -269,7 +269,19 @@ value="<?=($deadline)?$zen->showDate(strip_tags($deadline)):""?>">
   </td>
 </tr>
 <?
-
+    foreach($varfields as $v) {
+?>
+<tr>
+  <td class="bars">
+   <?=tr($v['field_label'])?>
+  </td>
+  <td class="bars">
+    <input type="checkbox" name="<?=$v['field_name']?>" value="1" 
+    <?= $zen->getDefaultValue("default_aprv_checked") ?>>
+  </td>
+</tr>
+<?
+   }
  }
 ?>
 
