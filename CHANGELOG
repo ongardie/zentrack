@@ -14,6 +14,18 @@ abstraction, and endless possibilities for project expansion.
 ----- VERSION 2.5.0.3 (development) -----
 
 2005-03-15, cfalonso
+  Added the posibility to set ctime when ticket is set to Pending (settings["ctime_on_pending"])
+    - zentrack_2/includes/zenTrack.class 1.178
+    - zentrack_2/includes/templates/ticket_detailsBox.php 1.15
+    - zentrack_2/install/UPGRADE_mssqlserver.sql 1.35
+    - zentrack_2/install/UPGRADE_mysql.sql 1.45
+    - zentrack_2/install/UPGRADE_oracle.sql 1.41
+    - zentrack_2/install/UPGRADE_postgres.sql 1.33
+    - zentrack_2/install/seed_mssqlserver.sql 1.36
+    - zentrack_2/install/seed_mysql.sql 1.49
+    - zentrack_2/install/seed_oracle.sql 1.42
+    - zentrack_2/install/seed_postgres.sql 1.38
+
   Standard fields don't respect ID in search page when used as menu fields  -Fixed
     - zentrack_2/includes/ZenFieldMap.class 1.11
   FieldMap didn't show the current default value as "selected"  -Fixed
