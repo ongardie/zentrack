@@ -185,8 +185,16 @@ value="<?=strip_tags($title)?>">
     <?=tr("Start Date")?>
   </td>
   <td class="bars">
-    <input type="text" name="start_date" size="12" maxlength="10"
-	value="<?=($start_date)?$zen->showDate(strip_tags($start_date)):""?>">
+    <input type="text" name="start_date" size="20" maxlength="250"
+	value="
+<?
+           if ($zen->settings["default_start_date_hours"]=="on") {
+             echo ($start_date)?$zen->showDateTime(strip_tags($start_date)):"";
+           } else {
+             echo ($start_date)?$zen->showDate(strip_tags($start_date)):"";
+           }
+?>
+">
     <img name="date_button" src='<?=$rootUrl?>/images/cal.gif' 
 	onClick="popUpCalendar(this,document.newProjectForm.start_date, '<?=$zen->popupDateFormat()?>')"
 	alt="Select a Date">
@@ -198,8 +206,16 @@ value="<?=strip_tags($title)?>">
     <?=tr("Deadline")?>
   </td>
   <td class="bars">
-    <input type="text" name="deadline" size="12" maxlength="10"
-value="<?=($deadline)?$zen->showDate(strip_tags($deadline)):""?>">
+    <input type="text" name="deadline" size="20" maxlength="250"
+value="
+<?
+           if ($zen->settings["default_deadline_hours"]=="on") {
+             echo ($deadline)?$zen->showDateTime(strip_tags($deadline)):"";
+           } else {
+             echo ($deadline)?$zen->showDate(strip_tags($deadline)):"";
+           }
+?>
+">
     <img name="date_button" src='<?=$rootUrl?>/images/cal.gif' 
 	onClick="popUpCalendar(this,document.newProjectForm.deadline, '<?=$zen->popupDateFormat()?>')"
 	alt="Select a Date">
