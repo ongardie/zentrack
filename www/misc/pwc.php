@@ -3,7 +3,7 @@
   /*
   **  CHANGE PASSWORD
   **  
-  **  Change the password for the logged in user
+  **  Change the passphrase for the logged in user
   **
   */
   
@@ -19,9 +19,9 @@
       $errs[] = "Your passwords did not match";
     } else {
       if( $zen->settings["check_pwd_simple"] == "on" && strlen($newPass1) < 6 ) 
-				$errs[] = "Your password must be at least 6 digits long";
+				$errs[] = "Your passphrase must be at least 6 digits long";
       if( $zen->settings["check_pwd_simple"] == "on" && !ereg("[^a-zA-Z]", $newPass1) )
-			  $errs[] = "Your new password must contain at least 1 non-letter character";
+			  $errs[] = "Your new passphrase must contain at least 1 non-letter character";
   	}
   	$user = $zen->getUser($login_id);
   	if( $user["initials"] == "GUEST" ) {
@@ -32,12 +32,12 @@
   	  $params = array();
   	  $params["passwd"] = $newPass1;
   	  if( $zen->demo_mode == "on" ) {
-			  $msg = "Your request was successful, but this is a demo site, so the password was not altered";
+			  $msg = "Your request was successful, but this is a demo site, so the passphrase was not altered";
 				$skip = 1;
   	  } else {
 				$res = $zen->update_user($login_id,$params);
 				if( !$res ) {
-				  $errs[] = "System Error: Unable to change user password.";
+				  $errs[] = "System Error: Unable to change user passphrase.";
 				} else {
 				  $skip = 1;
 				  $msg = "Password successfully changed";
@@ -49,7 +49,7 @@
   	}
   }
 
-  // if we made it this far, then the password wasn't changed,
+  // if we made it this far, then the passphrase wasn't changed,
   // so print errors if applicable and show form
 
   include("$libDir/nav.php");

@@ -2,7 +2,7 @@
   /*
   **  RESET PASSWORD
   **  
-  **  Changes a users password to the default
+  **  Changes a users passphrase to the default
   **
   */
   
@@ -10,7 +10,7 @@
   include("./admin_header.php");
 
   if( $user_id == 1 && $login_id != 1 ) {
-    $errs[] = "Only the root administrator can change the root administrator's password";
+    $errs[] = "Only the root administrator can change the root administrator's passphrase";
   } else if( $user_id ) {
     if( $zen->demo_mode == "on" ) {
       $msg = "Process completed successfully.  No changes were made because this is a demo site";
@@ -19,7 +19,7 @@
       if( $res ) {
 	$msg = "Password reset to the default [user's last name] for user $user_id";
       } else { 
-	$errs[] = "The user password could not be found/edited";
+	$errs[] = "The user passphrase could not be found/edited";
       }	
     }
   } else {

@@ -2,7 +2,7 @@
   /*
   **  USER OPTIONS
   **  
-  **  Provide user specific options such as password changing
+  **  Provide user specific options such as passphrase changing
   **  and preferences
   **
   */
