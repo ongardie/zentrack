@@ -13,7 +13,7 @@
      $deadline = $zen->dateAdjust(1,"month",time());
 ?>     
 
-<form method="post" action="<?=($td)? "editTicketSubmit.php" : "$rootUrl/addSubmit.php"?>">
+<form method="post" name="ticketForm" action="<?=($td)? "editTicketSubmit.php" : "$rootUrl/addSubmit.php"?>">
 <input type="hidden" name="id" value="<?=strip_tags($id)?>">
 
   
@@ -195,6 +195,8 @@ value="<?=strip_tags($relations)?>">
   <td class="bars">
     <input type="text" name="start_date" size="12" maxlength="10"
 value="<?=($start_date)?$zen->showDate(strip_tags($start_date)):""?>">&nbsp;(mm/dd/yyyy, optional)
+    &nbsp;&nbsp;
+    <input type="button" name="date_button" value="Select Date" onclick="popUpCalendar(this, ticketForm.start_date, 'mm/dd/yyyy');"
   </td>
 </tr>
 <tr>
@@ -213,6 +215,9 @@ value="<?=strip_tags($est_hours)?>">&nbsp;(up to two decimal places, optional)
   <td class="bars">
     <input type="text" name="deadline" size="12" maxlength="10"
 value="<?=($deadline)?$zen->showDate(strip_tags($deadline)):""?>">&nbsp;(mm/dd/yyyy, optional)
+    &nbsp;&nbsp;
+    <input type="button" name="date_button2" value="Select Date" onclick="popUpCalendar(this, ticketForm.deadline, 'mm/dd/yyyy');"
+
   </td>
 </tr>				   
 <tr>

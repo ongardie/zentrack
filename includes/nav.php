@@ -3,6 +3,7 @@
   <title><?=$page_prefix.$page_title?></title>
   <LINK HREF="<?=$rootUrl?>/styles.php" REL="STYLESHEET" TYPE="text/css">
   <script language="javascript" src="<?=$rootUrl?>/javascript.js"></script>
+  <script language="javascript" src="<?=$rootUrl?>/popcalendar.js"></script>
   </head>
   
 <body>

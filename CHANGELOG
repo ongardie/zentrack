@@ -5,6 +5,22 @@
  100 percent object oriented and database abstracted. 
 
 ----- V2.2.2 (not released) -----
+2003-02-01, Altman
+  Added a javascript calendar that was written by Tan 
+  Ling <fuushikanden@yahoo.com>.  This closes RFE #640016.
+  The date_fmt_short configuration variable needs to be changed
+  in the Administration's Configuration interface to be "%m/%d/%Y"
+  for those users that are using MySQL.
+    Added:
+    - www/popcalendar.js
+    - www/actions/images/calendar/*.gif
+    - www/images/calendar/*.gif
+    Modified:
+    - includes/nav.php
+    - includes/templates/newProjectForm.php
+    - includes/templates/newTicketForm.php
+    - install/seed_mysql.sql
+
 2003-01-31, Altman
   Updated build_oracle.sql per comments from Maxim Maletsky
   reported in bug #677582.  Thanks Maxim (s-maxim).
