@@ -1137,7 +1137,7 @@ class zenTrack extends zen {
        // add the value to our data set
        $vals[$key]['values'][] = $dataRow[$valueColumnIndex];
      }
-     
+
      return $vals;
    }
    
@@ -1152,7 +1152,7 @@ class zenTrack extends zen {
       $key .= 'G'.$behavior['group_id'];
       for($i=0; $i<count($behavior['fields']); $i++) {
         if( $behavior['fields'][$i]['field_name'] != 'value_column' ) {
-          $k = $behavior['fields'][$i]['field_value'];
+          $k = $behavior['fields'][$i]['field_value']-1;
           $key .= ":$i-".$dataRow[ $k ];
         }
       }

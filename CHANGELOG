@@ -11,6 +11,13 @@ and user experience, internationalization, platform and database
 abstraction, and endless possibilities for project expansion. 
 --------------------
 
+----- VERSION 2.5.0.2(development -----
+
+2004-10-14, Kato
+  Fixed missing -value_column- entry in behavior detail (only when using file groups)
+    - behaviorDetailForm
+    
+
 ----- VERSION 2.5.0.1(2004-10-14) -----
 
 2004-10-14, Kato

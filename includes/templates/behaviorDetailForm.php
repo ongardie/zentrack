@@ -109,6 +109,9 @@
       // new detail name
       print "$t<select name='NewFieldName[{$j}]'>\n";
       print "<option value='' selected>".tr('-new/delete-')."</option>\n";
+      if( $groupIsFile ) {
+        print "<option value='value_column'>".tr('-value column-')."</option>\n"; 
+      }
       foreach($field_list as $fl=>$fn) {
         print "<option value='$fn'>$fl</option>\n";
       }

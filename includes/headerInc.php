@@ -187,6 +187,9 @@
     
     $key = $varfield['field_name'];
     
+    $zen->addDebug('headerInc', "genVarfield( '$formName', "
+       +"'$varfield', '$value' ) using type=$type and key=$key", 3);
+    
     switch( $type ) {
       case "boolean":
         $inp = "<input type='checkbox' name='{$key}' "
@@ -392,7 +395,5 @@
   $helpUrl = "$helpBase/$helpLang";
   $helpDir = "$rootWWW/help/$helpLang";
   
-  
   // you can't have any spaces after this closing tag!
-  
 }?>
