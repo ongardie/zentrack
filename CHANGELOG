@@ -7,6 +7,11 @@
 
 ----- V2.4.2 (Development, See CVS) ----
 
+2003-05-10, Rob Hillis
+  Remove non-functional default tester/manager code.
+    - zentrack/install/header.php.default 1.10
+    - zentrack/includes/zenTrack.class 1.105
+
 2003-05-09, Rob Hillis
   Fix returning of default tester
     - zentrack/includes/zenTrack.class 1.102-1.104
