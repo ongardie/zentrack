@@ -16,6 +16,8 @@
     - zentrack/www/admin/bins.php 1.5
 
 2003-04-18, Kato
+  Revised issue with users moving tickets (header.php not found error)
+    - zentrack/www/ticket.php 1.15
   Added swedish translation
     - zentrack/includes/translations/swedish.trans 1.2
   Updated "log" action in egate, and cleaned up a bit

@@ -7,7 +7,9 @@
   */
   
   // include the header file
-  include_once("header.php");
+  if( file_exists("header.php") ) {
+    include_once("header.php");
+  }
 
   if( $page != "project" )
       $page = "ticket";
