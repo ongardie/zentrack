@@ -7,6 +7,11 @@
 
 ----- V2.3 (development, see CVS) ----
 
+2003-03-09, Kato
+  Created new templating system for use with
+  zenTrack
+    - includes/zenTemplate.class 1.1
+
 2003-03-08, Kato
   Filtered projects from ticket listing
     - includes/zenTrack.class 1.67
