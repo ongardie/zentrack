@@ -13,6 +13,11 @@ abstraction, and endless possibilities for project expansion.
 
 ----- VERSION 2.5.0.3 (development) -----
 
+2005-04-06, cfalonso
+  To be used for hidden, text, etc: set the oldPos value if the fieldObj.value is in the list
+  (unless we do it, the first element of the list will always be assigned to the field, no matter if the fieldObj.value is in the list)
+    - zentrack_2/www/behavior_js.php 1.24
+
 2005-03-31, cfalonso
   Fixed security hole for first login
     - zentrack_2/includes/leftMain.php 1.6
