@@ -49,14 +49,6 @@ class ZenTicket extends ZenDataType {
    */
   function getActions() { }
   
-  /**
-   * Perform next action in flowpath
-   * 
-   * Validates the ticket's status based on flowpath
-   * requirements and attempts to execute next action
-   */
-  function next() { }
-
   /* VARIABLES */
   
 }

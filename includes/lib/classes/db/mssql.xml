@@ -1,0 +1,40 @@
+
+<dbTypeInfo>
+
+  <dbInfo>
+    <preferredCase>upper</preferredCase>
+  </dbInfo>
+
+  <dataTypes>
+    <dataType name="value"      type="VARCHAR"  size="25"   max="25"   fixed="true" />
+    <dataType name="string"     type="VARCHAR"  size="200"  max="200"  fixed="false"/>
+    <dataType name="maxstring"  type="VARCHAR"  size="8000" max="8000" fixed="true"/>
+    <dataType name="text"       type="TEXT"     size=""     max=""     fixed="true"/>
+    <dataType name="byte"       type="NUMERIC"  size="1"    max="1"    fixed="true" />
+    <dataType name="shortint"   type="NUMERIC"  size="3"    max="3"    fixed="true" />
+    <dataType name="integer"    type="NUMERIC"  size="9"    max="9"    fixed="true" />
+    <dataType name="decimal"    type="DECIMAL"  size="6,2"  max="16,4" fixed="false"/>
+    <dataType name="long"       type="NUMERIC"  size="18"   max="18"   fixed="true" />
+    <dataType name="primarykey" type="NUMERIC"  size="9"    max="9"    fixed="true" />
+    <dataType name="email"      type="VARCHAR"  size="255"  max="255"  fixed="true" />
+    <dataType name="date"       type="NUMERIC"  size="12"   max="12"   fixed="true" />
+  </dataTypes>
+
+  <sqlInfo>
+    <now></now>
+    <endline>;</endline>
+    <escapechar>'</escapechar>
+    <create>CREATE TABLE %table% (%columns%)</create>
+    <droptable>DROP TABLE %table%</droptable>
+    <primarykey location="internal">PRIMARY KEY (%column%)</primarykey>
+    <index uniquelabel="UNIQUE">CREATE %unique% INDEX %name% ON %table%(%columns%)</index>
+    <dropindex></dropindex>
+    <tablecolumn uniquelabel="" notnull="NOT NULL" default="DEFAULT %default%">%name% %datatype% %attr% </tablecolumn>
+    <addcolumn>ALTER TABLE %table% ADD COLUMN %def%</addcolumn>
+    <dropcolumn>ALTER TABLE %table% DROP COLUMN %name%</dropcolumn>
+    <delete>DELETE FROM %table% %where%</delete>
+    <insert>INSERT INTO %table% COLUMNS(%columns%) VALUES(%values%)</insert>
+    <update>UPDATE %table% SET %set% %where%</update>
+  </sqlInfo>
+
+</dbTypeInfo>

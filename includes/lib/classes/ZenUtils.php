@@ -4,6 +4,23 @@
  * Includes common utils for processing.  This page should be static
  * and should not depend on any other files.
  */
+
+/**
+ * Provides a means to include helper files globally (rather than internal to the {@link runHelper()} function.
+ *
+ * This method will generate the correct helper file to include based on the function name.
+ *
+ * @param string $function the name of the function to be run
+ */
+function includeHelper( $function ) {
+  if( !function_exists($function) ) {
+    $file = ZenUtils::getIni('directories','dir_helpers')."/"
+      .preg_replace('/([^_]+)_([^_]+)_.*$/', "\\1_\\2", $function).'.php';
+    if( @file_exists($file) ) {
+      include_once($file);
+    }
+  }
+}
  
 /** 
  * LVL_NONE for ZenMessage: specifies no output
@@ -684,30 +701,67 @@ class ZenUtils {
    * which is similar to a 'plugin', providing specific
    * functionality for the zentrack system.
    *
-   * The helper script must contain a function with the
-   * same name as the file (minus the extension) which will
-   * accept an array as an argument (which contains all params
-   * the helper will need) and returns whatever the calling
-   * script needs to process (usually a string).
+   * Helper functions must be named according to the following
+   * convention:
+   * <pre> 
+   * helper_subject_function
+   *  - helper: the text "helper"
+   *  - subject: db table, form name, or type of helper(action,param,etc)
+   *  - function: name of helper function
    *
-   * The following params are always expected to appear in the argument list,
-   * others may appear as warranted by the criteria for the db field:
+   * The helper will be included from a file called helper_subject.php, this
+   * will facilitate a means of including common functions without loading the
+   * whole kit and kaboodle.
+   *
+   * The following parms are always expected to appear in the argument list, 
+   * for the given helper type.  Others may appear as warranted by the 
+   * criteria for the db field:
    * <ul>
-   *   <li><b>template</b> - name of the template file being generated
-   *   <li><b>field</b> - array containing all the form field properties
+   *   <li><b>db/form helper</b>
+   *   <ul>
+   *     <li>template - template rendering the form
+   *     <li>field - array containing all field properties
+   *   </ul>
+   *   <li><b>action helper</b>
+   *   <ul>
+   *     <li>action_id - action calling the helper
+   *   </ul>
+   *   <li><b>parm helper</b>
+   *   <ul>
+   *     <li>parm - a ZenParm object containg the parm info
+   *   </ul>
    * </ul>
    *
-   * @param string $helper name of helper script (minus extension)
-   * @param array $args associative array containing arguments to pass to helper script
+   * <b>Example:</b>
+   * <code>
+   * // (a helper placed on the TICKET.owner field)
+   * // therefore the file is called helper_ticket.php
+   * // the function_name is helper_ticket_owner.php
+   * // this function checks to see if there is an owner,
+   * // if not, it tries to assign the current logged in
+   * // user as the owner (obviously would be called on
+   * // ticket create screen)
+   * function helper_ticket_owner( $args ) {
+   *   if( !isset($args['default']) || $args['default'] == '{login_id}' ) {
+   *     return ZenUtils::findGlobal('login','id');
+   *   }
+   *   return $args['default'];
+   * }
+   * </code>
+   *
+   * @param string $template the name of the template calling this helper (if any)
+   * @param string $helper name of helper function
+   * @param array $args associative array containing arguments to pass to helper
    * @return mixed the return value of the helper function
    */
-  function runHelper($helper, $args) {
-    $dir = ZenUtils::getIni('directories','dir_helpers');
-    if( !$dir || !file_exists("$dir/$helper.php") ) {
+  function runHelper($helper, $template, $field, $args) {
+    
+    includeHelper($helper);
+    if( !function_exists($helper) ) {
+      ZenUtils::safeDebug("ZenUtils","runHelper","Helper $helper not found!",105,LVL_ERROR);
       return null;
     }
-    include("$dir/$helper");
-    return $helper($args);    
+    return $helper($args);   
   }
 
   /**

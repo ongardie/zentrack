@@ -22,7 +22,7 @@ class ZenDataType extends Zen {
     // set the params
     $this->_id = $id;
     $this->_table = ZenUtils::tableNameFromClass($this);
-    $this->_primarykey = ZenUtils::getPrimaryKey( $this->_table );
+    $this->_primarykey = ZenUtils::getPrimaryKey( $this );
     // load the data
     if( $id && is_object($zenlist) ) {
       if( ZenUtils::tableNameFromClass($zenlist)!=$this->_table || !$this->_loadFromListData($zenlist,$id) ) {
@@ -78,24 +78,49 @@ class ZenDataType extends Zen {
   /**
    * Sets the value of a field
    *
-   * This sets the $this->_changed flag to true
+   * This sets the $this->_changed flag to true if updated.
+   *
+   * The best method to check the return value for this would be as follows:
+   * <code>
+   * $returnValue = $zenDataTypeObject->setField($fieldName, $newValue);
+   * if( is_boolean($returnValue) ) {
+   *    print $returnValue === true? "Updated" : "Unchanged";
+   * }
+   * else {
+   *    print "Error detected: $returnValue";
+   * }
+   * </code>
    * 
    * @param string $field the field to set
    * @param mixed $value the value to set
-   * @return boolean validated and set
+   * @return boolean true if updated, false if unchanged, or String containing validation error
    */
   function setField( $field, $value ) { 
     if( !isset($this->_fields[$field]) && $this->_id ) {
       $this->_debug($this,"setField","The field $field does not exist",122,LVL_ERROR);
-      return false;
+      return "Field $field does not exist, unable to set";
     }
-    //todo
-    //todo
-    //todo validate new value
-    //todo
-    $this->_changed = true;
-    $this->_fields[$field] = $value;
-    return true;
+    
+    // see if the value has changed
+    if( isset($this->_fields[$field]) ) {
+      if( $value == $this->_fields[$field] ) {
+        return false;
+      }
+    }
+
+    // validate the return value
+    $mt = Zen::getMetaData($this->_table);
+    $valid = $mt->validate($field, $value);
+    if( $valid === true ) {
+      // set the new value
+      $this->_changed = true;
+      $this->_fields[$field] = $value;
+      return true;
+    }
+    else {
+      // return the error
+      return $valid;
+    }
   }
 
   /**
@@ -163,8 +188,13 @@ class ZenDataType extends Zen {
    * @return boolean load succeeded, id was valid (actually returns $this->loaded())
    */
   function _load( $id ) {
-    $vars = $this->simpleQuery( $this->_table, $this->_primaryKey, $id );
-    $this->_fields = $vars[0];
+    $vals = Zen::getDataRow( $this->_table, $this->_primaryKey, $id );
+    if( !is_array($vals) || !count($vals) ) {
+      ZenUtils::safeDebug($this, '_load', "Invalid id: $id", LVL_WARN);
+      return false;
+    }
+    $this->_fields = $vals;
+    return true;
   }
 
   /**
@@ -178,12 +208,14 @@ class ZenDataType extends Zen {
    * @return boolean validated and loaded (true if the item is found in the list)
    */
   function _loadFromListData( $zenlist, $id ) { 
-    $fields = $zenlist->find($id);
-    if( is_array($fields) && count($fields) ) {
-      $this->_fields = $fields;
-      return true;
+    $fields = $zenlist->findData($id);
+    if( !is_array($fields) || !count($fields) ) {
+      $class = get_class($zenlist);
+      ZenUtils::safeDebug($this, '_load', "ID ($id) not in List ($class)", LVL_WARN);
+      return false;
     }
-    return false;
+    $this->_fields = $fields;
+    return true;
   }
 
   /****************

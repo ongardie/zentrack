@@ -38,20 +38,25 @@
       </columns>
     </table>
 
-    <table name="ABSTRACT_FILTER_TYPE">
+    <table name="ABSTRACT_CRITERIA">
       <description>Filter data is inherited from this abstract</description>
       <columns>
-	<column name="table_name" type="value" ftype="hidden" />
-	<column name="field_name" type="value" ftype="select">
-	  <criteria type="helper">field:table_name,field:field_name</criteria>
-	</column>
 	<column name="andor" type="byte" ftype="select" label="Grouping">
 	  <criteria type="standard">grouping</criteria>
 	</column>
+        <column name="parm_id_1" type="integer" ftype="popselect" label="Parameter 1">
+          <criteria type="helper" />
+          <reference>PARMS.parm_id</reference>
+        </column>
+        <column name="parm_id_2" type="integer" ftype="popselect" label="Parameter 2">
+          <criteria type="helper" />
+          <reference>PARMS.parm_id</reference>
+        </column>
 	<column name="field_comp" type="value" ftype="select" label="Operator">
 	  <criteria type="standard">comparison</criteria>
 	</column>
-	<column name="field_value" type="string" ftype="text" label="Value" />
+        <column name="field_pri" type="integer" ftype="text" label="Order" />        
+        <column name="descript" type="maxstring" ftype="text" label="Description" />
       </columns>
     </table>
 
@@ -243,6 +248,38 @@
       </indexList>
     </table>
 
+    <table name="CRITERIA_SET">
+      <description>A group of criteria which can be used to determine when actions are valid,
+             when functions should be run, etc.</description>
+      <inherit>ABSTRACT_DESCRIPTORS</inherit>
+      <columns>
+         <column name="criteria_set_id" type="primarykey" ftype="immutable" label="Set ID" />
+         <column name="field_name" type="value" ftype="text" label="Set Name" />
+         <column name="andor" type="string" ftype="select" label="And/Or">
+           <size>3</size>
+           <criteria type='list'>AND,OR</criteria>
+         </column>
+      </column>
+    </table>
+
+    <table name="CRITERIA">
+      <description>A criteria param used by CRITERIA_SET to compare two parameters and produce
+        a true or false result</description>
+      <inherit>ABSTRACT_CRITERIA</inherit>
+      <columns>
+         <column name="criteria_id" type="primarykey" ftype="immutable" label="ID" />
+         <column name="criteria_set_id" type="integer" ftype="hidden" label="Set ID">
+           <reference>CRITERIA_SET.criteria_set_id</reference>
+         </column>
+        <column name="onfail" type="byte" ftype="yesno" label="Continue on Fail" />
+      </column>
+      <indexList>
+        <index name="crit_sort_idx">field_pri</index>
+        <index name="crit_get_idx">criteria_set_id</index>
+      </indexList>
+    </table>
+
+
     <table name="DBTEST">
       <description>Test data for PHPUnit tests, should only be uploaded if develop=true</description>
       <inherit>ABSTRACT_TEST</inherit>
@@ -300,7 +337,7 @@
 
     <table name="FILTER_FIELDS">
       <description>Fields and values that are used by filter for searching</description>
-      <inherit>ABSTRACT_FILTER_TYPE</inherit>
+      <inherit>ABSTRACT_CRITERIA</inherit>
       <columns>
         <column name="filter_id" type="integer" ftype="hidden">
 	  <reference>FILTER.filter_id</reference>
@@ -394,6 +431,47 @@
       </columns>
     </table>
 
+    <table name="PARM">
+      <description>
+         The parms table stores parameters which 
+         can be used as arguments for filters, actions, 
+         functions, external scripts, or just about anything
+      </description>
+      <columns>
+        <column name="parm_id" type="primarykey" ftype="immutable" label="ID" />
+        <column name="parm_name" type="value" ftype="text" label="Name" />
+        <column name="descript" type="maxstring" ftype="string" label="Description" />
+        <column name="parm_source" type="string" ftype="select" label="Source">
+          <size>20</size>
+          <criteria type='list'>
+            [boolean]Boolean
+            [db]Database
+            [setting]DB Setting
+            [eval]Eval
+            [form]Form Data
+            [helper]Helper
+            [ini]Ini File
+            [scope]Session
+            [text]Text
+            [user]User Function       
+          </criteria>
+        </column>
+        <column name="parm_cat1" type="value" ftype="popselect" label="Category/Table">
+          <criteria type="helper" />
+        </column>
+        <column name="parm_cat2" type="value" ftype="popselect" label="Field">
+          <criteria type="helper" />
+        </column>
+        <column name="parm_val" type="string" ftype="popselect" label="Value" />
+          <criteria type="helper" />
+        </column>
+        <column name="parm_pri" type="integer" ftype="text" label="Order" />
+      </columns>
+      <indexList>
+        <index name="parm_sort_idx">parm_pri,parm_name</index>
+      </indexList>
+    </table>
+
     <table name="PREFS">
       <description>User Preferences</description>
       <columns>
@@ -441,7 +519,7 @@
 	  <size>100</size>
 	</column>
 	<column name="filter_id" type="integer" ftype="select" label="Filter Name">
-	  <criteria type="helper">{login_id},{login_bins}</criteria>
+	  <criteria type="helper" />
 	  <reference>FILTER.filter_id</reference>
 	</column>
 	<column name="date_start" type="date" ftype="datebox" label="Start Date">
@@ -590,7 +668,7 @@
 	  <reference>STAGE.stage_id</reference>
 	</column>
 	<column name="priority_id" type="integer" ftype="select" label="Priority">
-	  <criteria type="helper">{login_id},{type_id}</criteria>
+	  <criteria type="helper" />
 	  <default>0</default>
 	  <reference>PRIORITY.priority_id</reference>
 	</column>
@@ -632,6 +710,9 @@
       <inherit>ABSTRACT_DATA_NAMED</inherit>
       <columns>
         <column name="trigger_id" type="primarykey" ftype="hidden" />
+        <column name="criteria_set_id" type="integer" ftype="hidden" label="Criteria Set">
+          <reference>CRITERIA_SET.criteria_set_id</reference>
+        </column>
       </columns>
       <indexList>
         <index name="trgr_sort">field_pri,field_name</index>
@@ -646,7 +727,7 @@
 	</column>
 	<column name="action_id" type="integer" ftype="select" label="Action">
   	  <!-- this criteria will probably need to be updated when this is more prepared -->
-	  <criteria type="helper">field:trigger_id,field:action_id</criteria>
+	  <criteria type="helper">field:trigger_id</criteria>
 	  <reference>ACTION.action_id</reference>
 	</column>
 	<column name="trigger_pri" type="shortint" ftype="text" label="Order">
@@ -655,19 +736,6 @@
       </columns>
       <indexList>
         <index name="trgract_sort">trigger_pri</index>
-      </indexList>
-    </table>
-
-    <table name="TRIGGER_FIELDS">
-      <description>Fields and values that activate triggers</description>
-      <inherit>ABSTRACT_FILTER_TYPE</inherit>
-      <columns>
-        <column name="trigger_id" type="integer" ftype="immutable">
-	  <reference>TRIGGER.trigger_id</reference>
-	</column>
-      </columns>
-      <indexList>
-        <index name="trgrfld_find">table_name,field_name</index>   
       </indexList>
     </table>
 
@@ -709,7 +777,7 @@
 	  <reference>TYPE.type_id</reference>
 	</column>
 	<column name="field_name" type="value" ftype="select" label="Field">
-	  <criteria type="helper">ticket</criteria>
+	  <criteria type="helper" />
 	</column>
 	<column name="field_default" type="string" ftype="popselect" label="Default">
 	  <criteria type="helper">field:type_id,field:field_name</criteria>
@@ -798,7 +866,7 @@
 	<column name="email" type="string" ftype="email" label="Email" />
 	<column name="homebin" type="integer" ftype="select" label="Home Bin">
 	  <reference>BIN.bin_id</reference>
-	  <criteria type="helper"></criteria>
+	  <criteria type="helper" />
 	  <notnull>true</notnull>
 	  <default>0</default>
 	</column>

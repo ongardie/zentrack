@@ -11,10 +11,14 @@
  *  <li>Allow for possible serialization and passing between pages (reducing system load considerably)
  * </ol>
  *
+ * The basic way to employ this class is to create an instance of a class which extends this
+ * one, use the various criteria methods and sort to determine contents and order of the list,
+ * then call {@link load()} to prepare the data.  Once the data is prepared, the {@link next()},
+ * {@link hasNext()}, {@link reset()}, and {@link count()} methods can be used to iterate
+ * through the elements of the list.
+ *
  * This class should not be called, rather, it should be extended and used
  * by a child class.
- *
- * All child classes must define the ZenMetaTable object in their constructor
  *
  * @package Zen 
 */
@@ -26,18 +30,28 @@ class ZenList extends Zen {
    * This method recieves the ZenMetaTable object, and utilizes this to find out
    * which columns and tables are valid for use by this object. This allows for 
    * validation of the incoming params.
-   *
-   * @param ZenMetaTable $metainfo a ZenMetaTable object corresponding to this data type
    */
-  function ZenList( $metainfo ) { 
-    // get validation info
-
+  function ZenList() { 
     // call Zen()
+    $this->Zen();
 
-    // todo set primarykey
+    // find the meta info
+    $this->_dataType = preg_replace('/List$/', '', get_class(this));
+    $this->_metaTable = Zen::getMetaData($this);
 
+    /** @var integer $_thisid id of the currently indexed element */
+    $this->_thisid = null;
+
+    /** @var string $_primarykey the column used as primary key for this data type */
+    $this->_primarykey = ZenUtils::getPrimaryKey( $this );
+
+    // initialize params
+    $this->_criteria = null;
+    $this->_sortCriteria = array();
+    $this->_data = null;
     $this->_position = -1;
     $this->_count = -1;
+    $this->_changed = array();
   }
 
   /**
@@ -48,9 +62,20 @@ class ZenList extends Zen {
    *
    * @param array $ids a simple array of data rows that are to be included
    */
-  function criteriaIdSet( $ids ) {
-    $this->_criteria = new ZenSearchCriteria( 'OR' );
+  function criteriaIdArray( $ids ) {
+    $this->_criteria = new ZenSearchParms( 'OR' );
     $this->_criteria->match( $this->_primarykey, ZEN_IN, $ids );
+  }
+
+  /**
+   * Use an existing criteria set to search for matches to be added to this list
+   *
+   * @param integer $setId the id of the criteria set to load
+   * @return boolean
+   */
+  function criteriaSetId( $setId ) {
+    $set = new ZenCriteriaSet($setId);
+    return $this->criteria( $set->getSearchParms() );
   }
 
   /**
@@ -74,9 +99,13 @@ class ZenList extends Zen {
    * must be called before load() or loadAll()
    *
    * @param string $field the field to sort on
-   * @param boolean $desc sort in reverse order?
+   * @param boolean $desc sort in reverse order(descending)?
    */
-  function sort($field, $desc = false) { }
+  function sort($field, $desc = false) { 
+    if( !array_key_exists($field, $this->_sortFields) ) {
+      $this->_sortFields[$field] = $desc;
+    }
+  }
 
   /**
    * Return a data row
@@ -95,7 +124,36 @@ class ZenList extends Zen {
    * @param integer $offset is the offset to use (i.e. start with 10 instead of 1)
    * @return integer the number matched
    */
-  function load($limit = 0, $offset = 0) { }
+  function load($limit = 0, $offset = 0) { 
+    $query = Zen::getNewQuery();
+    $query->table( ZenUtils::tableNameFromClass($this) );
+    if( $this->_criteria ) {
+      $query->search($criteria);
+    }
+    if( count($this->_sortFields) ) {
+      foreach($this->_sortFields as $field=>$desc) {
+        $query->sort($field, $desc);
+      }
+    }
+    $rows = $query->select(Zen::getCacheTime());
+    if( is_array($rows) ) {
+      $this->_count = count($rows);
+      foreach($rows as $r) {
+        $id = $this->getPrimaryKey();
+        $this->_ids[] = $r[ $id ];
+        $this->_rows["$id"] = $r;
+      }
+    }
+    else {
+      $this->_data = array();
+      $this->_ids = array();
+      $this->_count = 0;
+    }
+    $this->_changed = array();
+    $this->_loaded = true;
+    $this->_position = 0;
+    return $this->count();
+  }
 
   /**
    * gets the next result in the list (essentially an iterator)
@@ -103,7 +161,7 @@ class ZenList extends Zen {
    * @return ZenDataType object or false if no more results
    */
   function next() { 
-    if( $position >= $this->_count ) { return false; }
+    if( $this->_position >= $this->_count ) { return false; }
     return($this->get( $this->_ids[ ++$this->_position ] ));
   }
 
@@ -133,8 +191,8 @@ class ZenList extends Zen {
    * @param integer $id is the id to be found
    * @return array containing data for this row or false if id is invalid
    */
-  function find( $id ) {
-    if( !$this->_data["$id"] ) {
+  function findData( $id ) {
+    if( !isset($this->_data["$id"]) ) {
       $this->debug($this, "find", "ID $id was expected but not found in the list data", 122, LVL_WARN);
       return false;
     }
@@ -148,18 +206,34 @@ class ZenList extends Zen {
    * @return ZenDataType of the data type comparable to this list
    */
   function _makeObject( $id ) {
-    $n = $this->_datatype;
+    $n = $this->getDataType();
     return new $n( $id, $this );
   }
+
+  /**
+   * Get the primary key for the table associated with this List
+   *
+   * @return String primary key field name
+   */
+  function getPrimaryKey() {
+    return $this->_primarykey;
+  }
+  
+  /**
+   * Get the data type this List is responsible for
+   */
+  function getDataType() {
+    return $this->_dataType;
+  }
+
+  /**
+   * 
 
 
   /* VARIABLES */
 
-  /** @var string $_datatype the data type class for this List type (set in constructor) */
-  var $_datatype;
-
-  /** @var string $_listtype the list object extending this List class (set in constructor) */
-  var $_listtype;
+  /** @var String $_dataType the source type for this List */
+  var $_dataType;
 
   /** @var array $_ids the ids, in order they were recieved from db */
   var $_ids;
@@ -182,14 +256,17 @@ class ZenList extends Zen {
   /** @var boolean $_loaded whether load() has been called */
   var $_loaded = false;
 
-  /** @var ZenMetaTable $_metainfo the ZenMetaTable object provided by the extending class */
-  var $_metainfo;
-
-  /** @var array $_columns is the list of valid columns, and their data types... provided by the constructor */
-  var $_columns;
+  /** @var ZenMetaTable $_metaTable the ZenMetaTable object provided by the extending class */
+  var $_metaTable;
 
   /** @var ZenSearchParms $_criteria search criteria for filtering db data */
   var $_criteria;
+
+  /** @var array $_sortCriteria array containing array( (String)field, (boolean)descending ) elements */
+  var $_sortCriteria;
+
+  /** @var array $_changed array mapped (String)id -> (boolean)has_changed */
+  var $_changed;
 
 }
 

@@ -14,6 +14,7 @@
   /** @var array $classes_standard a list of the standard classes, these are included automagically when this page is called */
   $classes_standard = array(
                             "Zen.php",
+                            "ZenCriteriaSet.php",
                             "ZenDatabase.php",
                             "ZenDbSchema.php",
                             "ZenDbTypeInfo.php",
@@ -22,6 +23,8 @@
                             "ZenMessageList.php",
                             "ZenMetaField.php",
                             "ZenMetaTable.php",
+                            "ZenParm.php",
+                            "ZenParmList.php",
                             "ZenQuery.php",
                             "ZenTemplate.php",
                             "ZenUtils.php",
