@@ -328,6 +328,11 @@ class ZenDbSchema extends Zen {
    */
   function addTable( $name, $description, $is_abstract, $has_custom_fields, 
                      $inherits, $has_transactions = false ) {
+    //todo add some sort of validation here
+    if( isset($this->_tables[$name]) ) {
+      ZenUtils::safeDebug($this, "addTable", "The table name $name already exists", 105, LVL_WARN);
+      return false;
+    }
     $this->_tables[$name] = 
       compact( array('name', 'description', 'is_abstract', 'has_custom_fields', 
                      'inherits', 'has_transactions') );
