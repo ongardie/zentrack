@@ -16,6 +16,7 @@ abstraction, and endless possibilities for project expansion.
 2005-02-23, cfalonso
   Added a setting option to manage if a mandatory edit field to explain why the ticket is being edited should be shown in edit page
     - zentrack_2/includes/editTicketSubmit.php 1.12
+    - zentrack_2/includes/zenTrack.class 1.172
     - zentrack_2/includes/zenTrack.class 1.171
     - zentrack_2/includes/templates/newTicketForm.php 1.39
     - zentrack_2/install/UPGRADE_mssqlserver.sql 1.30
