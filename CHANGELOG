@@ -7,6 +7,9 @@
 
 ----- V2.4.1 (Development, See CVS) ----
 2003-04-23, Rob Hillis
+  Allow admins to set a user's home bin to -All-
+    - zentrack/includes/templates/userAdd.php 1.9
+    - zentrack/includes/templates/userSearchForm.php 1.7
   Fix bin order in "Options->Home Bin", User search form and user edit form
     - zentrack/includes/templates/homebinForm.php 1.8
     - zentrack/includes/templates/userAdd.php 1.8

@@ -90,6 +90,7 @@
 <?
    $userBins = $zen->getUsersBins($login_id);
    if( is_array($userBins) ) {
+     print "<option $check value='all'>-All-</option>\n";
      foreach($zen->getBins(1) as $v) {
        $k = $v["bid"];
        if(in_array($k, $userBins)) {

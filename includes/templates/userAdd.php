@@ -93,10 +93,11 @@
     <select name="homebin">
       <?
        if( is_array($zen->bins) ) {
+         print "<option $check value='-1'>-All-</option>\n";
          foreach($zen->getBins(1) as $v) {
            $k = $v["bid"];
            print ($k == $homebin)? 
-             "<option selected value='$k'>$v[name]</option>\n" : "<option value='$k'>$v</option>\n";
+             "<option selected value='$k'>$v[name]</option>\n" : "<option value='$k'>$v[name]</option>\n";
          }
        }
       ?>
