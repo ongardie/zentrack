@@ -3417,3 +3417,39 @@ msgid ucwords($l)
 msgstr ucwords($l)
 
 
+msgid "Account Settings"
+msgstr ""
+
+
+msgid "Press LESS to remove blank rows"
+msgstr ""
+
+
+msgid "Process completed successfully.  Systems were not updated since this is a demo site."
+msgstr ""
+
+
+msgid "Process completed successfully.  Tasks were not updated since this is a demo site."
+msgstr ""
+
+
+msgid "Process completed successfully.  Types were not updated since this is a demo site."
+msgstr ""
+
+
+msgid "System Error: Could not add ?, ? to the system"
+msgstr ""
+
+
+msgid "System Error: Could not update ?, ?"
+msgstr ""
+
+
+msgid "This grants the user the specified level of  	access to all bins not otherwise indicated by 'user access'."
+msgstr ""
+
+
+msgid "Your passphrase must be at least 6 characters long and      contain at least 1 non-letter character."
+msgstr ""
+
+
