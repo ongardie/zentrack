@@ -651,7 +651,7 @@ class ZenDBXML {
                  "col_reference"   => $props['reference'],
                  "col_default"     => $props['default'],
                  "col_description" => $props['description'],
-                 "col_order"       => $props['order'],
+                 "col_order"       => $props['order']? $props['order'] : 900,
                  "col_unique"      => ($props['unique']? 1 : 0));
   }
   

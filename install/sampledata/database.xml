@@ -14,6 +14,14 @@
    and then delete the old db structure and create a new one, then
    to load the backed up data into the new structure.
 
+   Column orders should generally begin at 100 and move up in
+   increments of 10 for best usability.  This allows abstract tables
+   to specify values that will be less than 100 for columns which should
+   be prepended to tables, and greater than 900 for columns which should
+   appear at end of tables.
+
+   The default column value is 900 (for anything not explicitly declared here).
+
    Details on this recreate procedure can be found in the 
    official project documentation:
     http://docs.zentrack.net
@@ -30,10 +38,12 @@
 	<column name="descript" type="maxstring" ftype="text" label="Description" />
 	<column name="last_update" type="date" ftype="hidden" label="Last Updated">
 	  <default>NOW</default>
+          <order>904</order>
 	</column>
-	<column name="syslock" type="byte" ftype="hidden" label="System Lock">
+	<column name="syslock" type="integer" ftype="hidden" label="System Lock">
 	  <default>0</default>
 	  <description>If set to 1, field is locked(restricted access)</description>
+          <order>902</order>
 	</column>
       </columns>
     </table>
@@ -44,10 +54,12 @@
       <columns>
 	<column name="field_pri" type="shortint" ftype="text" label="Priority">
 	  <description>The order this item will appear in, highest appears at top, items of same priority are sorted alphabetically</description>
+          <order>901</order>
         </column>
 	<column name="isactive" type="byte" ftype="checkbox" label="Active">
 	  <default>1</default>
 	  <description>Controls whether this item is actively used... items cannot be deleted, but they can be deactivated by unchecking this box</description>
+          <order>903</order>
 	</column>
       </columns>
     </table>
@@ -57,6 +69,7 @@
       <inherit>ABSTRACT_DATA_TYPE</inherit>
       <columns>
         <column name="field_name" type="string" ftype="text" label="Name" />
+        <order>10</order>
       </columns>
     </table>
 
@@ -66,24 +79,29 @@
 	<column name="andor" type="string" ftype="select" label="Matching">
           <size>5</size>
 	  <criteria type="list">AND,OR</criteria>
+          <order>21</order>
 	</column>
 	<column name="grouping" type="string" ftype="select" label="Grouping">
           <size>1</size>
+          <order>31</order>
 	  <criteria type="list">(,)</criteria>
 	</column>
         <column name="parm_id_1" type="integer" ftype="popselect" label="Parameter 1">
           <criteria type="helper" />
           <reference>PARMS.parm_id</reference>
+          <order>41</order>
         </column>
         <column name="parm_id_2" type="integer" ftype="popselect" label="Parameter 2">
           <criteria type="helper" />
           <reference>PARMS.parm_id</reference>
+          <order>61</order>
         </column>
 	<column name="field_comp" type="value" ftype="select" label="Operator">
 	  <criteria type="standard">comparison</criteria>
+          <order>51</order>
 	</column>
         <column name="field_exclude" type="byte" ftype="checkbox" label="Exclude" />
-        <column name="field_pri" type="integer" ftype="text" label="Order" />        
+        <column name="field_pri" type="integer" ftype="text" label="Order" />
         <column name="descript" type="maxstring" ftype="text" label="Description" />
       </columns>
     </table>
@@ -94,10 +112,12 @@
         <column name="user_id" type="integer" ftype="searchbox" label="User ID">
 	  <reference>USER.user_id</reference>
 	  <notnull>true</notnull>
+          <order>21</order>
 	</column>
         <column name="bin_id" type="integer" ftype="select" label="Bin ID">
 	  <reference>BIN.bin_id</reference>
 	  <notnull>true</notnull>
+          <order>31</order>
 	</column>
       </columns>
     </table>
@@ -109,6 +129,7 @@
         <column name="ticket_id" type="integer" ftype="searchbox" label="Ticket ID">
 	  <reference>TICKET.ticket_id</reference>
 	  <notnull>true</notnull>
+          <order>11</order>
 	</column>
       </columns>
     </table>
@@ -119,10 +140,12 @@
       <columns>
         <column name="column_value" type='value' ftype='text' label='Value'>
           <unique>true</unique>
+          <order>11</order>
         </column>
         <column name="column_string" type='string' ftype='text' label='String' />
         <column name="column_integer" type='integer' ftype='text' label='Integer'>
            <notnull>true</notnull>
+           <order>21</order>
         </column>
         <column name="column_byte" type='byte' ftype='text' label='Byte'>
            <required>true</required>
@@ -139,20 +162,26 @@
     <table name="ACCESS">
       <description>Access Priviledges</description>
       <columns>
-        <column name="access_id" type="primarykey" ftype="hidden" />
+        <column name="access_id" type="primarykey" ftype="hidden">
+          <order>100</order>
+        </column>
         <column name="access_type" type="integer" ftype="select" label="Type">
           <criteria type="list">[0]Login,[1]Email Gateway,[2]Restricted</criteria>
           <description>
             The access type is 
           </description>
+          <order>110</order>
         </column>
 	<column name="bin_id" type="integer" ftype="select" label="Bin">
 	  <reference>BIN.bin_id</reference>
+          <order>130</order>
 	</column>
 	<column name="role_id" type="integer" ftype="select" label="Role">
+          <order>120</order>
 	  <reference>ROLE.role_id</reference>
 	</column>
 	<column name="action_id" type="integer" ftype="select" label="Action ID">
+          <order>140</order>
 	  <reference>ACTION.action_id</reference>
           <showfield>action_name</showfield>
 	</column>
@@ -160,6 +189,7 @@
 	  <default>1</default>
 	</column>
         <column name="criteria_set_id" type="string" ftype="pulldown" label="Criteria">
+          <order>150</order>
           <reference>CRITERIA_SET.criteria_set_id</reference>
           <showfield>field_name</showfield>
         </column>
@@ -174,16 +204,23 @@
       <description>Actions and their properties</description>
       <inherit>ABSTRACT_DATA_NAMED</inherit>
       <columns>
-        <column name="action_id" type="primarykey" ftype="hidden" />
+        <column name="action_id" type="primarykey" ftype="hidden">
+          <order>10</order>
+        </column>
         <column name="action_shortname" type="string" ftype="text">
           <size>12</size>
+          <order>160</order>
           <description>A shortened name for use with action buttons</description>
         </column>
-	<column name="is_button" type="byte" ftype="checkbox" />
+	<column name="is_button" type="byte" ftype="checkbox">
+          <order>140</order>
+        </column>
 	<column name="icon_name" type="value" ftype="text" label="Icon">
 	  <description>Leave blank to disable icon</description>
+          <order>150</order>
 	</column>
         <column name="criteria_set_id" type="integer" ftype="select" label="Criteria Set">
+          <order>110</order>
           <reference>CRITERIA_SET.criteria_set_id</reference>
           <showfield>field_name</showfield>
           <description>Criteria used to decide if this action runs or not</description>
@@ -202,8 +239,14 @@
     <table name="ACTION_STEPS">
       <description>System actions to be performed by this action</description>
       <columns>
-        <column name="action_steps_id" type="primarykey" ftype="hidden" label="ID" />
-	<column name="action_id" type="integer" ftype="immutable" label="Action ID" />
+        <column name="action_steps_id" type="primarykey" ftype="hidden" label="ID">
+          <order>100</order>
+        </column>
+	<column name="action_id" type="integer" ftype="immutable" label="Action ID">
+          <order>110</order>
+          <reference>ACTION.ACTION_ID</reference>
+          <showfield>field_name</showfield>
+        </column>
 	<column name="step_type" type="value" ftype="select" label="Type">
 	  <criteria type="list">
              [action]Action
@@ -227,14 +270,19 @@
              Relate - update ticket relationships
              User Fxn - run a user defined function
 	   </description>
+          <order>120</order>
 	</column>
-	<column name="step_name" type="value" ftype="text" label="Name" />
+	<column name="step_name" type="value" ftype="text" label="Name">
+          <order>130</order>
+        </column>
         <column name="criteria_set_id" type="integer" ftype="select" label="Criteria Set">
           <reference>CRITERIA_SET.criteria_set_id</reference>
           <showfield>field_name</showfield>
+          <order>140</order>
         </column>
         <column name="parm_set_id" type="string" ftype="hidden" label="Param Set">
           <reference>PARM_SET.parm_set_id</reference>
+          <order>150</order>
         </column>        
         <column name="step_fail" type="byte" ftype="checkbox" label="Continue on Fail" />
         <column name="step_pri" type="shortint" ftype="text" label="Order" />
@@ -249,15 +297,24 @@
       <description>References attachments (physically stored in includes/cache/attachments)</description>
       <inherit>ABSTRACT_DESCRIPTORS</inherit>
       <columns>
-        <column name="attachment_id" type="primarykey" ftype="immutable" />
+        <column name="attachment_id" type="primarykey" ftype="immutable">
+          <order>100</order>
+        </column>
 	<column name="ticket_id" type="integer" ftype="immutable" label="Ticket ID">
 	  <reference>TICKET.ticket_id</reference>
+          <showfield>field_name</showfield>
+          <order>120</order>
 	</column>
 	<column name="log_id" type="integer" ftype="immutable" label="Log Entry">
 	  <reference>LOG.log_id</reference>
+          <order>110</order>
 	</column>
-	<column name="field_name" type="value" ftype="immutable" label="File Name" />
-	<column name="file_type" type="value" ftype="immutable" label="File Type" />
+	<column name="field_name" type="value" ftype="immutable" label="File Name">
+          <order>130</order>
+        </column>
+	<column name="file_type" type="value" ftype="immutable" label="File Type">
+          <order>140</order>
+        </column>
       </columns>
       <indexList>
         <index name="attchmt_ordr">field_name</index>
@@ -430,9 +487,9 @@
 	</column>
       </columns>
       <customList>
-	<column name="string1" type="string" ftype="hidden" label="String 1" />
-	<column name="date1" type="date" ftype="hidden" label="Date 1" />	
-	<column name="num1" type="integer" ftype="hidden" label="Int 1" />	
+	<column name="string1" type="string" ftype="skip" label="String 1" />
+	<column name="date1" type="date" ftype="skip" label="Date 1" />	
+	<column name="num1" type="integer" ftype="skip" label="Int 1" />	
       </customList>
       <indexList>
         <index name="log_sort">ctime</index>
@@ -746,15 +803,15 @@
 	</column>
       </columns>
       <customList>
-        <column name="string1" type="string" ftype="hidden" label="String 1" />
-        <column name="string2" type="string" ftype="hidden" label="String 2" />
-        <column name="string3" type="string" ftype="hidden" label="String 3" />
-        <column name="date1" type="date" ftype="hidden" label="Date 1" />
-        <column name="date2" type="date" ftype="hidden" label="Date 2" />
-        <column name="date3" type="date" ftype="hidden" label="Date 3" />
-        <column name="num1" type="integer" ftype="hidden" label="Int 1" />
-        <column name="num2" type="integer" ftype="hidden" label="Int 2" />
-        <column name="num3" type="integer" ftype="hidden" label="Int 3" />
+        <column name="string1" type="string" ftype="skip" label="String 1" />
+        <column name="string2" type="string" ftype="skip" label="String 2" />
+        <column name="string3" type="string" ftype="skip" label="String 3" />
+        <column name="date1" type="date" ftype="skip" label="Date 1" />
+        <column name="date2" type="date" ftype="skip" label="Date 2" />
+        <column name="date3" type="date" ftype="skip" label="Date 3" />
+        <column name="num1" type="integer" ftype="skip" label="Int 1" />
+        <column name="num2" type="integer" ftype="skip" label="Int 2" />
+        <column name="num3" type="integer" ftype="skip" label="Int 3" />
       </customList>
       <indexList>
 	<index name="tckt_bin">bin_id</index>
@@ -939,15 +996,15 @@
 	</column>
       </columns>
       <customList>
-        <column name="string1" type="string" ftype="hidden" label="String 1" />
-        <column name="string2" type="string" ftype="hidden" label="String 2" />
-        <column name="string3" type="string" ftype="hidden" label="String 3" />
-        <column name="date1" type="date" ftype="hidden" label="Date 1" />
-        <column name="date2" type="date" ftype="hidden" label="Date 2" />
-        <column name="date3" type="date" ftype="hidden" label="Date 3" />
-        <column name="num1" type="integer" ftype="hidden" label="Int 1" />
-        <column name="num2" type="integer" ftype="hidden" label="Int 2" />
-        <column name="num3" type="integer" ftype="hidden" label="Int 3" />
+        <column name="string1" type="string" ftype="skip" label="String 1" />
+        <column name="string2" type="string" ftype="skip" label="String 2" />
+        <column name="string3" type="string" ftype="skip" label="String 3" />
+        <column name="date1" type="date" ftype="skip" label="Date 1" />
+        <column name="date2" type="date" ftype="skip" label="Date 2" />
+        <column name="date3" type="date" ftype="skip" label="Date 3" />
+        <column name="num1" type="integer" ftype="skip" label="Int 1" />
+        <column name="num2" type="integer" ftype="skip" label="Int 2" />
+        <column name="num3" type="integer" ftype="skip" label="Int 3" />
       </customList>
       <indexList>
         <index name="user_get">user_id,isactive</index>

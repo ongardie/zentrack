@@ -68,7 +68,7 @@ class ZenMetaDb extends Zen {
     $this->_tables = array();
     // load info from the database
     $tableInfo = Zen::simpleQuery('TABLE_DEFS');
-    $fieldInfo = Zen::simpleQuery('FIELD_DEFS',null,null,'field_order');
+    $fieldInfo = Zen::simpleQuery('FIELD_DEFS',null,null,'col_order');
 
     // store the xml field info for use later (done in this awkard way
     // to facilitate sorting)

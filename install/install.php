@@ -164,8 +164,10 @@
   $z->args( $argv );
 
   // run
-  if( $z->run() ) {
+  $result = $z->run();
+  if( $result ) {
     print "\nSUCCESS: All targets completed successfully\n";
+   
   }
   else {
     print "\n\nFAILURE: One or more targets failed\n";
@@ -174,5 +176,9 @@
   // print performance time
   $ctime = time()-$stime;
   print "\n-----------------\nCompleted: ".($ctime)." seconds.\n\n";
+
+  // return a value that can be used by cron scripts and batch jobs
+  // to determine if this operation succeeded
+  return $result;
 
 }?>
