@@ -4,40 +4,46 @@
  Clean, simple interface, fully adaptable administration,
  100 percent object oriented and database abstracted. 
 
+----- V2.2.2 (not released) -----
+
+2003-01-28, Kato
+  Fixed directory names in setup_from_cvs shell script
+   - setup_from_cvs v1.2
+
 ----- V2.2.1 (2003-01-27) ------
 
-Altman, 2003-01-25
+2003-01-25, Altman
  Fixed assignment problems on project create
    - www/newProjectForm.php v1.8
 
-Kato, 2003-01-22
+2003-01-2, Kato
  Cleaned up some form input
    - includes/leftMain.php 
    - includes/templates/ticketForm.php
 
-Kato, 2003-01-20
+2003-01-20, Kato
  Corrected some blank page issues for IIS users
    - www/action/action_header.php v1.6
    - www/admin/admin_header.php v1.5
 
 ----- v2.2.0 (2003-01-14) ------
 
-Kato, 2003-01-17
+2003-01-17, Kato
   Form input javascript errors
     - www/javascript.js v1.5
     - includes/templates/loginForm.php v
 
-Kato, 2003-01-15
+2003-01-15, Kato
   Changed homebin behavior, no longer able to select "All" for homebin.
     - www/misc/homebin.php v1.3
 
-Kato, 2003-01-13
+2003-01-13, Kato
   php 4.2 compliant (register_globals fun)
     - includes/session_start.php v1.0
     - includes/session_save.php v1.0
     - includes/headerInc.php v1.8
 
-Kato, 2003-01-13
+2003-01-13, Kato
   Fixed display issues between tickets and projects
   also fixed sticky tabs (same code changes)
     - includes/templates/ticket_*.php v1.?
@@ -45,11 +51,11 @@ Kato, 2003-01-13
     - www/ticket.php v1.4
     - others?
 
-Kato, 2003-01-13
+2003-01-13, Kato
   Fixed reject ticket bug
     - includes/zenTrack.class v1.33
 
-Kato, 2003-01-12
+2003-01-12, Kato
   Added usage reports, graphical and html
     - www/reports/* v1.0
     - includes/zenGraph.php v1.0
@@ -59,110 +65,110 @@ Kato, 2003-01-12
 
 ----- v2.1.0 (not released) ------
 
-Kato, 2002-05-30
+2002-05-30, Kato
   Minor bug fixes... some oracle enhancements
 
-Kato, 2002-05-30
+2002-05-30, Kato
   Added Postgres build/seed files.  Thanks to jofry@users.sourceforge.net!
     - installs/build_postgres.sql
     - installs/seed_postgres.sql
 
 ----- v2.0.3 Live (2002-06-03) ------
 
-Kato, 2002-06-03
+2002-06-03, Kato
   Created a zenTrack project with useful tickets to begin 
   new users, and explain to them how to configure their 
   system accordingly.
 
-Kato, 2002-06-03
+2002-06-03, Kato
   Fixed several link bugs associated with ticketView.php 
   and attachmentView.php
 
-Kato, 2002-06-03
+2002-06-03, Kato
   Fixed -DEBUG OVERVIEW- in footer to include some highly 
   valuable info for troubleshooting support requests.
 
 ----- v2.0.2 Beta (2002-05-06) -----
 
-Kato, 2002-05-06
+2002-05-06, Kato
   Changed "password" to "passphrase" for Sybase compatibility.
 
-Kato, 2002-05-06
+2002-05-06, Kato
   Fixed $rootUrl issues with url_ticket_view and url_attachment_view
 
-Kato, 2002-05-06
+2002-05-06, Kato
   Fixed some issues with the "view all users" function in user admin
 
-Kato, 2002-05-06
+2002-05-06, Kato
   Fixed issue with the "first login" so that it will make users
   change their passphrase from the default before they can continue
 
-Kato, 2002-05-06
+2002-05-06, Kato
   Comments added to configVars.php section to indicate
   better use of Oracle/adodb methods
 
-Kato, 2002-05-06
+2002-05-06, Kato
   setenv() functions added for locale related issues, and for oracle
   fixes
 
 
 ----- v2.0.1c beta (2002-05-01) ------
 
-Kato, 2002-05-01
+2002-05-01, Kato
   All upper case column names changed to lower case 
   entries for oracle/adodb compatibility
 
-Kato, 2002-05-01
+2002-05-01, Kato
   Fixed bug in new project form concerning the start date.
 
 ----- v2.0.1 Beta (2002-04-27) ------
   
-Kato, 2002-04-27
+2002-04-27, Kato
   Oracle issue with uppercase column names (hopefully) overcome 
   with use of the ADODB function "oci8po"
 
-Kato, 2002-04-27
+2002-04-27, Kato
   Fix for ONAMES and HOSTNAMES provided by Izzy (thanks Izzy!)
   
-Kato, 2002-04-27
+2002-04-27, Kato
   Oracle build files tested and repaired.  Several bugs with
   reserved words and escape characters removed.
 
-Kato, 2002-04-27
+2002-04-27, Kato
   configVars.php and header.php files cleaned up, and better
   commented.
 
-Kato, 2002-04-27
+2002-04-27, Kato
   Sybase bug with reserved word "role" fixed.
 
-Kato, 2002-04-27
+2002-04-27, Kato
   INSTALL.README, and install.html files updated
 
-Kato, 2002-04-27
+2002-04-27, Kato
   CHANGELOG implemented (and needed)
 
 ----- v2.0 Beta (2002-04-23) ------
   
-Kato, 2002-04-23
+2002-04-23, Kato
   Added ADODB abstraction, making zenTrack fully 
   Database Compatible.
   
-Kato, 2002-04-23
+2002-04-23, Kato
   Completely rewrote the zenTrack.class, much cleaner, 
   more efficient, faster
 
-Kato, 2002-04-23
+2002-04-23, Kato
   Added the zen.class for basic utilities
   
-Kato, 2002-04-23
+2002-04-23, Kato
   Added attachments
   
-Kato, 2002-04-23
+2002-04-23, Kato
   Rewrote the administrative tools, and completely 
   re-dedesigned the database structure to support
   a very dynamic base and adaptable design
   
-Kato, 2002-04-23
+2002-04-23, Kato
   Began code changes to create a complete level based
   debugging tool and for report generation (planned for
   version 2.1)
@@ -181,14 +187,14 @@ Example
 
 ----- Vx.x.y ------
 
-YourName, yyyy-mm-dd
+yyyy-mm-dd, YourName
   Your comments about the update, indented 2 spaces, it can be
   multiple lines and very long, and should be kept to about this
   with, which is around 60-80 columns
     - includes/subdir/filename2.php v 2.21
     - www/subdir/filename2.php v 3.01
 
-MyName, yyyy-mm-dd
+yyyy-mm-dd, MyName
   My comments about the update, indented 2 spaces, it can be
   multiple lines and very long, and should be kept to about this
   with, which is around 60-80 columns
