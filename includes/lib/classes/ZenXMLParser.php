@@ -83,7 +83,7 @@
    * will cause the node data to be run with $param = eval(..data..)
    * (thus it must include valid php code)
    *
-   * @var array $node is an array of nodes recieved from {@link ZenXNode->getChild('param')}
+   * @var array $node is an array of nodes recieved from {@link ZenXNode::getChild()}
    */
   function getParmSet( $node ) {
     $parms = array();
@@ -253,7 +253,7 @@ class ZenXNode {
    * nodes which have more than one match will be in an array.  Example return value follows(note
    * differences in the 'orange' node and how it is converted to an array):
    *
-   * <code>
+   * <pre><code>
    *   //XML DATA:
    *   <fruit type='colored'>
    *      <orange>orange of course</orange>
@@ -342,7 +342,7 @@ class ZenXNode {
    *   )
    *   
    *
-   * </code>
+   * </code></pre>
    *
    * @param boolean $compress see description for details
    * @return array containing node and all children
@@ -382,7 +382,7 @@ class ZenXNode {
    * </pre>
    *
    * Note that the children array is in the format: 
-   * <code>children = array( "Key1" = array( nodeArrayA, nodeArrayB, nodeArrayC ), "Key2"... ), 
+   * <code>children = array( "Key1" = array( nodeArrayA, nodeArrayB, nodeArrayC ), "Key2"... )</code>
    * where the nodeArrays are structured exactly like this enclosing nodeArray
    *
    * @param array $vals represents the data structure to move to xml, see comments for more
