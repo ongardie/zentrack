@@ -41,14 +41,23 @@
         "deadline"    => "int",
         "start_date"  => "int"
         );
- $required = array(
-         "title",
-         "priority",
-         "description",
-         "bin_id",
-         "type_id",
-         "system_id"
-         );
+ // $required = array(
+         // "title",
+         // "priority",
+         // "description",
+         // "bin_id",
+         // "type_id",
+         // "system_id"
+         // );
+         
+  $fields = $map->getFieldMap($type=='project'?'project_edit':'ticket_edit');
+  $required = array();
+  foreach($fields as $f=>$field) {
+    if( $field['is_required'] ) {
+      $required[] = $f;
+    }
+  }
+         
   $zen->cleanInput($fields);
   // check for required fields
   foreach($required as $r) {
@@ -107,11 +116,12 @@
     $zen->print_errors($errs);
     $TODO = 'EDIT';
     if( $is_project ) {
-      include("$templateDir/newProjectForm.php");
+      $view = "project_edit";
     }
     else {
-       include("$templateDir/newTicketForm.php");
-     }
-     include("$libDir/footer.php");
+      $view = "ticket_edit";
+    }
+    include("$templateDir/newTicketForm.php");
+    include("$libDir/footer.php");
   }
 ?>

@@ -48,18 +48,18 @@
   "deadline"    => "int",
   "start_date"  => "int"
   );
-  $required = array(
-  "title",
-  "priority",
-  "description",
-  "bin_id",
-  "type_id",
-  "system_id"
-  );
+  
+  $fields = $map->getFieldMap('project_create');
+  $required = array();
+  foreach($fields as $f=>$field) {
+    if( $field['is_required'] ) {
+      $required[] = $f;
+    }
+  }
   $zen->cleanInput($fields);
   // check for required fields
   foreach($required as $r) {
-    if( !$$r ) {
+    if( !strlen($$r) ) {
       $errs[] = tr("required field missing:") . " " . ucfirst($r);
     }
   }
@@ -75,7 +75,7 @@
     $id = $zen->add_ticket($params);
     // check for errors
     if( !$id ) {
-      $errs[] = tr("Could not create ticket.") . " " .$zen->db_error;
+      $errs[] = tr("Could not create project.") . " " .$zen->db_error;
     }
     else {
       // parse variable fields which appear in new ticket screen, 
@@ -107,6 +107,7 @@
     $onLoad[] = "behavior_js.php?formset=ticketForm";
     include("$libDir/nav.php");
     $zen->print_errors($errs);
+    $view = "project_create";
     include("$templateDir/newProjectForm.php");
     include("$libDir/footer.php");
   }

@@ -14,6 +14,20 @@ if( !$page_type )
   
 if( is_array($tickets) && count($tickets) ) {
 ?>
+<script type='text/javascript'>
+function resortListPage( fieldName ) {
+<? if( strpos($view, 'search')===0 ) { ?>
+  document.searchModifyForm.sortBy.value = fieldName;
+  document.searchModifyForm.TODO.value = 'SEARCH';
+  document.searchModifyForm.submit();
+  return false;
+<? } else { ?>
+  s = window.location.href;
+  s += s.indexOf('?') > 0? '&sortBy='+fieldName : '?sortBy=fieldName';
+  window.location = s;
+<? } ?>
+}
+</script>
 <table width="100%" cellspacing='1' cellpadding='2' bgcolor='<?=$zen->settings["color_alt_background"]?>'>
    <tr bgcolor="<?=$zen->settings["color_title_background"]?>">
 <?
@@ -125,6 +139,50 @@ if( is_array($tickets) && count($tickets) ) {
       // close the row
       print "</tr>";
    }
+   
+   if( strpos($view, 'search')===0 ) {
+?>
+   <tr>
+       <td colspan="<?= 9+$vfcount ?>" class="titleCell">
+       <nobr>
+       <form method="post" action="search.php" name='searchModifyForm' style="display: inline; margin: 0px;">
+          <input type="submit" class="smallSubmit" value="<?=tr("Modify Search")?>">
+          <input type='hidden' name='TODO' value=''>
+          <input type='hidden' name='sort_field' value=''>
+          <input type="hidden" name="search_text" value="<?=$zen->ffv($search_text)?>">
+          <?
+           foreach($search_params as $k=>$v) {
+             print "<input type='hidden' name='search_params[$k]' value='".$zen->ffv($v)."'>\n";
+           }
+           foreach($search_dates as $k=>$v) {
+             print "<input type='hidden' name='search_dates[$k]' value='".$zen->ffv($v)."'>\n";
+           }
+           foreach($search_fields as $k=>$v) {
+             print "<input type='hidden' name='search_fields[$k]' value='".$zen->ffv($v)."'>\n";
+           }
+           ?>
+     </form>
+     <form method="post" action="exportSearch.php" style="display: inline; margin: 0px;">
+          <input type="submit" class="smallSubmit" value="<?=tr("Export Results")?>">
+          <input type="hidden" name="search_text" value="<?=$zen->ffv($search_text)?>">
+          <?
+           foreach($search_params as $k=>$v) {
+             print "<input type='hidden' name='search_params[$k]' value='".$zen->ffv($v)."'>\n";
+           }
+           foreach($search_dates as $k=>$v) {
+             print "<input type='hidden' name='search_dates[$k]' value='".$zen->ffv($v)."'>\n";
+           }
+           foreach($search_fields as $k=>$v) {
+             print "<input type='hidden' name='search_fields[$k]' value='".$zen->ffv($v)."'>\n";
+           }
+         ?>
+        </nobr>
+       </form>
+     </td>
+   </tr>
+<?
+   }
+   
    print "</table>\n";
    
 } else {

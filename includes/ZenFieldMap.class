@@ -217,8 +217,13 @@ class ZenFieldMap {
    * @return array containing (string)field_name 
    */
    function listFieldsForView( $view ) {
-     $map = $this->getFieldMap();
-     return array_keys($map[$view]);
+     if( !$view ) {
+       $this->_zen->addDebug('listFieldsForView', "Cannot retrieve field list without a view", 1);
+       return null;
+     }
+     $map = $this->getFieldMap($view);
+     $this->_zen->addDebug('listFieldsForView', "Found ".count($map)." entries for view '$view'", 3);
+     return array_keys($map);
    }
    
    /**
@@ -307,11 +312,11 @@ class ZenFieldMap {
    * @param string $view corresponds to which_view field
    * @param string $field_name the field's name
    * @param mixed $value the field's current value
-   * @param $prefix if provided, will be added to beginning of the name property
+   * @param $override_name if provided, will override the name=".." property of this input field 
    * @return string containing html to render
    */
-  function renderTicketField( $view, $form_name, $field_name, $value = null, $prefix = '' ) {
-    //$this->_zen->addDebug("renderTicketField", "rendering $view, $form_name, $field_name, $value, $prefix", 1);//debug
+  function renderTicketField( $view, $form_name, $field_name, $value = null, $override_name = null ) {
+    //$this->_zen->addDebug("renderTicketField", "rendering $view, $form_name, $field_name, $value, $override_name", 1);//debug
     global $templateDir;
     global $rootUrl;
     
@@ -341,7 +346,7 @@ class ZenFieldMap {
     $vals["templateDir"] = $templateDir;
     $vals["rooturl"] = $rootUrl;
     $vals['date_format'] = $this->_zen->popupDateFormat();
-    $vals["field_name"] = $this->_zen->ffv($prefix.$field_name);
+    $vals["field_name"] = $this->_zen->ffv(strlen($override_name)>0? $override_name : $field_name);
     $vals["field_value"] = $this->_zen->ffv($value);
     $vals["field_label"] = $this->getTextValue($view,$field_name,$value);
     $vals["field_max"] = $field['num_cols'];

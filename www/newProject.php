@@ -15,6 +15,7 @@
 
   include("$libDir/nav.php");
 
+  $page_type = 'project';
   include("$templateDir/newProjectForm.php");
 
   include("$libDir/footer.php");

@@ -11,12 +11,12 @@
 	  </tr>
 	  <tr>
 	   <td class="small"><?=$id?></td>
-	   <td class="small" colspan="2"><?=stripslashes($title)?></td>
+	   <td colspan="2"><?=stripslashes($title)?></td>
 	  </tr>
 	  <tr>
 	   <td class="smallTitleCell" height="<?=$height_num?>"><?=uptr("Elapsed")?></td>  
-	   <td class="smallTitleCell" width="100"><?=uptr("Opened")?></td>
-	   <td class="smallTitleCell" width="100"><?=uptr("Deadline")?></td>
+	   <td class="smallTitleCell"><?=uptr("Opened")?></td>
+	   <td class="smallTitleCell"><?=uptr("Deadline")?></td>
 	  </tr>
 	  <tr>
 	   <td class="small"><?=$zen->showTimeElapsed($otime,$ctime,1,0)?></td>  

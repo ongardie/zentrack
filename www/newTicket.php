@@ -15,6 +15,7 @@
 
   include("$libDir/nav.php");
 
+  $view = "ticket_create";
   include("$templateDir/newTicketForm.php");
 
   include("$libDir/footer.php");

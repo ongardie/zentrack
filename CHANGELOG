@@ -13,6 +13,15 @@ abstraction, and endless possibilities for project expansion.
 
 ----- VERSION 2.5.0.3 (development) -----
 
+2005-02-28, kato
+  Implemented fieldMap in project/ticket edit screens
+  
+  Implemented fieldMap in search_form and search_list (not completed yet)
+  
+  Added sorting to the listTickets screen (untested)
+  Deprecated the searchList.php file (this uses listTickets instead now)
+  
+  
 2005-02-25, cfalonso
   Fixed typo in seed file for mysql
     - zentrack_2/install/seed_mysql.sql 1.45
@@ -60,6 +69,18 @@ abstraction, and endless possibilities for project expansion.
     - zentrack_2/www/behavior_js.php 1.19
     - zentrack_2/www/images/disabled-cal.gif 1.1
 
+2005-02-21, kato
+  Fixed sql errors in seed_mysql.sql
+    - zentrack_2/install/seed_mysql.sql 1.46
+
+2005-02-19, kato
+  New SQL for create scripts
+    - install/build_mysql.sql 1.18
+    - install/build_oracle.sql 1.17
+    
+  Minor cleanup and bug fixes
+    - includes/zenTrack.class 1.170
+    
 2005-02-10, cfalonso
   Fixed a bug on behaviors when using file groups evaluating on a
   standard key-value field

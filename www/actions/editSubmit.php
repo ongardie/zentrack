@@ -37,19 +37,28 @@
 		  "deadline"    => "int",
 		  "start_date"  => "int"
 		  );
- $required = array(
-		   "title",
-		   "priority",
-		   "description",
-		   "bin_id",
-		   "type_id",
-		   "system_id"
-		   );
+      
+  $fields = $map->getFieldMap('ticket_edit');
+  $required = array();
+  foreach($fields as $f=>$field) {
+    if( $field['is_required'] ) {
+      $required[] = $f;
+    }
+  }
+
+ // $required = array(
+		   // "title",
+		   // "priority",
+		   // "description",
+		   // "bin_id",
+		   // "type_id",
+		   // "system_id"
+		   // );
   $zen->cleanInput($fields);
   // check for required fields
   foreach($required as $r) {
-     if( !$$r ) {
-	$errs[] = tr("? is a required field", array(ucfirst($r)));
+     if( !strlen($$r) ) {
+       $errs[] = tr("? is a required field", array(ucfirst($r)));
      }
   }
   if( !$errs ) {
@@ -77,6 +86,7 @@
      add_system_messages($errs);
      include("$libDir/nav.php");
      $zen->print_errors($errs);
+     $view = "ticket_edit";
      include("$templateDir/newTicketForm.php");
      include("$libDir/footer.php");
   }

@@ -67,6 +67,7 @@
   include_once("$libDir/zenTemplate.class");
   
   $zen = new zenTrack( $configFile );
+  $map =& new ZenFieldMap($zen);
   
   /**
   * Translator Object Initialization (mlively)
@@ -177,8 +178,9 @@
   
   function getVarfieldDataType( $varfieldName ) {
     $varfieldName = strtolower($varfieldName);
-    preg_match('/^custom_([a-z]+)[0-9]+$/', $varfieldName, $matches);
-    return isset($matches[1])? $matches[1] : null;
+    if( preg_match('/^custom_([a-z]+)[0-9]+$/', $varfieldName, $matches) ) {
+      return isset($matches[1])? $matches[1] : null;
+    }
   }
   
   function genVarfield( $formName, $varfield, $value = '' ) {

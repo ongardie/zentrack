@@ -49,7 +49,6 @@
      $debug_text .= "<tr><td class='mainContent'>\n";
      $debug_text .= "<p><b>SETTINGS / SYSTEM INFO</b></p>\n";
      $debug_text .= "<span class='note'>\n";
-     $debug_text .= "<i>To disable this output, set \$Debug_Overview in header.php to 0.</i><br>\n";
      $debug_text .= "HTTP_USER_AGENT: $HTTP_USER_AGENT<br>\n";
      $debug_text .= "SCRIPT_NAME: $SCRIPT_NAME<br>\n";
      $debug_text .= "HTTP_HOST: $HTTP_HOST<br>\n";
@@ -91,7 +90,7 @@
 
      $user = $zen->getUser($login_id);
     ?>
-    <table cellspacing='2' cellpadding='4' align='center'><tr><td class='mainContent'>
+    <table cellspacing='2' cellpadding='4' width='500' align='center'><tr><td class='mainContent'>
     <form action='<?=$rootUrl?>/help/bugs.php' method='post'>
     <input type='submit' value='Report A Bug' name='reportButton' class='submit'>
     <input type='hidden' name='name' value='<?=$zen->ffv($login_name)?>'>
@@ -102,7 +101,7 @@
     <p>Please send us <a href='http://www.zentrack.net/feedback/?name=<?=$zen->ffv($login_name)?>&email=<?=$user['email']?>&subject=Feedback'>Feedback</a>!</p>
     <p><b>PHPINFO:</b> <a href='<?=$rootUrl?>/phpinfo.php'>click here to view phpinfo</a></p>
     <p><b>CACHE:</b> <a href='<?=$SCRIPT_NAME?>?clear_session_cache=1'>click here to clear session cache</a></p>
-
+    <p><i>To disable this output, set $Debug_Mode in header.php to 0.</i><br>
     </td></tr>
     <?
   

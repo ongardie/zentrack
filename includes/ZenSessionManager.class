@@ -15,6 +15,51 @@
    }
    
    /**
+    * Returns data cached in the session, or null if the key is not found
+    */
+    function find( $key ) {
+      if( isset($_SESSION) ) {
+        if( isset($_SESSION['ztMiscCache']) && array_key_exists("$key", $_SESSION['ztMiscCache']) ) {
+          return $_SESSION['ztMiscCache']["$key"];
+        }
+      }
+      return null;
+    }
+   
+   /**
+    * Stores information in a cache array in the session
+    *
+    * @param string $key the index used to store values (if key exists it is replaced)
+    * @param mixed $value any valid session data
+    */
+    function store( $key, $value ) {
+      if( isset($_SESSION) ) {
+        if( !isset($_SESSION['ztMiscCache']) ) {
+          $_SESSION['ztMiscCache'] = array();
+        }
+        $_SESSION['ztMiscCache']["$key"] = $value;
+      }
+    }
+    
+   /**
+    * Clears information from the cache array in the session
+    *
+    * @param string $key if not provided, clears entire cache
+    */
+    function clear( $key = null ) {
+      if( isset($_SESSION) ) {
+        if( isset($_SESSION['ztMiscCache']) ) {
+          if( $key ) {
+            unset($_SESSION['ztMiscCache']["$key"]);
+          }
+          else {
+            $_SESSION['ztMiscCache'] = array();
+          }
+        }
+      }
+    }
+   
+   /**
     * Store information about a data type in the session
     *
     * @param string $type

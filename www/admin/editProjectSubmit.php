@@ -13,6 +13,7 @@
 
   // set the type to project
   $type = "project";
+  $page_type = "project";
 
   include("editTicketSubmit.php");
 ?>

@@ -7,20 +7,27 @@
   **
   */
   
-
   include("admin_header.php");
-
   $page_title = tr("Edit Field Map");
   include("$libDir/nav.php");
   
   function fmGetSet( $name, $key, $type = '' ) {
     // don't make updates on rows that don't exist (we may skip some fields occasionally
-    if( !array_key_exists($name, $_POST) || !array_key_exists($key, $_POST[$name]) ) { return; }
+    if( !array_key_exists($name, $_POST) ) {
+      return;
+    }
     // get the updates array
     global $updates;
     global $zen;
+    // process the type
+    $t = substr($type,0,1);
+    // handle fields which don't get posted (booleans which are not checked)
+    if( !array_key_exists($key, $_POST[$name]) ) { 
+      $updates[$name][$key] = $t == 'b'? 0 : null;
+      return;
+    }
     // format the value
-    switch( substr($type,0,1) ) {
+    switch( $t ) {
       case "i": //int
         $v = $zen->checkNum($_POST[$name][$key]);
         break;
@@ -36,8 +43,6 @@
     $updates[$name][$key] = $v;
   }
   
-  $map = new ZenFieldMap($zen);
-
   if( !$view || !in_array($view, array_keys($GLOBALS['zt_field_dependencies']['views'])) ) {
     $view = 'ticket_create';
   }
@@ -67,9 +72,9 @@
       else if( !isset($_POST[$f]) ) { continue; }
       
       // field_label
-      fmGetSet($f, 'field_label', &$changes, 'text');
+      fmGetSet($f, 'field_label', 'text');
       // is_visible
-      fmGetSet($f, 'is_visible', &$changes, 'boolean');
+      fmGetSet($f, 'is_visible', 'boolean');
 
       // num_cols
       fmGetSet($f, 'num_cols', 'int');

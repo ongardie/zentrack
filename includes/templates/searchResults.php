@@ -1,6 +1,6 @@
 <?{
-  // set up search parms
-  include("{$libDir}/prepareSearchVarfields.php");
+  
+  include("$libDir/sorting.php");
   
   // integrity
   $params = array();
@@ -67,16 +67,6 @@
     }
     $search_dates[$kb] = $d1;
     $search_dates[$ke] = $d2;
-  }
-  
-  //#####################################################
-  //orderby checkin
-  //#####################################################
-  if ($orderby == "") {
-    $orderby="status DESC, priority DESC";
-  }
-  else {
-    $orderby = preg_replace("/[^_0-9a-zA-Z ,]/", "", $orderby);
   }
   
   // determine which bins user can view

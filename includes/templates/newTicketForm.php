@@ -1,22 +1,42 @@
 <?  
+  /**
+   PREREQUISITES:
+     (ZenFieldMap)$map - contains properties for fields
+     (string)$view - the current view (probably project_create or ticket_create)
+     (string)$page_type - (optional) either 'ticket' or 'project'
+  **/
+
+
   unset($users);
   $td = ($TODO == 'EDIT');
+  
+  // determine what type of page we are looking at and create some useful labels
+  if( !isset($page_type) ) { 
+    $page_type = strpos($view,'project')===0? 'project' : 'ticket'; 
+  }
+  $plural = $page_type == 'project'? 'projects' : 'tickets';
+  $ucfirst = ucfirst($page_type);
+  
+  // calculate the bins which this user can access
   if( $td ) {
     $userBins = $zen->getUsersBins($login_id,"level_edit");  
   }
   else {
-    $userBins = $zen->getUsersBins($login_id,"level_create");
+    $level = $page_type=='project'? 'level_create_proj' : "level_create";
+    $userBins = $zen->getUsersBins($login_id,$level);
     $id = 0;
     $creator_id = $login_id;
     $status = 'OPEN';
   }
+  
+  // blow up if this user does not have proper access to any bins
   if( !is_array($userBins) || !count($userBins) ) {
     print "<span class='error'>";
     if( $td ) {
-      print tr("You do not have permission to edit tickets.");
+      print tr("You do not have permission to edit ?.", array($plural));
     }
     else {
-      print tr("You do not have permission to create tickets.");
+      print tr("You do not have permission to create ?.", array($plural));
     }
     print "</span>\n";
     include("$libDir/footer.php");
@@ -33,8 +53,7 @@
   if( strlen($otime) && $td ) { $otime = $zen->showDateTime($otime); }
   else { $otime = time(); }
      
-  $view = $td? 'ticket_edit' : 'ticket_create';
-  $map =& new ZenFieldMap($zen);
+  //$view = $td? 'ticket_edit' : 'ticket_create';
   $fields = $map->listFieldsForView($view);
   $hidden_fields = array();
   $visible_fields = array();
@@ -47,12 +66,20 @@
       if( $field['field_type'] == 'section' ) { $sections[] = $f; }
     }
   }
+  
+  // calculate the destination of our form results
+  if( $td ) {
+    $formDest = $page_type == 'project'? 'editProjectSubmit.php' : 'editTicketSubmit.php';
+  }
+  else {
+    $formDest = $page_type == 'project'? 'addProjectSubmit.php' : 'addSubmit.php';
+  }
 ?>
-<form method="post" name="ticketForm" action="<?=($td)? "editTicketSubmit.php" : "$rootUrl/addSubmit.php"?>" onSubmit='return validateTicketForm()'>
+<form method="post" name="ticketForm" action="<?=$formDest?>" onSubmit='return validateTicketForm()'>
 <table width="640" align="left" cellpadding="2" cellspacing="2" bgcolor="<?=$zen->settings["color_background"]?>">
 <tr>
   <td colspan="2" width="640" class="titleCell" align="center">
-     <?=tr("Ticket Information")?>
+     <?=tr("$ucfirst Information")?>
   </td>
 </tr>
 <?
@@ -79,7 +106,7 @@ foreach($visible_fields as $f) {
 ?>
 <tr>
   <td class="titleCell" colspan="2" align="center">
-  <?=tr("Click button to")?> <?=($td)? tr("save your changes"):tr("create your ticket")?>.
+  <?=tr("Click button to")?> <?=($td)? tr("save your changes"):tr("create your $page_type")?>.
   </td>
 </tr>
 <?

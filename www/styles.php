@@ -271,6 +271,8 @@
    font-size:   <?=$zen->settings["font_size_large"]?>px;  
 }
 
+TD.bigger { font-size: 50px; }
+
 .error {
    color:       <?=$zen->settings["color_hot"]?>;
    font-weight: Bold;
