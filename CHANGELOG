@@ -6,6 +6,12 @@
 
 ----- V2.2.2 (not released) -----
 2003-02-07, Altman
+  Fixed bug that caused Approval Required on new Tickets to 
+  not read default settings.
+  - includes/templates/newTicketForm.php v1.12
+  - includes/templates/newProjectForm.php v1.10
+
+2003-02-07, Altman
   Fixed misspellings found by Jeremy Griffith (atlantisal)
   - includes/leftTickets.php v1.6
   - includes/templates/searchList.php v1.6
