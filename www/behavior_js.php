@@ -189,7 +189,6 @@ if( is_array($behaviors) ) {
         // this is a file group, we have a more complex match here, since
         // one behavior can map to many sets of matches.
         $sets = $zen->getBehaviorFileSet( $b, $group, $userBins, $mode );
-        //if( $group['group_id'] == 30 ) { Zen::printArray( $sets, 'SETS FOR GROUP '.$group['group_name'] ); } 
         if( $sets && count($sets) ) {
           foreach($sets as $setid=>$vals) {
             genBehaviorFields($bid, $vals['matches'], &$fieldMap, $setid); 
