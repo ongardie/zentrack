@@ -250,8 +250,14 @@ class ZenFieldMap {
   /**
    * Returns the label specified for the field in question
    */
+/*old Function (wrong):
   function getLabel( $view, $field_name ) {
     $field = $this->getFieldFromMap($view,$field_name);
+    return $field['field_label']? $field['field_label'] : $field['field_name'];
+  }
+  new Function: */
+  function getLabel( $view, $field_name) {
+    $field = $this->getFieldFromMap($view,is_array($field_name)?$field_name['field_name']:$field_name);
     return $field['field_label']? $field['field_label'] : $field['field_name'];
   }
   
