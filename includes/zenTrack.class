@@ -877,8 +877,8 @@ class zenTrack extends zen {
         }
       }
     }
+    $name = $this->formatName($recipient,1);
     if( $res && $this->settings["log_assign"] == 'on' ) {
-      $name = $this->formatName($user,1);
       $logParams = array(
                          "action"   =>  'ASSIGNED',
                          "user_id"   =>  $user_id
@@ -896,14 +896,14 @@ class zenTrack extends zen {
       $this->checkIncludedRecipients($recipients,$user["email"]);
       // create email
       if( is_array($recipients) && count($recipients) ) {
-        if( !$name )
-          $name = $this->formatName($recipient,1);
+//        if( !$name )
+//          $name = $this->formatName($recipient,1);
         $subject = $this->ptrans("Ticket #?: assigned to ?",array($id,$name));
         $emailParams["Assigned by"] = $this->formatName($user_id);
         $emailParams["Assigned to"] = $name;
         if( $comments )
           $emailParams["body"] = htmlentities($comments);
-        $emailParams["tid"] = (is_array($ticket))? $ticket : $id;
+        $emailParams["tid"] = $id;
         $message = $this->formatEmailMessage($emailParams);
         $this->sendEmail($recipients,$subject,$message,$user_id);
       }
