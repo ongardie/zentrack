@@ -2128,7 +2128,7 @@ class zenTrack extends zen {
 
     $t = $this->get_ticket($id);      
     $params["bin_id"] = $newBin;
-    if ($this->settings["retain_owner_move"]) {
+    if ($this->settings["retain_owner_move"] != "on") {
       $params["user_id"] = NULL;
     }
     $res = $this->update_ticket($id, $params);

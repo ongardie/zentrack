@@ -14,6 +14,10 @@ abstraction, and endless possibilities for project expansion.
 ----- VERSION 2.5.0.2(development -----
 
 2004-10-22, cfalonso
+  Fixed a mistake I made in move_ticket function
+    - zentrack_2/includes/zenTrack.class 1.158
+
+2004-10-22, cfalonso
   Add admin settings to keep owners when moving a ticket, closing it and setting it to pending
     - zentrack_2/includes/zenTrack.class 1.157
     - zentrack_2/install/UPGRADE_mssqlserver.sql 1.22
