@@ -57,7 +57,7 @@
            }
            print "$te";
            print "$t<select name='NewComparator[{$j}]'>\n";
-           foreach($comp_opers as $cl=>$cn) {
+           foreach($comp_opers as $cn=>$cl) {
              $sel=($cn=='equals')? " selected" : "";
              print "<option value='{$cn}'{$sel}>{$cl}</option>\n";
            }
@@ -65,7 +65,7 @@
            print "{$t}<input type='text' name='NewMatchValue[{$j}]' "
 	     ." value='{$item['field_value']}' size='20' maxlength='255'>{$te}";
            print "$t"."<input type='text' name='NewSortOrder[{$j}]' "
-	     ." value='{$item['sort_order']};' size='3' maxlength='3'>{$te}";
+	     ." value='{$item['sort_order']}' size='3' maxlength='3'>{$te}";
 	   print "</tr>\n";
 	   $j++;
 	 }
