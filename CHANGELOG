@@ -4,6 +4,9 @@
  Clean, simple interface, fully adaptable administration,
  100 percent object oriented and database abstracted. 
 
+----- V2.2.3 (development) ----
+
+
 ----- V2.2.2.1 (2003-02-12) ----
 2003-02-12, Kato
   Fixed bug with closing tickets caused by new
