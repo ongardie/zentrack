@@ -76,6 +76,7 @@ INSERT INTO ZENTRACK_USERS (login,access,passwd,lname,fname,initials,email,notes
 INSERT INTO ZENTRACK_SETTINGS (name,value,description) VALUES ('admin_email'   ,'zentrack@havenshade.com' ,'The email address of the zenTrack administrator');
 INSERT INTO ZENTRACK_SETTINGS (name,value,description) VALUES ('bot_name'      ,'zenBot'                  ,'The system bots name');
 
+INSERT INTO ZENTRACK_SETTINGS (name,value,description) VALUES ('allow_cview'   ,'on' ,'Allow ticket creator to view the ticket, regardless of access');
 INSERT INTO ZENTRACK_SETTINGS (name,value,description) VALUES ('allow_reject'  ,'on' ,'Allow tickets to be rejected');
 INSERT INTO ZENTRACK_SETTINGS (name,value,description) VALUES ('allow_yank'    ,'on' ,'Allow tickets to be yanked');
 INSERT INTO ZENTRACK_SETTINGS (name,value,description) VALUES ('allow_assign'  ,'on' ,'Allow tickets to be assigned');
@@ -115,6 +116,7 @@ INSERT INTO ZENTRACK_SETTINGS (name,value,description) VALUES ('email_max_logs' 
 INSERT INTO ZENTRACK_SETTINGS (name,value,description) VALUES ('font_size', '12'              , 'Font size on pages, in pixels');
 INSERT INTO ZENTRACK_SETTINGS (name,value,description) VALUES ('font_face', 'Arial, Helvetica', 'Font face to appear on pages, comma seperated list');
 
+INSERT INTO ZENTRACK_SETTINGS (name,value,description) VALUES ('level_create'   , '2', 'Level required to create a ticket');
 INSERT INTO ZENTRACK_SETTINGS (name,value,description) VALUES ('level_hot'      , '1', 'Priority level to consider hot(highest is 1)');
 INSERT INTO ZENTRACK_SETTINGS (name,value,description) VALUES ('level_highlight', '2', 'Priority level to highlight(highest is 1)');
 INSERT INTO ZENTRACK_SETTINGS (name,value,description) VALUES ('level_user'     , '2', 'Level required to perform worker/user tasks');
