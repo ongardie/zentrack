@@ -3,8 +3,8 @@
 -- Table structure for `zentrack_agreement`
 --
 
-CREATE TABLE zentrack_agreement (
-  agree_id NUMERIC(12) IDENTITY(1,1) NOT NULL,
+CREATE TABLE ZENTRACK_AGREEMENT (
+  agree_id NUMERIC(12) NOT NULL,
   company_id NUMERIC(12) default NULL,
   contractnr VARCHAR(50) default NULL,
   title VARCHAR(50) default NULL,
@@ -23,8 +23,8 @@ CREATE TABLE zentrack_agreement (
 -- Table structure for `zentrack_agreement_item`
 --
 
-CREATE TABLE zentrack_agreement_item (
-  item_id NUMERIC(12) IDENTITY(1,1) NOT NULL ,
+CREATE TABLE ZENTRACK_AGREEMENT_ITEM (
+  item_id NUMERIC(12) NOT NULL ,
   agree_id NUMERIC(12) default NULL,
   name1 VARCHAR(50) default NULL,
   description1 VARCHAR(50) default NULL,
@@ -40,8 +40,8 @@ CREATE TABLE zentrack_agreement_item (
 -- Table structure for `zentrack_company`
 --
 
-CREATE TABLE zentrack_company (
-  company_id NUMERIC(12) IDENTITY(1,1) NOT NULL,
+CREATE TABLE ZENTRACK_COMPANY (
+  company_id NUMERIC(12) NOT NULL,
   title VARCHAR(50) default NULL,
   office VARCHAR(50) default NULL,
   address1 VARCHAR(50) default NULL,
@@ -68,8 +68,8 @@ CREATE TABLE zentrack_company (
 -- Table structure for `zentrack_employee`
 --
 
-CREATE TABLE zentrack_employee (
-  person_id NUMERIC(12) IDENTITY(1,1) NOT NULL,
+CREATE TABLE ZENTRACK_EMPLOYEE (
+  person_id NUMERIC(12) NOT NULL,
   company_id NUMERIC(12) default NULL,
   fname VARCHAR(50) default NULL,
   lname VARCHAR(50) default NULL,
@@ -92,8 +92,8 @@ CREATE TABLE zentrack_employee (
 -- Table structure for `zentrack_related_contacts`
 --
 
-CREATE TABLE zentrack_related_contacts (
-  clist_id NUMERIC(12) IDENTITY(1,1) NOT NULL,
+CREATE TABLE ZENTRACK_RELATED_CONTACTS (
+  clist_id NUMERIC(12) NOT NULL,
   ticket_id NUMERIC(12) NOT NULL,
   cp_id NUMERIC(12) default NULL,
   type NUMERIC(12) default NULL,
@@ -105,7 +105,7 @@ CREATE TABLE zentrack_related_contacts (
 --
 
 CREATE TABLE ZENTRACK_ACCESS (
- access_id NUMERIC(12) IDENTITY (1, 1) NOT NULL ,
+ access_id NUMERIC(12) NOT NULL ,
  [user_id] NUMERIC(12) default NULL,
  bin_id NUMERIC(12) default NULL,
  lvl NUMERIC(12) default NULL,
@@ -118,7 +118,7 @@ CREATE TABLE ZENTRACK_ACCESS (
 --
 
 CREATE TABLE ZENTRACK_ATTACHMENTS (
- attachment_id NUMERIC(12) IDENTITY (1, 1) NOT NULL ,
+ attachment_id NUMERIC(12) NOT NULL ,
  log_id NUMERIC(12) default NULL,
  ticket_id NUMERIC(12) default NULL,
  name varchar(25) default NULL,
@@ -133,7 +133,7 @@ CREATE TABLE ZENTRACK_ATTACHMENTS (
 --
 
 CREATE TABLE ZENTRACK_BINS (
- bid NUMERIC(12) IDENTITY (1, 1) NOT NULL ,
+ bid NUMERIC(12) NOT NULL ,
  [name] varchar(25) NOT NULL default '',
  priority NUMERIC(12) default NULL,
  active NUMERIC(12) default '1',
@@ -145,7 +145,7 @@ CREATE TABLE ZENTRACK_BINS (
 --
 
 CREATE TABLE ZENTRACK_LOGS (
- lid NUMERIC(12) IDENTITY (1, 1) NOT NULL ,
+ lid NUMERIC(12) NOT NULL ,
  ticket_id NUMERIC(12) NOT NULL default '0',
  [user_id] NUMERIC(12) NOT NULL default '0',
  bin_id NUMERIC(12) NOT NULL default '0',
@@ -161,7 +161,7 @@ CREATE TABLE ZENTRACK_LOGS (
 --
 
 CREATE TABLE ZENTRACK_NOTIFY_LIST (
-   notify_id NUMERIC(12) IDENTITY (1,1) NOT NULL,
+   notify_id NUMERIC(12) NOT NULL,
    ticket_id NUMERIC(12) NOT NULL,
    user_id NUMERIC(12) default NULL,
    name varchar(100) default NULL,
@@ -186,7 +186,7 @@ CREATE TABLE ZENTRACK_PREFERENCES (
 --
 
 CREATE TABLE ZENTRACK_PRIORITIES (
- pid NUMERIC(12) IDENTITY (1, 1) NOT NULL ,
+ pid NUMERIC(12) NOT NULL ,
  [name] varchar(25) NOT NULL default '',
  priority NUMERIC(12) default NULL,
  active NUMERIC(12) default NULL,
@@ -198,7 +198,7 @@ CREATE TABLE ZENTRACK_PRIORITIES (
 --
 
 CREATE TABLE ZENTRACK_SETTINGS (
- setting_id NUMERIC(12) IDENTITY (1, 1) NOT NULL ,
+ setting_id NUMERIC(12) NOT NULL ,
  [name] varchar(25) default NULL,
  value varchar(100) default NULL,
  [description] varchar(200) default NULL,
@@ -210,7 +210,7 @@ CREATE TABLE ZENTRACK_SETTINGS (
 --
 
 CREATE TABLE ZENTRACK_SYSTEMS (
- sid NUMERIC(12) IDENTITY (1, 1) NOT NULL ,
+ sid NUMERIC(12) NOT NULL ,
  [name] varchar(25) NOT NULL default '',
  priority NUMERIC(12) default NULL,
  active NUMERIC(12) default NULL,
@@ -222,7 +222,7 @@ CREATE TABLE ZENTRACK_SYSTEMS (
 --
 
 CREATE TABLE ZENTRACK_TASKS (
- task_id NUMERIC(12) IDENTITY (1, 1) NOT NULL ,
+ task_id NUMERIC(12) NOT NULL ,
  [name] varchar(25) NOT NULL default '',
  priority NUMERIC(12) default NULL,
  active NUMERIC(12) default NULL,
@@ -234,7 +234,7 @@ CREATE TABLE ZENTRACK_TASKS (
 --
 
 CREATE TABLE ZENTRACK_TICKETS (
- [id] NUMERIC(12) IDENTITY (1, 1) NOT NULL ,
+ [id] NUMERIC(12) NOT NULL ,
  title varchar(50) NOT NULL default 'untitled',
  priority NUMERIC(12) NOT NULL default '0',
  status varchar(25) NOT NULL default 'OPEN',
@@ -262,7 +262,7 @@ CREATE TABLE ZENTRACK_TICKETS (
 --
 
 CREATE TABLE ZENTRACK_TYPES (
- type_id NUMERIC(12) IDENTITY (1, 1) NOT NULL ,
+ type_id NUMERIC(12) NOT NULL ,
  [name] varchar(25) NOT NULL default '',
  priority NUMERIC(12) default NULL,
  active NUMERIC(12) default NULL,
@@ -274,7 +274,7 @@ CREATE TABLE ZENTRACK_TYPES (
 --
 
 CREATE TABLE ZENTRACK_USERS (
- [user_id] NUMERIC(12) IDENTITY (1, 1) NOT NULL ,
+ [user_id] NUMERIC(12) NOT NULL ,
  login varchar(25) default NULL,
  access_level NUMERIC(12) default NULL,
  passphrase varchar(32) default NULL,
@@ -293,7 +293,7 @@ CREATE TABLE ZENTRACK_USERS (
 -- 
 
 CREATE TABLE ZENTRACK_REPORTS ( 
-  report_id NUMERIC(12) IDENTITY (1, 1) NOT NULL ,
+  report_id NUMERIC(12) NOT NULL ,
   report_name varchar(100) default NULL, 
   report_type varchar(25) default NULL, 
   date_selector varchar(25) default NULL, 
@@ -328,7 +328,7 @@ CREATE TABLE ZENTRACK_REPORTS_INDEX (
 -- 
 
 CREATE TABLE ZENTRACK_REPORTS_TEMP ( 
-  report_id NUMERIC(12) IDENTITY (1, 1) NOT NULL ,
+  report_id NUMERIC(12) NOT NULL ,
   report_name varchar(100) default NULL, 
   report_type varchar(25) default NULL, 
   date_selector varchar(25) default NULL, 
@@ -352,7 +352,7 @@ CREATE TABLE ZENTRACK_REPORTS_TEMP (
 
 
 CREATE TABLE ZENTRACK_BEHAVIOR (
-  behavior_id NUMERIC(12) IDENTITY(1,1) NOT NULL,
+  behavior_id NUMERIC(12) NOT NULL,
   behavior_name VARCHAR(100),
   group_id NUMERIC(12) NOT NULL,
   is_enabled NUMERIC(1),
@@ -373,13 +373,14 @@ CREATE TABLE ZENTRACK_BEHAVIOR_DETAIL (
 );
 
 CREATE TABLE ZENTRACK_GROUP (
-  group_id NUMERIC(12) IDENTITY(1,1) NOT NULL,
+  group_id NUMERIC(12) NOT NULL,
   table_name VARCHAR(50),
   group_name VARCHAR(100),
   descript VARCHAR(255),
   eval_type VARCHAR(10),
   eval_text TEXT,
   name_of_file VARCHAR(100),
+  include_none NUMERIC(1),
   PRIMARY KEY (group_id)
 );
 

@@ -103,6 +103,16 @@
   </td>
 </tr>
 <tr>
+  <td class='bars'>
+    <?=tr('Optional')?>
+  </td>
+  <td class='bars'>
+    <input type='checkbox' name='include_none' value='1' <?=$group['include_none']? ' checked' : ''?>>
+    <br><span class='note'>Checking this will create a -none- option in addition
+    to the listed items</span>
+  </td>
+</tr>
+<tr>
   <td colspan="2" class="subTitle">
     <?=tr("Click ? to ?",array($button,$blurb))?>.
   </td>

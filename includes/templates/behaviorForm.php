@@ -35,7 +35,7 @@
     <?
          $t = "\t<td class='bars'>";
          $te = "</td>\n";
-         $sel = $behavior['is_enabled']? ' checked' : '';
+         $sel = !$td || $behavior['is_enabled']? ' checked' : '';
          print "$t<input type='checkbox' name='NewIsEnabled' value='1'$sel>\n";
          print "$te";
     ?>
@@ -89,7 +89,7 @@
     <?
          $t = "\t<td class='bars'>";
          $te = "</td>\n";
-         $sel = $behavior['field_enabled']? ' checked' : '';
+         $sel = !$td || $behavior['field_enabled']? ' checked' : '';
          print "$t<input type='checkbox' value='1' name='NewFieldEnabled'$sel>\n";
          print "$te";
     ?>

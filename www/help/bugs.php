@@ -4,7 +4,7 @@
 
   if( array_key_exists('reportButton', $_POST) ) {
     $debug_output = urldecode($debug_output);
-    $url = $_SERVER['HTTP_REFERER'];
+    $url = preg_replace('@^http://[^/]+@', '', $_SERVER['HTTP_REFERER']);
   }
   
   if( array_key_exists('submit', $_POST) ) {
@@ -27,9 +27,9 @@
         .$_SERVER['REMOTE_ADDR']."\n"
         .$_SERVER['HTTP_USER_AGENT']."\n"
         .$_SERVER['HTTP_REFERER']."\n";
-     $headers = "From: bot@zentrack.net\nReply-To: ".stripslashes($email)."\n";
+     $headers = "From: ".$zen->bugFrom."\nReply-To: ".stripslashes($email)."\n";
      
-     $res = mail('bugs@zentrack.net', "Bug report from ".stripslashes($name),
+     $res = mail($zen->bugTo, "Bug report from ".stripslashes($name),
                  $fullMessage, $headers);
      if( $res ) {
        $msg = "Your message was delivered: <pre>$fullMessage</pre>";

@@ -137,7 +137,8 @@ CREATE TABLE ZENTRACK_GROUP (
   descript varchar(255) default NULL,
   eval_type VARCHAR(10) default NULL,
   eval_text TEXT default NULL,
-  name_of_file VARCHAR(100)
+  name_of_file VARCHAR(100),
+  include_none int2
 );
 
 CREATE TABLE ZENTRACK_GROUP_DETAIL (

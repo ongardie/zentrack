@@ -9,34 +9,34 @@
 
   $action = "reject";  
   include("action_header.php");
-
+  
   if( $actionComplete == 1 ) {
-     $input = array(
-		    "id"       => "int",
-		    "comments" => "html"
-		    );
-     $zen->cleanInput($input);
-     $required = array_keys($input);
-     foreach($required as $r) {
-	if( !$$r ) {
-	   $errs[] = " $r is required";
-	}
-     }
-     
-     if( !$errs ) {
-	$res = $zen->reject_ticket($id, $login_id, $comments);
-	if( $res ) {
-	   add_system_messages(tr("Ticket ? was rejected.", array($id)));
-	   $setmode = "details";
-	   include("../ticket.php");
-	   exit;
-	   //header("Location:$rootUrl/ticket.php?id=$id&setmode=details");
-	} else {
-	   $errs[] = tr("System error: Ticket ? could not be rejected", array($id)).$zen->db_error;
-	}
-     }
-     if( $errs )
-       add_system_messages( $errs, 'Error' );     
+    $input = array(
+    "id"       => "int",
+    "comments" => "html"
+    );
+    $zen->cleanInput($input);
+    $required = array_keys($input);
+    foreach($required as $r) {
+      if( !$$r ) {
+        $errs[] = " $r is required";
+      }
+    }
+    
+    if( !$errs ) {
+      $res = $zen->reject_ticket($id, $login_id, $comments);
+      if( $res ) {
+        add_system_messages(tr("Ticket ? was rejected.", array($id)));
+        $setmode = "details";
+        include("../ticket.php");
+        exit;
+        //header("Location:$rootUrl/ticket.php?id=$id&setmode=details");
+      } else {
+        $errs[] = tr("System error: Ticket ? could not be rejected", array($id)).$zen->db_error;
+      }
+    }
+    if( $errs )
+    add_system_messages( $errs, 'Error' );     
   }
 
   include("$libDir/nav.php");

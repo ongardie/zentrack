@@ -19,10 +19,11 @@
                             "NewDescript"        => "html",
                             "NewEvalType"        => "alphanum",
                             "NewEvalText"        => "html",
-                            "name_of_file"       => "filename"
+                            "name_of_file"       => "filename",
+                            'include_none'       => 'int'
                             );
   
-  $data_group_required = array("NewGroupName", "NewTableName", "NewEvalType");
+  $data_group_required = array("NewGroupName", "NewEvalType");
   
   $zen->cleanInput($data_group_fields);
   
@@ -60,7 +61,7 @@
     } else {
       $res = $zen->updateDataGroup($group_id,$NewGroupName,$NewTableName,
       $NewEvalType,$NewEvalText,
-      ( strlen($NewDescript) )?$NewDescript : "NULL", $name_of_file);
+      ( strlen($NewDescript) )?$NewDescript : "NULL", $name_of_file, $include_none);
       if( $res ) {
         // update session info with changes
         $vars = $zen->generateDataGroupInfo( array($group_id) );

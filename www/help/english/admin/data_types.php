@@ -40,6 +40,20 @@
     checkbox, which will prevent the bin from being used in the future.</p>
   </td>
 </tr>
+<tr>
+  <td class='titleCell'>Priorities</td>
+</tr>
+<tr>
+  <td class='cell'>
+    <p>The priority entries must all have a sort order.  The orders should be
+    consecutive.
+    
+    <p>Items which are inactive do not need a sort order, they will be ignored.
+    
+    <p>If the priority colors do not seem to work right, always check the ordering
+    for the priority items.
+  </td>
+</tr>
 </table>
 
 <? 

@@ -52,18 +52,18 @@
     <select name="project_id">
     <option value=''>--<?=tr("none")?>--</option>
     <?
-      $bins = $zen->getUsersBins($login_id);
-      if( is_array($bins) ) {
-	$params = array("bin_id" => $bins, "status" => "OPEN");
-	$projects = $zen->get_projects($params,'title');
-      } 
-      if( is_array($projects) ) {
-	foreach($projects as $p) {
-	  $sel = ($p["id"] == $project_id)? " selected" : "";
-	  print "<option value='$p[id]'$sel>"
-	    .stripslashes($p["title"])."</option>\n";
-	}
+    $bins = $zen->getUsersBins($login_id);
+    if( is_array($bins) ) {
+      $params = array("bin_id" => $bins, "status" => "OPEN");
+      $projects = $zen->get_projects($params,'title');
+    } 
+    if( is_array($projects) ) {
+      foreach($projects as $p) {
+        $sel = ($p["id"] == $project_id)? " selected" : "";
+        print "<option value='$p[id]'$sel>"
+        .stripslashes($p["title"])."</option>\n";
       }
+    }
     ?>
     </select>
   </td>
@@ -242,22 +242,39 @@ value="<?=($deadline)?$zen->showDate(strip_tags($deadline)):""?>">
     &nbsp;(<?=tr("optional")?>)
   </td>
 </tr>          
+
 <tr>
   <td class="bars">
     <?=tr("Testing Required")?>
   </td>
   <td class="bars">
+  <? if( $td ) { ?>
+    <select name='tested'>
+      <option value='0' <?=$ticket['tested'] == 0? ' selected':''?>><?=tr('n/a')?></option>
+      <option value='1' <?=$ticket['tested'] == 1? ' selected':''?>><?=tr('Required')?></option>
+      <option value='2' <?=$ticket['tested'] == 2? ' selected':''?>><?=tr('Completed')?></option>
+    </select>
+  <? } else { ?>
     <input type="checkbox" name="tested" value="1" 
-  <?= $zen->getDefaultValue("default_test_checked") ?>>
+    <?= $zen->getDefaultValue("default_test_checked") ?>>
+  <? } ?>
   </td>
-</tr>          
+</tr>   
 <tr>
   <td class="bars">
     <?=tr("Approval Required")?>
   </td>
   <td class="bars">
+  <? if( $td ) { ?>
+    <select name='approved'>
+      <option value='0' <?=$ticket['approved'] == 0? ' selected':''?>><?=tr('n/a')?></option>
+      <option value='1' <?=$ticket['approved'] == 1? ' selected':''?>><?=tr('Required')?></option>
+      <option value='2' <?=$ticket['approved'] == 2? ' selected':''?>><?=tr('Completed')?></option>
+    </select>
+  <? } else { ?>
     <input type="checkbox" name="approved" value="1" 
     <?= $zen->getDefaultValue("default_aprv_checked") ?>>
+  <? } ?>
   </td>
 </tr>
 
@@ -267,7 +284,7 @@ value="<?=($deadline)?$zen->showDate(strip_tags($deadline)):""?>">
 ?>
 <tr>
   <td colspan="2" class="subtitle">
-    <?=tr("Other Fields")?>
+    <?=tr($zen->settings['varfield_tab_name'])." ".tr("Fields")?>
   </td>
 </tr>
 <?
@@ -323,44 +340,44 @@ value="<?=($deadline)?$zen->showDate(strip_tags($deadline)):""?>">
    }
    
 <?
- $varfields = $zen->getCustomFields(0,'Ticket', 'New');
-   if( is_array($varfields) && count($varfields) ) {
-     foreach($varfields as $v) {
-       $k = $v['field_name'];
-       $l = $v['field_label'];
-       if( $v['js_validation'] ) {
-	 print preg_replace('/\{form\}/', 'document.ticketForm', $v['js_validation']);
-       }
-       else {
-	 $f = "document.ticketForm.{$k}";
-	 $e = 'errs[ errs.length ]';
-	 switch( getVarfieldDataType($k) ) {
-	 case "menu":
-	   // if the value of the menu selection is '', then
-	   // the required status is significant
-	   if( $v['is_required'] ) {
-	     print "if( {$f}.options[ {$f}.selectedIndex ].value == '' )"
-	       . " { {$e} = '{$l} is required'; }\n";
-	   }
-	 case "boolean":
-	   // no validation for checkboxes
-	   break;
-	 case "number":
-	   // make sure it is a valid number
-	   print "if( {$f}.value.match( /[^0-9.]/ ) ) { {$e} = '"
-	     .tr('? is not a valid number',array(tr($l)))."'; }\n";
-	 default:
-	   // nothing to do for dates or strings, just
-	   // check the required status
-	   // numbers fall through to here also
-	   if( $v['is_required'] ) {
-	     print "if( !{$f}.value ) { {$e} = '"
-	       .tr('? is required',array(tr($l)))."'; }\n";
-	   }
-	 }
-       }
-     }
-   }
+$varfields = $zen->getCustomFields(0,'Ticket', 'New');
+if( is_array($varfields) && count($varfields) ) {
+  foreach($varfields as $v) {
+    $k = $v['field_name'];
+    $l = $v['field_label'];
+    if( $v['js_validation'] ) {
+      print preg_replace('/\{form\}/', 'document.ticketForm', $v['js_validation']);
+    }
+    else {
+      $f = "document.ticketForm.{$k}";
+      $e = 'errs[ errs.length ]';
+      switch( getVarfieldDataType($k) ) {
+        case "menu":
+        // if the value of the menu selection is '', then
+        // the required status is significant
+        if( $v['is_required'] ) {
+          print "if( {$f}.options[ {$f}.selectedIndex ].value == '' )"
+          . " { {$e} = '{$l} is required'; }\n";
+        }
+        case "boolean":
+        // no validation for checkboxes
+        break;
+        case "number":
+        // make sure it is a valid number
+        print "if( {$f}.value.match( /[^0-9.]/ ) ) { {$e} = '"
+        .tr('? is not a valid number',array(tr($l)))."'; }\n";
+        default:
+        // nothing to do for dates or strings, just
+        // check the required status
+        // numbers fall through to here also
+        if( $v['is_required'] ) {
+          print "if( !{$f}.value ) { {$e} = '"
+          .tr('? is required',array(tr($l)))."'; }\n";
+        }
+      }
+    }
+  }
+}
 ?>
    if( errs.length > 0 ) {
      var str = "<?=tr("Please correct the following errors:")?>\n----------\n";

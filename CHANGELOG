@@ -7,12 +7,56 @@
 
 ----- V2.5 LIVE (in testing) -----
 
-2004-09-22, Kato
-  Corrected bug causing help language to default to english.
+2004-10-06, Kato
+  Fixed get_table_id (missing function)
+    - zentrack_2/includes/reportDataParser.php
+
+2004-09-28, Kato
+  Fixed reject ticket bug
   
 2004-09-27, Kato
-  Added ability to generate behaviors from file using File Groups
+  Added -none- option for data groups
   
+  Fixed mssql identity problem
+  
+  Added ability to generate behaviors from file using File Groups
+    - zentrack_2/setup_from_cvs 1.12
+    - zentrack_2/setup_from_cvs.cmd 1.4
+    - zentrack_2/includes/footer.php 1.28
+    - zentrack_2/includes/headerInc.php 1.47
+    - zentrack_2/includes/leftAdmin.php 1.8
+    - zentrack_2/includes/leftBins.php 1.9
+    - zentrack_2/includes/leftHelp.php 1.8
+    - zentrack_2/includes/zen.class 1.29
+    - zentrack_2/includes/zenTrack.class 1.151
+    - zentrack_2/includes/templates/behaviorDetailForm.php 1.6
+    - zentrack_2/includes/templates/behaviorForm.php 1.6
+    - zentrack_2/includes/templates/behaviorMenu.php 1.5
+    - zentrack_2/includes/templates/editCustomsForm.php 1.8
+    - zentrack_2/includes/templates/groupAdd.php 1.4
+    - zentrack_2/includes/templates/groupDetailsForm.php 1.6
+    - zentrack_2/includes/templates/groupForm.php 1.10
+    - zentrack_2/includes/templates/optionsMenu.php 1.4
+    - zentrack_2/install/UPGRADE_mssqlserver.sql 1.19
+    - zentrack_2/install/UPGRADE_mysql.sql 1.27
+    - zentrack_2/install/UPGRADE_oracle.sql 1.26
+    - zentrack_2/install/UPGRADE_postgres.sql 1.18
+    - zentrack_2/install/build_mssqlserver.sql 1.12
+    - zentrack_2/install/build_mysql.sql 1.15
+    - zentrack_2/install/build_oracle.sql 1.15
+    - zentrack_2/install/build_postgres.sql 1.16
+    - zentrack_2/www/behavior_js.php 1.11
+    - zentrack_2/www/javascript.js 1.12
+    - zentrack_2/www/admin/addGroupSubmit.php 1.8
+    - zentrack_2/www/admin/editBehavior.php 1.4
+    - zentrack_2/www/admin/editBehaviorDetails.php 1.5
+    - zentrack_2/www/admin/editCustom.php 1.8
+    - zentrack_2/www/admin/editGroupSubmit.php 1.7
+    - zentrack_2/www/misc/pwc.php 1.10
+  
+2004-09-22, Kato
+  Corrected bug causing help language to default to english.
+    - zentrack_2/includes/headerInc.php 1.47
 
 ----- V2.5 RC3 [Pre 3] (2004-09-10) -----
 

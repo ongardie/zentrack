@@ -19,10 +19,11 @@
                             "NewDescript"        => "html",
                             "NewEvalType"        => "alphanum",
                             "NewEvalText"        => "html",
-                            "name_of_file"       => "filename"
+                            "name_of_file"       => "filename",
+                            'include_none'       => 'int'
                             );
   
-  $data_group_required = array("NewGroupName", "NewTableName", "NewEvalType");
+  $data_group_required = array("NewGroupName", "NewEvalType");
   
   $zen->cleanInput($data_group_fields);
   
@@ -57,7 +58,7 @@
       $msg = tr("Process successful.  Group was not added, because this is a demo site.");
     } else {
       $group_id = $zen->addDataGroup( $NewGroupName, $NewTableName, $NewDescript, 
-      $NewEvalType, $NewEvalText, $name_of_file, array() );
+      $NewEvalType, $NewEvalText, $name_of_file, $include_none, array() );
       if( $group_id ) {
         $vars = $zen->generateDataGroupInfo( array($group_id) );
         $_SESSION['data_groups'][$group_id] = $vars[$group_id];

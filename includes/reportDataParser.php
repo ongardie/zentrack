@@ -29,7 +29,7 @@ if( is_array($params) ) {
     $set_index = array();
     $n = "get_".strtolower($matches[1]);
     $type_column = str_replace(" ","_",strtolower($params["report_type"]));
-    $tbl_column = $zen->get_table_id(strtolower($matches[1]));
+    $tbl_column = $zen->getTableId(strtolower($matches[1]));
     foreach($params["data_set"] as $d) {
       $vals = $zen->$n($d);
       $k = $vals["$tbl_column"];

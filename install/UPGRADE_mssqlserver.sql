@@ -4,7 +4,7 @@
 --
 
 CREATE TABLE ZENTRACK_AGREEMENT (
-  agree_id NUMERIC(12) IDENTITY(1,1) NOT NULL,
+  agree_id NUMERIC(12) IDENTITY(100,1) NOT NULL,
   company_id NUMERIC(12) default NULL,
   contractnr VARCHAR(50) default NULL,
   title VARCHAR(50) default NULL,
@@ -24,7 +24,7 @@ CREATE TABLE ZENTRACK_AGREEMENT (
 --
 
 CREATE TABLE ZENTRACK_AGREEMENT_ITEM (
-  item_id NUMERIC(12) IDENTITY(1,1) NOT NULL ,
+  item_id NUMERIC(12) IDENTITY(100,1) NOT NULL ,
   agree_id NUMERIC(12) default NULL,
   name1 VARCHAR(50) default NULL,
   description1 VARCHAR(50) default NULL,
@@ -41,7 +41,7 @@ CREATE TABLE ZENTRACK_AGREEMENT_ITEM (
 --
 
 CREATE TABLE ZENTRACK_COMPANY (
-  company_id NUMERIC(12) IDENTITY(1,1) NOT NULL,
+  company_id NUMERIC(12) IDENTITY(100,1) NOT NULL,
   title VARCHAR(50) default NULL,
   office VARCHAR(50) default NULL,
   address1 VARCHAR(50) default NULL,
@@ -69,7 +69,7 @@ CREATE TABLE ZENTRACK_COMPANY (
 --
 
 CREATE TABLE ZENTRACK_EMPLOYEE (
-  person_id NUMERIC(12) IDENTITY(1,1) NOT NULL,
+  person_id NUMERIC(12) IDENTITY(100,1) NOT NULL,
   company_id NUMERIC(12) default NULL,
   fname VARCHAR(50) default NULL,
   lname VARCHAR(50) default NULL,
@@ -93,7 +93,7 @@ CREATE TABLE ZENTRACK_EMPLOYEE (
 --
 
 CREATE TABLE ZENTRACK_RELATED_CONTACTS (
-  clist_id NUMERIC(12) IDENTITY(1,1) NOT NULL,
+  clist_id NUMERIC(12) IDENTITY(100,1) NOT NULL,
   ticket_id NUMERIC(12) NOT NULL,
   cp_id NUMERIC(12) default NULL,
   type NUMERIC(12) default NULL,
@@ -104,7 +104,7 @@ CREATE TABLE ZENTRACK_RELATED_CONTACTS (
 -- Table structure for behaviors
 
 CREATE TABLE ZENTRACK_BEHAVIOR (
-  behavior_id NUMERIC(12) IDENTITY(1,1) NOT NULL,
+  behavior_id NUMERIC(12) IDENTITY(100,1) NOT NULL,
   behavior_name VARCHAR(100),
   group_id NUMERIC(12) NOT NULL,
   is_enabled NUMERIC(1),
@@ -125,13 +125,14 @@ CREATE TABLE ZENTRACK_BEHAVIOR_DETAIL (
 );
 
 CREATE TABLE ZENTRACK_GROUP (
-  group_id NUMERIC(12) IDENTITY(1,1) NOT NULL,
+  group_id NUMERIC(12) IDENTITY(100,1) NOT NULL,
   table_name VARCHAR(50),
   group_name VARCHAR(100),
   descript VARCHAR(255),
   eval_type VARCHAR(10),
   eval_text TEXT,
   name_of_file VARCHAR(100),
+  include_none NUMERIC(1),
   PRIMARY KEY (group_id)
 );
 

@@ -28,6 +28,7 @@ CREATE TABLE ZENTRACK_GROUP (
   eval_type VARCHAR(10),
   eval_text TEXT,
   name_of_file VARCHAR(100),
+  include_none int(1),
   PRIMARY KEY (group_id),
   INDEX (group_name)
 );

@@ -11,6 +11,10 @@
      <p><?=tr('Notes are special tickets which do not require any actions.').'  '.
 	       tr('They start their life closed, and do not need to be completed.').'  '. 
 	       tr('Use them only for tracking and documentation.')?></p>
+<? } else if( $type == 'priority' ) {?>
+   <p><?=tr("The priority order fields should all be filled in and should "
+           ."be consecutive (for proper coloring).")?>
+   <br><?=tr("Any fields which are disabled should have the order set to 0")?></p>
 <? } ?>
 	
       <ul>
@@ -42,9 +46,8 @@
 	     print "<input type='hidden' name='newID[$j]' value='".$v[$id_type]."'>\n";
 	     print "$t<input type='text' name='newName[$j]' "
 	       ." value='$v[name]' size='20' maxlength='25'>$te";
-	     print "$t<select name='newPri[$j]' "
-	       ." onChange='return checkOrder($j, this)'>\n"
-	       .admin_number_pulldown( $num, $v["priority"] )."</select>\n$te";
+	   print "$t<input name='newPri[$j]' value='"
+        .$zen->checkNum($v['priority'])."' size='4' maxlength='4'>$te\n";
 	     print "$t<input type='checkbox' name='newActive[$j]' value='1'";
 	     print ($v["active"])? " checked" : "";
 	     print ">$te";
@@ -59,9 +62,7 @@
 	   print "<input type='hidden' name='newID[$j]' value=''>\n";
 	   print "$t<input type='text' name='newName[$j]' "
 	     ." value='' size='20' maxlength='25'>$te";
-	   print "$t<select name='newPri[$j]' "
-	     ." onChange='checkOrder($j, this)'>\n"
-	     .admin_number_pulldown( $num )."</select>\n$te";
+	   print "$t<input name='newPri[$j]' value='0' size='4' maxlength='4'>$te\n";
 	   print "$t<input type='checkbox' name='newActive[$j]' value='1' checked>$te";
 	   print "</tr>\n";	   
 	   $js_vals[] = 0;
@@ -98,29 +99,13 @@
       <input type='hidden' name='more' value='<?=$more?>'>
       </form>
       <script language='javascript'>
-	 var i;
-         var ci;
-         var bin = [ <?=join(",",$js_vals)?> ];
-	 function setToDo(val) {
-	   document.configForm.TODO.value = val;
-           return true;
-         }
-         function checkOrder( num, f ) {
-	   if( num == "" )
-	     num = 0;
-	   val = f.selectedIndex+"";
-	   for( i=0; i<bin.length; i++ ) {
-	     if( i != num ) {
-	       if( bin[i] > 0 && bin[i] == val ) {
-		 alert("<?=tr("There is already an entry with that value.")?>");
-		 f.selectedIndex = bin[num];
-		 return false;
-	       }
-	     }
-	   }
-	   bin[num] = val;
-	   return true;
-	 }
+      var i;
+      var ci;
+      var bin = [ <?=join(",",$js_vals)?> ];
+      function setToDo(val) {
+        document.configForm.TODO.value = val;
+        return true;
+      }
       </script> 
 
 

@@ -263,11 +263,16 @@ class zenTrack extends zen {
       $tbl = $this->table_tickets;
       $tblpri = $this->table_priorities;
       $tables .= ", $tblpri p";
-      $sort = str_replace("priority", "p.priority", $sort);
+      $sort = str_replace("priority", "ppri", $sort);
     }
 
     if( !is_array($columns) )
-      $columns = $tf_pri? array('*, t.priority') : array("*");
+      $columns = $tf_pri? 
+         array('id', 'title', 't.priority priority', 'status',
+               'description', 'otime', 'ctime', 'bin_id', 'type_id',
+               'user_id', 'system_id', 'creator_id', 'tested', 'approved',
+               'relations','project_id','est_hours','deadline','start_date',
+               'wkd_hours','p.priority ppri') : array("*");
 
     $where = ($tf_pri)? " WHERE t.priority = p.pid " : "";
     if( is_array($params) ) {
@@ -277,8 +282,10 @@ class zenTrack extends zen {
     $query = "SELECT ".join(",",$columns)." FROM $tables $where";
 
     if( $sort )
-      $query .= " ORDER BY $sort";
-    $this->total_records = $this->db_getrowcount($query);
+      $query .= " ORDER BY $sort ";
+    $w = preg_replace('/^ *WHERE/', '', $where);
+    $this->total_records = $this->db_getrowcount($tables, $w);
+    $this->total_records = 30;
     $numtoshow = $this->settings['paging_max_rows'];
     $start = $pageNumber * $numtoshow;
     if( $start + $numtoshow > $this->total_records ) {
@@ -996,6 +1003,10 @@ class zenTrack extends zen {
       $v['fields'] = array();
       $groups["$k"] = $v;
       if( $v['eval_type'] == 'Matches' ) {
+        if( $v['include_none'] ) {
+          // make the select menu optional by including a -none- option
+          $groups["$k"]['fields'][] = array('field_value'=>null, 'label'=>'-none-');
+        }
         // get values from database
         if( $t ) {
           // if this is a custom group, there will be no
@@ -1008,11 +1019,11 @@ class zenTrack extends zen {
           $query = "SELECT field_value FROM ".$this->table_group_detail
              ." WHERE group_id = {$k} ORDER BY sort_order, field_value";
           $this->addDebug('generateDataGroupInfo', "custom: {$query}", 3);
-          $vals = $this->db_queryIndexed($query);
-          if( is_array($vals) ) {
-            foreach($vals as $v) {
+          $vars = $this->db_queryIndexed($query);
+          if( is_array($vars) ) {
+            foreach($vars as $v) {
               $g = $v['field_value'];
-              $groups[$k]['fields'][]=array('field_value'=>$g, 'label'=>$g);
+              $groups["$k"]['fields'][]=array('field_value'=>$g, 'label'=>$g);
             }
           }
         }
@@ -1278,7 +1289,7 @@ class zenTrack extends zen {
    * @return integer
    */
   function addDataGroup( $name, $table, $descript, $evalType, $evalText, 
-                         $name_of_file, $vals = null ) { 
+                         $name_of_file, $include_none, $vals = null ) { 
     // create the group first
     $id = $this->db_insert( $this->table_group, 
                             array("table_name"=>$table, 
@@ -1286,7 +1297,8 @@ class zenTrack extends zen {
                                   "descript"=>$descript,
                                   "eval_type"=>$evalType,
                                   "eval_text"=>$evalText,
-                                  "name_of_file"=>$name_of_file));
+                                  "name_of_file"=>$name_of_file,
+                                  'include_none'=>$include_none));
     if( $id && $vals ) {
       $this->_insertGroupDetails($id, $vals);
     }
@@ -1319,7 +1331,7 @@ class zenTrack extends zen {
    * @param string $evalText javascript text for evals
    */
   function updateDataGroup( $group_id, $name, $table, $evalType, $evalText, 
-                            $descript, $name_of_file ) {     
+                            $descript, $name_of_file, $include_none ) {     
     $group = $this->get_data_group($group_id);
     if( $group['table_name'] != $table ) {
       $this->db_delete($table_group_detail, "group_id", $group_id);
@@ -1330,7 +1342,8 @@ class zenTrack extends zen {
                                   "descript"=>$descript,
                                   "eval_type"=>$evalType,
                                   "eval_text"=>$evalText,
-                                  "name_of_file"=>$name_of_file) );
+                                  "name_of_file"=>$name_of_file,
+                                  'include_none'=>$include_none) );
   }
 
   /**
@@ -1926,7 +1939,7 @@ class zenTrack extends zen {
     // if comments field is set to 'skip_log' then
     // no log will be generated (assumed to have 
     // been done before calling this)
-    $id = $this->checkNum($user_id);
+    $id = $this->checkNum($id);
     $newBin = $this->checkNum($newBin);
     if( $user_id ) { $user_id = $this->checkNum($user_id); }
 
@@ -1974,10 +1987,10 @@ class zenTrack extends zen {
     $id = $this->checkNum($id);
     $user_id = $this->checkNum($user_id);
     $sender = $this->getTicketSender($id);
-    if( !$sender["bin_id"] && $sender["user_id"] )
-      $res = $this->assign_ticket($id,$sender["user_id"],$user_id);
-    else if( $sender["bin_id"] )
+    if( $sender["bin_id"] )
       $res = $this->move_ticket( $id, $sender["bin_id"], $user_id );
+    if( $sender["user_id"] )
+      $res = $this->assign_ticket($id,$sender["user_id"],$user_id);
     $t = $this->get_ticket($id);
     if( $res && $this->settings["log_reject"] == "on" ) {
       $logParams["action"] = "REJECTED";
@@ -1985,15 +1998,15 @@ class zenTrack extends zen {
       $logParams["user_id"] = $user_id;
       $logParams["ticket_id"] = $t["id"];
       if( $comments )
-        $logParams["entry"] = $comments;
+      $logParams["entry"] = $comments;
       $this->add_log($id,$logParams);
     }
     if( $res && $this->settings["email_reject"] == "on" ) {
       $recipients = $this->get_notify_recipients($id);
       // make sure the sender gets an email
       if( is_array($sender) && isset($sender["user_id"]) ) {
-	$user = $this->get_user($sender["user_id"]);
-	$this->checkIncludedRecipients($recipients,$user['email']);
+        $user = $this->get_user($sender["user_id"]);
+        $this->checkIncludedRecipients($recipients,$user['email']);
       }
       if( is_array($recipients) && count($recipients) ) { 
         // add the sender if not on notify list
@@ -2012,12 +2025,12 @@ class zenTrack extends zen {
         }
         $subject = $this->ptrans("Ticket #?: rejected",array($id));
         $eParams = array(
-                         "From" => $this->bins["$t[bin_id]"], 
-                         "Time" => $this->showDateTime(),
-                         "By"   => $this->formatName($user_id)           
-                         );
+        "From" => $this->bins["$t[bin_id]"], 
+        "Time" => $this->showDateTime(),
+        "By"   => $this->formatName($user_id)           
+        );
         if( $comments )
-          $eParams["body"] = $comments;
+        $eParams["body"] = $comments;
         $eParams["tid"] = $id;  
         $message = $this->formatEmailMessage($eParams);
         $this->sendEmail($recipients,$subject,$message,$user_id);
@@ -3352,7 +3365,6 @@ class zenTrack extends zen {
         $headers = str_replace("\n", "\r\n", $headers);
       }
       $this->addDebug("sendEmail","$recipient_address::$subject::$headers",3);
-      //print 'mail('.$recipient_address.','.$subject.','.$message.','.$headers.");<br>\n";//debug
       if( !mail( $recipient_address, $subject, $message, $headers ) ) {
         return "System error: send failed";
       }
@@ -5215,6 +5227,10 @@ class zenTrack extends zen {
   var $projectTypeID; 
   var $projectTypeIDs;
   var $demo_mode;
+  
+  // bug reports
+  var $bugFrom;
+  var $bugTo;
 }
 
 ?>

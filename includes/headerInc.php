@@ -361,14 +361,8 @@
   * This array is reset when a logoff occurs, so make sure this
   * is after the login include
   */
-  if( !array_key_exists('data_groups', $_SESSION) ) {
+  if( !array_key_exists('data_groups', $_SESSION) || !$_SESSION['data_groups'] ) {
     $_SESSION['data_groups'] = $zen->generateDataGroupInfo();
-  }
-  
-  // this is used to store parsed information about file groups
-  // so that we don't have to load and read the file each time.
-  if( !array_key_exists('filegroups', $_SESSION) ) {
-    $_SESSION['filegroups'] = array(); 
   }
   
   /**

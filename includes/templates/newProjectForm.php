@@ -211,8 +211,16 @@ value="<?=($deadline)?$zen->showDate(strip_tags($deadline)):""?>">
     <?=tr("Testing Required")?>
   </td>
   <td class="bars">
+  <? if( $td ) { ?>
+    <select name='tested'>
+      <option value='0' <?=$ticket['tested'] == 0? ' selected':''?>><?=tr('n/a')?></option>
+      <option value='1' <?=$ticket['tested'] == 1? ' selected':''?>><?=tr('Required')?></option>
+      <option value='2' <?=$ticket['tested'] == 2? ' selected':''?>><?=tr('Completed')?></option>
+    </select>
+  <? } else { ?>
     <input type="checkbox" name="tested" value="1" 
-  <?= $zen->getDefaultValue("default_test_checked"); ?>>
+    <?= $zen->getDefaultValue("default_test_checked") ?>>
+  <? } ?>
   </td>
 </tr>   
 <tr>
@@ -220,8 +228,16 @@ value="<?=($deadline)?$zen->showDate(strip_tags($deadline)):""?>">
     <?=tr("Approval Required")?>
   </td>
   <td class="bars">
+  <? if( $td ) { ?>
+    <select name='approved'>
+      <option value='0' <?=$ticket['approved'] == 0? ' selected':''?>><?=tr('n/a')?></option>
+      <option value='1' <?=$ticket['approved'] == 1? ' selected':''?>><?=tr('Required')?></option>
+      <option value='2' <?=$ticket['approved'] == 2? ' selected':''?>><?=tr('Completed')?></option>
+    </select>
+  <? } else { ?>
     <input type="checkbox" name="approved" value="1" 
-    <?= $zen->getDefaultValue("default_aprv_checked"); ?>>
+    <?= $zen->getDefaultValue("default_aprv_checked") ?>>
+  <? } ?>
   </td>
 </tr>
 

@@ -20,9 +20,9 @@
       extract($ticket);
       $description = preg_replace("@<br ?/?>@","\n",$description); 
       if( $zen->inProjectTypeIDs($ticket["type_id"]) )
-	include("$templateDir/newProjectForm.php");
+        include("$templateDir/newProjectForm.php");
       else
-	include("$templateDir/newTicketForm.php");
+        include("$templateDir/newTicketForm.php");
     }
   } 
   if( !$skip ) {

@@ -110,12 +110,7 @@
 
   /*** PRIORITY PROPERTIES ***/
 <?
-if( $zen->settings["priority_medium"] > 0 ) {
   include("$libDir/priorityColors.php");
-}
-else {
-  print $zen->settings["priority_medium"]."/** disabled **/\n";
-}
 ?>
 
   /*** CELL PROPERTIES ***/

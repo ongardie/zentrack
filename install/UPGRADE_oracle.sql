@@ -136,6 +136,7 @@ CREATE TABLE ZENTRACK_GROUP (
   eval_type VARCHAR2(10),
   eval_text VARCHAR2(4000),
   name_of_file VARCHAR2(100),
+  include_none NUMBER(1),
   CONSTRAINT group_pk PRIMARY KEY (group_id)
 );
 

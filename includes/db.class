@@ -16,16 +16,19 @@ class DB {
   */   
   
   //Paging Feature 
-  function db_getrowcount ($query) {
+  function db_getrowcount ($table, $where) {
     //returns the rowcount for the particular table selected by the query
+    $query = "SELECT count(*) FROM $table WHERE $where";
+    $this->switchQueryMode(0);
     $recordSet = &$this->db_link->Execute($query);
     if ($recordSet) {
-      $vars = $recordSet->RecordCount( );
-      $this->addDebug('db_getrowcount', "Results: $vars, Query: $query", 3);
-      return($vars);
+      $vars = $recordSet->FetchRow();
+      $res = $vars? $vars : 0;
+      $this->addDebug('db_getrowcount', "Results: $res, query=$query", 3);
+      return $res; 
     }
     else {
-      $this->addDebug('db_getrowcount', "Error in query: $query  [" . $this->db_link->ErrorMsg()."]", 1);      
+      $this->addDebug('db_getrowcount', "Error in query: $query [" . $this->db_link->ErrorMsg()."]", 1);      
     }
   }
   
@@ -155,18 +158,18 @@ class DB {
     }
     // this allows us to insert the generated id in sql server
     // see http://msdn.microsoft.com/library/default.asp?url=/library/en-us/tsqlref/ts_set-set_7zas.asp
-    if( !(strpos($this->database_type, 'mssql') === false) ) {
-      $query = "SET IDENTITY_INSERT $table ON";
-      $this->db_result($query);
-    }
+    // if( !(strpos($this->database_type, 'mssql') === false) ) {
+      // $query = "SET IDENTITY_INSERT $table ON";
+      // $this->db_result($query);
+    // }
     list($cols,$vals) = $this->makeInsertVals($params);
     $query = "INSERT INTO $table ($cols) VALUES($vals)";
     $this->addDebug("db_insert",$query,3);
     $res = $this->db_link->Execute($query);
-    if( !(strpos($this->database_type, 'mssql') === false) ) {
-      $query = "SET IDENTITY_INSERT $table OFF";
-      $this->db_result($query);
-    }
+    // if( !(strpos($this->database_type, 'mssql') === false) ) {
+      // $query = "SET IDENTITY_INSERT $table OFF";
+      // $this->db_result($query);
+    // }
     if( $res && $this->database_type == "mysql" ) {
       $id = $this->db_insertID();
     }
@@ -486,7 +489,7 @@ class DB {
     // configure the db connection
     
     // connect
-    $this->db_link->PConnect($host, $user, $passphrase, $database);
+    $this->db_link->Connect($host, $user, $passphrase, $database);
     if( $database and $this->db_link ) {
       $this->dbName = $database;
     }
