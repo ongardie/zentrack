@@ -18,12 +18,15 @@
   $userBins = $zen->getUsersBins($login_id);
   $user = $zen->getUser($login_id);
   $homebin= $user["homebin"];
+  $check = ($homebin == -1)?"selected":"";
+  
+  print "<option $check value='all'>-All-</option>\n";
   if( is_array($userBins) ) {
     foreach($userBins as $k=>$v) {
       if( $v ) {
-	$check = ( $v == $homebin )? "selected" : "";
-	$n = $zen->bins["$v"];
-	print "<option $check value='$v'>$n</option>\n";
+        $check = ( $v == $homebin )? "selected" : "";
+        $n = $zen->bins["$v"];
+        print "<option $check value='$v'>$n</option>\n";
       }
     }
   }

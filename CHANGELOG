@@ -7,6 +7,12 @@
 
 ----- V2.4 (2003-04-19) ----
 
+2003-04-21, Rob Hillis
+  Allow users to select "-All-" as their default bin
+    - zentrack/www/misc/homebin.php 1.5
+    - zentrack/includes/templates/homebinForm.php 1.6
+    - zentrack/includes/leftBins.php 1.7
+
 2003-04-19, Rob Hillis
   More work for sorting of bins: create and search menus
     - zentrack/includes/templates/newTicketForm.php 1.24

@@ -8,7 +8,7 @@
   <form name="newbin" action="<?=$SCRIPT_NAME?>">
   <td>
     <select name="newbin" onChange="document.newbin.submit()">
-      <option value='all'>-All-</option>
+      <option <?=($login_bin == -1)?"selected ":"" ?>value='all'>-All-</option>
   <?
   $bins = $zen->getBins(1);
   for($i=0; $i<count($bins); $i++) {
