@@ -119,6 +119,25 @@ INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (76,
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (77,'date_fmt_time','%H:%M','Time Format');
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (78,'time_elapsed_unit','hours','Use hours, days, months, years, seconds, or weeks');
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (79,'language_default','english','This will be used in an upcoming version');
+INSERT INTO ZENTRACK_SETTINGS
+(name, value, description)
+VALUES
+('default_notify_manager','on','Add bin manager to notify list by default.');
+
+
+INSERT INTO ZENTRACK_SETTINGS
+(name, value, description)
+VALUES
+('default_notify_tester','on','Add bin tester to notify list by default.');
+
+
+INSERT INTO ZENTRACK_SETTINGS
+(name, value, description)
+VALUES
+('default_notify_creator','on','Add ticket creator to notify list by default.');
+
+
+
 
 #
 # Load data for table 'ZENTRACK_SYSTEMS'

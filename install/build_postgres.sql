@@ -20,6 +20,7 @@
 --DROP SEQUENCE "users_user_id_seq";
 --DROP SEQUENCE "reports_id_seq";
 --DROP SEQUENCE "reports_temp_id_seq";
+--DROP SEQUENCE "notify_id_seq";
 
 --DROP TABLE ZENTRACK_ACCESS;
 --DROP TABLE ZENTRACK_ATTACHMENTS;
@@ -40,6 +41,7 @@
 --DROP TABLE ZENTRACK_REPORTS;
 --DROP TABLE ZENTRACK_REPORTS_TEMP;
 --DROP TABLE ZENTRACK_REPORTS_INDEX;
+--DROP TABLE ZENTRACK_NOTIFY_LIST;
 
 CREATE SEQUENCE "access_access_id_seq" start 1001 increment 1 maxvalue 2147483647 minvalue 1  cache 1;
 CREATE SEQUENCE "attachments_attachment_id_seq" start 1001 increment 1 maxvalue 2147483647 minvalue 1  cache 1;
@@ -56,6 +58,17 @@ CREATE SEQUENCE "types_type_id_seq" start 1001 increment 1 maxvalue 2147483647 m
 CREATE SEQUENCE "users_user_id_seq" start 1001 increment 1 maxvalue 2147483647 minvalue 1  cache 1;
 CREATE SEQUENCE "reports_id_seq" start 1001 increment 1 maxvalue 2147483647 minvalue 1  cache 1;
 CREATE SEQUENCE "reports_temp_id_seq" start 1001 increment 1 maxvalue 2147483647 minvalue 1  cache 1;
+CREATE SEQUENCE "notify_id_seq" start 1001 increment 1 maxvalue 2147483647 minvalue 1 cache 1;
+
+CREATE TABLE ZENTRACK_NOTIFY_LIST (
+   notify_id int8 default nextval('"notify_id_seq"') NOT NULL PRIMARY KEY,
+   ticket_id int(12) NOT NULL,
+   user_id int(12) default NULL,
+   name varchar(100) default NULL,
+   email varchar(150) default NULL,
+   priority int(12) default NULL,
+   notes text default NULL
+);
 
 CREATE TABLE ZENTRACK_ACCESS (
   access_id int8 default nextval('"access_id_seq"') NOT NULL PRIMARY KEY,

@@ -109,6 +109,25 @@ INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (68,
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (70,'url_view_ticket','ticket.php','Link to script which displays ticket information, no leading slash');
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (71,'allow_pwd_save','off','Allows users to save passphrase in a cookie(fairly secure/not available until v2.1)');
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (72,'check_pwd_simple','on','System will refuse lazy passwords');
+INSERT INTO ZENTRACK_SETTINGS
+(name, value, description)
+VALUES
+('default_notify_manager','on','Add bin manager to notify list by default.');
+
+
+INSERT INTO ZENTRACK_SETTINGS
+(name, value, description)
+VALUES
+('default_notify_tester','on','Add bin tester to notify list by default.');
+
+
+INSERT INTO ZENTRACK_SETTINGS
+(name, value, description)
+VALUES
+('default_notify_creator','on','Add ticket creator to notify list by default.');
+
+
+
 
 ---
 --- Loading data for table 'ZENTRACK_SYSTEMS'
