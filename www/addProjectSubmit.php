@@ -22,7 +22,7 @@
   }
 
   $type_id = $zen->projectTypeID();
-  $description = nl2br(htmlentities($description));
+  $description = nl2br(htmlspecialchars($description));
 
   $fields = array(
 		  "title"       => "text",

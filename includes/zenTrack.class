@@ -1410,7 +1410,8 @@ class zenTrack extends zen {
 	    $message .= "Bin:\t".$this->bins[$n]."\n";
 	    $message .= "Owner:\t$name\n";
 	    $message .= "URL:\t$url\n";
-	    $message .= "\n\n".htmlentities($t[description])."\n\n------------------\n\n";
+            $des = preg_replace("#&quot;#",'"',preg_replace("#&amp;#","&",$t["description"]));
+	    $message .= "\n\n$des\n\n------------------\n\n";
 	 } else if( $k == "log" ) {
 	    // print the log for the ticket
 	    if( $this->settings["email_max_logs"] )
@@ -1429,7 +1430,9 @@ class zenTrack extends zen {
 		  //
 		  // the log and attachments
 		  if( $l["entry"] ) {
-		     $message .= "\n".htmlentities($l["entry"])."\n";
+		     $message .= "\n".stripslashes($l["entry"])."\n";
+	             $message .= preg_replace("#&amp;#", "&", $message);
+		     $message .= preg_replace("#&quot;#", '"', $message);	             
 		  }
 		  if( $att["$id"]["$lid"] ) {
 		     $message .= "\nATTACHMENT(s):\n";
@@ -1468,6 +1471,11 @@ class zenTrack extends zen {
       // $recipients, $sender, and $cc can all be an array
       
       // figure out who sent it
+	$message = (get_magic_quotes_gpc())? stripslashes($message) : $message;
+	$message = preg_replace(
+				array("#&lt;#", "#&gt;#", "#&quot;#", "#&amp;#"),
+				array("<",">",'"',"&"),
+				$message);
       if( !$sender ) {
 	 $sender_address = $this->settings["botName"]."<".$this->settings["botEmail"].">";
       } else {
@@ -1512,8 +1520,8 @@ class zenTrack extends zen {
       }
       
       // finalize and send the message
-      $message = addslashes($message);
-      $subject = addslashes($subject);
+      $message = (get_magic_quotes_gpc())? $message : addslashes($message);
+      $subject = (get_magic_quotes_gpc())? $subject : addslashes($message);
       return( mail( $recipient_address, $subject, $message, $headers ) );      
    }
    

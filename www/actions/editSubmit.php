@@ -24,7 +24,7 @@
   $fields = array(
 		  "title"       => "text",
 		  "priority"    => "int",
-		  "description" => "ignore",
+		  "description" => "html",
 		  "otime"       => "int",
 		  "bin_id"       => "int",
 		  "type_id"      => "int",
