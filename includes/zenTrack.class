@@ -1389,6 +1389,61 @@ class zenTrack extends zen {
   }
 
 
+  /**
+   * How many references to the given data group exist in the database
+   *
+   * @param integer $group_id The id of the group being queried
+   * @return integer
+   */
+  function queryReferencesToDataGroup( $group_id ) {
+    $qty=0;
+    $query = "SELECT count(*) FROM ".$this->table_varfield_idx
+           . " where field_value='$group_id'"
+           . " and field_name like 'custom_menu%'";
+    $qty = $this->db_get($query);
+    $query = "SELECT count(*) FROM ".$this->table_behavior
+           . " where group_id=$group_id";
+    $qty += $this->db_get($query);
+    return ( $qty );
+  }
+
+  /**
+   * Disables all references of the given data group
+   *
+   * @param integer $group_id The id of the group being deleted
+   */
+  function disableReferencesToDataGroup( $group_id ) {
+    $query = "UPDATE ".$this->table_varfield_idx
+           . " set use_for_project=0, use_for_ticket=0, field_value=NULL"
+           . " where field_value='$group_id'"
+           . " and field_name like 'custom_menu%'";
+    $this->db_result($query);
+    $query = "UPDATE ".$this->table_behavior
+           . " set is_enabled=0, group_id=NULL"
+           . " where group_id=$group_id";
+    $this->db_result($query);
+  }
+
+  /**
+   * Changes all references of the old data group to a new data group
+   *
+   * @param integer $old_group_id The id of the group being deleted
+   * @param integer $new_data_group The id of the group that is replacing it
+   */
+  function moveReferencesToDataGroup( $old_group_id, $new_data_group ) {
+    $query = "UPDATE ".$this->table_varfield_idx
+           . " set field_value = '$new_data_group'"
+           . " where field_value = '$old_group_id'"
+           . " and field_name like 'custom_menu%'";
+    $this->db_result($query);
+    $query = "UPDATE ".$this->table_behavior
+           . " set group_id = $new_data_group"
+           . " where group_id = $group_id";
+    $this->db_result($query);
+  }
+
+
+
 
   /*
    *  SEARCH FUNCTIONS 

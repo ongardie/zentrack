@@ -1,6 +1,7 @@
 <?
          $elnk="$rootUrl/admin/editGroup.php";
          $llnk="$rootUrl/admin/editGroupDetails.php";
+         $dlnk="$rootUrl/admin/deleteGroup.php";
 ?>
       <br>
       <p><b><?=tr("Edit existing groups or create a new group.")?></b></p>
@@ -85,6 +86,10 @@
 		 . "[<a href='".$llnk."?group_id=".$v['group_id']."'>"
 		 .uptr('entries')."</a>]";
 	     }
+             print "<br>";
+	     print "<span class='small'>"
+		 . "[<a href='".$dlnk."?group_id=".$v['group_id']."'>"
+		 .uptr('delete')."</a>]";
 	     print $te;
 	       
 	     print "</tr>\n";
