@@ -34,16 +34,25 @@
      $expand_tickets = 1;     
   }
 
+  // allow creator of ticket to view (if setting is on) even if no access
+  $is_creator = ($login_id == $ticket["creatorID"] && $zen->settings["allow_cview"] == "on");
+
   /*
   ** PRINT OUT THE PAGE
   */ 
   include("$libDir/nav.php");
 
-  extract($ticket);
-  if( $typeID == $zen->projectTypeID() ) {
-     include("$templateDir/projectView.php");
+  if( !$is_creator && !$zen->checkAccess($login_id,$ticket["binID"]) ) {
+     print "<p class='hot'>You are not allowed to view tickets in this bin</p>\n";
   } else {
-     include("$templateDir/ticketView.php");     
+
+     extract($ticket);
+     if( $typeID == $zen->projectTypeID() ) {
+	include("$templateDir/projectView.php");
+     } else {
+	include("$templateDir/ticketView.php");     
+     }
+     
   }
 
   include("$libDir/footer.php");
