@@ -1,6 +1,19 @@
 
 --- V3.0 RC1 (beta,in CVS) ---	
 
+2004-03-11, Kato
+  Implemented ZenAction class, cleaned up ZenSystemAction
+    - zentrack/includes/lib/classes/Zen.php 1.23
+    - zentrack/includes/lib/classes/ZenAction.php 1.3
+    - zentrack/includes/lib/classes/ZenSystemAction.php 1.9
+  Improvements to ZenCriteriaSet, ZenParm and ZenParmSet
+    - zentrack/includes/lib/classes/ZenCriteriaSet.php 1.7
+    - zentrack/includes/lib/classes/ZenList.php 1.13
+    - zentrack/includes/lib/classes/ZenParm.php 1.6
+    - zentrack/includes/lib/classes/ZenParmList.php 1.3
+  Added new list() method to ZenQuery
+    - zentrack/includes/lib/classes/ZenQuery.php 1.20
+
 2004-03-10, Kato
   Updated install.php to work properly when installing
   to a different target directory than the source code
