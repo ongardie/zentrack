@@ -61,7 +61,7 @@
         <param name='table'>TICKET</param>
         <param name='name'>newfield</param>
         <param name='label'>It's a new field</param>
-        <param name='size'>0</param>
+        <param name='size'></param>
         <param name='type'>VALUE</param>
         <param name='ftype'>select</param>
         <param name='notnull'>1</param>

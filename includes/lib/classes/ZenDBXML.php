@@ -1,5 +1,10 @@
 <? /* -*- Mode: C; c-basic-indent: 3; indent-tabs-mode: nil -*- ex: set tabstop=3 expandtab: */ 
 
+/**
+ * Holds the ZenDBXML class.  Requires ZenDbTypeInfo.php, ZenDbSchema.php, and ZenXMLParser.php
+ * @package DB
+ */
+
 /** 
  * Converts databases schemas to xml, and xml to db schemas
  *
@@ -15,6 +20,9 @@ class ZenDBXML {
    * @param boolean $devmode zen.ini->develop mode parameter, affects how tables are created/loaded
    */
   function ZenDBXML( &$dbobject, $xmlfile, $devmode ) {
+    ZenUtils::prep("ZenDbTypeInfo");
+    ZenUtils::prep("ZenDbSchema");
+    ZenUtils::prep("ZenXMLParser");
     $this->_dbobj =& $dbobject;
     $this->_dbtype = $this->_dbobj->getDbType();
     $this->_dbTypeInfo = new ZenDbTypeInfo( $dbobject );
@@ -600,7 +608,7 @@ class ZenDBXML {
     $rows = array();
     $i=0;
     foreach($dataRows as $row) {
-      foreach( $set->childSet() as $val ) {
+      foreach( $row->childSet() as $val ) {
         $rows[$i][$val->name()] = $val->data();
       }
       $i++;

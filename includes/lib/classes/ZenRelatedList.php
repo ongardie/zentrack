@@ -1,9 +1,17 @@
 <? /* -*- Mode: C; c-basic-indent: 3; indent-tabs-mode: nil -*- ex: set tabstop=3 expandtab: */ 
 
 /**
+ * Holds the ZenRelatedList class.  Requires ZenTicketList.php
+ * @package Zen
+ */
+
+/**
  * This creates a list of tickets and keeps special information about
  * their relationships
  *	
+ * @see ZenTicketList
+ * @see ZenList
+ * @see ZenTicket
  * @package Zen 
  */
 class ZenRelatedList extends ZenTicketList {

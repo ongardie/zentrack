@@ -1,5 +1,10 @@
 <? /* -*- Mode: C; c-basic-indent: 3; indent-tabs-mode: nil -*- ex: set tabstop=3 expandtab: */ 
 
+/**
+ * Holds the ZenDbSchema class.  Requires Zen.php
+ * @package DB
+ */
+
 /** 
  * Holds the database schema parsed from the xml configuration file.
  *
@@ -18,8 +23,11 @@ class ZenDbSchema extends Zen {
    * @param boolean $devmode are we in develop mode? (will search for this if not provided)
    */
   function ZenDbSchema( $xmlfile, $use_cache = true, $devmode = null ) {
+    ZenUtils::prep("ZenMetaTable");
+    ZenUtils::prep("ZenMetaField");
     // call Zen()
     $this->Zen();
+    ZenUtils::mark("ZenDbSchema[".$this->randomNumber."] constructor");
 
     // develop mode?
     $this->_devmode = !is_null($devmode)? $devmode : ZenUtils::getIni('debug','develop_mode');
@@ -57,7 +65,7 @@ class ZenDbSchema extends Zen {
         ZenUtils::serializeDataToFile( $cacheFile, $this->_tables );
       }
     }
-    
+    ZenUtils::unmark("ZenDbSchema[".$this->randomNumber."] constructor");
   }
 
   /**
@@ -106,11 +114,11 @@ class ZenDbSchema extends Zen {
    *
    *
    * @param string $table name of table to retrieve
-   * @return array mapped as above or false
+   * @return array mapped as above or null
    */
-  function getTableArray( $table ) {
+  function getTableArray( $table ) { 
     $table = strtoupper($table);
-    return isset($this->_tables[$table])? $this->_tables[$table] : false;
+    return isset($this->_tables[$table])? $this->_tables[$table] : null;
   }
 
   /**
@@ -120,15 +128,14 @@ class ZenDbSchema extends Zen {
    * @return array see getTableArray()
    */
   function getMergedTableArray( $table ) {
-    $table = strtoupper($table);
-    if( !isset($this->_tables[$table]) ) { return false; }
-    $table = $this->_tables[$table];
+    $tableArray = $this->getTableArray($table);
+    if( $tableArray == null ) { return $tableArray; }
     foreach( $this->getInheritedFields($table) as $key=>$val ) {
-      if( !isset($table['fields'][$key]) ) {
-        $table['fields'][$key] = $val;
+      if( !isset($tableArray['fields'][$key]) ) {
+        $tableArray['fields'][$key] = $val;
       }
     }
-    return $table;
+    return $tableArray;
   }
 
   /**
@@ -136,11 +143,11 @@ class ZenDbSchema extends Zen {
    *
    * @param string $table
    * @param string $column
-   * @return ZenMetaField or false
+   * @return ZenMetaField or null
    */
   function getMetaField( $table, $column ) {
     $field = $this->getFieldArray($table,$column);
-    return $field? (new ZenMetaField($field)) : false;
+    return $field != null? (new ZenMetaField($field)) : null;
   }
 
   /**
@@ -148,13 +155,13 @@ class ZenDbSchema extends Zen {
    *
    * @param string $table
    * @param string $column
-   * @return array or false
+   * @return array or null
    */
   function getFieldArray( $table, $column ) {
     $table = strtoupper($table);
     $column = strtolower($column);
     return isset($this->_tables[$table]['fields'][$column])? 
-      $this->_tables[$table]['fields'][$column] : false;
+      $this->_tables[$table]['fields'][$column] : null;
   }
 
   /**
@@ -163,9 +170,11 @@ class ZenDbSchema extends Zen {
    * @param string $xmlfile filename or valid xml data to parse
    */
   function _load( $xmlfile ) {
+    ZenUtils::mark("ZenDbSchema[".$this->randomNumber."] _load");
     ZenUtils::safeDebug($this, '_load', "Loading xml data from $xmlfile", 0, LVL_DEBUG);
 
     // load xml data to an array
+    ZenUtils::prep("ZenXMLParser");
     $x = new ZenXMLParser();
     $rootNode =& $x->parse($xmlfile);
     $this->_tables = array();
@@ -191,6 +200,7 @@ class ZenDbSchema extends Zen {
         $this->_loadUpdateQuery( $node );
       }
     }
+    ZenUtils::unmark("ZenDbSchema[".$this->randomNumber."] _load");
   }
 
   /**
@@ -294,7 +304,7 @@ class ZenDbSchema extends Zen {
         $f[$t] = array($criteria->prop('type'), $criteria->data());
       }
       else if( $t == 'required' || $t == 'unique' ) {
-        $val = ZenUtils::parseBoolean( $field->childData('required'), false );
+        $val = ZenUtils::parseBoolean( $field->childData($t), false );
         $f[$t] = $val? 1 : 0;
       }
       else {

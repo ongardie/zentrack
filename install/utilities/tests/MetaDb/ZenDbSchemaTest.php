@@ -63,9 +63,12 @@
                                   $vals['type'], $vals['ftype'], $vals);
       if( $vals['expected'] ) {
         // if success is expected then check the values
-        Assert::equalsTrue($res, "Field was not added properly");
+        Assert::equalsTrue($res, "Field {$vals['table']}->{$vals['name']} was not added properly");
         if( $res ) {
           $this->testGetFieldArray( $vals );
+        }
+        else {
+          ZenUtils::printArray($this->obj->getTableArray($vals['table']));//debug         
         }
       }
       else {

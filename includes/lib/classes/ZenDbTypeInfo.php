@@ -1,5 +1,10 @@
 <? /* -*- Mode: C; c-basic-indent: 3; indent-tabs-mode: nil -*- ex: set tabstop=3 expandtab: */ 
 
+/**
+ * Holds the ZenDbTypeInfo class.
+ * @package DB
+ */
+
 /** 
  * Provides db specific information for data types and calls for create/drop/alter statements
  *
@@ -16,6 +21,7 @@ class ZenDbTypeInfo {
    * @param ZenDatabase $dbo is the database connection
    */
   function ZenDbTypeInfo( &$dbo ) { 
+    ZenUtils::prep("ZenXMLParser");
     $this->_dir = dirname(__FILE__);
     $this->_dbo =& $dbo;
     $t = $this->_dbo->getDbType();
@@ -268,12 +274,22 @@ class ZenDbTypeInfo {
     if( $props['fixed'] == 'false' ) {
       // check the size attribute
       if( !$props['size'] && !$length ) {
-        ZenUtils::safeDebug($this, "makeTypeDef", "Data type $type requires a length", 101, LVL_WARN);
-        return 'NOSIZE';
+        ZenUtils::safeDebug($this, "makeTypeDef", "Data type $type requires a length", 101, LVL_ERROR);
+        $length = $props['max'];
       }
-      if( $length > $props['max'] ) {
+      if( $type == 'decimal' ) {
+        $len = $length? explode(',',$length) : null;
+        $max = explode(',',$props['max']);
+        if( $len && $len[0] > $max[0] || $len[1] > $max[1] ) {
+          ZenUtils::safeDebug($this, "makeTypeDef", "Maximum length exceeded for data type $type ($length)"
+                              ."using max instead({$props['max']})", 123, LVL_WARN);
+          $length = $props['max'];
+        }
+      }
+      else if( $type != 'decimal' && $length > $props['max'] ) {
         ZenUtils::safeDebug($this, "makeTypeDef", "Maximum length exceeded for data type $type ($length)"
                    ."using max instead({$props['max']})", 123, LVL_WARN);
+        $length = $props['max'];
       }
       // format and return the element
       $num = ($length)? $length : $props['size'];
@@ -322,7 +338,7 @@ class ZenDbTypeInfo {
     // validate dbinfo
     foreach($this->required_dbInfoNodes as $key) {
       if( !isset($this->_dbInfo[$key]) ) {
-        Zen::Debug($this, "_load", "dbInfo required node $key missing", 101, LVL_ERROR);
+        ZenUtils::safeDebug($this, "_load", "dbInfo required node $key missing", 101, LVL_ERROR);
         $success = false;
       }
     }
@@ -336,14 +352,14 @@ class ZenDbTypeInfo {
       // validate name
       if( isset($this->_dataTypes[$n]) || !$n ) {        
         $msg = $n? "Duplicate node $n detected" : "Name invalid/missing for dataType node";
-        Zen::Debug($this, "_load", $msg, 103, LVL_WARN);
+        ZenUtils::safeDebug($this, "_load", $msg, 103, LVL_WARN);
         $success = false;
       }
       $this->_dataTypes[$n] = $v->props();
       // validate data type properties
       foreach($this->required_dataTypeProps as $key) {
         if( !isset($this->_dataTypes[$n][$key]) ) {
-          Zen::Debug($this, "_load", "Node $n missing required property $key", 101, LVL_ERROR);
+          ZenUtils::safeDebug($this, "_load", "Node $n missing required property $key", 101, LVL_ERROR);
           $success = false;
         }
       }
@@ -351,7 +367,7 @@ class ZenDbTypeInfo {
     // validate data types all present
     foreach($this->required_dataTypeNodes as $key) {
       if( !isset($this->_dataTypes[$key]) ) {
-        Zen::Debug($this, "_load", "dataTypes required node $key missing", 101, LVL_ERROR);
+        ZenUtils::safeDebug($this, "_load", "dataTypes required node $key missing", 101, LVL_ERROR);
         $success = false;
       }
     }
@@ -372,7 +388,7 @@ class ZenDbTypeInfo {
     // validate sqlInfo nodes
     foreach($this->required_sqlInfoNodes as $key) {
       if( !isset($this->_sqlCriteria[$n]) ) {
-        Zen::Debug($this, "_load", "sqlInfo node $key missing", 101, LVL_ERROR);
+        ZenUtils::safeDebug($this, "_load", "sqlInfo node $key missing", 101, LVL_ERROR);
         $success = false;
       }
     }

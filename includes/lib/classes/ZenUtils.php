@@ -3,10 +3,13 @@
 /**
  * Includes common utils for processing.  This page should be static
  * and should not depend on any other files.
+ *
+ * @package Utils
  */
 
 /**
- * Provides a means to include helper files globally (rather than internal to the {@link runHelper()} function.
+ * Provides a means to include helper files globally (rather than internal to the 
+ * {@link ZenUtils::runHelper()} function.
  *
  * This method will generate the correct helper file to include based on the function name.
  *
@@ -871,23 +874,19 @@ class ZenUtils {
   /**
    * STATIC: Runs a user function and returns results safely.
    *
-   * A user function must reside in the zen.ini->dir_user directory.  The
-   * function must accept an array of arguments (which may be null) and return
-   * a result usable by the calling method.
-   *
-   * All user functions must begin with usr_fxn_, to avoid any ambiguity
-   * or conflicts with system functions.
+   * A user function must reside in the zen.ini->dir_user directory, in the 
+   * user_functions.php file.  The function must accept an array of arguments 
+   * (which may be null) and return a result usable by the calling method.
    *
    * @param string $function name of the function to run
    * @param array $args associative array containing args to pass to function, if any
    * @return mixed whatever the function is designed to generate
    */
-  function callUserFunction( $function, $args ) {    
-    if( !(str_pos($function, 'usr_fxn_') === 0) ) {
-      ZenUtils::safeDebug("ZenUtils", "callUserFunction", "Invalid user function ($function), must begin with usr_fxn_!", 
-                          105, LVL_ERROR);
-      return null;
-    }
+  function callUserFunction( $function, $args ) {
+    // include the user functions
+    ZenUtils::prep("ZenUserFunctions", ZenUtils::getIni('directories','dir_user'));
+
+    $function = "ZenUserFunctions::{$function}";
     if( !function_exists($function) ) {
       ZenUtils::safeDebug("ZenUtils", "callUserFunction", "Specified user function ($function) does not exist!", 105, LVL_ERROR);
       return null; 
@@ -933,6 +932,74 @@ class ZenUtils {
     default:
       return $default;
     }    
+  }
+
+  /**
+   * Runs {@link parseBoolean()} and converts the result to a string
+   *
+   * @param mixed $value
+   * @param boolean $default (can be null)
+   * @return string 'true' or 'false'
+   */
+  function boolString($value, $default = false) {
+    return ZenUtils::parseBoolean($value, $default)? 'true' : 'false';
+  }
+
+  /**
+   * Stores performance data if the {@link functions.php::startPTime()} and
+   * {@link functions.php::endPTime()} functions are available.
+   *
+   * @see functions.php
+   * @param mixed $name the name/description of event being marked
+   */
+  function mark( $name ) {
+    if( function_exists("startPTime") ) {
+      startPTime( $name );      
+    }
+  }
+
+  /**
+   * Indicates the end of performance marking for a specific function.  It is
+   * essential that the $name variable precisely match the ones passed
+   * to the {@link mark()} function.
+   *
+   * @param mixed $name the name/description of event being marked
+   * @see mark()
+   */
+  function unmark( $name ) {
+    if( function_exists("endPTime") ) {
+      endPTime( $name );      
+    }
+  }
+
+  /**
+   * Includes class files on demand to reduce page loading time.  Insures
+   * that each class is only loaded once.
+   *
+   * @param mixed $class is the (String)name or (Array)names of classes to load(case sensitive)
+   * @param string $dir directory where class resides, it will be loaded
+   *                    from the dir_classes config setting if this variable
+   *                    is blank.
+   * @return integer representing number of classes loaded
+   */
+  function prep( $class, $dir = '' ) {
+    ZenUtils::mark("prep: loading $class");
+    if( !is_array($class) ) {
+      $class = array($class);
+    }
+    if( !$dir ) {
+      $dir = ZenUtils::getIni('directories','dir_classes');
+    }
+    $count = 0;
+    foreach( $class as $c ) {
+      if( !class_exists($c) ) {
+        ZenUtils::safeDebug("ZenUtils","prep","loading $c from $dir",0,LVL_DEBUG);
+        include("$dir/$c.php");
+        $count++;
+      }
+    }
+    ZenUtils::unmark("prep: loading $class");
+    return $count;
   }
 
 }

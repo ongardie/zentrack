@@ -1,5 +1,9 @@
 <? /* -*- Mode: C; c-basic-indent: 3; indent-tabs-mode: nil -*- ex: set tabstop=3 expandtab: */ 
 
+/**
+ * Contains the ZenUser class
+ */
+
 /** 
  * User functions, this does not include access({@link ZenAccess}) or authentication({@link ZenAuthenticate})
  *

@@ -1,6 +1,16 @@
 <? /* -*- Mode: C; c-basic-indent: 3; indent-tabs-mode: nil -*- ex: set tabstop=3 expandtab: */ 
 
-/** @package Utils */
+/**
+ * Holds the ZenEmail class.  Requires Zen.php
+ * @package Utils
+ */
+
+/** 
+ * Provides methods for easy creation and formatting of emails 
+ * to one or more recipients.
+ * 
+ * @package Utils 
+ */
 class ZenEmail extends Zen {
 
   /**
@@ -27,13 +37,13 @@ class ZenEmail extends Zen {
    */
   function setRecipients( $recipients ) { 
     if( is_object($recipients) && is_a("ZenUserList") ) {
-      
+      //todo
     }
     if( is_object($recipients) && is_a("ZenNotifyList") ) {
-      
+      //todo
     }
     else if( is_array($recipients) ) {
-
+      //todo
     }
     else { return false; }
   }

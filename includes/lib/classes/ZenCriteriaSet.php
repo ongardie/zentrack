@@ -1,5 +1,10 @@
 <? /* -*- Mode: C; c-basic-indent: 3; indent-tabs-mode: nil -*- ex: set tabstop=3 expandtab: */ 
 
+/**
+ * Holds the ZenCriteriaSet class. Requires ZenSearchParms.php and ZenParmList.php
+ * @package Actions
+ */
+
 /*
  * Store criteria which can be used for searching data, setting up parameters, etc
  *
@@ -14,6 +19,8 @@ class ZenCriteriaSet {
    * @param integer $setId the criteria set id to load
    */
   function ZenCriteriaSet( $id = null ) {
+    ZenUtils::prep("ZenSearchParms");
+    ZenUtils::prep("ZenParmList");
     $this->_list = array();
     $this->_id = null;
     $this->_parms = null;

@@ -31,6 +31,7 @@
       list($tableNode,) = $node->child('table');
       $table = $tableNode->data();
       $inserts = $node->child('insert');
+
       // clear test table
       $query = Zen::getNewQuery();
       $query->table($table);
@@ -41,12 +42,12 @@
         $params = ZenXmlParser::getParmSet($i->child('param'));
         $query = Zen::getNewQuery();
         $query->table($table);
-        $query->setPrimaryKey('column_primarykey');
+        $query->setPrimaryKey();
         foreach($params as $key=>$val) {
           $query->field( $key, $val, $table );
         }
         $res = $query->insert();
-        Assert::assert( $res, "Insert failed:<br>(".$query->getQueryString().")" );
+        Assert::assert( $res, "query->load: Insert failed:<br>(".$query->getQueryString().")" );
       }      
     }
 
@@ -169,6 +170,8 @@
     }
 
     function testNeedsJoin() { Assert::equalsTrue( false, "need to add a join test" ); }
+
+    function testNeedsAffectedRows() { Assert::equalsTrue( false, "need to test different counts of update and delete" ); }
 
   }
 

@@ -1,5 +1,10 @@
 <? /* -*- Mode: C; c-basic-indent: 3; indent-tabs-mode: nil -*- ex: set tabstop=3 expandtab: */ 
 
+/**
+ * Holds the ZenQuery class.  Requires ZenDatabase.php and Zen.php
+ * @package DB
+ */
+
 /** 
  * ZEN_EQ for ZenQuery: field EQUALS value
  */
@@ -249,6 +254,7 @@ class ZenQuery extends Zen {
    */
   function setPrimaryKey( $key = null ) {    
     if( $key ) { $this->_key = $key; }
+    else { $key = $this->_key; }
     if( !in_array($key, $this->_fields) ) {
       $this->_fields[] = $key;
     }
@@ -471,16 +477,15 @@ class ZenQuery extends Zen {
    *
    * @access public
    * @since 1.0
-   * @return integer representing number of affected rows
+   * @return integer representing number of affected rows (returns 0 or 1 if number of rows isn't supported)
    */
   function update() {
     $this->_queryType = 'UPDATE';
-    if( $this->_execute(false) ) {
-      return $this->_dbobject->affectedRows();
+    $res = $this->_execute(null);
+    if( !$this->_dbobject->affectedRows() ) {
+      return $res? 1 : 0;
     }
-    else {
-      return 0;
-    }
+    return $this->_dbobject->affectedRows();
   }
 
   /**
@@ -490,11 +495,14 @@ class ZenQuery extends Zen {
    *
    * @access public
    * @since 1.0
-   * @return integer representing number of affected rows
+   * @return integer representing number of affected rows (returns 0 or 1 if number of rows isn't supported)
    */
   function delete() {
     $this->_queryType = 'DELETE';
-    $this->_execute(false);
+    $res = $this->_execute(false);
+    if( !$this->_dbobject->affectedRows() ) {
+      return $res? 1 : 0;
+    }    
     return $this->_dbobject->affectedRows();
   }
 

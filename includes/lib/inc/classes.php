@@ -11,70 +11,76 @@
     startPTime("classes.php");
   }
 
-  /** @var array $classes_standard a list of the standard classes, these are included automagically when this page is called */
-  $classes_standard = array(
-                            "Zen.php",
-                            "ZenCriteriaSet.php",
-                            "ZenDatabase.php",
-                            "ZenDbSchema.php",
-                            "ZenDbTypeInfo.php",
-                            "ZenList.php",
-                            "ZenMessage.php",
-                            "ZenMessageList.php",
-                            "ZenMetaDb.php",
-                            "ZenMetaField.php",
-                            "ZenMetaTable.php",
-                            "ZenQuery.php",
-                            "ZenTemplate.php",
-                            "ZenUtils.php",
-                            "ZenXMLParser.php",
-                            "adodb/adodb.inc.php" );
+  /** 
+   * @var array $classes_standard a list of the standard classes, 
+   * these are assumed to always be included by the existing libs,
+   * and should not require a call to {@link ZenUtils::prep()}
+   */
+  $classes_common = array(
+                          "ZenUtils",     //should be first to get loaded
+                          "Zen",
+                          "ZenDatabase",
+                          "ZenDataType",
+                          "ZenDbSchema",
+                          "ZenList",
+                          "ZenMessage",
+                          "ZenMessageList",
+                          "ZenQuery",
+                          "adodb/adodb.inc" );
 
   /** @var array $classes_data_types the DataType classes */
   $classes_data_types = array(
-                            "ZenDataType.php",
-                            "ZenAccess.php",
-                            "ZenAccessList.php",
-                            "ZenAction.php",
-                            "ZenActionList.php",
-                            "ZenAttachment.php",
-                            "ZenAttachmentList.php",
-                            "ZenBin.php",
-                            "ZenBinList.php",
-                            "ZenFilter.php",
-                            "ZenFilterList.php",
-                            "ZenNotifyList.php",
-                            "ZenParm.php",
-                            "ZenParmList.php",
-                            "ZenPriority.php",
-                            "ZenPriorityList.php",
-                            "ZenRole.php",
-                            "ZenStage.php",
-                            "ZenStageList.php",
-                            "ZenSystem.php",
-                            "ZenSystemList.php",
-                            "ZenTask.php",
-                            "ZenTaskList.php",
-                            "ZenTicket.php",
-                            "ZenTicketList.php",
-                            "ZenRelatedList.php",
-                            "ZenTrigger.php",
-                            "ZenTriggerList.php",
-                            "ZenType.php",
-                            "ZenTypeList.php",
-                            "ZenUser.php",
-                            "ZenUserList.php" );
+                            "ZenAccess",
+                            "ZenAccessList",
+                            "ZenAction",
+                            "ZenActionList",
+                            "ZenAttachment",
+                            "ZenAttachmentList",
+                            "ZenBin",
+                            "ZenBinList",
+                            "ZenFilter",
+                            "ZenFilterList",
+                            "ZenNotifyList",
+                            "ZenParm",
+                            "ZenParmList",
+                            "ZenPriority",
+                            "ZenPriorityList",
+                            "ZenRole",
+                            "ZenStage",
+                            "ZenStageList",
+                            "ZenSystem",
+                            "ZenSystemList",
+                            "ZenTask",
+                            "ZenTaskList",
+                            "ZenTicket",
+                            "ZenTicketList",
+                            "ZenRelatedList",
+                            "ZenTrigger",
+                            "ZenTriggerList",
+                            "ZenType",
+                            "ZenTypeList",
+                            "ZenUser",
+                            "ZenUserList" );
 
   /** @var array $classes_other the other/misc classes we don't use very often */
   $classes_other = array(
-                         "ZenDBXML.php",
-                         "ZenEmail.php",
-                         "ZenFormGenerator.php",
-                         "ZenTranslator.php"
+                         "ZenCriteriaSet",
+                         "ZenDbTypeInfo",
+                         "ZenDBXML",
+                         "ZenEmail",
+                         "ZenFormGenerator",
+                         "ZenMetaDb",
+                         "ZenMetaField",
+                         "ZenMetaTable",
+                         "ZenTemplate",
+                         "ZenTranslator",
+                         "ZenXMLParser"
                          );
 
   /** @var array $classes_all all available libraries */
-  $classes_all = array_merge($classes_standard, $classes_data_types, $classes_other);
+  $classes_all = array_merge($classes_common, 
+                             $classes_data_types, 
+                             $classes_other);
 
   /** 
    * Loads classes into memory, checks each class to insure it hasn't been loaded already
@@ -84,30 +90,16 @@
    * utils
    *
    * @param array $set is a list of classes to load, they should have the file ext (.php)
-   * @param string $location is the full path to the libraries, if not provided, will search globals for ini settings
+   * @param string $location is the full path to the libraries
    */
   function load_classes( $set, $location ) {
+    startPtime("load_classes: ".count($set));
     foreach($set as $class) {
-      loadClass($class, $location);
+      if( !class_exists($class) ) {
+        include("$location/$class.php");
+      }
     }
-  }
-
-  /**
-   * Loads a single class into memory if it doesn't exist already
-   *
-   * If the location variable is not set, this method will attempt to divine the location by 
-   * checking the ini settings ($GLOBAL or $_SESSION)
-   *
-   * @param string $name the name of class to be loaded
-   * @param string $location is the full path to the libraries, if not provided, 
-   *               will search globals for ini settings
-   */
-  function loadClass( $name, $location ) { 
-    $file = (strpos($name, '.') > 0)? $name : "$name.php";
-    $name = (strpos($name, '.') > 0)? substr($name,0,-4) : $name;
-    if( !class_exists( $name ) ) {
-      include("$location/$file");
-    }
+    endPtime("load_classes: ".count($set));
   }
 
   // benchmarking

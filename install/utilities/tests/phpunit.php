@@ -526,6 +526,14 @@ else
 <br><br><br>
 <?
   if( class_exists("Zen") && $showdebug ) {
+?>
+<style type='text/css'>
+.error { color:red; }
+.warn { color:black; }
+.note { color:#666666; }
+.debug { color:#AAAAAA; }
+</style>
+<? 
     print "<p>------ DEBUG ------</p>";
     $list = Zen::getMessageList();
     print $list->outputHTML(true);

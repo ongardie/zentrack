@@ -181,11 +181,11 @@ I {
   color: #000000;
 }
 
-.msg {
-  color: #999999;
+.note, .msg {
+  color: #666666;
 }
 
 .debug { 
-  color: #EAEAEA;
+  color: #AAAAAA;
 }
 

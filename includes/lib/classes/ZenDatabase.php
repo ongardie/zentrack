@@ -1,5 +1,10 @@
 <? /* -*- Mode: C; c-basic-indent: 3; indent-tabs-mode: nil -*- ex: set tabstop=3 expandtab: */ 
 
+/**
+ * Holds the ZenDatabase class.  Requires Zen.php, ZenQuery.php, and the adodb.inc.php libs
+ * @package DB
+ */
+
 /** 
  * Manages information concerning a database connection. Currently this class wraps the ADODB 
  * library.
@@ -26,6 +31,7 @@ class ZenDatabase extends Zen {
    */
   function ZenDatabase( $dbtype, $dbhost, $dbuser, $dbpass, 
                         $dbinst, $persistent = false, $connect = true ) {
+    ZenUtils::prep("ZenDbTypeInfo");
     $this->Zen();
     $this->_dbtype = $dbtype;
     $this->_dbhost = $dbhost;

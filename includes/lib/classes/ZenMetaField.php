@@ -1,5 +1,10 @@
 <? /* -*- Mode: C; c-basic-indent: 3; indent-tabs-mode: nil -*- ex: set tabstop=3 expandtab: */ 
 
+/**
+ * Holds the ZenMetaField class.  Requires Zen.php
+ * @package DB
+ */
+
 /** 
  * Store properties for a field in the database
  *
@@ -83,8 +88,10 @@ class ZenMetaField extends Zen {
       ZenUtils::safeDebug($this, 'setProp', "Property $property cannot be edited", 105, LVL_WARN);
       return false;
     }
-    $this->_updated = true;
-    $this->_data[$property] = $value;
+    if( $property != $this->_data[$property] ) { 
+      $this->_updated = true;
+      $this->_data[$property] = $value;
+    }
     return true;
   }
 
@@ -160,6 +167,7 @@ class ZenMetaField extends Zen {
    * @return integer rows affected
    */
   function save() {
+    ZenUtils::prep("ZenMetaDb");
     if( !$this->_updated ) { 
       Zen::debug($this, 'save', 'Attempted to save field, but has not changed', 161, LVL_WARN);
       return false; 
@@ -179,7 +187,7 @@ class ZenMetaField extends Zen {
     $res = $query->update();
     if( $res ) { $this->_updated = false; }
     Zen::debug($this, 'save', $this->name().": [$res] '".$query->getQueryString()."'", 0, LVL_DEBUG);
-    return $res? true : false;
+    return $res;
   }
 
   /**

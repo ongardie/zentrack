@@ -1,6 +1,14 @@
 <? /* -*- Mode: C; c-basic-indent: 3; indent-tabs-mode: nil -*- ex: set tabstop=3 expandtab: */ 
 
+/**
+ * Holds the ZenTask class.  Requires ZenDataType.php
+ * @package Zen
+ */
+
 /** 
+ * A task represents a type of action performed on a ticket.  This could be a log entry, labor, or
+ * other user defined tasks which a worker might enter into the tracking system.
+ * 
  * @package Zen 
  */
 class ZenTask extends ZenDataType {

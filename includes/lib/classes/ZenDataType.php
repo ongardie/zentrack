@@ -1,6 +1,11 @@
 <? /* -*- Mode: C; c-basic-indent: 3; indent-tabs-mode: nil -*- ex: set tabstop=3 expandtab: */
 
 /**
+ * Holds the ZenDataType class.  Requires Zen.php
+ * @package Zen
+ */
+
+/**
  *
  * The purpose of the ZenDataType object is to extract all common functionality between various
  * object types such as ZenTicket, ZenUser, ZenAction, ZenTrigger, etc.
@@ -114,7 +119,7 @@ class ZenDataType extends Zen {
   function setField( $field, $value ) { 
     if( !array_key_exists($field, $this->_fields) ) {
       ZenUtils::safeDebug($this,"setField","The field $field does not exist",122,LVL_ERROR);
-      return "Field $field does not exist, unable to set";
+      return array("Field $field does not exist, unable to set");
     }
     
     // validate the return value
@@ -123,6 +128,7 @@ class ZenDataType extends Zen {
     if( $valid === true ) {
       // see if the value has changed
       if( $value == $this->_fields[$field] ) {
+        ZenUtils::safeDebug($this,"setField","Value has not changed",0,LVL_DEBUG);
         return false;
       }
       // set the new value
@@ -131,7 +137,7 @@ class ZenDataType extends Zen {
       return true;
     }
     else {
-      // return the error
+      // return the error condition
       return $valid;
     }
   }

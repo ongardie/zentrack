@@ -1,6 +1,11 @@
 <? /* -*- Mode: C; c-basic-indent: 3; indent-tabs-mode: nil -*- ex: set tabstop=3 expandtab: */ 
 
 /**
+ * Holds the ZenFormGenerator class.  Requires Zen.php
+ * @package Zen
+ */
+
+/**
  * ZenFormGenerator is used to create html forms from database
  * schema information.
  *
@@ -28,8 +33,8 @@ class ZenFormGenerator extends Zen {
    * @param string $template the template file to use for creating form output
    */
   function ZenFormGenerator($table, $template) {
-    print "name: "+$table->name();//debug
-    ZenUtils::printArray($table->listFields(), 'fields');//debug
+    ZenUtils::prep("ZenMetaField");
+    ZenUtils::prep("ZenTemplate");
     $this->_table = $table;
     $this->_template = $template;
     $this->_name = 'aForm';
@@ -240,6 +245,10 @@ class ZenFormGenerator extends Zen {
    * @return string containing html output
    */
   function render() {
+    $markName = "Render ".$this->_table->name()." form(ZenFormGenerator)";
+    // store performance times if possible
+    ZenUtils::mark($markName);
+
     // generate values to pass to form
     $vals = $this->_vals;
     $vals["name"] = $this->_name;
@@ -338,12 +347,14 @@ class ZenFormGenerator extends Zen {
       //todo
     }
     
-    ZenUtils::printArray($vals);//debug
+    //ZenUtils::printArray($vals);//debug
     
     // render the form
     $template = new ZenTemplate($this->_template);
     $template->values($vals);
-    return $template->process();
+    $res = $template->process();
+    ZenUtils::unmark($markName);
+    return $res;
   }
 
   /**
@@ -428,6 +439,7 @@ class ZenFormGenerator extends Zen {
     // are going to use for data
     list($table,$fk_id) = explode('.',$field['reference']);       
     if( is_numeric($field['criteria'][1]) ) {
+      ZenUtils::prep("ZenFilter");
       // if we get a filter with just an id, it refers
       // to a filter_id in the filter table, so we will
       // simply retrieve it and use it for our filter parms
@@ -435,6 +447,7 @@ class ZenFormGenerator extends Zen {
       $parms = $filter->createSearchParms();          
     }
     else {
+      ZenUtils::prep("ZenSearchParms");
       // if we get a filter with params, we will
       // generate a ZenSearchParms object
       // ourselves from the params provided

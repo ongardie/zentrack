@@ -1,5 +1,10 @@
 <? /* -*- Mode: C; c-basic-indent: 3; indent-tabs-mode: nil -*- ex: set tabstop=3 expandtab: */
 
+/**
+ * Contains the template processing engine
+ * @package Utils
+ */
+
   /**
    *  TEMPLATE PROCESSING ENGINE
    *
@@ -163,7 +168,7 @@ class ZenTemplate {
     }
     else {
       $this->_templateDir = ZenUtils::getIni('directories','dir_templates')
-        +"/"+ZenUtils::getIni('layout','template_set');
+        ."/".ZenUtils::getIni('layout','template_set');
     }
     $this->_template = $template;
     $this->_modifiers = array();
@@ -202,7 +207,8 @@ class ZenTemplate {
    * <b>private</b>: get the template file and convert it to a text string
    */
   function _get() {
-    if( !file_exists($this->_template) && file_exists($this->_templateDir."/".$this->_template) ) {
+    if( !file_exists($this->_template) 
+        && file_exists($this->_templateDir."/".$this->_template) ) {
       $this->_template = $this->_templateDir."/".$this->_template;
     }
     if( file_exists($this->_template) ) {
@@ -223,12 +229,14 @@ class ZenTemplate {
    * @return string parsed contents
    */
   function _parse() {
+    ZenUtils::mark("Processing template: ".$this->_template);
     $txtArray = explode("\n",$this->_text);
     for($i=0; $i<count($txtArray); $i++) {
       $txtArray[$i] = preg_replace("@[{]([^}]+)[}]@e", "''.\$this->_insert(\"\\1\").''",$txtArray[$i]);
     }
     $text = stripslashes(join("\n",$txtArray)); 
     $this->_runMods($text);
+    ZenUtils::unmark("Processing template: ".$this->_template);
     return $text;
   }
 

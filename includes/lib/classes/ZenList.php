@@ -1,5 +1,10 @@
 <? /* -*- Mode: C; c-basic-indent: 3; indent-tabs-mode: nil -*- ex: set tabstop=3 expandtab: */ 
 
+/**
+ * Holds the ZenList class.  Requires Zen.php
+ * @package Zen
+ */
+
 /** 
  * This is a base class to allow for retrieving lists of various things.  Several primary purposes
  * exist for this class: 
@@ -63,6 +68,7 @@ class ZenList extends Zen {
    * @param boolean $sortby if true, then results will be sorted by this id list instead of sort parms
    */
   function criteriaIdArray( $ids, $sortby = false ) {
+    ZenUtils::prep("ZenSearchParms");
     $this->_criteria = new ZenSearchParms( 'OR' );
     $this->_criteria->match( $this->_primarykey, ZEN_IN, $ids );
     if( $sortby ) { $this->_sortByIds = $ids; }
@@ -75,6 +81,7 @@ class ZenList extends Zen {
    * @return boolean
    */
   function criteriaSetId( $setId ) {
+    ZenUtils::prep("ZenCriteriaSet");
     $set = new ZenCriteriaSet($setId);
     return $this->criteria( $set->getSearchParms() );
   }
@@ -86,7 +93,7 @@ class ZenList extends Zen {
    * @return boolean
    */
   function criteria($criteria) { 
-    if( is_a($criteria, "ZenSearchParms") ) {
+    if( ZenUtils::instanceOf("ZenSearchParms", $criteria) ) {
       $this->_criteria = $criteria;
       return true;
     }

@@ -43,37 +43,34 @@
   <testgetfield>
     <pass_1>
       <param name='rowid'>1</param>
-      <param name='field'>field_name</param>
+      <param name='field'>column_value</param>
       <param name='value'>test_field_1</param>
       <param name='expected' eval='true'>true</param>
       <param name='uselist' eval='true'>false</param>
     </pass_1>
     <pass_2>
       <param name='rowid'>3</param>
-      <param name='field'>syslock</param>
-      <param name='value'>1</param>
+      <param name='field'>column_byte</param>
+      <param name='value'>0</param>
       <param name='expected' eval='true'>true</param>
       <param name='uselist' eval='true'>true</param>
     </pass_2>
     <pass_3>
       <param name='rowid'>2</param>
-      <param name='field'>field_pri</param>
-      <param name='value'>1</param>
+      <param name='field'>column_integer</param>
+      <param name='value'>20</param>
       <param name='expected' eval='true'>true</param>
       <param name='uselist' eval='true'>true</param>
     </pass_3>
-
     <fail_1>
       <param name='rowid'>10</param>
       <param name='field'>happy</param>
-      <param name='value'>sad</param>
       <param name='expected' eval='true'>false</param>
       <param name='uselist' eval='true'>false</param>
     </fail_1>
     <fail_2>
       <param name='rowid'>1</param>
       <param name='field'>zippy</param>
-      <param name='value'>skippy</param>
       <param name='expected' eval='true'>false</param>
       <param name='uselist' eval='true'>true</param>
     </fail_2>
@@ -130,14 +127,14 @@
     <pass_1>
       <param name='rowid'>2</param>
       <param name='uselist' eval='true'>false</param>
-      <param name='field'>field_pri</param>
-      <param name='newval'>20</param>
+      <param name='field'>column_integer</param>
+      <param name='newval'>21</param>
       <param name='expected'>true</param>
     </pass_1>
     <pass_2>
       <param name='rowid'>3</param>
       <param name='uselist' eval='true'>true</param>
-      <param name='field'>field_name</param>
+      <param name='field'>column_value</param>
       <param name='newval'>spiffy field</param>
       <param name='expected'>true</param>
     </pass_2>
@@ -152,28 +149,28 @@
     <fail_2>
       <param name='rowid'>3</param>
       <param name='uselist' eval='true'>true</param>
-      <param name='field'>syslock</param>
-      <param name='newval'>1</param>
+      <param name='field'>column_byte</param>
+      <param name='newval'>0</param>
       <param name='expected'>false</param>
     </fail_2>
     <fail_3>
       <param name='rowid'>2</param>
       <param name='uselist' eval='true'>true</param>
-      <param name='field'>syslock</param>
+      <param name='field'>column_byte</param>
       <param name='newval'>a</param>
       <param name='expected'>error</param>
     </fail_3>
     <fail_4>
       <param name='rowid'>1</param>
       <param name='uselist' eval='true'>true</param>
-      <param name='field'>isacive</param>
+      <param name='field'>column_integer</param>
       <param name='newval'>2.5</param>
       <param name='expected'>error</param>
     </fail_4>
     <fail_5>
       <param name='rowid'>1</param>
       <param name='uselist' eval='true'>true</param>
-      <param name='field'>field_name</param>
+      <param name='field'>column_integer</param>
       <param name='newval'></param>
       <param name='expected'>error</param>
     </fail_5>
@@ -183,14 +180,14 @@
     <pass_1>
       <param name='rowid'>2</param>
       <param name='uselist' eval='true'>false</param>
-      <param name='field'>field_pri</param>
-      <param name='newval'>20</param>
+      <param name='field'>column_integer</param>
+      <param name='newval'>22</param>
       <param name='expected' eval='true'>true</param>
     </pass_1>
     <pass_2>
       <param name='rowid'>3</param>
       <param name='uselist' eval='true'>true</param>
-      <param name='field'>field_name</param>
+      <param name='field'>column_value</param>
       <param name='newval'>spiffy field</param>
       <param name='expected' eval='true'>true</param>
     </pass_2>
@@ -205,18 +202,41 @@
     <fail_2>
       <param name='rowid'>3</param>
       <param name='uselist' eval='true'>true</param>
-      <param name='field'>syslock</param>
+      <param name='field'>column_byte</param>
       <param name='newval'>1</param>
       <param name='expected' eval='true'>false</param>
     </fail_2>
     <fail_3>
       <param name='rowid'>2</param>
       <param name='uselist' eval='true'>true</param>
-      <param name='field'>syslock</param>
+      <param name='field'>column_byte</param>
       <param name='newval'>a</param>
       <param name='expected' eval='true'>false</param>
     </fail_3>
   </testischanged>
 
+  <testloaded>
+    <pass_1>
+      <param name='rowid'>2</param>
+      <param name='uselist' eval='true'>false</param>
+      <param name='expected' eval='true'>true</param>
+    </pass_1>
+    <pass_2>
+      <param name='rowid'>3</param>
+      <param name='uselist' eval='true'>true</param>
+      <param name='expected' eval='true'>true</param>
+    </pass_2>
+
+    <fail_1>
+      <param name='rowid'></param>
+      <param name='uselist' eval='true'>true</param>
+      <param name='expected' eval='true'>false</param>
+    </fail_1>
+    <fail_2>
+      <param name='rowid'></param>
+      <param name='uselist' eval='true'>false</param>
+      <param name='expected' eval='true'>false</param>
+    </fail_2>
+  </testloaded>
 
 </TestUnit>

@@ -3,7 +3,9 @@
    This file contains the database structure used by ZenTrack.
 
    Editing this file without proper understanding can have
-   catastrophic effects.
+   catastrophic effects.  If your goal is to change properties
+   of fields, try using the admin panel, which allows for
+   many properties to be altered without editing the schema information.
 
    After editing this file, be sure to run install.php -changed_config
    to update the cached/compiled data resulting from this file.
@@ -115,18 +117,20 @@
       <description>Testing and development tables.  Any table inheriting this abstract is
                    only created if develop_mode is true</description>
       <columns>
-        <column name="column_primarykey" type='primarykey' ftype='immutable' label='PrimeKey' />	
         <column name="column_value" type='value' ftype='text' label='Value'>
           <unique>true</unique>
         </column>
         <column name="column_string" type='string' ftype='text' label='String' />
         <column name="column_integer" type='integer' ftype='text' label='Integer'>
            <notnull>true</notnull>
-        </column>	
+        </column>
         <column name="column_byte" type='byte' ftype='text' label='Byte'>
            <required>true</required>
         </column>
         <column name="column_email" type='email' ftype='text' label='Email' />	
+        <column name="column_decimal" type='decimal' ftype='text' label="Decimal">
+          <size>3,2</size>
+        </column>
       </columns>
     </table>
  </abstractTables>
@@ -305,7 +309,7 @@
       <transactions>true</transactions>      
       <columns>
         <column name="dbtest_id" type="primarykey" ftype="immutable" label="Key" />
-      </column>
+      </columns>
     </table>
     
     <table name="FIELD_DEFS">
@@ -401,6 +405,7 @@
 	<column name="ctime" type="date" ftype="hidden" />
 	<column name="hours" type="decimal" ftype="text" label="Hours Worked">
 	  <description>Hours associated with this log entry, decimals are acceptable here</description>
+          <size>10,3</size>
 	</column>
 	<column name="entry" type="text" ftype="textarea" label="Details" />	  
 	<column name="action_id" type="integer" ftype="select">

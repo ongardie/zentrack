@@ -16,33 +16,25 @@
   $GLOBALS['ptimes'] = array('total'=>array(microtime(), null), 'global.php'=>array(microtime(),null));
 
   // include all global functions
-  require_once("$dir_lib/inc/functions.php");
+  require("$dir_lib/inc/functions.php");
 
   // include all the object classes
-  require_once("$dir_lib/inc/classes.php");
-  load_classes( $classes_standard, $dir_classes );
-  load_classes( $classes_data_types, $dir_classes );
-  load_classes( $classes_other, $dir_classes );
-
-  //todo
-  //todo
-  //todo make this a class!!!
-  //todo
-  loadClass( "user_functions.php", getIni('directories','dir_user') );
+  require("$dir_lib/inc/classes.php");
+  load_classes( $classes_common, $dir_classes );
 
   set_error_handler('zenErrorWrapper');
 
   // start the session information
-  require_once("$dir_lib/inc/session.php");
+  require("$dir_lib/inc/session.php");
 
   // check the php environment settings
-  require_once("$dir_lib/inc/environment.php");
+  require("$dir_lib/inc/environment.php");
 
   // include all global variables
-  //require_once("$dir_lib/inc/variables.php");
+  require("$dir_lib/inc/variables.php");
 
   // include standard criteria
-  require_once("$dir_lib/inc/standard_criteria.php");
+  require("$dir_lib/inc/standard_criteria.php");
 
   endPTime( 'global.php' );
 

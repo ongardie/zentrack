@@ -84,4 +84,11 @@
      <desc>Comma seperated list. Only these extensions may be uploaded. Blank allows all(security risk!)</desc>
      <set_value>txt,html,xls,pdf,jpg,gif,png,doc,wpd</set_value>
   </dataRow>
+  <dataRow>
+     <set_category>development</set_category>
+     <set_name>show_performance_times</set_name>
+     <field_type>yesno</field_type>
+     <desc>Displays performance times in a table at base of page, turn this on only for development or troubleshooting.</desc>
+     <set_value>0</set_value>
+  </dataRow>
 </dataDump>

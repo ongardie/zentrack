@@ -1,12 +1,17 @@
 <? /* -*- Mode: C; c-basic-indent: 3; indent-tabs-mode: nil -*- ex: set tabstop=3 expandtab: */ 
 
 /**
+ * Holds the ZenMessageList class.  Requires Zen.php and ZenMessage.php
+ * @package Utils
+ */
+
+/**
  * The ZenMessageList is a utility for error reporting and logging
  *
  * The message list should not be called by its constructor... it should only
  * be called by using getInstance()
  *
- * @package Zen
+ * @package Utils
  */
 class ZenMessageList extends Zen {
 
@@ -40,6 +45,7 @@ class ZenMessageList extends Zen {
    * @param string $config is the xml file which holds the debug config info
    */
   function ZenMessageList( $config ) {
+    ZenUtils::prep("ZenMessage");
     $this->Zen();
     $this->_messages = array();    
 
@@ -369,6 +375,7 @@ class ZenMessageList extends Zen {
    * @return integer 0-failed, 2-loaded from file
    */
   function _loadXMLConfig( $xmlfile ) {
+    ZenUtils::prep("ZenXMLParser");
     // get xml data
     $data = join("",file($xmlfile));    
     // create an xml parser and parse data
@@ -535,10 +542,10 @@ class ZenMessageList extends Zen {
   var $_blockformat = array( "<ul>\n", "</ul>\n" ); 
 
   /** @var array $_msgformat how to format output messages @see show() */
-  var $_msgformat = array( LVL_ERROR => array("<li class='err'>","</li>"),
+  var $_msgformat = array( LVL_ERROR => array("<li class='error'>","</li>"),
                            LVL_WARN => array("<li class='warn'>","</li>"),
-                           LVL_NOTE => array("<li class='msg'>","</li>"),
-                           LVL_DEBUG => array("<li class='msg'>","</li>") );
+                           LVL_NOTE => array("<li class='note'>","</li>"),
+                           LVL_DEBUG => array("<li class='debug'>","</li>") );
 
 
 }

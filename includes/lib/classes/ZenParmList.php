@@ -1,5 +1,10 @@
 <? /* -*- Mode: C; c-basic-indent: 3; indent-tabs-mode: nil -*- ex: set tabstop=3 expandtab: */ 
 
+/**
+ * Holds the ZenParmList class.  Requires ZenList.php
+ * @package Zen
+ */
+
 /** 
  * Holds a list of parms which are used by actions, filters, and other logic
  * to load dynamic variable values.
@@ -8,7 +13,7 @@
  * tables which extend ABSTRACT_DATA_TYPE will not be found here.  Be careful
  * how this class is implemented!
  *
- * @package Zen 
+ * @package Zen
  */
 class ZenParmList extends ZenList {
 
@@ -16,6 +21,8 @@ class ZenParmList extends ZenList {
    * CONSTRUCTOR
    */
   function ZenParmList( $setId ) {
+    //todo
+    //todo use $setId
     $this->ZenList();
   }
 

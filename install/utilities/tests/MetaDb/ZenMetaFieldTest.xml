@@ -37,7 +37,7 @@
 
   <setup>
     <!-- set the db schema to use, load some fields for testing -->
-    <xmlfile>dbtest.xml</xmlfile>
+    <xmlfile>testdb.xml</xmlfile>
     <field>
       <name>an_integer</name>
       <label>an integer</label>
@@ -46,7 +46,7 @@
       <ftype>text</ftype>
       <notnull>1</notnull>
       <criteria type='zen'>bins</criteria>
-      <reference>DBTEST.column_primarykey</reference>
+      <reference>DBTEST.dbtest_id</reference>
       <showfield>field_name</showfield>
       <default></default>
       <description>a description</description>
@@ -70,7 +70,7 @@
       <notnull>1</notnull>
       <required>1</required>
       <criteria type='list'>a,b,c</criteria>
-      <reference>DBTEST.column_primarykey</reference>
+      <reference>DBTEST.dbtest_id</reference>
       <default>2</default>
       <description>a description</description>
       <custom>0</custom>
@@ -97,28 +97,31 @@
       <unique>1</unique>
     </field>
     <load>
-      <column_primarykey>1</column_primarykey>
+      <datatype_test_id>1</datatype_test_id>
       <column_value>test_field_1</column_value>
       <column_string>test 1 string</column_string>
       <column_integer>10</column_integer>
       <column_byte>0</column_byte>
       <column_email>an@email.com</column_email>
+      <column_decimal>2.5</column_decimal>
     </load>
     <load>
-      <column_primarykey>2</column_primarykey>
+      <datatype_test_id>2</datatype_test_id>
       <column_value>test_field_2</column_value>
       <column_string>test 2 string</column_string>
       <column_integer>20</column_integer>
       <column_byte>1</column_byte>
       <column_email>another@email.net</column_email>
+      <column_decimal>4</column_decimal>
     </load>
     <load>
-      <column_primarykey>3</column_primarykey>
+      <datatype_test_id>3</datatype_test_id>
       <column_value>test_field_3</column_value>
       <column_string>test 3 string</column_string>
       <column_integer>30</column_integer>
       <column_byte>0</column_byte>
       <column_email>alt@email.gov.cc</column_email>
+      <column_decimal>33.52</column_decimal>
     </load>
   </setup>
 
@@ -288,7 +291,7 @@
   <testsave>
     <pass_1>
       <param name='table'>DATATYPE_TEST</param>
-      <param name='field'>custom_byte</param>
+      <param name='field'>column_byte</param>
       <param name='set'>label</param>
       <param name='value'>customary bytage</param>
       <param name='expected' eval='true'>true</param>
@@ -414,7 +417,7 @@
     </pass_3>
     <pass_4>
       <param name='rowid'>1</param>
-      <param name='field'>column_primarykey</param>
+      <param name='field'>datatype_test_id</param>
       <param name='newval'>222</param>
       <param name='expected' eval='true'>true</param>
     </pass_4>
@@ -430,27 +433,33 @@
       <param name='newval'>test_field_2</param>
       <param name='expected' eval='true'>true</param>
     </pass_6>
+    <pass_7>
+      <param name='rowid'>3</param>
+      <param name='field'>column_decimal</param>
+      <param name='newval'>2.2</param>
+      <param name='expected' eval='true'>true</param>
+    </pass_7>
     <fail_1>
       <param name='rowid'>1</param>
-      <param name='field'>an_integer</param>
+      <param name='field'>column_integer</param>
       <param name='newval'></param>
       <param name='expected' eval='true'>false</param>
     </fail_1>
     <fail_2>
       <param name='rowid'>3</param>
-      <param name='field'>a_byte</param>
+      <param name='field'>column_byte</param>
       <param name='newval'>2.5</param>
       <param name='expected' eval='true'>false</param>
     </fail_2>
     <fail_3>
-      <param name='rowid'>2</param>
-      <param name='field'>a_primarykey</param>
-      <param name='newval'>0.1</param>
+      <param name='rowid'>1</param>
+      <param name='field'>datatype_test_id</param>
+      <param name='newval'>2</param>
       <param name='expected' eval='true'>false</param>
     </fail_3>
     <fail_4>
       <param name='rowid'>1</param>
-      <param name='field'>a_custom_email</param>
+      <param name='field'>column_email</param>
       <param name='newval'>memeeme@memememe</param>
       <param name='expected' eval='true'>false</param>
     </fail_4>
@@ -460,6 +469,18 @@
       <param name='newval'>test_field_2</param>
       <param name='expected' eval='true'>false</param>
     </fail_5>
+    <fail_6>
+      <param name='rowid'>2</param>
+      <param name='field'>column_decimal</param>
+      <param name='newval'>aaa</param>
+      <param name='expected' eval='true'>false</param>
+    </fail_6>
+    <fail_7>
+      <param name='rowid'>1</param>
+      <param name='field'>column_integer</param>
+      <param name='newval'>233.55</param>
+      <param name='expected' eval='true'>false</param>
+    </fail_7>
   </testvalidate>
   
 </TestUnit>

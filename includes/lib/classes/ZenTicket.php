@@ -1,7 +1,14 @@
 <? /* -*- Mode: C; c-basic-indent: 3; indent-tabs-mode: nil -*- ex: set tabstop=3 expandtab: */ 
 
 /**
- * The main ticket control functions
+ * Holds the ZenTicket class.  Requires ZenDataType.php
+ * @package Zen
+ */
+
+/**
+ * A ticket represents the basic task, issue, or bug to be tracked.  This class
+ * contains functions used for creating, altering, and performing advanced functions
+ * to a ticket.
  *
  * @package Zen 
  */

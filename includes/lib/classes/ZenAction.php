@@ -1,7 +1,17 @@
 <? /* -*- Mode: C; c-basic-indent: 3; indent-tabs-mode: nil -*- ex: set tabstop=3 expandtab: */ 
 
-/** 
- * @package Zen 
+/**
+ * Contains the ZenAction class.  Requires ZenDataType.php
+ * @package Actions
+ */
+
+/**
+ * Contains a user defined action which is used to collect arguments and
+ * run a system action.
+ *
+ * @see ZenSystemAction
+ * @see ZenParms 
+ * @package Actions
  */
 class ZenAction extends ZenDataType {
 

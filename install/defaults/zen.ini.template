@@ -88,13 +88,15 @@ cache_time = {cache_time=""}
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 [layout]
 
-system_name = "{system_name="ZenTrack"}"   ;system name to display
+system_name = "{system_name="ZenTrack"}"                 ;system name to display
 
 page_prefix = "{page_prefix="ZenTrack | "}"              ;the prefix for titles displayed by browser
 
-page_title = "{page_title="Welcome"}"  ;the default title displayed by browser
+page_title = "{page_title="Welcome"}"                    ;the default title displayed by browser
 
-template_set = "{template="default"}"                     ;which layout templates to employ
+template_set = "{template="default"}"                    ;which layout templates to employ
+
+default_language = "{default_language="english"}"        ;which language to show by default
 
 ;;;;;;;;;;;;;;;;; DEBUGGING OUTPUT ;;;;;;;;;;;;;;;;;;;;;
 ;;; The debug settings are controlled in an xml file

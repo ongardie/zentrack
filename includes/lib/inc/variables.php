@@ -21,7 +21,9 @@
   $GLOBALS['rootUrl'] = getini('paths','url_www');
   $GLOBALS['templateDir'] = getini('directories','dir_templates')."/".getini('layout','template_set');
   $GLOBALS['styleSheet'] = getGlobal('rootUrl')."/styles/".getini('layout','template_set').".css";
-  
+  $GLOBALS['currentLocale'] = getini('layout','default_language');
+  //todo: add user prefs to these variables
+
   /**
    * @var array $GLOBALS['tcache'] temporary cache to store ZenDataTypes for life of page
    */

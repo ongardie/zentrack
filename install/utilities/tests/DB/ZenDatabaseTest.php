@@ -131,7 +131,10 @@
     function testExecute( $vals ) {
       // create query statement
       $query = $vals['statement'];
-      if( $vals['table'] ) { $query = preg_replace("/\{table\}/", $this->_makeTableName($vals['table']), $query); }        
+      if( $vals['table'] ) { 
+        $query = preg_replace("/\{table\}/", $vals['table'], $query); 
+        $query = preg_replace("/\{ptable\}/", $this->_makeTableName($vals['table']), $query); 
+      }
       $offset = isset($vals['offset'])? $vals['offset'] : 0;
       $this->_dbo->setFetchMode(false);
       $recordSet = $this->_dbo->execute($query, $vals['cache'], $vals['limit'], $offset );
@@ -162,7 +165,10 @@
     function testExecuteGetOne( $vals ) {
       // create query statement
       $query = $vals['statement'];
-      if( $vals['table'] ) { $query = preg_replace("/\{table\}/", $this->_makeTableName($vals['table']), $query); }        
+      if( $vals['table'] ) { 
+        $query = preg_replace("/\{table\}/", $vals['table'], $query); 
+        $query = preg_replace("/\{ptable\}/", $this->_makeTableName($vals['table']), $query); 
+      }
       //todo fix cache
       $retVal = $this->_dbo->executeGetOne($query, $vals['cache']); //$vals['cache']);
       // check pass or fail results
@@ -189,15 +195,15 @@
 
     function testGenerateID( $vals ) {
       // select id from the database and compare to generated
-      $table = $this->_dbo->makeTableName($vals['table']);
+      $ptable = $this->_dbo->makeTableName($vals['table']);
       $query = "SELECT current_id FROM ".$this->_dbo->makeTableName('TABLE_IDS')
-        ." where name_of_table = '{$table}'";
+        ." where name_of_table = '{$ptable}'";
       $maxid = $this->_dbo->executeGetOne($query, false);
       Assert::equalsTrue( ($maxid > 0), 
                           "Could not get max primary_key from database<br>($query)<br>".$this->_dbo->getErrorMessage() );
       
       // generate a new id and compare
-      $id = $this->_dbo->generateID( $table );
+      $id = $this->_dbo->generateID( $ptable );
       Assert::equalsTrue( ($id == $maxid+1), "Generated ID isn't valid(needed ".($maxid+1).", found $id)" );
     }
 
@@ -209,10 +215,10 @@
       $id = $this->_dbo->generateID( $table );
       $query = $vals['statement'];
       // substitute values for any {...} occurences in statement
+      $vals['ptable'] = $this->_makeTableName($vals['table']);
       foreach( $vals as $key=>$val ) {
         // there could be table1, table2, etc.. so we do it this
         // way instead of just == "table"
-        if( strpos($key, 'table') === 0 ) { $val = $this->_makeTableName($val); }
         $query = str_replace( "{".$key."}", $val, $query );
       }
       $query = str_replace("{key}", $id, $query);
@@ -245,14 +251,10 @@
         $v = ZenXMLParser::getParmSet( $childset[0]->child('param') );
         
         // perform insert, check results
-        $id = $this->_dbo->generateID( $this->_dbo->makeTableName($v['table']) );
         $query = $v['statement'];
-        // substitute values for any {...} occurences in statement
-        foreach( $v as $key=>$val ) {
-          if( strpos($key, 'table') === 0 ) { $val = $this->_makeTableName($val); }
-          $query = str_replace( "{".$key."}", $val, $query );
-        }
-        $query = str_replace("{key}", $id, $query);
+        // substitute values for any {table} occurences in statement
+        $query = str_replace( "{table}", $v['table'], $query );
+        $query = str_replace( "{ptable}", $this->_makeTableName($v['table']), $query );
         $result = $this->_dbo->execute($query);
         Assert::assert( $result, "Could not load data: $query" );
       }

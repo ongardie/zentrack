@@ -1102,6 +1102,7 @@ class ZenTargets {
       // this will parse the directories and substitue %varname% for any values which
       // correspond with another variable for scalability
       foreach($vals as $k1=>$v1) {
+        if( !$v1 ) { continue; }
         foreach($vals as $k2=>$v2) {
           // we only want to do directories, and we
           // don't want to replace a var with its own val
@@ -1111,7 +1112,7 @@ class ZenTargets {
           $vals[$k2] = preg_replace("|^$v1|", "%$k1%", $vals[$k2]);
         }
       }
-    }    
+    }
 
     $template = new ZenTemplate( $source );
     $template->values($vals);

@@ -1,5 +1,10 @@
 <? /* -*- Mode: C; c-basic-indent: 3; indent-tabs-mode: nil -*- ex: set tabstop=3 expandtab: */ 
 
+/**
+ * Holds the ZenMetaDb class.  Requires Zen.php
+ * @package DB
+ */
+
 /** 
  * Combines user defined info with DbSchema info and produces complete db model
  *
@@ -22,8 +27,14 @@ class ZenMetaDb extends Zen {
    * @param string $xml the database.xml file to load
    */
   function ZenMetaDb( $use_cache = true, $xml = 'database.xml' ) {
+    ZenUtils::prep("ZenDbSchema");
+    ZenUtils::prep("ZenMetaTable");
+    ZenUtils::prep("ZenMetaField");
+
     // call Zen()
     $this->Zen();
+    ZenUtils::mark("ZenMetaDb[".$this->randomNumber."] constructor");
+
     $this->_conn = Zen::getDbConnection();
     $this->_schema = new ZenDbSchema( $xml );
     $this->_tables = false;
@@ -46,22 +57,20 @@ class ZenMetaDb extends Zen {
                                        $this->_tables );
       }
     }
+    ZenUtils::unmark("ZenMetaDb[".$this->randomNumber."] constructor");
   }
 
   /**
    * Load schema from xml and def tables into memory
    */
   function _load() {
+    ZenUtils::mark("ZenMetaDb[".$this->randomNumber."] _load");
     $this->_tables = array();
     $tableInfo = Zen::simpleQuery('TABLE_DEFS',null,null);
     $fieldInfo = Zen::simpleQuery('FIELD_DEFS',null,null);
     foreach( $tableInfo as $t ) {
       $table = $t['tbl_name'];
-      $this->_tables[$table] = $this->_schema->getTableArray($table);
-      if( count($this->_tables[$table]['inherits']) > 0 ) {
-        $newfields = $this->_schema->getInheritedFields($table);
-        $this->_tables[$table]['fields'] = array_merge($this->_tables[$table]['fields'], $newfields);
-      }
+      $this->_tables[$table] = $this->_schema->getMergedTableArray($table);
       foreach( $t as $key=>$val ) {
         if( !is_null($val) ) {
           $this->_tables[$table][$this->mapTableDbToProp($key)] = $val;
@@ -71,7 +80,6 @@ class ZenMetaDb extends Zen {
     foreach( $fieldInfo as $f ) {
       $field = strtolower($f['col_name']);
       $table = strtoupper($f['col_table']);
-      $this->_tables[$table]['fields'][$field] = array();
       foreach( $f as $key=>$val ) {
         if( $key == 'col_criteria' ) {
           $val = $val? explode('=',$val) : null;
@@ -83,6 +91,7 @@ class ZenMetaDb extends Zen {
     }
     Zen::debug($this, '_load', count($this->_tables)." tables were loaded, containing "
                .count($fieldInfo)." fields", 01, LVL_DEBUG);
+    ZenUtils::unmark("ZenMetaDb[".$this->randomNumber."] _load");
   }
 
   /**
@@ -156,9 +165,9 @@ class ZenMetaDb extends Zen {
    */
   function getFieldArray( $table, $field ) { 
     $field = strtolower($field);
-    $table = $this->getTableArray($table);
-    if( $table && isset($table['fields'][$field]) ) {
-      return $table['fields'][$field];
+    $tableArray = $this->getTableArray($table);
+    if( $tableArray && isset($tableArray['fields'][$field]) ) {
+      return $tableArray['fields'][$field];
     }
     return null;
   }

@@ -1,5 +1,10 @@
 <? /* -*- Mode: C; c-basic-indent: 3; indent-tabs-mode: nil -*- ex: set tabstop=3 expandtab: */ 
 
+/**
+ * Holds the ZenMetaTable class.  Requires Zen.php
+ * @package DB
+ */
+
 /** 
  * Contains all schema information for a table and all of its columns
  *
@@ -13,6 +18,7 @@ class ZenMetaTable extends Zen {
    * @param array $data is a table schema array obtained from {@link ZenDbSchema::getTableArray()}
    */
   function ZenMetaTable( $data ) {
+    ZenUtils::prep("ZenMetaField");
     // call Zen()
     $this->Zen();
     if( is_array($data) ) {      

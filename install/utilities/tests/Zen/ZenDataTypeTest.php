@@ -30,6 +30,9 @@
     }
 
     function load( $setupNode ) {
+      // remove any existing data from test table
+      $this->unload();
+
       // add new test data (use devmode so test tables are available */
       $xmlnode = $setupNode->child('xmlfile',0);
       $xmlfile = dirname(dirname(__FILE__))."/DB/".$xmlnode->data();
@@ -48,8 +51,9 @@
       $dataTypeObj = $this->_getDataType($vals);
       $val = $dataTypeObj->getField( $vals['field'] );
       if( !$vals['expected'] ) { $vals['value'] = null; }
-      Assert::equals( $val, $vals['value'], "Expected {$vals['value']} for field "
-                      ."{{$vals['field']}, found {$val}" );
+      Assert::equalsTrue( ZenUtils::safeEquals($val, $vals['value']), 
+                          "Expected {$vals['value']} for field "
+                          ."{$vals['field']}, found {$val}" );
     }
 
     function testGetMetaInfo( $vals ) {
@@ -68,7 +72,9 @@
     function testId( $vals ) {
       $dataTypeObj = $this->_getDataType($vals);
       if( $vals['expected'] ) {
-        Assert::equals($dataTypeObj->id(), $vals['rowid'], "Field id not equal to {$vals['rowid']}");
+        Assert::equals($dataTypeObj->id(), $vals['rowid'], 
+                       "Field id (".$dataTypeObj->id()
+                       .") not equal to {$vals['rowid']}");
       }
       else {
         Assert::equals($dataTypeObj->id(), null, "Field id should not be set, found "
@@ -87,7 +93,7 @@
         Assert::equalsTrue( $res === false, "Expected false, recieved ".($res?'true':'false') );
         break;
       case 'error':
-        Assert::equalsTrue( is_string($res), "Expected error but recieved {$res} while "
+        Assert::equalsTrue( is_array($res), "Expected error but recieved {$res} while "
                             ." setting {$vals['field']} to '{$vals['newval']}'" );
         break;
       default:
@@ -104,22 +110,33 @@
     function testIsChanged( $vals ) {
       $dataTypeObj = $this->_getDataType($vals);
       $res = $dataTypeObj->setField($vals['field'], $vals['newval']);
-      $v1 = $vals['expected']? 'true' : 'false';
-      $v2 = $res? 'true' : 'false';
-      Assert::equals($res, $vals['expected'], "Expected '{$v1}', found '{$v2}'");
+      $v1 = ZenUtils::boolString($vals['expected']);
+      $v2 = is_bool($res)? ZenUtils::boolString($res) : $res;
+      $tf = ($vals['expected'] && $res === true) || !$vals['expected'];
+      Assert::equalsTrue($tf, "Expected '{$v1}', found '{$v2}'");
     }
 
     function testSave() {
       Assert::equalsTrue(false, "Not ready for use yet");
     }
 
-    function testLoaded() {
-      Assert::equalsTrue(false, "Not ready for use yet");
+    function testLoaded( $vals ) {
+      $dataTypeObj = $this->_getDataType($vals);
+      Assert::equals( $dataTypeObj->loaded(), $vals['expected'],
+                      "Expected ".ZenUtils::boolString($dataTypeObj->loaded())
+                      .", recieved ".ZenUtils::boolString($vals['expected']) );
     }
 
     function _getDataType( $vals ) {
       $list = $vals['uselist']? $this->_list : null;
       return new ZenDataType_test( $vals['rowid'], $list );      
+    }
+
+    /**
+     * Cleans out test data used here
+     */
+    function unload() {
+      Zen::simpleDelete('DATATYPE_TEST');
     }
 
     /**

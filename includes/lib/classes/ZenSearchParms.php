@@ -1,5 +1,10 @@
 <? /* -*- Mode: C; c-basic-indent: 3; indent-tabs-mode: nil -*- ex: set tabstop=3 expandtab: */ 
 
+/**
+ * Holds the ZenSearchParms class.
+ * @package Zen
+ */
+
 /** 
  * Search parameters to be used for constructing db search queries.
  *

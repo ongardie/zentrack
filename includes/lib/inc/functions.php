@@ -81,7 +81,11 @@
    * Parses and returns difference of two microtimes
    */
   function diffmicrotimes($end, $start) {
-    return showmicrotime(parsemicrotime($end) - parsemicrotime($start));
+    if( $start == '--' || $end == '--' ) { return '--'; }
+    $s = parsemicrotime($start);
+    $e = parsemicrotime($end);
+    if( $e - $s < 0 ) { return "--"; }
+    return showmicrotime($e - $s);
   }
 
   /**
@@ -94,8 +98,8 @@
     print "<tr><th colspan='4'>Performance Times<br>(seconds)</td></tr>\n";
     print "<tr><th>Section</th><th>Start</th><th>Stop</th><th>Elapsed</th></tr>\n";
     foreach( $GLOBALS['ptimes'] as $k=>$v ) {
-      $s = parsemicrotime($v[0]) - $base;
-      $e = parsemicrotime($v[1]) - $base;
+      $s = is_null($v[0])? '--' : parsemicrotime($v[0]) - $base;
+      $e = is_null($v[1])? '--' : parsemicrotime($v[1]) - $base;
       print "<tr>\n";
       // basics
       print "<td>$k</td><td>".showmicrotime($s)."</td><td>".showmicrotime($e)."</td>";

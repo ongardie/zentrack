@@ -1,12 +1,17 @@
 <? /* -*- Mode: C; c-basic-indent: 3; indent-tabs-mode: nil -*- ex: set tabstop=3 expandtab: */ 
 
+/**
+ * Holds the ZenSystemAction class.  Requires Zen.php
+ * @package Actions
+ */
+
 /** 
  * The ZenSystemAction class provides the base API for creating
  * and utilizing all user defined actions.  It comprises the 
  * essential events that define the abilities of the ZenTrack
  * system.
  *
- * @package Zen 
+ * @package Actions
  */
 class ZenSystemAction extends Zen {
 

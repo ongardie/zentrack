@@ -39,7 +39,7 @@
     </LVL_WARN>
     <LVL_NOTE>
       <open>
-        <![CDATA[<li class='msg'>]]>
+        <![CDATA[<li class='note'>]]>
       </open>
       <close>
         <![CDATA[</li>]]>
@@ -47,7 +47,7 @@
     </LVL_NOTE>
     <LVL_DEBUG>
       <open>
-        <![CDATA[<li class='msg'>]]>
+        <![CDATA[<li class='debug'>]]>
       </open>
       <close>
         <![CDATA[</li>]]>

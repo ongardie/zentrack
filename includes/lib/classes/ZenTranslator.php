@@ -19,9 +19,9 @@
  *   To initialize the engine you need to call this function with an associative array as the first
  *   parameter. The keys for this array are
  *     zen - A reference to a zenTrack object.
- *     domain - A domain to translate from.
+ *     domain - A domain to translate from
  *     path - The path to the domain containing the translation files
- *     locale - The locale to translate too
+ *     locale - The locale to translate too 
  *
  * String translation -
  *   To translate a simple string just calling tr() with the string to translate will do the job
@@ -36,13 +36,21 @@
  */
 function tr($string, $vals = '') {
   static $translator;
-  if (is_array($string)) {
+  if( is_array($string)) {
     $translator = new ZenTranslator;
-    $translator->bindZen($string['zen']);
     $translator->bindDomain($string['domain'], $string['path']);
     $translator->textDomain($string['domain']);
     $translator->setLocale($string['locale']);
     return true;
+  }
+  else if( !$translator ) {
+    $locale = ZenUtils::findGlobal('currentLocale');
+    if( !$locale ) { $locale = ZenUtils::getIni('layout','default_language'); }
+    $translator = new ZenTranslator;
+    $translator->bindDomain('messages', 
+                            ZenUtils::getIni('directories','dir_translations'));
+    $translator->textDomain('messages');    
+    $translator->setLocale( $locale );
   }
   if( is_array($vals) ) {
     return $translator->ptrans($string,$vals);
@@ -50,8 +58,6 @@ function tr($string, $vals = '') {
   else {
     return $translator->trans($string);
   }
-  //global $zen;
-  //return $zen->trans($string,$init);
 }   
  
 /**
@@ -63,7 +69,7 @@ function tr($string, $vals = '') {
  * $trans = new ZenTranslator;
  * $trans->bindDomain('messages', './locales/messages/');
  * $trans->textDomain('messages');
- * $trans->setLocale('es') //Spanish
+ * $trans->setLocale('spanish') // corresponds to the spanish.trans file
  * $trans->trans('Hello World'); //outputs 'Hola Mundo'
  *
  * @package Utils
@@ -76,18 +82,7 @@ class ZenTranslator {
       $this->_domainList = array();
       $this->_curDomain = '';
       $this->_locale = '';
-      $this->_zenObj;
       $this->_translationCache = array();
-   }
-
-/**
- * Binds the zenClass object to the translator.
- *
- * @param $zenObj object The instance of zenClass to bind to.
- */
-   function bindZen(&$zenObj) {
-      //This is for error tracking purposes
-      $this->_zenObj =& $zenObj;
    }
 
 /**
@@ -106,7 +101,7 @@ class ZenTranslator {
          return true;
       }
       else {
-         Zen::debug($this,"bindDomain", "Domain Path Doesn't Exist: '$path'\n", 21, LVL_ERROR);
+         ZenUtils::safeDebug($this,"bindDomain", "Domain Path Doesn't Exist: '$path'\n", 21, LVL_ERROR);
          return false;
       }
    }
@@ -117,7 +112,7 @@ class ZenTranslator {
  * @param $locale string the two letter ISO abbreviation for the language.
  */
    function setLocale($locale)  {
-     Zen::debug($this, "setLocale", "Locale set to $locale", 0, LVL_DEBUG);
+     ZenUtils::safeDebug($this, "setLocale", "Locale set to $locale", 0, LVL_DEBUG);
       $this->_locale = $locale;
    }
 
@@ -134,7 +129,7 @@ class ZenTranslator {
          return true;
       }
       else {
-         Zen::debug($this, "textDomain", "Domain Does Not Exist: '$domain'\n", 105, LVL_ERROR);
+         ZenUtils::safeDebug($this, "textDomain", "Domain Does Not Exist: '$domain'\n", 105, LVL_ERROR);
          return false;
       }
    }
@@ -164,13 +159,21 @@ class ZenTranslator {
    function trans($string) {
       $error = false;
       $translationFile = $this->_domainList[$this->_curDomain] . '/' . $this->_locale . '.trans';
-      $compiledFile = $this->_domainList[$this->_curDomain] . '/' . $this->_locale . '.ctrans';
+
+      $cachedir = ZenUtils::getIni('directories','dir_cache') . '/translations/' . $this->_curDomain;
+      if( !is_dir( $cachedir ) ) {
+        mkdir($cachedir, 0777);
+      }
+
+      $compiledFile =  $cachedir . '/' . $this->_locale . '.ctrans';
 
       //Check for a cached copy
       if (!array_key_exists($translationFile, $this->_translationCache)) {
          //check for file
          if (!file_exists($translationFile)) {
-            Zen::debug($this, "trans", "Translation File Does Not Exist: '$translationFile'\n", 21, LVL_WARN);
+            ZenUtils::safeDebug($this, "trans", 
+                                "Translation File Does Not Exist: '$translationFile'\n", 
+                                21, LVL_ERROR);
             $error = true;
          }
          else {
@@ -183,7 +186,8 @@ class ZenTranslator {
             else {
                $transArray = $this->_parseTranslationFile($translationFile);
                if ($transArray === false) {
-                  Zen::debug($this, "trans", "Improper Translation File: '$translationFile'\n", 26, LVL_ERROR);
+                  ZenUtils::safeDebug($this, "trans", 
+                                      "Improper Translation File: '$translationFile'\n", 26, LVL_ERROR);
                   $error = true;
                }
                $serializedArray = serialize($transArray);
@@ -200,14 +204,14 @@ class ZenTranslator {
       if ($error == false) {
 	if( !isset($this->_translationCache[$translationFile][$string]) ) {
 	  // translation string doesn't exist, send an error
-	  Zen::debug($this, "trans", "Translation does Not Exist: '$string'\n", 21, LVL_ERROR);
+	  ZenUtils::safeDebug($this, "trans", "Translation does Not Exist: '$string'\n", 21, LVL_ERROR);
 	  $error = true;	  
 	}
 	$translatedString = $this->_translationCache[$translationFile][$string];
 	if ($translatedString == '') {
 	  //Translated string exists, but isn't filled out, so send a notice
-	  if( $this->_locale != "english" )
-	    Zen::debug($this, "trans", "Empty string: '$string'\n", 104, LVL_NOTE);
+	  if( $this->_locale != "en" )
+	    ZenUtils::safeDebug($this, "trans", "Empty string: '$string'\n", 104, LVL_NOTE);
 	  $error = true;	  
 	}
       }
@@ -269,7 +273,8 @@ class ZenTranslator {
          return $translationArray;
       }
       else {
-         Zen::debug($this, "parseTranslationFile", "Translation file missing: '$translationFile'\n", 21, LVL_WARN);
+         ZenUtils::safeDebug($this, "parseTranslationFile", 
+                             "Translation file missing: '$translationFile'\n", 21, LVL_WARN);
       }
    }
 
@@ -293,14 +298,6 @@ class ZenTranslator {
  * @var string $_locale
  */
    var $_locale;
-   
-/**
- * The zenClass object this object is bound to. For error handling purposes.
- * This is intended to be depreciated by version 3.0.
- *
- * @var object $_zenObj
- */
-   var $_zenObj;
    
 /**
  * The translation cache. Any translation files that have been parsed are

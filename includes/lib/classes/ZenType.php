@@ -1,5 +1,10 @@
 <? /* -*- Mode: C; c-basic-indent: 3; indent-tabs-mode: nil -*- ex: set tabstop=3 expandtab: */ 
 
+/**
+ * Holds the ZenType class.  Requires ZenDataType.php
+ * @package Zen
+ */
+
 /** 
  * Ticket types, controls what actions, triggers, fields, data types, etc are available
  *

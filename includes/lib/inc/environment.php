@@ -33,6 +33,7 @@
     $_SESSION['configLastUpdated'] = $ft;
   }
   if( $ft > $_SESSION['configLastUpdated'] || $ft < 1 ) {
+    ZenUtils::prep("ZenMetaDb");
     clearZenSessionCache();
     $_SESSION['configLastUpdated'] = $ft;
     $_SESSION['zen'] = ZenUtils::read_ini( $ini_file );

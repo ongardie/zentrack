@@ -276,6 +276,7 @@ class Zen {
    * @param string $path (optional) the path to the template (usually not necessary as long as $_SESSION['zen'] has been created)
    */
   function loadTemplate( $template, $vars = null, $path = '' ) {
+    ZenUtils::prep("ZenTemplate");
     if( !$path ) {
       if( isset($GLOBALS['templateDir']) ) {
         // grab the path if created
@@ -329,6 +330,7 @@ class Zen {
    * @return ZenDbSchema (singleton)
    */
   function &getZenDbSchema() {
+    ZenUtils::prep("ZenDbSchema");
     // the array may not be initialized if we did not run variables.php, so
     // we will manually create it
     if( !isset($GLOBALS['tcache']) ) { $GLOBALS['tcache'] = array(); }
@@ -347,6 +349,7 @@ class Zen {
    * @return ZenMetaDB (singleton)
    */
   function &getMetaDb() {
+    ZenUtils::prep("ZenMetaDb");
     // the array may not be initialized if we did not run variables.php, so
     // we will manually create it
     if( !isset($GLOBALS['tcache']) ) { $GLOBALS['tcache'] = array(); }
@@ -489,6 +492,7 @@ class Zen {
       if( !isset($vars[$type]) ) {
         $vals = array();
         $name = Zen::mapTypeToClass($type)."List";
+        ZenUtils::prep($name);
         $list = new $name();
         $list->sort('field_pri');
         $list->sort('field_name');

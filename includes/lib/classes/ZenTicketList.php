@@ -1,6 +1,14 @@
 <? /* -*- Mode: C; c-basic-indent: 3; indent-tabs-mode: nil -*- ex: set tabstop=3 expandtab: */ 
 
-/** @package Zen */
+/**
+ * Contains the ZenTicketList class.  Requires ZenList.php
+ * @package Zen
+ */
+
+/** 
+ * Contains a set of ZenTicket data.
+ * @package Zen 
+ */
 class ZenTicketList extends ZenList {
 
   /**
