@@ -13,16 +13,16 @@
 // start the session
 session_start();     
 
-// dump the system variables for use
-if( isset($_SERVER) ) {
-  extract($_SERVER);
-}
-
 // ... except the following list
 $reservedList = array("libDir", "rootUrl", 
 		      "Db_Type", "Db_Instance", "Db_Login", "Db_Pass", "Db_Host", 
 		      "Debug_Mode", "Demo_Mode", "page_prefix", "page_title", 
 		      "configFile", "system_message_limit");
+
+// dump the system variables for use
+if( isset($_SERVER) ) {
+   extract($_SERVER);
+}
 
 if (isset($_POST)) {
   foreach ($_POST as $k=>$v) {
@@ -41,7 +41,11 @@ if (isset($_GET)) {
 }
 
 if( isset($_COOKIE) ) {
-  extract($_COOKIE);
+  foreach($_COOKIE as $k=>$v) {
+    if( !in_array($k,$reservedList) ) {
+      $$k = $v;
+    }
+  }
 }
 
 // fix $SCRIPT_NAME for some php binary installations
