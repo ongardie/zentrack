@@ -10,9 +10,16 @@
 2004-08-25, Kato
   Added htaccess authentication
   Fixed typo in UPGRADE scripts
-    (sql scripts)
+    - zentrack_2/includes/login.php 1.25
+    - zentrack_2/install/UPGRADE_mssqlserver.sql 1.12
+    - zentrack_2/install/UPGRADE_mysql.sql 1.19
+    - zentrack_2/install/UPGRADE_oracle.sql 1.19
+    - zentrack_2/install/seed_mssqlserver.sql 1.20
+    - zentrack_2/install/seed_mysql.sql 1.31
+    - zentrack_2/install/seed_oracle.sql 1.26
   Fixed foreach bug
-    (prepareSearchVarfields.php)
+    - zentrack_2/includes/headerInc.php 1.41
+    - zentrack_2/includes/prepareSearchVarfields.php 1.2
 
 ----- V2.5 RC1 [Pre 1] (2004-08-24) ----
 
