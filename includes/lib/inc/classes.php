@@ -31,7 +31,6 @@
 
   /** @var array $classes_data_types the DataType classes */
   $classes_data_types = array(
-                            "ZenAccess",
                             "ZenAccessList",
                             "ZenAction",
                             "ZenActionList",

@@ -268,7 +268,7 @@ class ZenList extends Zen {
    *
    * @return array contains (integer)id elements
    */
-  function list() { return $this->_ids; }
+  function listIds() { return $this->_ids; }
 
   /**
    * returns the number of items in the list
