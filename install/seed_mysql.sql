@@ -51,7 +51,7 @@ INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (7,'
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (8,'allow_relate','on','Allow tickets to be related to one another');
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (9,'attachment_max_size','20000','The maximum file size of an attachment (in Bytes)');
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (10,'attachment_text_types','php,txt,pl,cgi,asp,jsp,java,class,inc','Files with this extention will be displayed as text by the browser');
-INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (11,'attachment_types_allowed','txt,html,xls,pdf,jpg,gif,png,doc,wpd,php','Comma seperated list.  Only these extensions may be uploaded.  Set to blank to allow all(security risk)');
+INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (11,'attachment_types_allowed','txt,html,xls,pdf,jpg,gif,png,doc,wpd,php','Comma seperated list.  Only these extensions may be uploaded.  Set to 0 to allow all (WARNING:  this is a security risk!)');
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (12,'color_links','#006633','Color of links on the page');
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (13,'color_grey','#666666','Greyed text color');
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (14,'color_background','#FFFFFF','Color of normal bg');
