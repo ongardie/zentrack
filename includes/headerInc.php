@@ -49,40 +49,11 @@
   **  CLASS OBJECTS
   */
 
+  include_once("$libDir/translator.class");
   include_once("$libDir/zenTrack.class");
   include_once("$libDir/zenTemplate.class");
-  include_once("$libDir/translator.class");
 
   $zen = new zenTrack( $configFile );
-
-
-  /**
-   * The translation function wrapper
-   *
-   * This calls a zen.class function, which controls
-   * initialization of the translation class, since
-   * this class needs to be available to the child classes
-   * of zen.class
-   */
-  function tr($string, $vals = '') {
-    static $translator;
-    if (is_array($string)) {
-      $translator = new Translator;
-      $translator->bindZen($string['zen']);
-      $translator->bindDomain($string['domain'], $string['path']);
-      $translator->textDomain($string['domain']);
-      $translator->setLocale($string['locale']);
-      return true;
-    }
-    if( is_array($vals) ) {
-      return $translator->ptrans($string,$vals);
-    }
-    else {
-      return $translator->trans($string);
-    }
-    //global $zen;
-    //return $zen->trans($string,$init);
-  }   
  
   /**
    * Translator Object Initialization (mlively)
