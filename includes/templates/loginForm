@@ -11,7 +11,7 @@
   </form>
   <p>
   <i style="color:red">Login and passphrase are case sensitive</i>
-  <P>Visit the zenTrack development site: <a href='http://sourceforge.net/projects/zentrack/'>http://sourceforge.net/projects/zentrack/</a>
+  <P>Visit the zenTrack development site: <a href="http://sourceforge.net/projects/zentrack/">http://sourceforge.net/projects/zentrack/</a>
 </blockquote>
 
 <script language='javascript'>
