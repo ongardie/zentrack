@@ -116,7 +116,7 @@
    </tr>
    <tr>
     <td colspan="5" class="outlined">
-   <?= nl2br(stripslashes(htmlentities($description))); ?>
+   <?= stripslashes($description); ?>
     </td>
    </tr>  
    </table>

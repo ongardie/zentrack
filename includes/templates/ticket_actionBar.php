@@ -23,10 +23,7 @@
     $ticket = $zen->get_ticket($id);
   foreach($actions as $a=>$v) {
      $flag = 1;
-     if( $zen->actionApplicable($id, $a, $login_id)
-	   &&
-	 $zen->checkAccess($login_id, $ticket["binID"], $k)
-	) {
+     if( $zen->actionApplicable($id, $a, $login_id) ) {
 	$style = "style='color:".$zen->settings["color_highlight"]."'";
 	$button = "submit";
      } else {

@@ -1,6 +1,11 @@
 <?
   
   if( $action ) {   
+     
+     if( $actionComplete == 1 ) {
+	print_system_messages(1);
+     }
+     
      // if there is an action, include the appropriate window
      // so that the user can input the action data and commit
      
