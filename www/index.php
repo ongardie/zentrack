@@ -6,11 +6,11 @@
   **
   */  
   
-  include("header.php");
+  include_once("header.php");
 
   $page_title = "Welcome to zenTrack";
   $expand_tickets = 1;
-  include("$libDir/nav.php");
+  include_once("$libDir/nav.php");
 
   $userBins = $zen->getUsersBins($login_id);
   
