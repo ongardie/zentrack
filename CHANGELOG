@@ -20,6 +20,7 @@
     - www/actions/close.php v1.8
   Fixed some postgres sql bugs
     - install/build_postgres.sql v1.3
+    - includes/db.class v1.16
   Enhanced popup calendar
     - www/popcalendar.js v1.2
     - www/images/cal.gif v1.1 [new]

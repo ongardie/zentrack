@@ -38,6 +38,12 @@
   **
   **  DATABASE SETTINGS
   **
+  **
+  **  Valid SQL Types:
+  **     mysql
+  **     oci8po (oracle >= 8i)
+  **     postgres (postgres >= 7)
+  **     (see http://php.weblogs.com/ADOdb_manual#drivers for more)
   */
   $Db_Type      = "mysql";      //sql type
   $Db_Instance  = "zentrack";   //db name
