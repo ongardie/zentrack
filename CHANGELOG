@@ -21,17 +21,23 @@
   Email notification enhancements
     - includes/zenTrack.class v1.39 & v1.40
     - www/actions/close.php v1.8
-  Fixed some postgres sql bugs
-  Thanks to Marc Dyksterhouse (usimarit) for
-  Tons of work on this one
-    - install/build_postgres.sql v1.3
-    - includes/db.class v1.16
   Enhanced popup calendar
     - www/popcalendar.js v1.2
     - www/images/cal.gif v1.1 [new]
     - includes/templates/newTicketForm.php v1.13
     - includes/templates/newProjectForm.php v1.11
     - www/addProjectSubmit.php v1.9
+  Disallowed duplicate login names
+    - includes/zenTrack.class v1.43
+    - includes/templates/userAdd.php v1.6
+    - www/admin/addUserSubmit.php v1.6
+    - www/admin/addUserSubmit.php v1.6
+    - www/admin/editUserSubmit.php v1.5
+  Fixed some postgres sql bugs
+  Thanks to Marc Dyksterhouse (usimarit) for
+  Tons of work on this one
+    - install/build_postgres.sql v1.3
+    - includes/db.class v1.16
   Fixed SCRIPT_NAME issues with php binary installs as CGI executable
     - includes/session_start.php v1.5
   Enhanced the access/roles functions
