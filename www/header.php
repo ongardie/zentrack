@@ -15,10 +15,12 @@
   $page_title = "Welcome to zenTrack";
   
   // the directory where zentrack includes are stored
-  $libDir = "/web/phpzen/sub/devtrack/includes";
+  // this should be outside the public_html
+  $libDir = "zentrack/includes";
 
-  // the directory where zentrack www docs are kept
-  $rootUrl = "http://devtrack.phpzen.net";
+  // the url where zentrack www docs are kept
+  // this should be in the public_html
+  $rootUrl = "";
   
   // the configuration settings for the zenTrack functions
   $configFile = "$libDir/configVars.php";
