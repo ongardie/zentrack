@@ -1,0 +1,169 @@
+<?
+
+/**
+ * Manages session information for ZT
+ */
+ class ZenSessionManager {
+   
+   /** 
+    * Construct a session manager 
+    *
+    * @param zenTrack $zen
+    */
+   function ZenSessionManager(&$zen) { 
+     $this->_zen =& $zen;
+   }
+   
+   /**
+    * Store information about a data type in the session
+    *
+    * @param string $type
+    * @param mixed $vals
+    */
+   function storeDataType( $type, $vals ) {
+    if( isset($_SESSION) ) {
+      // store results in session for later use
+      if( !isset($_SESSION['ztDataTypes']) ) { $_SESSION['ztDataTypes'] = array(); }
+      $this->_zen->addDebug("storeDataType", "$type: stored",3);
+      $_SESSION['ztDataTypes'][$type] = $vals;
+      return true;
+    }    
+    return false;
+  }
+  
+  /**
+   * Retrieves a data type from the session
+   *
+   * @param string $type
+   * @return mixed array containing data type vals or false if not found
+   */
+  function getDataType( $type ) {
+    if( isset($_SESSION) && isset($_SESSION['ztDataTypes']) ) {
+      // check session before bothering with the lookup
+      if( isset($_SESSION['ztDataTypes'][$type]) ) {
+        $this->_zen->addDebug("getDataType","$type: retrieved "
+          .count($_SESSION['ztDataTypes'][$type])." from session",3);
+        return $_SESSION['ztDataTypes'][$type];
+      }
+    }
+    return false;
+  }
+  
+  /**
+   * Removes a data type from the session
+   *
+   * @param string $type
+   */
+  function clearDataType( $type ) {
+    if( isset($_SESSION) ) {
+      if( isset($_SESSION['ztDataTypes']) ) {
+        $this->_zen->addDebug("clearDataType", "$type: cleared");
+        unset($_SESSION['ztDataTypes'][$type]);
+      }
+    }
+  }
+  
+  /**
+   * Retrieves a value or set of values from the data cache
+   *
+   * @param string $type
+   * @param int $id
+   * @return mixed array for single row or array of rows, depending on value of $id, returns false if not found
+   */
+  function getDataCache( $type, $id = null ) {
+    if( isset($GLOBALS) && isset($GLOBALS['ztDataCache']) && isset($GLOBALS['ztDataCache'][$type]) ) {
+      if( isset($id) ) {
+        $this->_zen->addDebug("getDataCache", "$type-$id: retrieved");
+        return isset($GLOBALS['ztDataCache']["id$id"])? $GLOBALS['ztDataCache']["id$id"] : false;
+      }
+      $this->_zen->addDebug("getDataCache", "$type: retrieved");
+      return $GLOBALS['ztDataCache'][$type];
+    }
+    return false;
+  }
+  
+  /**
+   * Places a value into the data cache.  If this value already exists, it
+   * will be overwritten
+   *
+   * @param string $type
+   * @param int $id
+   * @param array $vals
+   */
+  function storeDataCache( $type, $id, $vals ) {
+    if( isset($GLOBALS) ) {
+      if( !isset($GLOBALS['ztDataCache']) ) { $GLOBALS['ztDataCache'] = array(); }
+      if( !isset($GLOBALS['ztDataCache'][$type]) ) { $GLOBALS['ztDataCache'][$type] = array(); }
+      if( !strlen($id) ) {
+        $this->_zen->addDebug("storeDataCache", "Storing cache for {$type}",3);
+        $GLOBALS['ztDataCache'][$type] = $vals; 
+      }
+      else {
+        $this->_zen->addDebug("storeDataCache", "Storing cache for {$type}->{$id}",3);
+        $GLOBALS['ztDataCache'][$type][$id] = $vals; 
+      }
+    }
+  }
+  
+  /**
+   * Removes an item from the data cache.  If $id is provided, it removes a
+   * specific item, otherwise it removes an entire group
+   *
+   * @param string $type
+   * @param int $id
+   */
+  function clearDataCache( $type, $id = null ) {
+    if( isset($GLOBALS) && isset($GLOBALS['ztDataCache']) ) {
+      if( $id ) {
+        $this->_zen->addDebug("clearDataCache", "Clearing cache for {$type}->{$id}",3);
+        unset($GLOBALS['ztDataCace'][$type]["id$id"]);
+      }
+      else {
+        $this->_zen->addDebug("clearDataCache", "Clearing cache for {$type}",3);
+        unset($GLOBALS['ztDataCache'][$type]);
+      }
+    }
+  }
+  
+  /** Stores custom field parms in the session for easy retrieval */
+  function storeCustomFields( $vals ) {
+    if( isset($_SESSION) ) {
+      $this->_zen->addDebug("storeCustomFields", "Storing ".count($vals)." vals", 3);
+      $_SESSION['ztVarfields'] = $vals;
+      return true;
+    }
+    return false;
+  }
+  
+  /** Retrieves custom field parms from the session */
+  function getCustomFields() {
+    if( isset($_SESSION) ) {
+      if( isset($_SESSION['ztVarfields']) ) {
+        $this->_zen->addDebug("getCustomFields", "Retrieving ".count($_SESSION['ztVarfields'])." vals", 3);
+        return $_SESSION['ztVarfields']; 
+      }
+    }
+    return false;
+  }
+  
+  
+  /** Clears custom field parms from the session */
+  function clearCustomFields() {
+    if( isset($_SESSION) ) {
+      $this->_zen->addDebug("clearCustomFields", "Clearing cache", 3);
+      $_SESSION['ztVarfields'] = false;
+    }
+  }
+  
+  /** Clears all session information which has been cached */
+  function clearAll() {
+    $_SESSION = array();
+    $GLOBALS = array();
+  }
+  
+  /** @var zenTrack $_zen */
+  var $_zen;
+
+ }
+
+?>

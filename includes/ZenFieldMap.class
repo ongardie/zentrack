@@ -1,0 +1,723 @@
+<?
+
+// define some constants for field types
+define("ZTFIELD_HIDDEN",0);
+define("ZTFIELD_LABEL",1);
+define("ZTFIELD_TEXT",2);
+define("ZTFIELD_MENU",3);
+define("ZTFIELD_SEARCHBOX",4);
+define("ZTFIELD_CHECKBOX",5);
+define("ZTFIELD_RADIO",6);
+define("ZTFIELD_DATE",7);
+define("ZTFIELD_SECTION",8);
+
+/** 
+ * Returns properties for a view
+ * <ul>
+ *  <li>disabled - (boolean)this view doesn't use field_map yet
+ *  <li>view_only - (boolean)this view does not have input fields, just text
+ *  <li>has_behaviors - (boolean)this view has behaviors
+ *  <li>admin_view - (boolean)this is an admin screen
+ *  <li>multiple - (boolean)this view allows multiple selections (overrides field->multiple)
+ *  <li>sections - (boolean)true if this view can support sections
+ * </ul>
+ *
+ * @param string $view if omitted, all views are returned
+ */
+function getFmViewProps( $view = null ) {
+  if( !$view ) {
+    // return the entire set
+    $set = array();
+    $list = array_keys($GLOBALS['zt_field_dependencies']['views']);
+    foreach($list as $l) {
+      $set[$l] = getFmViewProps($l);
+    }
+    return $set;
+  }
+  // fetch an individual view
+  $vals = $GLOBALS['zt_field_dependencies']['views'][$view];
+  if( !is_array($vals) ) { return false; }
+  $vars = array();
+  $indices = array("disabled", "view_only", "has_behaviors", "admin_view", "multiple", "sections");
+  for($i=0; $i < count($vals); $i++) {
+    $vars[ $indices[$i] ] = $vals[$i];
+  }
+  return $vars;
+}
+
+/**
+ * Returns properties for a field:
+ * <ul>
+ *  <li>searchable - (boolean)can be on search screens
+ *  <li>types - (array)valid field types (takes admin screens into account)
+ *  <li>multiple - (boolean)may have multiple entries (view can override this)
+ *  <li>always_required - (boolean)true if this field is required by system
+ *  <li>default - (boolean)true if this field can use default values
+ * </ul>
+ *
+ * @param string $view
+ * @param string $field if omitted, returns all fields formatted for a given view
+ */
+function getFmFieldProps( $view, $field = null ) {
+  if( !$field ) {
+    // return all fields for a view
+    $set = array();
+    $list = array_keys($GLOBALS['zt_field_dependencies']['fields']);
+    foreach($list as $l) {
+      $set[$l] = getFmFieldProps($view, $l);
+    }
+    return $set;
+  }
+  // return a single field
+  $vprops = getFmViewProps($view);
+  $vals = $GLOBALS['zt_field_dependencies']['fields'][$field];
+  if( !is_array($vals) ) { return false; }
+  $vars = array();
+  $indices = array("searchable", "types", "multiple", "admin_view", "always_required", "default");
+  for($i=0; $i < count($indices); $i++) {
+    if( $indices[$i] == 'admin_view' ) { continue; }
+    else if( $indices[$i] == 'types' ) {
+      // convert integers to names
+      $set = array();
+      foreach($vals[$i] as $v) {
+        $set[] = ZenFieldMap::getTypeString($v);
+      }
+      if( $vprops['admin_view'] && $vals[$i+1] ) {
+        foreach($vals[$i+1] as $v) {
+          $set[] = ZenFieldMap::getTypeString($v);
+        }
+      }
+      $vars[ $indices[$i] ] = $set;
+    }
+    else {
+      $vars[ $indices[$i] ] = $vals[$i];
+    }
+  }
+  return $vars;   
+}
+ 
+/**
+ * Returns properties for a field_type
+ * <ul>
+ *   <li>has_choices - (boolean) true if this field type requires a list of choices
+ *   <li>multiple_rows - (boolean) true if this type allows multiple rows
+ * </ul>
+ *
+ * @param string $type if omitted, returns properties for all types
+ */
+function getFmTypeProps( $type = null ) {
+  if( !$type ) {
+    // return the entire set
+    $set = array();
+    $list = array_keys($GLOBALS['zt_field_dependencies']['types']);
+    foreach($list as $l) {
+      $set[$l] = getFmTypeProps($l);
+    }
+    return $set;    
+  }
+  // return a single type
+  $vals = $GLOBALS['zt_field_dependencies']['types'][$type];
+  if( !is_array($vals) ) { return false; }
+  $vars = array();
+  $indices = array("has_choices", "multiple");
+  for($i=0; $i < count($vals); $i++) {
+    $vars[ $indices[$i] ] = $vals[$i];
+  }
+  return $vars;   
+}
+
+// these can't be edited or the system will break
+// they define system dependancies and possible
+// layouts for various fields
+$ztf = array(
+  "fields" => array(//       searchable,  types                 , admin_view , multiple, always_required, default
+    "id"              => array(   true,   array(1)              ,        null, false,  true,  false),
+    "title"           => array(   true,   array(1,2)            ,        null, false,  true,   true),
+    "priority"        => array(   true,   array(1,3,4,6)        ,        null, false,  true,   true),
+    "status"          => array(   true,   array(1,3,4,6)        ,        null, false,  true,  false),
+    "description"     => array(   true,   array(1,2)            ,        null, false,  false,  true),
+    "otime"           => array(   true,   array(1)              ,    array(7), false,  true,  false),
+    "ctime"           => array(   true,   array(1)              ,    array(7), false,  true,  false),
+    "bin_id"          => array(   true,   array(1,3,4,6)        ,        null, false,  true,   true),
+    "type_id"         => array(   true,   array(1,3,4,6)        ,        null, false,  true,   true),
+    "user_id"         => array(   true,   array(1,3,4,6)        ,        null, false,  false,  true),
+    "system_id"       => array(   true,   array(1,3,4,6)        ,        null, false,  true,   true),
+    "creator_id"      => array(  false,   array(1)              ,    array(4), false,  true,  false),
+    "tested"          => array(  false,   array(1,3,5,6)        ,        null, false,  false,  true),
+    "approved"        => array(  false,   array(1,3,5,6)        ,        null, false,  false,  true),
+    "relations"       => array(  false,   array(1,4)            ,    array(2), true ,  false,  true),
+    "project_id"      => array(  false,   array(1,4)            ,    array(2), false,  false,  true),
+    "est_hours"       => array(  false,   array(1,2)            ,        null, false,  false,  true),
+    "deadline"        => array(  false,   array(1,7)            ,        null, false,  false,  true),
+    "start_date"      => array(  false,   array(1,7)            ,        null, false,  false,  true),
+    "wkd_hours"       => array(  false,   array(1,2)            ,        null, false,  false,  true),
+    "custom_string"   => array(   true,   array(1,2)            ,        null, false,  false,  true),
+    "custom_number"   => array(   true,   array(1,2)            ,        null, false,  false,  true),
+    "custom_boolean"  => array(   true,   array(1,3,5,6)        ,        null, false,  false,  true),
+    "custom_date"     => array(   true,   array(1,7)            ,        null, false,  false,  true),
+    "custom_menu"     => array(   true,   array(1,3,6)          ,        null, false,  false,  true),
+    "custom_text"     => array(  false,   array(1,2)            ,        null, false,  false,  true)
+  ),
+  
+  "views" => array(//           disabled, view_only, has_behaviors, admin_view, multiple, sections
+    "ticket_create"   => array(    false,    false,      true, false, false, true  ), 
+    "project_create"  => array(    false,    false,      true, false, false, true  ),
+    "ticket_edit"     => array(    false,    false,      true, false, false, true  ), 
+    "project_edit"    => array(    false,    false,      true, false, false, true  ),
+    "ticket_list"     => array(    false,     true,     false, false, false, false ),
+    "project_list"    => array(    false,     true,     false, false, false, false ),
+    "ticket_search"   => array(     true,    false,      true, false, true , true  ),
+    "project_search"  => array(     true,    false,      true, false, true , true  ),
+    "ticket_title"    => array(     true,     true,     false, false, false, false ),
+    "project_title"   => array(     true,     true,     false, false, false, false ),
+    "ticket_detail"   => array(     true,     true,     false, false, false, true  ),
+    "project_detail"  => array(     true,     true,     false, false, false, true  ),
+    "ticket_custom"   => array(     true,    false,      true, false, false, true  ),
+    "project_custom"  => array(     true,    false,      true, false, false, true  )
+  ),
+  
+  "types" => array(//   choices| multirows
+    "hidden"   => array(  false, false ),
+    "label"    => array(  false, false ),
+    "text"     => array(  false, true  ),
+    "menu"     => array(  true , true  ),
+    "searchbox"=> array(  false, true  ),
+    "checkbox" => array(  false, false ),
+    "radio"    => array(  true , false ),
+    "date"     => array(  false, false ),
+    "section"  => array(  false, false )
+  )
+
+);
+$GLOBALS['zt_field_dependencies'] = $ztf;
+
+/**
+ * Stores information about the fields and how they are rendered on different
+ * view.
+ */
+class ZenFieldMap {
+  
+  /**
+   * Construct a field map
+   *
+   * @param object $zen instance of zenTrack.class
+   */
+  function ZenFieldMap(&$zen) {
+    $this->_zen =& $zen;
+    $this->_session =& $zen->getSessionManager();
+    $this->_fieldVals = array();
+  }
+  
+  /**
+   * Consults the field map and constructs a list of (String)field_name which
+   * represents all of the fields which exist in this view. (note that some
+   * of these may be hidden fields
+   *
+   * @param string view corresponds to the which_view field in db
+   * @return array containing (string)field_name 
+   */
+   function listFieldsForView( $view ) {
+     $map = $this->getFieldMap();
+     return array_keys($map[$view]);
+   }
+   
+   /**
+    * Returns a single field from the field map
+    *
+    * @param string $view the view to use (from which_view field)
+    * @param string $field_name the field to retrieve
+    * @return array all properties for this field
+    */
+    function getFieldFromMap($view, $field_name) {
+      $map = $this->getFieldMap();
+      return $map[$view][$field_name];
+    }
+    
+  /**
+   * Returns the label specified for the field in question
+   */
+  function getLabel( $view, $field_name ) {
+    $field = $this->getFieldFromMap($view,$field_name);
+    return $field['field_label']? $field['field_label'] : $field['field_name'];
+  }
+  
+  /**
+   * Consults the field map and returns a string of suitable text to show
+   * to the user for a given field.  This text will be read only, and no
+   * hidden field will be rendered.  This is for display purposes only.
+   *
+   * The text will be truncated to the num_cols length specified in the database.
+   *
+   * @param string $view corresponds to the which_view field in db
+   * @param string $field_name corresponds to $field_name in db
+   * @return string of text to display
+   */
+  function getTextValue( $view, $field_name, $value ) {
+    $this->_zen->addDebug("getTextValue", "rendering $view, $field_name, $value", 1);//debug
+    $field = $this->getFieldFromMap($view,$field_name);
+    if( strlen($value) && $field['is_visible'] && $field['field_type'] != 'hidden' ) {
+      switch($this->fieldName($field_name)) {
+        case "priority":
+        case "status":
+        case "bin_id":
+        case "type_id":
+        case "system_id":
+          $vals = $this->getChoices($view,$field_name);
+          if( isset($vals["$value"]) ) { return $this->_zen->ffv(tr($vals["$value"])); }
+          else {
+            $this->_zen->addDebug("getTextValue", "Unable to find choices for {$view}->{$field_name}", 1);
+            return $this->_zen->ffv(tr($value)); 
+          }
+        case "user_id":
+        case "creator_id":
+          return $this->_zen->formatName($value,1);
+        case "tested":
+        case "approved":
+          return $value == 1? tr('No') : $value == 2? tr('Yes') : tr('n/a');
+        case "otime":
+        case "ctime":
+        case "deadline":
+        case "start_date":
+        case "custom_date":
+          if( preg_match('/[^0-9]/', $value) ) {
+            return $this->_zen->ffv($value);
+          }
+          if( $value == 'NULL' ) { $value = ''; }
+          if( $value == 0 ) { $value = ""; }
+          return strlen($value)? $this->_zen->showDateTime($value) : '';
+        case "custom_boolean":
+          return $value == 1? tr('Yes') : tr('No');
+        default:
+          return $this->_zen->ffv(
+            strlen($value)>$field['num_cols']? substr($value,0,$field['num_cols']) : $value
+          );
+      }
+    }
+    // it's hidden, return nothing
+    return '';
+  }
+  
+  /**
+   * Consults the field map to determine what sort of field we have, loads
+   * this information, and renders the field to the screen appropriately.
+   *
+   * @param string $view corresponds to which_view field
+   * @param string $field_name the field's name
+   * @param mixed $value the field's current value
+   * @param $prefix if provided, will be added to beginning of the name property
+   * @return string containing html to render
+   */
+  function renderTicketField( $view, $form_name, $field_name, $value = null, $prefix = '' ) {
+    //$this->_zen->addDebug("renderTicketField", "rendering $view, $form_name, $field_name, $value, $prefix", 1);//debug
+    global $templateDir;
+    global $rootUrl;
+    
+    // collect field properties
+    $field = $this->getFieldFromMap($view,$field_name);
+    $typeint = $this->getTypeInt($field['field_type']);
+    $typename = $field['field_type'];
+    
+    // don't waste time on spacers
+    if( $typeint == ZTFIELD_SECTION ) {
+      $vals = array('label'=>tr($field['field_label']));
+      return $this->_template($templateDir, $typename, $vals); 
+    }
+
+    // collect system properties
+    $fprops = getFmFieldProps($view, $field_name);
+    $vprops = getFmViewProps($view);
+    $tprops = getFmTypeProps($typename);
+    
+    // see if this is a 'viewonly' screen, if so, no form fields needed
+    if( $vprops["view_only"] ) { return $this->getTextValue($view,$field_name,$value); }
+    
+    // collect template props
+    $vals = array();
+    $vals["view"] = $view;
+    $vals["form_name"] = $form_name;
+    $vals["templateDir"] = $templateDir;
+    $vals["rootUrl"] = $rootUrl;
+    $vals['date_format'] = $this->_zen->popupDateFormat();
+    $vals["field_name"] = $this->_zen->ffv($prefix.$field_name);
+    $vals["field_value"] = $this->_zen->ffv($value);
+    $vals["field_label"] = $this->getTextValue($view,$field_name,$value);
+    $vals["field_max"] = $field['num_cols'];
+    if( $tprops["has_choices"] ) {
+      $vals["field_choices"] = $this->getChoices($view,$field_name);
+    }
+    
+    // set up special searchbox properties such as url and instructions
+    if( $typeint == ZTFIELD_SEARCHBOX ) {
+      if( $field_name == 'relations' ) { 
+        $vals['search_text'] = '<br>('.tr("Enter multiple ids, separated by a comma").')';
+      }
+      switch($field_name) {
+        case "project_id":
+          $s = 'project';
+          break;
+        case "id":
+        case "relations":
+          $s = 'ticket';
+           break;
+        case "user_id":
+        case "creator_id":
+          $s = 'user';
+          break;
+        case "type_id":
+        case "bin_id":
+        case "status":
+        case "priority":
+        case "system_id":
+          $s = 'datatype';
+          break;
+        default:
+          $this->_zen->addDebug("renderTicketField","The field $field_name cannot have a searchbox",1);
+          return $this->getTextValue($view,$field_name,$value);
+      }
+      $vals["search_url"] = $rootUrl."/helpers/{$s}Searchbox.php?"
+          ."return_form=$form_name&return_field=$field_name";
+      if( !$fprops["multiple"] && !$vprops["multiple"] ) {
+        $vals['search_url'] .= "&onechoice=1";
+      }
+    }
+    
+    // deal with fields that can have multiple rows by checking 
+    // the column count and the row count to make sure they are reasonable
+    if( $tprops["multiple_rows"] && $field['num_cols'] > 30 && $field['num_rows'] == 1 ) {
+      $vals['field_cols'] = 30;
+      $vals['field_rows'] =  1;
+    }
+    else {
+      $vals['field_rows'] = $field['num_rows'];
+      $vals['field_cols'] = $field['num_cols']; 
+    }
+    
+    // deal with special custom field problems
+    if( strpos($field_name,'custom_')===0 ) {
+      $f = $this->_zen->getCustomField($field_name);
+      if( $f['js_validation'] ) {
+        $vals['field_events'] = "onblur='{$f['js_validation']}'";
+      }
+      if( strpos($field_name,'custom_date') === 0 ) {
+        if( $vals['field_value'] == 'NULL' ) { $vals['field_value'] = ''; }
+        if( $vals['field_value'] == 0 ) { $vals['field_value'] = ""; }
+      }
+    }
+    
+    // check for special cases, such as textarea
+    if( $typeint == ZTFIELD_TEXT && $field['num_rows'] > 1 ) {
+      $typename = 'textarea';
+    }
+    
+    // check field if it is a checkbox
+    if( $typeint == ZTFIELD_CHECKBOX && !$vals['field_value'] ) {
+      $vals['field_value'] = null;
+    }
+    
+    // hide any fields which are not visible
+    if( $field['is_visible'] < 1 ) {
+      $typename = 'hidden';
+      if( $field['is_required'] && !strlen($value) ) {
+        $value = $this->getDefaultValue($view, $field_name);
+        if( !strlen($value) ) {
+          $this->_zen->addDebug("renderTicketField", "Required field is hidden and has no default: $view, $field_name", 1);
+        }
+      }
+    }
+    
+    // parse and return 
+    return $this->_template($templateDir, $typename, $vals);
+  }
+  
+  /**
+   * Generate a template
+   */
+   function _template( $templateDir, $typename, $vals ) {
+     // render the template
+     $this->_zen->addDebug("_template", "Rendering $templateDir/fields/$typename.template", 3);
+     $templateFile = "$templateDir/fields/$typename.template";
+     $template = new zenTemplate($templateFile);
+     $template->values($vals);
+     return $template->process();     
+   }
+  
+  /**
+   * Returns field map, which explains how fields should be displayed, and which
+   * screens they will appear on.  This array is indexed first by view, and then
+   * by the field_name
+   *
+   * <p>This information is cached in the session.
+   *
+   * @param boolean $nocache if true, clears cache and loads from database
+   */
+  function getFieldMap($flag = false) {
+
+    // try to retrieve from session
+    if( !$flag ) {
+      $map = $this->_session->getDataType('fieldmap');
+      if( $map && count($map) ) { return $map; }
+    }
+    
+    // retrieve from database
+    $query = "SELECT * FROM ".$this->_zen->table_field_map." ORDER BY sort_order, field_label";
+    $vals = $this->_zen->db_queryIndexed($query);
+    $set = array();
+    for($i=0; $i<count($vals); $i++) {
+      $v = $vals[$i];
+      if( !array_key_exists($v['which_view'], $set) ) { $set[ $v['which_view'] ] = array(); }
+      $set[ $v['which_view'] ] [ $v['field_name'] ] = $v;
+    }
+    $this->_zen->addDebug("getFieldMap", "Loaded $i rows into field_map from database",3);
+    
+    // store in session
+    $this->_session->storeDataType('fieldmap',$set);
+    
+    return $set;
+  }
+  
+  /**
+   * Updates the database and the session with new field map values
+   *
+   * @param array $newvals an array structured identical to getFieldMap() results
+   * @param array $newspacers array ( 'field_name' => array('field_label', 'is_visible', 'sort_order'), ... )
+   * @param array $oldspacers array ( 'field_name'=>field_map_id, ... )
+   * @return array(updates, attempts)
+   */
+  function updateFieldMap( $view, $newvals, $newspacers = null, $oldspacers = null ) {
+    $updateVals = array();
+    $fullMap = $this->getFieldMap();
+    foreach($fullMap[$view] as $k=>$v) {
+      if( $newvals[$k] && $newvals[$k] != $v ) {
+        $updateVals[] = $newvals[$k];
+      }
+    }
+    $i=0;
+    for($j=0; $j<count($updateVals); $j++) {
+      $v = $updateVals[$j];
+      $res = $this->_zen->db_update($this->_zen->table_field_map, 'field_map_id', $v['field_map_id'], $v);
+      $this->_zen->addDebug('updateFieldMap', "Updating {$v['which_view']}->{$v['field_name']}", 3);
+      if( $res ) { $i++; }
+    }
+    
+    foreach($newspacers as $k=>$v) {
+      $j++;
+      if( $this->addSection($view, $k, $v['field_label'], $v['is_visible'], $v['sort_order']) ) { $i++; }
+    }
+    foreach($oldspacers as $k=>$v) {
+      $j++;
+      if( $this->removeSection($view, $k, $v) ) { $i++; } 
+    }
+    
+    // clear cache so it reloads next time
+    $this->_session->clearDataType('fieldmap');
+    
+    return array($i,$j);
+  }
+  
+  /**
+   * Adds a new section into the field map
+   */
+   function addSection( $view, $name, $label, $visible, $sort_order ) {
+     $vals = array("which_view"  => $view, 
+                   "field_name"  => $name,
+                   "sort_order"  => $sort_order,
+                   "is_visible"  => $visible? 1 : 0,
+                   "field_label" => $label,
+                   "field_type"  => 'section',
+                   "num_cols"    => 100,
+                   "num_rows"    =>   1);
+     $res = $this->_zen->db_insert($this->_zen->table_field_map, $vals, 'field_map_id_seq');
+     $this->_zen->addDebug("addSection", "Section added[$res]: $view, '$label', $sort_order", 3);
+     return $res;
+   }
+   
+   /**
+    * Removes a section from the field map
+    */
+   function removeSection( $view, $field_name, $field_map_id ) {
+     $field = $this->getFieldFromMap($view, $field_name);
+     if( $field['field_type'] != 'section' ) {
+       $this->addDebug("removeSection", "Field is not a section: $view-$field_name", 1);
+       return false;
+     }
+     $id = $field['field_map_id'];
+     $res = $this->_zen->db_delete($this->_zen->table_field_map, 'field_map_id', $id);
+     $this->_zen->addDebug("removeSection", "Section deleted[$res]: $view, $field_name", 3);
+     return $res;
+   }
+  
+  /**
+   * Returns the default value for this field
+   */
+  function getDefaultValue( $view, $field_name ) {
+    $field = $this->getFieldFromMap($view,$field_name);
+    switch($this->fieldName($field_name)) {
+      case "creator_id":
+      case "user_id":
+        if( strlen($field['default_val']) && preg_match('/[^0-9]/', $field['default_val']) ) {
+          if( strpos($field['default_val'],'@') === false ) {
+            $val = $this->_zen->get_user_by_login($field['default_value']);
+            $this->_zen->addDebug("getDefaultValue", "Retrieved user id '$val' by login: {$view}->{$field_name}", 3);
+            return $val;
+          }
+          else {
+            $vals = $this->_zen->getUsersFromEmail($field['default_value']);
+            $this->_zen->addDebug("getDefaultValue", "Retrieved ".count($vals)." user ids by email: {$view}->{$field_name}", 3);
+            return $vals && count($vals)? $vals[0] : null; 
+          }
+        }
+        else { return $field['default_val']; }
+      case "custom_date":
+      case "otime":
+      case "ctime":
+      case "deadline":
+      case "start_date":
+        return $this->_zen->showDateTime($field['default_val']);
+      default:
+        return $field['default_val'];
+    }
+  }
+  
+  /**
+   * Returns a list of valid choices for the given field in the format:
+   *  array( (string)value -> (string)label )
+   */
+  function getChoices( $view, $field_name ) {
+    if( isset($this->_fieldVals[$view]) && isset($this->_fieldVals[$view][$field_name]) ) 
+      { return $this->_fieldVals[$view][$field_name]; }
+      
+    $field = $this->getFieldFromMap($view, $field_name);
+    $fprops = getFmFieldProps($view, $field_name);
+    $vprops = getFmViewProps($view);
+    $bins = $this->_zen->getUsersBins($_SESSION['login_id']);
+    
+    switch( $this->fieldName($field_name) ) {
+      case "id":
+      case "title":
+      case "priority":
+      case "status":
+      case "bin_id":
+      case "type_id":
+      case "user_id":
+      case "system_id":
+      case "creator_id":
+        $vals = $this->_zen->getValsForTicketField($field_name, $bins);
+        break;
+      case "tested":
+      case "approved":
+        $vals = $vprops["admin_view"]? 
+          array('0'=>'n/a', '1'=>'No', '2'=>'Yes') : array('0'=>'No', '1'=>'Yes');
+        break;
+      case "custom_menu":
+        $pts = explode("_", $view, 2);
+        $vars = $this->_zen->getCustomField($field_name);
+        $vals = genDataGroupChoices($vars['field_value']);
+        break;
+      default:
+        $vals = array();
+    }
+    
+    $this->_zen->addDebug('_getChoices', "Generated ".count($vals)." choices for {$view}->{$field_name}", 3);
+    
+    if( !isset($this->_fieldVals[$view]) ) { $this->_fieldVals[$view] = array(); }
+    $this->_fieldVals[$view][$field_name] = $vals;
+    return $vals;
+  }
+  
+  /**
+   * Strip varfield numbers from field names for easier indexing
+   *
+   * @static
+   */
+   function fieldName( $name ) {
+     return strpos($name, 'custom_') === 0? 
+        preg_replace('/[0-9]+$/', '', $name) : $name;
+   }
+   
+  /**
+   * Returns a string representation of a field type
+   *
+   * This method is safe to call from a static context
+   *
+   * @param int $field_type
+   * @return string
+   */
+   function getTypeString( $field_type ) {
+     switch($field_type) {
+       case ZTFIELD_HIDDEN:
+         return "hidden";
+       case ZTFIELD_LABEL:
+         return "label";
+       case ZTFIELD_TEXT:
+         return "text";
+       case ZTFIELD_MENU:
+         return "menu";
+       case ZTFIELD_SEARCHBOX:
+         return "searchbox";
+       case ZTFIELD_CHECKBOX:
+         return "checkbox";
+       case ZTFIELD_RADIO:
+         return "radio";
+       case ZTFIELD_DATE:
+         return "date";
+       case ZTFIELD_SECTION:
+         return "section";
+       default:
+         if( isset($this) && isset($this->_zen) ) {       
+           $this->_zen->debug("getTypeString", "Invalid fieldMap type! $field_type", 1);
+         }
+         return null;
+     }
+   }
+   
+  /**
+   * Returns an integer representation of a field type
+   *
+   * This method is safe to call from a static context
+   *
+   * @param string $field_type
+   * @return int
+   */
+   function getTypeInt($field_type) {
+     switch(strtolower($field_type)) {
+       case "hidden":
+         return ZTFIELD_HIDDEN;
+       case "label":
+         return ZTFIELD_LABEL;
+       case "text":
+         return ZTFIELD_TEXT;
+       case "menu":
+         return ZTFIELD_MENU;
+       case "searchbox":
+         return ZTFIELD_SEARCHBOX;
+       case "checkbox":
+         return ZTFIELD_CHECKBOX;
+       case "radio":
+         return ZTFIELD_RADIO;
+       case "date":
+         return ZTFIELD_DATE;
+       case "section":
+         return ZTFIELD_SECTION;
+       default:
+         if( isset($this) && isset($this->_zen) ) {
+           $this->_zen->addDebug("getTypeInt", "Invalid fieldMap type! $field_type", 1);
+         }
+         return null;
+     }     
+   }
+  
+  /** @var array $_map an array of (string)view -> array( (string)field_name->(array)values... ) */
+  var $_map;
+  
+  /** @var array $_fieldVals contains valid entries for ticket field criteria */
+  var $_fieldVals;
+
+  /** @var ZenSessionManager $_session */
+  var $_session;
+  
+  /** @var zenTrack $_zen */
+  var $_zen;
+  
+}
+
+?>
