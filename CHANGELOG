@@ -18,7 +18,10 @@
   Enhanced egate system to always send a reply if possible
   Some errors did not recieve a reply message.  Also corrected
   some errors with emails send from web pages.
-    - 
+    - includes/egate_utils.php 1.21
+    - includes/zenTrack.class 1.79
+    - includes/templates/email/form_log.template 1.3
+    - includes/templates/email/form_move.template 1.2
   Fixed email notifications which were not working
   (ticket create, assign, and close)
     - zentrack/includes/zenTrack.class 1.79

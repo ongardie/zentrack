@@ -1078,7 +1078,7 @@ class zenTrack extends zen {
 	  $eParams["body"] = $comments;
 	$eParams["tid"] = $t;
 	$message = $this->formatEmailMessage($eParams);
-	$subject = "Ticket $id moved to ".$this->getBinName($newBin);
+	$subject = "Ticket #$id: moved to ".$this->getBinName($newBin);
 	$this->sendEmail($recipients,$subject,$message,$user_id);
       }
     }
@@ -1101,11 +1101,24 @@ class zenTrack extends zen {
 	$logParams["entry"] = $comments;
       $this->add_log($id,$logParams);
     }
-    if( $res && $this->settings["email_reject"] == "on" 
-	&& $sender["user_id"] ) {
+    if( $res && $this->settings["email_reject"] == "on" ) {
       $recipients = $this->get_notify_recipients($id);
       if( is_array($recipients) && count($recipients) ) {
-	$subject = "Ticket $id rejected";
+	// add the sender if not on notify list
+	if( $sender && $sender["user_id"] ) {
+	  $usr = $this->get_user($sender["user_id"]);
+	  $dup = false;
+	  foreach($recipients as $r) {
+	    if( $usr["email"] = $r ) {
+	      $dup = true;
+	      break;
+	    }
+	  }
+	  if( !$dup ) {
+	    $recipients[] = $usr["email"];
+	  }
+	}
+	$subject = "Ticket #$id: rejected";
 	$eParams = array(
 			 "From" => $this->bins["$t[bin_id]"], 
 			 "Time" => $this->showDateTime(),
@@ -1113,7 +1126,7 @@ class zenTrack extends zen {
 			 );
 	if( $comments )
 	  $eParams["body"] = $comments;
-	$eParams["tid"] = $id;
+	$eParams["tid"] = $id;	
 	$message = $this->formatEmailMessage($eParams);
 	$this->sendEmail($recipients,$subject,$message,$user_id);
       }
@@ -1193,7 +1206,7 @@ class zenTrack extends zen {
       $logParams["bin_id"] = $t["bin_id"];
       $logParams["user_id"] = $user_id;
       $logParams["ticket_id"] = $t["ticket_id"];   
-      $logParams["entry"] = "Ticket $id opened in ".$this->bins["$bin_id"];
+      $logParams["entry"] = "Ticket #$id: opened in ".$this->bins["$bin_id"];
       if( $comments )
 	$logParams["entry"] .= "\n\n".$comments;
       $this->add_log($id,$logParams);
@@ -1202,7 +1215,7 @@ class zenTrack extends zen {
 		 || $this->settings["email_arrival"] == "on")  ) {
       $recipients = $this->get_notify_recipients($id);
       if( is_array($recipients) && count($recipients) ) {
-	$subject = "Ticket $id reopened";
+	$subject = "Ticket #$id: reopened";
 	$eParams = array(
 			 "message" => "This ticket has been reopened.",
 			 "From"    => $this->bins["$t[bin_id]"], 
