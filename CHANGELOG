@@ -13,7 +13,7 @@
   because of session issues.
     - includes/headerInc.php 1.15
     - includes/session_save.php 1.5
-    - includes/session_start.php 1.10
+    - includes/session_start.php 1.9
   Close ticket, username retention
     - includes/zenTrack.class 1.64
   Fixes for popupcalendar feature
