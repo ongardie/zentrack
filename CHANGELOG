@@ -6,6 +6,12 @@
  endless possibilities for project expansion.
 
 ----- V2.4 (development, see CVS) ----
+
+2003-03-28, Kato
+  Updated SQL files for new version
+  Integrated the default language variable
+  Created a user preference to select language
+
 2003-03-27, mlively
   Integrating tr() translation function
     - zentrack/www/actions/accept.php 1.5
@@ -205,6 +211,14 @@
   Created Translation Engine 
     - includes/tranlator.class 1.1
     - includes/headerInc.php 1.20
+
+----- V2.3.2 (2003-03-26) ----
+
+2003-03-26, Kato
+  Addressed some of the common php config questions in INSTALL.README
+  Fixed a mistake in the UPGRADE.readme file (sql query wrong)
+  Fixed a problem with includes/configVars.php (causing error message for some)
+    - not available in cvs
 
 ----- V2.3.1 (2003-03-19) ----
 
