@@ -5,7 +5,25 @@
  object oriented and database abstracted design lend to 
  endless possibilities for project expansion. 
 
------ V2.4.3 (RC1 Released: 2003-08-26) ----
+----- V2.4.3 (RC2 Released: 2003-08-27) ----
+
+/cvsroot/zentrack/zentrack_2/setup_from_cvs,v  <--  setup_from_cvs
+new revision: 1.10; previous revision: 1.9
+done
+Checking in includes/zenTrack.class;
+/cvsroot/zentrack/zentrack_2/includes/zenTrack.class,v  <--  zenTrack.class
+new revision: 1.113; previous revision: 1.112
+done
+Checking in includes/templates/accessForm.php;
+/cvsroot/zentrack/zentrack_2/includes/templates/accessForm.php,v  <--  accessForm.php
+new revision: 1.8; previous revision: 1.7
+
+2003-08-28, Kato
+  Fixed access screen issues with blank bin fields, improper saving
+    - zentrack_2/includes/zenTrack.class 1.113
+    - zentrack_2/includes/templates/accessForm.php 1.8
+  Improved setup_from_cvs sh script
+    - zentrack_2/setup_from_cvs 1.10
 
 2003-08-27, Kato
   Fixed parse error in zenDate class
