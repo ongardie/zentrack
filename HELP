@@ -15,11 +15,10 @@
   Support
 
     CRITICAL!!  When submitting a support request, always begin by setting 
-                $this->debug = 3; in the includes/configVars.php file and then
-		pasting the results in the request.  If you can't get zenTrack to
-		run this far, THEN YOU MUST SUBMIT YOUR VERSION INFO for zenTrack,
-		your OS, your Browser, and your Server, so that we can re-create
-		the error.
+                $Debug_Mode = 3; in the www/header.php file and then pasting the
+                results in the request.  If you can't get zenTrack to run this
+                far, THEN YOU MUST SUBMIT YOUR VERSION INFO for zenTrack, your OS,
+                your Browser, and your Server, so that we can re-create the error.
            
 
     online - http://www.sourceforge.net/projects/zentrack (see the support pages)
@@ -27,7 +26,7 @@
               you will get one)
 
     irc    - zentrack now has a home on irc.sourceforge.net, #zentrack, this may
-   	     be a good place to find some help with more in depth issues.
+             be a good place to find some help with more in depth issues.
              (usually a response in minutes, sometimes ignored)
 
     mailing list - zentrack-users is a great place to get help.  Answers usually

@@ -12,6 +12,9 @@
    - zentrack/includes/leftHelp.php
    - zentrack/www/help/index.php
    - zentrack/www/help/support.php
+  Fix up incorrect debug information request in zentrack/HELP ($Debug_Mode instead of $this->debug)
+   - zentrack/HELP
+   - help/support.php
 
 2003-04-14, Rob Hillis
   Fixed broken link to GPL License in Help section

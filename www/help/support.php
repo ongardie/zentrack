@@ -58,9 +58,9 @@
   </table>
 
   <p>Please report bugs <a href="http://sourceforge.net/tracker/?group_id=22724&atid=376336">here</a>.  When
-  submitting a bug report, or asking for support from the developers, you <b>must</b> set <em>$this->debug</em>
-  in the <em>includes/configVars.php</em> file to <em>3</em> and paste the results in your report.  If you can't get zenTrack
-  to run this far, <b>then you must submit your version info for zenTrack, your OS, your Browser, and your
-  Server,</b> so that we can re-create the error.</p>
+  submitting a bug report, or asking for support from the developers, you <b>must</b> set <em>$Debug_Mode</em>
+  in the <em>www/header.php</em> file to <em>3</em> and paste the results in your report.  If you can't
+  get zenTrack to run this far, <b>then you must submit your version info for zenTrack, your OS, your Browser,
+  and your Server,</b> so that we can re-create the error.</p>
 
   </blockquote>
