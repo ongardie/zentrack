@@ -160,33 +160,6 @@ CREATE TABLE ZENTRACK_TICKETS (
 ) TYPE=MyISAM;
 
 #
-# Table structure for table 'ZENTRACK_TRANSLATION_STRINGS'
-#
-
-CREATE TABLE ZENTRACK_TRANSLATION_STRINGS (
-  trans_id int(12) NOT NULL auto_increment,
-  language varchar(25) NOT NULL default '',
-  identifier varchar(25) default NULL,
-  string varchar(255) default NULL,
-  PRIMARY KEY (trans_id),
-  KEY language(language)
-) TYPE=MyISAM;
-
-#
-# Table structure for table 'ZENTRACK_TRANSLATION_WORDS'
-#
-
-CREATE TABLE ZENTRACK_TRANSLATION_WORDS (
-  word_id int(12) NOT NULL auto_increment,
-  language varchar(25) NOT NULL default '',
-  identifier varchar(50) default NULL,
-  translation varchar(50) default NULL,
-  PRIMARY KEY (word_id),
-  KEY language(language),
-  KEY identifier(identifier)
-) TYPE=MyISAM;
-
-#
 # Table structure for table 'ZENTRACK_TYPES'
 #
 

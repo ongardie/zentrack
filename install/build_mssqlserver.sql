@@ -146,33 +146,6 @@ CREATE TABLE ZENTRACK_TICKETS (
 );
 
 --
--- Table structure for table 'ZENTRACK_TRANSLATION_STRINGS'
---
-
-CREATE TABLE ZENTRACK_TRANSLATION_STRINGS (
- trans_id int IDENTITY (1, 1) NOT NULL ,
- language varchar(25) NOT NULL default '',
- identifier varchar(25) default NULL,
- string varchar(255) default NULL,
- PRIMARY KEY (trans_id),
- -- KEY language(language)
-);
-
---
--- Table structure for table 'ZENTRACK_TRANSLATION_WORDS'
---
-
-CREATE TABLE ZENTRACK_TRANSLATION_WORDS (
- word_id int IDENTITY (1, 1) NOT NULL ,
- language varchar(25) NOT NULL default '',
- identifier varchar(50) default NULL,
- [translation] varchar(50) default NULL,
- PRIMARY KEY (word_id),
--- KEY language(language),
--- KEY identifier(identifier)
-);
-
---
 -- Table structure for table 'ZENTRACK_TYPES'
 --
 
@@ -265,7 +238,4 @@ CREATE TABLE ZENTRACK_REPORTS_TEMP (
 --  KEY tempreports_created(created) 
 );
 
-create nonclustered index language on ZENTRACK_TRANSLATION_STRINGS(language) ;
-create nonclustered index language on ZENTRACK_TRANSLATION_WORDS(language) ;
-create nonclustered index identifier on ZENTRACK_TRANSLATION_WORDS(identifier) ;
 create nonclustered index tempreports_created on ZENTRACK_REPORTS_TEMP(created) ;

@@ -111,7 +111,7 @@ INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (70,
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (71,'allow_pwd_save','off','Allows users to save passphrase in a cookie(fairly secure/not available until v2.1)');
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (72,'check_pwd_simple','on','System will refuse lazy passwords');
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (73,'level_reports','1','Level required to access and view reports');
-INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (74,'version_xx','2.2.2','The version of zentrack, this cannot be edited');
+INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (74,'version_xx','2.3','The version of zentrack, this cannot be edited');
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (75,'date_fmt_long','%A %d, %b %Y','Long date format');
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (76,'date_fmt_short','%m/%d/%Y','Short Date Format');
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (77,'date_fmt_time','%H:%M','Time Format');
@@ -162,108 +162,6 @@ INSERT INTO ZENTRACK_TASKS (task_id, name, priority, active) VALUES (11,'Work',0
 
 INSERT INTO ZENTRACK_TICKETS (id, title, priority, status, description, otime, ctime, bin_id, type_id, user_id, system_id, creator_id, tested, approved, relations, project_id, est_hours, deadline, start_date, wkd_hours) VALUES (1,'Welcome to zenTrack!!',2,'OPEN','Welcome to the zenTrack system!\r<br />\n\r<br />\nCongratulations, your install was successful.\r<br />\n\r<br />\nYou can find more help in the help section on this site, and online at http://zentrack.phpzen.net.\r<br />\n\r<br />\nYou can find support for your product at the sourceforge project: http://www.sourceforge.net/projects/zentrack',1019621097,NULL,2,5,NULL,7,1,0,0,NULL,NULL,0.00,NULL,NULL,0.00);
 INSERT INTO ZENTRACK_TICKETS (id, title, priority, status, description, otime, ctime, bin_id, type_id, user_id, system_id, creator_id, tested, approved, relations, project_id, est_hours, deadline, start_date, wkd_hours) VALUES (2,'CHANGE ADMIN PASSWORD',1,'OPEN','You need to change the admin passphrase right away.\r<br />\n\r<br />\nIn addition, two other accounts, User, and Guest were created.  You will want to modify those or delete them as your system security and preferences determine.',1019621197,NULL,2,8,1,7,1,1,0,NULL,NULL,0.01,1022137200,NULL,0.00);
-
---
--- Dumping data for table 'ZENTRACK_TRANSLATION_STRINGS'
---
-
-INSERT INTO ZENTRACK_TRANSLATION_STRINGS (trans_id, language, identifier, string) VALUES (1,'english','log in','log in');
-INSERT INTO ZENTRACK_TRANSLATION_STRINGS (trans_id, language, identifier, string) VALUES (2,'english','not required','not required');
-INSERT INTO ZENTRACK_TRANSLATION_STRINGS (trans_id, language, identifier, string) VALUES (3,'english','view users','view users');
-INSERT INTO ZENTRACK_TRANSLATION_STRINGS (trans_id, language, identifier, string) VALUES (4,'english','view projects','view projects');
-INSERT INTO ZENTRACK_TRANSLATION_STRINGS (trans_id, language, identifier, string) VALUES (5,'english','view summary','view summary');
-INSERT INTO ZENTRACK_TRANSLATION_STRINGS (trans_id, language, identifier, string) VALUES (6,'english','view user reports','view user reports');
-INSERT INTO ZENTRACK_TRANSLATION_STRINGS (trans_id, language, identifier, string) VALUES (7,'english','view project reports','view project reports');
-INSERT INTO ZENTRACK_TRANSLATION_STRINGS (trans_id, language, identifier, string) VALUES (8,'english','summary reports','summary reports');
-INSERT INTO ZENTRACK_TRANSLATION_STRINGS (trans_id, language, identifier, string) VALUES (9,'english','tickets assigned to','tickets assigned to');
-INSERT INTO ZENTRACK_TRANSLATION_STRINGS (trans_id, language, identifier, string) VALUES (10,'english','no tickets assigned to','no tickets assigned to');
-INSERT INTO ZENTRACK_TRANSLATION_STRINGS (trans_id, language, identifier, string) VALUES (11,'english','no open tickets','no open tickets');
-INSERT INTO ZENTRACK_TRANSLATION_STRINGS (trans_id, language, identifier, string) VALUES (12,'english','filtered tickets','filtered tickets');
-INSERT INTO ZENTRACK_TRANSLATION_STRINGS (trans_id, language, identifier, string) VALUES (13,'english','administrate user access','administrate user access');
-INSERT INTO ZENTRACK_TRANSLATION_STRINGS (trans_id, language, identifier, string) VALUES (14,'english','administrate users','administrate users');
-INSERT INTO ZENTRACK_TRANSLATION_STRINGS (trans_id, language, identifier, string) VALUES (15,'english','administrate tickets','administrate tickets');
-INSERT INTO ZENTRACK_TRANSLATION_STRINGS (trans_id, language, identifier, string) VALUES (16,'english','phrase 1','open a new ticket');
-INSERT INTO ZENTRACK_TRANSLATION_STRINGS (trans_id, language, identifier, string) VALUES (17,'english','phrase 2','please enter a new bin');
-INSERT INTO ZENTRACK_TRANSLATION_STRINGS (trans_id, language, identifier, string) VALUES (18,'english','phrase 3','enter id''s seperated by commas or carriage returns');
-INSERT INTO ZENTRACK_TRANSLATION_STRINGS (trans_id, language, identifier, string) VALUES (19,'english','phrase 4','please read the administrator''s manual before attempting to alter any settings.  altering these settings can result in severe consequences, without proper understanding.');
-
---
--- Dumping data for table 'ZENTRACK_TRANSLATION_WORDS'
---
-
-INSERT INTO ZENTRACK_TRANSLATION_WORDS (word_id, language, identifier, translation) VALUES (1,'english','accept','accept');
-INSERT INTO ZENTRACK_TRANSLATION_WORDS (word_id, language, identifier, translation) VALUES (2,'english','all','all');
-INSERT INTO ZENTRACK_TRANSLATION_WORDS (word_id, language, identifier, translation) VALUES (3,'english','admin','admin');
-INSERT INTO ZENTRACK_TRANSLATION_WORDS (word_id, language, identifier, translation) VALUES (4,'english','approval','approved');
-INSERT INTO ZENTRACK_TRANSLATION_WORDS (word_id, language, identifier, translation) VALUES (5,'english','approved','approved');
-INSERT INTO ZENTRACK_TRANSLATION_WORDS (word_id, language, identifier, translation) VALUES (6,'english','assign','assign');
-INSERT INTO ZENTRACK_TRANSLATION_WORDS (word_id, language, identifier, translation) VALUES (7,'english','bin','bin');
-INSERT INTO ZENTRACK_TRANSLATION_WORDS (word_id, language, identifier, translation) VALUES (8,'english','calendar','calendar');
-INSERT INTO ZENTRACK_TRANSLATION_WORDS (word_id, language, identifier, translation) VALUES (9,'english','close','close');
-INSERT INTO ZENTRACK_TRANSLATION_WORDS (word_id, language, identifier, translation) VALUES (10,'english','created','created');
-INSERT INTO ZENTRACK_TRANSLATION_WORDS (word_id, language, identifier, translation) VALUES (11,'english','closed','closed');
-INSERT INTO ZENTRACK_TRANSLATION_WORDS (word_id, language, identifier, translation) VALUES (12,'english','comments','comments');
-INSERT INTO ZENTRACK_TRANSLATION_WORDS (word_id, language, identifier, translation) VALUES (13,'english','completed','completed');
-INSERT INTO ZENTRACK_TRANSLATION_WORDS (word_id, language, identifier, translation) VALUES (14,'english','configure','configure');
-INSERT INTO ZENTRACK_TRANSLATION_WORDS (word_id, language, identifier, translation) VALUES (15,'english','description','description');
-INSERT INTO ZENTRACK_TRANSLATION_WORDS (word_id, language, identifier, translation) VALUES (16,'english','detected','detected');
-INSERT INTO ZENTRACK_TRANSLATION_WORDS (word_id, language, identifier, translation) VALUES (17,'english','development','development');
-INSERT INTO ZENTRACK_TRANSLATION_WORDS (word_id, language, identifier, translation) VALUES (18,'english','edit','edit');
-INSERT INTO ZENTRACK_TRANSLATION_WORDS (word_id, language, identifier, translation) VALUES (19,'english','email','email');
-INSERT INTO ZENTRACK_TRANSLATION_WORDS (word_id, language, identifier, translation) VALUES (20,'english','errors','errors');
-INSERT INTO ZENTRACK_TRANSLATION_WORDS (word_id, language, identifier, translation) VALUES (21,'english','for','for');
-INSERT INTO ZENTRACK_TRANSLATION_WORDS (word_id, language, identifier, translation) VALUES (22,'english','general','general');
-INSERT INTO ZENTRACK_TRANSLATION_WORDS (word_id, language, identifier, translation) VALUES (23,'english','help','help');
-INSERT INTO ZENTRACK_TRANSLATION_WORDS (word_id, language, identifier, translation) VALUES (24,'english','in','in');
-INSERT INTO ZENTRACK_TRANSLATION_WORDS (word_id, language, identifier, translation) VALUES (25,'english','installation','installation');
-INSERT INTO ZENTRACK_TRANSLATION_WORDS (word_id, language, identifier, translation) VALUES (26,'english','log','log');
-INSERT INTO ZENTRACK_TRANSLATION_WORDS (word_id, language, identifier, translation) VALUES (27,'english','menu','menu');
-INSERT INTO ZENTRACK_TRANSLATION_WORDS (word_id, language, identifier, translation) VALUES (28,'english','move','move');
-INSERT INTO ZENTRACK_TRANSLATION_WORDS (word_id, language, identifier, translation) VALUES (29,'english','new','new');
-INSERT INTO ZENTRACK_TRANSLATION_WORDS (word_id, language, identifier, translation) VALUES (30,'english','number','number');
-INSERT INTO ZENTRACK_TRANSLATION_WORDS (word_id, language, identifier, translation) VALUES (31,'english','open','open');
-INSERT INTO ZENTRACK_TRANSLATION_WORDS (word_id, language, identifier, translation) VALUES (32,'english','opened','opened');
-INSERT INTO ZENTRACK_TRANSLATION_WORDS (word_id, language, identifier, translation) VALUES (33,'english','optional','optional');
-INSERT INTO ZENTRACK_TRANSLATION_WORDS (word_id, language, identifier, translation) VALUES (34,'english','options','options');
-INSERT INTO ZENTRACK_TRANSLATION_WORDS (word_id, language, identifier, translation) VALUES (35,'english','owned','owned');
-INSERT INTO ZENTRACK_TRANSLATION_WORDS (word_id, language, identifier, translation) VALUES (36,'english','owner','owner');
-INSERT INTO ZENTRACK_TRANSLATION_WORDS (word_id, language, identifier, translation) VALUES (37,'english','parent','parent');
-INSERT INTO ZENTRACK_TRANSLATION_WORDS (word_id, language, identifier, translation) VALUES (38,'english','pending','pending');
-INSERT INTO ZENTRACK_TRANSLATION_WORDS (word_id, language, identifier, translation) VALUES (39,'english','please','please');
-INSERT INTO ZENTRACK_TRANSLATION_WORDS (word_id, language, identifier, translation) VALUES (40,'english','pri','pri');
-INSERT INTO ZENTRACK_TRANSLATION_WORDS (word_id, language, identifier, translation) VALUES (41,'english','print','print');
-INSERT INTO ZENTRACK_TRANSLATION_WORDS (word_id, language, identifier, translation) VALUES (42,'english','priority','priority');
-INSERT INTO ZENTRACK_TRANSLATION_WORDS (word_id, language, identifier, translation) VALUES (43,'english','project','project');
-INSERT INTO ZENTRACK_TRANSLATION_WORDS (word_id, language, identifier, translation) VALUES (44,'english','projects','projects');
-INSERT INTO ZENTRACK_TRANSLATION_WORDS (word_id, language, identifier, translation) VALUES (45,'english','quick','quick');
-INSERT INTO ZENTRACK_TRANSLATION_WORDS (word_id, language, identifier, translation) VALUES (46,'english','related','related');
-INSERT INTO ZENTRACK_TRANSLATION_WORDS (word_id, language, identifier, translation) VALUES (47,'english','refresh','refresh');
-INSERT INTO ZENTRACK_TRANSLATION_WORDS (word_id, language, identifier, translation) VALUES (48,'english','reject','reject');
-INSERT INTO ZENTRACK_TRANSLATION_WORDS (word_id, language, identifier, translation) VALUES (49,'english','relate','relate');
-INSERT INTO ZENTRACK_TRANSLATION_WORDS (word_id, language, identifier, translation) VALUES (50,'english','required','required');
-INSERT INTO ZENTRACK_TRANSLATION_WORDS (word_id, language, identifier, translation) VALUES (51,'english','reports','reports');
-INSERT INTO ZENTRACK_TRANSLATION_WORDS (word_id, language, identifier, translation) VALUES (52,'english','save','save');
-INSERT INTO ZENTRACK_TRANSLATION_WORDS (word_id, language, identifier, translation) VALUES (53,'english','search','search');
-INSERT INTO ZENTRACK_TRANSLATION_WORDS (word_id, language, identifier, translation) VALUES (54,'english','searches','searches');
-INSERT INTO ZENTRACK_TRANSLATION_WORDS (word_id, language, identifier, translation) VALUES (55,'english','settings','settings');
-INSERT INTO ZENTRACK_TRANSLATION_WORDS (word_id, language, identifier, translation) VALUES (56,'english','status','status');
-INSERT INTO ZENTRACK_TRANSLATION_WORDS (word_id, language, identifier, translation) VALUES (57,'english','system','system');
-INSERT INTO ZENTRACK_TRANSLATION_WORDS (word_id, language, identifier, translation) VALUES (58,'english','tested','tested');
-INSERT INTO ZENTRACK_TRANSLATION_WORDS (word_id, language, identifier, translation) VALUES (59,'english','testing','testing');
-INSERT INTO ZENTRACK_TRANSLATION_WORDS (word_id, language, identifier, translation) VALUES (60,'english','ticket','ticket');
-INSERT INTO ZENTRACK_TRANSLATION_WORDS (word_id, language, identifier, translation) VALUES (61,'english','tickets','tickets');
-INSERT INTO ZENTRACK_TRANSLATION_WORDS (word_id, language, identifier, translation) VALUES (62,'english','time','time');
-INSERT INTO ZENTRACK_TRANSLATION_WORDS (word_id, language, identifier, translation) VALUES (63,'english','title','title');
-INSERT INTO ZENTRACK_TRANSLATION_WORDS (word_id, language, identifier, translation) VALUES (64,'english','to','to');
-INSERT INTO ZENTRACK_TRANSLATION_WORDS (word_id, language, identifier, translation) VALUES (65,'english','type','type');
-INSERT INTO ZENTRACK_TRANSLATION_WORDS (word_id, language, identifier, translation) VALUES (66,'english','view','view');
-INSERT INTO ZENTRACK_TRANSLATION_WORDS (word_id, language, identifier, translation) VALUES (67,'english','welcome','welcome');
-INSERT INTO ZENTRACK_TRANSLATION_WORDS (word_id, language, identifier, translation) VALUES (68,'english','yank','yank');
-INSERT INTO ZENTRACK_TRANSLATION_WORDS (word_id, language, identifier, translation) VALUES (69,'english','atc','atc');
-INSERT INTO ZENTRACK_TRANSLATION_WORDS (word_id, language, identifier, translation) VALUES (70,'english','etc','etc');
-INSERT INTO ZENTRACK_TRANSLATION_WORDS (word_id, language, identifier, translation) VALUES (71,'english','id','id');
-INSERT INTO ZENTRACK_TRANSLATION_WORDS (word_id, language, identifier, translation) VALUES (72,'english','na','n/a');
-INSERT INTO ZENTRACK_TRANSLATION_WORDS (word_id, language, identifier, translation) VALUES (73,'english','pid','pid');
 
 --
 -- Dumping data for table 'ZENTRACK_TYPES'

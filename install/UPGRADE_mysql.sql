@@ -2,6 +2,7 @@
 # 
 # Table structure for table 'ZENTRACK_NOTIFY_LIST' 
 # 
+
 CREATE TABLE ZENTRACK_NOTIFY_LIST (
    notify_id int(12) NOT NULL auto_increment,
    ticket_id int(12) NOT NULL,
@@ -13,4 +14,6 @@ CREATE TABLE ZENTRACK_NOTIFY_LIST (
    PRIMARY KEY (notify_id)
 );
 
+DROP TABLE ZENTRACK_TRANSLATION_STRINGS;
+DROP TABLE ZENTRACK_TRANSLATION_WORDS;
 

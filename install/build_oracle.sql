@@ -161,31 +161,6 @@ CREATE TABLE ZENTRACK_TICKETS (
 ) ;
 
 --
--- Table structure for table 'ZENTRACK_TRANSLATION_STRINGS'
---
-
-CREATE TABLE ZENTRACK_TRANSLATION_STRINGS (
-  trans_id number(12),
-  language varchar2(25) default NULL,
-  identifier varchar2(25) default NULL,
-  string varchar2(255) default NULL,
-  CONSTRAINT trstr_pk PRIMARY KEY (trans_id)
-) ;
-
---
--- Table structure for table 'ZENTRACK_TRANSLATION_WORDS'
---
-
-CREATE TABLE ZENTRACK_TRANSLATION_WORDS (
-  word_id number(12),
-  language varchar2(25) default NULL,
-  identifier varchar2(50) default NULL,
-  translation varchar2(50) default NULL,
-  PRIMARY KEY (word_id)
-) ;
-
-
---
 -- Table structure for table 'ZENTRACK_TYPES'
 --
 
@@ -291,8 +266,6 @@ create sequence settings_id_seq            start with 1001 nocache;
 create sequence systems_id_seq             start with 1001 nocache;
 create sequence tasks_id_seq               start with 1001 nocache;
 create sequence tickets_id_seq             start with 1001 nocache;
-create sequence translation_strings_id_seq start with 1001 nocache;
-create sequence translation_words_id_seq   start with 1001 nocache;
 create sequence types_id_seq               start with 1001 nocache;
 create sequence users_id_seq               start with 1001 nocache;
 create sequence reports_id_seq             start with 1001 nocache;
@@ -302,6 +275,4 @@ create sequence reports_temp_id_seq        start with 1001 nocache;
 --  CREATE INDICES
 --
 
-CREATE INDEX TRANSLATION_LANGUAGE ON ZENTRACK_TRANSLATION_WORDS (language);
-CREATE INDEX TRANSLATION_IDENTIFIER ON ZENTRACK_TRANSLATION_WORDS (identifier);
 CREATE INDEX REPINDEX_COMB ON ZENTRACK_REPORTS_INDEX (user_id,bid);

@@ -14,8 +14,6 @@ CREATE SEQUENCE "settings_setting_id_seq" start 1001 increment 1 maxvalue 214748
 CREATE SEQUENCE "systems_sid_seq" start 1001 increment 1 maxvalue 2147483647 minvalue 1  cache 1;
 CREATE SEQUENCE "tasks_task_id_seq" start 1001 increment 1 maxvalue 2147483647 minvalue 1  cache 1;
 CREATE SEQUENCE "tickets_id_seq" start 1001 increment 1 maxvalue 2147483647 minvalue 1  cache 1;
-CREATE SEQUENCE "translation_strings_trans_id_seq" start 1001 increment 1 maxvalue 2147483647 minvalue 1  cache 1;
-CREATE SEQUENCE "translation_words_word_id_seq" start 1001 increment 1 maxvalue 2147483647 minvalue 1  cache 1;
 CREATE SEQUENCE "types_type_id_seq" start 1001 increment 1 maxvalue 2147483647 minvalue 1  cache 1;
 CREATE SEQUENCE "users_user_id_seq" start 1001 increment 1 maxvalue 2147483647 minvalue 1  cache 1;
 CREATE SEQUENCE "reports_id_seq" start 1001 increment 1 maxvalue 2147483647 minvalue 1  cache 1;
@@ -177,31 +175,6 @@ CREATE TABLE ZENTRACK_TICKETS (
   deadline int8 default NULL,
   start_date int8 default NULL,
   wkd_hours decimal(10,2) default '0.00'
-);
-
---
--- Table structure for table 'ZENTRACK_TRANSLATION_STRINGS'
---
-
-CREATE TABLE ZENTRACK_TRANSLATION_STRINGS (
-  trans_id int8 default nextval('"translation_strings_id_seq"') NOT NULL PRIMARY KEY,
-  language varchar(25) default NULL,
-  identifier varchar(25) default NULL,
-  string varchar(255) default NULL
---  KEY language(language)
-);
-
---
--- Table structure for table 'ZENTRACK_TRANSLATION_WORDS'
---
-
-CREATE TABLE ZENTRACK_TRANSLATION_WORDS (
-  word_id int8 default nextval('"translation_words_id_seq"') NOT NULL PRIMARY KEY,
-  language varchar(25) default NULL,
-  identifier varchar(50) default NULL,
-  translation varchar(50) default NULL
---  KEY language(language),
---  KEY identifier(identifier)
 );
 
 --
