@@ -7,6 +7,17 @@
 
 ----- V2.4.1 (Development, See CVS) ----
 
+2003-05-03, Rob Hillis
+  Clarified setting description in database and updated version number.
+    - zentrack/install/UPGRADE_SEED_mssqlserver.sql 1.2
+    - zentrack/install/UPGRADE_SEED_mysql.sql 1.10
+    - zentrack/install/UPGRADE_SEED_oracle.sql 1.9
+    - zentrack/install/UPGRADE_SEED_postgres.sql 1.9
+    - zentrack/install/seed_mssqlserver.sql 1.8
+    - zentrack/install/seed_mysql.sql 1.18
+    - zentrack/install/seed_oracle.sql 1.19
+    - zentrack/install/seed_postgres.sql 1.14
+    - 
 2003-05-02, Kato
   Updated language files (minor cleanup)
     - zentrack/includes/templates/languageForm.php 1.2

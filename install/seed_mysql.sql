@@ -67,7 +67,7 @@ INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (23,
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (24,'color_hover','#00FF33','Color of links on mouseover (hover)');
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (25,'default_test_checked','on','Testing required defaults to yes');
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (26,'default_aprv_checked','off','Approval required defaults to yes');
-INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (27,'email_pending','on','Send email to tester/approver when email is pending');
+INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (27,'email_pending','on','Send email to tester/approver when ticket is pending');
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (28,'email_reject','on','Send email to sender/creator when ticket is rejected');
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (29,'email_assign','on','Send email to recipient when ticket is assigned');
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (30,'email_arrival','on','Send email to bin owner when ticket arrives in bin');
