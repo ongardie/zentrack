@@ -133,7 +133,7 @@ foreach($fields as $f=>$field) {
         $txt .= "<option value=''>--</option>";
         foreach($choices as $k=>$v) {
           $sel = $field['default_val'] == $k? " selected" : "";
-          $txt .= "<option value='$k'>$v</option>";
+          $txt .= "<option value='$k'{$sel}>$v</option>";
         }
         $txt .= "</select>";
       }

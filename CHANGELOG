@@ -13,6 +13,9 @@ abstraction, and endless possibilities for project expansion.
 
 ----- VERSION 2.5.0.3 (development) -----
 
+2005-02-09, cfalonso
+  Default groups in field_map page didn't show the selected field in the pulldown, just added the $sel variable
+
 2005-02-08, kato
   Fixed section flags for various views (sections can be added/deleted)
     - zentrack_2/includes/ZenFieldMap.class 1.4
