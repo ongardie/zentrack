@@ -19,8 +19,10 @@ if( isset($_SERVER) ) {
 }
 
 // ... except the following list
-$reservedList = array("Db_Type", "Db_Instance", "Db_Login", "Db_Pass", "Db_Host", "Debug_Mode",
-                      "Demo_Mode", "page_prefix", "page_title", "configFile", "system_message_limit");
+$reservedList = array("libDir", "rootUrl", 
+		      "Db_Type", "Db_Instance", "Db_Login", "Db_Pass", "Db_Host", 
+		      "Debug_Mode", "Demo_Mode", "page_prefix", "page_title", 
+		      "configFile", "system_message_limit");
 
 if (isset($_POST)) {
   foreach ($_POST as $k=>$v) {
