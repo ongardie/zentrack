@@ -5,6 +5,13 @@
  100 percent object oriented and database abstracted. 
 
 ----- V2.2.2 (not released) -----
+2003-02-05, Kato
+  Fixed upload issues due to yet another PHP major function change
+    - www/actions/upload.php v1.5
+  Fixed old redirect, username cookie, and some session issues
+    - includes/login.php v1.17
+    - includes/session_start.php v1.4
+	
 2003-02-01, Altman
   Added a javascript calendar that was written by Tan 
   Ling <fuushikanden@yahoo.com>.  This closes RFE #640016.

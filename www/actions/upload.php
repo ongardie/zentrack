@@ -11,6 +11,18 @@
   include("./action_header.php");
 
   if( $actionComplete == 1 ) {
+    // here we are converting this page to make it work
+    // with php's EVER changing way of doing things... so
+    // we will try to keep everything from breaking while they continue
+    // to alter how everything works... while still maintaining some backwards
+    // compatability
+    if( is_array($HTTP_POST_FILES) && is_array($HTTP_POST_FILES["userfile"]) ) {
+      $userfile_name = $HTTP_POST_FILES["userfile"]["name"];
+      $userfile_type = $HTTP_POST_FILES["userfile"]["type"];
+      $userfile = $HTTP_POST_FILES["userfile"]["tmp_name"];
+      $userfile_size = $HTTP_POST_FILES["userfile"]["size"];
+      $userfile_error = $HTTP_POST_FILES["userfile"]["error"];
+    }
      
      // determine what the incoming data is, and format it
      // for use
@@ -29,6 +41,9 @@
 	if( !$$r ) {
 	   $errs[] = " $r is required";
 	}
+     }
+     if( $userfile_error ) {
+       $errs[] = $userfile_error;
      }
      
      if( !$errs ) {
@@ -75,7 +90,9 @@
 	   $res = $zen->attach_to_ticket( $ticket_id, $login_id, $params, $log_id);
 	   if( $res ) {
 	      add_system_messages("Attachment $userfile_name uploaded for ticket $id");
-	      header("Location: $rootUrl/ticket.php?id=$id&setmode=attachments\n");
+	      $setmode = "attachments";
+	      include("../ticket.php");
+	      exit;
 	   } else {
 	      $errs[] = "System error: Attachment $userfile_name could not be uploaded for ticket $id. ".$zen->db_error;
 	   }
