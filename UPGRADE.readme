@@ -29,6 +29,9 @@ UPGRADE FROM 2.4.3
 
   This new does not contain any database changes from 2.4.3 (there is no update sql to run)
 
+  If you wish to update your version number, you can do so with the following sql query:
+      UPDATE ZENTRACK_SETTINGS SET value = '2.4.4' WHERE name = 'version_xx';
+
 UPGRADE FROM 2.4.2
 
   IMPORTANT USAGE NOTE:
