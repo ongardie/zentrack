@@ -112,7 +112,7 @@ msgstr "? de ? configuraciones fueron actualizadas exitosamente"
 #file "/home/ired/zentrack_2/includes/leftMain.php"
 #args "array($num,count($zen->bins))"
 msgid "? open tickets in ? bins"
-msgstr "? tickets abiertos en ? 'bins'"
+msgstr "? tickets abiertos en ? comunidades"
 
 
 #file "/home/ired/zentrack_2/www/admin/priorities.php"
