@@ -61,8 +61,13 @@
        print "Not logged in<br>\n";
      }
      print "GD Info:<ul>\n";
-     foreach(gd_info() as $k=>$v) {
-       print "<li>$k: $v</li>\n";
+     if( function_exists("gd_info") ) {
+       foreach(gd_info() as $k=>$v) {
+	 print "<li>$k: $v</li>\n";
+       }
+     }
+     else {
+       print "PHP < 4.3, gd_info not available<br>\n";
      }
      print "</ul>\n";
      print "<p>&nbsp;------/DEBUG OVERVIEW-------&nbsp;</p>\n";
