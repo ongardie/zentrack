@@ -4,7 +4,7 @@
   **  HELP SECTION
   */
 
-  $b = dirname(dirname(__FILE__));
+  $b = realpath(dirname(dirname(__FILE__)));
   include_once("$b/help_header.php");
   $page_title = tr("Main Menu");
   include("$libDir/nav.php");
