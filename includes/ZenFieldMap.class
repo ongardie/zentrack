@@ -339,7 +339,7 @@ class ZenFieldMap {
     $vals["view"] = $view;
     $vals["form_name"] = $form_name;
     $vals["templateDir"] = $templateDir;
-    $vals["rootUrl"] = $rootUrl;
+    $vals["rooturl"] = $rootUrl;
     $vals['date_format'] = $this->_zen->popupDateFormat();
     $vals["field_name"] = $this->_zen->ffv($prefix.$field_name);
     $vals["field_value"] = $this->_zen->ffv($value);

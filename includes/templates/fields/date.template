@@ -1,6 +1,6 @@
 
 <input type="text" name="{field_name}" size="{field_cols}" maxlength="{field_max}" value="{field_value}" 
   hascalendar="{field_name}-calendar_icon" {field_events}>
-  <img name="date_button" src='{rootUrl}/images/cal.gif' 
+  <img name="date_button" src='{rooturl}/images/cal.gif' 
     onClick="popUpCalendar(this, document.{form_name}.{field_name}, '{date_format}')"
     alt="Select a Date" id="{field_name}-calendar_icon">
