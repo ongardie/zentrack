@@ -7,31 +7,23 @@ class ZenTicket extends Zen {
   /**
    * CONSTRUCTOR
    *
-   * loads a blank ticket object, or by loads a ticket by id
+   * loads a blank ticket object, or loads a ticket by id
    * 
    * @param integer $ticket_id (optional)id of ticket to load
    */
   function zenTicket( $ticket_id = 0 ) { }
-  
+
   /**
    * copies an existing ticket to this one
+   *
+   * Note that it is NOT considered the same ticket... running
+   * save() will create a new ticket in the db.
    *
    * @param integer $ticket_id to be copied to this object
    * @return boolean copy succeeded
    */
-  function copy( $ticket_id ) { }
+  function copy( $ticket_id = 0 ) { }
    
-  /**
-   * searches for a ticket by the title
-   * 
-   * loads the ticket into this object if found, if more than one match
-   * was found, then returns false, and stores error which can
-   * be retrieved by $object->getMessages( 2, "find" );
-   * @param string $title title to match (use * for wildcard)
-   * @return boolean matched 1 ticket
-   */
-  function findByTitle( $title ) { }
-  
   /**
    * Save the ticket in its current state
    * to the database
@@ -57,6 +49,14 @@ class ZenTicket extends Zen {
    * requirements and attempts to execute next action
    */
   function next() { }
+
+  /**
+   * Gets a ticket parameter
+   *
+   * @param string $field is the field to retrieve a value for
+   * @return mixed the value of the parameter/field requested
+   */
+  function getField( $field ) { }
   
   /**
    * Set a ticket parameter
@@ -68,7 +68,7 @@ class ZenTicket extends Zen {
    * @param mixed $value is the value to use
    * @return boolean succeeded
    */
-  function set( $field, $value ) { }
+  function setField( $field, $value ) { }
 
   /* VARIABLES */
   
