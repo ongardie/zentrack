@@ -13,7 +13,7 @@
    * Test the ZenDbSchema.php class methods
    *
    * This test unit requires that the ZenDbSchema.php, ZenUtils.php, and Zen.php class files be included
-   * This test also relies on the ZenTestDbSchema.xml file to provide test data
+   * This test also relies on the testdb.xml and ZenDbSchemaTest.xml file to provide test data
    *
    * @package PHPUnit
    */
@@ -177,7 +177,7 @@
     }
 
     function testGetTableNames() {
-      $names = $this->obj->getTableNames();
+      $names = $this->obj->listTables();
       foreach( $names as $n ) {
         $table = $this->obj->getTableArray($n);
         Assert::equalsTrue( is_array($table) && is_array($table['fields']) );

@@ -60,9 +60,9 @@
           $newfields = $newtable->getTableArray();
           $eq = ZenUtils::arrayEquals($oldfields, $newfields);
           Assert::equalsTrue( $eq, "The values were not copied correctly" );
-          if( !$eq ) {
+          //if( !$eq ) {
             $this->printArrayComparisons( $oldfields, $newfields );
-          }
+            //}
         }
       }
       else {
@@ -76,28 +76,37 @@
 
     /** UTILITIES */
 
-    function printArrayComparisons( $arr1, $arr2, $ind = 0 ) {
-      print "array(<ul>\n";
+    function printArrayComparisons( $arr1, $arr2, $ind = 0, $key = '' ) {
+      if( $ind == 0 ) {
+        print "array(<ul style='font-size: 90%; margin-left: 20px;'>\n";
+      }
+      else { 
+        if( $key ) { print '"'.$key.'" => '; }
+        print "array(<ul style='margin-left:15px'>\n";
+      }
       // check count
       if( count($arr1) != count($arr2) ) { print "<b>count does not match</b><br>\n"; }
       // check each element
+      $first = true;
       foreach( $arr1 as $key=>$val ) {
         if( is_array($val) && isset($arr2[$key]) ) {
           // recurse if needed
-          $this->printArrayComparisons($val, $arr2[$key]);
+          if( !$first ) { print "<br>\n"; }
+          $this->printArrayComparisons($val, $arr2[$key], $ind+1, $key);
         }
         else {
+          if( !$first ) { print ", \n"; }
           // test values carefully
-          $eq = ZenUtils:;safeEquals($val, $arr2[$key]);
-          print "$key: [".($eq? $eq : "<font color='red'>$eq</font>")."]";
+          $eq = ZenUtils::safeEquals($val, $arr2[$key]);
+          print "$key".($eq? '' : "<font color='red'>[not equal]</font>")."";
           if( !$eq ) {
             // make values something we can display (without notices)
             $d1 = isset($val)? (strlen($val)>10? substr($val,0,10)."...":$val) : "<null>";
             $d2 = isset($arr2[$key])? (strlen($arr2[$key])>10? substr($arr2[$key],0,10)."...":$arr2[$key]) : "<null>";
             // print the values
-            print " $d1=$d2<br>\n";
+            print "(<font color='red'>$d1 != $d2</font>)";
           }
-          else { print "<br>\n"; }
+          $first = false;
         }
       }
       print "</ul>)<br>\n";
