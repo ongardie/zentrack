@@ -72,7 +72,7 @@ if( is_array($tickets) ) {
       $ttl_est += $est;
       $ttl_wkd += ($wkd > $est)? $est : $wkd;
       $ttl_ext += ($wkd > $est)? $wkd - $est : 0;
-      if( $est <= 0 )
+      if( !strlen($est) )
 	$est = "n/a";
       if( $wkd <= 0 )
 	$wkd = 0;
