@@ -6,6 +6,39 @@
  endless possibilities for project expansion.
 
 ----- V2.2.3 (development, see CVS) ----
+	
+2003-03-06, Kato
+  Session enhancments: support for older versions of php, and hopefully
+  will clear up problems for users experiencing multiple login requests
+  because of session issues.
+    - includes/headerInc.php 1.15
+    - includes/session_save.php 1.4
+    - includes/session_start.php 1.8
+  Close ticket, username retention
+    - includes/zenTrack.class 1.64
+  Fixes for popupcalendar feature
+    - www/popcalendar.js 1.3
+    - includes/nav.php 1.7    
+  Notify Lists
+    - includes/db.class 1.18
+    - includes/headerInc.php 1.15
+    - includes/zenTrack.class 1.64
+    - includes/templates/ticketView.php 1.2
+    - includes/templates/ticket_box.php 1.7
+    - includes/templates/ticket_notifyBox.php 1.2
+    - www/actions/action_header.php 1.9
+  Improved ticket creator viewing permissions
+    - www/actions/action_header.php 1.9	
+  Added new utility: checkEmail()
+    - includes/zen.class 1.11	
+  Debian Linux ./ problems
+    - www/project.php 1.5
+    - www/ticket.php 1.13	
+  Minor text change
+    - www/reports/save.php 1.7
+  Cleanup of comments and instructions
+    - install/header.php.default 1.6
+	
 2003-02-27, Kato
   Notify List Implementations (not complete... more to come)
     - includes/zenTrack.class 1.62
