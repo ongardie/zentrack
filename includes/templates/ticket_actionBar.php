@@ -36,7 +36,7 @@
 	print "<tr>\n<form name='$aForm' action='$rootUrl/actions/$a.php'$target>\n";
 	print "<td>\n";
 	$a_name = ( $page_browser == 'ns' )?
-	  strtoupper(tr($a)) : str_pad( strtoupper(tr($a)) ,18," ",STR_PAD_RIGHT);
+	  uptr(ucfirst($a)) : str_pad( uptr(ucfirst($a)) ,18," ",STR_PAD_RIGHT);
 	print "<input type='$button' class='actionButton' $style value='$a_name'>\n";
 	print "<input type='hidden' name='id' value='$id'>\n";
 	print "<input type='hidden' name='setmode' value='$a'>\n";
