@@ -33,70 +33,81 @@
 [paths]
 
 ;absolute path to includes directory (not web path)
-path_includes = "{path_includes="/web/zentrack/includes"}" 
+path_includes = "{$path_includes|default:"/web/zentrack/includes"}" 
 
 ;absolute path to www directory (not web path)
-path_www = "{path_www="/web/zentrack/www"}"  
+path_www = "{$path_www|default:"/web/zentrack/www"}"  
 
 ;browser path to zentrack www directory (this should include the domain name)
-url_www = "{url_www="http&#58;//mysite.com/zentrack"}"
+url_www = "{$url_www|default="http://mysite.com/zentrack"}"
 
 ;path to the php CLI executable (i.e. C:/php/cli/php.exe or /usr/bin/php)
 ;if the CLI binary is in the system path, a blank is ok here
 ;this variable is usually needed on windows platforms
-path_cli = "{path_cli=""}"
+path_cli = "{$path_cli}"
 
 
 ;;;;;;;;;;;;;;; DATABASE SETTINGS ;;;;;;;;;;;;;;;;;;;;;;
 ;;; these settings will point zentrack to your database instance
 ;;; more database types can be found at: 
 ;;;   http://php.weblogs.com/ADOdb_manual#drivers
+;;;   Some common choices: 
+;;;     mssqlpo (sql server)
+;;;     mysql
+;;;     oci8po (oracle 8/9)
+;;;     postgres
+;;;     db2
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 [db]
 
 ; the type of database
 ; mysql, mysqlt(transaction enabled), postgres, oci8po (oracle), mssqlpo
-db_type = "{db_type="mysql"}"
+db_type = "{$db_type|default="mysql"}"
 
 ; domain or ip for database server, sometimes blank is good
-db_host = "{db_host="localhost"}"
+db_host = "{$db_host|default="localhost"}"
 
 ; the table set or instance to use for zentrack
-db_instance = "{db_instance="zentrack"}" 
+db_instance = "{$db_instance|default="zentrack"}" 
 
 ; username for logging into db
-db_user = "{db_user="zentrack"}" 
+db_user = "{$db_user|default="zentrack"}" 
 
 ; password for logging in, sometimes blank for postgres
-db_pass = "{db_pass="zentrack"}"
+db_pass = "{$db_pass|default="zentrack"}"
 
 ; whether we should use persistent connections or not
 ; On improves efficiency, if your db experiences problems
 ; with too many open connections, or not closing connections
-; when you would like, turn this Off
-db_persistent = {db_persistent="0"}
+; when you would like, turn this off (1=on, 0=off)
+db_persistent = {$db_persistent|default="0"}
 
-;the prefix for table names, keep in upper case
-db_prefix = "{db_prefix="ZENTRACK_"}"
+;the prefix for table names, keep in upper case, blank for none
+db_prefix = "{$db_prefix|default="ZENTRACK_"}"
 
 ;the length time to cache queries in seconds
 ;use blank to disable caching
-cache_time = {cache_time=""}
+cache_time = {$cache_time}
 
 ;;;;;;;;;;;;;;;;; PAGE DISPLAY ;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; The properties concerning how pages are displayed
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 [layout]
 
-system_name = "{system_name="ZenTrack"}"                 ;system name to display
+;system name to display
+system_name = "{$system_name|default:"ZenTrack"}"       
 
-page_prefix = "{page_prefix="ZenTrack | "}"              ;the prefix for titles displayed by browser
+;the prefix for titles displayed by browser
+page_prefix = "{$page_prefix|default:"ZenTrack | "}"    
 
-page_title = "{page_title="Welcome"}"                    ;the default title displayed by browser
+;the default title displayed by browser
+page_title = "{$page_title|default:"Welcome"}"          
 
-template_set = "{template="default"}"                    ;which layout templates to employ
+;which layout templates to employ
+template_set = "{$template|default:"default"}"          
 
-default_language = "{default_language="english"}"        ;which language to show by default
+;which language to show by default
+default_language = "{$default_language|default:"english"}"        
 
 ;;;;;;;;;;;;;;;;; DEBUGGING OUTPUT ;;;;;;;;;;;;;;;;;;;;;
 ;;; The debug settings are controlled in an xml file
@@ -107,16 +118,18 @@ default_language = "{default_language="english"}"        ;which language to show
 [debug]
 
 ; 1=true, 0=false, display messages on screen
-debug_display = {debug_display="0"}
+debug_display = {$debug_display|default:"0"}
 
 ; name of the debug config file (must be located in dir_config)
-debug_configfile = "{debug_configfile="debug.xml"}"
+debug_configfile = "{$debug_configfile|default:"debug.xml"}"
 
 ; name of log file, blank disables file output (must be located in dir_logs)
-debug_logfile = "{debug_logfile}"
+debug_logfile = "{$debug_logfile}"
 
+; allows certain security settings to be overridden during development
 ; set to 1 if you are a developer, otherwise leave this at 0
-develop_mode = {develop_mode="false"}
+; this SHOULD NOT be set to 1 in a production environment
+develop_mode = {$develop_mode=0}
 
 ;;;;;;;;;;;;;;; ADVANCED SETTINGS ;;;;;;;;;;;;;;;;;;;;;;
 ;;; It's probably best to leave these settings "as is"
@@ -124,19 +137,19 @@ develop_mode = {develop_mode="false"}
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 [directories]
-dir_cache         = "{dir_cache="%path_includes%/cache"}"
-dir_lib           = "{dir_lib="%path_includes%/lib"}"
-dir_backups       = "{dir_backups="%path_includes%/backups"}"
-dir_config        = "{dir_config="%path_includes%/config"}"
-dir_logs          = "{dir_logs="%path_includes%/logs"}"
-dir_user          = "{dir_user="%path_includes%/user"}"
+dir_cache         = "{$dir_cache|default:"%path_includes%/cache"}"
+dir_lib           = "{$dir_lib|default:"%path_includes%/lib"}"
+dir_backups       = "{$dir_backups|default:"%path_includes%/backups"}"
+dir_config        = "{$dir_config|default:"%path_includes%/config"}"
+dir_logs          = "{$dir_logs|default:"%path_includes%/logs"}"
+dir_user          = "{$dir_user|default:"%path_includes%/user"}"
 
-dir_dbcache       = "{dir_dbcache="%dir_cache%/db"}"
-dir_attachments   = "{dir_attachments="%dir_cache%/attachments"}"
+dir_dbcache       = "{$dir_dbcache|default:"%dir_cache%/db"}"
+dir_attachments   = "{$dir_attachments|default:"%dir_cache%/attachments"}"
 
-dir_classes       = "{dir_classes="%dir_lib%/classes"}"
-dir_templates     = "{dir_templates="%dir_lib%/templates"}"
-dir_helpers       = "{dir_helpers="%dir_lib%/helpers"}"
+dir_classes       = "{$dir_classes|default:"%dir_lib%/classes"}"
+dir_templates     = "{$dir_templates|default:"%dir_lib%/templates"}"
+dir_helpers       = "{$dir_helpers|default:"%dir_lib%/helpers"}"
 
 [login requirements]
 ; any directories or files entered here will be excluded from login requirements
@@ -147,11 +160,11 @@ dir_helpers       = "{dir_helpers="%dir_lib%/helpers"}"
 ;     actions/log.php     the log.php file located in subdirectory actions/
 ;     index.php           the index.php in the root zentrack folder
 ;
-excluded = "{excluded="help/,styles.php"}"
+excluded = "{$excluded|default:"help/,styles.php"}"
 
 ; any directories or files entered here will be added to login requirements
 ; this, of course, overrides the excluded directive, so that you can say:
 ;    excluded = "help/"
 ;    included = "help/special.php"
 ; (i.e. help/ directory doesn't require login, except the special.php page)
-included = "{included}"
+included = "{$included}"

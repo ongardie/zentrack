@@ -1,7 +1,7 @@
 <?{ /* -*- Mode: C; c-basic-indent: 2; indent-tabs-mode: nil -*- ex: set tabstop=2 expandtab: */ 
 
   /**
-   * Test the {class}.php class file and its methods
+   * Test the <<$class>>.php class file and its methods
    *
    * Requirements: Relies on config.php in the install/utilities/tests/ folder
    *
@@ -12,9 +12,9 @@
   include_once( realpath(dirname(__FILE__)."/../")."/phpunit_config.php");
 
   /**
-   * Test the {class}.php class methods
+   * Test the <<$class>>.php class methods
    *
-   * This test relies on the {class}Test.xml 
+   * This test relies on the <<$class>>Test.xml 
    * file to provide test data
    *
    * Essentially any node in the xml file which
@@ -25,11 +25,12 @@
    *
    * @package PHPUnit
    */
-  class {class}Test extends Test {
+  class <<$class>>Test extends Test {
 
     /** Constructor */
-    function {class}Test() {
-      //$this->obj = new {class}();
+    function <<$class>>Test() {
+      ZenUtils::prep("<<$class>>");
+      //$this->obj = new <<$class>>();
     }
 	
     /** 
@@ -40,7 +41,11 @@
     //  ..do something here..
     //}
 
-{list:methods:"    function "+value+"( $vals ) &#123;\n      Assert::equalsTrue(false, 'write me');\n&#125;\n\n"}
+  <<foreach item=item from=$methods>>
+    function <<$item>>( $vals ) {
+      Assert::equalsTrue(false, 'write me');
+    }
+  <</foreach>>
 
   }
 
