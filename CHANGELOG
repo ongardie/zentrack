@@ -7,6 +7,18 @@
 
 ----- V2.5 (in development) ----
 
+2004-08-11, cfalonso
+  Updated database scripts for release 2.5
+    - zentrack_2/install/UPGRADE_mssqlserver.sql
+    - zentrack_2/install/UPGRADE_mysql.sql
+    - zentrack_2/install/UPGRADE_oracle.sql
+    - zentrack_2/install/build_mssqlserver.sql
+    - zentrack_2/install/build_mysql.sql
+    - zentrack_2/install/build_oracle.sql
+    - zentrack_2/install/seed_mssqlserver.sql
+    - zentrack_2/install/seed_mysql.sql
+    - zentrack_2/install/seed_oracle.sql
+
 2004-08-09, cfalonso
   Default group for menu-type custom fields was not shown correctly. Fixed.
     - zentrack_2/includes/templates/editCustomsForm.php 1.5
