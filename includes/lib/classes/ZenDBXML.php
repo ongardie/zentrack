@@ -17,7 +17,7 @@ class ZenDBXML {
   function ZenDBXML( &$dbobject, $xmlfile, $devmode ) {
     $this->_dbobj =& $dbobject;
     $this->_dbtype = $this->_dbobj->getDbType();
-    $this->_dbTypeInfo = new DbTypeInfo( $dbobject );
+    $this->_dbTypeInfo = new ZenDbTypeInfo( $dbobject );
     $this->_schema = new ZenDbSchema( $xmlfile, false, $devmode );
   }
 
@@ -702,7 +702,7 @@ class ZenDBXML {
   /** @var ZenDatabase $_dbobj a db connection to use (also provides db type, specs, etc) */
   var $_dbobj;
 
-  /** @var DbTypeInfo $_dbc a DbTypeInfo* object specific to the database type */
+  /** @var ZenDbTypeInfo $_dbc meta info specific to the database type */
   var $_dbc;
 
   /** @var string $_dbtype is the database type in use */

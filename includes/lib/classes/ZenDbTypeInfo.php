@@ -8,14 +8,14 @@
  * @package DB
  *
  */
-class DbTypeInfo {
+class ZenDbTypeInfo {
 
   /**
    * CONSTRUCTOR - load correct db type info from xml
    *
    * @param ZenDatabase $dbo is the database connection
    */
-  function DbTypeInfo( &$dbo ) { 
+  function ZenDbTypeInfo( &$dbo ) { 
     $this->_dir = dirname(__FILE__);
     $this->_dbo =& $dbo;
     $t = $this->_dbo->getDbType();

@@ -93,7 +93,7 @@ class ZenDatabase extends Zen {
   /**
    * Returns the preferred case for table names used by this db
    *
-   * This should be expanded to use the DbTypeInfo object
+   * This should be expanded to use the ZenDbTypeInfo object
    */
   function getPreferredCase() {
     $dbi = $this->getDbTypeInfo();
@@ -101,12 +101,12 @@ class ZenDatabase extends Zen {
   }  
 
   /**
-   * Returns the DbTypeInfo associated with this database
-   * @return Object DbTypeInfo
+   * Returns the ZenDbTypeInfo associated with this database
+   * @return ZenDbTypeInfo
    */
   function getDbTypeInfo() {
     if( !$this->_dbTypeInfo ) {
-      $this->_dbTypeInfo = new DbTypeInfo( $this );
+      $this->_dbTypeInfo = new ZenDbTypeInfo( $this );
     }
     return $this->_dbTypeInfo;
   }
