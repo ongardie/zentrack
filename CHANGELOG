@@ -9,6 +9,9 @@
   Fixed bug with closing tickets caused by new
   object method implementation
     - includes/zenTrack.class v1.44
+  Fixed CVS images uploaded as ascii rather than binary
+    - www/images/cal.gif v1.3
+    - www/images/calendar/*
 	
 ----- V2.2.2 (2003-02-10) -----
 2003-02-09, Kato
