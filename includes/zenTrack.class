@@ -230,7 +230,29 @@ class zenTrack extends zen {
     */
 
    function get_notify_recipients( $ticket_id ) {
+      // Get an array of email addresses.
+      // Will need two queries here as some versions of mysql
+      // doesn't support JOINS and/or UNIONS as needed for this.
 
+      $query  = "SELECT u.email FROM ".$this->table_users." AS u, ";
+      $query .= $this->table_notify_list." AS nl WHERE ";
+      $query .= "u.user_id = nl.user_id AND nl.ticket_id = '";
+      $query .= $ticket_id."' ";
+
+      $rs = $this->db_query($query);  
+      if ( count($rs) > 0 ) {
+         foreach( $rs as $record ) { $list[] = $record[0]; }
+      }
+
+      $query  = "SELECT email FROM ".$this->table_notify_list." WHERE ";
+      $query .= "user_id IS NULL AND ticket_id = '".$ticket_id."' ";
+
+      $rs = $this->db_query($query);
+      if ( count($rs) ) {
+         foreach( $rs as $record ) { $list[] = $record[0]; }
+      }
+
+      return $list;
    }
 
    function get_notify_list( $ticket_id ) {
