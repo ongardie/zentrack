@@ -6,7 +6,10 @@
  endless possibilities for project expansion.
 
 ----- V2.4.2 (Development, See CVS) ----
-
+2003-05-23, William L. Terry
+  Updated priority sort for project tasks
+    - zentrack/includes/zenTrack.class 1.107
+ 
 2003-05-22, Rob Hillis
   Fix minor syntax error.
     - zentrack/www/actions/estimate.php 1.6
