@@ -10,7 +10,13 @@
 2003-05-25, Rob Hillis
   Removed apparent accidental commit to zenTrack.class
   and commit diffed language files.
-    - zentrack/includes/zenTrack.class 1.99
+    - zentrack/includes/zenTrack.class 1.108
+    - zentrack/includes/translations/english.trans 1.4
+    - zentrack/includes/translations/french.trans 1.4
+    - zentrack/includes/translations/german.trans 1.4
+    - zentrack/includes/translations/portuguese.trans 1.2
+    - zentrack/includes/translations/spanish.trans 1.4
+    - zentrack/includes/translations/swedish.trans 1.3
 
 2003-05-23, William L. Terry
   Updated priority sort for project tasks
