@@ -57,6 +57,7 @@ class ZenList extends Zen {
     $this->_data = null;
     $this->_position = -1;
     $this->_count = -1;
+    $this->_loadParms = array(0,0);
   }
 
   /**
@@ -155,13 +156,24 @@ class ZenList extends Zen {
    * @param integer $offset is the offset to use (i.e. start with 10 instead of 1)
    * @return integer the number matched
    */
-  function load($limit = 0, $offset = 0) { 
+  function load($limit = 0, $offset = 0) {
+    // do not load the list multiple times, unless the limit and offset
+    // have changed
+    if( $this->isLoaded() && ZenUtils::arrayEquals($this->_loadParms, array($limit,$offset)) ) {
+      return count($this->count());
+    }
+
+    // store the parms for use later
+    $this->_loadParms = array($limit,$offset);
+
     if( !$this->_table ) {
       $this->debug($this, "load", 
                    "The list has not been properly initialized (probably need to call loadAbstract)", 
                    161, LVL_ERROR);
       return false;
     }
+
+    // initialize our data query
     $query = Zen::getNewQuery();
     $query->table( $this->_table );
 
@@ -250,6 +262,15 @@ class ZenList extends Zen {
   }
 
   /**
+   * Returns a list of ids (in sorted order) contained in this list.
+   *
+   * Normally, you will simply want to use the hasNext() and next() methods.
+   *
+   * @return array contains (integer)id elements
+   */
+  function list() { return $this->_ids; }
+
+  /**
    * returns the number of items in the list
    */
   function count() { return $this->_count; }
@@ -308,6 +329,13 @@ class ZenList extends Zen {
     return $this->_table;
   }
 
+  /**
+   * Returns true if this list has been loaded and is ready for use
+   *
+   * @return boolean
+   */
+  function isLoaded() { return $this->_loaded; }
+
   
 
   /* VARIABLES */
@@ -338,6 +366,9 @@ class ZenList extends Zen {
 
   /** @var boolean $_loaded whether load() has been called */
   var $_loaded = false;
+
+  /** @var array $_loadParms [0]-limit, [1]-offset; stored for determining if loaded data needs recalculation */
+  var $_loadParms;
 
   /** @var ZenMetaTable $_metaTable the ZenMetaTable object provided by the extending class */
   var $_metaTable;

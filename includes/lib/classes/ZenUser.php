@@ -35,32 +35,81 @@ class ZenUser extends ZenDataType {
   }
 
   /**
-   * Load a ZenUser by their unique login
+   * STATIC: Load a ZenUser by their unique login
    *
    * @param string $login the users login name
-   * @return boolean login found, record loaded
+   * @return ZenUser or null (if login wasn't found)
    */
-  function loadFromLogin( $login ) { }
+  function loadFromLogin( $login ) {
+    // create search parms based
+    // on the user's login (which is unique)
+    $parms = new ZenSearchParms();
+    $parms->match('login', ZEN_EQ, $login);
+
+    // load the user into a list
+    // using the search parms
+    $list = new ZenList();
+    $list->load_abstract('ZenUser');
+    $list->criteria($parms);
+    $list->load();
+
+    // return the ZenUser object (there
+    // will only be zero or one items in
+    // this list, since the login is
+    // unique)
+    return $list->next();
+  }
 
   /**
    * Checks user access for specified bin and action
    * 
-   * this is done by using getting a ZenAccess object
-   * (on demand) based on a user group and user_id
-   * then checking this object for the appropriate access
+   * The user is considered to have access to the specified
+   * bin and action if any of the user's roles are
+   * allowed to access that action.
    *
    * @param integer $bin_id the bin to access
    * @param integer $action_id the action to perform
    * @return boolean has access requested
    */
-  function checkAccess( $bin_id, $action_id ) { }
+  function checkAccess( $bin_id, $action_id ) { 
+    $roles = $this->getRoles();
+    $roles->reset();
+    while( $roles->hasNext() ) {
+      $role = $roles->next();
+      if( $role->checkAccess($bin_id, $action_id) ) {
+        // if any of the user's roles are allowed
+        // to access the requested priviledge, then
+        // the result is true
+        return true;
+      }
+    }
+    // none of the user's roles can access this priviledge
+    return false;
+  }
 
   /**
    * Get roles
    *
    * @return ZenRoleList for this user
    */
-  function getRoles() { }
+  function getRoles() { 
+    if( !isset($this->_roles) ) {
+      // query the user_roles table to determine
+      // which roles this user has
+      $query = Zen::getNewQuery();
+      $query->table('USER_ROLES');
+      $query->match('user_id', $this->id());
+      $query->field('role_id');
+      $ids = $query->list(Zen::getCacheTime(), false);
+      
+      // create a role list using the ids we queried
+      $this->_roles = new ZenList();
+      $this->_roles->loadAbstract('ZenUser');
+      $this->_roles->criteriaIdArray($ids);
+      $this->_roles->load();
+    }
+    return $this->_roles;
+  }
 
   /**
    * Return the full name of the user, formatted for display
