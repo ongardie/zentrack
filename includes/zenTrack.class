@@ -2082,10 +2082,12 @@ class zenTrack extends zen {
     $this->addDebug("fetch_bin_roles","result: ".count($vals)
                     .", query: $query",3);
                     
-    if (count($vals) == 0 && $role["default"]) {
+    if (count($vals) == 0) {
        // return the default for the requested role, if set
        
-       $vals = array($this->getRoleDefault($role));
+       $default = $this->getRoleDefault($role);
+       
+       $vals = ($default) : "" ? array($this->getRoleDefault($role));
     }
     
     return( $vals );

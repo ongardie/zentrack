@@ -9,7 +9,7 @@
 
 2003-05-09, Rob Hillis
   Fix returning of default tester
-    - zentrack/includes/zenTrack.class 1.102
+    - zentrack/includes/zenTrack.class 1.102/1.103
   Added default tester and manager for bins without these roles set.
     - zentrack/install/header.php.default 1.9
     - zentrack/includes/zenTrack.class 1.101
