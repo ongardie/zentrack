@@ -7,6 +7,20 @@
 
 ----- V2.4 (development, see CVS) ----
 
+2003-04-15, Kato
+  Added two new egate utilities to allow for simpler email ingestion
+    - zentrack/includes/egate_check_create.php 1.1
+    - zentrack/includes/egate_create.php 1.1
+  Enhanced some egate features, corrected some inconsistencies
+    - zentrack/includes/egate_utils.php 1.23
+    - zentrack/includes/zenTrack.class 1.89
+    - zentrack/install/egate_config.php.default 1.10
+  Corrected an email address in seed files
+    - zentrack/install/seed_mssqlserver.sql 1.7
+    - zentrack/install/seed_mysql.sql 1.17
+    - zentrack/install/seed_oracle.sql 1.14
+    - zentrack/install/seed_postgres.sql 1.13  
+
 2003-04-15, Rob Hillis
   Clean up Help subsystem, removed dead links and added link to forum on support page.
    - zentrack/includes/leftHelp.php

@@ -31,6 +31,7 @@
 
   // the user account that will be used to control
   // permissions while using the egate interface
+  // this should match the login name entered in the zentrack users
   // (provide the login name here, the password is not needed)
   $egate_account = "egate";
   

@@ -1271,7 +1271,7 @@
     // retrieve the contents from the body
     // of the email
     $body = parse_message_body($params->body);
-    list($name,$email) = parse_name_and_email($params);
+    list($name,$email) = get_name_and_email($params);
 
     // don't process tickets with no return address
     if( !$email ) {
