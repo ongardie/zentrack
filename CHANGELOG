@@ -5,6 +5,13 @@
  object oriented and database abstracted design lend to 
  endless possibilities for project expansion.
 
+----- V2.4 (development, see CVS) ----
+
+2003-03-12, MLively
+  Created Translation Engine 
+    - includes/tranlator.class 1.1
+    - includes/headerInc.php 1.20
+
 ----- V2.3 (development, see CVS) ----
 
 2003-03-11, Kato
