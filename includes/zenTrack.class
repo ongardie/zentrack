@@ -4009,7 +4009,7 @@ class zenTrack extends zen {
         $vals = array();
         for($i=0; $i<count($users); $i++) {
           $u = $users[$i];
-          $vals["{$u['user_id']}"] = $this->formatName($u);
+          $vals["{$u['user_id']}"] = $this->formatName($u,1);
         }
         break;
       case "id":
