@@ -1,11 +1,24 @@
 
- zenTrack is a top quality, simple, and elegant
- tracking system for small to medium-large companies.
- Clean, simple interface, fully adaptable administration,
- object oriented and database abstracted design lend to 
- endless possibilities for project expansion. 
+-------------------
+Project Description
+-------------------
+zenTrack is a highly configurable tracking system based 
+on a flexible and high quality code base designed for small 
+to medium-large businesses.
+ 
+It features a simple interface, fully adaptable administration
+and user experience, internationalization, platform and database 
+abstraction, and endless possibilities for project expansion. 
+--------------------
 
------ V2.5.0(2004-10-12) -----
+----- VERSION 2.5.0.1(2004-10-14) -----
+
+2004-10-14, Kato
+  Fixed problem on new ticket screen where "1(invalid)" [others similar] appears
+  in custom_menuX fields.
+    - zentrack_2/includes/templates/newTicketForm.php 1.34
+
+----- VERSION 2.5.0(2004-10-12) -----
 
 2004-10-12, Kato
   Cleaned up add contact pages
