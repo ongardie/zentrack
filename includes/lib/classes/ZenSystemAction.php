@@ -21,6 +21,74 @@ class ZenSystemAction extends Zen {
   }
 
   /**
+   * Create data type
+   */
+  
+  //todo
+
+  /**
+   * Edit data type
+   */
+  
+  //todo
+
+  /**
+   * Delete data type
+   */
+
+  //todo
+
+  /**
+   * Move ticket
+   */
+
+  //todo
+
+  /**
+   * Assign ticket
+   */
+
+  //todo
+
+  /**
+   * Send Notification
+   */
+  
+  //todo
+
+  /**
+   * Change ticket status
+   */
+
+  //todo
+
+  /**
+   * Create log entry
+   */
+
+  //todo
+
+  /**
+   * Get actions
+   */
+  
+  //todo
+
+  /**
+   * Get Notify List
+   */
+  
+  //todo
+
+  /**
+   * Get triggers
+   *
+   * @access private
+   */
+  
+  //todo
+
+  /**
    * Edit the values of a row of data in the database.
    *
    * @access private
@@ -30,7 +98,7 @@ class ZenSystemAction extends Zen {
    * @param String $keyname defines field used to identify row(must have a unique value), defaults to the primary key for this table
    * @return boolean true if row edited successfully
    */
-  function editData( $vals, $table, $id, $keyname = null ) {
+  function _editData( $vals, $table, $id, $keyname = null ) {
     // set the row id
     if( $keyname == null ) {
       $keyname = $this->_dbo->getPrimaryKey($table);      
@@ -96,22 +164,47 @@ class ZenSystemAction extends Zen {
   function runAction( $action_id, $args = null ) { }
 
   /**
+   * Runs a helper script
+   *
+   * @param string $name name of helper.. it will translate to lib/helpers/action_$name.php
+   * @param array $args contains (String)argument values to be passed to helper
+   * @return mixed value returned by helper
+   */
+  function runHelper( $name, $args ) {
+    return ZenUtils::runHelper("action_$name", $args);
+  }
+
+  /**
    * Returns a value from somewhere in the server scope
    *
    * If no scope is provided, then this method searches the following
-   * locations, in order: _SESSION, _GLOBALS, _SERVER, _ENV, HTTP_VARS
+   * locations, in order: _SESSION, _GLOBALS
    *
    * @param string $name name of variable to return
-   * @param string $scope the scope to look in: session, globals, db, or ini
+   * @param string $key if the variable is an array $key can be an index in that array 
    * @return mixed value of variable or null if not found
    */
-  function getScope( $name, $scope = null ) {
-    if( isset($_SESSION) && isset($_SESSION[$name]) ) { return $_SESSION[$name]; }
-    if( isset($GLOBALS) && isset($GLOBALS[$name]) ) { return $GLOBALS[$name]; }
-    if( isset($_SERVER) && isset($_SERVER[$name]) ) { return $_SERVER[$name]; }
-    if( isset($_ENV) && isset($_ENV[$name]) ) { return $_ENV[$name]; }
-    if( isset($HTTP_VARS) && isset($HTTP_VARS[$name]) ) { return $HTTP_VARS[$name]; }
-    return null;
+  function getScope( $name, $key = null ) {
+    $val = null;
+    if( isset($_SESSION) && isset($_SESSION[$name]) ) { $val = $_SESSION[$name]; }
+    else if( isset($GLOBALS) && isset($GLOBALS[$name]) ) { $val = $GLOBALS[$name]; }
+    return $key && is_array($val)? $val[$key] : $val;
+  }
+
+  /**
+   * Returns a value from the environment settings, searching
+   * the following locations, in order: _SERVER, _ENV, HTTP_VARS
+   *
+   * @param string $name name of variable
+   * @param string $key if the variable is an array $key can be an index in that array 
+   * @return mixed value of variable or null if not found
+   */
+  function getEnv( $name, $key = null ) {
+    $val = null;
+    if( isset($_SERVER) && isset($_SERVER[$name]) ) { $val = $_SERVER[$name]; }
+    else if( isset($_ENV) && isset($_ENV[$name]) ) { $val = $_ENV[$name]; }
+    else if( isset($HTTP_VARS) && isset($HTTP_VARS[$name]) ) { $val = $HTTP_VARS[$name]; }
+    return $key && is_array($val)? $val[$key] : $val;
   }
 
   /**
@@ -140,16 +233,46 @@ class ZenSystemAction extends Zen {
    * Returns a value from somewhere in the page request scope.  The following
    * locations are searched, in order:
    *
-   * _POST, _GET, _GLOBALS
+   * _POST, _GET
    *
    * @param string $name name of variable to return
    * @return value of variable or null if not found
    */
-  function getValue( $name ) { 
+  function getFormValue( $name ) { 
     if( isset($_POST) && isset($_POST[$name]) ) { return $_POST[$name]; }
     if( isset($_GET) && isset($_GET[$name]) ) { return $_GET[$name]; }
-    if( isset($GLOBALS) && isset($GLOBALS[$name]) ) { return $GLOBALS[$name]; }
     return null;
+  }
+
+  /**
+   * Returns a date/time value
+   *
+   * @param string $date any format, even +1 day, -2 weeks, etc (see http://php.net/strtotime for more details)
+   * @return integer date format for use in db
+   */
+  function getTime( $date ) {
+    $euroDate = Zen::getSetting('dates','use_euro_date');
+    return ZenUtils::parseDate($format);
+  }
+  
+  /**
+   * Returns date string formatted for display (according to user preferences and db settings)
+   *
+   * @param string $date any format, even +1 day, -2 weeks, etc (see http://php.net/strtotime for more details)
+   * @return string $date formatted for display
+   */
+  function getDateString($date) {
+    return Zen::showDate(ZenSystemAction::getDateTime($date));
+  }
+
+  /**
+   * Returns date/time string formatted for display (according to user preferences and db settings)
+   *
+   * @param string $date any format, even +1 day, -2 weeks, etc (see http://php.net/strtotime for more details)
+   * @return string $date formatted for display
+   */
+  function getDateTimeString($date) {
+    return Zen::showDateTime(ZenSystemAction::getDateTime($date));
   }
 
   /** 

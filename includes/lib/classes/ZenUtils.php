@@ -299,7 +299,7 @@ class ZenUtils {
    * @param string $date is the date string to parse
    * @return integer unix timestamp representative of date or false if date was invalid
    */
-  function parseDate( $date, $eurodates = false ) { 
+  function parseDate( $date, $eurodates = false ) {
     // clean
     $date = trim($date);
 
