@@ -2,114 +2,285 @@
 
 /** @package zen */
 
+/** 
+ * Manages information concerning a database connection. Currently this class wraps the ADODB 
+ * library.
+ *
+ * @package Zen
+ * @author Mike Lively <mike@digitalsandwich.com>
+ * @version 1.0
+ */
 class ZenDatabase extends Zen {
 
   /**
-   * CONSTRUCTOR
+   * Creates a new ZenDatabase object.
    *
-   * sets up adodb, and database params
+   * Sets up adodb, and database params. Also connects to the database
    *
+   * @access public
+   * @since 1.0
    * @param string $dbtype database type
    * @param string $dbhost database host (might be blank or localhost)
-   * @param string $dbinst database instance to connect to
    * @param string $dbuser database username
    * @param string $dbpass database password
+   * @param string $dbinst database instance to connect to
    */
-  function ZenDatabase( $dbtype, $dbhost, $dbinst, $dbuser, $dbpass ) { }
-
+  function ZenDatabase( $dbtype, $dbhost, $dbuser, $dbpass, $dbinst ) {
+    $this->_dbtype = $dbtype;
+    $this->_dbhost = $dbhost;
+    $this->_dbinst = $dbinst;
+    $this->_dbuser = $dbuser;
+    $this->_dbpass = $dbpass;
+	ZenDatabase::_getDbConnection();
+  }
+  
   /**
-   * returns a query object that the user can
-   * manipulate and execute
+   * Sets the Cache directory.
    *
-   * @return ZenQuery the query object
+   * @access public
+   * @since 1.0
+   * @param string $directory The directory where cache files will be stored.
    */
-  function newQuery() {
-    return new ZenQuery($this);
+  function setCacheDirectory($directory) {
+  	$GLOBALS['ADODB_CACHE_DIR'] = $directory;
   }
 
   /**
-   * executes a query and returns a result count, id, or boolean
+   * Returns a new query object that the user can manipulate and execute. 
    *
-   * @param ZenQuery $queryObject the query object to be executed
-   * @return mixed array for select, id from insert, count from results, etc 
+   * This function automatically binds the current database to the query.
+   *
+   * @access public
+   * @since 1.0
+   * @return ZenQuery
    */
-  function executeQuery( $queryObject ) { }
+  function newQuery() {
+  	$query = new ZenQuery($this);
+    return $query;
+  }
 
   /**
-   * connects to a database
+   * Executes a query.
    *
-   * @return boolean connection was successful
+   * Returns the query result.
+   *
+   * @access public
+   * @since 1.0
+   * @param string $query the query object to be executed
+   * @param mixed $cacheTime The amount of time in seconds to cache the query. Set to 0 to not cache it. Set to boolean false if you want to ignore caching altogether.
+   * @return resource
    */
-  function connect() { }
+  function execute( $query, $cacheTime = 0 ) {
+  	if ($cacheTime === false) {
+      $result = &$this->_adodb->Execute($query);
+	}
+	else {
+	  $result = &$this->_adodb->cacheExecute($cacheTime, $query);
+	}
+	if (!$result) {
+	  $this->debug($this, 'execute', "There was an error in the query ($query): " . $this->_adodb->ErrorMsg(), 1);
+	  return false;
+	}
+	return $result;
+  }
+
+  /**
+   * Sets whether an associative or numericaly indexed array is returned.
+   *
+   * @access public
+   * @since 1.0
+   * @param boolean $indexed whether results are returned in an associative (true) or plain array (false)
+   */
+  function setFetchMode( $indexed = false ) {
+    if ($indexed) {
+	  $this->_adodb->SetFetchMode(ADODB_FETCH_ASSOC);
+	}
+	else {
+	  $this->_adodb->SetFetchMode(ADODB_FETCH_NUM);
+	}
+  }
+
+  /**
+   * Executes a query and returns a the first column from the first row.
+   *
+   * @access public
+   * @since 1.0
+   * @param string $query the query object to be executed
+   * @param int $cacheTime The amount of time in seconds to cache the query. Set to 0 to not cache it.
+   * @return string
+   */
+  function executeGetOne( $query, $cacheTime = 0) {
+    $result = $this->_adodb->cacheGetOne($cacheTime, $query);
+	if (!$result) {
+	  $this->debug($this, 'execute', "There was an error in the query ($query): " . $this->_adodb->ErrorMsg(), 1);
+	  return;
+	}
+	return $result;
+  }
+
+  /**
+   * Insert or replace a single record. 
+   *
+   * Returns an integer. This value is set to 0 when the query fails, 1 when an update is performed, 
+   * and 2 when an insert is performed.
+   *
+   * @access public
+   * @since 1.0
+   * @param string $table table name
+   * @param array $fieldArray associative array of data (you must quote strings yourself).
+   * @param mixed $keyCol the primary key field name or if compound key, array of field names
+   * @return int
+   */
+  function replace($table, $arrFields, $keyCols) {
+    $result = $this->_adodb->Replace($table, $arrFields, $keyCols, true);
+	if (!$result) {
+		$this->debug($this, 'replace', $this->_adodb->ErrorMsg(), 1);
+	}
+	return $result;
+  }
+
+  /**
+   * Quotes a string for insertion into db, escaping needed characters. The quoted string is returned.
+   *
+   * This method wraps the quoting method derived by the adodb library.
+   *
+   * @access public
+   * @since 1.0
+   * @param mixed $text the text to quote, arrays converted to ('...','...',etc.)
+   * @return string
+   */
+  function quote( $text ) {
+    if (is_array($text)) {
+	  $quotedText = array();
+	  foreach ($text as $name => $value) {
+	    $quotedText[$name] = $this->_adodb->qstr($value);
+	  }
+	  return $quotedText;
+	}
+	else {
+	  return $this->_adodb->qstr($text);
+	}
+  }
+
+  /**
+   * Returns the number of affected rows
+   *
+   * @access public
+   * @since 1.0
+   * @return int
+   */
+  function affectedRows() {
+    return $this->_adodb->Affected_Rows();
+  }
+  
+  /**
+   * Generates an ID to use in inserting the next record into a specified table. Returns the 
+   * generated ID.
+   *
+   * @access public
+   * @since 1.0
+   * @param string $table The table to generate the ID for.
+   * @return int
+   */
+  function generateID($table) {
+    return $this->_adodb->GenID($table);
+  }
 
   /* UTILITIES */
 
   /**
-   * returns an incremental insert id for use as primary table keys
+   * Connects to a database.
    *
-   * @param string $table the table name the key will be used for
-   * @return integer key: this is guaranteed to be unique
+   * Returns true if the connection was successful, false otherwise.
+   *
+   * @access private
+   * @since 1.0
+   * @return boolean
    */
-  function _insertID( $table ) { }
+  function _connect() {
+	if (!$this->_adodb->PConnect($this->_dbhost, $this->_dbuser, $this->_dbpass, $this->_dbinst)) {
+		$this->debug($this, "connect", $this->_adodb->ErrorMsg(), 1);
+		return false;
+	}
+	return true;
+  }
 
   /**
-   * quotes a string for insertion into db, escaping needed characters
+   * Returns a db connection / database object
    *
-   * this method can deal with nulls, blank strings, dates, and integer values
+   * THIS SHOULD BE STATIC, only one db connection is necessary. The only way
+   * this function should be called is as follows:
+   * ZenDatabase::getDbConnection();
    *
-   * @param mixed $text the text to quote, arrays converted to ('...','...',etc.)
+   * @access private
+   * @since 1.0
+   * @return object ADOConnection
    */
-  function _quote( $text ) { }
-
-  /**
-   * creates a where clause based on the given parameters
-   *
-   * @param ZenQuery $queryObject
-   */
-  function _whereClause( $queryObject ) { }
-
-  /**
-   * creates an order by clause based on the given parameters
-   *
-   * @param ZenQuery $queryObject
-   */
-  function _sortClause( $queryObject ) { }
-
-  /**
-   * creates an insert clause based on the given parameters
-   *
-   * @param ZenQuery $queryObject
-   */
-  function _insertClause( $queryObject ) { }
-
-  /**
-   * creates an update clause based on the given parameters
-   *
-   * @param ZenQuery $queryObject
-   */
-  function _updateClause( $queryObject ) { }
-
-  /**
-   * initializes adodb connection
-   */
-  function _initAdodb() { }
-
+  function _getDbConnection() {
+  	static $dbConnection;
+	if (!isset($dbConnection)) {
+		$dbConnection = ADONewConnection($this->_dbtype);
+	}
+	$this->_adodb = $dbConnection;
+	$this->_connect();
+	return ($dbConnection);
+  }
+  
   /* VARIABLES */
 
-  /** @var string $_dbtype the database type */
+  /**
+   * The type of database to use.
+   *
+   * @var string
+   * @access private
+   * @since 1.0
+   */
+  var $_dbtype;
 
-  /** @var string $_dbhost the database host */
+  /**
+   * The hostname of the database to use.
+   *
+   * @var string
+   * @access private
+   * @since 1.0
+   */
+  var $_dbhost;
 
-  /** @var string $_dbinst the database instance */
+  /**
+   * The name of the database to use.
+   *
+   * @var string
+   * @access private
+   * @since 1.0
+   */
+  var $_dbinst;
 
-  /** @var string $_dbuser the database username */
+  /**
+   * The username to use in authenticating with the database.
+   *
+   * @var string
+   * @access private
+   * @since 1.0
+   */
+  var $_dbuser;
 
-  /** @var string $_dbpass the database password */
+  /**
+   * The password to use in authenticating with the database.
+   *
+   * @var string
+   * @access private
+   * @since 1.0
+   */
+  var $_dbpass;
 
-  /** @var string $_dbo the db specific object */
-
-  /** @var string $_adodb the adodb object */
-
+  /**
+   * The ADODB object that is managing the database.
+   *
+   * @var object ADOConnection
+   * @access private
+   * @since 1.0
+   */
+  var $_adodb;
 }
 
 ?>
