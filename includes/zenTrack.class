@@ -37,7 +37,7 @@ class zenTrack extends zen {
     //  ( ["bin_id"] = $bin_level )
     
     $query = "SELECT * FROM ".$this->table_access." WHERE user_id = $user_id ";
-    if( !$widthnull ) { $query .= " AND lvl is not null"; }
+    if( !$withnull ) { $query .= " AND lvl is not null"; }
     $this->addDebug("get_access()Query",$query,3);
     $vars = $this->db_queryIndexed($query);
     if( $flag ) {
@@ -2409,7 +2409,9 @@ class zenTrack extends zen {
 	$message = (get_magic_quotes_gpc())? $message : addslashes($message);
       }
       $subject = (get_magic_quotes_gpc())? $subject : addslashes($subject);
-      $headers = str_replace("\n", "\r\n", $headers);
+      if (strtoupper(substr(PHP_OS, 0, 3)) == 'WIN') {
+        $headers = str_replace("\n", "\r\n", $headers);
+      }
       $this->addDebug("sendEmail","$recipient_address::$subject::$headers",3);
       return( mail( $recipient_address, $subject, $message, $headers ) );
     } else {
