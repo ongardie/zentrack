@@ -256,15 +256,40 @@ class zenTrack extends zen {
    }
 
    function get_notify_list( $ticket_id ) {
+      $query  = "SELECT * FROM ".$this->table_notify_list." WHERE ";
+      $query .= "ticket_id = '".$ticket_id."' ";
 
+      return $this->db_query($query);
    }
 
    function set_notify_list( $ticket_id, $list ) {
+      // Do a $this->drop_notify_list($ticket_id)
+      // first and then loop through the $list doing INSERTS.
+      $this->drop_notify_list($ticket_id); 
 
+      // Determine if $list[i] is an array or element.
+      // If it is an element then $list[i] is a user_id, if an array
+      // then $list[i][0] is the name and $list[i][1] is the email.
+      foreach ( $list as $item ) {
+         if ( count($item) > 1 ) {
+           // Array
+           $where  = "(ticket_id, name, email) VALUES ('".$ticket_id."', '";
+           $where .= $item[0]."', '".$item[1]."') ";
+         } else {
+           // User ID
+           $where  = "(ticket_id, user_id) VALUES ('".$ticket_id."', '";
+           $where .= $item."' )";
+         }
+         $q  = "INSERT INTO ".$this->table_notify_list." ".$where;
+         $this->db_result($q);
+      }
    }
 
    function drop_notify_list( $ticket_id ) {
-
+      // Do a DELETE FROM ZENTRACK_NOTIFY_LIST WHERE ticket_id = $ticket_id
+      $q  = "DELETE FROM ".$this->table_notify_list." WHERE ticket_id = '";
+      $q .= $ticket_id."' ";
+      $this->db_result($q);
    }
 
    function delete_ticket( $ticket_id ) {
