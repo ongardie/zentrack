@@ -810,13 +810,12 @@ class zenTrack extends zen {
   }
 
 
-
   /**
-   * Return an array with the fields that can be used in behaviors
+   * Return an array with all the non-custom fields that can be used in behaviors
    *
    * @return array mapped translated_field_label -> field_name sorted by key
    */
-  function getBehaviorDestinationFieldsArray() {
+  function getStdBehaviorFieldsArray() {
     $field_list=array(
                tr("Title") => "title",
                tr("Priority") => "priority",
@@ -835,6 +834,18 @@ class zenTrack extends zen {
                tr("Estimated Hours") => "est_hours",
                tr("Deadline") => "deadline",
                tr("Start Date") => "start_date");
+    ksort($field_list);
+    return($field_list);
+  }
+
+
+  /**
+   * Return an array with the fields that can be used in behaviors
+   *
+   * @return array mapped translated_field_label -> field_name sorted by key
+   */
+  function getBehaviorDestinationFieldsArray() {
+    $field_list=$this->getStdBehaviorFieldsArray();
     $custom=$this->getCustomFields(1);
     foreach($custom as $k => $v) {
       $field_list["{$v}"]=$k;

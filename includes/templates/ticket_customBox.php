@@ -15,11 +15,16 @@ if( $TODO == 'SAVED' ) {
 ?>
   <table width="600" align="center" cellpadding="2" cellspacing="2">
 <?
+  $sfd=$zen->getBehaviorDestinationFieldsArray();
   $cfd=$zen->getCustomFields(0,$page_type,"C");
   $rc = 0;
   if( $editMode ) { 
     foreach($cfd as $f) {
       $k = $f['field_name'];
+      $l = $f['field_label'];
+      if ( isset($sfd["$l"]) ) {
+        unset($sfd["$l"]);
+      }
       $v = $varfields["$k"];
       if( $v == 'NULL' ) { $v = ''; }
 ?>
@@ -30,7 +35,26 @@ if( $TODO == 'SAVED' ) {
     </td>
   </tr>
 <?   
-     }
+    }
+    foreach($sfd as $k=>$f) {
+      $v = isset($ticket["$f"])? $ticket["$f"] : ( isset($varfields["$f"]) ? $varfields["$f"] : NULL );
+      if( $v == 'NULL' ) { $v = ''; }
+      //If it is a date field it has to be formatted
+      switch ($f) {
+        case "ctime":
+        case "deadline":
+        case "otime":
+        case "start_date":
+          if( $v == 0 ) { $v = ""; }
+          if( strlen($v) && preg_match("/^[0-9]+$/", $v) ) {
+            $v = $zen->showDateTime($v);
+          }
+          break;
+      }
+?>
+         <input type="hidden" name="<?=$f?>" value="<?=strip_tags($v)?>">
+<?
+    }
   } 
   else {
     foreach($cfd as $f) {
