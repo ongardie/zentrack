@@ -8,6 +8,11 @@
   // use the absolute path (not the url)
   // to the www/header.php file
   $header_file_location = "/path/to/zentrack/www/header.php";
+
+  // the user account that will be used to control
+  // permissions while using the egate interface
+  // (provide the login name here, the password is not needed)
+  $egate_account = "EgateUser";
   
   /*
   **  IF USING THE PIPE TO EGATE OPTION, you are done

@@ -50,7 +50,7 @@
   */
 
   include_once("$libDir/zenTrack.class");
-  $zen = new zenTrack( $configFile, $login_id );
+  $zen = new zenTrack( $configFile );
 
   /*
   **  SOME FUNCTIONS FOR USE IN

@@ -2532,7 +2532,7 @@ class zenTrack extends zen {
     if( !$flag ) {
       $query = "SELECT sid, name FROM ".$this->table_systems;
       if( $active )
-	$query .= " WHERE active = $active";
+	$query .= " WHERE active = $active ORDER BY priority DESC, name";
       $vars = $this->db_query($query);
       if( is_array($vars) ) {
 	foreach($vars as $v) {
@@ -2633,7 +2633,7 @@ class zenTrack extends zen {
     if( !$flag ) {
       $query = "SELECT type_id,name FROM ".$this->table_types;
       if( $active )
-	$query .= " WHERE active = $active";
+	$query .= " WHERE active = $active ORDER BY priority DESC, name";
       $vars = $this->db_query($query);
       if( is_array($vars) ) {
 	foreach($vars as $v) {
@@ -2767,7 +2767,7 @@ class zenTrack extends zen {
    */
    
    
-  function zenTrack( $file, $user = '', $language = '' ) {
+  function zenTrack( $file, $language = '' ) {
     // $file is the configuration file
     // containing all of the settings for
     // zenTrack to use during operation
@@ -2797,19 +2797,16 @@ class zenTrack extends zen {
     $this->priorities  = $this->getPriorities();
     $this->tasks       = $this->getTasks();
 
+    // set the date formatting
     $this->date_fmt_long  = $this->settings["date_fmt_long"];
     $this->date_fmt_short = $this->settings["date_fmt_short"];
     $this->time_fmt       = $this->settings["date_fmt_time"];
     $this->elapsed_unit   = $this->settings["time_elapsed_unit"];
     $this->date_and_time  = $this->date_fmt_short." ".$this->time_fmt;
-    $this->language       = $this->settings["language_default"];
-
-    if( $user ) {
-      $this->user = $this->get_user($user_id);
-      $this->access = $this->get_access($user_id);
-    }
-    if( $language )
-      $this->language = $language;
+    
+    // set language params
+    $this->language       = ($language)? $language : $this->settings["language_default"];
+    
   }
    
   
