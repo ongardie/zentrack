@@ -7,6 +7,16 @@
 
 ----- V2.5 LIVE (in testing) -----
 
+----- V2.5 RC3 [Pre 3] (2004-09-10) -----
+
+2004-09-09, Kato
+  Fixed url bug with the contact tab on ticket page
+  (selecting a group refreshed to broken url in some instanced)
+  Added link to create contact if none exist in the ticket tab
+  
+  Fixed up 'Report A Bug' - changed email addy to bugs@zentrack.net
+  and created an alternate method to send via email if needed.
+
 ----- V2.5 RC2 [Pre 2] (2004-09-08) -----
 
 2004-09-09, Kato

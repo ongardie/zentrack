@@ -20,7 +20,7 @@
       $Debug_Overview = 1.  This will produce some debugging output
       at the base of the page.
     
-    <p><b>2. Click on Bug Button</b>:  Inside the new debugging output
+    <p><b>2. Click on 'Report a Bug' Button</b>:  Inside the new debugging output
     you will see a button to report a bug.  Click this button and
     submit the form with your comments.
     

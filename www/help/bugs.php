@@ -29,7 +29,7 @@
         .$_SERVER['HTTP_REFERER']."\n";
      $headers = "From: bot@zentrack.net\nReply-To: ".stripslashes($email)."\n";
      
-     $res = mail('feedback@zentrack.net', "Bug report from ".stripslashes($name),
+     $res = mail('bugs@zentrack.net', "Bug report from ".stripslashes($name),
                  $fullMessage, $headers);
      if( $res ) {
        $msg = "Your message was delivered: <pre>$fullMessage</pre>";

@@ -1,5 +1,5 @@
 
-UPGRADE INSTRUCTIONS FOR 2.5 RC2
+UPGRADE INSTRUCTIONS FOR 2.5 RC3
 
 THIS IS A RELEASE CANDIDATE!!
     This release probably contains bugs.  If you are not interested
@@ -18,8 +18,8 @@ REQUIREMENTS
     GD: [optional] 2.0 or higher needed to use reports
     Freetype libraray required to view reports
 
-UPGRADE FROM 2.5 RC1
- 
+UPGRADE FORM 2.5 RC2
+
   Be sure to BACKUP CONFIG FILES:
       www/header.php
       includes/egate_config.php
@@ -29,7 +29,14 @@ UPGRADE FROM 2.5 RC1
   www/ should overwrite your existing www/
 
   You do not have to update your database structure to
-  upgrade from 2.5 RC1 to 2.5 RC2.  
+  upgrade from 2.5 RC1 to 2.5 RC2.
+
+  You must update header.php manually, you may not copy over your old
+  header.php file.
+  
+UPGRADE FROM 2.5 RC1
+
+  Follow instructions for RC2
 
 UPGRADE FROM 2.4.4
 
@@ -50,6 +57,9 @@ UPGRADE FROM 2.4.4
   Run the sql file install/UPGRADE_[yourdb].sql file to upgrade structure
   from 2.4.3 to 2.4.5 (there are no sql changes for version 2.4.4)
 
+  You must update header.php manually, you may not copy over your old
+  header.php file.
+  
 UPGRADE FROM 2.4.3
   
   Follow install instructions for 2.4.4

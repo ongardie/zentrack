@@ -22,9 +22,59 @@ if(isset($create_time)) { ?>
   
 <tr>
   <td colspan="2" class="subTitle">
-    <?=tr("Details")?>
+    <?=tr("Info")?>
   </td>
 </tr>
+
+<?
+
+	$company = $zen->get_contact_all();
+  if( isset($cid) ) {
+    $cid = $zen->checkNum($cid); 
+  }
+  if ( $cid ) {
+    foreach($company as $c) {
+      if( $c['company_id'] == $cid ) {
+			   $cn = $c['office']?
+            strtoupper($c['title'])." ,".$c['office'] : strtoupper($c['title']);
+         break;
+      }
+    }
+    if( !$cn ) { $cn = $cid." (untitled company) "; }
+?>
+  <tr>
+  <td class='bars'>
+    <?=tr("Company")?>:  
+	  <input type="hidden" name="company_id" value="<?=strip_tags($cid)?>">
+  </td>
+  <td class='bars'><?=$cn?></td>
+  </tr>
+<?
+	} else {
+	if (is_array($company)) {
+	?>
+		<tr>
+  	<td class="bars">
+    <?=tr("Company")?>:
+  	</td>
+  	<td class="bars">
+		<select name="company_id">
+  	<option value=''>--<?=tr("none")?>--</option>
+		<?
+		foreach($company as $p) {
+			$sel = ($p["company_id"] == $company_id)? " selected" : "";
+			$val =($p['office'])?strtoupper($p[title])." ,".$p[office]:strtoupper($p[title]);
+	  	print "<option value='$p[company_id]' $sel>".$val."</option>\n";
+		}
+	?>
+	</select>
+	</td>
+	</tr>
+	<?
+	}
+}
+
+?> 
 
 <tr>
   <td class="bars">
@@ -107,39 +157,6 @@ value="<?=strip_tags($email)?>">
   </td>
 </tr> 
 
-<?
-
-if (isset($cid)) {
-?>
-	<input type="hidden" name="company_id" value="<?=strip_tags($cid)?>">		
-<?
-	} else {
-	$company = $zen->get_contact_all();
-	if (is_array($company)) {
-	?>
-		<tr>
-  	<td class="bars">
-    <?=tr("Company")?>:
-  	</td>
-  	<td class="bars">
-		<select name="company_id">
-  	<option value=''>--<?=tr("none")?>--</option>
-		<?
-		foreach($company as $p) {
-			$sel = ($p["company_id"] == $company_id)? " selected" : "";
-			$val =($p['office'])?strtoupper($p[title])." ,".$p[office]:strtoupper($p[title]);
-	  	print "<option value='$p[company_id]' $sel>".$val."</option>\n";
-		}
-	?>
-	</select>
-	</td>
-	</tr>
-	<?
-	}
-}
-
-?> 
-
 <tr>
   <td class="bars">
     <?=tr("Type")?>:
@@ -154,8 +171,8 @@ if (isset($cid)) {
 </tr>   
 
 <tr>
-  <td colspan="2" class="bars">
-    <?=tr("Notes")?>:
+  <td colspan="2" class="subTitle">
+    <?=tr("Notes")?>
   </td>
 </tr>
   

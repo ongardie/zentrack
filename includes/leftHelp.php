@@ -9,16 +9,16 @@
   
   <tr>
   <td <?=$nav_rollover_text?>>
-  <a class='subMenuLink' href="<?=$rootUrl?>/help/about.php"><?=tr("About")?></a>
+  <a class='subMenuLink' href="<?=$helpUrl?>/about.php"><?=tr("About")?></a>
   </td>
   </tr>
   <tr>
   <td <?=$nav_rollover_text?>>
-  <a class='subMenuLink' href="<?=$rootUrl?>/help/support.php"><?=tr("Support")?></a>
+  <a class='subMenuLink' href="<?=$helpUrl?>/support.php"><?=tr("Support")?></a>
   </td>
   <tr>
   <td <?=$nav_rollover_text?>>
-  <a class='subMenuLink' href="<?=$rootUrl?>/help/gpl.php"><?=tr("License")?></a>
+  <a class='subMenuLink' href="<?=$helpUrl?>/gpl.php"><?=tr("License")?></a>
   </td>
   </tr>
   </tr>

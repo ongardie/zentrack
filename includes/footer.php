@@ -95,6 +95,7 @@
     <input type='hidden' name='debug_output' value='<?=urlencode($debug_text)?>'>
     <input type='hidden' name='user_info' value='<?=$zen->ffv($_SERVER['HTTP_USER_AGENT'])?>'>
     </form>
+    <p>Please send us <a href='http://www.zentrack.net/feedback/?name=<?=$zen->ffv($login_name)?>&email=<?=$user['email']?>&subject=Feedback'>Feedback</a>!</p>
     <?
   }
   

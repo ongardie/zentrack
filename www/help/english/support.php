@@ -14,11 +14,6 @@
   <br>
   <blockquote>
   <span class='bigBold'>Support for <?=$zen->settings["system_name"]?></span>
-  <p>Much of the documentation for zenTrack is still under construction and changes from
-  time to time.  For the latest information, please refer to the following pages:</p>
-  <ul>
-    <b>Documentation: <a href="http://docs.zentrack.net">http://docs.zentrack.net</a></b>
-  </ul>
   <p>If the solution to your problem is not to be found in the manual, it is worthwhile trying one
   of the following places for some help:</p>
   
@@ -29,12 +24,12 @@
           within 12-24 hours.</td>
 	</tr>
         <tr valign="top">
-	  <td valign="top"><a href="http://www.sourceforge.net/projects/zentrack">Online</a></td>
+	  <td valign="top"><a href="http://www.sourceforge.net/projects/zentrack">Project</a></td>
 	  <td>(see the support pages)  This will get you a response, probably in hours, maybe in days, but
            you will get one.</td>
 	</tr>
 	<tr>
-	  <td valign="top"><a href="mailto:phpzen@users.sourceforge.net">E-mail</a></td>
+	  <td valign="top"><a href="http://www.zentrack.net/feedback">Contact Page</a></td>
            <td>If you are a registered tester, you can email me directly.  If you are not 
                a registered tester you will have better luck on the  mailing list.
            </td>

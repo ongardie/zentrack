@@ -8,7 +8,7 @@
 <script type="text/javascript">
 function printpopup(varialbe)
 {
-location.href ="<?=$rootUrl.$zen->ffv($SCRIPT_NAME)?>?id=<?=$id?>&company_id="+varialbe
+location.href ="<?=$_ENV['SCRIPT_NAME']?>?id=<?=$id?>&company_id="+varialbe
 }
 </script>
 
@@ -100,6 +100,19 @@ echo tr("Select a contact");
     </td>
 	<?
 	}
+  else if( $company_id ) {
+  ?>
+  <tr>
+    <td class='bars'><?=tr('Person')?></td>
+    <td class='bars'>
+      <?=tr('There are no employees assigned to this company.')?>  
+      <br><a href='<?=$rootUrl?>/actions/contact_employee.php?cid=<?=$company_id?>'>
+        <?=tr('Click Here')?></a> 
+      <?=tr('to add one')?>.
+    </td>
+  </tr>
+  <?
+  }
   
   if( !$people && !$companies ) {
     print tr("There are no contacts to add.");
