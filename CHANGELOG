@@ -15,7 +15,9 @@
   Fix up incorrect debug information request in zentrack/HELP ($Debug_Mode instead of $this->debug)
    - zentrack/HELP
    - help/support.php
-
+  Add "Hours Worked" to printed ticket
+   - zentrack/www/actions/print.php
+   
 2003-04-14, Rob Hillis
   Fixed broken link to GPL License in Help section
    - zentrack/www/help/gpl.php

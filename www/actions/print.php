@@ -170,10 +170,23 @@
     <b>Est. Hrs:</b>
   </td>
   <td >
-    <?=($ticket["est_hours"] > 0)? "$ticket[est_hours] (".$zen->percentWorked($ticket["est_hours"],$ticket["wkd_hours"])."% complete)" : "n/a"; ?>
+    <?=($ticket["est_hours"] > 0)? "$ticket[est_hours]" : "n/a"; ?>
   </td>
 </tr>
-  
+<tr>
+  <td>
+    <b>Worked:</b></td>
+  </td>
+  <td>
+    <?=($ticket["wkd_hours"]> 0)? "$ticket[wkd_hours]" : "n/a"; ?>
+  </td>
+  <td>
+    <b>% Est:</b>
+  </td>
+  <td>
+    <?=$zen->percentWorked($ticket["est_hours"],$ticket["wkd_hours"])."% complete"; ?>
+  </td>
+</tr>
 <tr>
   <td colspan=4 height=10>&nbsp;</td>
 </tr>  
