@@ -373,10 +373,14 @@ class ZenTargets {
     // get base backups directory
     $base = $this->_getBackupLocation();
 
+    // create directory tree and 
+    // remove windows root references(i.e. c:)
+    $des = preg_split('#[\\\\/]#', preg_replace("#^$base#", "", $dest));
+    if( preg_match('#[a-zA-Z]:#', $des[0]) ) { array_shift($des); }
+
     // make sure the subdirectory exists
     // by getting each piece and
     // creating if necessary
-    $des = preg_split('#[\\\\/]#', $dest);
     $dir = "";
     foreach( $des as $d ) {
       $dir .= $dir? "/$d" : $d;
@@ -424,8 +428,8 @@ class ZenTargets {
     else { $tables = null; }
     
     // create directory if not done yet
-    $dir = $this->_getBackupLocation()."/database";
-    $source = $this->_ini['directories']['dir_config']."/database.xml";
+    $dir = "database";
+    $source = $this->_ini['directories']['dir_config'];
     
     // backup the database schema
     if( !$this->_backup_file('database.xml', $source, $dir, 'database.xml.schema') ) {
@@ -433,8 +437,13 @@ class ZenTargets {
       return false;
     }
 
+    print "opening zendbxmml\n";//debug
+
     // perform backups
     $dbx = new ZenDBXML( Zen::getDbConnection(), $source );                 
+
+    print "dumping db data\n";//debug
+
     $res = $dbx->dumpDatabaseData( $dir, $tables, true );
     print "   {$res[1]} of {$res[0]} statements processed successfully\n";
     if( $res[0] != $res[1] ) {
@@ -442,6 +451,9 @@ class ZenTargets {
       $this->_printerr("_backup_database", "Backup error: $diff statements failed");
       return false;
     }
+
+    print "done\n";//debug
+
     return true;
   }
 
