@@ -16,6 +16,7 @@ abstraction, and endless possibilities for project expansion.
 2005-03-10, cfalonso
 Included field_map for close page
     - zentrack_2/includes/ZenFieldMap.class 1.9
+    - zentrack_2/includes/templates/validateTicketForm.php 1.1
     - zentrack_2/includes/templates/newTicketForm.php 1.41
     - zentrack_2/includes/templates/actions/close.php 1.4
     - zentrack_2/install/UPGRADE_mssqlserver.sql 1.32
