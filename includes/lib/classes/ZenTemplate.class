@@ -24,10 +24,10 @@
    ** <ul> 
    **  <li>{varname} - inserts value of varname
    **  <li>{zen:varname} - inserts value of $zen->settings["varname"]
-   **  <li>{list:varname:"text"+index+"more text"+value} - loops through indexed array and prints name/value
-   **  <li>{list:varname:%sub-template%} - loops through the indexed array and passes name/value to sub-template
-   **  <li>{foreach:varname:"text"+value+"text"} - loops through array and prints values
-   **  <li>{foreach:varname:%sub-template%} - loops through the array, passing values to the sub-template
+   **  <li>{foreach:varname:"text"+index+"more text"+value} - loops through indexed array and prints name/value
+   **  <li>{foreach:varname:%sub-template%} - loops through the indexed array and passes name/value to sub-template
+   **  <li>{list:varname:"text"+value+"text"} - loops through array and prints values
+   **  <li>{list:varname:%sub-template%} - loops through the array, passing values to the sub-template
    **  <li>{include:template_name} - inserts another template into this one
    **  <li>{if:field:"text to print"+field+"text to print"} - inserts text if field exists
    **  <li>{if:field:%sub-template%} - inserts sub-template if field exists
@@ -130,56 +130,20 @@ class zenTemplate {
         return isset($zen->settings["$n"])? $zen->settings["$n"] : "";
       }
       break;
-      case "list":
+      case "foreach":
       {
-        // {list:varname:"text"+index+"more text"+value}
-        $vars = $this->_getVar(trim($parts[1]));
-        if( is_array($vars) ) {
-          $txt = "";
-          // make the string to show
-          $str = $this->_parseString($parts[2]);
-          // loop the list and make output text
-          foreach($vars as $k=>$v) {
-            $tmp = str_replace("{index}", $k, $str);
-            $txt .= str_replace("{value}", $v, $tmp);
-          }
-          return $txt;
-        }
-        else {
-          return "";
-        }
+        // {foreach:varname:"text"+index+"more text"+value}
+        // {foreach:varname:%sub-template%}
+        
+        return _parseForeach($parts);
       }
       break;
-      case  "foreach":
+      case  "list":
       {
-        // {foreach:varname:"text"+value+"text"}
-        $vars = $this->_getVar(trim($parts[1]));
-        if( is_array($vars) ) {
-          $txt = "";
-          // parse the string
-          $str = $this->_parseString($parts[2]);
-          // create the output text
-          foreach($vars as $v) {
-            // determine if we are to process text or a template
-            if (preg_match('|^%.+%$', $parts[2])) {
-              // return the template
-              
-              $tplname = substr(substr($parts[2], 1), -1);
-              
-              $tpl = new zenTemplate($this->templateDir."/".$tplname);
-              $tpl->values($this->values($this->_vars));
-              
-              $txt .= $tpl->process();
-            } else {
-              //return the text
-              $txt .= str_replace("{value}", $v, $str);
-            }
-          }
-          return $txt;
-        }
-        else {
-          return "";
-        }
+        // {list:varname:"text"+value+"text"}
+        // {list:varname:%sub-template%}
+        
+        return _parseList($parts);
       }
       break;
       case  "include":
@@ -194,39 +158,10 @@ class zenTemplate {
       {
         // {if:field:"text to print"+field+"text to print"}
         // {if:field=something:"text to print"+field+"more text"}
-        $p = trim($parts[1]);
-        // determine if the if condition is true
-        if( strpos($p,"=") > 0 ) {
-          // there is an equals clause
-          list($key,$val) = explode("=",$parts[1]);
-          $key = trim($key);
-          $val = trim($val);
-          $tf = ($this->_getVar($key) == $val);
-        }
-        else {
-          $var = $this->_getVar($p);
-          $tf = ( (is_array($var) && count($var)) || (strlen($var) > 0) );
-        }
-        // execute the query if we met if condition
-        if( $tf ) {
-          // determine if we are expecting to include a template or not
-          if( preg_match("|^%.+%$|", $parts[2])  {
-            // return template
-            
-            $tplname = substr(substr($parts[2], 1), -1);
-            
-            $tpl = new zenTemplate($this->templateDir."/".$tplname);
-            $tpl->values($this->values($this->_vars));
-            
-            return $tpl->process();
-          } else {
-            // return text
-            return $this->_parseString($parts[2]);
-          }
-        }
-        else {
-          return "";
-        }
+        // {if:field:%sub-template%}
+        // {if:field=something:%sub-template%}
+        
+        return _parseIf($parts);
       }
       break;
       }
@@ -235,6 +170,118 @@ class zenTemplate {
     return "{invalid tag: $index}";
   }
   
+  /**
+   ** <b>private</b>: parse a {foreach} call in a template
+   **
+   ** @param array $parts the parts of the foreach call to be parsed
+   ** @return string the parsed {foreach} call
+   **/
+  function _parseForeach($parts)
+  {
+    $vars = $this->_getVar(trim($parts[1]));
+    if( is_array($vars) ) {
+      $txt = "";
+      // make the string to show
+      $str = $this->_parseString($parts[2]);
+      // loop the list and make output text
+      foreach($vars as $k=>$v) {
+        // determine if we are to process text or a template
+        if (preg_match('|^%.+%$', $parts[2])) {
+          // return the template
+          
+          $tplname = substr(substr($parts[2], 1), -1);
+          $txt .= $this->parseSubtemplate($tplname, $v, $k);
+        } else {
+          // return the text
+          $tmp = str_replace("{index}", $k, $str);
+          $txt .= str_replace("{value}", $v, $tmp);
+        }
+      }
+      return $txt;
+    }
+    else {
+      return "";
+    }
+  }
+  
+  /**
+   ** <b>private</b>: parse a {list} call in a template
+   **
+   ** @param array $parts the parts of the list call to be parsed
+   ** @return string the parsed {list} call
+   **/
+  function _parseList($parts) {
+    $vars = $this->_getVar(trim($parts[1]));
+    if( is_array($vars) ) {
+      $txt = "";
+      // parse the string
+      $str = $this->_parseString($parts[2]);
+      // create the output text
+      foreach($vars as $v) {
+        // determine if we are to process text or a template
+        if (preg_match('|^%.+%$', $parts[2])) {
+          // return the template
+          
+          $tplname = substr(substr($parts[2], 1), -1);
+          
+          $txt .= parseSubtemplate($tplname, $v);
+        } else {
+          //return the text
+          $txt .= str_replace("{value}", $v, $str);
+        }
+      }
+      return $txt;
+    }
+    else {
+      return "";
+    }
+  }
+  
+  /**
+   ** <b>private</b>: parse a {list} call in a template
+   **
+   ** @param array $parts the parts of the if call to be parsed
+   ** @return string the parsed {if} call
+   **/
+  function _parseIf() {
+    $p = trim($parts[1]);
+    // determine if the if condition is true
+    if( strpos($p,"=") > 0 ) {
+      // there is an equals clause
+      list($key,$val) = explode("=",$parts[1]);
+      $key = trim($key);
+      $val = trim($val);
+      $tf = ($this->_getVar($key) == $val);
+    }
+    else {
+      $var = $this->_getVar($p);
+      $tf = ( (is_array($var) && count($var)) || (strlen($var) > 0) );
+    }
+    // execute the query if we met if condition
+    if( $tf ) {
+      // determine if we are expecting to include a template or not
+      if( preg_match("|^%.+%$|", $parts[2])  {
+        // return template
+        
+        $tplname = substr(substr($parts[2], 1), -1);
+        return $this->_parseSubtemplate($tplname, $this->_vars);
+        
+        /*
+        $tpl = new zenTemplate($this->templateDir."/".$tplname);
+        $tpl->values($this->_vars);
+        
+        return $tpl->process();
+        */
+      } else {
+        // return text
+        return $this->_parseString($parts[2]);
+      }
+    }
+    else {
+      return "";
+    }
+  }
+
   /**
    ** <b>private</b>: parse a value string and return the results
    **
@@ -291,6 +338,30 @@ class zenTemplate {
       return "";
   }
 
+  /**
+   ** <b>private</b>: returns an expanded sub-template
+   **
+   ** @param string $template the name of the sub-template to be expanded, assumed to be contained in the templates directory
+   ** @param mixed $value a string to be passed as {pval} to the sub-template or an array of indexed values to be passed to the sub-array
+   ** @param string $key the key of the value to be passed as {pkey} to the sub-template (only used when $value is a string)
+   ** @return the expanded sub-template
+   **/
+  function _parseSubtemplates ( $template, $value, $key = '' ) {
+    $tpl = new zenTemplate($this->templateDir."/".$tplname);
+    
+    if is_array($value) {
+      // $value is an indexed array to be passed to the sub-template
+      
+      $tpl->values($value);
+    } else {
+      // $value/$key are a string pair to be passed as {pkey} and {pval}
+      
+      $tpl->values(array("pkey" -> $key, "pval" -> $value);
+    }
+    
+    return $tpl->process();
+  }
+  
   var $_template; //the file we are using
   var $_zen;
   var $_text;  //the template data loaded and ready for parsing
