@@ -3422,8 +3422,8 @@ class zenTrack extends zen {
     $query = "SELECT DISTINCT i.report_id,r.report_name FROM "
       .$this->table_reports_index
       ." i,".$this->table_reports." r WHERE i.report_id = r.report_id AND ("
-      ."(i.bid IS NULL OR i.bid = '') "
-      ." AND (i.user_id IS NULL or i.user_id = '') ";
+      ."((i.bid IS NULL OR i.bid = '') "
+      ." AND (i.user_id IS NULL or i.user_id = ''))";
     if( $bin_id ) {
       $query .= (is_array($bin_id))? 
         " OR i.bid IN(".join(",",$bin_id).")" : " OR i.bid = $bin_id";
