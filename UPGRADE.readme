@@ -1,5 +1,5 @@
 
-UPGRADE INSTRUCTIONS FOR 2.5.0
+UPGRADE INSTRUCTIONS FOR 2.5.0.2
 
 REQUIREMENTS
 
@@ -13,7 +13,7 @@ REQUIREMENTS
     GD: [optional] 2.0 or higher needed to use reports
     Freetype libraray required to view reports
 
-UPGRADE FROM 2.5 RC3
+UPGRADE FROM 2.5.0.1
 
   Be sure to BACKUP CONFIG FILES:
       www/header.php
@@ -23,22 +23,26 @@ UPGRADE FROM 2.5 RC3
   included files: includes/ should overwrite your existing includes,
   www/ should overwrite your existing www/
 
-  You must create a new database schema to upgrade from any RC to the live release.
-  
-  If you need help migrating critical data from your RC build to the live build,
-  simply email a dump of your database data to the ZT team.  Be sure to specify
-  which RC you are upgrading from.
+  You must update header.php manually, you may not copy over your old
+  header.php file to this new build.
 
-  !!!!You must update header.php manually, you may not copy over your old
-  header.php file.!!!!
-  
-UPGRADE FROM 2.5 RC2
+  Set directory permissions (probably only necessary on unix)
+     -chmod 777 includes/attachments (if using attachments)
+     -chmod 777 includes/logs
+     -chmod 777 includes/cache
+     -chmod 777 includes/translations
+     -chmod 755 includes/egate.php
+     -chmod 755 includes/egate_create.php 
 
-  Follow instructions for 2.5 RC3
-  
-UPGRADE FROM 2.5 RC1
+  Run the sql file install/UPGRADE_[yourdb].sql file using your favorite
+  sql interface (you can open the file and run the statements directly if
+  this is easier for you).  This will upgrade you to 2.5.0.2 database.  
+ 
+UPGRADE FROM 2.5.0
 
-  Follow instructions for RC2
+  Follow instructions for 2.5.0.1 
+
+  (2.5.0.1 contains only bug fixes from version 2.5.0, they are essentially the same)
 
 UPGRADE FROM 2.4.4
 
@@ -55,12 +59,15 @@ UPGRADE FROM 2.4.4
      -chmod 777 includes/logs
      -chmod 777 includes/cache
      -chmod 777 includes/translations
+     -chmod 755 includes/egate.php
+     -chmod 755 includes/egate_create.php  
 
-  Run the sql file install/UPGRADE_[yourdb].sql file to upgrade structure
-  from 2.4.3 to 2.4.5 (there are no sql changes for version 2.4.4)
+  Run the sql file install/previous/2.5.0.1.UPGRADE_[yourdb].sql file using your favorite
+  sql interface (you can open the file and run the statements directly if
+  this is easier for you).  This will upgrade you to the 2.5.0.1 database (the database
+  version between 2.5.0 and 2.5.0.1 are identical).
 
-  You must update header.php manually, you may not copy over your old
-  header.php file.
+  Follow install instructions for 2.5.0  
   
 UPGRADE FROM 2.4.3
   
