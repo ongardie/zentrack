@@ -7,6 +7,14 @@
 
 ----- V2.2.3 (development, see CVS) ----
 2003-02-27, Kato
+  Notify List Implementations (not complete... more to come)
+    - includes/zenTrack.class 1.62
+    - includes/templates/ticket_notifyBox.php 1.1
+  Minor cleanup
+    - includes/zenTrack.class 1.62
+    - includes/egate_utils.php 1.6
+    - includes/templates/ticket_tasksBox.php 1.4
+    - install/egate_config.php.default 1.3	
   Added mssqlserver build and seed files to install
   Thanks to Jim Martin for this contribution!
     - install/*_sqlserver.sql 1.1

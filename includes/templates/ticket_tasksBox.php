@@ -1,9 +1,9 @@
 
   <table width="600" align="center" cellpadding="2" cellspacing="2">
   <tr> 
-     <form action="<?=$rootUrl?>/newTicket.php">
-     <input type="hidden" name="project_id" value="<?=strip_tags($id)?>">
      <td align="right">
+     <form action="<?=$rootUrl?>/newTicket.php">
+     <input type="hidden" name="project_id" value="<?=$zen->checkNum($id)?>">
        <?
          if( $zen->checkAccess($login_id,$ticket["bin_id"],"create") ) {
 	    $button = "submit";
@@ -14,13 +14,13 @@
 	 }
        ?>
        <input type="<?=$button?>" value=" Add Ticket to Project " class="actionButton" style="width:125;color:<?=$color?>">  
-     </td>
      </form>
+     </td>
    </tr>  
   <tr> 
-     <form action="<?=$rootUrl?>/newProject.php">
-     <input type="hidden" name="project_id" value="<?=strip_tags($id)?>">
      <td align="right">
+     <form action="<?=$rootUrl?>/newProject.php">
+     <input type="hidden" name="project_id" value="<?=$zen->checkNum($id)?>">
        <?
          if( $zen->checkAccess($login_id,$ticket["bin_id"],"create") ) {
 	    $button = "submit";
@@ -31,8 +31,8 @@
 	 }
        ?>
        <input type="<?=$button?>" value=" Create Sub-Project " class="actionButton" style="width:125;color:<?=$color?>">  
-     </td>
      </form>
+     </td>
    </tr>    
    <tr>  
      <td class='titleCell'>
