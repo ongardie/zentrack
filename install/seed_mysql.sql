@@ -118,7 +118,7 @@ INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (75,
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (76,'date_fmt_short','%m/%d/%Y','Short Date Format');
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (77,'date_fmt_time','%H:%M','Time Format');
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (78,'time_elapsed_unit','hours','Use hours, days, months, years, seconds, or weeks');
-INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (79,'language_default','english','This must match one of the files in translations directory');
+INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (79,'language_default','english','This is the language to display pages in, must match one of the filenames in includes/translations/');
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (80,'default_deadline','+1 month','Format: [+-]nn [minutes|hours|days|weeks|months], or use 0 for none');
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (81,'default_start_date','+1 day','Format: [+-]nn [minutes|hours|days|weeks|months], or use 0 for none');
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (82,'email_interface_enabled','off', 'Use the email gateway');
