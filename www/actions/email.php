@@ -70,7 +70,7 @@
 	   //unset($action);
 	   //exit;
 	} else {
-	   $errs[] = tr("System error: Ticket ? could not be emailed", array($id).$zen->db_error);
+	   $errs[] = tr("System error: Ticket ? could not be emailed. ", array($id)).$zen->db_error;
 	}
      }
      if( $errs )

@@ -102,22 +102,6 @@ INSERT INTO ZENTRACK_LOGS (lid, ticket_id, user_id, bin_id, created, action, hou
 INSERT INTO ZENTRACK_LOGS (lid, ticket_id, user_id, bin_id, created, action, hours, entry) VALUES (98,24,1,2,1045534269,'CREATED',NULL,NULL);
 INSERT INTO ZENTRACK_LOGS (lid, ticket_id, user_id, bin_id, created, action, hours, entry) VALUES (99,24,1,2,1045534280,'log',10.00,'fjiwejoi');
 
-#
-# Dumping data for table 'ZENTRACK_PREFERENCES'
-#
-
-
-#
-# Dumping data for table 'ZENTRACK_PRIORITIES'
-#
-
-INSERT INTO ZENTRACK_PRIORITIES (pid, name, priority, active) VALUES (1,'Critical',5,1);
-INSERT INTO ZENTRACK_PRIORITIES (pid, name, priority, active) VALUES (2,'High',4,1);
-INSERT INTO ZENTRACK_PRIORITIES (pid, name, priority, active) VALUES (3,'Medium',3,1);
-INSERT INTO ZENTRACK_PRIORITIES (pid, name, priority, active) VALUES (4,'Low',2,1);
-INSERT INTO ZENTRACK_PRIORITIES (pid, name, priority, active) VALUES (6,'None',1,1);
-
-#
 # Dumping data for table 'ZENTRACK_TICKETS'
 #
 
@@ -145,4 +129,3 @@ INSERT INTO ZENTRACK_TICKETS (id, title, priority, status, description, otime, c
 INSERT INTO ZENTRACK_TICKETS (id, title, priority, status, description, otime, ctime, bin_id, type_id, user_id, system_id, creator_id, tested, approved, relations, project_id, est_hours, deadline, start_date, wkd_hours) VALUES (22,'aaaa',1,'CLOSED','ffff',1045035774,1045035795,2,3,NULL,1,1,2,0,NULL,0,0.00,1047452400,0,0.00);
 INSERT INTO ZENTRACK_TICKETS (id, title, priority, status, description, otime, ctime, bin_id, type_id, user_id, system_id, creator_id, tested, approved, relations, project_id, est_hours, deadline, start_date, wkd_hours) VALUES (23,'fwfewfewewfew',1,'OPEN','fewfweewfewfew',1045534020,NULL,2,3,0,1,1,1,1,NULL,4,20.00,1047884400,0,0.00);
 INSERT INTO ZENTRACK_TICKETS (id, title, priority, status, description, otime, ctime, bin_id, type_id, user_id, system_id, creator_id, tested, approved, relations, project_id, est_hours, deadline, start_date, wkd_hours) VALUES (24,'fwfwewfwe',1,'OPEN','fwefwe',1045534269,NULL,2,3,0,1,1,1,1,NULL,4,2.00,1047884400,0,10.00);
-

@@ -226,19 +226,29 @@ class zenTrack extends zen {
    * @param string $sort [optional] comma separated list for ORDER BY clause
    * @param string $columns [optional] comma separated list of columns to select 
    */
-  function get_tickets( $params = '', $sort = 'priority, otime desc', $columns = '', $archive_flag = 0 ) {
-    $table = ($archive_flag)? 
-      $this->table_tickets_archived : $this->table_tickets;
+  function get_tickets( $params = '', $sort = 'priority desc, otime desc', $columns = '', $archive_flag = 0 ) {
+    $tf_pri = preg_match("/priority/", $sort);
+
+    $tables = $this->table_tickets;
+    if( $tf_pri ) {
+      $tbl = $this->table_tickets;
+      $tblpri = $this->table_priorities;
+      $tables .= ", ".$tblpri;
+      $sort = preg_replace("/priority/", "$tblpri.priority", $sort);
+    }
 
     if( !is_array($columns) )
-      $columns = array("*");
+      $columns = $tf_pri? array("$tbl.*") : array("*");
 
+    $where = ($tf_pri)? " WHERE $tbl.priority = $tblpri.pid " : "";
     if( is_array($params) ) {
-      $where = "WHERE ".$this->simpleWhere($params);
+      $where = $where? "$where AND " : "WHERE ";
+      $where .= $this->simpleWhere($params);
     }
-    $query = "SELECT ".join(",",$columns)." FROM $table $where";
+    $query = "SELECT ".join(",",$columns)." FROM $tables $where";
     if( $sort )
       $query .= " ORDER BY $sort";
+    $this->addDebug("get_tickets",$query,3);
     return( $this->db_queryIndexed($query) );
   }      
 
@@ -2380,8 +2390,8 @@ class zenTrack extends zen {
       }
       $subject = (get_magic_quotes_gpc())? $subject : addslashes($subject);
       $headers = str_replace("\n", "\r\n", $headers);
-      $this->addDebug("sendEmail","$recipient_address,$subject,$headers",3);
-      return( @mail( $recipient_address, $subject, $message, $headers ) );
+      $this->addDebug("sendEmail","$recipient_address::$subject::$headers",3);
+      return( mail( $recipient_address, $subject, $message, $headers ) );
     } else {
       $this->addDebug("sendEmail","recipient_address was blank... "
 		      ."this could be that the email was sent to a user "
@@ -2645,6 +2655,10 @@ class zenTrack extends zen {
       // the owner
       if( !$ticket["user_id"] || $ticket["user_id"] == $user_id )
         return false;
+    } else if( $c["owner"] == 5 ) {
+      // here we must be the owner, or it is unowned
+      if( $ticket["user_id"] && $ticket["user_id"] != $user_id )
+	return false;
     } else if( $c["owner"] > 0 ) {
       // here we must be the owner (or there is an override)
       // see if we can override this
@@ -2726,6 +2740,7 @@ class zenTrack extends zen {
     //                2 - must NOT be owner
     //                3 - must not be owned by anyone
     //                4 - must be owned, and must not be owner
+    //                5 - must be owner, or not owned by anyone
     //   "access"   - must meet checkAccess
     //   "status"   - ticket status
     //   "override" - supervisor override?     
@@ -2749,7 +2764,7 @@ class zenTrack extends zen {
                                   "level"    => $this->settings["level_approve"]
                                   );
       $actions["assign"] = array(
-                                 "owner"    => 3,
+                                 "owner"    => 5,
                                  "access"   => 1,
                                  "status"   => array('OPEN'),
                                  "override" => 0,
@@ -2759,7 +2774,7 @@ class zenTrack extends zen {
       $actions["close"] = array(
                                 "owner"    => 1,
                                 "access"   => 1,
-                                "status"   => array('OPEN','PENDING'),
+                                "status"   => array('OPEN'),
                                 "override" => 0,
                                 "egate"    => 1,
                                 "level"    => $this->settings["level_user"]

@@ -1,6 +1,14 @@
 
-UPDATE ZENTRACK_SETTINGS SET description = 'This must match one of the file names in the translations folder' WHERE setting_id = 79;
-UPDATE ZENTRACK_SETTINGS SET description = 'Send email to tester/approver when ticket is pending' WHERE setting_id = 27;
-UPDATE ZENTRACK_SETTINGS SET description) = 'Comma seperated list.  Only these extensions may be uploaded.  Set to 0 to allow all (WARNING:  this is a security risk!)') WHERE setting_id = 11;
+INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (89,'priority_medium','2','Median priority, pick number around 1/2 total priorities, set to 0 to disable coloring');
+INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (90,'color_priority_low','#FFFFFF','Base color for low priority items');
+INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (91,'color_priority_med','#FFFFCC','Base color for medium priority items');
+INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (92,'color_priority_hi','#FF9999','Base color for high priority items');
 
 UPDATE ZENTRACK_SETTINGS SET value = '2.4.1' WHERE name = 'version_xx';
+
+
+
+
+
+
+

@@ -116,7 +116,7 @@ INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (70,
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (71,'allow_pwd_save','off','Allows user to save passphrase (not implemented yet)');
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (72,'check_pwd_simple','on','System will refuse lazy passwords');
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (73,'level_reports','1','Level required to access and view reports');
-INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (74,'version_xx','2.4','The version of zentrack, this cannot be edited');
+INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (74,'version_xx','2.4.1','The version of zentrack, this cannot be edited');
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (75,'date_fmt_long','%A %d, %b %Y','Long date format');
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (76,'date_fmt_short','%m/%d/%Y','Short Date Format');
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (77,'date_fmt_time','%H:%M','Time Format');
@@ -132,6 +132,10 @@ INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (85,
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (86,'default_notify_owner','on','Add ticket owner to notify list by default.');
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (87,'sql_cache_time',0,'Number of seconds to cache db results, set to 0 to disable sql caching');
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (88,'email_log','on','Send email when a log entry is created');
+INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (89,'priority_medium','2','Median priority, pick number around 1/2 total priorities, set to 0 to disable coloring');
+INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (90,'color_priority_low','#FFFFFF','Base color for low priority items');
+INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (91,'color_priority_med','#FFFFCC','Base color for medium priority items');
+INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (92,'color_priority_hi','#FF9999','Base color for high priority items');
 
 
 --

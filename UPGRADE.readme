@@ -11,8 +11,7 @@ REQUIREMENTS
     Supported DBs: Mysql, Oracle 8i/9i, Postgres
        Other Possible DBs: DB2, SQLServer
 
-
-UPGRADE FROM 2.3.x
+UPGRADE FROM 2.4.0 & 2.4.0.1
 
   MAKE A BACKUP OF YOUR www/header.php file
   
