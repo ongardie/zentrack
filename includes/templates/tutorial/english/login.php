@@ -7,7 +7,7 @@
 <p>In general, your password will be the same as your last name (case sensitive!) 
 until your first login.</p>
 
-<img src='<?=$rootUrl?>/images/help_screenshots/changepwd.gif' 
+<img src='<?=$tutImageUrl?>/changepwd.gif' 
   alt='An image of the change password screen' align='right'>
 
 <p><b>Changing Your Password</b></p>
@@ -20,3 +20,9 @@ This will allow you to change your password to something you can remember.
 <p>This is an optional feature to make it harder for others to guess your password, and
 you will not be allowed to enter anything which does not conform to this
 requirement (if enabled).
+
+<p><b>If you forget your password</b></p>
+
+If you don't stencil your password on the inside of your eyelids like normal
+people, then you may occasionally forget them.  When this happens, simply
+contact your administrator who can reset your password for you.

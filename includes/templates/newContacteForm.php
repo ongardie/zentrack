@@ -58,7 +58,7 @@ value="<?=strip_tags($initials)?>">
     
 <tr>
   <td class="bars">
-    <?=tr("Jobtitle")?>:
+    <?=tr("Title")?>:
   </td>
   <td class="bars">
     <input type="text" name="jobtitle" size="20" maxlength="50"
@@ -79,7 +79,7 @@ value="<?=strip_tags($department)?>">
 
 <tr>
   <td class="bars">
-    <?=tr("Telephone no")?>:
+    <?=tr("Telephone")?>:
   </td>
   <td class="bars">
     <input type="text" name="telephone" size="20" maxlength="50"
@@ -89,7 +89,7 @@ value="<?=strip_tags($department)?>">
 
 <tr>
   <td class="bars">
-    <?=tr("Mobile no")?>:
+    <?=tr("Mobile")?>:
   </td>
   <td class="bars">
     <input type="text" name="mobiel" size="20" maxlength="20"
@@ -142,20 +142,20 @@ if (isset($cid)) {
 
 <tr>
   <td class="bars">
-    <?=tr("Intern/Extern")?>:
+    <?=tr("Type")?>:
   </td>
   <td class="bars">
       <?if($inextern==extern) {echo "selected";}?>
      <select name="inextern">
-    <option <?if($inextern==1) {echo "selected";}?> value='1'>Extern</option>
-    <option <?if($inextern==2) {echo "selected";}?> value='2'>Intern</option>
+    <option <?if($inextern==1) {echo "selected";}?> value='1'>External</option>
+    <option <?if($inextern==2) {echo "selected";}?> value='2'>Internal</option>
     </select>
   </td>
 </tr>   
 
 <tr>
   <td colspan="2" class="bars">
-    <?=tr("Commentary")?>:
+    <?=tr("Notes")?>:
   </td>
 </tr>
   

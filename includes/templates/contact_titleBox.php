@@ -54,7 +54,7 @@
  if(!empty($description)) {
 ?>	  
 	  <tr>
-	   <td class="smallTitleCell" colspan="3"><?=uptr("Commentary")?></td>  
+	   <td class="smallTitleCell" colspan="3"><?=uptr("Comments")?></td>  
 	  </tr>
 	  <tr>
 	   <td class="small" colspan="3"><?=(get_magic_quotes_runtime())?nl2br(stripslashes($description)):nl2br($description); ?></td>
@@ -78,19 +78,19 @@
 			);	
 	//show the buttons
 	foreach($actions as $a=>$v) {
-		$value=($v==1)?"ADD ".uptr(ucfirst($a)):uptr(ucfirst($a));
+		$value = ($v == 1)? uptr("add")." ".uptr(ucfirst($a)) : uptr(ucfirst($a));
 		
 			print "<tr>\n<form name='".$a."_form' action='$rootUrl/actions/contact_$a.php'>\n";
 			print "<td>\n";
 			print "<input type='submit' class='actionButtonContact' value='$value'"; 
-			if ($a=="delete") {print " onClick='return confirm(\"Are you sure you want to permanently delete this contact\")'";}
+			if ($a=="delete") {print " onClick='return confirm(\"".tr('Are you sure you want to permanently delete this contact')."\")'";}
 			print ">\n";
 			print "<input type='hidden' name='cid' value='$id'>\n";
 			print "</td>\n</form>\n</tr>\n";
   }
   //button to show open tickets
   		print "<tr>\n<form name='tickets_form' action='$rootUrl/contact.php'>\n<td>\n";
-			print "<input type='submit' class='actionButtonContact' value='VIEW TICKETS'>\n"; 
+			print "<input type='submit' class='actionButtonContact' value='".uptr('view')." ".uptr('Tickets')."'>\n"; 
 			print "<input type='hidden' name='cid' value='$id'>\n";
 			print "<input type='hidden' name='overview' value='tickets'>\n";
 			print "</td>\n</form>\n</tr>\n";
@@ -100,13 +100,13 @@
   
   if ($overview=="contact") {
   	  print "<tr>\n<form name='contact_form' action='$rootUrl/contact.php'>\n<td>\n";
-			print "<input type='submit' class='actionButtonContact' value='VIEW AGREEMENTS'>\n"; 
+			print "<input type='submit' class='actionButtonContact' value='".uptr('view')." ".uptr('Agreements')."'>\n"; 
 			print "<input type='hidden' name='cid' value='$id'>\n";
 			print "<input type='hidden' name='overview' value='agreement'>\n";
 			print "</td>\n</form>\n</tr>\n";
 	} else {
 			print "<tr>\n<form name='agreement_form' action='$rootUrl/contact.php'>\n<td>\n";
-			print "<input type='submit' class='actionButtonContact' value='VIEW CONTACTS'>\n"; 
+			print "<input type='submit' class='actionButtonContact' value='".uptr('view')." ".uptr('Contacts')."'>\n"; 
 			print "<input type='hidden' name='cid' value='$id'>\n";
 			print "<input type='hidden' name='overview' value='contact'>\n";
 			print "</td>\n</form>\n</tr>\n";

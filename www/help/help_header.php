@@ -9,15 +9,16 @@
   // determine which directory contains
   // our current translation (if one exists)
   $helpBase = $rootUrl."/help";
-  $l = $_SESSION['login_language'];
-  if( @is_dir("$b/$l") ) {
-    $helpUrl = $helpBase."/$l";
-    $helpDir = $b."/$l";
+  $helpLang = $_SESSION['login_language'];
+  if( !@is_dir("$b/$helpLang") ) {
+    // it may be that we have languages which are not
+    // translated to the help section yet, so switch
+    // these back to english, which is better than nothing
+    $helpLang = 'english';
   }
-  else {
-    $helpUrl = $helpBase."/english";
-    $helpDir = $b."/english";
-  }
+  $helpUrl = "$helpBase/$helpLang";
+  $helpDir = "$b/$helpLang";
+
   // store our directory links in the global scope
   // for functions and pages
   $GLOBALS['helpDir'] = $helpDir;

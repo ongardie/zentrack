@@ -302,7 +302,7 @@ class zen extends zenDate {
              $vals["$k"] = $this->checkNum($v,true);
              break;
            case "string":
-             $vals["$k"] = $this->checkAlphaNum($v," _-");
+             $vals["$k"] = $this->checkAlphaNum($v," '_-");
              break;
            case "text":
              $vals["$k"] = htmlspecialchars("$v");
@@ -557,28 +557,26 @@ class zen extends zenDate {
      if( is_array($this->debugMessages) ) {
        $styles = array("","error","warning","note");
        print "<p>--------<b>MESSAGES</b>--------<ul>\n";
-       print "<i>To disable this output, set \$Debug_Mode "
-         ."in header.php to 0.</i><br>\n";
+       print "<i>To disable this output, set \$Debug_Mode ";
+       print "in header.php to 0.</i><br>\n";
        if( is_array($this->debugMessages) ) {   
-	 foreach($this->debugMessages as $v) {
-	   $n = $v[2];
-	   $style = $styles[$n];
-	   print "<li class='$style'>$v[0]: \"";
-	   if( is_array($v[1]) ) {
-	     print "<pre>\n";
-	     print_r($v[1]);
-	     print "</pre>\n";
-	   }
-	   else {
-	     print $v[1];
-	   }
-	   print "\"\n";
-	 }
-       }
+         foreach($this->debugMessages as $v) {
+           $n = $v[2];
+           $style = $styles[$n];
+           print "<li class='$style'>$v[0]: \"";
+           if( is_array($v[1]) ) {
+             Zen::printArray($v[1]);
+           }
+           else {
+             print $v[1];
+           }
+           print "\"\n";
+         }
+       }      
        print "</ul>------<b>MESSAGES</b>------</p>\n";
      }
    }
-
+   
   /**
    * STATIC: Prints an array out as formatted text (debug utility)
    *

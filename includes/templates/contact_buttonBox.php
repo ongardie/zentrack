@@ -4,8 +4,8 @@
       
       $actions = array(
 			"company",			
-			"extern",		     
-			"intern",
+			"external",		     
+			"internal",
 			"all"
 			);	
 

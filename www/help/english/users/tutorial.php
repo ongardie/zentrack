@@ -1,7 +1,7 @@
 <?
   $b = dirname(__FILE__);
-  $tutDir = "$b/tutorial";
   include("$b/user_header.php");
+  $tutDir = "$templateDir/tutorial/$helpLang";
   
   $tutUrl = "$helpUrl/users/tutorial.php";
   $sections = array(
@@ -16,10 +16,9 @@
      'notify_list'     => 'Notifications',
      'relate_ticket'   => 'Related',
      'create_ticket'   => 'New Ticket',
-     'create_project'  => 'New Project',
      'use_project'     => 'Projects',
      'contacts'        => 'Contacts',
-     'advanced'        => 'Advanced'
+     'closure'         => 'The End'
   );
   
 ?>
@@ -55,10 +54,7 @@
   </td>
   <td class='content' valign='top'>
     <?
-      if( file_exists("$tutDir/$s") ) {
-        include("$tutDir/$s");
-      }
-      
+      include("$tutDir/$s.php");
       if( $save ) {
         print "<p align='right'><b><a href='$tutUrl?s=$save'>Next: ";
         print $sections[$save];

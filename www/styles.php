@@ -123,9 +123,13 @@ else {
      background:  <?=$zen->settings["color_alt_background"]?>;
   }
 
-  .cell, .invalidCell, .content {
+  .cell, .invalidCell, .content, .labelCell {
      color:       <?=$zen->settings["color_alt_text"]?>;
      background:  <?=$zen->settings["color_background"]?>;     
+  }
+  
+  .labelCell {
+     font-weight: bold; 
   }
   
   .content {

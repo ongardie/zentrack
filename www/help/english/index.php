@@ -33,6 +33,7 @@
     &nbsp;<br><b>More Assistance</b>
     <ul>
       <a href='<?=$helpUrl?>/support.php'>Support & Community</a>
+      <br><a href='<?=$helpUrl?>/bugs.php'>Reporting Bugs</a>
       <br><a href='http://www.zentrack.net'>Zentrack Website</a>
     </ul>
     
@@ -41,6 +42,12 @@
       <a href='<?=$helpUrl?>/about.php'>About <?=$zen->settings["system_name"]?></a>
       <br><a href='<?=$helpUrl?>/gpl.php'>License Agreement</a>
       <br><a href='http://www.zentrack.net'>The zenTrack Project</a>
+    </ul>
+    
+    &nbsp;<br><b>Send Us Feedback!</b>
+    <ul>
+      <p>Be sure to give us some <a href='http://www.zentrack.net/feedback/?subject=Feedback' target='_blank'>feedback</a> about the the 
+        the documentation, software, or the latest <a href='http://kato.was-here.org/funnies/catattack.mpeg' target='_blank'>cat attack</a>.
     </ul>
 
   </ul>

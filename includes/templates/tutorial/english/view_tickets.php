@@ -1,23 +1,37 @@
 <p align='center' class='bigbold'>Viewing Tickets</p>
 
-<img src="<?=$imageUrl?>/help_screenshots/nav_tickets.gif" 
+<img src="<?=$tutImageUrl?>/nav_tickets.gif" 
      alt="An image of the ticket link on the nav"
      height="235" width="157" align='left'>
 
 <p><b>Finding a Ticket</b></p>
 
-<p>By clicking on the '<?=tr("Tickets")?>' link in the nav bar to the left, you can
-bring up the list of current items.  This will also expand the left-hand menu
-to include some advanced features, such as creating tickets and viewing items
-which are only assigned to you.
+<p>Clicking on the '<?=tr("Tickets")?>' link in the nav bar (shown on the left) 
+brings up the ticket list. 
 
-<p>This will bring up the list of tickets (shown below), which you can use to
-select a ticket.  There may be multiple pages, which will be noted by the 
-next/previous links and page numbers at the bottom right.
+<p>There may be multiple pages, which will be noted by next/previous 
+links and page numbers at the bottom right.
 
-<p>You can also search for tickets if you aren't sure what you are looking for
-by going to the '<?=tr("Search")?>' link on the left-hand menu.  We won't discuss
-that feature in this tutorial, but it is worth mentioning.
+<p>The tickets will be sorted by the priority (importance) of the ticket
+and color coded as well.  Note that if you are filtering the tickets based on the bin
+or those assigned to you (explained below) that column will not be shown.
+
+<p>The <b>Opened</b> column lists the date when this ticket was originally
+created.
+
+<p>The <b>Time</b> column shows how long this ticket has been opened.  If your
+time column looks like the one in our screenshot, then I suggest you put
+away this tutorial and get to work.
+
+<p align='center'><img src="<?=$tutImageUrl?>/ticket_list.gif" 
+     alt="An image of the list tickets screen"
+     height="115" width="401" align='center'></p>
+
+<p>If your organization is like the Zentrack Project, you may not be able to
+find anything in the ever growing list of tickets shown here.  In this case, 
+you can also <b>search</b> for tickets by going to the 
+'<?=tr("Search")?>' link on the left-hand menu.  We won't cover the search
+feature in this tutorial, but it is worth mentioning.
 
 <p><b>Filtering the List</b></p>
 
@@ -25,7 +39,7 @@ that feature in this tutorial, but it is worth mentioning.
 any tickets from the list on the right which do not list you as the current
 owner.
 
-<img src="<?=$imageUrl?>/help_screenshots/current_bin.gif" 
+<img src="<?=$tutImageUrl?>/current_bin.gif" 
      alt="An image of the current bin pulldown"
      height="291" width="212" align='right'>
 
@@ -54,9 +68,9 @@ This screen contains several important elements:
   <br><b>(3)</b> tabs containing more components of the ticket such as
   the details, log, attachments, and system messages
 </ul>
-<img src="<?=$imageUrl?>/help_screenshots/ticket_view.gif" 
+<img src="<?=$tutImageUrl?>/ticket_view.gif" 
      alt="An image of the ticket view screen"
      height="141" width="450" align='center'>
 
-<p>This screen is where you will conduct most of your work regarding a ticket.
-We will discuss this more as the tutorial continues.
+<p>This screen is where you will conduct most of your work and most of the
+tutorial covers this section.

@@ -2,6 +2,8 @@
   $b = dirname(dirname(dirname(__FILE__)));
   include_once("$b/help_header.php");
   
+  $tutImageUrl = "$imageUrl/help_screenshots/$helpLang";
+  
   $page_section = tr("User's Manual");  
   include("$libDir/nav.php");
 

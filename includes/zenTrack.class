@@ -267,7 +267,7 @@ class zenTrack extends zen {
     }
 
     if( !is_array($columns) )
-      $columns = $tf_pri? array(" t.* ") : array(" * ");
+      $columns = $tf_pri? array('*, t.priority') : array("*");
 
     $where = ($tf_pri)? " WHERE t.priority = p.pid " : "";
     if( is_array($params) ) {
@@ -276,11 +276,14 @@ class zenTrack extends zen {
     }
     $query = "SELECT ".join(",",$columns)." FROM $tables $where";
 
-    $numtoshow = $this->settings['paging_max_rows'];
-    $start = $pageNumber * $numtoshow;
     if( $sort )
       $query .= " ORDER BY $sort";
     $this->total_records = $this->db_getrowcount($query);
+    $numtoshow = $this->settings['paging_max_rows'];
+    $start = $pageNumber * $numtoshow;
+    if( $start + $numtoshow > $this->total_records ) {
+      $numtoshow = $this->total_records - $start; 
+    }
     $vals = $this->db_getlimitedIndex($query,$numtoshow,$start);
     $this->addDebug("get_tickets","count(vals)=".count($vals).",numtoshow=".$numtoshow.",start=".$start.",total_records=".$this->total_records.",query=".$query,3);    
     return $vals;

@@ -5,21 +5,21 @@
 <p>The log is where notes, information, and labor are recorded for
 tickets.  
 
-<p>This screen is updated whenever the status of the ticket changes
-with the time, user, and action performed as well as any time worked and comments
-by the user.
+<p>The log is updated whenever the ticket is modified.  The new log entry 
+contains the time, the user who made the modification, the action 
+performed, and any time worked or comments noted by the user.
 
 <p><b>How to View</b></p>
 
 <p>You can view the existing log entries for a ticket by browsing to it and
 then by opening the 'Log' tab in the ticket view.</p>
 
-<img src="<?=$imageUrl?>/help_screenshots/log_view.gif" 
+<img src="<?=$tutImageUrl?>/log_view.gif" 
      alt="An image of the ticket log"
      height="194" width="400" align='center'>
 
-<p>Anyone with access to view the bin where the ticket is located can view
-the log as well.
+<p>The log can be viewed by anyone with access to the appropriate bin, so this
+probably isn't a good place to make fun of customers and managers.
 
 <p><b>Creating Log Entries</b></p>
 

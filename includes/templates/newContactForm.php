@@ -78,27 +78,7 @@ value="<?=strip_tags($address3)?>">
 
 <tr>
   <td class="bars">
-    <?=tr("Post/Zip Code")?>:
-  </td>
-  <td class="bars">
-    <input type="text" name="postcode" size="20" maxlength="50"
-value="<?=strip_tags($postcode)?>">
-  </td>
-</tr> 
-
-<tr>
-  <td class="bars">
-    <?=tr("County / State")?>:
-  </td>
-  <td class="bars">
-    <input type="text" name="place" size="20" maxlength="50"
-      value="<?=strip_tags($place)?>">
-  </td>
-</tr>   
-
-<tr>
-  <td class="bars">
-    <?=tr("PObox")?>:
+    <?=tr("P.O. Box")?>:
   </td>
   <td class="bars">
     <input type="text" name="pobox" size="20" maxlength="50"
@@ -108,11 +88,41 @@ value="<?=strip_tags($pobox)?>">
 
 <tr>
   <td class="bars">
-    <?=tr("Post/Zip code/Place")?>:
+    <?=tr("Postal Code(Zip)")?>:
+  </td>
+  <td class="bars">
+    <input type="text" name="postcode" size="20" maxlength="50"
+value="<?=strip_tags($postcode)?>">
+  </td>
+</tr> 
+
+<tr>
+  <td class="bars">
+    <?=tr("Location")?>:
   </td>
   <td class="bars">
     <input type="text" name="postcode2" size="20" maxlength="50"
       value="<?=strip_tags($postcode2)?>">
+  </td>
+</tr>   
+
+<tr>
+  <td class="bars">
+    <?=tr("Country")?>:
+  </td>
+  <td class="bars">
+    <input type="text" name="country" size="20" maxlength="50"
+      value="<?=strip_tags($country)?>">
+  </td>
+</tr>   
+
+<tr>
+  <td class="bars">
+    <?=tr("County / State")?>:
+  </td>
+  <td class="bars">
+    <input type="text" name="place" size="20" maxlength="50"
+      value="<?=strip_tags($place)?>">
   </td>
 </tr>   
 
@@ -135,16 +145,6 @@ value="<?=strip_tags($pobox)?>">
       value="<?=strip_tags($fax)?>">
   </td>
 </tr>  
-
-<tr>
-  <td class="bars">
-    <?=tr("Country")?>:
-  </td>
-  <td class="bars">
-    <input type="text" name="country" size="20" maxlength="50"
-      value="<?=strip_tags($country)?>">
-  </td>
-</tr>   
 
 <tr>
   <td class="bars">

@@ -26,59 +26,79 @@
 
   include_once("$libDir/session_save.php");
 
+  $debug_text = "";
   /*
   **  This is the debugging section... please keep this intact, as
   **  we use it extensively for support questions
   */
   if( $Debug_Overview ) {
-     print "<span class='note'>\n";
-     print "<p>&nbsp;------DEBUG OVERVIEW-------&nbsp;</p>\n";
-     print "<i>To disable this output, set \$Debug_Overview in header.php to 0.</i><br>\n";
-     print "<a href='$rootUrl/phpinfo.php'>click here to view phpinfo</a><br>\n";
-     print "HTTP_USER_AGENT: $HTTP_USER_AGENT<br>\n";
-     print "SCRIPT_NAME: $SCRIPT_NAME<br>\n";
-     print "HTTP_HOST: $HTTP_HOST<br>\n";
-     print "HTTP_COOKIE: $HTTP_COOKIE<br>\n";
-     print "SERVER_SOFTWARE: {$_SERVER['SERVER_SOFTWARE']}<br>\n";
-     print "SERVER_NAME: $SERVER_NAME<br>\n";
-     print "PHP Version: ".phpversion()."<br>\n";
-     print "zenTrack Version: ".$zen->settings["version_xx"]."<br>\n";
-     print "rootUrl: $rootUrl<br>\n";
-     print "database: ".$zen->database_type."/".$zen->database_host."<br>\n";
-     print "settings count: ".count($zen->settings)."<br>\n";
-     print "bins: ".join(",",$zen->bins)."<br>\n";
-     print "types: ".join(",",$zen->types)."<br>\n";
-     print "priorities: ".join(",",$zen->priorities)."<br>\n";
-     print "systems: ".join(",",$zen->systems)."<br>\n";
-     print "login_language: $login_language<br>\n";
+     $debug_text .= "<span class='note'>\n";
+     $debug_text .= "<p>&nbsp;------DEBUG OVERVIEW-------&nbsp;</p>\n";
+     $debug_text .= "<i>To disable this output, set \$Debug_Overview in header.php to 0.</i><br>\n";
+     $debug_text .= "<a href='$rootUrl/phpinfo.php'>click here to view phpinfo</a><br>\n";
+     $debug_text .= "HTTP_USER_AGENT: $HTTP_USER_AGENT<br>\n";
+     $debug_text .= "SCRIPT_NAME: $SCRIPT_NAME<br>\n";
+     $debug_text .= "HTTP_HOST: $HTTP_HOST<br>\n";
+     $debug_text .= "HTTP_COOKIE: $HTTP_COOKIE<br>\n";
+     $debug_text .= "SERVER_SOFTWARE: {$_SERVER['SERVER_SOFTWARE']}<br>\n";
+     $debug_text .= "SERVER_NAME: $SERVER_NAME<br>\n";
+     $debug_text .= "PHP Version: ".phpversion()."<br>\n";
+     $debug_text .= "zenTrack Version: ".$zen->settings["version_xx"]."<br>\n";
+     $debug_text .= "rootUrl: $rootUrl<br>\n";
+     $debug_text .= "database: ".$zen->database_type."/".$zen->database_host."<br>\n";
+     $debug_text .= "settings count: ".count($zen->settings)."<br>\n";
+     $debug_text .= "bins: ".join(",",$zen->bins)."<br>\n";
+     $debug_text .= "types: ".join(",",$zen->types)."<br>\n";
+     $debug_text .= "priorities: ".join(",",$zen->priorities)."<br>\n";
+     $debug_text .= "systems: ".join(",",$zen->systems)."<br>\n";
+     $debug_text .= "login_language: $login_language<br>\n";
      if( $login_id ) {
-       print "login_id: $login_id<br>\n";
-       print "login_level: $login_level<br>\n";
-       print "login_name: $login_name<br>\n";
-       print "login_bin: $login_bin<br>\n";     
-       print "userBins: ".join(",",$zen->getUsersBins($login_id))."<br>\n";
+       $debug_text .= "login_id: $login_id<br>\n";
+       $debug_text .= "login_level: $login_level<br>\n";
+       $debug_text .= "login_name: $login_name<br>\n";
+       $debug_text .= "login_bin: $login_bin<br>\n";     
+       $debug_text .= "userBins: ".join(",",$zen->getUsersBins($login_id))."<br>\n";
      } else {
-       print "Not logged in<br>\n";
+       $debug_text .= "Not logged in<br>\n";
      }
-     print "GD Info:\n";
+     $debug_text .= "GD Info:\n";
      if( function_exists("gd_info") ) {
-       print "<ul>\n";
+       $debug_text .= "<ul>\n";
        foreach(gd_info() as $k=>$v) {
-	 print "<li>$k: $v</li>\n";
+         $debug_text .= "<li>$k: $v</li>\n";
        }
-       print "</ul>\n";
+       $debug_text .= "</ul>\n";
      }
      else {
-       print "gd_info not available<br>\n";
+       $debug_text .= "gd_info not available<br>\n";
      }
-     print "<p>&nbsp;------/DEBUG OVERVIEW-------&nbsp;</p>\n";
-     print "</span>\n";
+     $debug_text .= "<p>&nbsp;------/DEBUG OVERVIEW-------&nbsp;</p>\n";
+     $debug_text .= "</span>\n";
   }
+  
   if( $zen->debug ) {
-     print "<span class='note'>\n";
+     $debug_text .= "<span class='note'>\n";
+     ob_start();
      $zen->printDebugMessages();
-     print "</span>\n";
+     $debug_text .= ob_get_contents();
+     ob_clean();
+     $debug_text .= "</span>\n";
   }
+  
+  if( $Debug_Overview ) {
+    $user = $zen->getUser($login_id);
+    ?>
+    <form action='<?=$rootUrl?>/help/bugs.php' method='post'>
+    <input type='submit' value='Report A Bug' name='reportButton' class='submit'>
+    <input type='hidden' name='name' value='<?=$zen->ffv($login_name)?>'>
+    <input type='hidden' name='email' value='<?=$zen->ffv($user['email'])?>'>
+    <input type='hidden' name='debug_output' value='<?=urlencode($debug_text)?>'>
+    <input type='hidden' name='user_info' value='<?=$zen->ffv($_SERVER['HTTP_USER_AGENT'])?>'>
+    </form>
+    <?
+  }
+  
+  print $debug_text;
 
   if( $Debug_Mode ) { 
     // used by behavior_js.php

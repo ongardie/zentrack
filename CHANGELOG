@@ -155,6 +155,9 @@
     - zentrack_2/includes/adodb/xsl/convert-0.2-0.1.xsl 1.1
     - zentrack_2/includes/adodb/xsl/remove-0.2.xsl 1.1
 
+2004-09-08, Kato
+  Added documentation (still incomplete) for user's manual
+  
 2004-09-06, Kato
   Repaired security issue with searching logs
     - zentrack_2/www/search.php 1.8
