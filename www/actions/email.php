@@ -62,6 +62,25 @@
      if( !$errs ) {
 	$res = $zen->sendEmail($recipients, $subject, $message, $login_id);
 	if( $res ) {
+     if( $zen->settings["log_email"] == 'on' ) {
+       $name = $zen->formatName($user,1);
+       $logParams = array(
+         "action"   =>  'EMAIL',
+         "user_id"   =>  $user_id
+         );
+       $logParams["bin_id"] = $ticket["bin_id"];
+       
+       // Generate log entry with list of email addresses
+       $entry = "Ticket emailed to ";
+       foreach ($recipients as $v) {
+         $entry .= $v . ", ";
+       }
+       $entry = substr($entry, 0, -2);
+       $logParams["entry"] = $entry;
+       if( $message )
+       $logParams["entry"] .= "";
+       $zen->add_log($id, $logParams);
+     }
 	   add_system_messages(tr("Ticket ? emailed to selected recipients", array($id)));
 	   $setmode = "system";
 	   include("../ticket.php");

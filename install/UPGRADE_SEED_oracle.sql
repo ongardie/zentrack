@@ -7,6 +7,7 @@ INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (89,
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (90,'color_priority_low','#FFFFFF','Base color for low priority items');
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (91,'color_priority_med','#FFFFCC','Base color for medium priority items');
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (92,'color_priority_hi','#FF9999','Base color for high priority items');
+INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (93,'log_email','on','Create a log entry when tickets are emailed.');
 
 UPDATE ZENTRACK_SETTINGS SET value = '2.4.1' WHERE name = 'version_xx';
 

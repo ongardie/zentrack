@@ -8,6 +8,17 @@
 ----- V2.4.2 (Development, See CVS) ----
 
 2003-05-10, Rob Hillis
+  Add ability to log when a ticket is emailed.
+    - zentrack/install/UPGRADE_SEED_mssqlserver.sql 1.7
+    - zentrack/install/UPGRADE_SEED_mysql.sql 1.15
+    - zentrack/install/UPGRADE_SEED_oracle.sql 1.14
+    - zentrack/install/UPGRADE_SEED_postgres.sql 1.13
+    - zentrack/install/seed_mssqlserver.sql 1.12
+    - zentrack/install/seed_mysql.sql 1.22
+    - zentrack/install/seed_oracle.sql 1.19
+    - zentrack/install/seed_postgres.sql 1.18
+    - zentrack/www/actions/email.php 1.11
+
   Remove non-functional default tester/manager code.
     - zentrack/install/header.php.default 1.10
     - zentrack/includes/zenTrack.class 1.105
