@@ -93,13 +93,17 @@
    * @param string $location is the full path to the libraries
    */
   function load_classes( $set, $location ) {
-    startPtime("load_classes: ".count($set));
+    if( function_exists("startPTime") ) {
+      startPtime("load_classes: ".count($set));
+    }
     foreach($set as $class) {
       if( !class_exists($class) ) {
         include("$location/$class.php");
       }
     }
-    endPtime("load_classes: ".count($set));
+    if( function_exists("startPTime") ) {
+      endPtime("load_classes: ".count($set));
+    }
   }
 
   // benchmarking
