@@ -16,6 +16,12 @@
   <td <?=$nav_rollover_text?>>
   <a class='subMenuLink' href="<?=$rootUrl?>/help/support.php"><?=tr("Support")?></a>
   </td>
+  <tr>
+  <td <?=$nav_rollover_text?>>
+  <a class='subMenuLink' href="<?=$rootUrl?>/help/gpl.php"><?=tr("License")?></a>
+  </td>
+  </tr>
+  </tr>
   </tr>
   
   <? } ?>

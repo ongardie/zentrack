@@ -46,6 +46,11 @@
           within 12 hours.  Never ignored.</td>
 	</tr>
 	<tr>
+	  <td valign="top"><a href="http://sourceforge.net/forum/forum.php?forum_id=71806">Online Forums</a></td>
+	  <td>The Open Disucssion forum on SourceForge is monitored by several experienced
+	      users and developers.  One of the best places to get help.</td>
+	</tr>
+	<tr>
 	  <td valign="top"><a href="mailto:phpzen@users.sourceforge.net">E-mail</a></td>
 	  <td>If you are a registered tester, you will get a reply, otherwise
           you may get a response if I'm bored, maybe in hours, maybe never</td>

@@ -7,6 +7,12 @@
 
 ----- V2.4 (development, see CVS) ----
 
+2003-04-15, Rob Hillis
+  Clean up Help subsystem, removed dead links and added link to forum on support page.
+   - zentrack/includes/leftHelp.php
+   - zentrack/www/help/index.php
+   - zentrack/www/help/support.php
+
 2003-04-14, Rob Hillis
   Fixed broken link to GPL License in Help section
    - zentrack/www/help/gpl.php
