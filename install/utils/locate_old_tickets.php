@@ -1,5 +1,12 @@
 <?php
 
+  /**
+   * You can run this file from the command line with a command similar to the following:
+   *   php ./locate_old_tickets.php '-1 month'
+   *     - or maybe -
+   *   c:\php\bin\php  locate_old_tickets.php '-1 month'
+   */
+
   if( !$argv || count($argv) < 2 ) {
     echo "\nUsage:\n\n./locate_old_tickets.php older_than_date\n\twhere older than date is any valid date format\n\teven '-1 month' or '-7 days'\n\n";
   }
