@@ -1,0 +1,243 @@
+<?
+
+include_once("$libDir/zenDate.class");  
+  
+class zen extends zenDate {
+ 
+   // this class includes basic formatting functions
+   // and utilities used by the various pages.
+   // it also extends the zenDate class to pull those
+   // functions into use for the rest of zenTrack.
+   
+   /*
+   **  TEXT FORMATTING
+   */
+   
+   function titleCase( $text = '' ) {
+      /*
+      ** The title case function converts the string to a title ready
+      ** format by capitalizing all words, excepting those 
+      ** found in lcwords, and converting all words found in ucwords to
+      ** all upper case
+      */
+      if( strlen($text) ) {
+	 $text = ucwords(strtolower($text));
+	 foreach($this->getFileArray($this->listDir."/lists/lcwords") as $l) {
+	    $l = trim($l);
+	    $lu = ucfirst($l);
+	    $text = ereg_replace(" $lu\b", " $l", $text);
+	 }
+	 foreach($this->getFileArray($this->listDir."/lists/ucwords") as $u) {
+	    $u = trim($u);
+	    $text = eregi_replace("\b$u\b", "$u", $text);
+	 }
+	 if( eregi("^([^a-zA-Z]*[a-z])", $text, $matches) ) {
+	    $text = ereg_replace("^([^a-zA-Z]*[a-z])", strtoupper($matches[1]), $text);
+	 }
+	 return $text;
+      }
+   }
+
+   function cleanInput( $fields = '', $vals = '' ) {
+     /*
+     **  Formats incoming data from forms
+     **
+     **  There are several ways to call this function:
+     **    
+     **    With with only $vals -- strips html excepting html_allowed from $vals and returns array
+     **    With $fields & $vals -- formats $vals as specified in $fields and returns array
+     **    With only $fields -- pulls variables listed in $fields by reference, formats 
+     **                         (using global attribute) and returns nothing
+     **
+     **  There are several values for the indexed array 'fields' which can be used
+     **
+     **	   case "alpha":     letters only
+     **    case "alphanum":  letters and numbers only
+     **    case "string":    letters, numbers and spaces only
+     **    case "num":       numbers and decimal symbols only
+     **    case "int":       numbers only
+     **	   case "date":      date chars format only
+     **	   case "html":      all but php tags allowed
+     **	   case "text":      strip all html
+     **	   case "ignore":    leave this fields alone
+     **    case "array":     also ignored
+     **	   case "":          strip all html excepting $mda->html_allowed (determined by lists/okhtmltags)
+     **
+     */
+
+      if( is_array($vals) ) {
+	 foreach($vals as $k=>$v ) {
+	    $f = ($fields["$k"] == 'array')? 'ignore' : $fields["$k"];
+	    if( !$k || !$f ) {
+	       $vals["$k"] = strip_tags( $v, $this->html_allowed );
+	    } else {
+	       switch( $f ) {
+		 case "alpha":
+		  $vals["$k"] = ereg_replace("[^a-zA-Z]", "", $v);
+		  break;
+		 case "alphanum":
+		  $vals["$k"] = ereg_replace("[^a-zA-Z0-9]", "", $v);
+		  break;	   
+		 case "num":
+		  $vals["$k"] = ereg_replace("[^0-9.]", "", $v);
+		  break;
+		 case "string":
+		  $vals["$k"] = ereg_relace("[^0-9a-zA-Z _-]", "", $v);
+		  break;
+		 case "int":
+		  $vals["$k"] = ereg_replace("[^0-9]", "", $v);
+		  break;
+		 case "date":
+		  $vals["$k"] = ereg_replace("[^0-9/: -]", "", $v);
+		  break;
+		 case "html": 
+		  $vals["$k"] = $this->stripPHP( $v );
+		  break;
+		 case "text":
+		  $vals["$k"] = htmlspecialchars($v);
+		  break;
+		 case "ignore":
+		  break;
+		 case "array":
+		  break;
+		 default:
+		  $vals["$k"] = strip_tags($v, $this->html_allowed);
+	       }
+	    }       
+	 }
+	 return $vals;
+      } else {
+	 foreach( $fields as $k=>$v ) {
+	    global $$k;
+	    switch( strtolower($v) ) {
+	      case "alpha":
+	       $$k = ereg_replace("[^a-zA-Z]", "", $$k);
+	       break;
+	      case "alphanum":
+	       $$k = ereg_replace("[^a-zA-Z0-9]", "", $$k);
+	       break;	   
+	      case "int":
+	       $$k = ereg_replace("[^0-9]", "", $$k);
+	       break;
+	      case "date":
+	       $$k = ereg_replace("[^0-9/: -]", "", $$k);
+	       break;
+	      case "html": 
+	       $$k = $this->stripPHP( $$k );
+	       break;
+	      case "text":
+	       $$k = strip_tags($$k);
+	       break;
+	      case "ignore":
+	       break;
+	      case "array":
+	       break;
+	      default:
+	       $$k = strip_tags($$k, $this->html_allowed);
+	    }	 
+	 }
+      }
+   }
+   
+   function stripPHP( $val = '' ) {
+      if( $val )
+	return ereg_replace("<\?", "&lt;?", ereg_replace("\?>", "?&gt;", $val));
+   }
+   
+   function getFileArray( $file, $delim = '', $index = '', $combined = 0 ) {
+      // makes an array from a file, each line of the file is one line in the array
+      // if $delim is given, then each row of data is split on that expression and 
+      // made into a sub-array if $index is set to an integer, then that number of 
+      // the sub-array is assigned as the index of the sub-array
+      // if $combined is set to 1, then the array is constructed with multiple rows
+      // under each index id (rather than overwriting if there is a duplicate)
+      if( file_exists($file) ) {
+	 $vals = $this->cleanText(file($file));
+	 if( is_array($vals) ) {
+	    foreach($vals as $v) {
+	       if( strlen($v) && !ereg("^#", $v) ) {
+		  if( strlen($delim) ) {
+		     $vals = explode($delim,$v);
+		     if( strlen($index) ) {
+			list($n) = array_splice($vals,$index,1);
+			if( $combined ) {
+			   $arr["$n"][] = $vals;
+			} else {
+			   $arr["$n"] = $vals;
+			}
+		     } else {
+			$arr[] = $vals;       
+		     }
+		  } else {
+		     $arr[] = $v;
+		  }
+	       }
+	    }
+	 }
+	 return $arr;
+      }
+   }
+   
+   function cleanText( $text = '' ) {   
+      /*
+      ** The clean text method creates an array out of a multi-line file
+      ** by splitting the contents on the carriage returns, and strips
+      ** any extraneous carriage return chars from the file
+      */
+      
+      $contents = (is_array($text))? $text : explode("\n", $text);
+      for( $i=0; $i<count($contents); $i++ ) {
+	 $contents[$i] = ereg_replace(chr(13), "", $contents[$i]);
+	 $contents[$i] = ereg_replace(chr(14), "", $contents[$i]);
+	 $contents[$i] = ereg_replace(chr(10), "", $contents[$i]);
+	 $contents[$i] = trim($contents[$i]);
+      }
+      return $contents;
+   }
+   
+   /*
+   **  UTILITIES
+   */   
+   
+   
+   
+   /*
+   **  ERROR REPORTING
+   */      
+   
+   function printErrors( $errs ) {
+      // prints an array of errors
+      // in red, as a formatted list
+      
+      print "<span class='red'><b>Errors Detected</b><ul>\n";
+      foreach($errs as $e)
+	print "<li>$e</li>\n";
+      print "</ul></span>";
+   }
+   
+   function print_errors( $errs ) {
+      // alias to printErrors()
+      
+      return($this->printErrors($errs));
+   }
+   
+   
+   
+   /*
+   **  SYSTEM METHODS
+   */
+   
+   
+   function zen() {
+      $this->zenDate();
+   }
+   
+   /*
+   **  VARIABLES
+   */ 
+   
+   var $html_allowed;
+   
+} 
+  
+?>

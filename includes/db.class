@@ -1,0 +1,340 @@
+<?
+  
+class DB {
+
+   var $db_link;
+   var $db_name;
+   var $db_errnum;
+   var $db_error;
+
+   /*
+   **  QUERIES
+   */   
+   
+   function db_queryIndexed( $query ) {
+      // retrieves an indexed array of results
+      // from $query
+      // stores any errors in $db_errnum(the code)
+      // and $db_error(the message)
+      
+      $result = mysql_query( $query );
+      if( $result and mysql_num_rows($result) ) {
+	 while( $vals = mysql_fetch_array($result) )
+	   $vars[] = $vals;	 
+      } else if( !is_resource($result) ) {
+	 $dbErrorNo = mysql_errno();
+	 $dbErrorMst = mysql_error();
+      }      
+      return($vars);
+   }
+
+   function db_query( $query ) {
+      // returns an array of results
+      // from $query
+      
+      $result = mysql_query( $query );      
+      if( $result and mysql_num_rows($result) ) {	 
+	 while( $vals = mysql_fetch_row($result) )
+	   $vars[] = $vals;
+      } else if( !is_resource($result) ) {
+	 $this->dbErrNo = mysql_errno();
+	 $this->dbErrMsg = mysql_error();
+      }
+      return($vars);
+   }
+
+   function db_quickIndexed( $query ) {
+      // returns an indexed row (1 row only)
+      // from $query
+      $result = mysql_query( $query );
+      if( $result and mysql_num_rows($result) )
+	$vars = mysql_fetch_array( $result );
+      else if( !is_resource($result) ) {
+	 $this->dbErrNo = mysql_errno();
+	 $this->dbErrMsg = mysql_error();
+      }      
+      return($vars);
+   }
+
+   function db_quick( $query ) {
+      // returns a row (1 row only) of
+      // results from $query
+      $result = mysql_query( $query );
+      if( $result and mysql_num_rows($result) )
+	$vars = mysql_fetch_row( $result );
+      else if( !is_resource($result) ) {
+	 $this->dbErrNo = mysql_errno();
+      	 $this->dbErrMsg = mysql_error();
+      }
+      return($vars);
+   }
+   
+   function db_get( $query ) {
+      // returns a single value from a db query
+      $result = mysql_query( $query );
+      if( $result and mysql_num_rows($result) )
+	$vars = mysql_fetch_row( $result );
+      else if( !is_resource($result) ) {
+	 $this->dbErrNo = mysql_errno();
+      	 $this->dbErrMsg = mysql_error();
+      }
+      return($vars[0]);
+   }
+   
+   function db_insert( $table, $params ) {
+      // requires abstraction because
+      // returning the insert_id varies
+      // in method from db to db
+      // for instance:  in oracle or postgres
+      // it is easiest to SELECT nextval() the 
+      // sequence/trigger/etc and then insert 
+      // the query with that value attached
+      // so that the insertID can then be returned
+      // .. in mysql, there is no SELECT nextval()
+      // so it is easieast to run the query, then return
+      // the mysql function mysql_insert_id()
+
+      list($cols,$vals) = $this->makeInsertVals($params);
+      $query = "INSERT INTO $table ($cols) VALUES($vals)";
+      
+      $res = $this->db_result($query);
+      if( $res ) {
+	 return( $this->db_insertID() );
+      }
+
+
+      /*
+      **  ORACLE REPLACEMENT FOR THE DB_INSERT() FUNCTION
+      **
+      
+      $seq = ereg_replace("ZENTRACK_", "", $table);
+      $sequence = "seq_".$seq."_id";
+      $query = "SELECT seq_ticket_id.nextval FROM DUAL";
+      $id = $this->db_get($query);
+      case( $seq ) {
+	case "access":
+	 $col = "aid";
+	 break;
+	case "attachments":
+	 $col = "attachmentID";
+	 break;
+	case "bins":
+	 $col = "bid";
+	 break;
+	case "logs":
+	 $col = "lid";
+	 break;	 
+	case "priorities":
+	 $col = "pid";
+	 break;
+	case "settings":
+	 $col = "setID";
+	 break;
+	case "systems":
+	 $col = "sid";
+	 break;
+	case "tasks":
+	 $col = "taskID";
+	 break;
+	case "translation_strings":
+	 $col = "trID";
+	 break;
+	case "translation_words":
+	 $col = "wordID";
+	 break;
+	case "types":
+	 $col = "typeID";
+	 break;
+	case "users":
+	 $col = "uid";
+	 break;
+	default:       // defaults to tickets id
+	 $col = "id";
+      }
+      $params["$col"] = $id;
+      list($cols,$vals) = $this->makeInsertVals($params);      
+      $res = $this->db_result($query);
+
+      **
+      **
+      **
+      */                       
+   
+   }
+
+   function db_result( $query ) {
+      // performs an insert, update, delete
+      // or other query which does not retrieve
+      // data
+      $result = mysql_query( $query );      
+      if( $result && mysql_affected_rows() ) {
+	 return( mysql_affected_rows() );
+      } else {
+	 $this->dbErrNo = mysql_errno();
+	 $this->dbErrMsg = mysql_error();
+	 return('');
+      }
+   }
+
+   function db_list( $query ) {
+      // retrieves a single column from the db
+      // and returns the results in a simple list
+      // array
+      $list = $this->db_query($query);
+      if( is_array($list) ) {
+	 foreach($list as $l) {
+	    $v[] = $l[0];
+	 }
+	 return( $v );
+      }
+   }
+   
+   /*
+   ** UTILITIES
+   */
+   
+   function db_insertID() {
+      // fetches the last mysql insert id from the db
+      return( mysql_insert_id() );
+   }
+   
+   function checkSlashes( $val = '' ) {
+      // checks incoming data for proper escaped ' marks
+      // to insure insertion integrity
+      
+      if( !ereg("[\\]['\"]", $val) && ereg("['\"]", $val) )
+	$val = addslashes($val);
+      return $val;
+   }   
+   
+   function makeInsertVals( $params, $set = 0 ) {
+      // takes an indexed array of parameters and creates a list of columns
+      // and values to insert into the database
+      // is sensitive to things like NULL and numbers
+      // if $set is 1, then this method will return an update formatted list
+      // rather than two insert formatted lists
+ 
+      if( !$set ) {
+	 foreach($params as $k=>$v) { 
+	    $cols .= ($cols)? ", $k" : "$k";
+	    if( ereg("^(NULL|FALSE|TRUE|[0-9]+)$", $v) ) {
+	       $vals .= ($vals)? ", $v" : "$v"; 
+	    } else {
+	       $v = $this->checkSlashes($v);
+	       $vals .= ($vals)? ", '$v'" : "'$v'";
+	    }
+	 }
+	 return(array($cols,$vals));
+      } else {
+	 foreach($params as $k=>$v) {
+	    if( ereg("^(NULL|FALSE|TRUE|[0-9]+)$", $v) ) {
+	       $vals .= ($vals)? ", $k = $v" : "$k = $v"; 
+	    } else {
+	       $v = $this->checkSlashes($v);
+	       $vals .= ($vals)? ", $k = '$v'" : "$k = '$v'";
+	    }
+	 }
+	 return( $vals );
+      }
+   }
+   
+   function simpleWhere( $params ) {
+      // takes an indexed array as a list of columns and
+      // their values to match and makes them into an sql
+      // format ready for use in a WHERE statement
+     
+      foreach($params as $k=>$v) {
+	 if( $text )
+	   $text .= " AND ";
+	 if( is_array($v) ) {
+	    $text .= "$k IN('".join("','",$v)."')";
+	 } else {
+	    if( ereg("^(NULL|FALSE|TRUE|[0-9]+)$", $v) ) {
+	       $text .= "$k = $v";
+	    } else {
+	       $v = $this->checkSlashes($v);
+	       $text .= "$k = '$v'";
+	    }
+	 }
+      }
+      return($text);
+   }
+   
+   function complexWhere( $params ) {
+      // takes an indexed array as a list of columns and
+      // an array containing the operator and value of each
+      // to match and makes them into an sql
+      // format ready for use in a WHERE statement
+      // the format is ["column_name"] = array("operator","value")
+      // where operator is a comparitor like =,>,>=,LIKE,etc
+      foreach($params as $k=>$v) {
+	 $text .= "$k $v[0] $v[1]";
+      }
+      return($text);
+   }            
+   
+   function db_get_fields( $table ) {
+      // returns the names of the columns
+      // in $table of the current database
+      
+      /* MYSQL SETUP */
+      
+      $fields = mysql_list_fields($this->dbName, $table);
+      $columns = mysql_num_fields($fields);      
+      for ($i = 0; $i < $columns; $i++) {
+	 $vars[] = mysql_field_name($fields, $i);
+      }
+      return($vars);
+      
+      /*** ORACLE SETUP ***/
+      /*  
+      **  ummm... need someone with oracle
+      **  to set this one up
+      **  don't remember off the top of my 
+      **  head
+      */
+   }   
+   
+   
+   /*
+   **  DB RELATED
+   */
+   
+   function db_connect( $host = '', $user = '', $password = '', $database = '' ) {
+      // create a db connection
+      $this->db_link = mysql_connect("$host", "$user", "$password");
+      if( $database and $this->db_link ) {
+	 $this->dbName = $database;
+	 $result = mysql_select_db( $database, $this->db_link );
+      } else
+	$result = 1;
+      if( !$this->db_link || !$result ) {
+	 $dbErrorNo = mysql_errno();
+   	 $dbErrorMsg = mysql_error();
+      }
+      return( $this->db_link );      
+   }
+
+   function db_switch( $db ) {
+      // switch database instance in use
+      $result = mysql_select_db( $db, $this->db_link );
+      $this->dbName = $db;
+      if( !$result ) {
+      	 $dbErrorNo = mysql_errno();
+      	 $dbErrorMst = mysql_error();
+      }
+      return( $result );
+   }   
+   
+   /*
+   **  INVOKE
+   */
+   
+   function DB( $host = '', $user = '', $password = '', $database = '' ) {
+      // call the zenDatabase class
+      $this->db_connect($host, $user, $password, $database);
+   }
+      
+}
+
+?>
