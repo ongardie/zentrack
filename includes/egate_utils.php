@@ -1251,8 +1251,8 @@
     // 'field:value' entries at the top of the message body
     if( $egate_create_overrides == 1 && count($egate_create_fields) > 0 ) {
       $i=0;
-      $match = '/^ *('.join('|',$egate_create_fields).') *: *(.+)/';
-      while( pregi_match( $match, $body['details'], $matches) && $i < 1000 ) {
+      $match = '/^ *('.join('|',$egate_create_fields).') *: *(.+)/i';
+      while( preg_match( $match, $body['details'], $matches) && $i < 1000 ) {
 	$body["{$matches[1]}"] = trim($matches[2]);
 	$body['details'] = trim(preg_replace($match, '', $body['details']));
 	$i++;

@@ -119,7 +119,7 @@
 			      "testing",
 			      "testing required",
 			      "testing_required",       //is testing required (1=yes)
-			      "approval"
+			      "approval",
 			      "approval required",
 			      "approval_required"       //is approval required (1=yes)
   );
