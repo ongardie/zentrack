@@ -49,6 +49,7 @@
    $this->table_types            = 'ZENTRACK_TYPES';            //ticket types
    $this->table_users            = 'ZENTRACK_USERS';            //users table   
    $this->table_notify_list      = 'ZENTRACK_NOTIFY_LIST';
+   $this->table_custom_fields_idx= 'ZENTRACK_VARFIELD_IDX';     //table for custom field definitions
 
    // not yet implemented... but functional
    // these will be fully added in 2.1
