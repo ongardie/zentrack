@@ -111,8 +111,9 @@ class ZenMetaDb extends Zen {
     if( ZenUtils::getIni('debug','develop_mode') ) {
       foreach( $xmlFields as $t=>$fields ) {
         foreach( $fields as $f ) {
-          if( !array_key_exists($this->_tables[$t]['fields'][$f]) ) {
-            ZenUtils::safeDebug($this, '_load', "{$t}->{$f} was not loaded from DB!", 122, LVL_ERROR);
+          $key = $f['name'];
+          if( !array_key_exists($key, $this->_tables[$t]['fields']) ) {
+            ZenUtils::safeDebug($this, '_load', "{$t}->{$key} was not loaded from DB!", 122, LVL_ERROR);
           }
         }
       }
