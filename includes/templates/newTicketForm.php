@@ -194,9 +194,11 @@ value="<?=strip_tags($relations)?>">
   </td>
   <td class="bars">
     <input type="text" name="start_date" size="12" maxlength="10"
-value="<?=($start_date)?$zen->showDate(strip_tags($start_date)):""?>">&nbsp;(mm/dd/yyyy, optional)
-    &nbsp;&nbsp;
-    <input type="button" name="date_button" value="Select Date" onclick="popUpCalendar(this, ticketForm.start_date, 'mm/dd/yyyy');"
+value="<?=($start_date)?$zen->showDate(strip_tags($start_date)):""?>">
+    <img name="date_button" src='<?=$rootUrl?>/images/cal.gif' 
+	onClick="popUpCalendar(this,document.ticketForm.start_date, 'mm/dd/yyyy')"
+	alt="Select a Date">
+    &nbsp;(optional)
   </td>
 </tr>
 <tr>
@@ -214,10 +216,11 @@ value="<?=strip_tags($est_hours)?>">&nbsp;(up to two decimal places, optional)
   </td>
   <td class="bars">
     <input type="text" name="deadline" size="12" maxlength="10"
-value="<?=($deadline)?$zen->showDate(strip_tags($deadline)):""?>">&nbsp;(mm/dd/yyyy, optional)
-    &nbsp;&nbsp;
-    <input type="button" name="date_button2" value="Select Date" onclick="popUpCalendar(this, ticketForm.deadline, 'mm/dd/yyyy');"
-
+value="<?=($deadline)?$zen->showDate(strip_tags($deadline)):""?>">
+    <img name="date_button" src='<?=$rootUrl?>/images/cal.gif' 
+	onClick="popUpCalendar(this, document.ticketForm.deadline, 'mm/dd/yyyy')"
+	alt="Select a Date">
+    &nbsp;(optional)
   </td>
 </tr>				   
 <tr>

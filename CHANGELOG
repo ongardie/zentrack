@@ -5,6 +5,16 @@
  100 percent object oriented and database abstracted. 
 
 ----- V2.2.2 (not released) -----
+2003-02-09, Kato
+  Fixed SCRIPT_NAME issues with php binary installs as CGI executable
+    - includes/session_start.php v1.5
+  Enhanced / Corrected the access/roles functions
+  Thanks to David Reite(Darktroll) for pointing out my laziness here
+    - includes/templates/userAdd.php v1.5
+    - includes/zenTrack.class v1.38
+    - includes/templates/accessForm.php v1.4
+    - www/admin/access.php v1.4
+
 2003-02-08, Altman
   Fixed bug that caused logs on tickets to produce only a partial 
   URL in a log entry should there have been a URL typed in.

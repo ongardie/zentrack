@@ -86,7 +86,7 @@ CREATE TABLE ZENTRACK_ATTACHMENTS (
 CREATE TABLE ZENTRACK_BINS (
   bid int8 default nextval('"bid_seq"') NOT NULL PRIMARY KEY,
   name varchar(25) NOT NULL default '',
-  priority int4 default NULL,
+  priority int8 default NULL,
   active int2 default '1'
 );
 
@@ -139,7 +139,7 @@ CREATE TABLE ZENTRACK_PREFERENCES (
 CREATE TABLE ZENTRACK_PRIORITIES (
   pid int8 default nextval('"pid_seq"') NOT NULL PRIMARY KEY,
   name varchar(25) NOT NULL default '',
-  priority int4 default NULL,
+  priority int8 default NULL,
   active int2 default NULL
 );
 
@@ -162,7 +162,7 @@ CREATE TABLE ZENTRACK_SETTINGS (
 CREATE TABLE ZENTRACK_SYSTEMS (
   sid int8 default nextval('"sid_seq"') NOT NULL PRIMARY KEY,
   name varchar(25) NOT NULL default '',
-  priority int4 default NULL,
+  priority int8 default NULL,
   active int2 default NULL
 );
 
@@ -173,7 +173,7 @@ CREATE TABLE ZENTRACK_SYSTEMS (
 CREATE TABLE ZENTRACK_TASKS (
   task_id int8 default nextval('"task_id_seq"') NOT NULL PRIMARY KEY,
   name varchar(25) NOT NULL default '',
-  priority int4 default NULL,
+  priority int8 default NULL,
   active int2 default NULL
 );
 
@@ -255,7 +255,7 @@ CREATE TABLE ZENTRACK_TRANSLATION_WORDS (
 CREATE TABLE ZENTRACK_TYPES (
   type_id int8 default nextval('"type_id_seq"') NOT NULL PRIMARY KEY,
   name varchar(25) NOT NULL default '',
-  priority int4 default NULL,
+  priority int8 default NULL,
   active int2 default NULL
 );
 
@@ -286,7 +286,7 @@ CREATE TABLE ZENTRACK_REPORTS (
    report_name varchar(100) default NULL, 
    report_type varchar(25) default NULL, 
    date_selector varchar(25) default NULL, 
-   date_value int(3) default NULL, 
+   date_value int8 default NULL, 
    date_range varchar(12) default NULL, 
    date_low int8 default NULL, 
    chart_title varchar(255) default NULL, 
@@ -320,7 +320,7 @@ CREATE TABLE ZENTRACK_REPORTS_TEMP (
    report_name varchar(100) default NULL, 
    report_type varchar(25) default NULL, 
    date_selector varchar(25) default NULL, 
-   date_value int(3) default NULL, 
+   date_value int8 default NULL, 
    date_range varchar(12) default NULL, 
    date_low int8 default NULL, 
    chart_title varchar(255) default NULL, 
@@ -336,4 +336,6 @@ CREATE TABLE ZENTRACK_REPORTS_TEMP (
    show_data_vals int2 default NULL, 
    PRIMARY KEY (report_id)
 );
+
+
 

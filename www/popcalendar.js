@@ -2,36 +2,36 @@
 //	last updated 23 June 2002
 //	email :	fuushikaden@yahoo.com
 
-	var	fixedX = -1			// x position (-1 if to appear below control)
-	var	fixedY = -1			// y position (-1 if to appear below control)
-	var startAt = 1			// 0 - sunday ; 1 - monday
-	var showWeekNumber = 1	// 0 - don't show; 1 - show
-	var showToday = 1		// 0 - don't show; 1 - show
-	var imgDir = "/images/calendar/"			// directory for images ... e.g. var imgDir="/img/"
+var	fixedX = -1			// x position (-1 if to appear below control)
+var	fixedY = -1			// y position (-1 if to appear below control)
+var startAt = 1			// 0 - sunday ; 1 - monday
+var showWeekNumber = 1	// 0 - don't show; 1 - show
+var showToday = 1		// 0 - don't show; 1 - show
+var imgDir = "/images/calendar/"			// directory for images ... e.g. var imgDir="/img/"
 
-	var gotoString = "Go To Current Month"
-	var todayString = "Today is"
-	var weekString = "Wk"
-	var scrollLeftMessage = "Click to scroll to previous month. Hold mouse button to scroll automatically."
-	var scrollRightMessage = "Click to scroll to next month. Hold mouse button to scroll automatically."
-	var selectMonthMessage = "Click to select a month."
-	var selectYearMessage = "Click to select a year."
-	var selectDateMessage = "Select [date] as date." // do not replace [date], it will be replaced by date.
+var gotoString = "Go To Current Month"
+var todayString = "Today is"
+var weekString = "Wk"
+var scrollLeftMessage = "Click to scroll to previous month. Hold mouse button to scroll automatically."
+var scrollRightMessage = "Click to scroll to next month. Hold mouse button to scroll automatically."
+var selectMonthMessage = "Click to select a month."
+var selectYearMessage = "Click to select a year."
+var selectDateMessage = "Select [date] as date." // do not replace [date], it will be replaced by date.
 
-	var	crossobj, crossMonthObj, crossYearObj, monthSelected, yearSelected, dateSelected, omonthSelected, oyearSelected, odateSelected, monthConstructed, yearConstructed, intervalID1, intervalID2, timeoutID1, timeoutID2, ctlToPlaceValue, ctlNow, dateFormat, nStartingYear
+var	crossobj, crossMonthObj, crossYearObj, monthSelected, yearSelected, dateSelected, omonthSelected, oyearSelected, odateSelected, monthConstructed, yearConstructed, intervalID1, intervalID2, timeoutID1, timeoutID2, ctlToPlaceValue, ctlNow, dateFormat, nStartingYear
 
-	var	bPageLoaded=false
-	var	ie=document.all
-	var	dom=document.getElementById
+var	bPageLoaded=false
+var	ie=document.all
+var	dom=document.getElementById
 
-	var	ns4=document.layers
-	var	today =	new	Date()
-	var	dateNow	 = today.getDate()
-	var	monthNow = today.getMonth()
-	var	yearNow	 = today.getYear()
-	var	imgsrc = new Array("drop1.gif","drop2.gif","left1.gif","left2.gif","right1.gif","right2.gif")
-	var	img	= new Array()
-
+var	ns4=document.layers
+var	today =	new	Date()
+     var	dateNow	 = today.getDate()
+     var	monthNow = today.getMonth()
+     var	yearNow	 = today.getYear()
+     var	imgsrc = new Array("drop1.gif","drop2.gif","left1.gif","left2.gif","right1.gif","right2.gif")
+     var	img	= new Array()
+     
 	var bShow = false;
 
     /* hides <select> and <applet> objects (for IE only) */
