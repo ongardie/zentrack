@@ -1,11 +1,11 @@
 
   <tr>
-  <td <?=($expand_help)? " class='titleCell'" : $nav_rollover_text?>>
+  <td <?=((isset($expand_help)&&$expand_help))? " class='titleCell'" : $nav_rollover_text?>>
     <a href='<?=$rootUrl?>/help/' class='menuLink'><?=$zen->prn("Help")?></a>
   </td>
   </tr>
   
-  <? if( $expand_help ) { ?>  
+  <? if( (isset($expand_help)&&$expand_help) ) { ?>  
   
   <tr>
   <td <?=$nav_rollover_text?>>

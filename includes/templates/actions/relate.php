@@ -22,7 +22,7 @@
     <textarea cols='20' rows='4' 
 	name='relations'><?=strip_tags($relations)?></textarea>
      &nbsp;<input type='button' class='searchbox' value=' ... ' 
-	onClick='return popupWindowScrolls("/helpers/ticketSearchbox.php?return_form=relateTicketForm&return_field=relations","popupHelper",375,500)'>
+	onClick='return popupWindowScrolls("<?=$rootUrl?>/helpers/ticketSearchbox.php?return_form=relateTicketForm&return_field=relations","popupHelper",375,500)'>
      <br><span class='note'>Type ids separated by commas, or press 'search'</span>
   </td>			     
 </tr>

@@ -1,54 +1,81 @@
 <?php
 /* 
-V1.99 21 April 2002 (c) 2000-2002 John Lim (jlim@natsoft.com.my). All rights reserved.
+V3.00 6 Jan 2003  (c) 2000-2003 John Lim (jlim@natsoft.com.my). All rights reserved.
   Released under both BSD license and Lesser GPL library license. 
   Whenever there is any discrepancy between the two licenses, 
   the BSD license will take precedence. 
   Set tabs to 4 for best viewing.
-    
+	
   Latest version is available at http://php.weblogs.com/
 */
 
 error_reporting(E_ALL);
 
-$PHP_SELF = $HTTP_SERVER_VARS['PHP_SELF'];
 
-include_once('../adodb-pear.inc.php');
-include_once('../tohtml.inc.php');
-session_register('curr_page');
+include_once('../adodb.inc.php');
+include_once('../adodb-pager.inc.php');
 
-$db = NewADOConnection('mysql');
-$db->debug = true;
-//$db->Connect('localhost:4321','scott','tiger','natsoft.domain');
-$db->Connect('localhost','root','','xphplens');
+$driver = 'postgres';
+$sql = 'select ID, firstname as "First Name", lastname as "Last Name", created as "Date Created" from adoxyz  order  by  id';
+$sql = 'select count(*),firstname from adoxyz group by firstname order by 2 ';
 
-$num_of_rows_per_page = 7;
-$sql = "select * from adoxyz ";
-
-if (isset($HTTP_GET_VARS['next_page']))
-	$curr_page = $HTTP_GET_VARS['next_page'];
-if (empty($curr_page)) $curr_page = 1; ## at first page
-
-$rs = $db->PageExecute($sql, $num_of_rows_per_page, $curr_page);
-if (!$rs) die('Query Failed');
-
-if (!$rs->EOF && (!$rs->AtFirstPage() || !$rs->AtLastPage())) {
-	if (!$rs->AtFirstPage()) {
-?>
-<a href="<?php echo $PHP_SELF;?>?next_page=1">First page</a> &nbsp;
-<a href="<?php echo $PHP_SELF,'?next_page=',$rs->AbsolutePage() - 1 ?>">Previous page</a> &nbsp;
-<?php
-	} else {
-	echo " First Page &nbsp; Previous Page &nbsp; ";
-	}
-	if (!$rs->AtLastPage()) {
-?>
-<a href="<?php echo $PHP_SELF,'?next_page=',$rs->AbsolutePage() + 1 ?>">Next Page</a>
-<?php
-	} else
-		print "Next Page";
-	rs2html($rs);
+if ($driver == 'postgres') {
+	$db = NewADOConnection('postgres');
+	$db->PConnect('localhost','tester','test','test');
 }
 
+if ($driver == 'access') {
+	$db = NewADOConnection('access');
+	$db->PConnect("nwind", "", "", "");
+}
 
+if ($driver == 'ibase') {
+	$db = NewADOConnection('ibase');
+	$db->PConnect("localhost:e:\\interbase\\examples\\database\\employee.gdb", "sysdba", "masterkey", "");
+	$sql = 'select ID, firstname , lastname , created  from adoxyz order by id';
+}
+if ($driver == 'mssql') {
+	$db = NewADOConnection('mssql');
+	$db->Connect('JAGUAR\vsdotnet','adodb','natsoft','northwind');
+}
+if ($driver == 'oci8') {
+	$db = NewADOConnection('oci8');
+	$db->Connect('','scott','tiger');
+}
+
+if ($driver == 'access') {
+	$db = NewADOConnection('access');
+	$db->Connect('nwind');
+}
+
+if (empty($driver) or $driver == 'mysql') {
+	$db = NewADOConnection('mysql');
+	$db->Connect('localhost','root','','xphplens');
+}
+
+//$db->pageExecuteCountRows = false;
+
+$db->debug = true;
+
+if (0) {
+$rs = &$db->Execute($sql);
+include_once('../toexport.inc.php');
+print "<pre>";
+print rs2csv($rs); # return a string
+
+print '<hr>';
+$rs->MoveFirst(); # note, some databases do not support MoveFirst
+print rs2tab($rs); # return a string
+
+print '<hr>';
+$rs->MoveFirst();
+rs2tabout($rs); # send to stdout directly
+print "</pre>";
+}
+
+$pager = new ADODB_Pager($db,$sql);
+$pager->showPageLinks = true;
+$pager->linksPerPage = 3;
+$pager->cache = 60;
+$pager->Render($rows=7);
 ?>

@@ -3,12 +3,14 @@
 $title_length = 25;
 
 // retrieve the params of the report
-if( $tempid ) { $params = $zen->getTempReport($tempid); }
-else if( $repid ) { $params = $zen->getReportParams($repid); }
+if( isset($tempid) ) { $params = $zen->getTempReport($tempid); }
+else if( isset($repid) ) { $params = $zen->getReportParams($repid); }
 
 if( is_array($params) ) {
   $report_type = $params["report_type"];
-  $params["data_set"] = explode(",",$params["data_set"]);
+  if( !is_array($params["data_set"]) )
+    $params["data_set"] = explode(",",$params["data_set"]);
+  print_r($params["data_set"]);
   $params["chart_options"] = explode(",",$params["chart_options"]);
 
   $zen->addDebug("reportDataParser",

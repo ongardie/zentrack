@@ -98,7 +98,7 @@ if( !$tempid || !is_array($template)) {
      print (is_array($data_set))? join(",",$data_set) : "";
      print "</textarea>\n";
      $onclick = "onClick='return popupWindowScrolls"
-	."(\"/helpers/userSearchbox.php?return_form=saveTemplateForm"
+	."(\"$rootUrl/helpers/userSearchbox.php?return_form=saveTemplateForm"
 	."&return_field=select_users\",\"popupHelper\",375,400)'";
      print "&nbsp;<input type='button' class='searchbox' value=' ... ' $onclick>\n";
      print "<br><span class='note'>Type ids separated by "

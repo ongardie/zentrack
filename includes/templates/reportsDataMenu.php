@@ -58,7 +58,7 @@
      print "<textarea cols='20' rows='4' name='data_set'>";
      print (is_array($data_set))? join(",",$data_set) : "";
      print "</textarea>\n";
-     $onclick = "onClick='return popupWindowScrolls(\"/helpers/$searchbox.php?return_form=reportDataForm&return_field=data_set\",\"popupHelper\",375,400)'";
+     $onclick = "onClick='return popupWindowScrolls(\"$rootUrl/helpers/$searchbox.php?return_form=reportDataForm&return_field=data_set\",\"popupHelper\",375,400)'";
      print "&nbsp;<input type='button' class='searchbox' value=' ... ' $onclick>\n";
      print "<br><span class='note'>Type ids separated by commas, or press 'search'</span>\n";
    } else {

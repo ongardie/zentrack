@@ -78,15 +78,15 @@
      global $system_message_limit;
      
      if( count($msg) >= $system_message_limit ) {
-	unset($login_messages);
+   unset($login_messages);
      }
      if( !is_array($login_messages) )
        $login_messages = array();
      if( count($login_messages)+count($msg) > $system_message_limit ) {
-	$login_messages = array_slice( $login_messages,0,($system_message_limit - count($msg)) );
+   $login_messages = array_slice( $login_messages,0,($system_message_limit - count($msg)) );
      }
-     foreach( $msg as $m ) {	
-	array_unshift($login_messages, array($m,time(),$code) );
+     foreach( $msg as $m ) {  
+   array_unshift($login_messages, array($m,time(),$code) );
      }
   }
 
@@ -100,21 +100,21 @@
      
      if( is_array($login_messages) ) {
        $i = 0;
-	foreach( $login_messages as $v ) {
-	   if( $style != "smallGrey" && $v[2] ) {
-	      $style = "small$v[2]";
-	   } else if( $style != "smallGrey" ) {
-	      $style = "smallBold";
-	   }
-	   $login_messages[$i][2] = "Grey";
-	   if( $style == "smallGrey" && $flag )
-	     break;
-	   print "<br><span class='$style'>";
-	   print "[".$zen->showTime($v[1])."] ";
-	   print $v[0]."</span>\n";
-	}	
+   foreach( $login_messages as $v ) {
+      if( $style != "smallGrey" && $v[2] ) {
+         $style = "small$v[2]";
+      } else if( $style != "smallGrey" ) {
+         $style = "smallBold";
+      }
+      $login_messages[$i][2] = "Grey";
+      if( $style == "smallGrey" && $flag )
+        break;
+      print "<br><span class='$style'>";
+      print "[".$zen->showTime($v[1])."] ";
+      print $v[0]."</span>\n";
+   }  
      } else {
-	print "<span class='smallGrey'>No system messages</span>";
+   print "<span class='smallGrey'>No system messages</span>";
      }
   }
 
@@ -124,9 +124,9 @@
      unset($login_messages);
   }
 
-  if( $newbin == 'all' ) {
+  if( isset($newbin) && $newbin == 'all' ) {
      unset($login_bin);
-  } else if( $newbin && $zen->bins["$newbin"] && $zen->checkAccess($login_id,$newbin) ) {
+  } else if( isset($newbin) && $newbin && $zen->bins["$newbin"] && $zen->checkAccess($login_id,$newbin) ) {
      $login_bin = $newbin;
   }
 
@@ -136,18 +136,8 @@
   $msg = array();
   $errs = "";
   $mode = "";
-  $id = ereg_replace("[^0-9]", "", $id);
-
-  /*
-  **  USER AUTHENTICATION
-  **
-  **  determine if a login is required
-  */
-
-  if( !eregi("(/help/|styles[.]php)",$SCRIPT_NAME) ) {
-     include("$libDir/login.php");
-  }     
-
+  if( isset($id) )
+     $id = ereg_replace("[^0-9]", "", $id);
 
   // used to set table cell padding (since netscape can't handle padding-top/bottom)
   $height_num = $zen->settings["font_size"]+4;
@@ -165,12 +155,12 @@
   // to a file called ticket_[name]Box.php which is included in
   // includes/templates dir
   $tabs = array(
-		"Details",
-		"Log",
-		"Related",		
-		"Attachments",
-		"System"
-		);  
+      "Details",
+      "Log",
+      "Related",     
+      "Attachments",
+      "System"
+      );  
   
    
   /*
@@ -205,16 +195,26 @@
 
 
   /*
+  **  USER AUTHENTICATION
+  **
+  **  determine if a login is required
+  */
+
+  if( !eregi("(/help/|styles[.]php)",$SCRIPT_NAME) ) {
+     include("$libDir/login.php");
+  }     
+
+  /*
   **  LISTS THAT SHOULD PROBABLY BE DYNAMIC, BUT AREN'T
   */
 
   $log_actions = array(
-		       "ACTION",
-		       "LABOR",
-		       "NOTE",
-		       "QUESTION",
-		       "SOLUTION"
-		     );
+             "ACTION",
+             "LABOR",
+             "NOTE",
+             "QUESTION",
+             "SOLUTION"
+           );
 
 
 ?>

@@ -2690,7 +2690,7 @@ class zenGraph extends Zen {
         $this->drawDash($x, $y, $color);
         break;
       case "bar":
-        $this->drawBar($x, $y, $color);
+        $this->drawBarPoint($x, $y, $color);
         break;
       default:
         $this->drawCircle($x, $y, $color, 1);
@@ -4413,7 +4413,7 @@ class zenGraph extends Zen {
     ImageLine( $this->img, $x, $y1, $x, $y2, $color );   
   }
   
-  function drawBar( $x, $y, $color, $filled = '' ) {
+  function drawBarPoint( $x, $y, $color, $filled = '' ) {
     $s = $this->pointSize / 2;
     $y1 = $y - $s;
     $y2 = $y + $s;

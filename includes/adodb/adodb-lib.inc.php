@@ -1,6 +1,6 @@
 <?php
 /* 
-V1.99 21 April 2002 (c) 2000-2002 John Lim (jlim@natsoft.com.my). All rights reserved.
+V3.00 6 Jan 2003  (c) 2000-2003 John Lim (jlim@natsoft.com.my). All rights reserved.
   Released under both BSD license and Lesser GPL library license. 
   Whenever there is any discrepancy between the two licenses, 
   the BSD license will take precedence. See License.txt. 
@@ -9,14 +9,6 @@ V1.99 21 April 2002 (c) 2000-2002 John Lim (jlim@natsoft.com.my). All rights res
   Less commonly used functions are placed here to reduce size of adodb.inc.php. 
 */ 
 
-function _adodb_totalpages(&$rs)
-{
-	if  ($rs->rowsPerPage) {
-		$rows = ($rs->RecordCount()+$rs->rowsPerPage-1) / $rs->rowsPerPage;
-		if ($rows < 0) return -1;
-		else return $rows;
-	} else return -1;
-}
 
 // Requires $ADODB_FETCH_MODE = ADODB_FETCH_NUM
 function _adodb_getmenu(&$zthis, $name,$defstr='',$blank1stItem=true,$multiple=false,
@@ -30,38 +22,43 @@ function _adodb_getmenu(&$zthis, $name,$defstr='',$blank1stItem=true,$multiple=f
 		if (!strpos($name,'[]')) $name .= '[]';
 	} else if ($size) $attr = " size=$size";
 	else $attr ='';
-	
-			
+
 	$s = "<select name=\"$name\"$attr $selectAttr>";
 	if ($blank1stItem) $s .= "\n<option></option>";
 
 	if ($zthis->FieldCount() > 1) $hasvalue=true;
 	else $compareFields0 = true;
 	
+	$value = '';
 	while(!$zthis->EOF) {
-		$zval = trim($zthis->fields[0]);
-		$selected = trim($zthis->fields[$compareFields0 ? 0 : 1]);
+		$zval = trim(reset($zthis->fields));
+		if (sizeof($zthis->fields) > 1) {
+			if (isset($zthis->fields[1]))
+				$zval2 = trim($zthis->fields[1]);
+			else
+				$zval2 = trim(next($zthis->fields));
+		}
+		$selected = ($compareFields0) ? $zval : $zval2;
 		
 		if ($blank1stItem && $zval=="") {
 			$zthis->MoveNext();
 			continue;
 		}
 		if ($hasvalue) 
-			$value = 'value="'.htmlspecialchars(trim($zthis->fields[1])).'"';
-		
+			$value = ' value="'.htmlspecialchars($zval2).'"';
 		
 		if (is_array($defstr))  {
 			
 			if (in_array($selected,$defstr)) 
-				$s .= "<option selected $value>".htmlspecialchars($zval).'</option>';
+				$s .= "<option selected$value>".htmlspecialchars($zval).'</option>';
 			else 
-				$s .= "\n<option ".$value.'>'.htmlspecialchars($zval).'</option>';
+				$s .= "\n<option".$value.'>'.htmlspecialchars($zval).'</option>';
 		}
 		else {
 			if (strcasecmp($selected,$defstr)==0) 
-				$s .= "<option selected $value>".htmlspecialchars($zval).'</option>';
-			else 
-				$s .= "\n<option ".$value.'>'.htmlspecialchars($zval).'</option>';
+				$s .= "<option selected$value>".htmlspecialchars($zval).'</option>';
+			else
+				$s .= "\n<option".$value.'>'.htmlspecialchars($zval).'</option>';
 		}
 		$zthis->MoveNext();
 	} // while
@@ -69,7 +66,139 @@ function _adodb_getmenu(&$zthis, $name,$defstr='',$blank1stItem=true,$multiple=f
 	return $s ."\n</select>\n";
 }
 
-function &_adodb_pageexecute(&$zthis, $sql, $nrows, $page, $inputarr=false, $arg3=false, $secs2cache=0) 
+/*
+	Count the number of records this sql statement will return by using
+	query rewriting techniques...
+	
+	Does not work with UNIONs.
+*/
+function _adodb_getcount(&$zthis, $sql,$inputarr=false,$secs2cache=0) 
+{
+	if (!preg_match('/\s+GROUP\s+BY\s+/is',$sql)) {
+	
+		// now replace SELECT ... FROM with SELECT COUNT(*) FROM
+		if (preg_match("/\s*SELECT\s*DISTINCT/i", $sql)) {
+			$rewritesql = preg_replace(
+				'/^\s*SELECT\s.*\s+FROM\s/Uis','SELECT DISTINCT COUNT(*) FROM ',$sql);
+		} else {
+			$rewritesql = preg_replace(
+				'/^\s*SELECT\s.*\s+FROM\s/Uis','SELECT COUNT(*) FROM ',$sql);
+		}
+		// fix by alexander zhukov, alex#unipack.ru, because count(*) and 'order by' fails 
+		// with mssql, access and postgresql. Also a good speedup optimization - skips sorting!
+		$rewritesql = preg_replace('/(\sORDER\s+BY\s.*)/is','',$rewritesql); 
+		
+	} else { 
+		// ok, has GROUP BY, so see if we can use a table alias
+		// but this is not supported by mysql nor mssql...
+		if ($zthis->dataProvider == 'oci8') {
+			
+			$rewritesql = preg_replace('/(\sORDER\s+BY\s.*)/is','',$sql);
+			$rewritesql = "SELECT COUNT(*) FROM ($rewritesql)"; 
+			
+		} else if ( $zthis->databaseType == 'postgres' || $zthis->databaseType == 'postgres7')  {
+			
+			$info = $zthis->ServerInfo();
+			if (substr($info['version'],0,3) >= 7.1) { // good till version 999
+				$rewritesql = preg_replace('/(\sORDER\s+BY\s.*)/is','',$sql);
+				$rewritesql = "SELECT COUNT(*) FROM ($rewritesql) _ADODB_ALIAS_";
+			}
+			
+		}
+	}
+	
+	if (isset($rewritesql) && $rewritesql != $sql) {
+		if ($secs2cache) {
+			// we only use half the time of secs2cache because the count can quickly
+			// become inaccurate if new records are added
+			$qryRecs = $zthis->CacheGetOne($secs2cache/2,$rewritesql,$inputarr);
+			
+		} else {
+			$qryRecs = $zthis->GetOne($rewritesql,$inputarr);
+	  	}
+		if ($qryRecs !== false) return $qryRecs;
+	}
+	
+	// query rewrite failed - so try slower way...
+	$rstest = &$zthis->Execute($sql);
+	if ($rstest) {
+   		$qryRecs = $rstest->RecordCount();
+		if ($qryRecs == -1) { 
+		// some databases will return -1 on MoveLast() - change to MoveNext()
+			while(!$rstest->EOF) {
+				$rstest->MoveNext();
+			}
+			$qryRecs = $rstest->_currentRow;
+		}
+		$rstest->Close();
+		if ($qryRecs == -1) return 0;
+	}
+
+	return $qryRecs;
+}
+
+/*
+ 	Code originally from "Cornel G" <conyg@fx.ro>
+
+	This code will not work with SQL that has UNION in it	
+	
+	Also if you are using CachePageExecute(), there is a strong possibility that
+	data will get out of synch. use CachePageExecute() only with tables that
+	rarely change.
+*/
+function &_adodb_pageexecute_all_rows(&$zthis, $sql, $nrows, $page, 
+						$inputarr=false, $arg3=false, $secs2cache=0) 
+{
+	$atfirstpage = false;
+	$atlastpage = false;
+	$lastpageno=1;
+
+	// If an invalid nrows is supplied, 
+	// we assume a default value of 10 rows per page
+	if (!isset($nrows) || $nrows <= 0) $nrows = 10;
+
+	$qryRecs = false; //count records for no offset
+	
+	$qryRecs = _adodb_getcount($zthis,$sql,$inputarr,$secs2cache);
+	$lastpageno = (int) ceil($qryRecs / $nrows);
+	$zthis->_maxRecordCount = $qryRecs;
+	
+	// If page number <= 1, then we are at the first page
+	if (!isset($page) || $page <= 1) {	
+		$page = 1;
+		$atfirstpage = true;
+	}
+
+	// ***** Here we check whether $page is the last page or 
+	// whether we are trying to retrieve 
+	// a page number greater than the last page number.
+	if ($page >= $lastpageno) {
+		$page = $lastpageno;
+		$atlastpage = true;
+	}
+	
+	// We get the data we want
+	$offset = $nrows * ($page-1);
+	if ($secs2cache > 0) 
+		$rsreturn = &$zthis->CacheSelectLimit($secs2cache, $sql, $nrows, $offset, $inputarr, $arg3);
+	else 
+		$rsreturn = &$zthis->SelectLimit($sql, $nrows, $offset, $inputarr, $arg3, $secs2cache);
+
+	
+	// Before returning the RecordSet, we set the pagination properties we need
+	if ($rsreturn) {
+		$rsreturn->_maxRecordCount = $qryRecs;
+		$rsreturn->rowsPerPage = $nrows;
+		$rsreturn->AbsolutePage($page);
+		$rsreturn->AtFirstPage($atfirstpage);
+		$rsreturn->AtLastPage($atlastpage);
+		$rsreturn->LastPageNo($lastpageno);
+	}
+	return $rsreturn;
+}
+
+// Iván Oliva version
+function &_adodb_pageexecute_no_last_page(&$zthis, $sql, $nrows, $page, $inputarr=false, $arg3=false, $secs2cache=0) 
 {
 
 	$atfirstpage = false;
@@ -129,15 +258,25 @@ function _adodb_getupdatesql(&$zthis,&$rs, $arrFields,$forceUpdate=false,$magicq
 		$fieldUpdatedCount = 0;
 		
 		// Get the table name from the existing query.
-		eregi("FROM ".ADODB_TABLE_REGEX, $rs->sql, $tableName);
+		preg_match("/FROM\s".ADODB_TABLE_REGEX."/i", $rs->sql, $tableName);
 
 		// Get the full where clause excluding the word "WHERE" from
 		// the existing query.
-		eregi("WHERE ([]0-9a-z=' \(\)\[\t\r\n_-]*)", $rs->sql, $whereClause);
-
+		preg_match('/\sWHERE\s(.*)/i', $rs->sql, $whereClause);
+		
+		$discard = false;
+		// not a good hack, improvements?
+		if ($whereClause)
+			preg_match('/\s(LIMIT\s.*)/i', $whereClause[1], $discard);
+		
+		if ($discard)
+			$whereClause[1] = substr($whereClause[1], 0, strlen($whereClause[1]) - strlen($discard[1]));
+		
 		// updateSQL will contain the full update query when all
 		// processing has completed.
 		$updateSQL = "UPDATE " . $tableName[1] . " SET ";
+
+		$hasnumeric = (isset($rs->fields[0]));
 		
 		// Loop through all of the fields in the recordset
 		for ($i=0, $max=$rs->FieldCount(); $i < $max; $i++) {
@@ -153,8 +292,9 @@ function _adodb_getupdatesql(&$zthis,&$rs, $arrFields,$forceUpdate=false,$magicq
 				// is different from the value passed in then
 				// go ahead and append the field name and new value to
 				// the update query.
-
-				if ($forceUpdate || strcmp($rs->fields[$i], $arrFields[$field->name])) {
+				
+				$val = ($hasnumeric) ? $rs->fields[$i] : $rs->fields[$field->name];
+				if ($forceUpdate || strcmp($val, $arrFields[$field->name])) {
 					// Set the counter for the number of fields that will be updated.
 					$fieldUpdatedCount++;
 
@@ -165,15 +305,20 @@ function _adodb_getupdatesql(&$zthis,&$rs, $arrFields,$forceUpdate=false,$magicq
 					// "mike" <mike@partner2partner.com> patch and "Ryan Bailey" <rebel@windriders.com> 
 					//PostgreSQL uses a 't' or 'f' and therefore needs to be processed as a string ('C') type field.
 					if ((substr($zthis->databaseType,0,8) == "postgres") && ($mt == "L")) $mt = "C";
-
+					// is_null requires php 4.0.4
+					if (/*is_null($arrFields[$fieldname]) ||*/ $arrFields[$field->name] === 'null') 
+						$updateSQL .= $field->name . " = null, ";
+					else		
 					switch($mt) {
+						case 'null':
 						case "C":
 						case "X":
+						case 'B':
 							$updateSQL .= $field->name . " = " . $zthis->qstr($arrFields[$field->name],$magicq) . ", ";
 							break;
 						case "D":
 							$updateSQL .= $field->name . " = " . $zthis->DBDate($arrFields[$field->name]) . ", ";
-       						break;
+	   						break;
 						case "T":
 							$updateSQL .= $field->name . " = " . $zthis->DBTimeStamp($arrFields[$field->name]) . ", ";
 							break;
@@ -182,7 +327,7 @@ function _adodb_getupdatesql(&$zthis,&$rs, $arrFields,$forceUpdate=false,$magicq
 							break;
 					};
 				};
-    		};
+			};
 		};
 
 		// If there were any modified fields then build the rest of the update query.
@@ -211,8 +356,9 @@ function _adodb_getinsertsql(&$zthis,&$rs,$arrFields,$magicq=false)
 		}
 
 		$fieldInsertedCount = 0;
+	
 		// Get the table name from the existing query.
-		eregi("FROM ".ADODB_TABLE_REGEX, $rs->sql, $tableName);
+		preg_match("/FROM\s".ADODB_TABLE_REGEX."/i", $rs->sql, $tableName);
 
 		// Loop through all of the fields in the recordset
 		for ($i=0, $max=$rs->FieldCount(); $i < $max; $i++) {
@@ -237,9 +383,13 @@ function _adodb_getinsertsql(&$zthis,&$rs,$arrFields,$magicq=false)
 
 				// Based on the datatype of the field
 				// Format the value properly for the database
+				if (/*is_null($arrFields[$fieldname]) ||*/ $arrFields[$field->name] === 'null') 
+						$values .= "null, ";
+				else		
 				switch($mt) {
 					case "C":
 					case "X":
+					case 'B':
 						$values .= $zthis->qstr($arrFields[$field->name],$magicq) . ", ";
 						break;
 					case "D":
@@ -252,8 +402,8 @@ function _adodb_getinsertsql(&$zthis,&$rs,$arrFields,$magicq=false)
 						$values .= (float) $arrFields[$field->name] . ", ";
 						break;
 				};
-    		};
-      	};
+			};
+	  	};
 
 		// If there were any inserted fields then build the rest of the insert query.
 		if ($fieldInsertedCount > 0) {

@@ -23,7 +23,7 @@
     <table width="600" align="center" cellpadding="0" cellspacing="0">
     <tr>
      <td width="400" class="page_section" align="center">
-      <?=($page_section)? $page_section:"&nbsp;";?>
+      <?=(isset($page_section))? strip_tags($page_section):"&nbsp;";?>
      </td>
      <td align="right" width="200">
       <span class="small">Ticket ID:</span>&nbsp;

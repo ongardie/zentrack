@@ -8,6 +8,7 @@ class DB {
    var $db_name;
    var $db_errnum;
    var $db_error;
+   var $sql_debug;
 
    /*
    **  QUERIES
@@ -22,9 +23,9 @@ class DB {
       $this->switchQueryMode(1);
       $recordSet = &$this->db_link->Execute($query);
       if( $recordSet ) {
-	 $vars = $recordSet->getArray();
-	 if( is_array($vars) && count($vars) > 0 )
-	   return($vars);
+    $vars = $recordSet->getArray();
+    if( is_array($vars) && count($vars) > 0 )
+      return($vars);
       }
    }
 
@@ -34,9 +35,9 @@ class DB {
       $this->switchQueryMode(0);
       $recordSet = &$this->db_link->Execute($query);
       if( $recordSet ) {
-	 $vars = $recordSet->getArray();
-	 if( is_array($vars) && count($vars) > 0 )
-	   return($vars);	 
+    $vars = $recordSet->getArray();
+    if( is_array($vars) && count($vars) > 0 )
+      return($vars);  
       }
    }
 
@@ -47,9 +48,9 @@ class DB {
       $this->switchQueryMode(1);
       $recordSet = &$this->db_link->Execute($query);
       if( $recordSet ) {
-	 $vars = $recordSet->fields;
-	 if( is_array($vars) && count($vars) > 0 )
-	   return($vars);	 
+    $vars = $recordSet->fields;
+    if( is_array($vars) && count($vars) > 0 )
+      return($vars);  
       }
    }
 
@@ -60,9 +61,9 @@ class DB {
       $this->switchQueryMode(0);
       $recordSet = &$this->db_link->Execute($query);
       if( $recordSet ) {
-	 $vars = $recordSet->fields;
-	 if( is_array($vars) && count($vars) > 0 )
-	   return($vars);	 	 
+    $vars = $recordSet->fields;
+    if( is_array($vars) && count($vars) > 0 )
+      return($vars);     
       }
    }
    
@@ -72,7 +73,7 @@ class DB {
       $this->switchQueryMode(0);
       $recordSet = &$this->db_link->Execute($query);
       if( $recordSet ) {
-	 return( $recordSet->fields[0] );
+    return( $recordSet->fields[0] );
       }
    }
    
@@ -96,24 +97,24 @@ class DB {
       // so it is easieast to run the query, then return
       // the mysql function mysql_insert_id()
       if( $this->database_type != 'mysql' ) {
-	 if( !$sequence ) {
-	    $sequence = ereg_replace("ZENTRACK_", "", $table);
-	    $sequence .= "_id_seq";
-	 }
-	 $id = $this->db_insertID($sequence);
-	 $fields = $this->db_get_fields($table);
-	 $id_field = $fields[0];
-	 $params["$id_field"] = $id;
+    if( !$sequence ) {
+       $sequence = ereg_replace("ZENTRACK_", "", $table);
+       $sequence .= "_id_seq";
+    }
+    $id = $this->db_insertID($sequence);
+    $fields = $this->db_get_fields($table);
+    $id_field = $fields[0];
+    $params["$id_field"] = $id;
       }      
       list($cols,$vals) = $this->makeInsertVals($params);
       $query = "INSERT INTO $table ($cols) VALUES($vals)";
       $this->addDebug("db_insert",$query,2);//debug
       $res = $this->db_link->Execute($query);
       if( $res && $this->database_type == "mysql" ) {
-	 $id = $this->db_insertID();
+    $id = $this->db_insertID();
       }      
       if( $res ) {
-	 return( $id );
+    return( $id );
       }
    }
 
@@ -133,13 +134,13 @@ class DB {
       $this->switchQueryMode(0);
       $recordSet = &$this->db_link->Execute($query);
       if( $recordSet ) {
-	 $vars = $recordSet->getArray();
-	 if( is_array($vars) && count($vars) > 0 ) {
-	    foreach($vars as $v) {
-	       $vals[] = $v[0];
-	    }
-	    return($vals);
-	 }
+    $vars = $recordSet->getArray();
+    if( is_array($vars) && count($vars) > 0 ) {
+       foreach($vars as $v) {
+          $vals[] = $v[0];
+       }
+       return($vals);
+    }
       }
    }
 
@@ -149,13 +150,13 @@ class DB {
       $this->switchQueryMode(0);
       $recordSet = &$this->db_link->Execute($query);
       if( $recordSet ) {
-	 $vars = $recordSet->getArray();
-	 if( is_array($vars) && count($vars) > 0 ) {
-	    foreach($vars as $v) {
-	       $vals[] = $v[0];
-	    }
-	    return($vals);
-	 }
+    $vars = $recordSet->getArray();
+    if( is_array($vars) && count($vars) > 0 ) {
+       foreach($vars as $v) {
+          $vals[] = $v[0];
+       }
+       return($vals);
+    }
       }     
    }
    
@@ -174,9 +175,9 @@ class DB {
      // forget to manually add the id with the insert statement in 
      // this case!
       if( $this->database_type == 'mysql' ) {
-	 return( mysql_insert_id() );
+    return( mysql_insert_id() );
       } else {
-	 return( $this->db_link->genID($sequence) );
+    return( $this->db_link->genID($sequence) );
       }
    }
    
@@ -184,12 +185,12 @@ class DB {
       // checks incoming data for proper escaped ' marks
       // to insure insertion integrity
       if( is_array($val) ) {
-	foreach($val as $v) {
-	  $text .= ($text)? ",".$this->checkSlashes($v) : $this->checkSlashes($v);
-	}
-	$val = "(".$text.")";
+   foreach($val as $v) {
+     $text .= ($text)? ",".$this->checkSlashes($v) : $this->checkSlashes($v);
+   }
+   $val = "(".$text.")";
       } else {
-	$val = $this->db_link->qstr($val,get_magic_quotes_gpc());
+   $val = $this->db_link->qstr($val,get_magic_quotes_gpc());
       }
       return $val;
    }   
@@ -202,24 +203,24 @@ class DB {
       // rather than two insert formatted lists
  
       if( !$set ) {
-	 foreach($params as $k=>$v) {
-	    $cols .= ($cols)? ", $k" : "$k";
-	    if( ereg("^(NULL|FALSE|TRUE|[0-9]+)$", $v) ) {
-	       $vals .= ($vals)? ", $v" : "$v"; 
-	    } else {
-	       $vals .= ($vals)? ", ".$this->checkSlashes($v) : $this->checkSlashes($v);
-	    }
-	 }
-	 return(array($cols,$vals));
+    foreach($params as $k=>$v) {
+       $cols .= ($cols)? ", $k" : "$k";
+       if( ereg("^(NULL|FALSE|TRUE|[0-9]+)$", $v) ) {
+          $vals .= ($vals)? ", $v" : "$v"; 
+       } else {
+          $vals .= ($vals)? ", ".$this->checkSlashes($v) : $this->checkSlashes($v);
+       }
+    }
+    return(array($cols,$vals));
       } else {
-	 foreach($params as $k=>$v) {
-	    if( ereg("^(NULL|FALSE|TRUE|[0-9]+)$", $v) ) {
-	       $vals .= ($vals)? ", $k = $v" : "$k = $v"; 
-	    } else {
-	       $vals .= ($vals)? ", $k = ".$this->checkSlashes($v) : "$k = ".$this->checkSlashes($v);
-	    }
-	 }
-	 return( $vals );
+    foreach($params as $k=>$v) {
+       if( ereg("^(NULL|FALSE|TRUE|[0-9]+)$", $v) ) {
+          $vals .= ($vals)? ", $k = $v" : "$k = $v"; 
+       } else {
+          $vals .= ($vals)? ", $k = ".$this->checkSlashes($v) : "$k = ".$this->checkSlashes($v);
+       }
+    }
+    return( $vals );
       }
    }
    
@@ -229,27 +230,27 @@ class DB {
       // format ready for use in a WHERE statement
      
       foreach($params as $k=>$v) {
-	 if( $text )
-	   $text .= " $andor ";
-	 if( is_array($v) ) {
-	    $text .= "$k IN(";
-	    $i = 0;
-	    foreach($v as $vi) {
-	       if( ereg("^(NULL|FALSE|TRUE|[0-9]+)$", $vi) ) {
-		  $text .= ($i > 0)? ", ".$vi : $vi;
-	       } else {
-		  $text .= ($i > 0)? ", ".$this->checkSlashes($vi) : $this->checkSlashes($vi);
-	       }
-	       $i++;
-	    }
-	    $text .= ")";
-	 } else {
-	    if( ereg("^(NULL|FALSE|TRUE|[0-9]+)$", $v) ) {
-	       $text .= "$k = $v";
-	    } else {
-	       $text .= "$k = ".$this->checkSlashes($v);
-	    }
-	 }
+    if( $text )
+      $text .= " $andor ";
+    if( is_array($v) ) {
+       $text .= "$k IN(";
+       $i = 0;
+       foreach($v as $vi) {
+          if( ereg("^(NULL|FALSE|TRUE|[0-9]+)$", $vi) ) {
+        $text .= ($i > 0)? ", ".$vi : $vi;
+          } else {
+        $text .= ($i > 0)? ", ".$this->checkSlashes($vi) : $this->checkSlashes($vi);
+          }
+          $i++;
+       }
+       $text .= ")";
+    } else {
+       if( ereg("^(NULL|FALSE|TRUE|[0-9]+)$", $v) ) {
+          $text .= "$k = $v";
+       } else {
+          $text .= "$k = ".$this->checkSlashes($v);
+       }
+    }
       }
       return($text);
    }
@@ -263,16 +264,16 @@ class DB {
       // where operator is a comparitor like =,>,>=,LIKE,etc
      $text = "";
       foreach($params as $k=>$v) {
-	if( $text != "" ) {
-	  $text .= " $andor ";
-	}
-	if( is_array($v[1]) && $v[0] == "AND" || $v[0] == "OR" ) {
-	  $text .= " (".$this->complexWhere($v[1], $v[0]).") ";
-	} else {
-	  if( !ereg("^(NULL|FALSE|TRUE|[0-9]+)$", $v[2]) )
-	    $v[2] = $this->checkSlashes($v[2]);
-	  $text .= " $v[0] $v[1] $v[2] ";
-	}
+   if( $text != "" ) {
+     $text .= " $andor ";
+   }
+   if( is_array($v[1]) && $v[0] == "AND" || $v[0] == "OR" ) {
+     $text .= " (".$this->complexWhere($v[1], $v[0]).") ";
+   } else {
+     if( !ereg("^(NULL|FALSE|TRUE|[0-9]+)$", $v[2]) )
+       $v[2] = $this->checkSlashes($v[2]);
+     $text .= " $v[0] $v[1] $v[2] ";
+   }
       }
       return($text);
    }            
@@ -349,7 +350,7 @@ class DB {
        if( $text )
          $text .= " $andor ";
        if( $p[0] == "AND" or $p[0] == "OR" ) {
-     	 $t = $this->recursiveSearchClause( $p[1], $p[0] );
+       $t = $this->recursiveSearchClause( $p[1], $p[0] );
          $text .= "($t)";
        } else {
          $not = ereg("^!",$p[1]);
@@ -369,19 +370,19 @@ class DB {
            break;
          case "i":
            $p[1] = "IN";
-	   $p[2] = (is_array($p[2]))? $p[2] : explode(",",$p[2]);
+      $p[2] = (is_array($p[2]))? $p[2] : explode(",",$p[2]);
            break;
          case "=":
            break;
-	 default:
-	   $p[3] = 1;
-	   break;
+    default:
+      $p[3] = 1;
+      break;
          }
          $p[2] = $this->checkSlashes($p[2]);
          if( !$p[3] && ereg("[a-zA-Z]",$p[2]) ) {
            $p[0] = "lower($p[0])";
-	   $p[2] = strtolower($p[2]);
-	 }
+      $p[2] = strtolower($p[2]);
+    }
          if( ereg("^NULL$",$p[2]) ) {
            $p[1] = ($not)? "IS NOT" : "IS";
          } else if($not) {
@@ -405,7 +406,7 @@ class DB {
       // connect
       $this->db_link->PConnect($host, $user, $passphrase, $database);
       if( $database and $this->db_link ) {
-	 $this->dbName = $database;
+    $this->dbName = $database;
       }
       return( $this->db_link );      
    }
