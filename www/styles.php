@@ -98,7 +98,6 @@
 
   /*** PRIORITY PROPERTIES ***/
 <?
-print_r($zen->settings);
 if( $zen->settings["priority_medium"] > 0 ) {
   include("$libDir/priorityColors.php");
 }
@@ -139,8 +138,8 @@ else {
      background:     <?=$zen->settings["color_title_background"]?>;
      <?
        if( $page_browser != "ns" ) {
-	  print "padding-top: 2px;";
-	  print "padding-bottom: 2px;";
+     print "padding-top: 2px;";
+     print "padding-bottom: 2px;";
        }
      ?>     
      padding-left:   2px;
@@ -158,8 +157,8 @@ else {
      background:     <?=$zen->settings["color_alt_background"]?>;
      <?
        if( $page_browser != "ns" ) {
-	  print "padding-top: 2px;";
-	  print "padding-bottom: 2px;";
+     print "padding-top: 2px;";
+     print "padding-bottom: 2px;";
        }
      ?>     
      padding-left:   2px;
@@ -176,8 +175,8 @@ else {
      background:     <?=$zen->settings["color_alt_background"]?>;
      <?
        if( $page_browser != "ns" ) {
-	  print "padding-top: 2px;";
-	  print "padding-bottom: 2px;";
+     print "padding-top: 2px;";
+     print "padding-bottom: 2px;";
        }
      ?>     
      padding-left:   2px;
@@ -189,8 +188,8 @@ else {
      background:     <?=$zen->settings["color_title_background"]?>;
      <?
        if( $page_browser != "ns" ) {
-	  print "padding-top: 2px;";
-	  print "padding-bottom: 2px;";
+     print "padding-top: 2px;";
+     print "padding-bottom: 2px;";
        }
      ?>     
      padding-left:   2px;
@@ -209,8 +208,8 @@ else {
      font-size:      <?=$zen->settings["font_size_small"]?>px;
      <?
        if( $page_browser != "ns" ) {
-	  print "padding-top: 2px;";
-	  print "padding-bottom: 2px;";
+     print "padding-top: 2px;";
+     print "padding-bottom: 2px;";
        }
      ?>     
      padding-left:   5px;
@@ -224,8 +223,8 @@ else {
      font-size:      <?=$zen->settings["font_size_small"]?>px;
      <?
        if( $page_browser != "ns" ) {
-	  print "padding-top: 2px;";
-	  print "padding-bottom: 2px;";
+     print "padding-top: 2px;";
+     print "padding-bottom: 2px;";
        }
      ?>     
      padding-left:   5px;

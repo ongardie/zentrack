@@ -22,6 +22,21 @@ function color_scale($startcol, $endcol, $pct) {
    return ('#' . str_pad(dechex($r), 2, "0", STR_PAD_LEFT) . str_pad(dechex($g), 2, "0", STR_PAD_LEFT) . str_pad(dechex($b), 2, "0", STR_PAD_LEFT));
 }
 
+function color_darken($startcol, $pct) {
+   $p = $pct / 100;
+
+   // Split the colours into their red, green and blue ratios
+   $sr = hexdec(substr($startcol, 1, 2));
+   $sg = hexdec(substr($startcol, 3, 2));
+   $sb = hexdec(substr($startcol, 5, 2));
+   
+   $r = $sr - $sr * $p;
+   $g = $sg - $sg * $p;
+   $b = $sb - $sb * $p;
+   
+   return ('#' . str_pad(dechex($r), 2, "0", STR_PAD_LEFT) . str_pad(dechex($g), 2, "0", STR_PAD_LEFT) . str_pad(dechex($b), 2, "0", STR_PAD_LEFT));   
+}
+
 function priority_color($priority) {
    // This function returns an HTML colour based on the priority
    // supplied on a sliding colour scale.
@@ -66,13 +81,23 @@ unset ($previous);
 
 foreach (array_reverse($pri_list) as $v) {
    print "  ";
-   if ($previous) print ".priority{$previous}Over, ";
-   $previous = $v["pid"];
+//   if ($previous) print ".priority{$previous}Over, ";
+//   $previous = $v["pid"];
+   $col = priority_color($v["priority"]);
    print ".priority{$v['pid']} {\n";
-   print "\tbackground:     ".priority_color($v["priority"])."\n";
+   print "\tBackground:     $col;\n";
    if ($v["priority"] == $hip) {
      print "\tfont-weight:     Bold;\n";
    }
    print "}\n\n";
+   print "  ";
+//   if ($previous) print ".priority{$previous}Over, ";
+//   $previous = $v["pid"];
+   print ".priority{$v['pid']}Over {\n";
+   print "\tBackground:     ".color_darken($col,10).";\n";
+   if ($v["priority"] == $hip) {
+     print "\tfont-weight:     Bold;\n";
+   }
+   print "}\n\n";   
 }
 ?>

@@ -42,11 +42,17 @@ if( is_array($tickets) ) {
       } else {
          $link = $ticketUrl;   
       }
+      
+   if( $zen->settings["priority_medium"] ) {
 
-   $classxText = "class='priority{$t['priority']}' "
-	."onMouseOver='mClassX(this,\"priority{$t['priority']}Over\")' "
-	."onMouseOut='mClassX(this,\"priority{$t['priority']}\")'";
+      $classxText = "class='priority{$t['priority']}' "
+      ."onMouseOver='mClassX(this,\"priority{$t['priority']}Over\")' "
+      ."onMouseOut='mClassX(this,\"priority{$t['priority']}\")'";
 
+   }
+   else {
+      $classxText = "class='cell'";
+   }
       ?>
    <tr <?=$classxText?>>
    <td height="25" valign="middle" <?=$td_ttl?>>
