@@ -8,7 +8,9 @@
 ----- V2.4.2 (Development, See CVS) ----
 
 2003-05-28, Rob Hillis
-  Show correct details in notification email when a ticket is assigned.
+  Correct ticket sort order when searching for tickets.
+    - zentrack/includes/zenTrack.class 1.10
+  Show correct details in notification email when a ticket is assigned
     - zentrack/includes/zenTrack.class 1.109
 
 2003-05-27, Rob Hillis

@@ -649,7 +649,7 @@ class zenTrack extends zen {
   }
 
   function search_tickets( $params, $andor = 'AND', 
-                           $archive_flag=0,$order_by='status DESC, priority' ) {
+                           $archive_flag=0,$order_by='status DESC, priority DESC' ) {
     // search through tickets for given text
     // acceptable params are:
     // params is an indexed array with two elements:
@@ -661,6 +661,7 @@ class zenTrack extends zen {
     // if archive_flag = 2, then searches archives only
 
     $where = $this->build_search_clause($params, $andor);
+    
     if( $archive_flag ) {
       $tables = ($archive_flag == 2)? 
         $this->table_tickets_archived : 
@@ -669,7 +670,19 @@ class zenTrack extends zen {
     else {
       $tables = $this->table_tickets;
     }
-    $query = "SELECT * "
+
+    $tf_pri = preg_match("/priority/", $order_by);
+    $tbl = $this->table_tickets;
+
+    if( $tf_pri ) {
+      $tblpri = $this->table_priorities;
+      $tables .= ", ".$tblpri;
+      $order_by = preg_replace("/priority/", "$tblpri.priority", $order_by);
+      
+      $where = ($where)? "$tbl.priority = $tblpri.pid AND ($where)": "$tbl.priority = $tblpri.pid";
+    }
+
+    $query = "SELECT $tbl.* "
       ." FROM $tables WHERE $where"
       ." ORDER BY $order_by";
     $this->addDebug("search_ticketsQuery:",$query,2);
