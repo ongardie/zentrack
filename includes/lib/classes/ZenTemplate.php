@@ -24,29 +24,31 @@
    *  </pre>
    *
    * <b>Valid template entries are:</b>
-   * <ul> 
-   *  <li>{varname} - inserts value of varname, if the value is an array
-   *                  <br>then the values will be iterated each time it is requested
-   *  <li>{varname="default_value"} - inserts val of varname, or default if not found, default is a string
-   *  <li>{varname[key]} - inserts value of array varname indexed by key (varname[key]),
-   *                  <br>varname must be an associative array or null will be returned
-   *  <li>{varname[key]="default value"} - as above, but default instead of null is returned if key not found
-   *  <li>{zen:category:varname} - inserts value from database settings using {@link Zen::getSetting()}
-   *  <li>{ini:category:varname} - inserts value from ini settings using {@link Zen::getIniVal()}
-   *  <li>{foreach:varname:"text"+index+"more text"+value} - loops through indexed array and prints name/value
-   *  <li>{foreach:varname:%"sub-template"%} - loops through the indexed array and passes name/value to sub-template
-   *  <li>{list:varname:"text"+value+"text"} - loops through array and prints values
-   *  <li>{list:varname:%"sub-template"%} - loops through the array, passing values to the sub-template
-   *  <li>{include:"template_name"} - inserts another template into this one (template_name is a string)
-   *  <li>{if:field:"text to print"+field+"text to print"} - inserts text if field exists
-   *  <li>{if:field:%"sub-template"%} - inserts sub-template if field exists
-   *  <li>{if:field=something:"text to print"+field+"more text"} - inserts text if field = something
-   *  <li>{if:field=something:%"sub-template"%} - inserts sub-template if field = something
-   *  <li>{function:function_name:param1,param2,param3} - runs a global function and inserts the return value
-   *  <li>{helper:file_name} - runs a helper script located in includes/lib/helpers and inserts results
-   *  <li>{script:file_name} - runs a script located in includes/users/code and inserts results
-   *  <li>{form:table:template:afield=ftype,afield=ftype,afield=ftype} - create a form from a database table
-   * </ul>
+   * <code>
+   *  {varname} // inserts value of varname, if the value is an array
+   *            // then the values will be iterated each time it is requested
+   *  {varname="default"} // inserts val of varname, or default if not found
+   *  {varname[key]} // inserts value of array varname indexed by key (varname[key]),
+   *                 // varname must be an associative array or null will be returned
+   *  {varname[key]="string"} // as above, but default returned instead of null if key not found
+   *  {zen:"category":"varname"} // inserts value from database settings using {@link Zen::getSetting()}
+   *  {ini:"category":"varname"} // inserts value from ini settings using {@link Zen::getIniVal()}
+   *  {foreach:varname:"text"+index+"more text"+value} // loops through key/value pairs, pritns string, vars index/value represent current iteration
+   *  {list:varname:"text"+value+"text"} // loops through array and prints string, special variable value represents current iteration
+   *  {include:"template_name"} // inserts another template into this one (all values available to this template are passed)
+   *  {if:field:"string"} // inserts string if field exists
+   *  {if:field="something":"string"} // inserts string if field equals parsed value of "something"
+   *  {ifnot:field:"string"} // inserts string if field does not exist
+   *  {ifnot:field="something":"string"} // inserts string if field does not equal parsed value of "something"
+   *  {function:function_name:"param1","param2",...} //run a global function, parse params and pass them to the function (any number)
+   *  {helper:"file_name":param1="value",param2="value",...} // run helper script (includes/lib/helpers), pass params, insert return result
+   *  {script:"file_name"} // runs script (includes/users/code) and insert return value
+   *  {form:"table":"template":field1="ftype",field2="ftype",...} // create form from database, types changed by final param(optional)
+   *  {modifier:"command"} // special condition for template parser, see below.
+   * </code>
+   *
+   * Note that all the properties listed above in <code>"quotes"</code> are strings. Usage of strings is
+   * explained below.
    *
    * <b>How strings work:</b>
    * 
@@ -56,18 +58,43 @@
    *
    * Note that listeral " and : characters can be included in template tags using &quot; and &#58; repectively.  
    * These will be reverted once the template tags have been parsed.
+   *
+   * Note that using %"string"% will insert parsed template (includes/lib/templates/..set../), the name is a string.
+   * There cannot be any other text with the template (the string param must begin and end with %(template) symbols.
+   *
+   * Sub-templates recieve the special varaibles pkey and pval.  If this is a 
    * 
    * <code>
-   *  // assuming color = 'blue', fruit = 'apple'
-   *  "I am "+color+"!"         //produces 'I am blue!'
-   *  "I found a "+color+fruit  //produces 'I found a blueapple'
-   *  "a "+color+" "+fruit      //produces 'a blue apple'
-   *  "I am "+"color"           //produces 'I am color'
+   *  // assume the following are entered into our
+   *  // template values: 
+   *  //   color    => 'blue'
+   *  //   fruit    => 'apple'
+   *  //   somevals => array('somekey'=>'happy')
+   * 
+   *  "I am "+color+"!"           // produces 'I am blue!'
+   *  "I found a "+color+fruit    // produces 'I found a blueapple'
+   *  "a "+color+" "+fruit        // produces 'a blue apple'
+   *  2.50                        // produces '2.5'
+   *  "2.50"                      // produces '2.50'
+   *  somevals[somekey]+" day"    // produces 'happy day'
+   *  %"some_template.template"%  // parses and returns results of some_template.template
+   *  %color+".template"%         // parses and returns results of blue.template
+   *  "I am a "+%"template_name"% // causes an error!
    * </code>
    *
+   * <b>Comments in templates:</b>
+   * 
    * Comments can be provided using normal html <!--    --> tags.  These tags cannot be nested!  All html comments
    * will be stripped before rendering page.
    * 
+   * <b>Special Template Modifiers</b>
+   *
+   * Using the {modifier:command} option, the template parser behavior can be altered. The valid commands are:
+   * <code>
+   *   {modifier:"stripEmptyLines"} // remove empty lines (extra carriage returns)
+   *   {modifier:"stripAllReturns"} // remove all carriage returns
+   * </code>
+   *
    * @package Utils
    */
 class ZenTemplate {
@@ -102,6 +129,14 @@ class ZenTemplate {
   }
 
   /**
+   * Sets a special modifier flag that will affect template output
+   *
+   */
+  function setModifier($mod) {
+    $this->_modifiers[] = $mod;
+  }
+
+  /**
    * return a text string representing the parsed contents of the template
    *
    * @return string parsed template data, ready for use
@@ -118,7 +153,9 @@ class ZenTemplate {
       $this->_template = $this->_templateDir."/".$this->_template;
     }
     if( file_exists($this->_template) ) {
-      $this->_text = file($this->_template);
+      $text = join("",file($this->_template));
+      $text = preg_replace("/<!--.*-->/", "", $text);
+      $this->_text = explode("\n",$text);
     }
     else {
       ZenUtils::safeDebug($this, "_get", 
@@ -138,8 +175,32 @@ class ZenTemplate {
     for($i=0; $i<count($txt); $i++) {
       $txt[$i] = preg_replace("@[{]([^}]+)[}]@e", "''.\$this->_insert(\"\\1\").''",$txt[$i]);
     }
-    $newtext = stripslashes(join("",$txt));
-    return preg_replace("/<!--.*-->/", "", $newtext);
+    $text = stripslashes(join("",$txt)); 
+    $this->_runMods($text);
+    return $text;
+  }
+
+  /**
+   * Read any modifiers and alter output accordingly
+   *
+   * @param string $text
+   * @return string
+   */
+  function _runMods($text) {
+    foreach($this->_modifiers as $m) {
+      switch($m) {
+      case "stripEmptyLines":
+        $text = preg_replace("/\n\n/", "\n", $text);
+        break;
+      case "stripAllReturns":
+        $text = preg_replace("/[\n\r]/", "", $text);
+        break;
+      default:
+        ZenUtils::safeDebug($this, "_parseMods", "$m was an invalid modifier", LVL_WARN);
+        break;
+      }
+    }
+    return $text;
   }
 
   /**
@@ -163,11 +224,18 @@ class ZenTemplate {
     }    
     else {
       switch($index) {
+      case "modifier":
+      {
+        // {modifier:some_command}
+        ZenUtils::safeDebug($this, "_insert", 
+                            "using {modifier:some_command} for '$text'", 0, LVL_DEBUG);
+        return $this->_parseMofifier($parts);        
+      }
       case "zen":
       {
         // {zen:category:varname}
-        $c = trim($parts[1]);
-        $n = trim($parts[2]);
+        $c = $this->_parseString($parts[1]);
+        $n = $this->_parseString($parts[2]);
         ZenUtils::safeDebug($this, "_insert", 
                             "using {zen:category:varname} for '$text'", 0, LVL_DEBUG);
         return Zen::getSetting($c,$n);
@@ -175,8 +243,8 @@ class ZenTemplate {
       case "ini":
       {
         // {ini:category:varname}
-        $c = trim($parts[1]);
-        $n = trim($parts[2]);
+        $c = $this->_parseString($parts[1]);
+        $n = $this->_parseString($parts[2]);
         ZenUtils::safeDebug($this, "_insert", 
                             "using {ini:category:varname} for '$text'", 0, LVL_DEBUG);
         return Zen::getIniVal($c,$n);
@@ -216,13 +284,20 @@ class ZenTemplate {
         ZenUtils::safeDebug($this, "_insert", "using {if:field...:...} for '$text'", 0, LVL_DEBUG);        
         return $this->_parseIf($parts);
       }
+      case "ifnot":
+      {
+        // {ifnot:field:"text"}
+        // {ifnot:field:%sub-template%}
+        ZenUtils::safeDebug($this, "_insert", "using {ifnot:field...:...} for '$text'", 0, LVL_DEBUG);        
+        return $this->_parseIfnot($parts);        
+      }
       case "helper":
       case "script":
       {
         // {helper:file_name}
         // {script:file_name}
         ZenUtils::safeDebug($this, "_insert", "using {script|helper:file_name} for '$text'", 0, LVL_DEBUG);
-        return $this->_parseScript($parts);        
+        return $this->_parseScript($parts);     
       }
       case "form":
         // {form:table_name:fields}
@@ -242,12 +317,13 @@ class ZenTemplate {
    * @return string the parsed text
    */
   function _parseForm( $parts ) {
-    $form = new ZenFormGenerator($parts[1], $parts[2]);
+    $form = new ZenFormGenerator($this->_parseString($parts[1]), 
+                                 $this->_parseString($parts[2]));
     if( $parts[3] ) {
       $set = explode(",",$parts[3]);
       foreach( $set as $entry ) {
         list($key,$val) = explode("=",$entry);
-        $form->modifyField( $key, array("ftype"=>$val) );
+        $form->modifyField( $key, array("ftype"=>$this->_parseString($val)) );
       }
     }
     return $form->render();
@@ -266,18 +342,9 @@ class ZenTemplate {
       $txt = "";
       // loop the list and make output text
       foreach($vars as $k=>$v) {
-        // determine if we are to process text or a template
-        if (preg_match('/^%.+%$/', $parts[2])) {
-          // return the template
-          
-          $tplname = substr(substr($parts[2], 1), -1);
-          $txt .= $this->_parseSubtemplate($tplname, $v, $k);
-        } else {
-          // make the string to show
-          $str = $this->_parseString($parts[2]);
-          // return the text
-          $tmp = str_replace("{index}", $k, $str);
-          $txt .= str_replace("{value}", $v, $tmp);
+        // make the string to show
+        if( $this->_isSub($parts[2]) ) {
+          $str = $this->_parseString($parts[2], $v, $k);
         }
       }
       return $txt;
@@ -299,21 +366,14 @@ class ZenTemplate {
     $vars = $this->_getVar(trim($parts[1]));
     if( is_array($vars) ) {
       $txt = "";
-      // parse the string
-      $str = $this->_parseString($parts[2]);
       // create the output text
       foreach($vars as $v) {
-        // determine if we are to process text or a template
-        if (preg_match('|^%.+%$', $parts[2])) {
-          // return the template
-          
-          $tplname = substr(substr($parts[2], 1), -1);
-          
-          $txt .= $this->_parseSubtemplate($tplname, $v);
-        } else {
-          //return the text
-          $txt .= str_replace("{value}", $v, $str);
+        // parse the string
+        if( $this->_isSub($parts[2]) ) {
+          $str = $this->_parseString($parts[2], $v);
         }
+        //return the text
+        $txt .= str_replace("{value}", $v, $str);
       }
       return $txt;
     }
@@ -323,10 +383,10 @@ class ZenTemplate {
   }
   
   /**
-   * <b>private</b>: parse a {list} call in a template
+   * <b>private</b>: parse an {if} call in a template
    *
    * @param array $parts the parts of the if call to be parsed
-   * @return string the parsed {if} call
+   * @return string
    */
   function _parseIf() {
     $p = trim($parts[1]);
@@ -336,7 +396,7 @@ class ZenTemplate {
       list($key,$val) = explode("=",$parts[1],1);
       $key = trim($key);
       $val = trim($val);
-      $tf = ($this->_getVar($key) == $val);
+      $tf = ($this->_getVar($key) == $this->_parseString($val));
     }
     else {
       $var = $this->_getVar($p);
@@ -344,23 +404,38 @@ class ZenTemplate {
     }
     // execute the query if we met if condition
     if( $tf ) {
-      // determine if we are expecting to include a template or not
-      if( preg_match("|^%.+%$|", $parts[2]) )  {
-        // return template
-        
-        $tplname = substr(substr($parts[2], 1), -1);
-        return $this->_parseSubtemplate($tplname, $this->_vars);
-        
-        /*
-        $tpl = new zenTemplate($this->_templateDir."/".$tplname);
-        $tpl->values($this->_vars);
-        
-        return $tpl->process();
-        */
-      } else {
-        // return text
-        return $this->_parseString($parts[2]);
-      }
+      // return text
+      return $this->_parseString($parts[2]);
+    }
+    else {
+      return "";
+    }
+  }  
+
+  /**
+   * <b>private</b>: parse an {ifnot} call in a template
+   *
+   * @param $parts the parts of the {ifnot} call
+   * @return string
+   */
+  function _parseIfnot( $parts ) {
+    $p = trim($parts[1]);
+    // determine if the if condition is true
+    if( strpos($p,"=") > 0 ) {
+      // there is an equals clause
+      list($key,$val) = explode("=",$parts[1],1);
+      $key = trim($key);
+      $val = trim($val);
+      $tf = ($this->_getVar($key) != $this->_parseString($val));
+    }
+    else {
+      $var = $this->_getVar($p);
+      $tf = ( !is_array($var) || (is_array($var) && !count($var)) || (strlen($var) < 1) );
+    }
+    // execute the query if we met if condition
+    if( $tf ) {
+      // return text
+      return $this->_parseString($parts[2]);
     }
     else {
       return "";
@@ -388,7 +463,8 @@ class ZenTemplate {
     $dir = ZenUtils::getIni('directories', ($tf? 'dir_lib':'dir_user') );
     $dir .= "/".($tf? 'code':'helpers');
     $output = array();
-    $file = str_replace('..','',$parts[1]);
+    $file = $this->_parseString($parts[1]);
+    $file = str_replace('..','',$file);
     $file = preg_replace("/[^0-9A-Za-z_-.]/", "", $file);
     if( !@file_exists("$dir/$file") ) {
       ZenUtils::safeDebug($this, "_parseScript", 
@@ -397,7 +473,7 @@ class ZenTemplate {
     }
     $command = "$dir/$file";
     for($i=2; $i<count($parts); $i++) {
-      $command .= " '".$this->_parseString($parts[$i])."'";
+      $command .= " ".$this->_parseString($parts[$i]);
     }
     exec( $command, $output );
     return join("\n",$output);
@@ -414,27 +490,37 @@ class ZenTemplate {
    *  "some text "+a_variable+"some more text"+another_variable... etc.
    *
    * @param string $text the text string to parse
+   * @params string $value the value if we are iterating a list or foreach (if blank, $this->_vals will be used)
+   * @param string $key the key if we are iterating a list or foreach (do not pass a key if there is no value!)
    * @return string the parsed data
    */
-  function _parseString( $text ) {
+  function _parseString( $text, $value = null, $key = '' ) {
     $text = str_replace('\\"', '"', $text);
+    // deal with subtemplates
+    if (preg_match('/^%(.+)%$/', $parts[2], $matches)) {
+      // if the whole entry is a template, then return it
+      // parse values and try to create special pkey and pval params 
+      $vals = $this->_vars;
+      if( $key ) { $vals['pkey'] = $key; }
+      if( $value ) { $vals['pval'] = $value; }
+      return $this->_parseSubtemplate($matches[1], $vals);
+    }
     // parse the string to print
     $vals = explode("+",trim($text));
     $str = "";
     foreach($vals as $v) {
       $v = trim($v);
       // this is a string
-      if( strpos($v,'"') === 0 ) {
+      if( strpos($v,'"') === 0 || is_numeric($v) ) {
 	$str .= preg_replace('/^"/', "", preg_replace('/"$/', "", $v)); 
       }
-      // this is the foreach key
-   
-   else if( $v == "index" ) {
-	$str .= "{index}";
+      // this is the foreach key   
+      else if( $v == "index" ) {
+	$str .= $key;
       }
       // this is the foreach value
       else if( $v == "value" ) {
-	$str .= "{value}";
+	$str .= $value;
       }
       // this is another variable
       else {
@@ -450,6 +536,15 @@ class ZenTemplate {
     $str = str_replace('&amp;', '&', $str);
     $str = str_replace('&#38;', '&', $str);
     return $str;
+  }
+
+  /**
+   * <b>private</b>: deal with special modifiers that affect template parsing
+   *
+   * @param array $parts
+   */
+  function _parseModifier( $parts ) {
+    $this->setModifier($this->_parseString($parts[1]));
   }
   
   /**
@@ -492,17 +587,14 @@ class ZenTemplate {
    * <b>private</b>: returns an expanded sub-template
    *
    * @param string $template the name of the sub-template to be expanded, assumed to be contained in the templates directory
-   * @param mixed $value a string to be passed as {pval} to the sub-template or an array of indexed values to be passed to the sub-array
-   * @param string $key the key of the value to be passed as {pkey} to the sub-template (only used when $value is a string)
+   * @param array $values is the values to be provided to subtemplate, if this is an iteration, this should contain special
+   *                      variables 'pkey' and 'pval', which represent the current iteration key/value pair
    * @return the expanded sub-template
    */
-  function _parseSubtemplate( $template, $value, $key = '' ) {
+  function _parseSubtemplate( $template, $values ) {
     $template = $this->_parseString($template);
-    $tpl = new zenTemplate($this->_templateDir."/".$template);
-    
-    // $value/$key are a string pair to be passed as {pkey} and {pval}      
-    $tpl->values(array("pkey" => $key, "pval" => $value));
-   
+    $tpl = new zenTemplate($this->_templateDir."/".$template);        
+    $tpl->values($values);   
     return $tpl->process();
   }
 
@@ -531,8 +623,11 @@ class ZenTemplate {
     $this->_templateDir = $newdir;
   }
   
-  /** @var Default template directory */
+  /** @var String default template directory */
   var $_templateDir;
+
+  /** @var Array special modifiers for template processing */
+  var $_modifiers;
 
   var $_template; //the file we are using
   var $_text;  //the template data loaded and ready for parsing

@@ -2,5 +2,5 @@
   <textarea 
     rows="{pval[rows]="4"}" 
     cols="{pval[cols]="30"}"
-    {include:"form/fieldEvents.template"}
+    {include:"simpleForm/fieldEvents.template"}
     >{pval[default]=""}</textarea>

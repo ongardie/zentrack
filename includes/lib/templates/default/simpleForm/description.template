@@ -1,2 +1,2 @@
 
-<tr><td colspan='2' class='note'>{description}</td></tr>
+<tr><td colspan='2' class='simpleFormDescription'>{description}</td></tr>

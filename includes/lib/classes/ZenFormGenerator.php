@@ -79,13 +79,23 @@ class ZenFormGenerator extends Zen {
   }
   
   /**
-   * Edit one or more properties of a field to appear on the form
+   * Edit one or more properties of a field to appear on the form.
+   *
+   * The field properties correspond to the values as described in
+   * {@link ZenDbSchema::getTableArray()}.
+   *
+   * Notes:
+   * <br>The size element refers to the maximum input length for the field
+   * <br>For ftype='checkbox', if defualt value != null, checkbox defaults to checked
+   *
+   * Also see {@link setFormProp()} below for more options
    *
    * @param string $fname the form field name
    * @param array $props mapped (String)property -> (mixed)value
    */
   function modifyField( $fname, $props ) {
     $field = $this->_table->getMetaField($fname);
+    if( $field == null ) { return null; }
     foreach( $props as $field=>$val ) {
       $field->setProp($field, $val);
     }
@@ -100,6 +110,39 @@ class ZenFormGenerator extends Zen {
    */
   function setValue($field, $value) {
     $this->modifyField($field, array('default'=>$value));
+  }
+
+  /**
+   * Set a special form property for the field
+   *
+   * The following special properties exist for form fields:
+   * <ul>
+   *   <li><b>len</b> - the size of the input element
+   *   <li><b>checkval</b> - the value to give a checkbox (defaults to 1)
+   *   <li><b>vals</b> - if type is select, option, or helper, vals contains
+   *       the valid choices (generated from criteria and reference values, 
+   *       setting this overrides the existing values)
+   *   <li><b>onBlur</b> - onBlur event handler
+   *   <li><b>onClick</b> - onClick event handler
+   *   <li><b>onChange</b> - onChange event handler
+   *   <li><b>onMouseOver</b> - onMouseOver event handler
+   *   <li><b>onMouseOut</b> - onMouseOut event handler
+   * </ul>
+   *
+   * @param string $field form field name
+   * @param string $prop special property
+   * @param mixed $value
+   * @return boolean
+   */
+  function setFormProp($field, $property, $value) {
+    if( in_array($field, $this->_specialProps) && $this->getMetaField($field) != null ) {
+      if( !isset($this->_props[$field]) ) {
+        $this->_props[$field] = array();
+      }
+      $this->_props[$field][$property] = $value;
+      return true;
+    }
+    return false;
   }
 
   /**
@@ -155,14 +198,47 @@ class ZenFormGenerator extends Zen {
     $vals["method"] = $this->_method;
     $vals["fields"] = array();
     foreach($this->_table->listFields as $f) {
-      $field = $this->_table->getMetaField($f);
+      $mfield = $this->_table->getMetaField($f);
+      $field = $field->getFieldArray();
       if( !isset($field['default']) ) { $field['default'] = null; }
-      $vals["fields"][] = $field->getFieldArray();
-      //todo
-      //todo
-      //todo special fields like helpers and
-      //todo select fields need to be handled
-      //todo here
+      if( isset($this->_props[$f]) ) {
+        foreach($this->_props[$f] as $key=>$val) {
+          $field[$key] = $val;
+        }
+      }
+      switch( $field['type'] ) {
+      case 'skip':
+        // do not process these
+        continue;
+      case 'checkbox':
+        if( !isset($field['checkval']) ) { $field['checkval'] = null; }
+        break;
+      case 'helper':
+        //todo: run helper and get results
+        break;
+      case 'select':
+        //todo: read criteria and reference, process
+        break;
+      case 'checklist':
+        //todo: read criteria and reference, process
+        break;
+      case 'popupselect':
+        //todo: read criteria and reference, process
+        break;
+      case 'yesno':
+        $field['type'] = 'select';
+        $field['vals'] = array('1'=>'Yes','0'=>'No');
+      case 'datebox':
+        //todo: convert date, determine format
+        break;
+      case 'colorbox':
+        //todo: read criteria, set default
+        break;
+      case 'setting':
+        //todo: get field type from db criteria
+        break;        
+      }      
+      $vals["fields"][] = $field;
     }
     
     // render the form
@@ -186,8 +262,11 @@ class ZenFormGenerator extends Zen {
   /** @var string $_method the form post method */
   var $_method = 'POST';
 
-  /** @var array $_vals values to pass to template */
+  /** @var array $_vals values to pass to template, mapped (string)name->(mixed)value */
   var $_vals = array();
+
+  /** @var array $_props special form field properties, mapped (string)field->array( (string)prop->(mixed)value ) */
+  var $_props = array();
 }
 
 ?>

@@ -1,4 +1,177 @@
 
+/**
+ * ----------------------------------
+ * PAGE ELEMENTS
+ * ----------------------------------
+ */ 
+
+/** The basic page formatting */
+BODY { 
+  background: #FFFFFF;
+  color: #000000;
+  font-size: 100%;  
+}
+
+
+/**
+ * ----------------------------------
+ * LINKS
+ * ----------------------------------
+ */ 
+
+/** 
+ * first, define basic characteristics,
+ * later, we will override for anything
+ * that we see fit
+ */
+A, A:visited, A:hover, A:active { 
+
+}
+
+A:hover {
+
+}
+
+/**
+ * ----------------------------------
+ * GENERATED FORM TABLES
+ *
+ * Table cell attributes for
+ * generated forms
+ * ----------------------------------
+ */
+TABLE.simpleForm { 
+
+}
+
+/**
+ * A title which will
+ * appear on the generated
+ * form table
+ */
+TD.simpleFormTitle { 
+
+}
+
+/** 
+ * A description which
+ * will appear on the form table
+ * to give the user instructions
+ * or hints.
+ */
+TD.simpleFormDescription { 
+
+}
+
+/**
+ * A table cell which contains a 
+ * the name/label of an input field
+ */
+TD.simpleFormLabel { 
+
+}
+
+/**
+ * A cell which contains a form field.
+ * This cell may also contain a short
+ * description or other useful info
+ */
+TD.simpleFormCell { 
+
+}
+
+/**
+ * A break in the form fields,
+ * which may contain a subtitle,
+ * or other text
+ */
+TD.simpleFormBreak { 
+
+}
+
+
+/**
+ * ----------------------------------
+ * FORM FIELDS
+ * ----------------------------------
+ */
+
+/**
+ * the margin settings here prevent form
+ * tags (which are not part of the visible DOM)
+ * from creating line breaks (i.e. messing up
+ * the page formatting)
+ */
+FORM { 
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
+INPUT, SELECT, TEXTAREA { 
+  
+}
+
+/**
+ * A button which appears on the form
+ */
+INPUT.button { 
+  
+}
+
+/**
+ * A submit button which appears on a form
+ */
+INPUT.submit { 
+  
+}
+
+/**
+ * ----------------------------------
+ * TEXT FORMATTING
+ * ----------------------------------
+ */
+
+/** Bold text */
+B { 
+
+}
+
+/** Italicized text */
+I { 
+
+}
+
+/** Monospaced font, for code, details, etc */
+.monospaced { 
+
+}
+
+/**
+ * A description of a form element
+ */
+.details { 
+  text-size: 85%;
+}
+
+/** 
+ * A minor comment or description which should 
+ * describe an element
+ */
+.footnote { 
+  text-size: 75%;
+  color: #999999;
+}
+
+
+/**
+ * ----------------------------------
+ * NOTES, WARNINGS, AND ERRORS
+ *
+ * Class definitions for messages
+ * printed to screen for errors, warnings
+ * notices, etc
+ * ----------------------------------
+ */
 .error {
   color: #990000;
   font-weight: bold;
@@ -10,5 +183,9 @@
 
 .msg {
   color: #999999;
+}
+
+.debug { 
+  color: #EAEAEA;
 }
 

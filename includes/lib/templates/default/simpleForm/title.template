@@ -1,2 +1,2 @@
 
-<tr><th colspan='2'>{title}</th></tr>
+<tr><th colspan='2' class='simpleFormTitle'>{title}</th></tr>

@@ -1,0 +1,7 @@
+
+  <input type="textarea"
+    name="{pval[name]}"
+    size="{pval[len]="20"}" 
+    maxlength="{pval[size]="200"}" 
+    value="{pval[default]=""}"
+    {include:"simpleForm/fieldEvents.template"}>
