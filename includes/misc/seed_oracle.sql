@@ -1,3 +1,5 @@
+-- /* $Id: seed_oracle.sql,v 1.5 2002/04/29 17:27:45 izzy Exp $ */
+
 --
 -- Dumping data for table 'ZENTRACK_ACCESS'
 --

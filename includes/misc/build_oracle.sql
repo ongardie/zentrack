@@ -1,3 +1,5 @@
+-- /* $Id: build_oracle.sql,v 1.8 2002/04/29 17:27:44 izzy Exp $ */
+
 --
 -- Table structure for table 'ZENTRACK_ACCESS'
 --
@@ -7,7 +9,6 @@ CREATE TABLE ZENTRACK_ACCESS (
   userID number(12) default NULL,
   binID number(12) default NULL,
   lvl   number(2) default NULL,
-  role  varchar2(50) default NULL,
   notes varchar2(25) default NULL,
   CONSTRAINT access_pk PRIMARY KEY (accessID)
 ) ;
