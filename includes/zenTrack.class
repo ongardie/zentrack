@@ -3228,7 +3228,7 @@ class zenTrack extends zen {
     // unsorted if using $columns (sorry!)
 
     $params = array("project_id"=>$pid);
-    $sort = "status desc, priority, otime desc";
+    $sort = "status desc, priority desc, otime desc";
     $vars = $this->get_tickets($params, $sort, $columns, $archive_flag);
     return( $vars );
   }
