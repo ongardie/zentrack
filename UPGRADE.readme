@@ -2,62 +2,49 @@
 
 REQUIREMENTS
 
-    PHP: 4.2.0 or greater 
+    PHP: 4.2.0 or greater (4.3 for email gateway) 
     GD: [optional] 2.0 or higher needed to use reports
     Freetype libraray required to view reports
     Supported Servers: Apache 1.3, 2.0, IIS
     Supported OS: Windows 2000, Linux 
        Other Tested OS: FreeBSD, NT, MacOS, Debian, Gentoo
-    Supported DBs: Mysql, Oracle 8i/9i
-       Other Possible DBs: Postgres, DB2, SQLServer
+    Supported DBs: Mysql, Oracle 8i/9i, Postgres
+       Other Possible DBs: DB2, SQLServer
 
 
-UPGRADE FROM 2.3.0
-
-  MAKE A BACKUP OF YOUR www/header.php file
-  
-  MAKE A BACKUP OF YOUR includes/attachments directory
-
-  REPLACE Your entire zentrack directory structure with the
-  included files: includes/ should overwrite your existing includes,
-  www/ should overwrite your existing www/
-
-  RESTORE YOUR www/header.php settings to the new file
-
-  RESTORE YOUR includes/attachments files to the new directory
-
-  RUN the following SQL command:  UPDATE ZENTRACK_SETTINGS SET value = '2.3.1' where name = 'version_xx';
-  
-
-UPGRADE FROM 2.2.2
+UPGRADE FROM 2.3.x
 
   MAKE A BACKUP OF YOUR www/header.php file
   
   MAKE A BACKUP OF YOUR includes/attachments directory
 
+  MAKE A BACKUP OF YOUR includes/egate_config.php file
+
   REPLACE Your entire zentrack directory structure with the
   included files: includes/ should overwrite your existing includes,
   www/ should overwrite your existing www/
 
-  RESTORE YOUR www/header.php settings to the new file
+  Chmod the directories in accordance with the INSTALL.readme file
+
+  RESTORE YOUR www/header.php settings to the new file (do not replace)
 
   RESTORE YOUR includes/attachments files to the new directory
+  
+  RESTORE YOUR includes/egate_config.php settings to the new file (do not replace)
 
-  Locate and run the appropriate UPGRADE_[database].sql and 
-    UPGRADE_SEED_[database].sql files.
+UPGRADE FROM OLDER VERSIONS:
 
-  If you recieve an error describing a duplicate key, then update the
-  user_id for the INSERT INTO ZENTRACK_USERS statement to an id that hasn't
-  been used, or add this entry by hand.
-
-  If you intend to use the email gateway, please read the online docs
-      which give a thorough overview of how to set this up:
-      http://zendocs.phpzen.net/bin/view/Zentrack/ManualInstallation#Setting_Up_Email_Gateway
+  Check the install/previous directory for upgrade docs and utilities for previous
+  versions.
  
+WHEN YOU FINISH:
+
   Please let us know!  
       send an email, log into irc.sourceforge.net #zentrack, 
       or visit our forum and tell us what platform your install
       was successful on.  We can also add your company/url to our user list.  
+
+
 
 
 
