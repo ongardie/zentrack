@@ -13,7 +13,14 @@ class zen extends zenDate {
    **  TEXT FORMATTING
    */
    
-   function titleCase( $text = '' ) {
+   /**
+    * Translates text, and then converts it to title case
+    */
+    function ttl( $text ) {
+      return $this->titleCase($this->trans($text));
+    }
+   
+   function titleCase( $text ) {
       /*
       ** The title case function converts the string to a title ready
       ** format by capitalizing all words, excepting those 
@@ -21,21 +28,54 @@ class zen extends zenDate {
       ** all upper case
       */
       if( strlen($text) ) {
-	 $text = ucwords(strtolower($text));
-	 foreach($this->getFileArray($this->listDir."/lists/lcwords") as $l) {
-	    $l = trim($l);
-	    $lu = ucfirst($l);
-	    $text = ereg_replace(" $lu\b", " $l", $text);
-	 }
-	 foreach($this->getFileArray($this->listDir."/lists/ucwords") as $u) {
-	    $u = trim($u);
-	    $text = eregi_replace("\b$u\b", "$u", $text);
-	 }
-	 if( eregi("^([^a-zA-Z]*[a-z])", $text, $matches) ) {
-	    $text = ereg_replace("^([^a-zA-Z]*[a-z])", strtoupper($matches[1]), $text);
-	 }
-	 return $text;
+       $text = ucwords(strtolower($text));
+       $text = ereg_replace(" $lu\b", " $l", $text);
+       // fix lower case words
+       foreach($this->getLcWords as $l) {
+         $text = preg_replace("/\b".ucfirst($l)."\b/", $l, $text);
+       }
+       // fix acronyms
+       foreach($this->getUcWords as $u) {
+          $text = preg_replace("/\b".ucfirst(strtolower($u))."\b/", "$u", $text);
+       }
+       // fix funny first characters
+       if( preg_match("/^([^a-zA-Z]*[a-z])/", $text, $matches) ) {
+          $text = preg_replace("/^([^a-zA-Z]*[a-z])/", strtoupper($matches[1]), $text);
+       }
+       // fix words with dashes
+       $text = preg_replace("/([a-z])+-([A-Z])/", "'\\1-'.strtolower('\\2')", $text);
+       return $text;
       }
+   }
+
+   /**
+    * returns a list of words that should be in lower case (prepositions and articles)
+    */
+   function getLcWords() {
+     if( !is_array($this->_lcwords) ) {
+        $this->_lcwords = array();
+        foreach($this->getFileArray($this->listDir."/lists/lcwords") as $l) {
+          $this->_lcwords[] = trim($l);
+        }
+     }
+     return $this->_lcwords;
+   }
+   
+   /**
+    * returns an array of words that should be shown in upper case (acronyms)
+    */
+   function getUcWords() {
+     if( !is_array($this->_ucwords) ) {
+        $this->_ucwords = array();
+        foreach($this->getFileArray($this->listDir."/lists/ucwords") as $u) {
+          $this->_ucwords[] = trim($u);
+        }
+        foreach($this->getFileArray($this->listDir."/lists/stateAcronyms") as $u) {
+          list(,$u) = explode(",",$u);
+          $this->_ucwords[] = trim($u);
+        }
+     }
+     return $this->_ucwords;
    }
 
    function ffv( $val = '' ) {
@@ -69,16 +109,16 @@ class zen extends zenDate {
        return 0;
      }     
      return( ($decimal)? 
-	     preg_replace("@[^0-9.]@", "", $val) :
-	     preg_replace("@[^0-9]@", "", $val) );
+        preg_replace("@[^0-9.]@", "", $val) :
+        preg_replace("@[^0-9]@", "", $val) );
    }
 
    function checkEmail( $val = '' ) {
      if( $val ) {
        $val = preg_replace("/[^a-zA-Z0-9_.@-]/", "", $val);
        if( !preg_match("/[a-zA-Z0-9_.-]+@[a-zA-Z0-9_-]+\.[a-zA-Z0-9_.-]+/",
-		       $val) ) {
-	 $val = "";
+             $val) ) {
+    $val = "";
        }
      }
      return $val;
@@ -87,7 +127,7 @@ class zen extends zenDate {
    function stripPHP( $val = '' ) {
      // replaces php tags with ascii code
       if( strlen($val) )
-	return str_replace("<?", "&lt;?", str_replace("?>", "?&gt;", $val));
+   return str_replace("<?", "&lt;?", str_replace("?>", "?&gt;", $val));
    }
    
    function getFileArray( $file, $delim = '', $index = '', $combined = 0 ) {
@@ -98,29 +138,29 @@ class zen extends zenDate {
       // if $combined is set to 1, then the array is constructed with multiple rows
       // under each index id (rather than overwriting if there is a duplicate)
       if( file_exists($file) ) {
-	 $vals = $this->cleanText(file($file));
-	 if( is_array($vals) ) {
-	    foreach($vals as $v) {
-	       if( strlen($v) && !ereg("^#", $v) ) {
-		  if( strlen($delim) ) {
-		     $vals = explode($delim,$v);
-		     if( strlen($index) ) {
-			list($n) = array_splice($vals,$index,1);
-			if( $combined ) {
-			   $arr["$n"][] = $vals;
-			} else {
-			   $arr["$n"] = $vals;
-			}
-		     } else {
-			$arr[] = $vals;       
-		     }
-		  } else {
-		     $arr[] = $v;
-		  }
-	       }
-	    }
-	 }
-	 return $arr;
+    $vals = $this->cleanText(file($file));
+    if( is_array($vals) ) {
+       foreach($vals as $v) {
+          if( strlen($v) && !ereg("^#", $v) ) {
+        if( strlen($delim) ) {
+           $vals = explode($delim,$v);
+           if( strlen($index) ) {
+         list($n) = array_splice($vals,$index,1);
+         if( $combined ) {
+            $arr["$n"][] = $vals;
+         } else {
+            $arr["$n"] = $vals;
+         }
+           } else {
+         $arr[] = $vals;       
+           }
+        } else {
+           $arr[] = $v;
+        }
+          }
+       }
+    }
+    return $arr;
       }
    }
    
@@ -133,10 +173,10 @@ class zen extends zenDate {
       
       $contents = (is_array($text))? $text : explode("\n", $text);
       for( $i=0; $i<count($contents); $i++ ) {
-	 $contents[$i] = ereg_replace(chr(13), "", $contents[$i]);
-	 $contents[$i] = ereg_replace(chr(14), "", $contents[$i]);
-	 $contents[$i] = ereg_replace(chr(10), "", $contents[$i]);
-	 $contents[$i] = trim($contents[$i]);
+    $contents[$i] = ereg_replace(chr(13), "", $contents[$i]);
+    $contents[$i] = ereg_replace(chr(14), "", $contents[$i]);
+    $contents[$i] = ereg_replace(chr(10), "", $contents[$i]);
+    $contents[$i] = trim($contents[$i]);
       }
       return $contents;
    }
@@ -168,7 +208,7 @@ class zen extends zenDate {
         $match = array($match);
      for( $i=0; $i<count($text); $i++ ) {
        foreach($match as $m) {
-	 $text[$i] = ereg_replace('#','\#',$text[$i]);
+    $text[$i] = ereg_replace('#','\#',$text[$i]);
          $text[$i] = preg_replace("#($m)#i", "$h[0]\\1$h[1]", $text[$i]);
        }
      }
@@ -197,116 +237,116 @@ class zen extends zenDate {
      **
      **  There are several values for the indexed array 'fields' which can be used
      **
-     **	   case "alpha":     letters only
+     **     case "alpha":     letters only
      **    case "alphanum":  letters and numbers only
      **    case "string":    letters, numbers and spaces only
      **    case "num":       numbers and decimal symbols only
      **    case "int":       numbers only
-     **	   case "date":      date chars format only
-     **	   case "html":      all but php tags allowed
-     **	   case "text":      strip all html
-     **	   case "ignore":    leave this fields alone
+     **     case "date":      date chars format only
+     **     case "html":      all but php tags allowed
+     **     case "text":      strip all html
+     **     case "ignore":    leave this fields alone
      **    case "email":     email format
      **    case "array":     also ignored
-     **	   case "":          strip all html excepting $mda->html_allowed (determined by lists/okhtmltags)
+     **     case "":          strip all html excepting $mda->html_allowed (determined by lists/okhtmltags)
      **
      */
 
       if( is_array($vals) ) {
-	$vars = $vals;
-	$vals = array();
-	foreach($vars as $k=>$v ) {
-	  if( is_array($fields) ) {
-	    $f = $fields["$k"];
-	  } else if( $fields ) {
-	    $f = $fields;
-	  }
-	  if( !$k ) {
-	    $vals[] = strip_tags( $v, $this->html_allowed );
-	  } else if( !$f ) {
-	    $vals["$k"] = strip_tags( $v, $this->html_allowed );
-	  } else {
-	    switch( $f ) {
-	    case "alpha":
-	      $vals["$k"] = $this->checkAlpha($v);
-	      break;
-	    case "alphanum":
-	      $vals["$k"] = $this->checkAlphaNum($v);
-	      break;	   
-	    case "array":
-	      $vals["$k"] = (is_array($v))? $v : array();
-	      break;		  
-	    case "date":
-	      $vals["$k"] = ereg_replace("[^0-9/: -]", "", $v);
-	      break;
-	    case "email":
-	      $vals["$k"] = ereg_replace("[^0-9a-zA-Z@._-]", "", $v);
-	      break;		  		  
-	    case "html": 
-	      $vals["$k"] = $this->stripPHP( $v );
-	      break;
-	    case "int":
-	      $vals["$k"] = $this->checkNum($v);
-	      break;		  
-	    case "ignore":
-	      $vals["$k"] = $v;
-	      break;
-	    case "num":
-	      $vals["$k"] = $this->checkNum($v,true);
-	      break;
-	    case "string":
-	      $vals["$k"] = $this->checkAlphaNum($v," _-");
-	      break;
-	    case "text":
-	      $vals["$k"] = htmlspecialchars($v);
-	      break;
-	    default:
-	      $vals["$k"] = strip_tags($v, $this->html_allowed);
-	    }
-	  }       
-	}
-	return $vals;
+   $vars = $vals;
+   $vals = array();
+   foreach($vars as $k=>$v ) {
+     if( is_array($fields) ) {
+       $f = $fields["$k"];
+     } else if( $fields ) {
+       $f = $fields;
+     }
+     if( !$k ) {
+       $vals[] = strip_tags( $v, $this->html_allowed );
+     } else if( !$f ) {
+       $vals["$k"] = strip_tags( $v, $this->html_allowed );
+     } else {
+       switch( $f ) {
+       case "alpha":
+         $vals["$k"] = $this->checkAlpha($v);
+         break;
+       case "alphanum":
+         $vals["$k"] = $this->checkAlphaNum($v);
+         break;      
+       case "array":
+         $vals["$k"] = (is_array($v))? $v : array();
+         break;        
+       case "date":
+         $vals["$k"] = ereg_replace("[^0-9/: -]", "", $v);
+         break;
+       case "email":
+         $vals["$k"] = ereg_replace("[^0-9a-zA-Z@._-]", "", $v);
+         break;              
+       case "html": 
+         $vals["$k"] = $this->stripPHP( $v );
+         break;
+       case "int":
+         $vals["$k"] = $this->checkNum($v);
+         break;        
+       case "ignore":
+         $vals["$k"] = $v;
+         break;
+       case "num":
+         $vals["$k"] = $this->checkNum($v,true);
+         break;
+       case "string":
+         $vals["$k"] = $this->checkAlphaNum($v," _-");
+         break;
+       case "text":
+         $vals["$k"] = htmlspecialchars($v);
+         break;
+       default:
+         $vals["$k"] = strip_tags($v, $this->html_allowed);
+       }
+     }       
+   }
+   return $vals;
       } else {
-	 foreach( $fields as $k=>$v ) {
-	    global $$k;
-	    switch( strtolower($v) ) {
-	      case "alpha":
-	       $$k = $this->checkAlpha($$k);
-	       break;
-	      case "alphanum":
-	       $$k = $this->checkAlphaNum($$k);
-	       break;	   
-	      case "array":
-	       $$k = (is_array($$k))? $$k : null;
-	       break;		  
-	      case "date":
-	       $$k = ereg_replace("[^0-9/: -]", "", $$k);
-	       break;
-	      case "email":
-	       $$k = ereg_replace("[^0-9a-zA-Z@._-]", "", $$k);
-	       break;		  		  
-	      case "html": 
-	       $$k = $this->stripPHP( $$k );
-	       break;
-	      case "int":
-	       $$k = $this->checkNum($$k);
-	       break;		  
-	      case "ignore":
-	       $$k = $$k;
-	       break;
-	      case "num":
-	       $$k = $this->checkNum($$k,true);
-	       break;
-	      case "string":
-	       $$k = $this->checkAlphaNum($$k," _-");
-	       break;
-	      case "text":
-	       $$k = htmlspecialchars($$k);
-	       break;
-	      default:
-	       $$k = strip_tags($$k, $this->html_allowed);
-	    }	 
-	 }
+    foreach( $fields as $k=>$v ) {
+       global $$k;
+       switch( strtolower($v) ) {
+         case "alpha":
+          $$k = $this->checkAlpha($$k);
+          break;
+         case "alphanum":
+          $$k = $this->checkAlphaNum($$k);
+          break;     
+         case "array":
+          $$k = (is_array($$k))? $$k : null;
+          break;       
+         case "date":
+          $$k = ereg_replace("[^0-9/: -]", "", $$k);
+          break;
+         case "email":
+          $$k = ereg_replace("[^0-9a-zA-Z@._-]", "", $$k);
+          break;             
+         case "html": 
+          $$k = $this->stripPHP( $$k );
+          break;
+         case "int":
+          $$k = $this->checkNum($$k);
+          break;       
+         case "ignore":
+          $$k = $$k;
+          break;
+         case "num":
+          $$k = $this->checkNum($$k,true);
+          break;
+         case "string":
+          $$k = $this->checkAlphaNum($$k," _-");
+          break;
+         case "text":
+          $$k = htmlspecialchars($$k);
+          break;
+         default:
+          $$k = strip_tags($$k, $this->html_allowed);
+       }  
+    }
       }
    }
 
@@ -334,32 +374,32 @@ class zen extends zenDate {
      if( is_array($name) && !strlen($value) ) {
        // show each name=>value pair
        foreach($name as $k=>$v) {
-	 print "<input type=\"hidden\" name=\"".$this->ffv($k)
-	   ."\" value=\"".$this->ffv($v)."\">\n";
+    print "<input type=\"hidden\" name=\"".$this->ffv($k)
+      ."\" value=\"".$this->ffv($v)."\">\n";
        }
      } else if( is_array($name) && is_array($value) ) {
        // show each matching pair
        for($i=0; $i<count($name); $i++) {
-	 print "<input type=\"hidden\" name=\"".$this->ffv($name[$i])
-	   ." value=\"".$this->ffv($value[$i])."\">\n";	 
+    print "<input type=\"hidden\" name=\"".$this->ffv($name[$i])
+      ." value=\"".$this->ffv($value[$i])."\">\n";  
        }
      } else if( is_array($name) ) {
        // show same value for all of $name
        $value = $this->ffv($value);
        for($i=0; $i<count($name); $i++) {
-	 print "<input type=\"hidden\" name=\""
-	       .$this->ffv($name[$i])."\" value=\"".$value."\">\n";	 
+    print "<input type=\"hidden\" name=\""
+          .$this->ffv($name[$i])."\" value=\"".$value."\">\n";  
        }
      } else if( is_array($value) ) {
        // make an array set
        $name = $this->ffv($name);
        for($i=0; $i<count($value); $i++) {
-	 print "<input type=\"hidden\" name=\"".$name."[".$i."]\" value=\""
-               .$this->ffv($value[$i])."\">\n";	 
+    print "<input type=\"hidden\" name=\"".$name."[".$i."]\" value=\""
+               .$this->ffv($value[$i])."\">\n";  
        }
      } else {
        print "<input type=\"hidden\" name=\"".$this->ffv($name)
-	 ."\" value=\"".$this->ffv($value)."\">\n";
+    ."\" value=\"".$this->ffv($value)."\">\n";
      }
    }
 
@@ -452,12 +492,12 @@ class zen extends zenDate {
       // prints an array of errors
       // in red, as a formatted list
       if( is_array($errs) ) {
-	 print "<span class='red'><b>Errors Detected</b>";
-	 print "<br>If problems persist, contact your "
-	   ."<a href='{$this->settings['admin_email']}'>Administrator</a>\n<ul>\n";
-	 foreach($errs as $e)
-	   print "<li>$e</li>\n";
-	 print "</ul></span>";
+    print "<span class='red'><b>Errors Detected</b>";
+    print "<br>If problems persist, contact your "
+      ."<a href='{$this->settings['admin_email']}'>Administrator</a>\n<ul>\n";
+    foreach($errs as $e)
+      print "<li>$e</li>\n";
+    print "</ul></span>";
       }
    }
    
@@ -483,8 +523,8 @@ class zen extends zenDate {
    function addDebug( $title, $msg, $lvl = 3 ) {
      if( $lvl <= $this->debug )
        $this->debugMessages[] = (is_array($msg))?
-	  array($title,$msg,$lvl) :
-	  array($title,htmlentities($msg),$lvl);
+     array($title,$msg,$lvl) :
+     array($title,htmlentities($msg),$lvl);
    }
 
    /**
@@ -498,7 +538,7 @@ class zen extends zenDate {
      $vals = array();
      foreach($this->debugMessages as $d) {
        if( $d[0] == $class ) {
-	 $vals[] = $d;
+    $vals[] = $d;
        }
      }
      return $vals;
@@ -507,30 +547,62 @@ class zen extends zenDate {
    /**
     * Prints the debug output collected by addDebug()
     */
-   function printDebugMessages() {	
+   function printDebugMessages() {  
      if( is_array($this->debugMessages) ) {
-	$styles = array("","error","","note");
+   $styles = array("","error","","note");
        print "<p>--------<b>DEBUG</b>--------<ul>\n";
-       if( is_array($this->debugMessages) ) {	
-	 foreach($this->debugMessages as $v) {
-	   $n = $v[2];
-	   $style = $styles[$n];
-	   print "<li class='$style'>$v[0]: \"";
-	   if( is_array($v[1]) ) {
-	     print "<pre>\n";
-	     print_r($v[1]);
-	     print "</pre>\n";
-	   }
-	   else {
-	     print $v[1];
-	   }
-	   print "\"\n";
-	 }
+       if( is_array($this->debugMessages) ) {   
+    foreach($this->debugMessages as $v) {
+      $n = $v[2];
+      $style = $styles[$n];
+      print "<li class='$style'>$v[0]: \"";
+      if( is_array($v[1]) ) {
+        print "<pre>\n";
+        print_r($v[1]);
+        print "</pre>\n";
+      }
+      else {
+        print $v[1];
+      }
+      print "\"\n";
+    }
        }
        print "</ul>------<b>END DEBUG</b>------</p>\n";
      }
    }
    
+   /**
+    * Translate prepared strings using the translate class
+    *
+    * @param string $string a string containing ? chars
+    * @param array $vals the vals to replace ? chars with
+    * @return string the translated string
+    */
+    function ptrans( $string, $vals ) {
+      return $this->_translator->ptrans($string,$vals);    
+    }
+   
+   /**
+    * Translate strings using the translate class
+    *
+    * This function will call an instance of the translate class, if one doesn't exist
+    * @param string $string the string to translate
+    * @param array $init the indexed array of init params
+    * @return string the translated text
+    */
+    function trans( $string, $init = '' ) {
+      if (!is_a($this->_translator, 'Translator')) {
+         $this->_translator = new Translator;
+         $this->_translator->bindZen($init['zen']);
+         $this->_translator->bindDomain($init['domain'], $init['path']);
+         $this->_translator->textDomain($init['domain']);
+         $this->_translator->setLocale($init['locale']);
+         return true;
+      }
+      return $this->_translator->trans($string);    
+   }
+   
+
    /*
    **  SYSTEM METHODS
    */
@@ -547,6 +619,10 @@ class zen extends zenDate {
    var $html_allowed;
    var $debugMessages;
    var $defaultHighlight;
+   var $_ucwords;
+   var $_lcwords;
+   var $_translator;
+   
 } 
   
 ?>

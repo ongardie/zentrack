@@ -30,9 +30,9 @@
       <?=(isset($page_section))? strip_tags($page_section):"&nbsp;";?>
      </td>
      <td align="right" width="200">
-      <span class="small">Ticket ID:</span>&nbsp;
+      <span class="small"><?=tr("Ticket ID")?>:</span>&nbsp;
       <input class="searchbox" type="text" name="id" 
-        size="6" maxlength="12" title="Enter a ticket ID and press enter to jump to that ticket">
+        size="6" maxlength="12" title="<?=tr("Enter a ticket ID and press enter")?>">
      </td>
     </tr>
     </table>
@@ -43,20 +43,19 @@
   <td valign="top" height="400" style="background:<?=$zen->settings["color_bars"]?>;">
   
   <? 
-      // print out any system messages
-      // which are queued up for display
-      if( is_array($msg) && count($msg) ) { 
-	print "&nbsp;<p><b>\n";
-	foreach($msg as $m) {
-	  print "$m<br>";	  
-	}
-	print "</b></p>\n";
-	$msg = array();
-      }
-      else if( $msg ) {
-	print "&nbsp;<p><b>$msg</b></p>";
-	$msg = array();
-      }
+    // print out any system messages
+    // which are queued up for display
+    if( $msg && !is_array($msg) ) {
+       $msg = array($msg);
+    }
+    if( is_array($msg) && count($msg) ) { 
+       print "&nbsp;<p><b>\n";
+       foreach($msg as $m) {
+          print "$m<br>";   
+       }
+       print "</b></p>\n";
+       $msg = array();
+    }
   ?>
   
   <!-- END OF NAVIGATION -->

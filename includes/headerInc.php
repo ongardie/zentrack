@@ -54,20 +54,34 @@
   include_once("$libDir/translator.class");
 
   $zen = new zenTrack( $configFile );
+
+
+  /**
+   * The translation function wrapper
+   *
+   * This calls a zen.class function, which controls
+   * initialization of the translation class, since
+   * this class needs to be available to the child classes
+   * of zen.class
+   */
+  function tr($string, $init = '') {
+    global $zen;
+    return $zen->trans($string,$init);
+  }   
  
-   /**
-    * Translator Object Initialization (mlively)
-    */
-   //Create the initialization array for the translator object
-   $translator_init = array(
-      'domain' => 'test',
-      'path' => './',
-      'locale' => $lang
-   );
-   $translator_init['zen'] =& $zen;
-   tr('', $translator_init);
-   //save a bit on memory
-   unset($translator_init);
+  /**
+   * Translator Object Initialization (mlively)
+   */
+  //Create the initialization array for the translator object
+  $translator_init = array(
+     'domain' => 'test',
+     'path' => './',
+     'locale' => $lang
+  );
+  $translator_init['zen'] =& $zen;
+  tr('', $translator_init);
+  //save a bit on memory
+  unset($translator_init);
 
   /*
   **  SOME FUNCTIONS FOR USE IN
@@ -99,7 +113,7 @@
        $login_messages = array();
      if( count($login_messages)+count($msg) > $system_message_limit ) {
        $login_messages = array_slice( $login_messages,0,
-			($system_message_limit - count($msg)) );
+         ($system_message_limit - count($msg)) );
      }
      foreach( $msg as $m ) {  
        array_unshift($login_messages, array($m,time(),$code) );

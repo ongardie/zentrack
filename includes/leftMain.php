@@ -1,22 +1,22 @@
 <div class="small" align="center"><b><?=$zen->showLongDate()?></b></div>
-<div class="small" align='center'>version <?=$zen->settings["version_xx"]?></div>
+<div class="small" align='center'><?=tr("version")?> <?=$zen->settings["version_xx"]?></div>
   
 <?
   $num = 0;
   $num = $zen->getTicketCount('OPEN');
   print "<p align='center' class='small'>";
-  print "$num open tickets in ".count($zen->bins)." bins";
+  print $zen->ptrans("? open tickets in ? bins",array($num,count($zen->bins)));
   print "</p>\n";
   
   if( $login_id ) {
      if( ereg("/help/",$SCRIPT_NAME) ) {
-	$expand_help = 1;
+   $expand_help = 1;
      } else if( ereg("/admin/",$SCRIPT_NAME) ) {
-	$expand_admin = 1;;
+   $expand_admin = 1;;
      }
   } else {
      if( ereg("/help/",$SCRIPT_NAME) ) {
-	$expand_help = 1;
+   $expand_help = 1;
      }
   }
 
@@ -27,14 +27,14 @@
   <? if( $login_id ) { include("$libDir/leftBins.php"); } ?>
   <tr>
   <td class="altCell" align=center>
-  <b><?=$zen->prn("Tracker")?></b>
+  <b><?=tr("Tracker")?></b>
   </td>
   </tr>
   <? include("$libDir/leftTickets.php"); ?>
   <? include("$libDir/leftSearch.php"); ?>
   <tr>
   <td class="altCell" align=center>
-  <b><?=$zen->prn("System")?></b>
+  <b><?=tr("System")?></b>
   </td>
   </tr>  
 <? if( $login_id ) { ?>
@@ -42,30 +42,30 @@
   <td <?=$nav_rollover_text?>>
   <a class='menuLink' 
      href="<?=$rootUrl?>/index.php?logoff=1"
-     onClick='return confirm("Really log out of zenTrack?")'><?=$zen->prn("Log Off")?></a>
+     onClick='return confirm("<?=tr("Really log out of zenTrack?")?>")'><?=tr("Log Off")?></a>
   </td>
   </tr>       
 <? } else { ?>
   <tr>
   <td <?=$nav_rollover_text?>>
-  <a class='menuLink' href="<?=$rootUrl?>/index.php"><?=$zen->prn("Log On")?></a>
+  <a class='menuLink' href="<?=$rootUrl?>/index.php"><?=tr("Log On")?></a>
   </td>
   </tr>                
 <? } ?>
 <? include("$libDir/leftHelp.php"); ?>
   <tr>
   <td <?=$nav_rollover_text?>>
-  <a class='menuLink' href="<?=$rootUrl?>/options.php"><?=$zen->prn("Options")?></a>
+  <a class='menuLink' href="<?=$rootUrl?>/options.php"><?=tr("Options")?></a>
   </td>
   </tr>  
   <? 
      if( $login_level >= $zen->settings["level_reports"] ) {
-	include("$libDir/leftReports.php");
+   include("$libDir/leftReports.php");
       } 
   ?>
   <? 
      if( $login_level >= $zen->settings["level_settings"] ) {
-	include("$libDir/leftAdmin.php");
+   include("$libDir/leftAdmin.php");
       } 
   ?>
 </table>

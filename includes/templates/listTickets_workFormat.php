@@ -4,35 +4,35 @@ if( is_array($tickets) ) {
  
       ?>
         <table width="100%" cellspacing='1' cellpadding='2' bgcolor='<?=$zen->settings["color_alt_background"]?>'>
-	<tr bgcolor="<?=$zen->settings["color_title_background"]?>">
-	<td width="32" height="25" valign="middle" title="Tracking ID for the <?=$page_type?>">
-	  <div align="center"><span style="color:<?=$zen->settings["color_title_txt"]?>"><b><span class="small"><?=$zen->prn("ID")?></span></b></span></div>
-	</td>
-	<td height="25" valign="middle" title="The name of the <?=$page_type?>">
-	  <div align="center"><span style="color:<?=$zen->settings["color_title_txt"]?>"><b><span class="small"><?=$zen->prn("Title")?></span></b></span></div>
-	</td>
-	<td width="32" height="25" valign="middle" title="The importance of the <?=$page_type?>">
-	  <div align="center"><span style="color:<?=$zen->settings["color_title_txt"]?>"><b><span class="small"><?=$zen->prn("Pri")?></span></b></span></div>
-	</td>
-	<td width="32" height="25" valign="middle" title="The type of task to complete">
-	  <div align="center"><span style="color:<?=$zen->settings["color_title_txt"]?>"><b><span class="small"><?=$zen->prn("Type")?></span></b></span></div>
-	</td>
-	<td width="40" height="25" valign="middle" title="Who the <?=$page_type?> belongs to">
-	  <div align="center"><span style="color:<?=$zen->settings["color_title_txt"]?>"><b><span class="small"><?=$zen->prn("Owner")?></span></b></span></div>
-	</td>
+   <tr bgcolor="<?=$zen->settings["color_title_background"]?>">
+   <td width="32" height="25" valign="middle" title="Tracking ID for the <?=$page_type?>">
+     <div align="center"><span style="color:<?=$zen->settings["color_title_txt"]?>"><b><span class="small"><?=tr("ID")?></span></b></span></div>
+   </td>
+   <td height="25" valign="middle" title="The name of the <?=$page_type?>">
+     <div align="center"><span style="color:<?=$zen->settings["color_title_txt"]?>"><b><span class="small"><?=tr("Title")?></span></b></span></div>
+   </td>
+   <td width="32" height="25" valign="middle" title="The importance of the <?=$page_type?>">
+     <div align="center"><span style="color:<?=$zen->settings["color_title_txt"]?>"><b><span class="small"><?=tr("Pri")?></span></b></span></div>
+   </td>
+   <td width="32" height="25" valign="middle" title="The type of task to complete">
+     <div align="center"><span style="color:<?=$zen->settings["color_title_txt"]?>"><b><span class="small"><?=tr("Type")?></span></b></span></div>
+   </td>
+   <td width="40" height="25" valign="middle" title="Who the <?=$page_type?> belongs to">
+     <div align="center"><span style="color:<?=$zen->settings["color_title_txt"]?>"><b><span class="small"><?=tr("Owner")?></span></b></span></div>
+   </td>
         <td width="40" height="25" valign="middle" title="The estimated time to complete this <?=$page_type?>">
-	  <div align="center"><span style="color:<?=$zen->settings["color_title_txt"]?>"><b><span class="small"><?=$zen->prn("Status")?></span></b></span></div>
+     <div align="center"><span style="color:<?=$zen->settings["color_title_txt"]?>"><b><span class="small"><?=tr("Status")?></span></b></span></div>
         </td>     
         <td width="40" height="25" valign="middle" title="The estimated time to complete this <?=$page_type?>">
-	  <div align="center"><span style="color:<?=$zen->settings["color_title_txt"]?>"><b><span class="small"><?=$zen->prn("Est Hrs")?></span></b></span></div>
+     <div align="center"><span style="color:<?=$zen->settings["color_title_txt"]?>"><b><span class="small"><?=tr("Est Hrs")?></span></b></span></div>
         </td>
         <td width="40" height="25" valign="middle" title="The estimated time to complete this <?=$page_type?>">
-  	  <div align="center"><span style="color:<?=$zen->settings["color_title_txt"]?>"><b><span class="small"><?=$zen->prn("Worked")?></span></b></span></div>     
+     <div align="center"><span style="color:<?=$zen->settings["color_title_txt"]?>"><b><span class="small"><?=tr("Worked")?></span></b></span></div>     
         </td>     
         <td width="40" height="25" valign="middle" title="Percent of Completion">
-          <div align="center"><span style="color:<?=$zen->settings["color_title_txt"]?>"><b><span class="small"><?=$zen->prn("%")?></span></b></span></div>     
+          <div align="center"><span style="color:<?=$zen->settings["color_title_txt"]?>"><b><span class="small"><?=tr("%")?></span></b></span></div>     
         </td>
-	</tr>
+   </tr>
       <?      
 
    $td_ttl = "title='Click here to view the $page_type.'";
@@ -48,22 +48,22 @@ if( is_array($tickets) ) {
       unset($per);
       
       if( $t["status"] == 'CLOSED' ) {
-	$row = $zen->settings["color_bars"];
-	$txt = $rollover_greytext;
-	$text = $zen->settings["color_bar_text"];
+   $row = $zen->settings["color_bars"];
+   $txt = $rollover_greytext;
+   $text = $zen->settings["color_bar_text"];
       } else if( $t["priority"] <= $zen->settings["level_hot"] ) {
-	$row = $zen->settings["color_background"];      
-	$tx = "style='background:".$zen->settings["color_highlight"]."'";
-	$txt = $hotrollover_text;
-	$text = $zen->settings["color_hot"];
+   $row = $zen->settings["color_background"];      
+   $tx = "style='background:".$zen->settings["color_highlight"]."'";
+   $txt = $hotrollover_text;
+   $text = $zen->settings["color_hot"];
       } else if( $t["priority"] <= $zen->settings["level_highlight"] ) {
-	$row = $zen->settings["color_background"];
-	$txt = $rollover_text;
-	$text = $zen->settings["color_hot"];	 
+   $row = $zen->settings["color_background"];
+   $txt = $rollover_text;
+   $text = $zen->settings["color_hot"];    
       } else {
-	$row = $zen->settings["color_background"];
-	$txt = $rollover_text;
-	$text = $zen->settings["color_text"];	 
+   $row = $zen->settings["color_background"];
+   $txt = $rollover_text;
+   $text = $zen->settings["color_text"];   
       }     
       
       // calculate the total hours
@@ -73,47 +73,47 @@ if( is_array($tickets) ) {
       $ttl_wkd += ($wkd > $est)? $est : $wkd;
       $ttl_ext += ($wkd > $est)? $wkd - $est : 0;
       if( !strlen($est) )
-	$est = "n/a";
+   $est = "n/a";
       if( $wkd <= 0 )
-	$wkd = 0;
-      if( $zen->inProjectTypeIDs($t["type_id"]) ) {	
-	$link = $projectUrl;
+   $wkd = 0;
+      if( $zen->inProjectTypeIDs($t["type_id"]) ) {   
+   $link = $projectUrl;
       } else {
-	$link = $ticketUrl;
+   $link = $ticketUrl;
       }
       if( $est > 0 )
-	$per = round($zen->percentWorked($est,$wkd),1)."%";
+   $per = round($zen->percentWorked($est,$wkd),1)."%";
       ?>
-	<tr style="background:<?=$row?>;color:<?=$text?>">
-	<td height="25" valign="middle" <?=$td_ttl?> <?=$txt?>>
-	 <a class="rowLink" style="color:<?=$text?>" href="<?=$link?>?id=<?=$t["id"]?>"><?=$t["id"]?></a>
-	</td>
-	<td height="25" valign="middle" <?=$txt?> <?=$td_ttl?>>
-	 <a class="rowLink" style="color:<?=$text?>" href="<?=$link?>?id=<?=$t["id"]?>"><?=$t["title"]?></a>
-	</td>
-	<td height="25" <?=$tx?> valign="middle">
-	  <?=$zen->priorities["$t[priority]"]?>
-	</td>
-	<td height="25" valign="middle">
-	  <?=$zen->types["$t[type_id]"]?>
-	</td>
-	<td width="40" height="25" valign="middle">
-	  <?=$zen->formatName($t["user_id"],2)?>
-	</td>
-	<td width="40" height="25" valign="middle">
-	  <?=$t["status"]?>
-	</td>
-	<td width="40" height="25" valign="middle" align="right">
-	  <?=$est?>
-	</td>
-	<td width="40" height="25" valign="middle" align="right">
-	  <?=$wkd?>
-	</td>
-	<td width="40" height="25" valign="middle" align="right">
-   	  <?=($per)? $per : "n/a"; ?>
-	</td>
-	</tr>	 	   
-	<?
+   <tr style="background:<?=$row?>;color:<?=$text?>">
+   <td height="25" valign="middle" <?=$td_ttl?> <?=$txt?>>
+    <a class="rowLink" style="color:<?=$text?>" href="<?=$link?>?id=<?=$t["id"]?>"><?=$t["id"]?></a>
+   </td>
+   <td height="25" valign="middle" <?=$txt?> <?=$td_ttl?>>
+    <a class="rowLink" style="color:<?=$text?>" href="<?=$link?>?id=<?=$t["id"]?>"><?=$t["title"]?></a>
+   </td>
+   <td height="25" <?=$tx?> valign="middle">
+     <?=$zen->priorities["$t[priority]"]?>
+   </td>
+   <td height="25" valign="middle">
+     <?=$zen->types["$t[type_id]"]?>
+   </td>
+   <td width="40" height="25" valign="middle">
+     <?=$zen->formatName($t["user_id"],2)?>
+   </td>
+   <td width="40" height="25" valign="middle">
+     <?=$t["status"]?>
+   </td>
+   <td width="40" height="25" valign="middle" align="right">
+     <?=$est?>
+   </td>
+   <td width="40" height="25" valign="middle" align="right">
+     <?=$wkd?>
+   </td>
+   <td width="40" height="25" valign="middle" align="right">
+        <?=($per)? $per : "n/a"; ?>
+   </td>
+   </tr>       
+   <?
    }      
    if( $ttl_est ) {
       $ttl_per = $zen->percentWorked($ttl_est,$ttl_wkd);

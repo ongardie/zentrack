@@ -1,13 +1,12 @@
 <?
 
 if( !$zen->checkAccess($login_id,$ticket["bin_id"],"edit") ) {
-  $errs[] = "You cannot edit a ticket in the "
-    .$zen->getBinName($ticket["bin_id"])." bin.";
+  $errs[] = tr("You cannot edit a ticket in this bin ");
 } else if( !$zen->actionApplicable($id,"edit",$login_id) ) {
-  $errs[] = "Ticket $id cannot be edited in its current status";
+  $errs[] = $zen->ptrans("Ticket #? cannot be edited in its current status",array($id));
 }
 
-  $page_tile = "Commit Edited Ticket";
+  $page_tile = tr("Commit Edited Ticket");
   $expand_admin = 1;
 
   // initiate default values
@@ -25,34 +24,34 @@ if( !$zen->checkAccess($login_id,$ticket["bin_id"],"edit") ) {
      $type_id = $zen->projectTypeID();
 
   $fields = array(
-		  "title"       => "text",
-		  "priority"    => "int",
-		  "description" => "html",
-		  "bin_id"       => "int",
-		  "type_id"      => "int",
-		  "user_id"      => "int",
-		  "system_id"    => "int",
-		  "tested"      => "int",
-		  "approved"    => "int",
-		  "relations"   => "text",
-		  "project_id"   => "int",
-		  "est_hours"   => "num",
-		  "deadline"    => "int",
-		  "start_date"  => "int"
-		  );
+        "title"       => "text",
+        "priority"    => "int",
+        "description" => "html",
+        "bin_id"       => "int",
+        "type_id"      => "int",
+        "user_id"      => "int",
+        "system_id"    => "int",
+        "tested"      => "int",
+        "approved"    => "int",
+        "relations"   => "text",
+        "project_id"   => "int",
+        "est_hours"   => "num",
+        "deadline"    => "int",
+        "start_date"  => "int"
+        );
  $required = array(
-		   "title",
-		   "priority",
-		   "description",
-		   "bin_id",
-		   "type_id",
-		   "system_id"
-		   );
+         "title",
+         "priority",
+         "description",
+         "bin_id",
+         "type_id",
+         "system_id"
+         );
   $zen->cleanInput($fields);
   // check for required fields
   foreach($required as $r) {
      if( !$$r ) {
-	$errs[] = ucfirst($r)." is a required field";
+   $errs[] = ucfirst($r)." ".tr("is a required field");
      }
   }
   if( !$errs ) {
@@ -64,12 +63,12 @@ if( !$zen->checkAccess($login_id,$ticket["bin_id"],"edit") ) {
      $res = $zen->update_ticket($id,$params);
      // check for errors
      if( !$res ) {
-	$errs[] = "System Error: Ticket $id could not be edited. ".$zen->db_error;
+   $errs[] = tr("System Error").": ".tr("Ticket could not be edited.")." ".$zen->db_error;
      }
   }
 
   if( !$errs ) {
-     add_system_messages("Edited ticket $id.");
+     add_system_messages(tr("Edited ticket")." $id.");
      //header("Location:$rootUrl/ticket.php?id=$id&setmode=Details");
      $setmode = "Details";
      if( $zen->inProjectTypeIDs($bin_id) ) {

@@ -39,15 +39,15 @@
 
    // ORACLE USERS! the order of items may be changed
    // it may be that the entry will be:
-   //      database_host: "serverip:port#"
-   //      database_login: "scott"
-   //      database_pass:  "tiger"
-   //      database_intance: "servicename"
+   //      $Db_Host: "serverip:port#"
+   //      $Db_Login: "scott"
+   //      $Db_Pass:  "tiger"
+   //      $Db_Instance: "servicename"
    // or:
-   //      database_host: ""
-   //      database_login: "scott"
-   //      database_pass:  "tiger"
-   //      database_intance: "TNSName"
+   //      $Db_Host: ""
+   //      $Db_Login: "scott"
+   //      $Db_Pass:  "tiger"
+   //      $Db_Instance: "TNSName"
    // hints for these entries:
    // - for Oracle 8 and later, use "oci8po" as database_type
    // - if using an Oracle Names Server, leave database_instance blank and put
