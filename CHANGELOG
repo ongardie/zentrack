@@ -8,6 +8,11 @@
 
 2003-01-30, Kato
   Fixed problem with display descriptions and newline chars
+  Thanks to Jamin W. Collins (jamincollins)
+    - includes/templates/listTickets.php v1.9
+
+2003-01-30, Kato
+  Fixed problem with display descriptions and newline chars
   Thanks to Hitman for reporting this
     - includes/templates/editTicketForm.php v1.2
     - includes/templates/ticket_detailsBox.php v1.5
