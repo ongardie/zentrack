@@ -13,6 +13,11 @@ REQUIREMENTS
 
 UPGRADE FROM 2.4.2
 
+  IMPORTANT USAGE NOTE:
+    The ability to create new projects is now controlled by a separate access level
+    than ticket creation, see level_create and level_create_proj in the admin->config menu
+    for more details
+
   Be sure to BACKUP CONFIG FILES:
       www/header.php
       includes/egate_config.php
