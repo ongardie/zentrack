@@ -42,8 +42,8 @@ class DbTypeInfo {
   /**
    * creates sql needed to add a table
    *
-   * @params string $table
-   * @params array $columns array of (string) column syntax
+   * @param string $table
+   * @param array $columns array of (string) column syntax
    * @return array of sql statements
    */
   function addTableSyntax( $table, $columns ) { 

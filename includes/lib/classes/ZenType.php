@@ -1,9 +1,9 @@
 <? /* -*- Mode: C; c-basic-indent: 3; indent-tabs-mode: nil -*- ex: set tabstop=3 expandtab: */ 
 
 /** 
- * @package Zen 
- *
  * Ticket types, controls what actions, triggers, fields, data types, etc are available
+ *
+ * @package Zen 
  */
 class ZenType extends ZenDataType {
 

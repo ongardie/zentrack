@@ -1,8 +1,6 @@
 <? /* -*- Mode: C; c-basic-indent: 3; indent-tabs-mode: nil -*- ex: set tabstop=3 expandtab: */
 
   /**
-   * @package Zen
-   *
    *  TEMPLATE PROCESSING ENGINE
    *
    *  Essentially, the template engine works as follows
@@ -38,6 +36,8 @@
    *  <li>{if:field=something:%sub-template%} - inserts sub-template if field = something
    *  <li>{function:function_name:param1,param2,param3} - runs a global function and inserts the return value
    * </ul>
+   *
+   * @package Utils
    */
 class zenTemplate {
 

@@ -1,11 +1,11 @@
 <? /* -*- Mode: C; c-basic-indent: 3; indent-tabs-mode: nil -*- ex: set tabstop=3 expandtab: */ 
 
 /** 
- * @package Utils
- *
  * Utility functions (all static, call with ZenUtils::method())
  *
  * Methods in this class shall not depend on $GLOBALS or any other external source for function
+ *
+ * @package Utils
  */
 class ZenUtils {
 

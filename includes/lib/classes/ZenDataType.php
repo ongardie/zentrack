@@ -1,13 +1,14 @@
 <? /* -*- Mode: C; c-basic-indent: 3; indent-tabs-mode: nil -*- ex: set tabstop=3 expandtab: */
 
-/** 
- * @package Zen
+/**
  *
  * The purpose of the ZenDataType object is to extract all common functionality between various
  * object types such as ZenTicket, ZenUser, ZenAction, ZenTrigger, etc.
  *
  * All Objects which directly correspond to a single data row in the db should extend this object.
-*/
+ *
+ * @package Zen
+ */
 class ZenDataType extends Zen {
 
   /**

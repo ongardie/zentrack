@@ -22,12 +22,14 @@
 
   // see if $zen was found in the session, otherwise initialize
   if( $_SESSION['zen'] == null ) {
+    /** @global array $_SESSION['zen'] */
     $_SESSION['zen'] = ZenUtils::read_ini( $ini_file );
   }
 
   // check our cached values and make sure things are up to date
   $ft = lastConfigUpdate();
   if( $_SESSION['configLastUpdated'] == null ) {
+    /** @global string $_SESSION['configLastUpdated'] */
     $_SESSION['configLastUpdated'] = $ft;
   }
   if( $ft > $_SESSION['configLastUpdated'] || $ft < 1 ) {

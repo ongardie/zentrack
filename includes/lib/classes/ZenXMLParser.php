@@ -1,10 +1,9 @@
 <? /* -*- Mode: C; c-basic-indent: 3; indent-tabs-mode: nil -*- ex: set tabstop=3 expandtab: */ 
 
  /**
-  * @package Utils
-  *
   * Takes a string of xml data and parses it, creating ZenXNode objects 
   *
+  * @package Utils
   * @see ZenXNode
   */
  class ZenXMLParser {

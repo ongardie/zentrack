@@ -1,9 +1,9 @@
 <? /* -*- Mode: C; c-basic-indent: 3; indent-tabs-mode: nil -*- ex: set tabstop=3 expandtab: */ 
 
 /**
- * @package Zen 
- *
  * The main ticket control functions
+ *
+ * @package Zen 
  */
 class ZenTicket extends ZenDataType {
 

@@ -21,6 +21,7 @@
 
   /** Clears and initializes the session data */
   function clearZenSessionCache() {
+    /** @global array $_SESSION['cache'] stores data types and settings to be used by all pages */
     $_SESSION['cache'] = array();
     
     // set up the type data
