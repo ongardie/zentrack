@@ -17,16 +17,18 @@
 
 if( $tempid ) {
   // fetch the template so we have some params to use
-  $template = $zen->getTempReport($repid)
+  $template = $zen->getTempReport($tempid);
 }
 
 // make sure we are valid
 if( !$tempid || !is_array($template)) {
   print "<span class='error'>Processing error: template not found.";
 } else {
-  $title = $template["report_name"];
+  $title = $template["chart_title"];
 ?>
-<table width='300'>
+<form method='post' action='<?=$rootUrl?>/reports/saveSubmit.php'>
+<?=$zen->hiddenField("tempid",$tempid);?>
+<table width='500' class='cell'>
 <tr>
   <td class='titleCell' colspan='2' align='center'>Save Report</td>
 </tr>
@@ -49,13 +51,49 @@ if( !$tempid || !is_array($template)) {
 <? } ?>
 <tr>
   <td class='bars'>
-    <input type='radio' name='save_method' value='new'>
+    <input type='radio' name='save_method' value='new' checked>
     &nbsp;Create New Report Template
   </td>
   <td class='bars'>
-    <input type='text' name='report_name' value='$
+    <input type='text' name='report_name' value='<?=$zen->ffv($title)?>'>
   </td>
 </tr>
+<tr>
+  <td class='subtitle' colspan='2' align='center'>
+    <input type='submit' class='submit' value='Save'>
+  </td>
+</tr>
+<?
+ foreach($template as $k=>$v) {
+   if( $k == "report_id" || $k == "created" || $k == "report_name" ) {
+     continue;
+   }
+   if( $k == "text_output" ) {
+     switch($v) {
+       case 0:
+       $v = "Image Only";
+       break;
+       case 1:
+       $v = "Text Only";
+       break;
+       case 2:
+       $v = "Both";
+     }
+   }     
+   else if( $k == "show_data_vals" || $k == "chart_combine" 
+	    || $k == "chart_add_ttl" || $k == "chart_add_avg" ) {
+     $v = ($v==1)? "Yes" : "No";
+   }
+   else if( $k == "chart_combine" ) {
+     $v = ($v==1)? "Yes" : "No";
+   }
+
+   $k = ucwords(str_replace("_"," ",$k));
+   print "<tr><td class='bars' colspan='2'>$k: "
+     .((is_array($v))?join(",",$v):$v)
+     ."</td></tr>\n";
+ }
+?>
 </table>
 <?
 } // end else

@@ -1,67 +1,28 @@
 <?
   /*
-  **  REPORTS INDEX PAGE
+  **  REPORTS SHOW PAGE
   **  
-  **  Shows menus for report generation
-  **
+  **  Displays saved reports
   */
   
   include("./reports_header.php");
-  $page_tile = "Admin Section";
+  $page_tile = "Show Report";
   include_once("$libDir/nav.php");
 
-// if we have a qry=xxxxx variable
-// then retrieve the report template from 
-// the database and show
-// otherwise, parse the viewing options and display
-  
-if( is_array($_POST) ) {
-  extract($_POST);
-}
-
-$zen->cleanInput($report_params);
-foreach($required_report_params as $k) {
-  if( !isset($$k) || (is_array($$k)&&!count($$k)) || (!is_array($$k) && $$k == "") ) {
-    $errs[] = "$k: ".$report_params["$k"]." required... processing error";
-  }
-}
-if( !is_array($errs) ) {
-  $params = array();
-  foreach(array_keys($report_params) as $k) {
-    if( is_array($$k) ) {
-      $params["$k"] = join(",",$$k);
-    } else if( strlen($$k) ) {
-      $params["$k"] = $$k;
-    } else {
-}
-  }
-  $tempid = $zen->addTempReport( $params );
-
+if( !$repid ) {
+  print "<span class='error'>Processing Error: Report ID Missing</span>\n";
+} else {
+  // retrieve the params of the report
+  include_once("$libDir/reportDataParser.php");  
 ?>
 <table width='640'>
 <tr>
-<form method='post' action='<?=$rootUrl?>/reports/save.php'>
-<input type='hidden' name='tempid' value='<?=$zen->ffv($tempid)?>'>
-  <td align='center' class='subTitle'><input 
-   type='submit' class='submit' value='Save Report'></td>
-</form>
-<form method='post' action='<?=$rootUrl?>/reports/custom.php'>
-<input type='hidden' name='tempid' value='<?=$zen->ffv($tempid)?>'>
-  <td align='center' class='subTitle'><input 
-   type='submit' class='submit' value='Modify Report'></td>
-</form>
-<form method='post' action='<?=$rootUrl?>/reports/custom.php'>
-  <td align='center' class='subTitle'><input 
-   type='submit' class='submit' value='New Report'></td>
-</form>
-</tr>
-<tr>
   <td class='bars' colspan='3'>
 <? 
- if( $text_output > 0 ) {
+ if( $params["text_output"] > 0 ) {
    include("./view_text.php");
  }
- if( $text_output != 1 ) {
+ if( $params["text_output"] != 1 ) {
 ?>
   <img 
 	src='view_image.php?tempid=<?=$tempid?>' 
@@ -73,9 +34,8 @@ if( !is_array($errs) ) {
 </table>
 <?
 
-  } else if( is_array($errs) ) {
-    $zen->printErrors($errs);
-  }
+}
 
   include("$libDir/footer.php");
 ?>
+
