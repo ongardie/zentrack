@@ -344,6 +344,26 @@ class ZenQuery extends Zen {
     $this->_offset = $offset;
     return true;
   }
+
+  /**
+   * Returns number of rows matching conditions provided.
+   *
+   * There is no point in calling {@link field()} before this
+   * method, it will simply be ignored (since we are getting a count).
+   *
+   * This method calls {@link get()} as part of its execution.  Review
+   * this method before use.
+   *
+   * @param int $cacheTime The amount of time to leave query in the cache
+   * @return int number of rows matching criteria
+   */
+  function count($cacheTime = 0) {
+    if( count($this->_fields) > 0 ) {
+      $this->debug($this, 'count', 'There were entries in the field set, count() has cleared these values', 160, LVL_NOTE);
+    }
+    $this->_fields = array("count(*)");
+    return $this->_get($cacheTime);
+  }
   
   /**
    * Returns a single database value (rather than an array.)
@@ -354,7 +374,7 @@ class ZenQuery extends Zen {
    * @access public
    * @since 1.0
    * @param int $cacheTime The amount of time to leave the query in the cache.
-   * @return mixed
+   * @return mixed (not an array)
    */
   function get($cacheTime = null) {
     if (count($this->_fields) > 1) {

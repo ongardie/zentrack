@@ -37,7 +37,7 @@
     /** Obtain a valid database connection */
     function getConnection() {
       $GLOBALS['dbConnection'] = null;
-      $this->_dbo = Zen::getDbConnection();
+      $this->_dbo =& Zen::getDbConnection();
       // use Assert::assert() here
       Assert::assert( is_object($this->_dbo), "Could not establish a database connection" );
     }

@@ -167,6 +167,7 @@ class ZenMetaField extends Zen {
       //todo also, address problems with how to
       //todo override xml vals, especially when
       //todo desire is to override value with a blank
+      //todo
       if( $this->immutable($k) ) {
         $v = null;
       }
@@ -199,6 +200,7 @@ class ZenMetaField extends Zen {
     if( $this->isRequired() && !strlen($value) ) {
       return "Field required";
     }
+
     // check data type
     // no need to check strings
     switch( $this->dataType() ) {
@@ -218,6 +220,17 @@ class ZenMetaField extends Zen {
       print "valid email\n";
       break;
     }
+
+    // deal with unique requirements
+    if( $this->getProp('unique') ) {
+      $query = Zen::getNewQuery();
+      $query->table( $this->table() );
+      $query->match( $this->name(), $value );
+      if( $query->count() > 0 ) {
+        return "Unique constraint violated (already an entry with this value)";
+      }
+    }
+
     return true;
   }
 

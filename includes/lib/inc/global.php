@@ -24,6 +24,12 @@
   load_classes( $classes_data_types, $dir_classes );
   load_classes( $classes_other, $dir_classes );
 
+  //todo
+  //todo
+  //todo make this a class!!!
+  //todo
+  loadClass( "user_functions.php", getIni('directories','dir_user') );
+
   set_error_handler('zenErrorWrapper');
 
   // start the session information
