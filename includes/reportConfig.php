@@ -30,7 +30,7 @@
   //   1 - major errors and comments
   //   2 - minor errors and comments
   //   3 - all errors and comments  
-  $this->debug = 0;
+  $this->debug = 0;  //DO NOT SET THIS, USE www/view_image.php $graph->debug = 0;
 
   /*
   **  OUTPUT SETTINGS
