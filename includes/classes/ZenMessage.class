@@ -1,6 +1,8 @@
 <?
 
-class ZenMessage {
+/** @package zen */
+
+class ZenMessage extends Zen {
 
   /**
    * CONSTRUCTOR

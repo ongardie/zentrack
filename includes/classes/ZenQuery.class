@@ -1,0 +1,192 @@
+<?
+
+/** @package zen */
+
+/** @const ZEN_EQ for ZenQuery: field EQUALS value */
+define("ZEN_EQ", "=");
+
+/** @const ZEN_LT for ZenQuery: field < value */
+define("ZEN_LT", "<");
+
+/** @const ZEN_EQ for ZenQuery: field <= value */
+define("ZEN_LE", "<=");
+
+/** @const ZEN_EQ for ZenQuery: field > value */
+define("ZEN_GT", ">");
+
+/** @const ZEN_EQ for ZenQuery: field >= value */
+define("ZEN_GE", ">=");
+
+/** @const ZEN_EQ for ZenQuery: field in ( value ) */
+define("ZEN_IN", "IN");
+
+/** @const ZEN_EQ for ZenQuery: field like "value%" */
+define("ZEN_BEGINS", "=%");
+
+/** @const ZEN_EQ for ZenQuery: field like "%value" */
+define("ZEN_ENDS", "%=");
+
+/** @const ZEN_EQ for ZenQuery: field like "%value%" */
+define("ZEN_CONTAINS", "%=%");
+
+class ZenQuery extends Zen {
+
+  /**
+   * CONSTRUCTOR
+   *
+   * stores db connection and readies query
+   */
+  function ZenQuery( &$dbobject ) {
+    $this->_dbobject =& $dbobject;
+  }
+
+  /**
+   * adds a table to the query list
+   *
+   * @param mixed $table the table to be included (can be an array of table names)
+   */
+  function table( $table ) { }
+
+  /**
+   * adds a field to the select/insert/update list
+   *
+   * @param mixed $field the column name to return/insert (can be an array for select statements only)
+   * @param string $value the value to insert/update (not valid for selects)
+   */
+  function field( $field, $value = null ) { }
+  
+  /**
+   * adds a field to the sort results for selects
+   *
+   * @param mixed $field can be a string or an array of fields
+   * @param mixed $descending can be a boolean or array
+   */
+  function sort( $field, $descending = false ) { }
+
+  /**
+   * sets a condition for the WHERE clause
+   *
+   * @param string $field the db field to match
+   * @param string $value the value to be matched
+   * @param constant $operator is a condition like (equals, contains, etc)
+   */
+  function match( $field, $value, $operator ) { }
+
+  /**
+   * sets conditions for where clause that should be excluded from results
+   *
+   * the $operator clause should be obtained from the constants defined by this class.
+   *
+   * @param string $field the db field to match
+   * @param string $value the value to be matched
+   * @param constant $operator is a condition like (equals, contains, etc)
+   */
+  function exclude( $field, $value, $operator ) { }
+
+  /**
+   * joins two tables on the given field (or links appropriately)
+   *
+   * @param string $field1 is the table_name.column_name value to use
+   * @param string $field2 is the table_name.column_name value to use
+   */
+  function join( $field1, $field2 ) { }
+
+  /**
+   * sets the maximum number of rows to return
+   *
+   * @param integer $limit is the maximum number to return
+   * @param integer $offset is the row number to start returning from
+   */
+  function limit( $limit, $offset = 0 ) { }
+
+  /**
+   * returns a single database value (rather than an array)
+   *
+   */
+  function get() { }
+
+  /**
+   * performs a select statement and returns results with the given criteria
+   *
+   * sets $this->_count = the number returned
+   *
+   * @param boolean $indexed whether results are indexed or plain array
+   * @return array containing rows of data
+   */
+  function select($indexed = false) { }
+
+  /**
+   * peforms an insert with the given criteria
+   *
+   * @return integer the id returned from the insert
+   */
+  function insert() { } 
+  
+  /**
+   * performs an update with the given criteria
+   *
+   * sets $this->_count to the number affected
+   *
+   * @return integer the number of rows updated
+   */
+  function update() { }
+
+  /**
+   * performs a delete based on the given criteria
+   *
+   * @return integer the number of rows deleted
+   */
+  function delete() { }
+
+  /**
+   * performs a replace on the given id
+   *
+   * @param string $field the field to match on
+   * @param string $value the value to match
+   * @return integer result: 0-failed, 1-inserted, 2-replaced
+   */
+  function replace() { }
+
+  /**
+   * sends the query to the ZenDatabase object and executes query
+   *
+   * @return mixed results from query
+   */
+  function _execute() {
+    $this->_dbobject->execute($this);
+  }
+
+  /* UTILITIES FOR DB EXECUTION */
+
+  /**
+   * returns a list of params for use in creating the sql statement
+   *
+   * essentially returns all the private methods of this object for
+   * use in constructing the select columns, where clause, sorting, etc
+   */
+  function getParams() { }
+
+  /** @var ZenDatabase $_dbobject to use for connections */
+  var $_dbobject;
+
+  /** @var array $_fields represents the fields associated with query */
+  var $_fields;
+
+  /** @var array $_vals represents the values to use with each field */
+  var $_vals;
+
+  /** @var array $_sorts represents the fields to use when sorting */
+  var $_sorts;
+
+  /** @var array $_excludes represents the filter conditions on where clause */
+  var $_excludes;
+
+  /** @var integer $_limit represents the maximum number to return */
+  var $_limit;
+
+  /** @var integer $_offset represents the result row to start results from */
+  var $_offset;
+
+}
+
+?>

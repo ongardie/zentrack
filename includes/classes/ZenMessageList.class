@@ -1,6 +1,8 @@
 <?
 
-class ZenMessageList {
+/** @package zen */
+
+class ZenMessageList extends Zen {
 
   /**
    * CONSTRUCTOR
@@ -9,9 +11,10 @@ class ZenMessageList {
    * the primary use for this class is to be called through a global scope to
    * maintain a single list of all errors
    *
-   * @param integer $level is the level of message that will be stored (all others discarded)
+   * the messages will be filtered according to the debug settings in zen.ini
+   *
    */
-  function ZenMessageList($level = 3) { } // should set $_* arrays to array()
+  function ZenMessageList() { } // should set $_* arrays to array()
 
   /**
    * adds a message to the list (if it meets the level requirement)
@@ -84,8 +87,8 @@ class ZenMessageList {
    */
   var $_counts;
 
-  /** @var integer $_level the level of message stored (1-error, 2-warning, 3-notice) */
-  var $_level;
+  /** @var array $_levels the level of message stored (1-error, 2-warning, 3-notice) indexed by each class and overall */
+  var $_levels;
 
   /** @var array $_messages the list of message objects */
   var $_messages;

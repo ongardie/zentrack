@@ -1,0 +1,37 @@
+
+--- V3.0 RC1 (beta,in CVS) ---	
+
+2003-03-27, Kato
+  Created the initial CVS repository
+  Set up some base classes to flesh out
+  Created a zen.ini file
+
+----- CHANGE LOG FORMAT ------
+The version should appear with dashes and indicated in the example, above all corresponding entries. 
+
+The username, and date should appear before any entry 
+
+The update comments should appear just after this. 
+
+A list of files changed, and the new version should be included with dashes under the comments. This can be used by other developers to quick-reference what has changed, and the versions to diff in CVS to find the changes.. for testing and bug tracking. 
+
+Example 
+
+----- Vx.x.y ------
+
+yyyy-mm-dd, YourName
+  Your comments about the update, indented 2 spaces, it can be
+  multiple lines and very long, and should be kept to about this
+  with, which is around 60-80 columns
+    - includes/subdir/filename2.php 2.21
+    - www/subdir/filename2.php 3.01
+
+yyyy-mm-dd, MyName
+  My comments about the update, indented 2 spaces, it can be
+  multiple lines and very long, and should be kept to about this
+  with, which is around 60-80 columns
+    - includes/subdir/filename.php 1.21
+    - www/subdir/filename.php 2.01 (tagged SPECIAL_TAG)
+
+----- Vx.x.x ------
+more......	

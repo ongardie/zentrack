@@ -1,5 +1,7 @@
 <?
 
+/** @package zen */
+
 class Zen {
 
   /**
@@ -19,11 +21,16 @@ class Zen {
    *    <li>Db_Host
    *    <li>Db_Instance
    * </ul>
+   *
+   * @param string $ini the location of the .ini file
    */
-  function Zen() { }
+  function Zen( $ini ) { }
 
   /**
    * returns a ZenMessageList of system messages matching criteria
+   *
+   * this method should use a GLOBAL array to maintain a single list
+   * for all of the results
    *
    * @param string $class returns only errors from this class
    * @param string $method return only errors from this method
@@ -31,6 +38,16 @@ class Zen {
    * @see ZenMessageList
    */
   function getMessages( $class = '', $method = '' ) { }
+
+  /**
+   * stores a message in the ZenMessageList
+   *
+   * @param string $class the class/page producing message
+   * @param string $method the method/section producing message
+   * @param string $message the message to store
+   * @param integer $level the level of the message
+   */
+  function debug( $class, $method, $message, $level ) { }
   
   /**
    * tells whether this object refers to a valid database entry
@@ -58,15 +75,21 @@ class Zen {
    * this method will return a system setting... some sort of static/global setup
    * would be best to invoke here, to avoid redundant calls
    *
+   * @param string $cat is the category for the setting (tickets, 
    * @param string $name of the setting
-   * @return string value of the setting
+   * @return string value of the setting or null if it isn't found
    */
-  function getSetting($name) { }
+  function getSetting($cat, $name) { }
 
   /**
 
   /**
    * loads system settings into memory
+   *
+   * This method should employ a static list from the GLOBAL settings to avoid
+   * redundant calls to this
+   *
+   * @param string $cat is the category (common should be loaded on construction)
    */
   function _loadSettings() { }
 

@@ -1,6 +1,8 @@
 <?
 
-class ZenTicket {
+/** @package zen */
+
+class ZenTicket extends Zen {
 
   /**
    * CONSTRUCTOR

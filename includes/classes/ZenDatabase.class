@@ -1,0 +1,105 @@
+<?
+
+/** @package zen */
+
+class ZenDatabase extends Zen {
+
+  /**
+   * CONSTRUCTOR
+   *
+   * sets up adodb, and database params
+   *
+   * @param string $dbtype database type
+   * @param string $dbhost database host (might be blank or localhost)
+   * @param string $dbinst database instance to connect to
+   * @param string $dbuser database username
+   * @param string $dbpass database password
+   */
+  function ZenDatabase( $dbtype, $dbhost, $dbinst, $dbuser, $dbpass ) { }
+
+  /**
+   * returns a query object that the user can
+   * manipulate and execute
+   *
+   * @return ZenQuery the query object
+   */
+  function newQuery() {
+    return new ZenQuery($this);
+  }
+
+  /**
+   * executes a query and returns a result count, id, or boolean
+   *
+   * @param ZenQuery $queryObject the query object to be executed
+   * @return mixed array for select, id from insert, count from results, etc 
+   */
+  function executeQuery( $queryObject ) { }
+
+  /**
+   * connects to a database
+   *
+   * @return boolean connection was successful
+   */
+  function connect() { }
+
+  /* UTILITIES */
+
+  /**
+   * quotes a string for insertion into db, escaping needed characters
+   *
+   * this method can deal with nulls, blank strings, dates, and integer values
+   *
+   * @param mixed $text the text to quote, arrays converted to ('...','...',etc.)
+   */
+  function _quote( $text ) { }
+
+  /**
+   * creates a where clause based on the given parameters
+   *
+   * @param ZenQuery $queryObject
+   */
+  function _whereClause( $queryObject ) { }
+
+  /**
+   * creates an order by clause based on the given parameters
+   *
+   * @param ZenQuery $queryObject
+   */
+  function _sortClause( $queryObject ) { }
+
+  /**
+   * creates an insert clause based on the given parameters
+   *
+   * @param ZenQuery $queryObject
+   */
+  function _insertClause( $queryObject ) { }
+
+  /**
+   * creates an update clause based on the given parameters
+   *
+   * @param ZenQuery $queryObject
+   */
+  function _updateClause( $queryObject ) { }
+
+  /**
+   * initializes adodb connection
+   */
+  function _initAdodb() { }
+
+  /* VARIABLES */
+
+  /** @var string $_dbtype the database type */
+
+  /** @var string $_dbhost the database host */
+
+  /** @var string $_dbinst the database instance */
+
+  /** @var string $_dbuser the database username */
+
+  /** @var string $_dbpass the database password */
+
+  /** @var string $_adodb the adodb object */
+
+}
+
+?>
