@@ -935,6 +935,17 @@ class zenTrack extends zen {
         // labels
         if( !$tables["$t"] ) { $tables["$t"] = array(); }
         $tables["$t"][] = $k;
+      } else {
+        $query = "SELECT field_value FROM ".$this->table_group_detail
+           ." WHERE group_id = {$k} ORDER BY sort_order, field_value";
+        $this->addDebug('generateDataGroupInfo', "custom: {$query}", 3);
+        $vals = $this->db_queryIndexed($query);
+        if( is_array($vals) ) {
+          foreach($vals as $v) {
+            $g = $v['field_value'];
+            $groups[$k]['fields'][]=array('field_value'=>$g, 'label'=>$g);
+          }
+        }
       }
     }
     
