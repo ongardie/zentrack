@@ -8,6 +8,12 @@
     
   include("header.php");
 
+  // security measure
+  if( $login_level < $zen->settings['level_contacts'] ) {
+    print "Illegal access.  You do not have permission to access contacts.";
+    exit;
+  }
+
   $page_tile = tr("Commit New Project");
   $expand_contacts = 1;
 

@@ -110,16 +110,18 @@ $items = $zen->get_contacts($parms,"ZENTRACK_AGREEMENT_ITEM",$sort);
 			
 			if ($status=="1") {
 				$active = "0";
-				$value = "TO ARCHIVE";
+				$value = "ARCHIVE";
 			} else {
 				$active = "1";
-				$value = "MAKE ACTIVE";
+				$value = "ACTIVATE";
 			}
 			
 			print "<tr>\n<form name='archief_form' action='$rootUrl/actions/agreement_archive.php'>\n";
 			print "<td>\n";
 			print "<input type='submit' class='actionButtonContact'  value='$value'";
-			print " onClick='return confirm(\"Are you sure you want to archive this agreement\")'";
+			print " onClick='return confirm(\"";
+	                print tr("Are you sure you want to archive this agreement?");
+	                print "\")'";
 			print ">\n";
 			print "<input type='hidden' name='id' value='$agree_id'>\n";
 			print "<input type='hidden' name='active' value='$active'>\n";
@@ -128,7 +130,7 @@ $items = $zen->get_contacts($parms,"ZENTRACK_AGREEMENT_ITEM",$sort);
 			
   		print "<tr>\n<form name='delete_form' action='$rootUrl/actions/agreement_delete.php'>\n";
 			print "<td>\n";
-			print "<input type='submit' class='actionButtonContact'  value='DELETE'";
+			print "<input type='submit' class='actionButtonContact'  value='".uptr('delete')."'";
 			print " onClick='return confirm(\"Are you sure you want to permanently delete this contact\")'";
 			print ">\n";
 			print "<input type='hidden' name='id' value='$agree_id'>\n";

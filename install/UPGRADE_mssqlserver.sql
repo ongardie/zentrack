@@ -3,7 +3,7 @@
 -- Table structure for `zentrack_agreement`
 --
 
-CREATE TABLE zentrack_agreement (
+CREATE TABLE ZENTRACK_AGREEMENT (
   agree_id NUMERIC(12) IDENTITY(1,1) NOT NULL,
   company_id NUMERIC(12) default NULL,
   contractnr VARCHAR(50) default NULL,
@@ -23,7 +23,7 @@ CREATE TABLE zentrack_agreement (
 -- Table structure for `zentrack_agreement_item`
 --
 
-CREATE TABLE zentrack_agreement_item (
+CREATE TABLE ZENTRACK_AGREEMENT_ITEM (
   item_id NUMERIC(12) IDENTITY(1,1) NOT NULL ,
   agree_id NUMERIC(12) default NULL,
   name1 VARCHAR(50) default NULL,
@@ -40,7 +40,7 @@ CREATE TABLE zentrack_agreement_item (
 -- Table structure for `zentrack_company`
 --
 
-CREATE TABLE zentrack_company (
+CREATE TABLE ZENTRACK_COMPANY (
   company_id NUMERIC(12) IDENTITY(1,1) NOT NULL,
   title VARCHAR(50) default NULL,
   office VARCHAR(50) default NULL,
@@ -68,7 +68,7 @@ CREATE TABLE zentrack_company (
 -- Table structure for `zentrack_employee`
 --
 
-CREATE TABLE zentrack_employee (
+CREATE TABLE ZENTRACK_EMPLOYEE (
   person_id NUMERIC(12) IDENTITY(1,1) NOT NULL,
   company_id NUMERIC(12) default NULL,
   fname VARCHAR(50) default NULL,
@@ -92,7 +92,7 @@ CREATE TABLE zentrack_employee (
 -- Table structure for `zentrack_related_contacts`
 --
 
-CREATE TABLE zentrack_related_contacts (
+CREATE TABLE ZENTRACK_RELATED_CONTACTS (
   clist_id NUMERIC(12) IDENTITY(1,1) NOT NULL,
   ticket_id NUMERIC(12) NOT NULL,
   cp_id NUMERIC(12) default NULL,

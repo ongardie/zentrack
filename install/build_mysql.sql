@@ -3,7 +3,7 @@
 # Table structure for `zentrack_agreement`
 #
 
-CREATE TABLE zentrack_agreement (
+CREATE TABLE ZENTRACK_AGREEMENT (
   agree_id int(12) NOT NULL auto_increment,
   company_id int(12) default NULL,
   contractnr varchar(50) default NULL,
@@ -23,7 +23,7 @@ CREATE TABLE zentrack_agreement (
 # Table structure for `zentrack_agreement_item`
 #
 
-CREATE TABLE zentrack_agreement_item (
+CREATE TABLE ZENTRACK_AGREEMENT_ITEM (
   item_id int(12) NOT NULL auto_increment,
   agree_id int(12) default NULL,
   name1 varchar(50) default NULL,
@@ -40,7 +40,7 @@ CREATE TABLE zentrack_agreement_item (
 # Table structure for `zentrack_company`
 #
 
-CREATE TABLE zentrack_company (
+CREATE TABLE ZENTRACK_COMPANY (
   company_id int(12) NOT NULL auto_increment,
   title varchar(50) default NULL,
   office varchar(50) default NULL,
@@ -68,7 +68,7 @@ CREATE TABLE zentrack_company (
 # Table structure for `zentrack_employee`
 #
 
-CREATE TABLE zentrack_employee (
+CREATE TABLE ZENTRACK_EMPLOYEE (
   person_id int(12) NOT NULL auto_increment,
   company_id int(12) default NULL,
   fname varchar(50) default NULL,
@@ -92,7 +92,7 @@ CREATE TABLE zentrack_employee (
 # Table structure for `zentrack_related_contacts`
 #
 
-CREATE TABLE zentrack_related_contacts (
+CREATE TABLE ZENTRACK_RELATED_CONTACTS (
   clist_id int(12) NOT NULL auto_increment,
   ticket_id int(12) NOT NULL default '0',
   cp_id int(12) default NULL,

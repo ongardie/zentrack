@@ -3,7 +3,7 @@
 -- Table structure for `zentrack_agreement`
 --
 
-CREATE TABLE zentrack_agreement (
+CREATE TABLE ZENTRACK_AGREEMENT (
   agree_id NUMBER(12) CONSTRAINT agree_id_notnull NOT NULL,
   company_id NUMBER(12) default NULL,
   contractnr VARCHAR2(50) default NULL,
@@ -23,7 +23,7 @@ CREATE TABLE zentrack_agreement (
 -- Table structure for `zentrack_agreement_item`
 --
 
-CREATE TABLE zentrack_agreement_item (
+CREATE TABLE ZENTRACK_AGREEMENT_ITEM (
   item_id NUMBER(12) CONSTRAINT agree_item_pk_notnull NOT NULL ,
   agree_id NUMBER(12) default NULL,
   name1 VARCHAR2(50) default NULL,
@@ -40,7 +40,7 @@ CREATE TABLE zentrack_agreement_item (
 -- Table structure for `zentrack_company`
 --
 
-CREATE TABLE zentrack_company (
+CREATE TABLE ZENTRACK_COMPANY (
   company_id NUMBER(12) CONSTRAINT company_pk_notnull NOT NULL,
   title VARCHAR2(50) default NULL,
   office VARCHAR2(50) default NULL,
@@ -68,7 +68,7 @@ CREATE TABLE zentrack_company (
 -- Table structure for `zentrack_employee`
 --
 
-CREATE TABLE zentrack_employee (
+CREATE TABLE ZENTRACK_EMPLOYEE (
   person_id NUMBER(12) CONSTRAINT employee_pk_notnull NOT NULL,
   company_id NUMBER(12) default NULL,
   fname VARCHAR2(50) default NULL,
@@ -92,7 +92,7 @@ CREATE TABLE zentrack_employee (
 -- Table structure for `zentrack_related_contacts`
 --
 
-CREATE TABLE zentrack_related_contacts (
+CREATE TABLE ZENTRACK_RELATED_CONTACTS (
   clist_id NUMBER(12) CONSTRAINT relatedcont_pk_notnull NOT NULL,
   ticket_id NUMBER(12) CONSTRAINT relatedcont_tid_notnull NOT NULL,
   cp_id NUMBER(12) default NULL,

@@ -303,10 +303,10 @@
 		"custom"      => tr($zen->settings['varfield_tab_name']),
 		"log"         => tr("Log"),
 		"notify"      => tr("Notify"),
-		"contacts"    => tr("Contacts")
+		"contacts"    => tr("Contacts"),
 		"related"     => tr("Related"),     
 		"attachments" => tr("Attachments"),
-		"system"      => tr("System"),
+		"system"      => tr("System")
 		);
         
   /*
@@ -365,4 +365,5 @@
   $log_actions = $zen->getActivities();
 
 // you can't have any spaces after this closing tag!
+
 ?>

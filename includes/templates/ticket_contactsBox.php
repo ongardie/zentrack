@@ -1,7 +1,7 @@
 <?
 
   // security measure
-  if( $zen->user['access_level'] < $zen->settings['level_contacts'] ) {
+  if( $login_level < $zen->settings['level_contacts'] ) {
     print "Illegal access.  You do not have permission to access contacts.";
     exit;
   }

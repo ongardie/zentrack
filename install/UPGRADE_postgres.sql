@@ -11,7 +11,7 @@ CREATE sequence "related_contacts_id_seq" start 1001 increment 1 maxvalue 214748
 -- Table structure for `zentrack_agreement`
 --
 
-CREATE TABLE zentrack_agreement (
+CREATE TABLE ZENTRACK_AGREEMENT (
   agree_id NUMBER(12) default nextval('"agreement_id_seq"') NOT NULL PRIMARY KEY,
   company_id NUMBER(12) default NULL,
   contractnr VARCHAR2(50) default NULL,
@@ -30,7 +30,7 @@ CREATE TABLE zentrack_agreement (
 -- Table structure for `zentrack_agreement_item`
 --
 
-CREATE TABLE zentrack_agreement_item (
+CREATE TABLE ZENTRACK_AGREEMENT_ITEM (
   item_id NUMBER(12) default nextval('"agreement_item_id_seq"') NOT NULL PRIMARY KEY,
   agree_id NUMBER(12) default NULL,
   name1 VARCHAR2(50) default NULL,
@@ -46,7 +46,7 @@ CREATE TABLE zentrack_agreement_item (
 -- Table structure for `zentrack_company`
 --
 
-CREATE TABLE zentrack_company (
+CREATE TABLE ZENTRACK_COMPANY (
   company_id NUMBER(12) default nextval('"company_id_seq"') NOT NULL PRIMARY KEY,
   title VARCHAR2(50) default NULL,
   office VARCHAR2(50) default NULL,
@@ -73,7 +73,7 @@ CREATE TABLE zentrack_company (
 -- Table structure for `zentrack_employee`
 --
 
-CREATE TABLE zentrack_employee (
+CREATE TABLE ZENTRACK_EMPLOYEE (
   person_id NUMBER(12) default nextval('"employee_id_seq"') NOT NULL PRIMARY KEY,
   company_id NUMBER(12) default NULL,
   fname VARCHAR2(50) default NULL,
@@ -96,7 +96,7 @@ CREATE TABLE zentrack_employee (
 -- Table structure for `zentrack_related_contacts`
 --
 
-CREATE TABLE zentrack_related_contacts (
+CREATE TABLE ZENTRACK_RELATED_CONTACTS (
   clist_id NUMBER(12) default nextval('"related_contacts_id_seq"') NOT NULL PRIMARY KEY,
   ticket_id NUMBER(12) NOT NULL,
   cp_id NUMBER(12) default NULL,
