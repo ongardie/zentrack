@@ -63,7 +63,7 @@
       $lclass = 'tabsOff';
     }
     $txt = (isset($counts[$lt]) && $counts[$lt])?
-      tr($t)." (".$counts["$lt"].")" : tr($t);
+      $t." (".$counts["$lt"].")" : $t;
     $link = ($t == 'System')? $SCRIPT_NAME : $pageUrl;
     $w = ($lt == "attachments")? 85 : 60;
     print "<td class='$class' height='$height_num' width='$w'>";

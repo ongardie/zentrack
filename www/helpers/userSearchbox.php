@@ -62,8 +62,7 @@
   <td class='bars' colspan='2'>
     <div align='center'><input type='submit' class='submit' name='dosearch'
 	 value='<?php echo tr("Search"); ?>'></div>
-    <span class='note'><?php echo tr("You may use * for a wildcard in any field but 
-	the id.. i.e. J* would match anything starting with J"); ?></span>
+    <span class='note'><?php echo tr("You may use * for a wildcard in any field but the id.. i.e. J* would match anything starting with J"); ?></span>
   </td>
 </table>
 

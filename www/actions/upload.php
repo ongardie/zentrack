@@ -39,7 +39,7 @@
      $zen->cleanInput($input);
      foreach($required as $r) {
 	if( !$$r ) {
-	   $errs[] = tr(" ? is required", $r);
+	   $errs[] = tr(" ? is required", array($r));
 	}
      }
      // print out an appropriate error message
@@ -85,14 +85,12 @@
 	}
         $max_size = $zen->settings["attachment_max_size"];	
 	if( !is_uploaded_file($userfile) ) {
-	  $errs[] = tr("The file was not recieved.  "
-	    ."Check to insure it's size does not exceed ?KB", array(substr($max_size,0,strlen($max_size)-3)));
+	  $errs[] = tr("The file was not recieved. Check to insure it's size does not exceed ?KB", array(substr($max_size,0,strlen($max_size)-3)));
 	} else if( $userfile_size > $max_size ) {
 	   $errs[] = tr("The file size (?) exceeded the maximum allowed (?)", array(number_format($userfile_size), number_format($max_size)));
 	} else if( $zen->settings["attachment_types_allowed"] 
 		   && !preg_match("/\b$file_type\b/i", $zen->settings["attachment_types_allowed"]) ) {
-	   $errs[] = tr("'?' is not an allowed file extension - "
-	     ."See your systems administrator for more information", array($file_type));
+	   $errs[] = tr("'?' is not an allowed file extension - See your systems administrator for more information", array($file_type));
 	} else if( !$userfile_type ) {
 	   $errs[] = tr("That is not a recognized file type, by your browsers determinations");	   
 	} else if( !move_uploaded_file($userfile, $zen->attachmentsDir."/$file_name") ) {

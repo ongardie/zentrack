@@ -13,7 +13,7 @@
 if( $repid ) {
   // fetch the template so we have some params to use
   $res = $zen->deleteReport($repid);
-  print "<b" . tr(">Report Deleted") . "</b>\n";
+  print "<b>" . tr("Report Deleted") . "</b>\n";
 }
 
   include("$templateDir/reportMenu.php");

@@ -21,14 +21,14 @@
     $required = array("id","action");
     foreach($required as $r) {
       if( !$$r ) {
-	$errs[] = tr(" $r is required", array($r));
+	$errs[] = tr(" ? is required", array($r));
       }
     }     
     if( $log_action == 'LABOR' ) {
       if( !$hours )
-	$errs[] = tr('Hours must be entered if the activity is "LABOR"');
+	$errs[] = tr("Hours must be entered if the activity is 'LABOR'");
     } else if( !$comments ) {
-      $errs[] = tr('No comments were entered.');
+      $errs[] = tr("No comments were entered.");
     }
     
     

@@ -101,8 +101,7 @@ if( !$tempid || !is_array($template)) {
 	."(\"$rootUrl/helpers/userSearchbox.php?return_form=saveTemplateForm"
 	."&return_field=select_users\",\"popupHelper\",375,400)'";
      print "&nbsp;<input type='button' class='searchbox' value=' ... ' $onclick>\n";
-     print "<br><span class='note'>" . tr("Type ids separated by "
-	."commas, or click on the button.") . "</span>\n";
+     print "<br><span class='note'>" . tr("Type ids separated by commas, or click on the button.") . "</span>\n";
 ?>
     <br><span class='note'><?php echo tr("Optional. You do not need to select yourself"); ?></span>
   </td>
