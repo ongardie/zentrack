@@ -16,10 +16,18 @@
     - zentrack/includes/headerInc.php 1.30
     - zentrack/includes/templates/listTickets.php 1.16
     - zentrack/includes/templates/listTickets_workFormat.php 1.14  
-  Ticket sorting
+  Ticket sorting enhancements
     - zentrack/includes/zenTrack.class 1.99
-  Updates for release
-    - zentrack/install/seed_mysql.sql 1.20
+  Updates for release (seed files)
+    - zentrack/install/UPGRADE_SEED_mssqlserver.sql 1.5
+    - zentrack/install/UPGRADE_SEED_mysql.sql 1.13
+    - zentrack/install/UPGRADE_SEED_oracle.sql 1.12
+    - zentrack/install/UPGRADE_SEED_postgres.sql 1.12
+    - zentrack/install/seed_mssqlserver.sql 1.10
+    - zentrack/install/seed_mysql.sql 1.21
+    - zentrack/install/seed_oracle.sql 1.17
+    - zentrack/install/seed_postgres.sql 1.16
+    - zentrack/install/seed_random_report_data.sql 1.2
 
 2003-05-07, Rob Hillis
   Template ticket summary and log entries in notification email.
