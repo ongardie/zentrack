@@ -13,7 +13,6 @@
      $deadline = strtotime($zen->settings["default_deadline"]);
   if( !$start_date && !$td && $zen->settings["default_start_date"] )
      $start_date = strtotime($zen->settings["default_start_date"]);
-  print "they are: ".$zen->settings["default_start_date"]."/".$zen->settings["default_deadline"]."<br>\n";//debug
 ?>     
 
 <form method="post" name="ticketForm" action="<?=($td)? "editTicketSubmit.php" : "$rootUrl/addSubmit.php"?>">
