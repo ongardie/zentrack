@@ -4,7 +4,7 @@
   // it's a good idea to keep a backup
   // of this file somewhere safe when upgrading!
 
-  // DO NOT PUT ANYTHING, INCLUDING SPACES, OUTSIDE OF THE <? ?> marks
+  /* DO NOT PUT ANYTHING, INCLUDING SPACES, OUTSIDE OF THE <? ?> marks */
 
   /*
   **  T H E S E   T W O   M U S T    B E   S E T ! ! !
