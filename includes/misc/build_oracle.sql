@@ -7,6 +7,7 @@ CREATE TABLE ZENTRACK_ACCESS (
   userID number(12) default NULL,
   binID number(12) default NULL,
   lvl   number(2) default NULL,
+  role  varchar2(50) default NULL,
   notes varchar2(25) default NULL,
   CONSTRAINT access_pk PRIMARY KEY (accessID)
 ) ;
