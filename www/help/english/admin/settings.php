@@ -96,6 +96,15 @@
         </td>
       </tr>
       <tr>
+        <td class='bars'>edit_reason_required</td>
+        <td class='bars'>
+          Editing existing ticket information can be logged setting log_edit to ON.
+          But if you need to require the user to explain why the edition took place
+          you need to set edit_reason_required to ON too. (If log_edit is set to OFF
+          then edit_reason_required is ignored).
+        </td>
+      </tr>
+      <tr>
         <td class='bars'>paging_max_rows</td>
         <td class='bars'>
           Controls the number of rows of data displayed in searches and lists
