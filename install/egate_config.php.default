@@ -9,11 +9,6 @@
   // to the www/header.php file
   $header_file_location = "/web/...zentrack/www/header.php";
 
-  // the user account that will be used to control
-  // permissions while using the egate interface
-  // (provide the login name here, the password is not needed)
-  $egate_account = "egate";
-  
   // the notify level determines what we will
   // send an email to the sender for
   //    0 - never
@@ -28,7 +23,7 @@
   //    1 - on high level errors only
   //    2 - on any warning
   //    3 - on any information logged
-  $egate_notify_level = 3;
+  $egate_log_level = 3;
 
   // this is primarily for debugging.  Any email address
   // entered here will recieve a BCC of all emails sent
@@ -64,6 +59,6 @@
   // there are others for imap, ssl, etc
   // see http://www.php.net/manual/en/function.imap-open.php for more options
 
-  $smtp_string = "{".$smtp_host.":".$port."/pop3}INBOX";  // note that the { and $ separation is critical!
+  $smtp_string = "{".$smtp_host.":".$smtp_port."/pop3}INBOX";  // note that the { and $ separation is critical!
 
 ?>

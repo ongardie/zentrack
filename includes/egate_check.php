@@ -11,7 +11,7 @@
   include("egate_utils.php");
   
   // connect to mailbox
-  $mb = @imap_open($smtp_string, $smtp_user, $smtp_pass);
+  $mb = imap_open($smtp_string, $smtp_user, $smtp_pass);
   
   // return error if needed
   if( !$mb ) {
