@@ -9,9 +9,9 @@
     exit;
   }
   $td = ($TODO == 'EDIT');
-  if( !$deadline && !$td && $zen->settings["default_deadline"] != "" )
+  if( !$deadline && !$td && $zen->settings["default_deadline"] )
      $deadline = strtotime($zen->settings["default_deadline"]);
-  if( !$start_date && !$td && $zen->settings["default_start_date"] != "" )
+  if( !$start_date && !$td && $zen->settings["default_start_date"] )
      $start_date = strtotime($zen->settings["default_start_date"]);
   print "they are: ".$zen->settings["default_start_date"]."/".$zen->settings["default_deadline"]."<br>\n";//debug
 ?>     
