@@ -61,6 +61,17 @@ class ZenMetaTable extends Zen {
   function name() { return $this->getProp('name'); }
 
   /**
+   * List the meta fields in this table
+   *
+   * @return array containing (string)name entries
+   */
+  function listFields() { 
+    return is_array($this->_data['fields'])? 
+      array_keys($this->_data['fields']) : array(); 
+  }
+  
+
+  /**
    * Returns a ZenMetaField for a column of this table
    *
    * @param string $field
@@ -74,21 +85,36 @@ class ZenMetaTable extends Zen {
    * Sets properties of a field in this table with the provided ZenMetaField data.
    *
    * @param ZenMetaField $field the updated ZenMetaField data
-   * @return boolean
+   * @return boolean true if field exists and param was valid
    */
-  function setMetaField( $field ) {
+  function updateMetaField( $field ) {
     if( !is_object($field) || get_class($field) != "ZenMetaField"
         || !isset($this->_data['fields'][$field->name()]) ) { 
-      Zen::debug($this, 'setMetaField', 'Param was not a valid ZenMetaField object', 105, LVL_ERROR);      
+      Zen::debug($this, 'updateMetaField', 'Param was not a valid ZenMetaField object', 105, LVL_ERROR);      
       return false; 
     }
     $this->_data['fields'][$field->name()] = $field->getFieldArray();
     $this->_changed[$field->name()] = true;
     return true;
   }
-   
+
+  /**
+   * Create a new field in this table (meant for use with ZenFormGenerator)
+   *
+   * @param ZenMetaField $field the field to add, if it exists, this method will fail
+   * @return boolean true if field was valid and added
+   */
+  function addMetaField( $field ) {
+    if( !isset($this->_data['fields'][$field->name()]) ) {
+      $this->_data['fields'][$field->name()] = true;
+      return $this->updateMetaField($field);
+    }
+    return false;
+  }
+
   /**
    * Returns an array containing mapped data representing the schema of this table, including field data
+   * mapped as explained in {@link ZenDbSchema::getTableArray()}
    *
    * @return array
    */

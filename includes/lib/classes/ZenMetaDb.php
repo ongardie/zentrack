@@ -211,8 +211,7 @@ class ZenMetaDb extends Zen {
   function getFieldList( $table ) { return array_keys($this->_tables[$table]['fields']); }
 
   /**
-   * Set the values of a db field by returning a ZenMetaField object
-   * with the updated values.  
+   * Set the values of a db field by providing the ZenMetaField with the updated values
    *
    * Note that the object must be marked as updated or it will be
    * rejected.  This can be done manually using {@link ZenMetaField::forceChanged()}
@@ -224,15 +223,15 @@ class ZenMetaDb extends Zen {
    * @param ZenMetaField $updatedMetaField
    * @return boolean true if field was updated
    */
-  function setMetaField( $updatedMetaField ) {
+  function updateMetaField( $updatedMetaField ) {
     if( !$updatedMetaField->changed() ) {
-      Zen::debug($this, 'setMetaField', 'ZenMetaField->updated() is false, ignoring', 161, LVL_NOTE);
+      Zen::debug($this, 'updateMetaField', 'ZenMetaField->updated() is false, ignoring', 161, LVL_NOTE);
       return false;
     }
     $table = $updatedMetaField->table();
     $field = $updatedMetaField->name();
     $this->_tables[$table]['fields'][$field] = $updatedMetaField->getFieldArray();
-    Zen::debug($this, 'setMetaField', "ZenMetaField[$table]['fields'][$field] updated", 00, LVL_DEBUG);
+    Zen::debug($this, 'updateMetaField', "ZenMetaField[$table]['fields'][$field] updated", 00, LVL_DEBUG);
     return true;
   }
 

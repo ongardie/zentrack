@@ -28,6 +28,9 @@
    *  <li>{varname} - inserts value of varname, if the value is an array
    *                  <br>then the values will be iterated each time it is requested
    *  <li>{varname="default_value"} - inserts val of varname, or default if not found, default is a string
+   *  <li>{varname[key]} - inserts value of array varname indexed by key (varname[key]),
+   *                  <br>varname must be an associative array or null will be returned
+   *  <li>{varname[key]="default value"} - as above, but default instead of null is returned if key not found
    *  <li>{zen:category:varname} - inserts value from database settings using {@link Zen::getSetting()}
    *  <li>{ini:category:varname} - inserts value from ini settings using {@link Zen::getIniVal()}
    *  <li>{foreach:varname:"text"+index+"more text"+value} - loops through indexed array and prints name/value
@@ -190,7 +193,7 @@ class ZenTemplate {
       case  "include":
       {
         // {include:template_name}
-        $tmp = new zenTemplate(trim($parts[1]));
+        $tmp = new zenTemplate($this->_parseString($parts[1]));
         $tmp->values( $this->_vars );
         ZenUtils::safeDebug($this, "_insert", 
                             "using {include:template_name} for '$text'", 0, LVL_DEBUG);        
@@ -210,7 +213,7 @@ class ZenTemplate {
       {
         // {helper:file_name}
         // {script:file_name}
-        ZenUtils::safeDebug($this, "_insert", "using {helper:file_name} for '$text'", 0, LVL_DEBUG);
+        ZenUtils::safeDebug($this, "_insert", "using {script|helper:file_name} for '$text'", 0, LVL_DEBUG);
         return $this->_parseScript($parts);        
       }
       }
@@ -231,8 +234,6 @@ class ZenTemplate {
     $vars = $this->_vars[ trim($parts[1]) ];
     if( is_array($vars) ) {
       $txt = "";
-      // make the string to show
-      $str = $this->_parseString($parts[2]);
       // loop the list and make output text
       foreach($vars as $k=>$v) {
         // determine if we are to process text or a template
@@ -240,8 +241,10 @@ class ZenTemplate {
           // return the template
           
           $tplname = substr(substr($parts[2], 1), -1);
-          $txt .= $this->parseSubtemplate($tplname, $v, $k);
+          $txt .= $this->_parseSubtemplate($tplname, $v, $k);
         } else {
+          // make the string to show
+          $str = $this->_parseString($parts[2]);
           // return the text
           $tmp = str_replace("{index}", $k, $str);
           $txt .= str_replace("{value}", $v, $tmp);
@@ -276,7 +279,7 @@ class ZenTemplate {
           
           $tplname = substr(substr($parts[2], 1), -1);
           
-          $txt .= parseSubtemplate($tplname, $v);
+          $txt .= $this->_parseSubtemplate($tplname, $v);
         } else {
           //return the text
           $txt .= str_replace("{value}", $v, $str);
@@ -432,10 +435,18 @@ class ZenTemplate {
     // find out if we have a default value
     if( strpos($name, "=") > 0 ) {
       list($name,$default) = explode('=',$name,2);
+      $default = $this->_parseString($default);
     }
     else { $default = null; }
     // parse the array or string
-    if( is_array($this->_vars) && isset($this->_vars["$name"]) && is_array($this->_vars["$name"]) ) {
+    if( preg_match("/^([a-zA-Z0-9_]+)\[([a-zA-Z0-9_]+)]$/", $name, $matches) ) {
+      $name = $matches[1];
+      $key = $matches[2];
+      if( is_array($this->_vars) && isset($this->_vars["$name"]) && is_array($this->_vars["$name"])
+          && isset($this->_vars["$name"]["$key"]) ) { return $this->_vars["$name"]["$key"]; }
+      else { return $default; }
+    }
+    else if( is_array($this->_vars) && isset($this->_vars["$name"]) && is_array($this->_vars["$name"]) ) {
       // if it is an array, we iterate each time it is requested (get the next value)
       return $this->_vars["$name"][$this->_getIteratorIndex($name)];
     }
@@ -443,7 +454,7 @@ class ZenTemplate {
       return $this->_vars["$name"];
     }
     else {
-      return $default? $this->_parseString($default) : '';
+      return $default;
     }
   }
 
@@ -455,16 +466,14 @@ class ZenTemplate {
    * @param string $key the key of the value to be passed as {pkey} to the sub-template (only used when $value is a string)
    * @return the expanded sub-template
    */
-  function _parseSubtemplates ( $template, $value, $key = '' ) {
+  function _parseSubtemplate( $template, $value, $key = '' ) {
     $tpl = new zenTemplate($this->_templateDir."/".$tplname);
     
     if( is_array($value) ) {
       // $value is an indexed array to be passed to the sub-template
-      
       $tpl->values($value);
     } else {
-      // $value/$key are a string pair to be passed as {pkey} and {pval}
-      
+      // $value/$key are a string pair to be passed as {pkey} and {pval}      
       $tpl->values(array("pkey" => $key, "pval" => $value));
     }
     

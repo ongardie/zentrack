@@ -127,7 +127,10 @@ class ZenMetaField extends Zen {
    *
    * @return boolean
    */
-  function isRequired() { return $this->_getProp('required'); }
+  function isRequired() { 
+    return $this->_getProp('required') || 
+      ($this->_getProp('notnull') && !strlen($this->_getProp('default'))); 
+  }
 
   /**
    * Tells if this field has been updated since loading
@@ -229,9 +232,9 @@ class ZenMetaField extends Zen {
     case 'form_type':
     case 'criteria':
     case 'reference':
+    case 'required':
       return $this->isCustom()? false : true;
     case 'label':
-    case 'required':
     case 'default':
     case 'description':
       return false;
@@ -249,7 +252,6 @@ class ZenMetaField extends Zen {
     return array('name','label','size','type','ftype','notnull',
                  'required','criteria','reference','default','description',
                  'custom','order','table','unique');
-
   }
 
   /**
