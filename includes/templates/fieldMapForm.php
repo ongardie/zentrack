@@ -183,10 +183,12 @@ foreach($fields as $f=>$field) {
     }
     else {
       $txt = "<select style='width:80px;' ".fmfName($f, 'field_type').">";
-      foreach($fprops['types'] as $t) {
-        if( $view == 'search_form' && $t == 'checkbox' ) { continue; }
-        $sel = ( $field['field_type'] == $t )? ' selected':'';
-        $txt .= "<option value='$t'$sel>$t</option>\n";
+      if (count($fprops['types'])>0) {
+        foreach($fprops['types'] as $t) {
+          if( $view == 'search_form' && $t == 'checkbox' ) { continue; }
+          $sel = ( $field['field_type'] == $t )? ' selected':'';
+          $txt .= "<option value='$t'$sel>$t</option>\n";
+        }
       }
       $txt .= "</select>";
       fmfRow($txt,$class);
