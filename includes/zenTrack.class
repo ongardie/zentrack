@@ -609,9 +609,249 @@ class zenTrack extends zen {
       }
     }
   }
-  
-  
 
+  /**
+   * BEHAVIORS
+   */
+
+  /**
+   * Returns a list of behaviors mapped by the behavior_id with the detail fields for each.  The list
+   * will be sorted by the sort_order from the behavior table.
+   *
+   * @param array $ids is a list of behavior ids to retrieve, if ommitted, all behaviors are listed
+   * @return array containing behavior_id -> array( data values... )
+   */
+  function getBehaviorList( $ids = null ) {
+    // construct sql statement to retrieve behaviors
+    $query = "SELECT * FROM ".$this->table_behavior;
+    if( $ids ) {
+      $query .= " WHERE behavior_id IN(".join(',',$ids).")";
+    }
+    $query .= " ORDER BY sort_order, behavior_name";
+    $this->addDebug("getBehaviorListQuery:",$query,3);
+    $vals = $this->db_queryIndexed($query);
+
+    // create a map of behaviors indexed by the behavior_id
+    $map = array();
+    foreach( $vals as $v ) {
+      $k = $v['behavior_id'];
+      $v['fields'] = array();
+      $map[$k] = $v;
+    }
+
+    // collect the fields for our list of behaviors
+    // we will always use the ids from our map for
+    // data integrity
+    $genIds = array_keys($map);
+    $query = "SELECT * FROM ".$this->table_behavior_detail;
+    $query .= " WHERE behavior_id IN(".join(',', $genIds).")";
+    $query .= " ORDER BY sort_order, field_name";
+    $fieldVals = $this->dbQueryIndexed($query);
+    foreach($fieldVals as $f) {
+      $b = $f['behavior_id'];
+      $k = $f['field_name'];
+      $map[$b]['fields'][$k] = $f;
+    }
+
+    $this->addDebug("getBehaviorList",count($map)." behaviors mapped", 3);
+    return $map;
+  }
+
+  /**
+   * Add a new behavior to the database
+   *
+   * @param array $props contains the database fields for this behavior
+   * @param array $details is mapped field_name -> array( db fields ) and holds all detail entries for this behavior
+   * @return integer the id of the newly created behavior or null on failure
+   */
+  function addBehavior( $props, $details ) { 
+    $id = $this->db_insert( $this->table_behavior, $props );
+    if( $id ) {
+      $this->updateBehaviorDetails( $id, $details );
+      $this->addDebug("addBehavior", "Added new behavior with id '".$id."'", 2);
+    }
+    else {
+      $this->addDebug("addBehavior", "Failed to add new behavior!", 3);
+    }
+    return $id;
+  }
+
+  /**
+   * Remove a behavior and all of its detail entries from the database
+   *
+   * @param integer $behavior_id the behavior to remove
+   * @return integer representing the query result
+   */
+  function removeBehavior( $behavior_id ) { 
+    return $this->db_delete( $this->table_behavior, "behavior_id", $behavior_id );
+  }
+
+  /**
+   * Update the properties for a behavior.
+   *
+   * @param integer $behavior_id the behavior to update
+   * @param array $props the new properties for this behavior
+   */
+  function updateBehavior( $behavior_id, $props ) { 
+    return $this->db_update( $this->table_behavior, "behavior_id", $behavior_id, $props );
+  }
+
+  /**
+   * Update the detail entries for a behavior.  This is accomplished by deleting all current entries and
+   * adding the updated values to the table.
+   *
+   * @param ingteger $behavior_id the behavior to update.
+   * @param array $fields mapped field_name -> array(data fields)
+   */
+  function updateBehaviorDetails( $behavior_id, $fields ) { 
+    return $this->db_update( $this->table_behavior_detail, "behavior_id", $behavior_id, $fields );
+  }
+
+
+  /*
+   *  VARIABLE FIELDS
+   */
+
+
+  /**
+   * Get variable field properties from the index table.  These fields will be returned sorted
+   * and with all information needed to determine where fields are active and how to display them.
+   */
+  function getVarfieldIndex() { 
+    return $this->getCustomFields(1);
+  }
+
+
+  /**
+   * Update the properties for variable fields in the index table.
+   *
+   * @param array $fields is mapped (String)field_name -> array( (String)prop -> (mixed)value )
+   * @return integer count of fields updated
+   */
+  function updateVarfieldIndex( $fields ) { 
+    $count = 0;
+    foreach( $fields as $name=>$props ) {
+      $set = $this->makeInsertVals($props, 1);
+      if( $this->db_update($this->table_varfield_idx, "field_name", $name, $props) ) 
+        { $count++; }
+    }
+    return $count;
+  }
+
+
+  /**
+   * Removes an entry from the variable field index table.  Use this method with great care.  This
+   * is not used to disable fields, and should only be used for removing fields which do not exist
+   * in the database.
+   *
+   * @param string $field_name the variable field which no longer exists in the database
+   */
+  function removeVarfieldIndex( $field_name ) { 
+    return $this->db_delete( $this->table_varfield_idx, "field_name", $field_name );
+  }
+
+
+  /**
+   * Adds a new entry to the variable field index table
+   *
+   * @param array $props mapped (String)field -> (mixed)value
+   */
+  function addVarfieldIndex( $props ) { 
+    // we don't use the $this->db_insert() method here because it requires
+    // a sequence/auto_increment field, which isn't used in this table
+    list($cols,$vals) = $this->makeInsertVals($props);
+    $query = "INSERT INTO ".$this->table_varfield_idx." ($cols) VALUES($vals)";
+    return $this->db_result($query);
+  }
+
+  /**
+   * Get variable field values for a given ticket
+   *
+   * @param integer $ticket_id
+   * @return array containing variable field entries for this ticket
+   */
+  function getVarfieldVals( $ticket_id ) { 
+    $query = "SELECT * FROM ".$this->table_varfield." WHERE ticket_id = $ticket_id";
+    return $this->db_quickIndexed($query);
+  }
+
+
+  /**
+   * Update the entries in the variable field table for a given ticket
+   *
+   * @param integer $ticket_id
+   * @param array $field_values mapped (String)field_name -> (String)value
+   */
+  function updateVarfieldVals( $ticket_id, $field_values ) { 
+    return $this->db_update( $this->table_varfield, "ticket_id", $ticket_id, $field_values );
+  }
+
+  /**
+   * DATA GROUP FUNCTIONS
+   */
+
+  /**
+   * Create a new group with the provided information
+   *
+   * @param string $name name of the group
+   * @param string $table the table this group applies to
+   * @param array $vals the values as they would be passed to {@link ZenTrack::updateDataGroupDetails()}
+   * @return integer
+   */
+  function addDataGroup( $name, $table, $vals ) { 
+    // create the group first
+    $id = $this->db_insert( $this->table_group, array("table_name"=>$table, "group_name"=>$name) );
+    if( $id ) {
+      $this->_insertGroupDetails($id, $vals);
+    }
+    return $id;
+  }
+
+  /**
+   * Update an existing data group.  To update the detail values, use {@link ZenTrack::updateDataGroupDetails()}.
+   *
+   * @param integer $group_id the id of the data group to be updated
+   * @param string $name the updated name of the group
+   * @param string $table the updated table for the group
+   */
+  function updateDataGroup( $group_id, $name, $table ) { 
+    return $this->db_update($this->table_group, "group_id", $group_id, 
+			    array("group_name"=>$name,"table_name"=>$table));
+  }
+
+  /**
+   * Update the detail values for a given group.  This deletes any existing entries and replaces them
+   * with the values passed here
+   *
+   * @param integer $group_id the group to update
+   * @param array $vals the new detail table values
+   */
+  function updateDataGroupDetails( $group_id, $vals ) { 
+    $this->db_delete($this->table_group_detail, "group_id", $group_id);
+    $this->_insertGroupDetails($group_id, $vals);
+  }
+
+  /**
+   * Delete an existing data group and all associated details
+   *
+   * @param integer $group_id
+   */
+  function removeDataGroup( $group_id ) { }
+
+  /**
+   * Inserts group details into the database
+   */
+  function _insertGroupDetails( $group_id, $vals ) {
+    foreach($vals as $v) {
+      // make sure we add in the new group id to each row
+      $v['group_id'] = $group_id;
+      list($ck,$cv) = $this->makeInsertVals($v);
+      $this->db_result("INSERT INTO ".$this->table_group_detail." ($ck) VALUES($cv)");
+    }
+  }
+
+  
+  
   /*
    *  SEARCH FUNCTIONS 
    */
@@ -2974,25 +3214,31 @@ class zenTrack extends zen {
    *
    * Returns an array with information about custom fields definition
    * ordered by sort_order and field_label
-   * set $filterUse ("P"roject, "T"icket or blank)
-   * and/or $filterShow ("S"earch, "L"ist, "C"ustom, "D"etail or blank)
-   * to filter which custom fields are returned
-   * If indexedMode is set, the array returned has only the field_label and is
-   * indexed by the field_name
+   * 
+   * The filterUse variable is used to filter for fields which apply only
+   * to tickets or projects, and the filterShow variable is used to filter
+   * for fields which only appear in certain areas (such as the search screen).
    *
-   * @param int $indexedMode
-   * @param string $filterUse
-   * @param string $filterShow
+   * @param int $indexedMode if set, returns the field_label indexed by field_name, otherwise all data is returned
+   * @param string $filterUse "P"roject, "T"icket or blank
+   * @param string $filterShow "S"earch, "L"ist, "C"ustom, "D"etail or blank
    * @return array of custom fields
    */
-  function getCustomFields($indexedMode = 0, $filterUse = "", $filterShow = "") {
-    if ( ! $indexedMode ) {
-      $query = "SELECT * FROM ".$this->table_custom_fields_idx;
+  function getCustomFields($indexedMode = 1, $filterUse = "", $filterShow = "") {
+    // we create an associative array if $indexedMode, otherwise it is just a list 
+    if ( $indexedMode ) {
+      $query = "SELECT field_name, field_label FROM ".$this->table_custom_fields_idx; 
     }
-    else {
-      $query = "SELECT field_name, field_label FROM ".$this->table_custom_fields_idx;
+    else { 
+      $query = "SELECT * FROM ".$this->table_custom_fields_idx; 
     }
+
+    // initialize connector, which will switch to 
+    // AND after the first query parameter is added
     $connector = " WHERE ";
+
+    // we filter based on whether this custom field is used
+    // in tickets or projects
     switch ( strtoupper(substr($filterUse,0,1)) ) {
       case "P":
         $query .= $connector . "use_for_project=1";
@@ -3003,6 +3249,10 @@ class zenTrack extends zen {
         $connector = " AND ";
         break;
     }
+
+    // we filter based on the location we are viewing the custom
+    // field from, so that we only recieve fields which have been
+    // configured to appear in this location
     switch ( strtoupper(substr($filterShow,0,1)) ) {
       case "S":
         $query .= $connector . "show_in_search=1";
@@ -3022,12 +3272,14 @@ class zenTrack extends zen {
         break;
     }
     $query .= " ORDER BY sort_order, field_label";
+    
     if ( $indexedMode ) {
+      $vals = array();
       $vars = $this->db_query($query);
       foreach ($vars as $v) {
-        $VALS["$v[0]"] = $v[1];
+        $vals["$v[0]"] = $v[1];
       }
-      return( $VALS );
+      return( $vals );
     } 
     else {
       return( $this->db_queryIndexed($query) );
