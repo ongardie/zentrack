@@ -17,12 +17,23 @@ session_start();
 if( isset($_SERVER) ) {
   extract($_SERVER);
 }
-if( isset($_POST) ) {
-  extract($_POST);
+
+// ... except the following list
+$reservedList = array("Db_Type", "Db_Instance", "Db_Login", "Db_Pass", "Db_Host", "Debug_Mode",
+                      "Demo_Mode", "page_prefix", "page_title", "configFile", "system_message_limit");
+
+foreach ($_POST as $k=>$v) {
+  if (!in_array($k, $reservedList)) {
+    $$k = $v;
+  }
 }
-if( isset($_GET) ) {
-  extract($_GET);
+
+foreach ($_GET as $k=>$v) {
+  if (!in_array($k, $reservedList)) {
+    $$k = $v;
+  }
 }
+
 if( isset($_COOKIE) ) {
   extract($_COOKIE);
 }

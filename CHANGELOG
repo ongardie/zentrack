@@ -7,6 +7,10 @@
 
 ----- V2.4.2 (Development, See CVS) ----
 
+2003-05-27, Rob Hillis
+  Fixed potential security hole
+    - zentrack/includes/session_start.php 1.12
+
 2003-05-25, Rob Hillis
   Removed apparent accidental commit to zenTrack.class
   and commit diffed language files.
