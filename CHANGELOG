@@ -7,6 +7,20 @@
 
 ----- V2.4.1 (Development, See CVS) ----
 
+2003-05-07, Kato
+  Added rollover effects to javascript/list pages
+    - zentrack/www/javascript.js 1.6
+    - zentrack/www/styles.php 1.13
+    - zentrack/www/javascript.js 1.8
+    - zentrack/includes/priorityColors.php 1.2
+    - zentrack/includes/headerInc.php 1.30
+    - zentrack/includes/templates/listTickets.php 1.16
+    - zentrack/includes/templates/listTickets_workFormat.php 1.14  
+  Ticket sorting
+    - zentrack/includes/zenTrack.class 1.99
+  Updates for release
+    - zentrack/install/seed_mysql.sql 1.20
+
 2003-05-07, Rob Hillis
   Template ticket summary and log entries in notification email.
     - zentrack/includes/zenTrack.class 1.98
