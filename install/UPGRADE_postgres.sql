@@ -395,4 +395,4 @@ UPDATE ZENTRACK_SETTINGS SET value='2.5.0.3' WHERE setting_id=74;
 
 -- Add new settings
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (108,'edit_reason_required', 'off', 'Show a mandatory edit field to explain why the ticket is being edited');
-
+INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (109,'email_accept', 'on', 'Send email to users in the notify list when ticket is accepted');

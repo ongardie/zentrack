@@ -525,6 +525,7 @@ INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (105
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (106,'default_start_date_hours','on','Include hours in default start date for new tickets');
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (107,'default_deadline_hours','on','Include hours in default deadline for new tickets');
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (108,'edit_reason_required', 'off', 'Show a mandatory edit field to explain why the ticket is being edited');
+INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (109,'email_accept', 'on', 'Send email to users in the notify list when ticket is accepted');
 
 --
 -- Load data for table 'ZENTRACK_SYSTEMS'
