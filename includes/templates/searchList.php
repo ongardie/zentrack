@@ -321,12 +321,13 @@ if( !$search_params["bin_id"] || is_array($search_params["bin_id"]) ) { ?>
     <?
     foreach($cf as $k=>$v) {
       if ( includeVarfield($k) ) {
-	$v = $t[$k]? $t[$k] : '&nbsp;';
-	$v = strlen($v) > 25? substr($v, 0, 22)."..." : $v;
-	if( $search_fields[$k] ) {	  
-	  $v = $zen->highlight($v, $search_text);
-	}
-	print "<td height='25' {$tx} valign='middle'>$v</td>\n";
+        $v = strlen($v) > 25? substr($v, 0, 22)."..." : $v;
+        $v = $t[$k];
+        if( $search_fields[$k] ) {	  
+          $v = $zen->highlight($v, $search_text);
+        }
+        if( !$v ) { $v = '&nbsp;'; }
+        print "<td height='25' {$tx} valign='middle'>$v</td>\n";
       } 
     } 
 ?>

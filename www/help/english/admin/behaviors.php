@@ -149,6 +149,106 @@
    </td>
 </tr>
 <tr>
+  <td class='titleCell'>File Based Behaviors</td>
+</tr>
+<tr>
+  <td class='cell'>
+     <p>File based behaviors use columns for a tab delimited file to specify
+     the rules (conditions) which must be met, and which values will be used.
+     
+     <p>Let's assume that we want to create a new behavior that will change the
+     priorities which can be selected based on the bin and type of issue.  We
+     will call this the 'Priority Behavior' for now.
+     
+     <p>Consider the following rules in our behavior:
+     <table width='80%' align='center'>
+      <tr>
+        <td colspan='3' class='labelCell' align='center'>Rules</td>
+      </tr>
+      <tr>
+        <td class='subTitle'>Compare Field</td>
+        <td class='subTitle'>Column Number</td>
+      </tr>
+      <tr>
+        <td class='bars'>-value column-</td>
+        <td class='bars'>3</td>
+     </tr>
+      <tr>
+        <td class='bars'>type_id</td>
+        <td class='bars'>1</td>
+     </tr>
+      <tr>
+        <td class='bars'>bin_id</td>
+        <td class='bars'>2</td>
+     </tr>
+     </table>
+     
+     <p>These rules would tell us that column 1 of our file will be matched against
+     the type_id, that column 2 will be matched against the bin_id.  If both of
+     these conditions are met, then whatever appears in column 3 will added to 
+     the list of values which will appear in the priority dropdown. 
+     
+     <p>If we have the following data in our tab delimited file:
+     <table width='80%' align='center'>
+      <tr>
+        <td colspan='3' class='labelCell' align='center'>Data</td>
+      </tr>
+      <tr>
+        <td class='subTitle'>Column 1</td>
+        <td class='subTitle'>Column 2</td>
+        <td class='subTitle'>Column 3</td>
+      </tr>
+      <tr>
+        <td class='bars'>Project</td>
+        <td class='bars'>Engineering</td>
+        <td class='bars'>First</td>
+     </tr>
+      <tr>
+        <td class='bars'>Project</td>
+        <td class='bars'>Engineering</td>
+        <td class='bars'>Second</td>
+     </tr>
+      <tr>
+        <td class='bars'>Project</td>
+        <td class='bars'>Tech Support</td>
+        <td class='bars'>Customer Down</td>
+     </tr>
+      <tr>
+        <td class='bars'>Project</td>
+        <td class='bars'>Tech Support</td>
+        <td class='bars'>Normal</td>
+     </tr>
+      <tr>
+        <td class='bars'>Bug</td>
+        <td class='bars'>Engineering</td>
+        <td class='bars'>High</td>
+     </tr>
+      <tr>
+        <td class='bars'>Bug</td>
+        <td class='bars'>Engineering</td>
+        <td class='bars'>Low</td>
+     </tr>
+     </table>
+     
+     <p>This data would produce the list or priorities First and Second any time
+     that we create a Project in the Engineering bin.  Alternately, if we move
+     this project to the Tech Support team, the priority list would shift to
+     Customer Down and Normal.
+     
+     <p>However, if we change this to a bug, the Engineering team would have
+     the priorities High and Low to choose from.
+     
+     <p>Note that, <b>since our file does not cover all possible combinations, we
+     would want to create a 'backup' behavior to handle all other cases</b>.  We
+     would give this lower priority (by giving it a higher sort order) and tell
+     it to match anything which equals '' or does not equal '' (basically this
+     means match anything at all).
+     
+     <p>If our Priority Behavior fell through, then this behavior would get run
+     and would be expected to set the list of priorities to some sort of default set.
+  </td>
+</tr>
+<tr>
   <td class='titleCell'>A Crash Course in Behaviors</td>
 </tr>
 <tr>

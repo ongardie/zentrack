@@ -108,6 +108,22 @@
   </td>
 </tr>
 <tr>
+  <td class='titleCell'>Lists Created from Files</td>
+</tr>
+<tr>
+  <td class='cell'>
+    <p>By selecting the Eval Type of 'File', you can use the contents of a
+    tab delimited text file to create data groups.  This feature is designed
+    to be used with behaviors.
+    
+    <p>The file to be used should be placed in the zentrack/includes/user_data
+    folder.
+    
+    <p>Once this is completed, the rest of the work is done from the behaviors
+    screen.
+  </td>
+</tr>
+<tr>
   <td class='titleCell'>Javascript Lists</td>
 </tr>
 <tr>

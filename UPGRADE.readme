@@ -1,14 +1,9 @@
 
-UPGRADE INSTRUCTIONS FOR 2.5 RC3
-
-THIS IS A RELEASE CANDIDATE!!
-    This release probably contains bugs.  If you are not interested
-    in helping us test, then wait for the live release in a couple
-    of weeks before upgrading.
+UPGRADE INSTRUCTIONS FOR 2.5.0
 
 REQUIREMENTS
 
-    PHP: 4.3 or greater (will not run with PHP 5, sorry next version)
+    PHP: 4.3 or greater
 
     Supported Servers: Apache 1.3, 2.0, IIS
     Supported OS: Windows 2000, Linux 
@@ -18,7 +13,7 @@ REQUIREMENTS
     GD: [optional] 2.0 or higher needed to use reports
     Freetype libraray required to view reports
 
-UPGRADE FORM 2.5 RC2
+UPGRADE FROM 2.5 RC3
 
   Be sure to BACKUP CONFIG FILES:
       www/header.php
@@ -28,11 +23,18 @@ UPGRADE FORM 2.5 RC2
   included files: includes/ should overwrite your existing includes,
   www/ should overwrite your existing www/
 
-  You do not have to update your database structure to
-  upgrade from 2.5 RC1 to 2.5 RC2.
+  You must create a new database schema to upgrade from any RC to the live release.
+  
+  If you need help migrating critical data from your RC build to the live build,
+  simply email a dump of your database data to the ZT team.  Be sure to specify
+  which RC you are upgrading from.
 
-  You must update header.php manually, you may not copy over your old
-  header.php file.
+  !!!!You must update header.php manually, you may not copy over your old
+  header.php file.!!!!
+  
+UPGRADE FROM 2.5 RC2
+
+  Follow instructions for 2.5 RC3
   
 UPGRADE FROM 2.5 RC1
 

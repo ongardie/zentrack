@@ -285,7 +285,6 @@ class zenTrack extends zen {
       $query .= " ORDER BY $sort ";
     $w = preg_replace('/^ *WHERE/', '', $where);
     $this->total_records = $this->db_getrowcount($tables, $w);
-    $this->total_records = 30;
     $numtoshow = $this->settings['paging_max_rows'];
     $start = $pageNumber * $numtoshow;
     if( $start + $numtoshow > $this->total_records ) {
@@ -1094,7 +1093,7 @@ class zenTrack extends zen {
      $valueColumnIndex = null;
      foreach($behavior['fields'] as $f) {
        if( $f['field_name'] == 'value_column' ) {
-          $valueColumnIndex = $f['field_value'];
+          $valueColumnIndex = $f['field_value']-1;
           break;
        }
      }
@@ -1119,7 +1118,7 @@ class zenTrack extends zen {
   
          // generate the matches needed for this set
          foreach($behavior['fields'] as $field) {
-           $i = $field['field_value'];
+           $i = $field['field_value']-1;
            $n = $field['field_name'];
            if( $i >= count($dataRow) ) {
              $this->addDebug('getBehaviorFileSet',"Column requested by '$n' does not exist",1);
@@ -1433,7 +1432,7 @@ class zenTrack extends zen {
     //paging feature
     $numtoshow = $this->settings['paging_max_rows'];
     $start = $pageNumber * $numtoshow;
-    $this->total_records = $this->db_getrowcount($query);
+    $this->total_records = $this->db_getrowcount($tables, $where);
     return($this->db_getlimitedIndex($query,$numtoshow,$start));
     //    return(  $this->db_queryIndexed($query) );
   }
@@ -1493,7 +1492,7 @@ class zenTrack extends zen {
     //paging feature
     $numtoshow = $this->settings['paging_max_rows'];
     $start = $pageNumber * $numtoshow;
-    $this->total_records = $this->db_getrowcount($query);
+    $this->total_records = $this->db_getrowcount($tables, $where);
     return($this->db_getlimitedIndex($query,$numtoshow,$start));
   }
 
@@ -3156,6 +3155,7 @@ class zenTrack extends zen {
             $ticket = $this->get_ticket($v);
           }
         }
+        $ticket['varfields'] = $this->getVarfieldVals($id);
         $url = $this->settings["url_view_ticket"]."?id=$v";
         $n = $ticket["bin_id"];
         $u = $ticket["user_id"];

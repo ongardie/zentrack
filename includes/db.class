@@ -23,7 +23,7 @@ class DB {
     $recordSet = &$this->db_link->Execute($query);
     if ($recordSet) {
       $vars = $recordSet->FetchRow();
-      $res = $vars? $vars : 0;
+      $res = $vars? $vars[0] : 0;
       $this->addDebug('db_getrowcount', "Results: $res, query=$query", 3);
       return $res; 
     }

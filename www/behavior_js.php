@@ -358,7 +358,7 @@ function executeBehavior( formObj, behaviorId, setid ) {
  */
 function setFormValsUsingGroup( fieldObj, group, setid ) {
   if( !setid ) { setid = 'default'; }
-  
+
   // we keep a history to avoid redundantly setting the values if they
   // already are and to prevent infinite loops
   if( behaviorHistoryMap[ fieldObj.name ] == group.id && group.evalType == 'Matches' ) {
@@ -422,7 +422,7 @@ function setFormValsUsingGroup( fieldObj, group, setid ) {
     case "select":
     case "select-one":
     case "select-multiple":
-      if( fieldObj.selectedIndex ) {
+      if( fieldObj.selectedIndex && fieldObj.options && fieldObj.options.length > 0 ) {
         // store the currently selected value and try to reproduce in a minute
         var oldValue = fieldObj.options[ fieldObj.selectedIndex ].value;
       }

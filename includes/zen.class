@@ -202,6 +202,8 @@ class zen extends zenDate {
      **  h     - [optional,default is <b></b>] array containing the pre 
      **          and post tags to use for highlighting
      */
+     
+     if( !$match ) { return $text; }
 
      if( !is_array($h) )
         $h = $this->defaultHighlight;
@@ -209,6 +211,7 @@ class zen extends zenDate {
        $join = 1;
        $text = array($text);
      }
+     else { $join = 0; }
      if( !is_array($match) )
         $match = array($match);
      for( $i=0; $i<count($text); $i++ ) {

@@ -8,17 +8,42 @@
 ----- V2.5 LIVE (in testing) -----
 
 2004-10-06, Kato
+  Added documentation for file based groups
+  
   Fixed get_table_id (missing function)
     - zentrack_2/includes/reportDataParser.php
+    
+  Fixed searchList formatting to handle blank search strings
+    - searchList & searchResults
+    
+  Fixed empty behavior javascript error (103)
+    - behavior_js
 
 2004-09-28, Kato
   Fixed reject ticket bug
+    - zentrack_2/www/actions/reject.php 1.6
+    - zentrack_2/includes/zenTrack.class 1.152
   
 2004-09-27, Kato
   Added -none- option for data groups
+    - zentrack_2/includes/zenTrack.class 1.152
+    - zentrack_2/includes/headerInc.php 1.48
+    - zentrack_2/includes/templates/behaviorForm.php 1.7
+    - zentrack_2/includes/templates/newProjectForm.php 1.27
+    - zentrack_2/includes/templates/newTicketForm.php 1.33
   
   Fixed mssql identity problem
-  
+    - zentrack_2/includes/zenTrack.class 1.152
+    - zentrack_2/includes/db.class 1.31
+    - zentrack_2/install/UPGRADE_mssqlserver.sql 1.20
+    - zentrack_2/install/UPGRADE_mysql.sql 1.28
+    - zentrack_2/install/UPGRADE_oracle.sql 1.27
+    - zentrack_2/install/UPGRADE_postgres.sql 1.19
+    - zentrack_2/install/build_mssqlserver.sql 1.13
+    - zentrack_2/install/build_mysql.sql 1.16
+    - zentrack_2/install/build_oracle.sql 1.16
+    - zentrack_2/install/build_postgres.sql 1.17
+    
   Added ability to generate behaviors from file using File Groups
     - zentrack_2/setup_from_cvs 1.12
     - zentrack_2/setup_from_cvs.cmd 1.4
