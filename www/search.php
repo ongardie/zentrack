@@ -19,7 +19,7 @@
     include("$templateDir/searchResults.php");
     if( is_array($tickets) ) {
       include("$templateDir/searchList.php");
-      include("$libDir/paging.php"); //Addition for paging
+      include("$libDir/paging.php"); //Addition for paging        
     } else {
       if( $errs ) {
         $zen->printErrors($errs);

@@ -428,8 +428,9 @@ if( !$search_params["bin_id"] || is_array($search_params["bin_id"]) ) { ?>
    ?>
 
    <tr>
-     <form method="post" action="<?=$SCRIPT_NAME?>">
        <td colspan="<?= 9+$vfcount ?>" class="titleCell">
+       <nobr>
+       <form method="post" action="<?=$SCRIPT_NAME?>" style="display: inline; margin: 0px;">
           <input type="submit" class="smallSubmit" value="<?=tr("Modify Search")?>">
           <input type="hidden" name="search_text" value="<?=$zen->ffv($search_text)?>">
           <?
@@ -443,8 +444,24 @@ if( !$search_params["bin_id"] || is_array($search_params["bin_id"]) ) { ?>
 	     print "<input type='hidden' name='search_fields[$k]' value='".$zen->ffv($v)."'>\n";
 	   }
            ?>
-       </td>
      </form>
+     <form method="post" action="exportSearch.php" style="display: inline; margin: 0px;">
+          <input type="submit" class="smallSubmit" value="<?=tr("Export Results")?>">
+          <input type="hidden" name="search_text" value="<?=$zen->ffv($search_text)?>">
+          <?
+           foreach($search_params as $k=>$v) {
+             print "<input type='hidden' name='search_params[$k]' value='".$zen->ffv($v)."'>\n";
+           }
+           foreach($search_dates as $k=>$v) {
+             print "<input type='hidden' name='search_dates[$k]' value='".$zen->ffv($v)."'>\n";
+           }
+           foreach($search_fields as $k=>$v) {
+             print "<input type='hidden' name='search_fields[$k]' value='".$zen->ffv($v)."'>\n";
+           }
+         ?>
+        </nobr>
+       </form>
+     </td>
    </tr>
   </table>
 <?  
