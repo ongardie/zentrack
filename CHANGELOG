@@ -7,6 +7,10 @@
 
 ----- V2.4.3 (RC1 Released: 2003-08-26) ----
 
+2003-08-27, Kato
+  Fixed parse error in zenDate class
+    - zentrack_2/includes/zenDate.class 1.11
+
 2003-08-26, Kato
   RC1 Preparations
     - zentrack_2/install/seed_mssqlserver.sql 1.15
