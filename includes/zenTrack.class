@@ -2765,7 +2765,7 @@ class zenTrack extends zen {
     $id = $this->checkNum($id);
     $res = $this->update_ticket($id, $params);
     if( $res && $this->settings['log_edit'] == 'on' ) {
-      $log_entry = 'Ticket edited:\n'.$reason.'\n';
+      $log_entry = 'Ticket edited:\n\n';
       foreach($params as $key=>$val) {
         // check each field to see if it was updated
         if( $t["$key"] && $t["$key"] != $val ) {
@@ -2773,6 +2773,10 @@ class zenTrack extends zen {
           $v2 = strlen($t["$key"]) > 50? substr($t["$key"], 0, 50)."..." : $t["$key"];
           $log_entry .= "{$key} changed from [$v1] to [$v2]\n";
         }
+      }
+      if(strlen($reason)) {
+        $log_entry.= "\nReason:\n";
+        $log_entry.= $reason;
       }
       $this->add_log( $tid, array('user_id'   => $user_id,
                                   'action'    => 'EDIT',
