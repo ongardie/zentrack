@@ -65,6 +65,7 @@
    * included in an email reply
    *
    * @param string $template is the template name to include
+   * @param int $id is the ticket id, if available (for creating subject)
    */
   function egate_store_template( $template, $id = 0 ) {
     global $email_templates;
@@ -400,11 +401,8 @@
     $errors = false;
     $ticket = null;
 
-    // get a list of valid actions
-    $valid_actions = fetch_valid_actions($id);
-
     // parse the subject
-    preg_match("@#([0-9]+): *([a-zA-Z0-9_-]+)@", 
+    preg_match("@#([0-9]+):? *([a-zA-Z0-9_-]+)@", 
 	       $params->headers["subject"], $matches);
     $matches[1] = (count($matches)>2)? 
       preg_replace("@[^0-9]@", "", $matches[1]) : 0;
@@ -430,12 +428,14 @@
       // start by removing [zenBot] tag
       $test = preg_replace("/\[".$zen->settings['bot_name']."]/","",$params->headers["subject"]);
       if( strlen($test) ) {
-	// get a string of possible action names
-	$str = join('|',$valid_actions);
 	// look for an id
 	if( preg_match("/#([0-9]+)/", $subject, $matches) ) {
 	  $id = $matches[1];
 	}
+	// get a list of valid actions
+	$valid_actions = fetch_valid_actions($id);
+	// get a string of possible action names
+	$str = join('|',$valid_actions);
 	if( preg_match("/($str)/", $subject,$matches) ) {
 	  $action = $matches[1];
 	}
@@ -447,6 +447,10 @@
 		  .$params->headers["subject"],2);
 	return;
       }
+    }
+
+    if( !is_array($valid_actions) ) {
+      $valid_actions = fetch_valid_actions($id);
     }
 
     // customize the notify actions
@@ -464,7 +468,7 @@
     // determine which actions might be in the subject
     if( !in_array($action,$valid_actions) ) {
       $errors = true;
-      egate_log("The action $action was not valid.  This could be an access violation, or simply that the ticket status prevents this.",2);
+      egate_log("The action $action was not valid.  This could be because of access or ticket status conditions. Try replying to this email with the subject \"#nnnn: options\" to see a list of valid actions.",2);
       return;
     }
 
@@ -662,17 +666,15 @@
       }
     }
     // return tag from subject
-    preg_match("/#[0-9]+: *[a-zA-Z0-9_-]+ +(.*)/",$params->headers["subject"],$matches);
+    if( $body_tag == "template" ) {
+      preg_match("/template:? ([a-zA-Z0-9_-]+)/", $params->headers["subject"],$matches);
+      return trim($matches[1]);
+    }
+    preg_match("/#[0-9]+:? *[a-zA-Z0-9_-]+ +(.*)/",$params->headers["subject"],$matches);
     if( $matches[1] ) {
       return trim($matches[1]);
     }
-    else if( $body_tag == "template" ) {
-      preg_match("/template ([a-zA-Z0-9_-]+)/", $params->headers["subject"],$matches);
-      return trim($matches[1]);
-    }
-    else {
-      return "";
-    }
+    return "";
   }
 
   /**
@@ -750,7 +752,7 @@
 	  return $k;
       }
     }
-    egate_log("$input was not a valid $type type",2);    
+    egate_log(($input?$input:"<null>")." was not a valid $type entry",2);    
     return $id;
   }
 
@@ -1351,6 +1353,10 @@
 	||(is_array($templates)&&count($templates)) ) {
       $text = "";
       
+      if( !is_array($templates) || !count($templates) ) {
+	$templates = array("reply.template");
+      }
+
       // grab the params
       $valid_actions = fetch_valid_actions($id);      
       $vals = array("success"  =>   $success,
