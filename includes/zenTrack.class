@@ -784,7 +784,8 @@ class zenTrack extends zen {
 	$logParams["entry"] = $comments;
       $this->add_log($id,$logParams);
     }
-    if( $res && $this->settings["email_reject"] == "on" && $senderID ) {
+    if( $res && $this->settings["email_reject"] == "on" && $sender["user_id"] ) {
+      $subject = "Ticket $id rejected";
       $eParams = array(
 		       "From" => $this->bins["$t[bin_id]"], 
 		       "Time" => $this->showDateTime(),
