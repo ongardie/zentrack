@@ -10,3 +10,5 @@ INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (87,
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (88,'email_log','on','Send email when a log entry is created');
 
 UPDATE ZENTRACK_SETTINGS SET value = '2.3' WHERE name = 'version_xx';
+
+INSERT INTO ZENTRACK_USERS (user_id, login, access_level, passphrase, lname, fname, initials, email, notes, homebin, active) VALUES (4,'egate',2,NULL,'Gateway','Email','egate','zentrack@havenshade.com','Email Gateway Account',1,0);
