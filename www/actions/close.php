@@ -14,14 +14,25 @@
   if( $actionComplete == 1 ) {
      $input = array(
 		    "id"       => "int",
-		    "hours"    => "num",
 		    "comments" => "html"
 		    );
-     $zen->cleanInput($input);
      $required = array_keys($input);
+     $input["hours"] = "int";
+     $zen->cleanInput($input);
      foreach($required as $r) {
 	if( !$$r ) {
 	   $errs[] = " $r is required";
+	}
+     }
+
+     if( $ticket["typeID"] == $zen->projectTypeID() ) {
+	$children = $zen->getProjectChildren($id,'id,type,status');
+	if( is_array($children) ) {
+	   foreach($children as $c) {
+	      if( $c["status"] != "CLOSED" ) {
+		 $errs[] = $zen->types["$c[typeID]"]." $c[id] is not completed.";
+	      }
+	   }
 	}
      }
      

@@ -27,7 +27,6 @@
      }
      
      if( !$errs ) {
-	add_system_messages("debug: ".join(",",$relations));
 	$res = $zen->relate_ticket($id, $relations, $login_id, $comments);
 	if( $res ) {
 	   add_system_messages("Ticket $id related.");
