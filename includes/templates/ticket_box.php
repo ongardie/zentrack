@@ -19,6 +19,13 @@
   ** CHECK THE PAGE MODE
   */
 
+  if( !$project_mode ) {
+    $project_mode = "tasks";
+  }
+  if( !$ticket_mode ) {
+    $ticket_mode = "details";
+  }
+
   // set the page mode, for viewing tickets
   if( $setmode ) {    
     if( $page_type == "project" )

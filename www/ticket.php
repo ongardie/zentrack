@@ -7,7 +7,7 @@
   */
   
   // include the header file
-  include("header.php");
+  include_once("header.php");
 
   if( $page != "project" )
       $page = "ticket";
@@ -24,18 +24,23 @@
   **  GET PARAMS FOR A PROJECT
   */
   if( $page_type == "project" ) {
-     if( $project_mode == "" )
-	$project_mode = 'details';    
      $ticket = $zen->get_project($id);
      $page_section = "Project $id";
      $expand_projects = 1;
   } else {
-     $page_type = "ticket";
      $ticket = $zen->get_ticket($id);
-     if( $ticket_mode == "" )
-	$ticket_mode = 'details';
-     $page_section = $zen->types["$ticket[type_id]"]." #$id";
-     $expand_tickets = 1;     
+     if( is_array($ticket) ) {
+       if( $zen->inProjectTypeIDs($ticket["type_id"]) ) {
+	 unset($ticket);
+	 $ticket = $zen->get_project($id);
+	 $page_section = "Project $id";
+	 $expand_projects = 1;
+       } else {
+	 $page_type = "ticket";
+	 $page_section = $zen->types["$ticket[type_id]"]." #$id";
+	 $expand_tickets = 1;     
+       }
+     }
   }
 
   // allow creator of ticket to view (if setting is on) even if no access

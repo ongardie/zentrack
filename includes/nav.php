@@ -18,8 +18,8 @@
   </td>
   <td class="titleCell" width="15"
         rowspan="3"><img src="<?=$imageUrl?>/empty.gif" width="15" height="2"></td>
-  <form action="<?=$rootUrl?>/ticket.php">
   <td width="645" height="25" class="titleCell">
+    <form action="<?=$rootUrl?>/ticket.php">
     <table width="600" align="center" cellpadding="0" cellspacing="0">
     <tr>
      <td width="400" class="page_section" align="center">
@@ -32,8 +32,8 @@
      </td>
     </tr>
     </table>
-  </td>
   </form>
+  </td>
   </tr>
   <tr>
   <td valign="top" height="400" style="background:<?=$zen->settings["color_bars"]?>;">
