@@ -1560,7 +1560,7 @@ class zenTrack extends zen {
       // finalize and send the message
       $message = (get_magic_quotes_gpc())? $message : addslashes($message);
       $subject = (get_magic_quotes_gpc())? $subject : addslashes($subject);
-      return( mail( $recipient_address, $subject, $message, $headers ) );      
+      return( @mail( $recipient_address, $subject, $message, $headers ) );      
    }
    
    function getTicketCount( $status = '', $bin_id = '' ) {
@@ -2004,7 +2004,7 @@ class zenTrack extends zen {
      // returns the name of a bin
      // from the given bin id
      $bins = $this->getBins(0,0);
-     return($bins["$id"]);
+     return((isset($bins["$id"]))? $bins["$id"] : "");
    }
    
    function getBins($flag = 0,$active = 1) {
@@ -2171,6 +2171,13 @@ class zenTrack extends zen {
    $vals["{$v['name']}"] = ($flag)? $v : $v["value"];
       }
       return($vals);
+   }
+
+   function getTypeName($id) {
+     // retrieves the name of the type
+     // with the given id
+     $types = $this->getTypes();
+     return( (isset($types["$id"]))? $types["$id"] : "" );
    }
    
    function getTypes($flag = 0, $active = 1) {

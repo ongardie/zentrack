@@ -44,7 +44,7 @@
 	$recipients = explode(",", $custom_email_addresses);
      }  
      
-     $subject = $zen->settings["system_name"].": ".$zen->types["$ticket[type_id]"]." $id";
+     $subject = "[{$zen->settings['system_name']}] ".$zen->getTypeName($ticket["type_id"])." $id";
      unset($params);
      if( $comments )
        $params["message"] = $comments;
