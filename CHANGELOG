@@ -7,6 +7,10 @@
 
 ----- V2.5 (in development) ----
 
+2004-08-11, cfalonso
+  Stored value wasn't correctly selected in custom_menu fields. Fixed.
+    - zentrack_2/includes/headerInc.php 1.38
+
 2004-08-11, Kato
   Testing and debugging for 2.5 release(Ticket #66 is dev tracker)
     - zentrack_2/includes/templates/behaviorAdd.php 1.2
