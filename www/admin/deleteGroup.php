@@ -11,7 +11,7 @@
   $group_id = $zen->checkNum($group_id);
   $tmpltForm = "$templateDir/groupForm.php";
   if( $group_id && $zen->demo_mode == "on" ) {
-    $msg = tr("The action completed successfully.  The dwidata group was not actually deleted, because this is a demo site");
+    $msg = tr("The action completed successfully.  The data group was not actually deleted, because this is a demo site");
   } else if ( $group_id && $TODO != "CANCEL" ) {
     if ( $TODO == "DISABLE" ) {
       $zen->disableReferencesToDataGroup($group_id);

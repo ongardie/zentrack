@@ -11,6 +11,10 @@ and user experience, internationalization, platform and database
 abstraction, and endless possibilities for project expansion. 
 --------------------
 
+2004-11-25, cfalonso
+  Fixed function uptr to properly display spanish characters converted to uppercase
+    - zentrack_2/includes/headerInc.php 1.51
+
 2004-11-19, cfalonso
   Allow start_date and deadline to have date and time (TK 161)
     - zentrack_2/includes/templates/newProjectForm.php 1.29
