@@ -24,7 +24,7 @@
 <? if( $expand_tickets ) { ?>
   <tr>
   <td <?=$nav_rollover_text?>>
-  <a class='subMenuLink' href="<?=$rootUrl?>/assignedTickets.php">&nbsp;&nbsp;<?=$zen->prn("Assinged to $login_inits")?></a>
+  <a class='subMenuLink' href="<?=$rootUrl?>/assignedTickets.php">&nbsp;&nbsp;<?=$zen->prn("Assigned to $login_inits")?></a>
   </td>
   </tr>
   <tr>
