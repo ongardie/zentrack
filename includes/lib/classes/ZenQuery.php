@@ -231,10 +231,12 @@ class ZenQuery extends Zen {
    * @param string $key overrides the default 'tablename_id' if provided
    * @see ZenQuery::table()
    */
-  function setPrimaryKey( $key = null ) {
-    if( !$key ) { $key = strtolower($this->_tables[0]."_id"); }
+  function setPrimaryKey( $key = null ) {    
+    if( !$key ) { $key = ZenDatabase::getPrimaryKey($this->_tables[0]); }
     $this->_key = $key;
-    $this->_fields[] = $key;
+    if( !in_array($key, $this->_fields) ) {
+      $this->_fields[] = $key;
+    }
     $this->_vals[$key] = $this->_dbobject->generateId($this->_tables[0]);
     Zen::debug($this, "setPrimaryKey", "Primary key set: {$key}->{$this->_vals[$key]}", 0, LVL_DEBUG);
     return $this->_vals[$key];

@@ -385,9 +385,10 @@ class ZenTargets {
    * @param string $source the source directory (without filename)
    * @param string $dest the backup directory (this is the subdirectory under backup only)
    * @param string $newname if provided, the backup will be created with this name
+   * @param boolean $required if true, then the file must exist or operation fails
    * @return boolean returns false only if source exists and copy failed, otherwise true
    */
-  function _backup_file($name, $source, $dest = '', $newname = '') {
+  function _backup_file($name, $source, $dest = '', $newname = '', $required = false) {
     // get base backups directory
     $base = $this->_getBackupLocation();
 
@@ -420,7 +421,7 @@ class ZenTargets {
     // if no source, return gracefully
     if( !file_exists($source) ) {
       print "   S $source not found: skipped\n";
-      return true;
+      return $required? false : true;
     }
     
     // copy file
@@ -451,15 +452,17 @@ class ZenTargets {
     $source = $this->_ini['directories']['dir_config'];
     
     // backup the database schema
-    if( !$this->_backup_file('database.xml', $source, $dir, 'database.xml') && !$supress ) {
-      $this->_printerr("_backup_database", "Could not backup schema file");
+    if( !$this->_backup_file('database.xml', $source, $dir, '', true) ) {
+      if( !$supress ) {
+        $this->_printerr("_backup_database", "Could not backup schema file");
+      }
       return false;
     }
 
     // turn off error reporting for now
     if( $supress ) {
       $lvl = $GLOBALS['installMode'];
-      $GLOBALS['installMode'] = null;
+      $GLOBALS['installMode'] = 0;
     }
 
     // perform backups
@@ -478,7 +481,7 @@ class ZenTargets {
       $GLOBALS['installMode'] = $lvl;
     }
 
-    return true;
+    return $res[0] > 0 && $res[0] == $res[1];
   }
 
   /**
@@ -667,7 +670,7 @@ class ZenTargets {
   function _check_permissions( $securemode = false, $apachegroup = null ) {
     if( $securemode ) {
       $dirs = $this->_parseConfigData("securedirs");
-      print "- Setting strict directory permissions\n";
+      print "- Setting STRICT directory permissions\n";
     }
     else {
       $dirs = $this->_dirs;
@@ -1071,7 +1074,7 @@ class ZenTargets {
     print "PERFORMING FULL INSTALLATION\n\n";
 
     // confirm
-    $str = "This will destroy data in the target directories and database, continue?";
+    $str = "This could destroy data in the target directories and database, continue?";
     if( $this->_confirm($str) != 'y') {
       print "   Aborted!\n";
       return false;
@@ -1260,7 +1263,7 @@ class ZenTargets {
    * @return boolean
    */
   function _create_database( $dataDirectory ) {
-    // drop database and backup first, supress errors
+    // backup first, supress all errors (there may not even be a db to backup)
     $this->_backup_database(null, true);
 
     // add new schema
@@ -1284,13 +1287,6 @@ class ZenTargets {
    * @return boolean
    */
   function _drop_database( $table = null ) {
-    // confirm before dropping
-    $msg = "This will destroy any existing data(it will be backed up first), continue?";
-    if( $this->_confirm($msg, array('y','n'), 'n') != 'y' ) {
-      print "   Cancelled\n";
-      return false;
-    }
-
     // decide which tables to do
     if( $table ) { $tables = explode(',',$table); }
     else { $tables = null; }
@@ -1298,6 +1294,13 @@ class ZenTargets {
     // backup schema and data
     if( !$this->_backup_database($table, true) ) {
       $this->_printerr("_drop_database", "Unable to backup db tables, aborting");
+      return false;
+    }
+
+    // confirm before dropping
+    $msg = "This will destroy any existing data(it will be backed up first), continue?";
+    if( $this->_confirm($msg, array('y','n'), 'n') != 'y' ) {
+      print "   Cancelled\n";
       return false;
     }
 
@@ -1315,7 +1318,7 @@ class ZenTargets {
       return false;
     }
 
-    return true;
+    return $res[0] > 0 && $res[0] == $res[1];
   }
 
   /**
@@ -1753,7 +1756,7 @@ class ZenTargets {
                  "create_database" => "Create a new database(install tool)",
                  "cvs_update" => "Update code from cvs repository(development tool)",
                  "drop_database" => "Delete a database (use with caution!!)",
-                 "extra_secure_mode" => "Tighten directory permissions(for unix, need to know unix)",
+                 "extra_secure_mode" => "Tighten directory permissions(for unix, experimental)",
                  "full_install" => "Install a new zentrack version",
                  "merge_ini_file" => "Merge ini params with template(development tool)",
                  "prepare_install_files" => "Prepare install file(development tool)",

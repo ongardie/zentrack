@@ -328,6 +328,17 @@ class ZenDatabase extends Zen {
     if( $id ) { return $id; }
     else { return null; }
   }
+  
+  /**
+   * STATIC: Generate the primary key for a table from the table name
+   *
+   * @access static
+   * @param string $table
+   * @return string
+   */
+  function getPrimaryKey( $table ) {
+    return strtolower($table."_id");
+  }
 
   /* UTILITIES */
 

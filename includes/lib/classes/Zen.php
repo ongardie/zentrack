@@ -151,20 +151,30 @@ class Zen {
   /**
    * STATIC: Performs a simple insert into a table.
    *
-   * The rowId will be generated automagically, and it is assumed
-   * that the primary key is named "tablename_id"
+   * The primary key will be generated automagically if it is not included.
+   * If it is, this query will attempt to insert 'as-is'.  It does not check
+   * the id for uniqueness.
    *
    * @param string $table is the table to insert into
    * @param array(indexed) $vals is a map of column->value to be inserted
    * @return integer the rowId of the inserted value (or null/false for failure)
    */
   function simpleInsert( $table, $vals ) {
+    // establish query object
     $query = Zen::getNewQuery();
     $query->table($table);
-    $query->setPrimaryKey();
+
+    // insert values
     foreach( $vals as $key=>$val ) {
       $query->field($key, $val);
     }
+
+    // create primary key if not already set
+    $pk = ZenDatabase::getPrimaryKey($table);
+    if( !isset($vals[$pk]) || !strlen($vals[$pk]) ) {
+      $query->setPrimaryKey();
+    }
+
     return $query->insert();
   }
 
@@ -294,7 +304,11 @@ class Zen {
    * @return string the formatted date string
    * @see Zen::getDbConnection
    */
-  function showDate( $utime = '' ) { }
+  function showDate( $utime = '' ) { 
+    $fmt = Zen::getSetting('common','date_format_short');
+    if( $fmt == null ) { $fmt = '%Y-%m-%d'; }
+    return strftime($fmt, $utime);
+  }
 
   /**
    * Shows a long format date properly formatted according to the system settings
@@ -302,7 +316,11 @@ class Zen {
    * @param integer $utime is a unix timestamp of date to show
    * @return string the formatted long date string
    */
-  function showLongDate( $utime = '' ) { }
+  function showLongDate( $utime = '' ) { 
+    $fmt = Zen::getSetting('common','date_format_long');
+    if( $fmt == null ) { $fmt = '%A %d, %b %Y'; }
+    return strftime($fmt, $utime);
+  }
 
   /**
    * Shows a date and time properly formatted according to the system settings
@@ -310,7 +328,9 @@ class Zen {
    * @param integer $utime is a unix timestamp of date to show
    * @return string the formatted date and time string
    */
-  function showDateTime( $utime = '' ) { }
+  function showDateTime( $utime = '' ) { 
+    return Zen::showDate($utime).' '.Zen::showTime($utime);
+  }
 
   /**
    * Shows a time properly formatted according to the system settings
@@ -318,7 +338,11 @@ class Zen {
    * @param integer $utime is a unix timestamp of date to show
    * @return string the formatted time string
    */
-  function showTime( $utime = '' ) { }
+  function showTime( $utime = '' ) { 
+    $fmt = Zen::getSetting('common','date_format_time');
+    if( $fmt == null ) { $fmt = '%H:%M'; }
+    return strftime($fmt, $utime);
+  }
 
 
   /**

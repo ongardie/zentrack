@@ -5,11 +5,7 @@
     <table name="ABSTRACT_DESCRIPTORS">
       <description>Descriptive columns common to many tables</description>
       <columns>
-        <column name="name" type="string" ftype="text" label="Name">
-	  <size>50</size>
-	  <description>The name or title of the entry</description>
-	</column>
-	<column name="description" type="string" ftype="text" label="Description" />      
+	<column name="desc" type="string" ftype="text" label="Description" />      
 	<column name="last_update" type="date" ftype="hidden">
 	  <default>NOW</default>
 	</column>
@@ -24,13 +20,21 @@
       <description>Includes common fields for data types to be used as objects</description>
       <inherit>ABSTRACT_DESCRIPTORS</inherit>
       <columns>
-	<column name="priority" type="shortint" ftype="text" label="Priority">
+	<column name="field_pri" type="shortint" ftype="text" label="Priority">
 	  <description>The order this item will appear in, highest appears at top, items of same priority are sorted alphabetically</description>
         </column>
 	<column name="isactive" type="byte" ftype="checkbox" label="Active">
 	  <default>1</default>
 	  <description>Controls whether this item is actively used... items cannot be deleted, but they can be deactivated by unchecking this box</description>
 	</column>
+      </columns>
+    </table>
+
+    <table name="ABSTRACT_DATA_NAMED">
+      <description>Common fields for data types and field_name</description>
+      <inherit>ABSTRACT_DATA_TYPE</inherit>
+      <columns>
+        <column name="field_name" type="string" ftype="text" label="Name" />
       </columns>
     </table>
 
@@ -108,11 +112,11 @@
 
     <table name="ACTION">
       <description>Actions and their properties</description>
-      <inherit>ABSTRACT_DATA_TYPE</inherit>
+      <inherit>ABSTRACT_DATA_NAMED</inherit>
       <columns>
         <column name="action_id" type="primarykey" ftype="hidden" />
 	<column name="action_type" type="value" ftype="selection" label="Action Type">
-	  <criteria type="list">Normal,Script,URL</criteria>
+	  <criteria type="list">Normal,Helper,URL</criteria>
 	  <default>Normal</default>
 	</column>
 	<column name="helper" type="value" ftype="text" label="Action Helper" />
@@ -142,7 +146,7 @@
       </columns>
       <indexList>
         <index name="act_get">action_id,isactive</index>
-	<index name="act_sort">name,priority</index>
+	<index name="act_sort">field_name,field_pri</index>
 	<index name="act_check">owner_reqs,stage_reqs,bin_reqs</index>
       </indexList>
     </table>
@@ -203,18 +207,18 @@
 	<column name="file_type" type="value" ftype="immutable" label="File Type" />
       </columns>
       <indexList>
-        <index name="attchmt_ordr">name</index>
+        <index name="attchmt_ordr">field_name</index>
       </indexList>
     </table>
 
     <table name="BIN">
       <description>Bins and their properties</description>
-      <inherit>ABSTRACT_DATA_TYPE</inherit>
+      <inherit>ABSTRACT_DATA_NAMED</inherit>
       <columns>
         <column name="bin_id" type="primarykey" ftype="immutable" label="Bin ID" />
       </columns>
       <indexList>
-        <index name="bin_ordr">priority,name</index>
+        <index name="bin_ordr">field_pri,field_name</index>
 	<index name="bin_actv">isactive</index>
       </indexList>
     </table>
@@ -267,7 +271,7 @@
 
     <table name="FILTER">
       <description>Filter properties and info</description>
-      <inherit>ABSTRACT_DATA_TYPE</inherit>
+      <inherit>ABSTRACT_DATA_NAMED</inherit>
       <columns>
         <column name="filter_id" type="primarykey" ftype="hidden" />
       </columns>
@@ -338,22 +342,14 @@
 
     <table name="NOTIFY">
       <description>Store notify lists</description>
+      <inherit>ABSTRACT_INDEX_LIST</inherit>
       <columns>
         <column name="notify_id" type="primarykey" ftype="hidden" />
-	<column name="bin_id" type="integer" ftype="hidden">
-	  <reference>BIN.bin_id</reference>
-	</column>
-	<column name="ticket_id" type="integer" ftype="hidden">
-	  <reference>TICKET.ticket_id</reference>
-	</column>
-	<column name="user_id" type="integer" ftype="searchbox" label="User ID">
-	  <reference>USER.user_id</reference>
-	</column>
-	<column name="name" type="string" ftype="text" label="Name">
+	<column name="field_name" type="string" ftype="text" label="Name">
 	  <size>50</size>
 	</column>
 	<column name="email" type="email" ftype="text" label="Email" />
-	<column name="priority" type="byte" ftype="select" label="Notify Volume">
+	<column name="field_pri" type="byte" ftype="select" label="Notify Volume">
 	  <criteria type="list">[1]Low,[2]Medium,[3]High</criteria>
 	  <default>3</default>
 	</column>
@@ -386,29 +382,32 @@
 
     <table name="PRIORITY">
       <description>Priorities and their properties</description>
-      <inherit>ABSTRACT_DATA_TYPE</inherit>
+      <inherit>ABSTRACT_DATA_NAMED</inherit>
       <columns>
 	<column name="priority_id" type="primarykey" ftype="hidden" />
 	<column name="colorpick" type="value" ftype="colorbox">
 	  <description>The color provided here will be used to highlight tickets in the list view, leaving this blank will use the default background color</description>
 	</column>
       </columns>
+      <indexList>
+        <index name="pri_sort">field_pri,field_name</index>
+      </indexList>
     </table>
     
     <table name="REPORT">
       <description>Report template properties</description>
       <columns>
         <column name="report_id" type="primarykey" ftype="hidden" />
-	<column name="report_type" type="byte" ftype="select">
+	<column name="rep_type" type="byte" ftype="select" Label="Output Type">
 	  <criteria type="list">[0]Text,[1]Image,[2]Both</criteria>
 	  <default>1</default>
 	</column>
-	<column name="name" type="string" ftype="text" label="Report Name">
+	<column name="rep_name" type="string" ftype="text" label="Report Name">
 	  <size>50</size>
 	  <notnull>true</notnull>
 	  <description>The name of this report template</description>
 	</column>
-	<column name="description" type="string" ftype="text" label="Description" />
+	<column name="rep_desc" type="string" ftype="text" label="Description" />
 	<column name="rep_title" type="string" ftype="text" label="Chart Title">
 	  <size>50</size>
 	</column>
@@ -433,7 +432,7 @@
 	</column>
       </columns>
       <indexList>
-        <index name="report_sort">name</index>
+        <index name="report_sort">rep_name</index>
       </indexList>
     </table>
 
@@ -467,12 +466,12 @@
 
     <table name="ROLE">
       <description>User roles and their properties</description>
-      <inherit>ABSTRACT_DATA_TYPE</inherit>
+      <inherit>ABSTRACT_DATA_NAMED</inherit>
       <columns>
         <column name="role_id" type="primarykey" ftype="hidden" />
       </columns>
       <indexList>
-        <index name="role_sort">priority,name</index>
+        <index name="role_sort">field_pri,field_name</index>
         <index name="role_get">role_id,isactive</index>
       </indexList>
     </table>
@@ -483,41 +482,41 @@
       <columns>
         <column name="setting_id" type="primarykey" ftype="hidden" />
 	<column name="set_category" type="value" ftype="immutable" label="Category" />
+	<column name="field_name" type="value" ftype="immutable" />
 	<column name="field_type" type="value" ftype="hidden" />
 	<column name="field_criteria" type="string" ftype="hidden" />
-	<column name="set_name" type="value" ftype="immutable" label="Name" />
 	<column name="set_value" type="string" ftype="setting" label="Value">
-	  <criteria type="helper">field:field_type,field:field_criteria</criteria>
+	  <criteria type="helper">field:field_type,field:field_criteria,field:set_name,field:set_value</criteria>
 	</column>	
       </columns>
       <indexList>
         <index name="setting_cat">set_category</index>
-	<index name="setting_name">set_name</index>
-	<index name="setting_sort">set_category,set_name</index>
+	<index name="setting_name">field_name</index>
+	<index name="setting_sort">set_category,field_name</index>
       </indexList>
     </table>
 
     <!-- stages are the successor of ticket status (open,closed,pending) -->
     <table name="STAGE">
       <description>Stages of ticket progress</description>
-      <inherit>ABSTRACT_DATA_TYPE</inherit>
+      <inherit>ABSTRACT_DATA_NAMED</inherit>
       <columns>
         <column name="stage_id" type="primarykey" ftype="hidden" />	
       </columns>
       <indexList>
-        <index name="stage_sort">priority,name</index>
+        <index name="stage_sort">field_pri,field_name</index>
         <index name="stage_get">stage_id,isactive</index>
       </indexList>
     </table>
 
     <table name="SYSTEM">
       <description>Systems and their properties</description>
-      <inherit>ABSTRACT_DATA_TYPE</inherit>
+      <inherit>ABSTRACT_DATA_NAMED</inherit>
       <columns>
         <column name="system_id" type="primarykey" ftype="hidden" />
       </columns>
       <indexList>
-        <index name="sys_sort">priority,name</index>
+        <index name="sys_sort">field_pri,field_name</index>
         <index name="sys_get">system_id,isactive</index>
       </indexList>
     </table>
@@ -540,12 +539,12 @@
     <!-- tasks are types of log entries -->
     <table name="TASK">
       <description>Log entry types</description>
-      <inherit>ABSTRACT_DATA_TYPE</inherit>
+      <inherit>ABSTRACT_DATA_NAMED</inherit>
       <columns>
         <column name="task_id" type="primarykey" ftype="hidden" />
       </columns>
       <indexList>
-        <index name="task_sort">priority,name</index>
+        <index name="task_sort">field_pri,field_name</index>
 	<index name="task_get">task_id,isactive</index>
       </indexList>
     </table>
@@ -555,6 +554,7 @@
       <inherit>ABSTRACT_DESCRIPTORS</inherit>
       <columns>
         <column name="ticket_id" type="primarykey" ftype="immutable" label="Ticket ID" />
+	<column name="field_name" type="string" ftype="text" label="Summary" />
 	<column name="otime" type="date" ftype="immutable" label="Opened" />
 	<column name="ctime" type="date" ftype="immutable" label="Closed" />
 	<column name="stage_id" type="integer" ftype="immutable" label="Status">
@@ -586,18 +586,18 @@
       </customList>
       <indexList>
 	<index name="tckt_bin">bin_id</index>
-	<index name="tckt_name">name</index>
+	<index name="tckt_name">field_name</index>
       </indexList>
     </table>    
 
     <table name="TRIGGER">
       <description>Trigger mechanisms and properties</description>
-      <inherit>ABSTRACT_DATA_TYPE</inherit>
+      <inherit>ABSTRACT_DATA_NAMED</inherit>
       <columns>
         <column name="trigger_id" type="primarykey" ftype="hidden" />
       </columns>
       <indexList>
-        <index name="trgr_sort">priority,name</index>
+        <index name="trgr_sort">field_pri,field_name</index>
       </indexList>
     </table>
 
@@ -612,12 +612,12 @@
 	  <criteria type="helper">field:trigger_id,field:action_id</criteria>
 	  <reference>ACTION.action_id</reference>
 	</column>
-	<column name="priority" type="shortint" ftype="text" label="Order">
+	<column name="trigger_pri" type="shortint" ftype="text" label="Order">
 	  <description>Order that actions will take place</description>
 	</column>
       </columns>
       <indexList>
-        <index name="trgract_sort">priority</index>
+        <index name="trgract_sort">trigger_pri</index>
       </indexList>
     </table>
 
@@ -636,13 +636,13 @@
 
     <table name="TYPE">
       <description>Ticket types and their related fields</description>
-      <inherit>ABSTRACT_DATA_TYPE</inherit>
+      <inherit>ABSTRACT_DATA_NAMED</inherit>
       <columns>
         <column name="type_id" type="primarykey" ftype="hidden" />
       </columns>
       <indexList>
         <index name="type_get">type_id,isactive</index>
-	<index name="type_sort">priority,name</index>
+	<index name="type_sort">field_pri,field_name</index>
       </indexList>
     </table>
 
@@ -656,12 +656,12 @@
 	  <reference>STAGE.stage_id</reference>
 	  <criteria type="zenlist">stages</criteria>
 	</column>
-	<column name="priority" type="shortint" ftype="text" label="Order">
+	<column name="ts_pri" type="shortint" ftype="text" label="Order">
 	  <description>Lowest to highest</description>
 	</column>
       </columns>
       <indexList>
-        <index name="typeflw_sort">priority</index>
+        <index name="typeflw_sort">ts_pri</index>
       </indexList>
     </table>
 
