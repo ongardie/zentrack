@@ -1,6 +1,12 @@
 
 --- V3.0 RC1 (beta,in CVS) ---	
 
+2003-06-03, William L. Terry
+  Created the preliminary install scripts.
+    - config.ini 1.1
+    - install.php 1.1
+    - install/installRoutines.php 1.1
+
 2003-05-20, MLively
   Committed the Database Wrapper and supporting classes
     - includes/lib/classes/ZenDatabase.class 1.2
