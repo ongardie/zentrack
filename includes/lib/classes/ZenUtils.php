@@ -92,6 +92,24 @@ class ZenUtils {
   }
 
   /**
+   * Attempts to locate a value submitted by a form or url.
+   * 
+   * Checks $_POST and then $_GET for the param in question and returns
+   * the value
+   *
+   * @return mixed value of the post data
+   */
+  function getFormData( $key ) {
+    if( isset($_POST) && isset($_POST[$key]) ) {
+      return $_POST[$key];
+    }
+    else if( isset($_GET) && isset($_GET[$key]) ) {
+      return $_GET[$key];
+    }
+    else { return null; }
+  }
+
+  /**
    * STATIC: Returns the parsed ini file array
    * <p>Retrieval is done as follows:
    * <ol>
@@ -788,7 +806,38 @@ class ZenUtils {
     }
     return `$cmd`;
   }
-  
+
+  /**
+   * STATIC: parse a value and try to equate it to a true or false boolean
+   *
+   * This is accomplished by looking at the php evaluation !$value, if this
+   * returns false, the return value is false.  Otherwise, we try to parse
+   * the value. 1, 't', 'true', 'y', 'yes' are examples of true results, while
+   * 'f', 'n', 0 are examples of false results.
+   *
+   * Any value which does not meet any of these criteria results in the default
+   * being returned.
+   *
+   * @param mixed $value
+   * @param boolean $default (can be null)
+   * @return boolean or $default if cannot be parsed
+   */
+  function parseBoolean($value, $default = false) {
+    if( is_bool($value) ) { return $value; }
+    if( !$value ) { return false; }
+    switch( strtolower(substr($value, 0, 1)) ) {
+    case "t":
+    case "y":
+    case 1:
+      return true;
+    case "f":
+    case "n":
+    case 0:
+      return false;
+    default:
+      return $default;
+    }    
+  }
 
 }
 

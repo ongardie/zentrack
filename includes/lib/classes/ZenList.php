@@ -61,10 +61,12 @@ class ZenList extends Zen {
    * and the {@link criteria()} method are mutually exclusive.
    *
    * @param array $ids a simple array of data rows that are to be included
+   * @param boolean $sortby if true, then results will be sorted by this id list instead of sort parms
    */
-  function criteriaIdArray( $ids ) {
+  function criteriaIdArray( $ids, $sortby = false ) {
     $this->_criteria = new ZenSearchParms( 'OR' );
     $this->_criteria->match( $this->_primarykey, ZEN_IN, $ids );
+    if( $sortby ) { $this->_sortByIds = $ids; }
   }
 
   /**
@@ -127,6 +129,8 @@ class ZenList extends Zen {
   function load($limit = 0, $offset = 0) { 
     $query = Zen::getNewQuery();
     $query->table( ZenUtils::tableNameFromClass($this) );
+
+    // create search and sort criteria
     if( $this->_criteria ) {
       $query->search($criteria);
     }
@@ -135,20 +139,51 @@ class ZenList extends Zen {
         $query->sort($field, $desc);
       }
     }
-    $rows = $query->select(Zen::getCacheTime());
+
+    // generate data
+    $ids = array();
+    $this->_data = array();
+    $rows = $query->select(Zen::getCacheTime(),true);
     if( is_array($rows) ) {
       $this->_count = count($rows);
       foreach($rows as $r) {
-        $id = $this->getPrimaryKey();
-        $this->_ids[] = $r[ $id ];
-        $this->_rows["$id"] = $r;
+        $key = $this->getPrimaryKey();
+        $id = $r[ $key ];
+        $ids[] = $id;
+        $this->_data["$id"] = $r;
+      }
+
+      // resort the ids if necessary
+      if( $this->_sortByIds ) {
+        // we will take the existing
+        // ids and resort them
+        $keys = $ids;
+        $ids = array();
+        
+        // iterate through the ids and
+        // order result accordingly
+        foreach($this->_sortByIds as $id) {
+          if( in_array($id, $keys) ) {
+            $ids[] = $key;
+          }
+        }
+      
+        // any values left over should
+        // just be appended to the end
+        // (hopefully this doesn't happen)
+        foreach($keys as $id) {
+          if( !in_array($id, $ids) ) {
+            $ids[] = $id;
+          }
+        }
       }
     }
-    else {
-      $this->_data = array();
-      $this->_ids = array();
-      $this->_count = 0;
-    }
+
+    // assign sorted ids
+    $this->_ids = $ids;
+
+    // reset some params
+    $this->_count = count($this->_data);
     $this->_changed = array();
     $this->_loaded = true;
     $this->_position = 0;
@@ -226,10 +261,6 @@ class ZenList extends Zen {
     return $this->_dataType;
   }
 
-  /**
-   * 
-
-
   /* VARIABLES */
 
   /** @var String $_dataType the source type for this List */
@@ -244,7 +275,7 @@ class ZenList extends Zen {
   /** @var string $_primarykey the column used as primary key for this data type */
   var $_primarykey;
 
-  /** @var array $_data the indexed data set */
+  /** @var array $_data the indexed data set, this data is not necessarily sorted, the ids are used for this */
   var $_data;
 
   /** @var integer $_position the current position in the result list */
@@ -267,6 +298,9 @@ class ZenList extends Zen {
 
   /** @var array $_changed array mapped (String)id -> (boolean)has_changed */
   var $_changed;
+
+  /** @var array $_sortByIds if set, this list of ids will be used to sort results, instead of sort parms */
+  var $_sortByIds = null;
 
 }
 

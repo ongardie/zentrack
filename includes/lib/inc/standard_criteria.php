@@ -23,11 +23,6 @@
            "skip"     => "Skip" );
 
   /**
-   * List of options for grouping search criteria
-   */
-  $GLOBALS['criteriaLists']['grouping'] = array( "AND", "OR", "(", ")" );
-
-  /**
    * List of options for making comparisons
    */
   $GLOBALS['criteriaLists']['comparison'] =

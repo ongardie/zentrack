@@ -41,8 +41,13 @@
     <table name="ABSTRACT_CRITERIA">
       <description>Filter data is inherited from this abstract</description>
       <columns>
-	<column name="andor" type="byte" ftype="select" label="Grouping">
-	  <criteria type="standard">grouping</criteria>
+	<column name="andor" type="string" ftype="select" label="Matching">
+          <size>5</size>
+	  <criteria type="list">AND,OR</criteria>
+	</column>
+	<column name="grouping" type="string" ftype="select" label="Grouping">
+          <size>1</size>
+	  <criteria type="list">(,)</criteria>
 	</column>
         <column name="parm_id_1" type="integer" ftype="popselect" label="Parameter 1">
           <criteria type="helper" />
@@ -55,6 +60,7 @@
 	<column name="field_comp" type="value" ftype="select" label="Operator">
 	  <criteria type="standard">comparison</criteria>
 	</column>
+        <column name="field_exclude" type="byte" ftype="checkbox" label="Exclude" />
         <column name="field_pri" type="integer" ftype="text" label="Order" />        
         <column name="descript" type="maxstring" ftype="text" label="Description" />
       </columns>
@@ -108,6 +114,10 @@
 	<column name="yesorno" type="byte" ftype="checkbox" label="Active">
 	  <default>1</default>
 	</column>
+        <column name="criteria_set_id" type="string" ftype="pulldown" label="Criteria">
+          <reference>CRITERIA_SET.criteria_set_id</reference>
+          <showfield>field_name</showfield>
+        </column>
       </columns>
       <indexList>
         <index name="access_ba">bin_id,action_id</index>
@@ -120,100 +130,68 @@
       <inherit>ABSTRACT_DATA_NAMED</inherit>
       <columns>
         <column name="action_id" type="primarykey" ftype="hidden" />
-	<column name="action_type" type="value" ftype="select" label="Action Type">
-	  <criteria type="list">Normal,Helper,URL</criteria>
-	  <default>Normal</default>
-	</column>
-	<column name="helper" type="value" ftype="text" label="Action Helper" />
 	<column name="is_button" type="byte" ftype="checkbox" />
 	<column name="icon_name" type="value" ftype="text" label="Icon">
 	  <description>Leave blank to disable icon</description>
 	</column>
-	<column name="owner_reqs" type="byte" ftype="select" label="Assigned To">
-	  <description>The requirements for ownership of ticket vs this action</description>
-	  <criteria type="list">
-	     [0]None
-	     [1]Owner
-	     [2]Not owner
-	     [3]Unowned
-	     [4]Owned
-	     [5]Owner or unowned
-	   </criteria>
-	</column>
+        <column name="criteria_set_id" type="integer" ftype="select" label="Criteria Set">
+          <description>Criteria used to decide if this action is available
+                       for use</description>
+        </column>
+        <column name="notify_priority" type="integer" ftype="select" label="Notify Priority">
+          <criteria type="list">[1]none,2[low],3[normal],4[high],5[all]</criteria>
+        </column>
+        <column name="dolog" type="byte" ftype="checkbox" label="Create Log" />
       </columns>
       <indexList>
         <index name="key_act_get">action_id,isactive</index>
-	<index name="key_act_sort">field_name,field_pri</index>
-	<index name="key_act_check">owner_reqs</index>
+	<index name="key_act_sort">field_pri,field_name</index>
       </indexList>
     </table>
 
-    <table name="ACTION_BIN">
-      <description>Maps actions to the bins in which they are active</description>
+    <table name="ACTION_STEPS">
+      <description>System actions to be performed by this action</description>
       <columns>
-         <column name="action_id" type="integer" ftype="hidden" label="Action" />
-         <column name="bin_id" type="integer" ftype="checklist" label="Active Bins">
-           <reference>BIN.bin_id</reference>
-           <criteria type="zenlist">bins</criteria>
-         </column>
-      </columns>
-      <indexList>
-        <index name="key_actbin_get">action_id,bin_id</index>
-      </indexList>
-    </table>
-
-    <table name="ACTION_STAGE">
-      <description>Maps actions to the stages in which they are active</description>
-      <columns>
-         <column name="action_id" type="integer" ftype="hidden" label="Action" />
-         <column name="stage_id" type="integer" ftype="checklist" label="Active Stages">
-           <reference>STAGE.stage_id</reference>
-           <criteria type="zenlist">stages</criteria>
-         </column>
-      </columns>
-      <indexList>
-        <index name="key_actbin_get">action_id,stage_id</index>
-      </indexList>
-    </table>
-
-    <table name="ACTION_PARAMS">
-      <description>Action parameters to be passed for each action</description>
-      <columns>
-        <column name="action_params_id" type="primarykey" ftype="hidden" />
-	<column name="param_number" type="shortint" ftype="text" label="Order" />
-	<column name="param_type" type="value" ftype="select" label="Parameter Type">
-	  <!-- the selections for special value may require a definition in the value field -->
+        <column name="action_steps_id" type="primarykey" ftype="hidden" />
+	<column name="action_id" type="integer" ftype="immutable" label="Action ID" />
+	<column name="action_type" type="value" ftype="select" label="Type">
 	  <criteria type="list">
-	      Action ID
-	      Action Name
-	      Trigger ID
-	      Environment Variable
-	      Ticket Field
-	      User Field
-	      Login Field
-	      Timestamp
-	      Date
-	      Text
+             [action]Action
+             [c_ticket]Create Ticket
+             [d_ticket]Delete Ticket
+             [e_ticket]Edit Ticket
+             [email]Email
+             [helper]Helper
+             [relate]Relate
+             [script]User Fxn
 	  </criteria>
 	  <description>
-	     This Field defines what sort of parameter will be used, the value of which will usually be found in the Value field.  Note that the correct object type must be available to make this work.  I.e. you have to be on a page with a user_id to access user fields, or a page with a ticket_id to access ticket fields.
+             This defines what sort of action will take place.  The actions are as follows:
 
-	     Action ID: the id of the action occuring
-	     Action Name: the name of the action occuring
-	     Trigger ID: the trigger causing the action, if applicable
-	     Environment Variable: an apache environment setting (HTTP_REFERRER, USER_AGENT, etc)
-	     Ticket Field: provide a column from the TICKET table (ticket_id,bin_id,owner_id,etc)
-	     User Field: provide a field from the USER table (user_id,fname,lname,etc)
-	     Login Field: refers to currently logged in user (login_id, login_role, login_name, login_inits)
-	     Timestamp: provides a unix timestamp representing right now (no value needed)
-	     Date: provides a date representing right now, the value should be a strftime() format
-	     Text: pass whatever is typed in the Value field	     
+             Action - run another action
+             Create Ticket - create a new ticket
+             Delete Ticket - delete an existing ticket
+             Edit Ticket - edit an existing ticket
+             Email - send an email
+             Helper - run an action_helper function             
+             Relate - update ticket relationships
+             User Fxn - run a user defined function
 	   </description>
 	</column>
-	<column name="param_value" type="string" ftype="text" label="Value" />
+	<column name="action_name" type="value" ftype="text" label="Name" />
+        <column name="criteria_set_id" type="integer" ftype="select" label="Criteria Set">
+          <reference>CRITERIA_SET.criteria_set_id</reference>
+          <showfield>field_name</showfield>
+        </column>
+        <column name="parm_set_id" type="string" ftype="hidden" label="Param Set">
+          <reference>PARM_SET.parm_set_id</reference>
+        </column>        
+        <column name="action_fail" type="byte" ftype="checkbox" label="Continue on Fail" />
+        <column name="action_pri" type="smallint" ftype="text" label="Order" />
       </columns>
       <indexList>
-         <index name="act_prms_ordr">param_number</index>
+        <index name="act_steps_get">action_id</index>
+        <index name="act_steps_sort">action_pri,action_name</index>
       </indexList>
     </table>
 
@@ -259,6 +237,7 @@
            <size>3</size>
            <criteria type='list'>AND,OR</criteria>
          </column>
+        <column name="onfail" type="byte" ftype="checkbox" label="Continue on Fail" />         
       </column>
     </table>
 
@@ -271,7 +250,6 @@
          <column name="criteria_set_id" type="integer" ftype="hidden" label="Set ID">
            <reference>CRITERIA_SET.criteria_set_id</reference>
          </column>
-        <column name="onfail" type="byte" ftype="yesno" label="Continue on Fail" />
       </column>
       <indexList>
         <index name="crit_sort_idx">field_pri</index>
@@ -446,8 +424,7 @@
           <criteria type='list'>
             [boolean]Boolean
             [db]Database
-            [setting]DB Setting
-            [eval]Eval
+            [setting]Admin Setting
             [form]Form Data
             [helper]Helper
             [ini]Ini File
@@ -456,19 +433,40 @@
             [user]User Function       
           </criteria>
         </column>
-        <column name="parm_cat1" type="value" ftype="popselect" label="Category/Table">
+        <column name="parm_cat1" type="value" ftype="popselect" label="Section/Table">
           <criteria type="helper" />
         </column>
-        <column name="parm_cat2" type="value" ftype="popselect" label="Field">
+        <column name="parm_cat2" type="value" ftype="popselect" label="Field/Name">
           <criteria type="helper" />
         </column>
-        <column name="parm_val" type="string" ftype="popselect" label="Value" />
+        <column name="parm_cat3" type="value" ftype="popselect" label="Match">
           <criteria type="helper" />
+        </column>
+        <column name="parm_cat4" type="string" ftype="popselect" label="Value" />
+          <criteria type="helper" />
+        </column>
+      </columns>
+      <indexList>
+        <index name="parm_sort_idx">parm_name</index>
+      </indexList>
+    </table>
+
+    <table name="PARM_SET">
+      <description>Designate a set of parms to use</description>
+      <columns>
+        <column name="parm_set_id" type="string" ftype="immutable" label="Set ID">
+          <description>The set id, which should be in the format table_id where table and id
+            correspond to the table employing this set.</description>
+        </column>
+        <column name="parm_id" type="integer" ftype="popselect" label="Parameter">
+          <reference>PARM.parm_id</reference>
+          <showfield>parm_name</showfield>
         </column>
         <column name="parm_pri" type="integer" ftype="text" label="Order" />
       </columns>
       <indexList>
-        <index name="parm_sort_idx">parm_pri,parm_name</index>
+        <index name="parm_set_get">parm_set_id</index>
+        <index name="parm_set_sort">parm_pri</index>
       </indexList>
     </table>
 

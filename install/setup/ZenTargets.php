@@ -1604,21 +1604,7 @@ class ZenTargets {
    * @return boolean true or false
    */
   function _getBooleanParm( $target, $index, $default = null ) {
-    $p = $this->_getParm($target,$index);
-    if( !$p ) { return $default; }
-    if( is_bool($p) ) { return $p; }
-    switch( strtolower(substr($p, 0, 1)) ) {
-    case "t":
-    case "y":
-    case 1:
-      return true;
-    case "f":
-    case "n":
-    case 0:
-      return false;
-    default:
-      return $default;
-    }
+    return ZenUtils::parseBoolean($this->_getParm($target,$index), $default);
   }
 
 

@@ -426,7 +426,7 @@ class ZenFormGenerator extends Zen {
     $query->field($fk_id);
     if( $nf ) { $query->field($nf); }
     if( $parms ) { $query->search($parms); }
-    $vals = $query->select(Zen::getCacheTime());
+    $vals = $query->select(Zen::getCacheTime(),true);
     if( is_array($vals) && count($vals) ) {
       // convert the values from the query
       // into proper args we can use
