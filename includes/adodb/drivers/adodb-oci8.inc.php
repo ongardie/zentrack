@@ -148,18 +148,21 @@ NATSOFT.DOMAIN =
 		         
     	if($argHostname) { // added by Jorma Tuomainen <jorma.tuomainen@ppoy.fi>
         	if(strpos($argHostname,":")) {
-				$argHostinfo=explode(":",$argHostname);
-               	$argHostname=$argHostinfo[0];
-                $argHostport=$argHostinfo[1];
+			$argHostinfo=explode(":",$argHostname);
+               		$argHostname=$argHostinfo[0];
+                	$argHostport=$argHostinfo[1];
          	} else {
     			$argHostport="1521";
-   			}
-
+   		}
+		if ( !strlen($argDatabasename) ) { // use oracle name services (added by Itzchak Rehberg <izzy@einsurance.de>)
+			$argDatabasename = $argHostname;
+		} else {
 			$argDatabasename="(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=".$argHostname
-				.")(PORT=$argHostport))(CONNECT_DATA=(SERVICE_NAME=$argDatabasename)))";
+				.")(PORT=".$argHostport."))(CONNECT_DATA=(SERVICE_NAME=".$argDatabasename.")))";
+		}
+    			$argHostport="1521";
     	}
-				
- 		//if ($argHostname) print "<p>Connect: 1st argument should be left blank for $this->databaseType</p>";
+	//if ($argHostname) print "<p>Connect: 1st argument should be left blank for $this->databaseType</p>";
         $this->_connectionID = OCIlogon($argUsername,$argPassword, $argDatabasename);
         if ($this->_connectionID === false) return false;
 		if ($this->_initdate) {
@@ -173,18 +176,21 @@ NATSOFT.DOMAIN =
     function _pconnect($argHostname, $argUsername, $argPassword, $argDatabasename)
 	{
 		if($argHostname) { // added by Jorma Tuomainen <jorma.tuomainen@ppoy.fi>
-        	if(strpos($argHostname,":")) {
-				$argHostinfo=explode(":",$argHostname);
-               	$argHostname=$argHostinfo[0];
-                $argHostport=$argHostinfo[1];
+        		if(strpos($argHostname,":")) {
+			$argHostinfo=explode(":",$argHostname);
+               		$argHostname=$argHostinfo[0];
+                	$argHostport=$argHostinfo[1];
          	} else {
     			$argHostport="1521";
-   			}
-
+   		}
+		if ( !strlen($argDatabasename) ) { // use oracle name services (added by Itzchak Rehberg <izzy@einsurance.de>)
+			$argDatabasename = $argHostname;
+		} else {
 			$argDatabasename="(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=".$argHostname
 				.")(PORT=".$argHostport."))(CONNECT_DATA=(SERVICE_NAME=".$argDatabasename.")))";
+		}
     	}
-		$this->_connectionID = OCIplogon($argUsername,$argPassword, $argDatabasename);
+	$this->_connectionID = OCIplogon($argUsername,$argPassword, $argDatabasename);
         if ($this->_connectionID === false) return false;
 		if ($this->_initdate) {
 			$this->Execute("ALTER SESSION SET NLS_DATE_FORMAT='YYYY-MM-DD'");
