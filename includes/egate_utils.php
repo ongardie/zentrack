@@ -256,21 +256,21 @@
 	    if( preg_match("/^[> ]*$/", $l) ) { continue; }
 	    // if this line starts with [ ]...
 	    // it's unchecked, so keep looking
-	    else if( preg_match("/[> ]*\[ *\]/", $l) ) { continue; }
-	    else if( preg_match("/[> ]*[ *[xX] *] *(.+)/", $l, $matches) ) {
+	    else if( preg_match("/^[> ]*\[ *\]/", $l) ) { continue; }
+	    else if( preg_match("/^[> ]*\[ *[xX] *] *(.+)/", $l, $matches) ) {
 	      // this line starts with [x] wordswords, 
 	      // then wordswords is our value
 	      $params["$n"] = trim($matches[1]);
 	      break;
 	    }
-	    else if( preg_match("/[> ]*(@end|@[a-zA-Z0-9_ -]+:)/", $l) ) {
+	    else if( preg_match("/^[> ]*(@end|@[a-zA-Z0-9_ -]+:)/", $l) ) {
 	      // if we come to the next parameter, or an @end, we are done
 	      $i--;
 	      break;
 	    } else {
 	      // we don't have a [ ] or a [x], so this must be
 	      // a text entry, concat it together and return it
-	      $params["$n"] .= preg_replace("/[> ]*/", "", $l)."\n";
+	      $params["$n"] .= preg_replace("/^[> ]*/", "", $l)."\n";
 	    }
 	  }
 	}

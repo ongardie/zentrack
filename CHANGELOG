@@ -6,6 +6,14 @@
  endless possibilities for project expansion.
 
 ----- V2.4.1 (Development, See CVS) ----
+
+2003-04-30, Kato
+  Resolved issue with not being able to access tr() while
+  using the egate_utils, causing an error
+    - zentrack/includes/egate_utils.php 1.28
+    - zentrack/includes/headerInc.php 1.29
+    - zentrack/includes/zenTrack.class 1.96
+
 2003-04-27, Rob Hillis
   Fix translation link to user permissions after adding a new user
     - zentrack/www/admin/addUserSubmit.php 1.9

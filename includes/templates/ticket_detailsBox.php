@@ -30,7 +30,7 @@
   <? } ?>
   <tr>
     <td class="smallTitleCell" width="140" height="<?=$height_num?>"><?=uptr("Bin")?></td>
-    <td class="smallTitleCell" width="140"><?=uptr("Bin")?></td>
+    <td class="smallTitleCell" width="140"><?=uptr("Type")?></td>
     <td class="smallTitleCell" width="140"><?=uptr("System")?></td>
     <td>&nbsp;</td>
     <td class="smallTitleCell"><?=uptr("Estimated Hours")?></td>
