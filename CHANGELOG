@@ -13,6 +13,11 @@ abstraction, and endless possibilities for project expansion.
 
 ----- VERSION 2.5.0.3 (development) -----
 
+2005-02-01, cfalonso
+  Fixed problem displaying fields in proper order after adding a section or moving an element (TK 66)
+    - zentrack_2/includes/templates/fieldMapForm.php 1.2
+    - zentrack_2/www/admin/fieldMap.php 1.2
+
 2005-01-31, Kato
   Added logic to determine owner by email or login
   for egate scripts
