@@ -17,16 +17,15 @@
    *  A template file will look similar to the following:
    *
    *  <pre>
-   *  <h3>{title}</h3>
-   *  <form name="{name}" action="{action}">
-   *  {list:array_name:"<input type='text' name='"+index+"' value='"+value+"'"}
-   *  </for>
+   *  &lt;h3&gt;{title}&lt;/h3&gt;
+   *  &lt;form name="{name}" action="{action}"&gt;
+   *  {list:array_name:"&lt;input type='text' name='"+index+"' value='"+value+"'>"}
+   *  &lt;/form&gt;
    *  </pre>
    *
    * <b>Valid template entries are:</b>
    * <code>
-   *  {varname} // inserts value of varname, if the value is an array
-   *            // then the values will be iterated each time it is requested
+   *  {varname} // insert varname, if array, iterate each value, null if not found
    *  {varname="default"} // inserts val of varname, or default if not found
    *  {varname[key]} // inserts value of array varname indexed by key (varname[key]),
    *                 // varname must be an associative array or null will be returned
@@ -490,7 +489,7 @@ class ZenTemplate {
    *  "some text "+a_variable+"some more text"+another_variable... etc.
    *
    * @param string $text the text string to parse
-   * @params string $value the value if we are iterating a list or foreach (if blank, $this->_vals will be used)
+   * @param string $value the value if we are iterating a list or foreach (if blank, $this->_vals will be used)
    * @param string $key the key if we are iterating a list or foreach (do not pass a key if there is no value!)
    * @return string the parsed data
    */
