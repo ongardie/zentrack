@@ -28,7 +28,7 @@
     <create>CREATE %table% {%columns%}</create>
     <droptable>DROP TABLE %table%</droptable>
     <primarykey location="inline"> NOT NULL PRIMARY KEY</primarykey>
-    <index location="external" uniquelabel="UNIQUE">
+    <index uniquelabel="UNIQUE">
       CREATE INDEX %unique% %name% ON %table%(%columns%)
     </index>
     <dropindex></dropindex>

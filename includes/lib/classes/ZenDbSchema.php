@@ -1,7 +1,10 @@
 <? /* -*- Mode: C; c-basic-indent: 3; indent-tabs-mode: nil -*- ex: set tabstop=3 expandtab: */ 
 
 /** 
- * Holds the database schema parsed from xml data
+ * Holds the database schema parsed from the xml configuration file.
+ *
+ * This is a map of the database structure.  This contains only the basic db stucture.
+ * All of the user configured portions are controlled by the {@link ZenMetaDb} class.
  *
  * @package DB
  */
@@ -11,7 +14,7 @@ class ZenDbSchema extends Zen {
    * CONSTRUCTOR
    *
    * @param string $xmlfile filename or valid xml data to parse
-   * @param boolean $use_cache if true, checks for cached data and loads rather than parsing $xmlfile
+   * @param boolean $use_cache if true, check for cached data rather than parsing $xmlfile
    */
   function ZenDbSchema( $xmlfile, $use_cache = true ) {
     // call Zen()
@@ -62,6 +65,7 @@ class ZenDbSchema extends Zen {
    *   <li>description [string]
    *   <li>inherits [array] all tables inherited by current
    *   <li>is_abstract [boolean]
+   *   <li>has_transactions [boolean]
    *   <li>has_custom_fields [boolean]
    *   <li>fields [array] contains the fields and their values
    * </ul>
@@ -93,6 +97,23 @@ class ZenDbSchema extends Zen {
   }
 
   /**
+   * Returns a table as with {@link getTableArray()}, include all inherited fields
+   *
+   * @param string $table
+   * @return array see getTableArray()
+   */
+  function getMergedTableArray( $table ) {
+    if( !isset($this->_tables[$table]) ) { return false; }
+    $table = $this->_tables[$table];
+    foreach( $this->getInheritedFields($table) as $key=>$val ) {
+      if( !isset($table['fields'][$key]) ) {
+        $table['fields'][$key] = $val;
+      }
+    }
+    return $table;
+  }
+
+  /**
    * Return a ZenMetaField for a given column
    *
    * @param string $table
@@ -112,7 +133,8 @@ class ZenDbSchema extends Zen {
    * @return array or false
    */
   function getFieldArray( $table, $column ) {
-    return isset($this->_tables[$table]['fields'][$column])? $this->_tables[$table]['fields'][$column] : false;
+    return isset($this->_tables[$table]['fields'][$column])? 
+      $this->_tables[$table]['fields'][$column] : false;
   }
 
   /**
@@ -161,10 +183,19 @@ class ZenDbSchema extends Zen {
       if( !isset($c['inherit'][0]) ) { $c['inherit'] = array($c['inherit']); }
       foreach($c['inherit'] as $i) {
 	$t['inherits'][] = $i['data'];
-      }
+       }
     }
     // see if table is abstract
     $t['is_abstract'] = $abstract;
+
+    // see if table supports transactions
+    if( isset($data['children']['transactions'])
+        && $data['children']['transactions'][0] == 'true' ) {
+      $t['has_transactions'] = true;
+    }
+    else {
+      $t['has_transactions'] = false;
+    }
 
     // the table may not have any columns (could simply inherit, or be an abstract with no columns)
     if( count($c['columns']['children']) ) {
@@ -194,6 +225,17 @@ class ZenDbSchema extends Zen {
     }
     else { $t['has_custom_fields'] = false; }
     $this->_tables[$n] = $t;
+
+    // iterate through all indexes associated with this table
+    // and create appropriately
+    $indices = array();
+    if( isset($c['indexList']['children']) ) {
+      foreach( $c['indexList']['children']['index'] as $index ) {
+        $key = $index['props']['name'];
+        $indices[$key] = explode(',', $index['data']);
+      }
+    }
+    $this->_indices[$n] = $indices;
   }
 
   /**
@@ -225,9 +267,11 @@ class ZenDbSchema extends Zen {
    * @param array $inherits
    * @return boolean
    */
-  function addTable( $name, $description, $is_abstract, $has_custom_fields, $inherits ) {
+  function addTable( $name, $description, $is_abstract, $has_custom_fields, 
+                     $inherits, $has_transactions ) {
     $this->_tables[$name] = 
-      compact( array('name', 'description', 'is_abstract', 'has_custom_fields', 'inherits') );
+      compact( array('name', 'description', 'is_abstract', 'has_custom_fields', 
+                     'inherits', 'has_transactions') );
     $this->_tables[$name]['fields'] = array();
     return isset($this->_tables[$name]);
   }
@@ -317,7 +361,14 @@ class ZenDbSchema extends Zen {
    *
    * @return contains list of table names
    */
-  function getTableNames() { return array_keys($this->_tables); }
+  function listTables() { return array_keys($this->_tables); }
+
+  /**
+   * Return all tables in a list as in {@link getTableArray()}
+   *
+   * @return array
+   */
+  function getAllTables() { return $this->_tables; }
 
   /**
    * Return a list of columns inherited from
@@ -330,6 +381,43 @@ class ZenDbSchema extends Zen {
     $table = $this->getTableArray($table);
     return $this->_inheritRecursiveFields($table['inherits']);
   }
+
+  /**
+   * Return indexes associated with a table
+   *
+   * @param string $table name of table to retrieve
+   * @return array mapped (string)index_name -> (array)index (always returns an array)
+   */
+  function getIndices( $table ) {
+    return isset($this->_indices[$table])? $this->_indices[$table] : array();
+  }
+
+  /**
+   * Return indexes associated with this table and all tables it inherits
+   *
+   * @param string $tableName
+   * @return array mapped (string)index_name -> (array)index (always returns an array)
+   */
+  function getMergedIndices( $tableName ) {
+    // get table info
+    $table = $this->getTableArray($tableName);
+    // initialize and validate
+    $vals = $this->getIndices($tableName);
+    if( !$table ) { return $vals; }
+    // find inherited indices
+    foreach( $table['inherits'] as $i ) {
+      $vals = array_merge($vals, $this->getMergedIndices($i));
+    }
+    // return results
+    return $vals;
+  }
+
+  /**
+   * Returns all indexes for all tables
+   *
+   * @return array mapped (string)table_name -> array( (string)index_name -> (array)index_info )
+   */
+  function getAllIndices() { return $this->_indices; }
 
   /**
    * Retrieve inherited fields recursively
@@ -370,6 +458,11 @@ class ZenDbSchema extends Zen {
    * @see ZenDbSchema::getTableArray()
    */
   var $_tables;
+
+  /**
+   * @var array $_indices is a mapped array of (string)table_name -> (array)related_indices
+   */
+  var $_indices;
   
 }
 

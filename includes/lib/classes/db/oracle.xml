@@ -20,16 +20,13 @@
     <dataType name="date"       type="NUMBER"   size="12,0" max="12,0" fixed="true" />
   </dataTypes>
 
-
   <sqlInfo>
     <endline>;</endline>
     <escapechar>'</escapechar>
     <create>CREATE %table% {%columns%}</create>
     <droptable>DROP TABLE %table%</droptable>
     <primarykey location="internal">CONSTRAINT %name% PRIMARY KEY (%column%)</primarykey>
-    <index location="external" uniquelabel="">
-      CREATE %unique% INDEX %name% ON %table%(%columns%)
-    </index>
+    <index uniquelabel="UNIQUE">CREATE %unique% INDEX %name% ON %table%(%columns%)</index>
     <dropindex></dropindex>
     <tablecolumn uniquelabel="" notnull="NOT NULL">%name% %datatype% %attr% </tablecolumn>
     <addcolumn>ALTER TABLE %table% ADD COLUMN %def%</addcolumn>

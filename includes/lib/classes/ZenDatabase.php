@@ -138,7 +138,8 @@ class ZenDatabase extends Zen {
    */
   function execute( $query, $cacheTime = 0, $limit = 0, $offset = 0 ) {
     $this->debug($this, "execute", "[cachetime:$cacheTime]$query", 0, LVL_NOTE);
-    if (!strlen($cacheTime) || !isset($GLOBALS['ADODB_CACHE_DIR']) || !strlen($GLOBALS['ADODB_CACHE_DIR'])) {
+    if (!strlen($cacheTime) || !isset($GLOBALS['ADODB_CACHE_DIR']) 
+        || !strlen($GLOBALS['ADODB_CACHE_DIR'])) {
       if( $limit )
         $result = &$this->_adodb->SelectLimit($query, $limit, $offset);
       else
@@ -252,6 +253,18 @@ class ZenDatabase extends Zen {
       $this->debug($this, "quote", "Quoted string: ".$res, 0, LVL_DEBUG);
       return $res;
     }
+  }
+
+  /**
+   * Flush the database cache
+   */
+  function flushCache() {
+    //todo
+    //todo
+    //todo
+    //todo check this function to make sure it works
+    //todo
+    return $this->_adodb->cacheFlush();
   }
 
   /**

@@ -416,7 +416,7 @@ class ZenTemplate {
   function _getVar($name) {
     // find out if we have a default value
     if( strpos($name, "=") > 0 ) {
-      list($name,$default) = explode('=',$name,1);
+      list($name,$default) = explode('=',$name,2);
     }
     else { $default = null; }
     // parse the array or string

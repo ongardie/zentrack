@@ -44,21 +44,21 @@ class DbTypeInfo {
    *
    * @param string $table
    * @param array $columns array of (string) column syntax
+   * @param boolean $transactions if true, this table will accept transactions
    * @return array of sql statements
    */
-  function addTableSyntax( $table, $columns ) { 
-    return $this->getStatement('addtable', array('table'=>$table, 'columns'=>join(",",$columns)));
-  }
-
-  /**
-   * creates sql needed to add a table which will use transactions
-   *
-   * @param string $table
-   * @param array $columns array of (string) column syntax
-   * @return array of sql statements
-   */
-  function addTransactionTableSyntax( $table, $columns ) { 
-    return $this->getStatement('addtable', array('table'=>$table, 'columns'=>join(",",$columns)), true);
+  function addTableSyntax( $table, $columns, $transactions ) {
+    $columnText = "";
+    foreach($columns as $c) {
+      $new = array();
+      if( $columnText ) { $columnText .= ", "; }
+      $columnText .= $this->inlineColumnSyntax($c['name'], $c['type'], 
+                                               $c['unique'], $c['notnull'], 
+                                               $c['size']);
+    }
+    return $this->getStatement('addtable', 
+                               array('table'=>$table, 'columns'=>$columntext), 
+                               $transactions);
   }
 
   /**
