@@ -1451,7 +1451,7 @@ abstraction, and endless possibilities for project expansion.
 
 2003-04-21, Rob Hillis
   Rename mis-spelled LISCENCE-GPL-2.0 in install/ directory
-    - zentrack/install/LISCENCE-GPL-2.0 <del>
+    - zentrack/install/LISCENCE-GPL-2.0 (deleted)
     - zentrack/install/LICENSE-GPL-2.0 1.1
   Fix minor typos in INSTALL.README
     - zentrack/INSTALL.README 1.23

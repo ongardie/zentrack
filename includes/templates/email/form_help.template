@@ -7,6 +7,8 @@ Overview
 
 The {zen:system_name} email gateway provides an interface for users to perform actions on request tickets via email.
 
+NOTE:  MOST USERS ARE SIMPLY LOOKING TO SEND AN EMAIL AND CREATE A TICKET.  This is not the interface for that purpose.  A seperate email address may be available from your administrator for this purpose.  This interface is designed to provide administrative capabilities (at the cost of additional complexity)
+
 Actions are performed by replying to any email post with the following text format in the subject:
 
 #nnnn: action
