@@ -33,7 +33,7 @@
                             "newShowInList[$i]"     => "int",
                             "newShowInCustom[$i]"   => "int",
                             "newShowInDetail[$i]"   => "int",
-			    "newShowInNew[$i]"
+			    "newShowInNew[$i]"      => "int"
                              );
           $zen->cleanInput($varfield_check);
 	  $updateParams = array( 
@@ -51,8 +51,7 @@
                 "show_in_new"	        => (strlen($newShowInNew[$i])?     $newShowInNew[$i]     : 0)
 				);
 	  $res = $zen->update_custom_field_idx($newFieldName[$i], $updateParams); 
-	  if( $res )
-	    $j++;
+	  if( $res ) { $j++; }
 	}
       }
       $msg = tr("? custom field definitions were saved to the database. Updates complete", array($j));

@@ -12,9 +12,9 @@
     $k = $f['field_name'];
     $v = $f['field_label'];
     $r = $f['is_required'];
-    $varfield_type = ereg_replace("[^a-z_]", "", $k);
+    $varfield_type = getVarfieldDataType($k);
     switch($varfield_type) {
-    case "custom_number":
+    case "number":
       if( !strlen($$k) ) {
 	$cfv = 'NULL';
 	$cft = 'ignore';
@@ -23,7 +23,7 @@
 	$cft = "int";
       }
       break;
-    case "custom_date":
+    case "date":
       if( !strlen($$k) ) {
 	$cfv = 'NULL';
 	$cft = "ignore";
@@ -42,7 +42,7 @@
     $$k = $cfv;
     // check for required fields
     if ($r && !$$k) {
-      $errs[] = ucfirst($v)." ".tr("is a required field");
+      $errs[] = tr("? is required", array(ucfirst(tr($v))));
     }
   }
 

@@ -166,6 +166,11 @@
     unset($login_messages);
   }
 
+  function getVarfieldDataType( $varfieldName ) {
+    preg_match('/^custom_([a-z]+)[0-9]+$/', $varfieldName, $matches);
+    return isset($matches[1])? $matches[1] : null;
+  }
+
   function genVarfield( $formName, $varfield, $value = '' ) {
     // generates html form element to represent
     // the variable field array
@@ -176,8 +181,7 @@
     $value = $zen->ffv($value);
 
     // determine the data type
-    preg_match('/^custom_([a-z]+)[0-9]+$/', $varfield['field_name'], $matches);
-    $type = $matches[1];
+    $type = getVarfieldDataType($varfield['field_name']);
 
     $onblur = "";
     if( $varfield['js_validation'] ) {

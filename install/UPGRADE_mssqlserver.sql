@@ -6,6 +6,7 @@ CREATE TABLE ZENTRACK_BEHAVIOR (
   is_enabled NUMERIC(1),
   sort_order NUMERIC(3),
   field_name varchar(100),
+  field_enabled NUMERIC(1),
   match_all NUMERIC(1),
   PRIMARY KEY (behavior_id)
 );
@@ -24,6 +25,8 @@ CREATE TABLE ZENTRACK_GROUP (
   table_name VARCHAR(50) NOT NULL,
   group_name VARCHAR(100),
   descript VARCHAR(255),
+  eval_type VARCHAR(10),
+  eval_text TEXT,
   PRIMARY KEY (group_id)
 );
 

@@ -865,17 +865,28 @@ class zenTrack extends zen {
    *
    * @param integer $ticket_id
    * @param array $field_values mapped (String)field_name -> (String)value
+   * @param integer $user_id user who edited
+   * @param integer $bin_id bin where edit occured (prevents sql query for ticket)
    */
-  function updateVarfieldVals( $ticket_id, $field_values ) { 
+  function updateVarfieldVals( $ticket_id, $field_values, $user_id = null, $bin_id = null ) { 
+    $a = $this->settings['varfield_tab_name'];
+    $log_entry = $a? 'Updated '.ucfirst(strtolower($a)).' fields' : 'Update Custom Fields';
+    $oldVals = $this->getVarfieldVals($ticket_id);
     foreach($field_values as $key=>$val) {
-      if( strpos($key, 'date') > 0 && $val == 0 ) {
-        $val = 'NULL';
-      }
-      else if( strpos($key, 'number') > 0 && is_null($val) ) {
-        $val = 'NULL';
-      }
+      if( strpos($key, 'date') > 0 && $val == 0 ) { $val = 'NULL'; }
+      else if( strpos($key, 'number') > 0 && is_null($val) ) { $val = 'NULL'; }
+      // find out if value was updated, check strlen so that 0 != '', and so forth
+      if( $val != $oldVals["$key"] ) { $log_entry .= "$key updated: "+$val+"\n"; }
     }
-    return $this->db_update( $this->table_varfield, "ticket_id", $ticket_id, $field_values );
+    $res = $this->db_update( $this->table_varfield, "ticket_id", $ticket_id, $field_values );
+    if( $res && $this->settings['log_edit'] == 'on' ) {
+      // add a log entry
+      $this->add_log( $ticket_id, array('user_id'   => $user_id,
+                                        'bin_id'    => $bin_id,
+                                        'action'    => 'EDIT',
+                                        'entry'     => $log_entry) );
+    }
+    return $res;
   }
 
 
@@ -926,53 +937,31 @@ class zenTrack extends zen {
       }
     }
     
-    // collect a list of the group details and map them
-    // into the existing groups arrays
-    $query = "SELECT * FROM ".$this->table_group_detail;
-    if( $group_ids ) {
-      $query .= " WHERE group_id IN(".join(",",$group_ids).") ";
-    }
-    $query .= " ORDER BY sort_order";
-    $vals = $this->db_queryIndexed($query);
-    if( is_array($vals) ) {
-      foreach($vals as $v) {
-        $k = $v['group_id'];
-        // We go ahead and store the label here since the custom groups have no table
-        // and the label is the same as the value.  Additionally, it serves as a good
-        // default.
-        $groups["$k"]['fields'][] = array('field_value'=>$v['field_value'], 'label'=>$v['field_value']);    
-      }
-    }
-
-    // collect the labels for each detail.  We do this process enmasse
-    // to reduce the number of db queries and increase the overall speed
+    // select all of the fields from the detail table, join to the appropriate
+    // data table for sorting and collecting labels
     foreach($tables as $table=>$grps) {
-      // first we generate a list of all valid entries for the table
-      // and map them in a useful array
+      // figure out which fields represent the id and sorting params
+      // for the current data type table
       $id_field = $this->getDataTypeId($table);
+      $sort_field = $this->getDataTypeSort($table);
       $fields = $this->getDataTypeFields($table);
 
-      // don't bother trying to specify ids here, we will just get them all
-      // since several groups are likely to use this reference, and it is possible
-      // that the number of ids to match could soar into the thousands.  Just
-      // get them all and sort them out.
-      $vals = $this->db_queryIndexed("SELECT {$fields} FROM {$table}");
-      $set = array();
+      // now we will select all entries for groups which match this data
+      // type table and generate labels for them, note that we sort
+      // first on the sort_order from this table and then by the normal
+      // sorting specified in the data type table
+      $query = "SELECT {$fields}, field_value, group_id FROM {$table}, "
+        .$this->table_group_detail." WHERE group_id IN(".join(',',$grps).") "
+        ." AND field_value = {$id_field} ORDER BY sort_order,{$sort_field}";
+      $this->addDebug('generateDataGroupInfo', "{$table}: {$query}", 3);
+      $vals = $this->db_queryIndexed($query);
       if( is_array($vals) ) {
         foreach($vals as $v) {
-          $k = $v[$id_field];
-          $set["$k"] = $this->getDataTypeLabel($table,$v);
-        }
-      }
-        
-      // then we iterate through the groups that use this table
-      // and assign labels to all the values in the group
-      foreach($grps as $g) {
-        for($i=0; $i<count($groups["$g"]['fields']); $i++) {
-          // by retrieving each field in the groups map, we will
-          // find the appropriate lable from our set and put it in.
-          $f = $groups["$g"]['fields'][$i]['field_value'];
-          $groups["$g"]['fields'][$i]['label'] = $set["$f"];
+          // iterate over our values obtained from detail table
+          // and generate entries (with labels) in the groups array
+          $g = $v['group_id'];
+          $l = $this->getDataTypeLabel($table,$v);
+          $groups["$g"]['fields'][] = array('field_value'=>$v['field_value'], 'label'=>$l);          
         }
       }
     }
@@ -1964,6 +1953,7 @@ class zenTrack extends zen {
 
       // create the notify list for this ticket
       $notify_list = array();
+
       // the bin owners
       if( $this->settings["default_notify_owner"] == "on" ) {
         $vars = $this->fetch_bin_roles($params["bin_id"],"manager");
@@ -1973,6 +1963,7 @@ class zenTrack extends zen {
           }
         }
       }
+
       // the bin testers
       if( $this->settings["default_notify_tester"] == "on" ) {
         $vars = $this->fetch_bin_roles($params["bin_id"],"tester");
@@ -2086,8 +2077,36 @@ class zenTrack extends zen {
     $query = "UPDATE ".$this->table_tickets." SET $set WHERE id = $id";
     $this->update_notify_list($t,$params);
     $this->addDebug("update_ticket",$query,3);
-    return( $this->db_result($query) );
+    return $this->db_result($query);
   }      
+
+  function edit_ticket( $id, $user_id, $params ) {
+    if( is_array($id) ) {
+      $t = $id;
+      $tid = $t['id'];
+    }
+    else {
+      $t = $this->get_ticket($id);
+      $tid = $id;
+    }
+    $res = $this->update_ticket($id, $params);
+    if( $res && $this->settings['log_edit'] == 'on' ) {
+      $log_entry = 'Ticket edited:\n\n';
+      foreach($params as $key=>$val) {
+        // check each field to see if it was updated
+        if( $t["$key"] && $t["$key"] != $val ) {
+          $v1 = strlen($val) > 50? substr($val, 0, 50)."..." : $val;
+          $v2 = strlen($t["$key"]) > 50? substr($t["$key"], 0, 50)."..." : $val;
+          $log_entry .= "{$key} changed from [$v1] to [$v2]\n";
+        }
+      }
+      $this->add_log( $tid, array('user_id'   => $user_id,
+                                  'action'    => 'EDIT',
+                                  'entry'     => $log_entry,
+                                  'bin_id'    => $t['bin_id']) );
+    }
+    return $res;
+  }
    
   /*
    *  LOG AND TIME FUNCTIONS 
@@ -3121,7 +3140,7 @@ class zenTrack extends zen {
     case "TASKS":
     case "ZENTRACK_TYPES":
     case "TYPES":
-      return "priority";
+      return "priority, name";
     case "ZENTRACK_USERS":
     case "USERS":
       return "lname, fname";

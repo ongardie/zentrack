@@ -60,7 +60,7 @@
 	}
      }
      // update the ticket info
-     $res = $zen->update_ticket($id,$params);
+     $res = $zen->edit_ticket($id,$login_id,$params);
      // check for errors
      if( !$res ) {
 	$errs[] = tr("Ticket ? could not edit ticket. ",array($id)).$zen->db_error;

@@ -15,12 +15,13 @@
 /**
  * Create a behavior map entry
  */
-function BehaviorMapEntry(group_id, name, matchall, field) {
+function BehaviorMapEntry(group_id, name, matchall, field, disabled) {
   this.group_id = group_id;
   this.name = name;
   this.matchall = matchall;
   this.field = field;
   this.fields = new Array();
+  this.disabled = disabled;
 }
 
 BehaviorMapEntry.prototype.addField = function(name, operator, value) {
@@ -71,6 +72,7 @@ if( is_array($behaviors) ) {
     print ",".$zen->fixJsVal($b['behavior_name']);
     print ",".$zen->fixJsVal($b['match_all']);
     print ",".$zen->fixJsVal($b['field_name']);
+    print ",".($b['field_enabled']? 'false' : 'true');
     print ");\n";
 
     if( is_array($b['fields']) ) {
@@ -247,11 +249,17 @@ function executeBehavior( formObj, behaviorId ) {
     return false;
   }
 
+  // store field modified
+  var fieldModified = false;
+
   // only return field if it exists and was changed
   if( setFormValsUsingGroup(fieldObj, group) ) {
-    return behavior.field;
+    fieldModified = behavior.field;
   }
-  return false;
+
+  // disable/enable field as appropriate
+  fieldObj.disabled = behavior.disabled;
+  return fieldModified;
 }
 
 /**

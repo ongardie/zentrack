@@ -963,6 +963,13 @@
 	  $res = $zen->update_ticket($id, $params);
 	  if( $res ) {
 	    egate_log("Estimated hours updated",3);
+	    // create a ticket log
+	    $name = $zen->formatName($user_id);
+	    $log_entry = "{$action} added via egate system by $name";
+	    $zen->add_log( $id, array('user_id' => $user_id, 
+				      'bin_id'  => $ticket['bin_id'],
+				      'entry'   => $log_entry,
+				      'action'  => 'ESTIMATE');
 	  }
 	  else {
 	    egate_log("Estimate hours failed",2);

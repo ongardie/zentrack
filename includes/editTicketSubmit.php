@@ -61,10 +61,10 @@ if( !$zen->checkAccess($login_id,$ticket["bin_id"],"edit") ) {
          $params["$f"] = $$f;
      }
      // update the ticket info
-     $res = $zen->update_ticket($id,$params);
+     $res = $zen->edit_ticket($id,$login_id,$params);
      // check for errors
      if( !$res ) {
-   $errs[] = tr("System Error").": ".tr("Ticket could not be edited.")." ".$zen->db_error;
+       $errs[] = tr("System Error").": ".tr("Ticket could not be edited.")." ".$zen->db_error;
      }
   }
 

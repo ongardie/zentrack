@@ -27,7 +27,7 @@
      $start_date = $zen->getDefaultValue("default_start_date");
 ?>     
 
-<form method="post" name="ticketForm" action="<?=($td)? "editTicketSubmit.php" : "$rootUrl/addSubmit.php"?>">
+<form method="post" name="ticketForm" action="<?=($td)? "editTicketSubmit.php" : "$rootUrl/addSubmit.php"?>" onSubmit='return validateTicketForm()'>
 <input type="hidden" name="id" value="<?=strip_tags($id)?>">
 
   
@@ -288,8 +288,7 @@ value="<?=($deadline)?$zen->showDate(strip_tags($deadline)):""?>">
  }
 ?>
 
-
-  
+ 
 <tr>
   <td colspan="2" class="subtitle">
     <?=tr("Description")?>
@@ -314,3 +313,64 @@ value="<?=($deadline)?$zen->showDate(strip_tags($deadline)):""?>">
   </td>
 </tr>
 </table>
+
+<script language='Javascript' type='text/javascript'>
+
+ function validateTicketForm() {
+   var errs = new Array();
+   if( !document.ticketForm.title.value ) {
+     errs[ errs.length ] = "<?=tr("? is required",array( tr("Title") ))?>";
+   }
+   
+<?
+ $varfields = $zen->getCustomFields(0,'Ticket', 'New');
+   if( is_array($varfields) && count($varfields) ) {
+     foreach($varfields as $v) {
+       $k = $v['field_name'];
+       $l = $v['field_label'];
+       if( $v['js_validation'] ) {
+	 print preg_replace('/\{form\}/', 'document.ticketForm', $v['js_validation']);
+       }
+       else {
+	 $f = "document.ticketForm.{$k}";
+	 $e = 'errs[ errs.length ]';
+	 switch( getVarfieldDataType($k) ) {
+	 case "menu":
+	   // if the value of the menu selection is '', then
+	   // the required status is significant
+	   if( $v['is_required'] ) {
+	     print "if( {$f}.options[ {$f}.selectedIndex ].value == '' )"
+	       . " { {$e} = '{$l} is required'; }\n";
+	   }
+	 case "boolean":
+	   // no validation for checkboxes
+	   break;
+	 case "number":
+	   // make sure it is a valid number
+	   print "if( {$f}.value.match( /[^0-9.]/ ) ) { {$e} = '"
+	     .tr('? is not a valid number',array(tr($l)))."'; }\n";
+	 default:
+	   // nothing to do for dates or strings, just
+	   // check the required status
+	   // numbers fall through to here also
+	   if( $v['is_required'] ) {
+	     print "if( !{$f}.value ) { {$e} = '"
+	       .tr('? is required',array(tr($l)))."'; }\n";
+	   }
+	 }
+       }
+     }
+   }
+?>
+   if( errs.length > 0 ) {
+     var str = "<?=tr("Please correct the following errors:")?>\n----------\n";
+     for( var i=0; i < errs.length; i++ ) {
+       str += errs[i]+"\n";
+     }
+     alert(str);
+     return false;
+   }
+   return true;
+ }
+
+</script>

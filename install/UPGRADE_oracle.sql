@@ -6,6 +6,7 @@ CREATE TABLE ZENTRACK_BEHAVIOR (
   is_enabled NUMBER(1),
   sort_order NUMBER(3),
   field_name varchar2(100),
+  field_enabled NUMBER(1),
   match_all NUMBER(1),
   CONSTRAINT behavior_pk PRIMARY KEY (behavior_id)
 );
@@ -23,6 +24,8 @@ CREATE TABLE ZENTRACK_GROUP (
   table_name varchar2(50) NOT NULL,
   group_name varchar2(100),
   descript varchar2(255),
+  eval_type VARCHAR2(10),
+  eval_text VARCHAR2(4000),
   CONSTRAINT group_pk PRIMARY KEY (group_id)
 );
 
@@ -61,7 +64,7 @@ CREATE TABLE ZENTRACK_VARFIELD_IDX (
   show_in_custom NUMBER(1) default 0,
   show_in_detail NUMBER(1) default 0,
   show_in_new    NUMBER(1) default 0,
-  js_validation VARCHAR2(2000)
+  js_validation VARCHAR2(4000)
 );
 
 create sequence behavior_id_seq       start with 1001 nocache;

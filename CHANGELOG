@@ -7,6 +7,15 @@
 
 ----- V2.5 (in development) ----
 
+2004-08-12, Kato
+  Improved logging (egate and editing fxns)
+
+  Added eval methods to upgrade scripts and build scripts
+  Now possible to add js_validation to variable fields
+  field_enabled added/implemented for behaviors (to disable/enable fields)
+  eval_type & eval_text added to groups to support php/javascript formulas
+
+
 2004-08-11, cfalonso
   Stored value wasn't correctly selected in custom_menu fields. Fixed.
     - zentrack_2/includes/headerInc.php 1.38
