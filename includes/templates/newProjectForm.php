@@ -240,7 +240,7 @@ value="<?=($deadline)?$zen->showDate(strip_tags($deadline)):""?>">
 </tr>
 <tr>
   <td class="titleCell" colspan="2" align="center">
-  <?=tr("Click button to")?> <?=($TODO=='EDIT'):tr("save your changes"):tr("create your ticket")?>
+  <?=tr("Click button to")?> <?=($TODO=='EDIT')?tr("save your changes"):tr("create your ticket")?>
   </td>
 </tr>
 <tr>
