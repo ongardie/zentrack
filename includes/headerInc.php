@@ -60,8 +60,8 @@
    */
   //Create the initialization array for the translator object
   $translator_init = array(
-     'domain' => 'test',
-     'path' => './',
+     'domain' => 'translator',
+     'path' => "$libDir/translations",
      'locale' => $lang
   );
   $translator_init['zen'] =& $zen;
