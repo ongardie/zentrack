@@ -13,6 +13,10 @@ abstraction, and endless possibilities for project expansion.
 
 ----- VERSION 2.5.0.3 (development) -----
 
+2005-02-25, cfalonso
+  Fixed typo in seed file for mysql
+    - zentrack_2/install/seed_mysql.sql 1.45
+
 2005-02-24, cfalonso
   Enabled email_accept option
     - zentrack_2/includes/zenTrack.class 1.173
