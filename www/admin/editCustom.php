@@ -21,6 +21,19 @@
 	$j = 0;
       for( $i=0; $i<count($newFieldLabel); $i++ ) {
 	if( $newFieldLabel[$i] ) {
+          $varfield_check = array(
+                            'newFieldName[$i]'      => "alphanum",
+                            'newFieldLabel[$i]'     => "alphanum",
+                            'newSortOrder[$i]'      => "int",
+                            'newIsRequired[$i]'     => "int",
+                            'newUseForProject[$i]'  => "int",
+                            'newUseForTicket[$i]'   => "int",
+                            'newShowInSearch[$i]'   => "int",
+                            'newShowInList[$i]'     => "int",
+                            'newShowInCustom[$i]'   => "int",
+                            'newShowInDetail[$i]'   => "int"
+                             );
+          $zen->cleanInput($varfield_check);
 	  $updateParams = array( 
                 "field_name"		=> $newFieldName[$i],
                 "field_label"		=> $newFieldLabel[$i],
