@@ -9,6 +9,9 @@
   Completed the get_notify_recipients($ticket_id) method of the zenTrack
   class.  It has been tested and fits the give requirements.
     - includes/zenTrack.class v1.48
+  The rest of the functions have been filled out and put through some quick 
+  sanity testing.  Needs some more thourough testing probably.
+    - includes/zenTrack.class v1.49
 
 2003-02-14, Altman
   Stubbed out functions in zenTrack.class and added entry for new table
