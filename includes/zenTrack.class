@@ -1215,7 +1215,7 @@ class zenTrack extends zen {
                     ." ($v) appears to be invalid", 2);
                }
                else {
-                  $v = $w['field_value']; 
+                  $v = $w[0];
                }
              }
              $vals[$key]['matches'][] = array('field_name'     => $n, 
