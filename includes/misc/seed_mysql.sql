@@ -117,9 +117,9 @@ INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (64,
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (65,'log_pending','on','Create a log when status is set to pending');
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (66,'log_attachment','on','Create a log entry when an attachment is added.');
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (67,'system_name','zenTrack','Name of the zenTrack ticketing system displayed to users');
-INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (68,'url_view_attachment','/viewAttachment.php','Link to script which displays attachments in a secure manner (for server integrity)');
-INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (69,'url_view_log','/viewLog.php','Link to script which displays an individual log entry');
-INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (70,'url_view_ticket','/ticket.php','Link to script which displays ticket information');
+INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (68,'url_view_attachment','viewAttachment.php','Link to script which displays attachments in a secure manner (for server integrity)');
+INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (69,'url_view_log','viewLog.php','Link to script which displays an individual log entry');
+INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (70,'url_view_ticket','ticket.php','Link to script which displays ticket information');
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (71,'allow_pwd_save','off','Allows users to save password in a cookie(fairly secure/not available until v2.1)');
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (72,'check_pwd_simple','on','System will refuse lazy passwords');
 
