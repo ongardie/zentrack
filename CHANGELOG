@@ -17,6 +17,12 @@
     - includes/zenTrack.class v1.77
     - includes/templates/newTicketForm.php 1.21
     - includes/templates/newProjectForm.php 1.17
+  Fixed error in help message for email gateway
+  it said to enter users name, should be email address
+    - includes/tempalates/email/form_help.template 1.3
+  Enhanced the subject parsing logic to try and deduce improperly formatted
+  Subjects and get the right info out
+    - includes/egate_utils.php 1.19
 
 2003-03-12, MLively
   Created Translation Engine 
