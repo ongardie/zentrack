@@ -15,7 +15,7 @@
    
   <p><?=$zen->settings["system_name"]?> is an open source variant of the 
      <a href='http://sourceforge.net/projects/zentrack'>zenTrack project</a>. It
-     is protected under the <a href='<?=$helpUrl?>/gpl.php'>GPL 2.0 Liscence</a>.</p>
+     is protected under the <a href='<?=$helpUrl?>/gpl.php'>GPL 2.0 License</a>.</p>
 
   <p>The system was originally written by <a href='http://kato.was-here.org'>Michael 
    "Kato" Richardson</a> (<a href='mailto:phpzen@users.sourceforge.net?subject=zenTrack'>phpzen@users.sourceforge.net</a>).  

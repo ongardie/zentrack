@@ -14,12 +14,7 @@
   </tr>
   <tr>
   <td <?=$nav_rollover_text?>>
-  <a class='subMenuLink' href="<?=$rootUrl?>/help/install.php"><?=tr("Installation")?></a>
-  </td>
-  </tr>
-  <tr>
-  <td <?=$nav_rollover_text?>>
-  <a class='subMenuLink' href="<?=$rootUrl?>/help/api.php"><?=tr("API")?></a>
+  <a class='subMenuLink' href="<?=$rootUrl?>/help/support.php"><?=tr("Support")?></a>
   </td>
   </tr>
   

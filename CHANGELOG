@@ -9,8 +9,13 @@
 
 2003-04-14, Rob Hillis
   Fixed broken link to GPL License in Help section
-    - zentrack/www/help/gpl.php
-    - zentrack/includes/misc/LICENSE-GPL-2.0
+   - zentrack/www/help/gpl.php
+   - zentrack/includes/misc/LICENSE-GPL-2.0
+  Added a support page.
+   - zentrack/www/help/support.php
+   - zentrack/includes/leftHelp.php
+  Cleaned up the about page.
+	- zentrack/www/help/about.php
 
 2003-04-10, Kato
   Removed extra shebang (causing stdout message) from included file

@@ -25,6 +25,7 @@
       <br><a href='<?=$helpUrl?>/gpl.php'>GPL License Agreement</a>
       <br><a href='http://sourceforge.net/projects/zentrack'>The zenTrack Project</a>
       <br><a href='<?=$helpUrl?>/install.php'>Installation</a>
+	  <br><a href='<?=$helpUrl?>/support.php'>Support</a>
     </ul>
   </ul>
   </blockquote>
