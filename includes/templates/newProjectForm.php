@@ -16,7 +16,7 @@
      $start_date = strtotime($zen->settings["default_start_date"]);
 ?>     
 
-<form method="post" name="newProjectForm" action="<?=($TODO=='EDIT')? "$rootUrl/admin/editProjectSubmit.php" : "$rootUrl/addProjectSubmit.php"?>">
+<form method="post" name="newProjectForm" action="<?=($td)? "editProjectSubmit.php" : "$rootUrl/addProjectSubmit.php"?>">
 <input type="hidden" name="id" value="<?=strip_tags($id)?>">
   
 <table width="640" align="left" cellpadding="2" cellspacing="2" bgcolor="<?=$zen->settings["color_background"]?>">
