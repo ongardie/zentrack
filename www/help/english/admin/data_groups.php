@@ -139,7 +139,13 @@
     
     <p>The special property <b>{form}</b> can be used as a pointer to the current
     form object (it gets translated to window.document.formName during 
-    evaluation).</p>
+    evaluation).  This is useful for pointing to other fields in the form
+    using javascript.</p>
+    
+    <p>The special property <b>{field}</b> can be used as a pointer to the current
+    field object (it gets translated to window.document.formName.fieldName).
+    This can be useful for using the same javascript in multiple behaviors
+    (behaviors are discussed in the next section).
     
     <p>The javascript code is expected to create an array named <b>x</b> which
     will contain a <b>simple array</b> of values or an <b>array of objects</b>

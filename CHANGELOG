@@ -20,6 +20,10 @@ abstraction, and endless possibilities for project expansion.
     - zentrack_2/includes/templates/fields/menu.template 1.2
     - zentrack_2/includes/templates/fields/checkbox.template 1.2 (No real change in this one)
 
+2005-03-08, Kato
+  Added {field} property to data group javascript evals.  This allows a direct
+  reference to the current field when used from behaviors.
+
 2005-03-08, cfalonso
   No tickets were shown when Assigned to... was selected  -Fixed
     - zentrack_2/www/assignedTickets.php 1.12
@@ -46,11 +50,7 @@ abstraction, and endless possibilities for project expansion.
     - zentrack_2/includes/editTicketSubmit.php 1.14
     - zentrack_2/www/addSubmit.php 1.24
 
-2005-02-28, kato
-  Removed hypot() dependency, since some impls of php seem
-  to be missing this function.
-    - zentrack_2/includes/zenGraph.class 1.8
-
+2005-02-28, Kato
   Implemented fieldMap in project/ticket edit screens
     - zentrack_2/includes/ZenFieldMap.class 1.6
     - zentrack_2/includes/ZenSessionManager.class 1.2
@@ -81,8 +81,11 @@ abstraction, and endless possibilities for project expansion.
     - zentrack_2/includes/sorting.php 1.2
     - zentrack_2/includes/templates/listTickets.php 1.23
     - zentrack_2/includes/templates/searchList.php 1.16
-  
-  
+
+  Removed hypot() dependency, since some impls of php seem
+  to be missing this function.
+    - zentrack_2/includes/zenGraph.class 1.8
+
 2005-02-25, cfalonso
   Fixed typo in seed file for mysql
     - zentrack_2/install/seed_mysql.sql 1.45
