@@ -10,10 +10,8 @@ include_once $rootPath . '\install\utilities\tests\ZenDatabase_test.php';
 
 
 $suite = new PHPUnit_TestSuite('ZenDatabaseTest');
+$suite->addTestSuite('ZenQueryTest');
 $result = PHPUnit::run($suite);
-echo $result->toHTML();
 
-$suite = new PHPUnit_TestSuite('ZenQueryTest');
-$result = PHPUnit::run($suite);
 echo $result->toHTML();
 ?>
