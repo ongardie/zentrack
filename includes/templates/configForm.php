@@ -21,12 +21,13 @@
          unset($js_vals);
          $num = count($vars) + $more;
 	 if( is_array($vars) ) {
+	   $newtext = "-".tr("new")."-";
 	   $j = 0;
 	   $t = "\t<td class='bars'>";
 	   $te = "</td>\n";
 	   foreach($vars as $v) {
 	     print "<tr>\n";
-	     $i = ($v["$id_type"])? $v["$id_type"] : "-".tr("new")."-";
+	     $i = ($v["$id_type"])? $v["$id_type"] : $newtext;
 	     print "$t$i$te";
 	     print "<input type='hidden' name='newID[$j]' value='$v[$id_type]'>\n";
 	     print "$t<input type='text' name='newName[$j]' "
@@ -44,7 +45,7 @@
 	 }
 	 for( $i=0; $i<$more; $i++ ) { 
 	   print "<tr>\n";
-	   print $t."-new-".$te;
+	   print $t.$newtext.$te;
 	   print "<input type='hidden' name='newID[$j]' value=''>\n";
 	   print "$t<input type='text' name='newName[$j]' "
 	     ." value='' size='20' maxlength='25'>$te";
@@ -106,4 +107,11 @@
 	   return true;
 	 }
       </script> 
+
+
+
+
+
+
+
 

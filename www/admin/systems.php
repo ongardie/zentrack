@@ -79,12 +79,3 @@
   include("$libDir/footer.php");
 
 }?>
-
-
-
-
-
-
-
-
-

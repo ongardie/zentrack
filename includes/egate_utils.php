@@ -948,12 +948,16 @@
 			     "user_id"   => $user_id,
 			     "ticket_id" => $id
 			     );
-	  if( isset($body["activity"]) && in_array(strtoupper($body["activity"]),$zen->getActivities()) ) {
+	  $logParams["hours"] = $zen->checkNum($body["hours"])?
+	    $zen->checkNum($body["hours"]) : null;
+	  if( isset($body["activity"]) 
+	      && in_array(strtoupper($body["activity"]),$zen->getActivities()) ) {
 	    $logParams["action"] = strtoupper($body["activity"]);
 	  } else {
 	    $logParams["action"] = "NOTE";
 	  }
-	  $res = $zen->add_log($id,$logParams);
+	  $res = $zen->log_ticket($id,$user_id,$logParams["action"],
+				  $logParams["hours"], $logParams["entry"]);
 	  if( $res ) {
 	    egate_log("Log entry added",3);
 	  }
@@ -963,7 +967,7 @@
 	  }
 	}
 	else {
-	  egate_log("There was no text to submit to the log",2);
+	  egate_log("Log entry failed, there was no message to add",2);
 	  $success = false;
 	}
 	break;

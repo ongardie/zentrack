@@ -44,6 +44,12 @@
   */
 
   function admin_number_pulldown( $max = '', $sel = '' ) {
+    static $cache_pulldown;
+    if( is_array($cache_pulldown) 
+	&& $cache_pulldown[0] == $max
+	&& $cache_pulldown[1] == $sel ) {
+      return $cache_pulldown[2];
+    }
     if( !$max )
       $max = 1;
     $text = "<option value=''>---</option>\n";
@@ -51,6 +57,7 @@
       $s = ($i == $sel)? " selected" : "";
       $text .= "<option$s>$i</option>\n";
     }
+    $cache_pulldown = array($max,$sel,$text);
     return $text;
   }
 
