@@ -3423,7 +3423,7 @@ class zenTrack extends zen {
       .$this->table_reports_index
       ." i,".$this->table_reports." r WHERE i.report_id = r.report_id AND ("
       ."(i.bid IS NULL OR i.bid = '') "
-      ." OR (i.user_id IS NULL or i.user_id = '') ";
+      ." AND (i.user_id IS NULL or i.user_id = '') ";
     if( $bin_id ) {
       $query .= (is_array($bin_id))? 
         " OR i.bid IN(".join(",",$bin_id).")" : " OR i.bid = $bin_id";
