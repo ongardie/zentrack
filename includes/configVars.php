@@ -19,16 +19,16 @@
   */
   
    // the root includes folder
-   $this->libDir         = "zentrack/includes";
+   $this->libDir         = "/web/phpzen/sub/devtrack/includes";
 
    // the folder under includes holding utility files
-   $this->listDir        = "zentrack/includes/lists";
+   $this->listDir        = "/web/phpzen/sub/devtrack/includes/lists";
    
    // the folder under includes holding templates
-   $this->templateDir    = "zentrack/includes/templates";
+   $this->templateDir    = "/web/phpzen/sub/devtrack/includes/templates";
    
    // the attachments folder under includes
-   $this->attachmentsDir = "zentrack/includes/attachments"; 
+   $this->attachmentsDir = "/web/phpzen/sub/devtrack/includes/attachments"; 
 
    
   /*
@@ -48,9 +48,9 @@
   */
 
    $this->database_type      = 'mysql';          //mysql,oracle,postgres,sqlserver
-   $this->database_instance  = 'zentrack';	 //database name
-   $this->database_login     = 'zentrack';           //database login
-   $this->database_password  = 'abc[123]';           //database password
+   $this->database_instance  = 'devtrack';	 //database name
+   $this->database_login     = 'test';           //database login
+   $this->database_password  = 'test';           //database password
    $this->database_host      = 'localhost';      //host name, if on same machine, 
                                                  //this is localhost
 

@@ -116,7 +116,7 @@
      // prints all the system messages to
      // the screen
      // if $flag is given, then it only prints
-     // up until the first division (-----)
+     // up until the first greyed entry (only print new entries)
      global $login_messages;
      global $zen;
      
@@ -127,6 +127,8 @@
 	   } else if( $style != "smallGrey" ) {
 	      $style = "smallBold";
 	   }
+	   if( $style == "smallGrey" && $flag )
+	     break;
 	   print "<br><span class='$style'>";
 	   print "[".$zen->showTime($v[1])."] ";
 	   print $v[0]."</span>\n";
