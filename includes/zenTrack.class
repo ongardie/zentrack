@@ -2299,7 +2299,7 @@ class zenTrack extends zen {
      if( !is_array($params) || !count($params) )
        return false;
      unset($params["created"]);
-     return $this->db_insert($table_reports,$params);
+     return $this->db_insert($this->table_reports,$params);
    }
    
    /**
