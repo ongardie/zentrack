@@ -216,7 +216,6 @@
     case "menu":
       $v = $varfield['field_value'];
       $group = $_SESSION['data_groups']["$v"];
-      print "looking for group $v: $group<br>\n";//debug
       if( $group ) {
 	// get the fields for our group
 	$opts = $group['fields'];

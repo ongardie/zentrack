@@ -94,9 +94,11 @@
       $num = $zen->updateDataGroupDetails($group_id, $elements) ;
 
       // update the session info with new changes
-      $vars = $zen->generateDataGroupInfo( array($group_id) );
-      $_SESSION['data_groups'][$group_id] = $vars[$group_id];
-      
+      if( $num ) {
+	$vars = $zen->generateDataGroupInfo( array($group_id) );
+	$_SESSION['data_groups'][$group_id] = $vars[$group_id];
+      }
+
       // print useful information for user
       $msg = tr("? of ? elements were saved in the selected group. Updates complete", 
 		array($num, count($elements)));

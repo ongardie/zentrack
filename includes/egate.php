@@ -6,6 +6,7 @@
 
   // include the utils and config
   include("egate_utils.php");
+  //include("egate_utils_relaxed.php"); //less strict rules about input to egate system
   
   // read email from stdin
   $input = join("",file("php://stdin"));  

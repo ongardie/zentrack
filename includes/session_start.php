@@ -69,8 +69,7 @@ $session_vars = array("login_name",
 		      "login_messages",
 		      "login_language",
 		      "project_mode",
-		      "ticket_mode",
-		      "data_groups");
+		      "ticket_mode");
 
 if( is_array($_SESSION) ) {
   foreach($session_vars as $s) {

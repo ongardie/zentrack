@@ -905,6 +905,8 @@ class zenTrack extends zen {
       $query .= " WHERE group_id IN(".join(",",$group_ids).") ";
     }
     $vals = $this->db_queryIndexed($query);
+    $this->addDebug("generateDataGroupInfo", $query, 3);
+
     // if there are no groups, then skip this process
     if( !$vals || !count($vals) ) {
       $this->addDebug("generateDataGroupInfo", "There appear to be no data groups, skipping", 2);
@@ -926,10 +928,11 @@ class zenTrack extends zen {
     
     // collect a list of the group details and map them
     // into the existing groups arrays
-    $query = "SELECT * FROM ".$this->table_group_detail." ORDER BY sort_order";
+    $query = "SELECT * FROM ".$this->table_group_detail;
     if( $group_ids ) {
       $query .= " WHERE group_id IN(".join(",",$group_ids).") ";
     }
+    $query .= " ORDER BY sort_order";
     $vals = $this->db_queryIndexed($query);
     if( is_array($vals) ) {
       foreach($vals as $v) {
