@@ -61,7 +61,7 @@
     }
     if( $key == 'contacts' && 
 	($zen->settings['allow_contacts'] != 'on' ||
-	 !$zen->checkAccess($login_id, $bin_id, 'level_contacts') ) {
+	 !$zen->checkAccess($login_id, $bin_id, 'level_contacts')) ) {
       // do not show contacts if this is off
       continue;
     }
