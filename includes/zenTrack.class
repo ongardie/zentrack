@@ -1280,6 +1280,10 @@ class zenTrack extends zen {
     // if archive_flag = 1, then searches ticket archives as well
     // if archive_flag = 2, then searches archives only
 
+    //added for paging feature
+    $pageNumber = array_key_exists('pageNumber', $_GET)? 
+                $this->checkNum($_GET['pageNumber']) : 0;
+    
     $columns = array(
                      "lid",     "ticket_id", 
                      "user_id",  "action",
@@ -1295,10 +1299,17 @@ class zenTrack extends zen {
     else {
       $tables = $this->table_logs;
     }
+
     $query = "SELECT ".join(",",$columns)
       ." FROM $tables WHERE $where ORDER BY created DESC";
     $this->addDebug("search_logsQuery",$query,2);
-    return(  $this->db_queryIndexed($query) );
+
+    //paging feature
+    $numtoshow = $this->settings['paging_max_rows'];
+    $start = $pageNumber * $numtoshow;
+    $this->total_records = $this->db_getrowcount($query);
+    return($this->db_getlimitedIndex($query,$numtoshow,$start));
+    //    return(  $this->db_queryIndexed($query) );
   }
 
   function search_tickets( $params, $andor = 'AND', 
