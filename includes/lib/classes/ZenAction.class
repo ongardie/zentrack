@@ -1,14 +1,6 @@
 <? /* -*- Mode: C; c-basic-indent: 3; indent-tabs-mode: nil -*- ex: set tabstop=3 expandtab: */ 
 
 /** 
- * The ZenAction class is a base class for actions
- * 
- * This is meant to be extended by TicketAction, UserAction, etc..
- * those specific classes will provide the needed params to run activate()
- * appropriately
- * 
- * This class should not be called directly for use
- *
  * @package zen 
  */
 

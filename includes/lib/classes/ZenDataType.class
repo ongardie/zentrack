@@ -16,13 +16,16 @@ class ZenDataType extends Zen {
    *
    * @param Object $child is a $this reference from the calling object
    * @param integer $id the id to load
+   * @param ZenList $zenlist (optional) passing this avoids a database call to load the object
    */
-  function ZenDataType( $child, $id ) { 
+  function ZenDataType( $child, $id, $zenlist = null ) { 
     $this->Zen();
     $this->_childobj = $child;
-    if( $id ) {
-      $this->_id = $id;
-      $this->_load();
+    if( $id && is_object($zenlist) ) {
+      $this->_loadFromData($zenlist,$id);
+    }
+    else if( $id ) {
+      $this->_load($id);
     }
     // set the primary key field for this table
     $this->_primarykey = getPrimaryKey( $this->_childobj );
@@ -62,17 +65,16 @@ class ZenDataType extends Zen {
   function setField( $field, $value ) { }
 
   /**
-   * Returns the meta data for all fields associated with this Object type
-   * in the form of a ZenMetaTable object
-   */
-  function getMetaData() { }
-
-  /**
    * Saves changes to database
    *
    * This should check all associated fields for obvious
    * validation issues and return false and set a message
    * if there is an integrity issue
+   *
+   * The data for the fields can be obtains from the getMetaData() method
+   *
+   * The save function should ALWAYS update the FIELD_DEFS entry for the
+   * appropriate table
    *
    * Most likely this will be overridden by several methods
    * This sets the $this->_changed flag to false upon completion
@@ -94,30 +96,28 @@ class ZenDataType extends Zen {
    * Only works if $this->_id has been set
    * Checks $this->loaded() and causes an error message if already loaded
    *
-   * @private
+   * @param integer $id is the id to be loaded (stored in $this->_id on success)
    * @return boolean load succeeded, id was valid (actually returns $this->loaded())
    */
-  function _load() { }
+  function _load( $id ) { }
 
   /**
-   * Creates a ticket object from a data set provided by a ZenList class type
+   * Static method to create a data type object from a data set provided by a ZenList class type
    *
-   * The data set will be validated to insure all rows are present and correct
-   * It will not be checked to insure it matches the db entry.
+   * This creates a data type from a ZenList data structure without requiring an additional
+   * database call to load the object
    *
-   * The ONLY ACCEPTABLE USE of this class is by constructing the object from
-   * the data row provided by ZenList types.
-   *
-   * @param array $data is the COMPLETE data set for this database row
-   * @return boolean succeeded and validated
+   * @param ZenList $zenlist is the ZenList (or subclass of) to abstract the data from
+   * @param integer $id is the id to load (stored in $this->_id if successful)
+   * @return boolean validated and loaded (true if the item is found in the list)
    */
-  function loadFromListData( $data ) { }
+  function _loadFromListData( $zenlist, $id ) { }
 
   /****************
    * VARIABLES
    ***************/
 
-  /** @var integer $_id the id associated with this object (used by isEmtpy() */
+  /** @var integer $_id the id associated with this object (used by loaded() */
   var $_id = 0;
 
   /** @var mixed $_fields are the fields of the current object */

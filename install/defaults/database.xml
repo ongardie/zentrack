@@ -1,0 +1,218 @@
+<database>
+ <version>3.0.0a</version>
+
+ <abstractTables>
+    <table name="ABSTRACT_DESCRIPTORS">
+        <column name="name" type="string" ftype="text" label="Name">
+	  <size>50</size>
+	  <description>The name or title of the entry</description>
+	</column>
+	<column name="description" type="string" ftype="text" label="Description"/>      
+    </table>
+
+    <table name="ABSTRACT_DATA_TYPE">
+      <description>Includes common fields for data types to be used as objects</description>
+      <inherit>ABSTRACT_DESCRIPTORS</inherit>
+      <columns>
+	<column name="priority" type="shortint" ftype="text" label="Priority">
+	  <description>The order this item will appear in, highest appears at top, items of same priority are sorted alphabetically</description>
+        </column>
+	<column name="active" type="byte" ftype="checkbox" label="Active">
+	  <default>1</default>
+	  <description>Controls whether this item is actively used... items cannot be deleted, but they can be deactivated by unchecking this box</description>
+	</column>
+      </columns>
+    </table>
+
+    <table name="ABSTRACT_INDEX_TYPES">
+      <description>Includes common index fields for associations</description>
+      <columns>
+        <column name="user_id" type="integer" ftype="searchbox">
+	  <reference>user.user_id</reference>
+	</column>
+        <column name="bin_id" type="integer" ftype="selection">
+	  <reference>bin.bin_id</reference>
+	</column>
+      </columns>
+    </table>
+
+    <table name="ABSTRACT_COMMON_TYPES">
+      <description>Includes the common primary keys</description>
+      <inherit>ABSTRACT_INDEX_TYPES</inherit>
+      <columns>
+        <column name="ticket_id" type="integer" ftype="searchbox">
+	  <reference>ticket.ticket_id</reference>
+	</column>
+      </columns>
+    </table>
+ </abstractTables>
+
+ <tables>
+    <table name="ACCESS">
+      <description>Access Priviledges</description>
+      <columns>
+        <column name="access_id" type="primarykey" ftype="hidden"/>
+	<column name="bin_id" type="integer" ftype="selection">
+	  <reference>bin.bin_id</reference>
+	</column>
+	<column name="role_id" type="integer" ftype="selection">
+	  <reference>role.role_id</reference>
+	</column>
+	<column name="action_id" type="integer" ftype="selection">
+	  <reference>action.action_id</reference>
+	</column>
+	<column name="yesorno" type="byte" ftype="checkbox" label="Active">
+      </columns>
+      <indexList>
+        <index name="access_ba">bin_id,action_id</index>
+	<index name="access_bra">bin_id,role_id,action_id</index>
+      </indexList>
+    </table>
+
+    <table name="ACTION">
+      <description>Actions and their properties</description>
+      <inherit>ABSTRACT_DATA_TYPE</inherit>
+      <columns>
+        <column name="action_id" type="primarykey" ftype="hidden"/>
+	<column name="action_type" type="value" ftype="selection" label="Action Type"/>
+	  <criteria type="list">Normal,Script,URL</criteria>
+	</column>
+	<column name="helper" type="value" ftype="text" label="Action Helper"/>	
+      </columns>
+    </table>
+
+    <table name="ACTION_PARAMS">
+      <description>Action parameters to be passed for each action</description>
+      <columns>
+        <column name="action_params_id" type="primary_key" ftype="hidden"/>
+	<column name="param_number" type="shortint" ftype="text" label="Order"/>
+	<column name="param_type" type="value" ftype="select" label="Parameter Type">
+	  <!-- the selections for special value may require a definition in the value field -->
+	  <criteria type="list">
+	      Action ID
+	      Action Name
+	      Trigger ID
+	      Environment Variable
+	      Ticket Field
+	      User Field
+	      Login Field
+	      Timestamp
+	      Date
+	      Text
+	  </criteria>
+	  <description>
+	     This Field defines what sort of parameter will be used, the value of which will usually be found in the Value field.  Note that the correct object type must be available to make this work.  I.e. you have to be on a page with a user_id to access user fields, or a page with a ticket_id to access ticket fields.
+
+	     Action ID: the id of the action occuring
+	     Action Name: the name of the action occuring
+	     Trigger ID: the trigger causing the action, if applicable
+	     Environment Variable: an apache environment setting (HTTP_REFERRER, USER_AGENT, etc)
+	     Ticket Field: provide a column from the TICKET table (ticket_id,bin_id,owner_id,etc)
+	     User Field: provide a field from the USER table (user_id,fname,lname,etc)
+	     Login Field: refers to currently logged in user (login_id, login_role, login_name, login_inits)
+	     Timestamp: provides a unix timestamp representing right now (no value needed)
+	     Date: provides a date representing right now, the value should be a strftime() format
+	     Text: pass whatever is typed in the Value field	     
+	</column>
+	<column name="param_value" type="string" ftype="text" label="Value"/>
+      </columns>
+      <indexList>
+         <index name="act_prms_ordr">param_number</index>
+      </indexList>
+    </table>
+
+    <table name="ATTACHMENT">
+      <description>References attachments (physically stored in includes/cache/attachments)</description>
+      <inherit>ABSTRACT_DESCRIPTORS</inherit>
+      <columns>
+        <column name="attachment_id" type="primarykey" ftype="immutable"/>
+	<column name="ticket_id" type="integer" ftype="immutable" label="Ticket ID">
+	  <reference>ticket.ticket_id</reference>
+	</column>
+	<column name="log_id" type="integer" ftype="immutable" label="Log Entry">
+	  <reference>log.log_id</reference>
+	</column>
+	<column name="file_name" type="value" ftype="immutable" label="File Name"/>
+	<column name="file_type" type="value" ftype="immutable" label="File Type"/>
+      </columns>
+      <indexList>
+        <index name="attchmt_ordr">name</index>
+      </indexList>
+    </table>
+
+    <table name="BIN">
+      <description>Bins and their properties</description>
+      <inherit>ABSTRACT_DATA_TYPE</inherit>
+      <columns>
+        <column name="bin_id" type="primarykey" ftype="immutable" label="Bin ID"/>
+      </columns>
+      <indexList>
+        <index name="bin_ordr">priority,name</index>
+	<index name="bin_actv">active</index>
+      </indexList>
+    </table>
+    
+    <table name="FIELD_DEFS">
+      <description>The information about tables and their fields</description>
+      <columns>
+	<column name="col_unique" type="byte" ftype="hidden"/>
+	<column name="col_ftype" type="value" ftype="hidden"/>
+	<column name="col_unique" type="byte" ftype="hidden"/>
+	<column name="col_notnull" type="byte" ftype="hidden"/>
+	<column name="col_default" type="string" ftype="hidden"/>
+	<column name="col_reference" type="string" ftype="hidden">
+	  <size>50</size>
+	</column>
+        <column name="col_crit_type" type="value" ftype="hidden"/>
+	<column name="col_criteria" type="text" ftype="hidden"/>	
+        <column name="table_name" type="value" ftype="immutable" label="Table"/>
+	<column name="col_name" type="value" ftype="immutable" label="Name">
+	  <description>The actual name of the column in the database</description>
+	</column>
+	<column name="col_type" type="value" ftype="immutable" label="Type"/>
+	<column name="col_size" type="integer" ftype="immutable" label="Length"/>
+	<column name="col_updated" type="date" ftype="immutable" label="Last Upated"/>
+	<column name="col_order" type="smallint" ftype="text" label="Order"/>
+	<column name="col_label" type="value" ftype="text" label="Label">
+	  <description>The name displayed for this column to users</description>
+	</column>
+	<column name="col_description" type="string" ftype="text" label="Description"/>	
+      </columns>
+    </table>
+
+    <table name="FILTER">
+      <description>Filter properties and info</description>
+      <inherit>ABSTRACT_DATA_TYPE</inherit>
+      <columns>
+        <column name="filter_id" type="primarykey" ftype="hidden"/>
+      </columns>
+    </table>
+
+    <table name="FILTER_FIELDS">
+      <description>Fields and values that are used by filter for searching</description>
+      <columns>
+        <column name="filter_id" type="integer" ftype="hidden">
+	  <reference>filter.filter_id</reference>
+	</column>
+	<column name="table_name" type="value" ftype="select" label="Data Type">
+	  <default>Ticket</default>
+	</column>
+	<column name="field_name" type="value" ftype="select" label="Field"/>
+	<column name"
+      </columns>
+    </table>
+
+      <customList>
+        <column name="department" type="string" ftype="selection">
+	  <size>20</size>
+	  <selections>Accounting,Engineering,Marketing</selections>
+	</column>
+        <column name="phone" type="string" ftype="text">
+	  <size>12</size>
+	</column>
+      </customList>
+
+
+ </tables>
+
+</database>

@@ -1,0 +1,76 @@
+<? /* -*- Mode: C; c-basic-indent: 3; indent-tabs-mode: nil -*- ex: set tabstop=3 expandtab: */ 
+
+/** @package zen */
+
+class ZenMetaTable extends Zen {
+
+  /**
+   * CONSTRUCTOR
+   *
+   * Loads all data for this table from the TABLE_DEFS and FIELD_DEFS
+   * information tables
+   *
+   * @param string $table the database table to obtain meta data for
+   */
+  function ZenMetaTable( $table ) { }
+
+  /**
+   * Returns the last time this table was updated
+   */
+  function lastUpdated() { }
+
+  /**
+   * Returns the version of this table
+   */
+  function getVersion() { }
+
+  /**
+   * Marks this table in the database as updated (as of now)
+   */
+  function markAsUpdated() { }
+
+  /**
+   * Get all the columns from this table
+   *
+   * The list is cached the first time it is requested
+   *
+   * @return array of columns and their field values
+   */
+  function getAllColumns() { }
+
+  /**
+   * Returns the properties for a specific column
+   *
+   * @param string $column name of the column
+   * @return array containing column properties
+   */
+  function getColumn( $column ) { }
+
+  /**
+   * Sets the table's current version
+   *
+   * @param string $newversion the new version for the table
+   * @return validated
+   */
+  function setTableVersion( $newversion ) { }
+
+  /**
+   * Sets a column property for this table
+   *
+   * @param string $column name of the column to update
+   * @param string $value the new value of the column
+   */
+  function setColumnProperty( $column, $value ) { }
+
+  /** @var string $_version the version of this table */
+  var $_version;
+
+  /** @var string $_name the name of this table */
+  var $_name;
+
+  /** @var array $_columns the list of columns for this table (populated on request) */
+  var $_columns;
+
+}
+
+?>

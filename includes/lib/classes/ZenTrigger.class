@@ -50,8 +50,49 @@ class ZenTrigger extends ZenDataType {
     $this->ZenDataType($this, $trigger_id);
   }
 
+  /**
+   * Checks to see if this trigger's conditions have been met, if so, calls activate()
+   *
+   * @return boolean activated
+   */
+  function check() { }
 
-  // ... needs structure defined before stubs are put here
+  /**
+   * Adds a new time based condition to the trigger
+   *
+   * @param string $field a ticket field (or a special term) to place the trigger on
+   * @param integer $base 
+   * @param integer $span
+   * @return integer condition_id or false
+   */
+  function addTimeCondition( $field, $base, $span ) { }
+
+  /**
+   * Adds a new action based condition
+   *
+   * @param integer $action_id the id of the action to be used
+   * @return integer condition_id or false
+   */
+  function addActionCondition( $action_id ) { }
+
+  /**
+   * Adds a new value based action
+   *
+   * @param string $field a ticket field to place the trigger on
+   * @param string $value a value to check for
+   * @param string $comparison (use the ZEN_* constants)
+   * @return integer condition_id or false
+   */
+  function addValueCondition( $field, $value, $comparison ) { }
+
+  /**
+   * Adds a condition to the trigger
+   *
+   * @param array $values associative array of db_field=>value to be used
+   * @return integer condition_id or false
+   */
+  function _addCondition( $params ) { }
+
 }
 
 ?>

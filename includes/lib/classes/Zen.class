@@ -135,13 +135,47 @@ class Zen {
    * This method will validate the class type using is_a to see if it is a valid ZenList
    * or ZenBase child (extends one of these)
    *
-   * @param Object $class is an empty class object for validation
+   * @param mixed $class is class object ($this reference) or string containing classname
    * @return string the name of the primary key column
    */
   function getPrimaryKey( $class ) {
-    $n = preg_replace("/^Zen/", "", class_name($this->_childobj)) . "_id";
-    return preg_replace("/List$/", "", $n);
+    if( is_object($class) ) {
+      $n = class_name($class);
+    }
+    else {
+      $n = $class;
+    }
+    $n = preg_replace("/List$/", "", $n);
+    return preg_replace("/^Zen/", "", $n) . "_id";
   }
+
+  /**
+   * Returns the meta data for this table
+   * in the form of a ZenMetaTable object
+   *
+   * The data is obtained from the TABLE_DEFS and FIELD_DEFS db tables, which are
+   * constructed from the xml during db generation
+   *
+   * @param mixed $class a $this reference or a string containing the classname
+   * @return ZenMetaTable object or false if no db table corresponds to this
+   */
+  function getMetaData( $class ) { }
+
+  /**
+   * Returns the name of the db table corresponding to this class object
+   *
+   * @param mixed $class is a $this object reference or a string containing class name
+   * @param string name of table or false if none
+   */
+  function tableNameFromClass( $class ) { }
+
+  /**
+   * Returns the name of a class corresponding to a db table
+   *
+   * @param string $table name of the db table
+   * @return string full class name corresponding to table or false if none
+   */
+  function classNameFromTable( $table ) { }
 
 
   /*********************************
