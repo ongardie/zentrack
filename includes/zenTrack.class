@@ -1837,11 +1837,11 @@ class zenTrack extends zen {
     if( $res && $this->settings["email_accept"] == "on" ) {
       $recipients = $this->get_notify_recipients($id);
       if( is_array($recipients) && count($recipients) ) {
-        $subject = $this->ptrans("ticket #?: accepted by ?",array($id,$name));
-        $emailParams["Assigned by"] = $this->formatName($user_id);
+        $subject = $this->ptrans("ticket #?: accepted by ?",array($id,$this->formatName($user_id)));
+        $emailParams["Accepted by"] = $this->formatName($user_id);
         if( $comments )
           $emailParams["body"] = $this->ffv($comments);
-        $emailParams["tid"] = (is_array($ticket))? $ticket : $id;
+        $emailParams["tid"] = $id;
         $message = $this->formatEmailMessage($emailParams);
         $this->sendEmail($recipients,$subject,$message,$user_id);
       }
@@ -2769,8 +2769,8 @@ class zenTrack extends zen {
       foreach($params as $key=>$val) {
         // check each field to see if it was updated
         if( $t["$key"] && $t["$key"] != $val ) {
-          $v1 = strlen($val) > 50? substr($val, 0, 50)."..." : $val;
-          $v2 = strlen($t["$key"]) > 50? substr($t["$key"], 0, 50)."..." : $t["$key"];
+          $v1 = strlen($t["$key"]) > 50? substr($t["$key"], 0, 50)."..." : $t["$key"];
+          $v2 = strlen($val) > 50? substr($val, 0, 50)."..." : $val;
           $log_entry .= "{$key} changed from [$v1] to [$v2]\n";
         }
       }
