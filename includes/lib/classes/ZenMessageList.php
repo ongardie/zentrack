@@ -1,27 +1,27 @@
 <? /* -*- Mode: C; c-basic-indent: 3; indent-tabs-mode: nil -*- ex: set tabstop=3 expandtab: */ 
 
 /** 
- * @constant LVL_NONE for ZenMessage: specifies no output
+ * LVL_NONE for ZenMessage: specifies no output
  */
 define("LVL_NONE", 0);
 
 /** 
- * @constant LVL_ERROR for ZenMessage: specifies highest error level (minimal output)
+ * LVL_ERROR for ZenMessage: specifies highest error level (minimal output)
  */
 define("LVL_ERROR", 1);
 
 /** 
- * @constant LVL_WARN for ZenMessage: specifies warnings
+ * LVL_WARN for ZenMessage: specifies warnings
  */
 define("LVL_WARN", 2);
 
 /** 
- * @constant LVL_NOTE for ZenMessage: specifies general notices (good for most stuff)
+ * LVL_NOTE for ZenMessage: specifies general notices (good for most stuff)
  */
 define("LVL_NOTE", 3);
 
 /** 
- * @constant LVL_DEBUG for ZenMessage: specifies lowest error level (maximum output, very verbose)
+ * LVL_DEBUG for ZenMessage: specifies lowest error level (maximum output, very verbose)
  */
 define("LVL_DEBUG", 4);
 

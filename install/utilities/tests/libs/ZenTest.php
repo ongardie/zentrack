@@ -34,10 +34,7 @@
       Assert::assert( $val == $vals['expected'], "Expected {$vals['expected']}, found $val" );
     }
 
-    //todo
-    //todo create a test for each method... be sure to differentiate between static and non-static methods
-
-
+    function testNotComplete() { Assert::assert( false, "Not yet completed" ); }
   }
 
 }?>

@@ -1,6 +1,17 @@
 
 --- V3.0 RC1 (beta,in CVS) ---	
 
+2003-10-30, Kato
+  Added new settings to zen.ini
+  Added generateID method to ZenDatabase
+  Completed phpunit testing for ZenDatabase and ZenMessageList (debugged)
+  Added new utils to ZenUtils
+  Implemented new phpdoc template and cleaned up code 
+    (thanks to CFAlonso for fixing these)
+  Created new user/ directory where customized user scripts will be stored
+  Added new template tags to template engine for calling scripts, functions, 
+    creating a row toggle, and specifying default vals for vars
+
 2003-10-24, Kato
   Updated adodb directory to latest release
   Fixed adodb.inc.php and adodb-csvinc.php to work with phpunit (must check file_exists before fopen or unlink)

@@ -1,47 +1,47 @@
 <? /* -*- Mode: C; c-basic-indent: 3; indent-tabs-mode: nil -*- ex: set tabstop=3 expandtab: */ 
 
 /** 
- * @constant ZEN_EQ for ZenQuery: field EQUALS value
+ * ZEN_EQ for ZenQuery: field EQUALS value
  */
 define("ZEN_EQ", "=");
 
 /** 
- * @constant ZEN_LT for ZenQuery: field < value
+ * ZEN_LT for ZenQuery: field < value
  */
 define("ZEN_LT", "<");
 
 /** 
- * @constant ZEN_EQ for ZenQuery: field <= value
+ * ZEN_LE for ZenQuery: field <= value
  */
 define("ZEN_LE", "<=");
 
 /** 
- * @constant ZEN_EQ for ZenQuery: field > value
+ * ZEN_GT for ZenQuery: field > value
  */
 define("ZEN_GT", ">");
 
 /** 
- * @constant ZEN_EQ for ZenQuery: field >= value
+ * ZEN_GE for ZenQuery: field >= value
  */
 define("ZEN_GE", ">=");
 
 /** 
- * @constant ZEN_EQ for ZenQuery: field in ( value )
+ * ZEN_IN for ZenQuery: field in ( value_list )
  */
 define("ZEN_IN", "IN");
 
 /** 
- * @constant ZEN_EQ for ZenQuery: field like "value%"
+ * ZEN_BEGINS for ZenQuery: field begins with value ("value%")
  */
 define("ZEN_BEGINS", "=%");
 
 /** 
- * @constant ZEN_EQ for ZenQuery: field like "%value"
+ * ZEN_ENDS for ZenQuery: field ends with value ("%value")
  */
 define("ZEN_ENDS", "%=");
 
 /** 
- * @constant ZEN_EQ for ZenQuery: field like "%value%"
+ * ZEN_CONTAINS for ZenQuery: field contains value ("%value%")
  */
 define("ZEN_CONTAINS", "%=%");
 
