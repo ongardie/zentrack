@@ -1,6 +1,13 @@
 
 --- V3.0 RC1 (beta,in CVS) ---	
 
+2003-11-6, Kato
+  Implemented ZenQuery object
+  Added ability to iterate arrays to ZenTemplate
+  Updated phpunit tests
+  Cleaned up ZenUtils
+  Completed preparations for the db install code
+
 2003-10-30, Kato
   Added new settings to zen.ini
   Added generateID method to ZenDatabase
