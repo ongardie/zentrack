@@ -1,6 +1,90 @@
 
 --- V3.0 RC1 (beta,in CVS) ---	
 
+2003-09-01, Kato
+  Created test cases, most libraries implemented, utilities underway
+    - zentrack/install/zen.php 1.7
+    - zentrack/includes/lib/inc/classes.php 1.4
+    - zentrack/includes/lib/inc/variables.php 1.9
+    - zentrack/includes/lib/classes/Zen.php 1.2
+    - zentrack/includes/lib/classes/ZenDBXML.php 1.2
+    - zentrack/includes/lib/classes/ZenDataType.php 1.2
+    - zentrack/includes/lib/classes/ZenFilter.php 1.2
+    - zentrack/includes/lib/classes/ZenSystemList.php 1.2
+    - zentrack/includes/lib/classes/ZenTemplate.php 1.2
+    - zentrack/includes/lib/classes/ZenTicket.php 1.2
+    - zentrack/includes/lib/classes/ZenTranslator.php 1.2
+    - zentrack/includes/lib/classes/ZenTrigger.php 1.2
+    - zentrack/includes/lib/classes/ZenType.php 1.2
+    - zentrack/includes/lib/classes/ZenUser.php 1.2
+    - zentrack/includes/lib/classes/ZenXMLParser.php 1.2
+    - zentrack/includes/lib/classes/db/DbTypeInfo.php 1.2
+    - zentrack/includes/lib/classes/ZenAccess.php 1.1
+    - zentrack/includes/lib/classes/ZenAccessList.php 1.1
+    - zentrack/includes/lib/classes/ZenAction.php 1.1
+    - zentrack/includes/lib/classes/ZenActionList.php 1.1
+    - zentrack/includes/lib/classes/ZenAttachment.php 1.1
+    - zentrack/includes/lib/classes/ZenAttachmentList.php 1.1
+    - zentrack/includes/lib/classes/ZenBin.php 1.1
+    - zentrack/includes/lib/classes/ZenBinList.php 1.1
+    - zentrack/includes/lib/classes/ZenDatabase.php 1.1
+    - zentrack/includes/lib/classes/ZenEmail.php 1.1
+    - zentrack/includes/lib/classes/ZenFilterList.php 1.1
+    - zentrack/includes/lib/classes/ZenFormGenerator.php 1.1
+    - zentrack/includes/lib/classes/ZenList.php 1.1
+    - zentrack/includes/lib/classes/ZenMessage.php 1.1
+    - zentrack/includes/lib/classes/ZenMessageList.php 1.1
+    - zentrack/includes/lib/classes/ZenMetaField.php 1.1
+    - zentrack/includes/lib/classes/ZenMetaTable.php 1.1
+    - zentrack/includes/lib/classes/ZenMetaTableList.php 1.1
+    - zentrack/includes/lib/classes/ZenNotifyList.php 1.1
+    - zentrack/includes/lib/classes/ZenPriority.php 1.1
+    - zentrack/includes/lib/classes/ZenPriorityList.php 1.1
+    - zentrack/includes/lib/classes/ZenQuery.php 1.1
+    - zentrack/includes/lib/classes/ZenRelatedList.php 1.1
+    - zentrack/includes/lib/classes/ZenRole.php 1.1
+    - zentrack/includes/lib/classes/ZenStage.php 1.1
+    - zentrack/includes/lib/classes/ZenStageList.php 1.1
+    - zentrack/includes/lib/classes/ZenSystem.php 1.1
+    - zentrack/includes/lib/classes/ZenTask.php 1.1
+    - zentrack/includes/lib/classes/ZenTaskList.php 1.1
+    - zentrack/includes/lib/classes/ZenTicketList.php 1.1
+    - zentrack/includes/lib/classes/ZenTriggerList.php 1.1
+    - zentrack/includes/lib/classes/ZenTypeList.php 1.1
+    - zentrack/includes/lib/classes/ZenUserList.php 1.1
+    - zentrack/includes/lib/inc/classes.php 1.5
+    - zentrack/includes/lib/inc/environment.php 1.9
+    - zentrack/includes/lib/inc/global.php 1.7
+    - zentrack/includes/lib/inc/session.php 1.5
+    - zentrack/includes/lib/inc/variables.php 1.10
+    - zentrack/install/utilities/get_post_session_data.php 1.1
+    - zentrack/install/utilities/predefined_vars.php 1.1
+    - zentrack/includes/lib/classes/db/db2.xml 1.3
+    - zentrack/includes/lib/classes/db/mysql.xml 1.3
+    - zentrack/includes/lib/classes/db/oracle.xml 1.3
+    - zentrack/includes/lib/classes/db/postgres.xml 1.3
+    - zentrack/includes/lib/inc/classes.php 1.6
+    - zentrack/includes/lib/inc/environment.php 1.10
+    - zentrack/includes/lib/inc/functions.php 1.5
+    - zentrack/install/utilities/tests/ZenDatabase_test.php 1.2
+    - zentrack/install/utilities/tests/ZenQuery_test.php 1.2
+    - zentrack/install/utilities/tests/phpunit.php 1.1
+    - zentrack/install/utilities/tests/test.php 1.3
+    - zentrack/includes/lib/inc/classes.php 1.7
+    - zentrack/includes/lib/inc/environment.php 1.11
+    - zentrack/includes/lib/lists/countries 1.1
+    - zentrack/includes/lib/lists/lcwords 1.1
+    - zentrack/includes/lib/lists/months 1.1
+    - zentrack/includes/lib/lists/okhtmltags 1.1
+    - zentrack/includes/lib/lists/stateAcronyms 1.1
+    - zentrack/includes/lib/lists/states 1.1
+    - zentrack/includes/lib/lists/ucwords 1.1
+    - zentrack/includes/lib/lists/weekdays 1.1
+    - zentrack/install/defaults/zen.ini.template 1.6
+    - zentrack/install/setup/classFiles 1.2
+    - zentrack/install/utilities/tests/phpunit.php 1.2
+    - zentrack/install/utilities/tests/libs/ZenTest.php 1.1
+
 2003-05-20, MLively
   Committed the Database Wrapper and supporting classes
     - includes/lib/classes/ZenDatabase.class 1.2
