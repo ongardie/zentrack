@@ -13,6 +13,21 @@ abstraction, and endless possibilities for project expansion.
 
 ----- VERSION 2.5.0.3 (development) -----
 
+2005-03-10, cfalonso
+Included field_map for close page
+    - zentrack_2/includes/ZenFieldMap.class 1.9
+    - zentrack_2/includes/templates/newTicketForm.php 1.41
+    - zentrack_2/includes/templates/actions/close.php 1.4
+    - zentrack_2/install/UPGRADE_mssqlserver.sql 1.32
+    - zentrack_2/install/UPGRADE_mysql.sql 1.42
+    - zentrack_2/install/UPGRADE_oracle.sql 1.38
+    - zentrack_2/install/UPGRADE_postgres.sql 1.30
+    - zentrack_2/install/seed_mssqlserver.sql 1.33
+    - zentrack_2/install/seed_mysql.sql 1.46
+    - zentrack_2/install/seed_oracle.sql 1.39
+    - zentrack_2/install/seed_postgres.sql 1.35
+    - zentrack_2/www/actions/close.php 1.12
+
 2005-03-09, cfalonso
   Improved log for edits
     - zentrack_2/includes/zenTrack.class 1.176
