@@ -648,12 +648,12 @@ class zenTrack extends zen {
       $query = "SELECT * FROM ".$this->table_behavior_detail;
       $query .= " WHERE behavior_id IN(".join(',', $genIds).")";
       $query .= " ORDER BY sort_order, field_name";
+      $this->addDebug("getBehaviorListQueryForDetails:",$query,3);
       $fieldVals = $this->db_queryIndexed($query);
       if ( is_array($fieldVals) ) {
         foreach($fieldVals as $f) {
           $b = $f['behavior_id'];
-          $k = $f['field_name'];
-          $map[$b]['fields'][$k] = $f;
+          $map[$b]['fields'][] = $f;
         }
       }
     }
@@ -671,8 +671,7 @@ class zenTrack extends zen {
   function addBehavior( $props, $details ) { 
     $id = $this->db_insert( $this->table_behavior, $props );
     if( $id ) {
-//Commented only for developement stage
-//      $this->updateBehaviorDetails( $id, $details );
+      $this->updateBehaviorDetails( $id, $details );
       $this->addDebug("addBehavior", "Added new behavior with id '".$id."'", 2);
     }
     else {
@@ -705,21 +704,26 @@ class zenTrack extends zen {
    * Update the detail entries for a behavior.  This is accomplished by deleting all current entries and
    * adding the updated values to the table.
    *
-   * @param ingteger $behavior_id the behavior to update.
+   * @param integer $behavior_id the behavior to update.
    * @param array $fields mapped field_name -> array(data fields)
    */
   function updateBehaviorDetails( $behavior_id, $fields ) { 
     $this->db_delete($this->table_behavior_detail, "behavior_id", $behavior_id);
     foreach($fields as $f) {
       // make sure we add in the behavior id to each row
-      $v['behavior_id'] = $behavior_id;
-      list($ck,$cv) = $this->makeInsertVals($v);
+      $f['behavior_id'] = $behavior_id;
+      list($ck,$cv) = $this->makeInsertVals($f);
       $this->db_result("INSERT INTO ".$this->table_behavior_detail." ($ck) VALUES($cv)");
     }
   }
 
 
 
+  /**
+   * Return an array with the fields that can be used in behaviors
+   *
+   * @return array mapped translated_field_label -> field_name sorted by key
+   */
   function getBehaviorDestinationFieldsArray() {
     $field_list=array(
                tr("Title") => "title",
@@ -746,6 +750,32 @@ class zenTrack extends zen {
     ksort($field_list);
     return($field_list);
   }
+
+  /**
+   * Return an array with the comparison operators that can be used in behaviors
+   *
+   * @return array mapped translated_operator_name -> operator_name sorted by key
+   */
+  function getBehaviorOperators() {
+    $beh_opers=array(
+                tr("Equals")                   => "eq",
+                tr("Not equal")                => "ne",
+                tr("Contains")                 => "co",
+                tr("Does not contain")         => "nc",
+                tr("Starts with")              => "sw",
+                tr("Ends with")                => "ew",
+                tr("Greater than")             => "gt",
+                tr("Less than")                => "lt",
+                tr("Greater than or equal")    => "ge",
+                tr("Less than or equal")       => "le"
+                    );
+    ksort($beh_opers);
+    return($beh_opers);
+  }
+
+
+
+
 
 
   /*
@@ -2905,7 +2935,7 @@ class zenTrack extends zen {
     return null;
   }
 
-  functiong getDataTypeSort( $table ) {
+  function getDataTypeSort( $table ) {
     // be careful using this, it's still limited
     switch( strtoupper($table) ) {
     case "ZENTRACK_BINS":

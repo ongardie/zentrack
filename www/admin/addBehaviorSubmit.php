@@ -56,7 +56,7 @@
 		  array($NewBehaviorName,
 			"--link--",
 			$NewBehaviorName));
-	$msg = str_replace("--link--","<br><a href='$rootUrl/admin/editBehaviorDetails.php?behavior_id=$behavior_id'>"
+	$msg = str_replace("--link--","<br><a href='$rootUrl/admin/editBehaviorDetails.php?behavior_id=$res'>"
 			   .tr("Click Here")."</a>",$msg);
       } else {
 	$errs[] = tr("System Error: Could not add ?", array($NewBehaviorName));
