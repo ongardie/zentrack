@@ -30,7 +30,7 @@
 	if( is_array($children) ) {
 	   foreach($children as $c) {
 	      if( $c["status"] != "CLOSED" ) {
-		 $errs[] = $zen->types["$c[type_id]"]." $c[id] is not completed. Close that before ending this project.";
+		 $errs[] = $zen->types["$c[type_id]"]." $c[id] is not completed.";
 	      }
 	   }
 	}

@@ -149,6 +149,14 @@ class DB {
    
    function db_insertID($sequence = '') {
       // fetches the last mysql insert id from the db
+     // if using mysql, call this AFTER the insert statement
+     // and will return the ID used by the preceding INSERT
+     // otherwise, call it BEFORE. 
+     // if using something other than msyql... this will actually
+     // increment the insert sequence... essentially reserving that
+     // insert id for the INSERT statement about to take place... don't
+     // forget to manually add the id with the insert statement in 
+     // this case!
       if( $this->database_type == 'mysql' ) {
 	 return( mysql_insert_id() );
       } else {
@@ -256,11 +264,11 @@ class DB {
    }   
    
    function switchQueryMode($mode = 1) {
-      global $ADODB_FETCH_MODE;
       // switches the return array method
       // 1 - associative array
       // 0 - non-associative array
       // mode is associative by default
+      global $ADODB_FETCH_MODE;
       $ADODB_FETCH_MODE = ($mode)? ADODB_FETCH_ASSOC : ADODB_FETCH_NUM;
       return $ADODB_FETCH_MODE;
    }
@@ -389,7 +397,7 @@ class DB {
       $ADODB_FETCH_MODE = ADODB_FETCH_ASSOC;      
       if( $this->sql_debug == "on" )
         $this->db_link->debug = true;
-        $this->db_connect($host, $user, $passphrase, $database);
+      $this->db_connect($host, $user, $passphrase, $database);
    }
       
 }

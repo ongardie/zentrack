@@ -15,7 +15,7 @@
   <tr>
    <td><b>Script:</b></td>
    <form method=post action='/reflectTest/reflectTest.php'>
-   <td colspan=3>/web/phpzen/sub/zengraph/&nbsp;<input type=text name='file' size=50 maxlength=500 value='www/zenTrack.class'></td>
+   <td colspan=3>/web/phpzen/sub/devtrack/&nbsp;<input type=text name='file' size=50 maxlength=500 value='includes/zenDate.class'></td>
   </tr>
   <tr>
     <td><b>Type:</b></td>
@@ -36,7 +36,7 @@
      <input type=checkbox name=s_g >&nbsp;Globals
    </td>
    <td valign=top>
-     <input type=checkbox name=s_i >&nbsp;Includes
+     <input type=checkbox name=s_i CHECKED>&nbsp;Includes
      <br>
      <input type=checkbox name=s_f CHECKED>&nbsp;Functions
    </td>
@@ -54,10 +54,10 @@
   <a href='/reflectTest/reflectTest.php?hlp=1&file=/reflectTest/reflectTest.php'>Help</a>&nbsp;&nbsp;<a href='/reflectTest/reflectTest.php'>Reset</a>
 </ul>
      &nbsp;<P>
-     <b><font size=4 color="#000099">www/zenTrack.class</font></b>
+     <b><font size=4 color="#000099">includes/zenDate.class</font></b>
      </p>
      <P>
-     <a href='#details'>Details</a>&nbsp;|&nbsp;<a href='#functions'>Functions</a>&nbsp;|&nbsp;<a href='/reflectTest/reflectTest.php?src=1&file=www/zenTrack.class&s_s=&s_g=&s_i=&s_f=on&s_sys=&s_d=on&s_v='>Show Source</a>
+     <a href='#details'>Details</a>&nbsp;|&nbsp;<a href='#includes'>Includes</a>&nbsp;|&nbsp;<a href='#functions'>Functions</a>&nbsp;|&nbsp;<a href='/reflectTest/reflectTest.php?src=1&file=includes/zenDate.class&s_s=&s_g=&s_i=on&s_f=on&s_sys=&s_d=on&s_v='>Show Source</a>
  
      
                                                
@@ -67,607 +67,280 @@
        <b>Page Details</b>
        <hr align=left width=400 color='teal'>
        <ul>
-       Version: See CVS Repository for version information<br>
-Modified: 02/22/21<br>
-Author: Kato &quot;phpzen&quot;<br>
-Contact: <a href='mailto:postmaster@phpzen.net'>postmaster@phpzen.net</a><br>Website: <a href='http://www.phpzen.net'>http://www.phpzen.net</a><P><i>
+       Version: 1.3<br>
+Author: phpZEN (Michael Richardson)<br>
+Contact: <a href='mailto:postmaster@phpzen.net'>postmaster@phpzen.net</a><br><P><i>
 <br>
-zenTrack Class<br>
-Description: Ticketing system functions<br>
-This is the main class containing all of the functionality for use<br>
-with the zentrack system.  This class extends zen (basic text formatting<br>
-and page utilities), zenDate (date manipulations and calculations) and<br>
-db.class (database access and retrieval)<br>
+zenDate Class<br>
+USAGE NOTE:  On all methods where the $utime field is optional, the function<br>
+will use the current time instead, if not specified<br>
+This class works with dates by converting them to unix timestamps.  It can<br>
+accurately parse an sql date (or create one), add, subtract, and track a given<br>
+time, as well as find starting period for days, months, weeks, years and determine<br>
+time elapsed over any of these ranges<br>
 </i>
  
       </ul>
        <P><a href='#top'>top</a><P>&nbsp;<a name='includes'></a>
       
-          	
+       
+       
+       <hr align=left width=400 color='teal'>
+       <b>Included Files</b>
+       <hr align=left width=400 color='teal'>
+       <ul>
+       <div style='padding-left:10px'>
+<a href='/reflectTest/reflectTest.php?file=/web/phpzen/sub/devtrack/includes/db.class&type=CLASS&s_s=&s_g=&s_i=on&s_f=on&s_sys=&s_d=on&s_v='>db.class</a>
+</div>
+       </ul>
+       <P><a href='#top'>top</a><P>&nbsp;<a name='sessions'></a>
+       
+           	
 	    <hr align=left width=400 color='teal'>
 	    <b>Functions:</b>
 	    <hr align=left width=400 color='teal'>
 	    <ul>
 	    <table bgcolor='#EEEEEE' width=600><tr><td class="titleCell">Name</td><td class='titleCell'>Parameters</td><td class='titleCell'>Line</td><td class='titleCell'>Comments</td></tr>
-<tr><td colspan=4 class='subTitle'>A</td></tr>
-<tr bgcolor='#FFFFFF'>
-<td class='nameCell' valign=top>accept_ticket</td><td class='valueCell' valign=top>
-id<br>user_id<br>comments = ''<br>bin_id = ''</td><td class='lineCell' valign=top>383</td><td class='commentCell' valign=top>changes the tickets user_id to reflect
-<br>a new owner for the ticket
-<br>logs this in the db if settings[&quot;log_accept&quot;] = &quot;On&quot;;
-</td>
-</tr>
-<tr bgcolor='#DFDFDF'>
-<td class='nameCell' valign=top>add_access</td><td class='valueCell' valign=top>
-user_id<br>params</td><td class='lineCell' valign=top>1071</td><td class='commentCell' valign=top>adds new access parameters for the
-<br>given user, ignores ones that
-<br>currently exist for that user
-<br>$params is an indexed array containing:
-<br>&quot;bin_id&quot; =&gt; level (integer)
-</td>
-</tr>
-<tr bgcolor='#FFFFFF'>
-<td class='nameCell' valign=top>add_attachment</td><td class='valueCell' valign=top>
-name<br>filename<br>filetype<br>ticket_id<br>log_id = ''<br>description = ''</td><td class='lineCell' valign=top>958</td><td class='commentCell' valign=top>adds an attachment to the db for tracking
-<br>does not add the actual file, just it's associations
-<br>with logs and tickets, log_id is optional, the ticket_id is not
-<br>filetype represents the complete mime type as will be used
-<br>to supply the file back to the user when requested
-</td>
-</tr>
-<tr bgcolor='#DFDFDF'>
-<td class='nameCell' valign=top>add_bin</td><td class='valueCell' valign=top>
-params</td><td class='lineCell' valign=top>1149</td><td class='commentCell' valign=top>add a new bin to the bins table
-</td>
-</tr>
-<tr bgcolor='#FFFFFF'>
-<td class='nameCell' valign=top>add_log</td><td class='valueCell' valign=top>
-id<br>params</td><td class='lineCell' valign=top>873</td><td class='commentCell' valign=top>add a new log entry for ticket
-<br>with $id
-<br>params can include any of the
-<br>following indexes:
-<br>user_id
-<br>bin_id
-<br>action (the action logged)
-<br>entry (the log entry)
-<br>ticket_id
-</td>
-</tr>
-<tr bgcolor='#DFDFDF'>
-<td class='nameCell' valign=top>add_prefs</td><td class='valueCell' valign=top>
-user_id<br>params</td><td class='lineCell' valign=top>1117</td><td class='commentCell' valign=top>adds prefs for a user_id
-</td>
-</tr>
-<tr bgcolor='#FFFFFF'>
-<td class='nameCell' valign=top>add_priority</td><td class='valueCell' valign=top>
-params</td><td class='lineCell' valign=top>1155</td><td class='commentCell' valign=top>add a new priorty
-</td>
-</tr>
-<tr bgcolor='#DFDFDF'>
-<td class='nameCell' valign=top>add_project</td><td class='valueCell' valign=top>
-params</td><td class='lineCell' valign=top>309</td><td class='commentCell' valign=top>create a new project with the given params
-<br>(abstracted from add_ticket() to allow
-<br>for custom functionality)
-<br>all dates are to be sent as unix timestamps
-</td>
-</tr>
-<tr bgcolor='#FFFFFF'>
-<td class='nameCell' valign=top>add_setting</td><td class='valueCell' valign=top>
-params</td><td class='lineCell' valign=top>1161</td><td class='commentCell' valign=top>add a new setting into the db
-</td>
-</tr>
-<tr bgcolor='#DFDFDF'>
-<td class='nameCell' valign=top>add_system</td><td class='valueCell' valign=top>
-params</td><td class='lineCell' valign=top>1167</td><td class='commentCell' valign=top>add a new system to the db
-</td>
-</tr>
-<tr bgcolor='#FFFFFF'>
-<td class='nameCell' valign=top>add_task</td><td class='valueCell' valign=top>
-params</td><td class='lineCell' valign=top>1173</td><td class='commentCell' valign=top>add a new task to the system
-</td>
-</tr>
-<tr bgcolor='#DFDFDF'>
-<td class='nameCell' valign=top>add_ticket</td><td class='valueCell' valign=top>
-params</td><td class='lineCell' valign=top>812</td><td class='commentCell' valign=top>create a new ticket with the
-<br>given params and return the new
-<br>insert ID for that ticket
-</td>
-</tr>
-<tr bgcolor='#FFFFFF'>
-<td class='nameCell' valign=top>add_type</td><td class='valueCell' valign=top>
-params</td><td class='lineCell' valign=top>1179</td><td class='commentCell' valign=top>add a new ticket type
-</td>
-</tr>
-<tr bgcolor='#DFDFDF'>
-<td class='nameCell' valign=top>add_user</td><td class='valueCell' valign=top>
-params</td><td class='lineCell' valign=top>1018</td><td class='commentCell' valign=top>creates a new user entry in the db
-<br>if $params[&quot;access&quot;] is an array
-<br>then it will also run add_access()
-<br>with this array once the user has
-<br>been created
-<br>if [&quot;passphrase&quot;] is given, it should
-<br>be the unencrypted value.. if blank,
-<br>[&quot;passphrase&quot;] will be set automatically
-<br>to the users last name until that user
-<br>logs into the system and changes it
-</td>
-</tr>
-<tr bgcolor='#FFFFFF'>
-<td class='nameCell' valign=top>approve_ticket</td><td class='valueCell' valign=top>
-id<br>user_id<br>comments = ''</td><td class='lineCell' valign=top>408</td><td class='commentCell' valign=top>changes the approval status to 2 for the ticket
-<br>if the ticket is ready for closure, then this function
-<br>will also close out the ticket
-</td>
-</tr>
-<tr bgcolor='#DFDFDF'>
-<td class='nameCell' valign=top>archive_log</td><td class='valueCell' valign=top>
-id<br>flag = 0</td><td class='lineCell' valign=top>935</td><td class='commentCell' valign=top>moves logs for ticket with $id to the
-<br>db archives.  if $flag = 1, then moves
-<br>only logs with an lid(log id) matching $id
-<br>instead of by ticket_id
-<br>attachments are deleted from the db
-<br>when a ticket is archived
-</td>
-</tr>
-<tr bgcolor='#FFFFFF'>
-<td class='nameCell' valign=top>archive_project</td><td class='valueCell' valign=top>
-pid</td><td class='lineCell' valign=top>340</td><td class='commentCell' valign=top>send a project to the archives
-<br>and all of it's related tickets and logs
-</td>
-</tr>
-<tr bgcolor='#DFDFDF'>
-<td class='nameCell' valign=top>archive_ticket</td><td class='valueCell' valign=top>
-id</td><td class='lineCell' valign=top>829</td><td class='commentCell' valign=top>send a ticket and all of it's log
-<br>entries to the archive db
-</td>
-</tr>
-<tr bgcolor='#FFFFFF'>
-<td class='nameCell' valign=top>assign_ticket</td><td class='valueCell' valign=top>
-id<br>recipient<br>user_id = ''<br>comments = ''</td><td class='lineCell' valign=top>433</td><td class='commentCell' valign=top>set the user_id for the ticket to another person
-<br>the recipient recieves the ticket, the user_id is for the
-<br>sender
-</td>
-</tr>
-<tr bgcolor='#DFDFDF'>
-<td class='nameCell' valign=top>attach_to_ticket</td><td class='valueCell' valign=top>
-id<br>user_id<br>params<br>log_id = ''</td><td class='lineCell' valign=top>464</td><td class='commentCell' valign=top>creates an attachment to the given ticket and logs
-<br>the event if needed
-<br>the params array contains:
-<br>name         - name of the file to display
-<br>filename     - name of file on system
-<br>filetype     - mime type (i.e. image/gif)
-<br>description  - [optional] comments about the file for display
-</td>
-</tr>
-<tr><td colspan=4 class='subTitle'>C</td></tr>
-<tr bgcolor='#FFFFFF'>
-<td class='nameCell' valign=top>check_bin_access</td><td class='valueCell' valign=top>
-user_id<br>bin_id<br>level = 1</td><td class='lineCell' valign=top>1259</td><td class='commentCell' valign=top>check the user's access priviledges for the given bin_id
-<br>based on the users user_id. and $level (returns true
-<br>if equal to or greater than this)
-</td>
-</tr>
-<tr bgcolor='#DFDFDF'>
-<td class='nameCell' valign=top>check_status</td><td class='valueCell' valign=top>
-id<br>code = 'OPEN'</td><td class='lineCell' valign=top>1274</td><td class='commentCell' valign=top>checks to see if a ticket is ready for the
-<br>given action, the $code codes are:
-<br>OPEN    - is open?
-<br>PEND    - is pending?
-<br>TEST    - ready for testing?
-<br>APPR    - ready for approval?
-<br>READY   - ready for closing?
-<br>CLOSED  - is closed?
-<br>returns 1 if $code can be met
-</td>
-</tr>
-<tr bgcolor='#FFFFFF'>
-<td class='nameCell' valign=top>close_project</td><td class='valueCell' valign=top>
-pid<br>params = ''<br>override = 0</td><td class='lineCell' valign=top>358</td><td class='commentCell' valign=top>sets the status of a project to 'CLOSED' assuming
-<br>that the project doesn't require testing and approval
-<br>and that all children are closed (otherwise will skip)
-<br>if $override is passed, then this method will
-<br>close a project, even if testing or approval are
-<br>required, or there are open children.
-<br>$params is an array passed on to the log function
-<br>(user_id, comments)
-</td>
-</tr>
-<tr bgcolor='#DFDFDF'>
-<td class='nameCell' valign=top>close_ticket</td><td class='valueCell' valign=top>
-id<br>user_id = ''<br>hours = ''<br>comments = ''</td><td class='lineCell' valign=top>491</td><td class='commentCell' valign=top>closes the ticket (sets the status to CLOSED)
-<br>if there is testing or approval yet required, then
-<br>simply sets status to pending.
-<br>however, if both of these are completed, then
-<br>closes out the ticket
-</td>
-</tr>
 <tr><td colspan=4 class='subTitle'>D</td></tr>
 <tr bgcolor='#FFFFFF'>
-<td class='nameCell' valign=top>delete_access</td><td class='valueCell' valign=top>
-id<br>flag = ''</td><td class='lineCell' valign=top>1096</td><td class='commentCell' valign=top>deletes access privedges based on $flag
-<br>NULL - by user_id
-<br>1    - by bin_id
-<br>2    - by access_id
-<br>$id can be an array
+<td class='nameCell' valign=top>dateAdjust</td><td class='valueCell' valign=top>
+adj<br>period = ''<br>date = ''</td><td class='lineCell' valign=top>437</td><td class='commentCell' valign=top>takes a unix timestamp and adds
+<br>$adj (integer) units of $period
+<br>(which will be 'seconds', 'minutes', 'hours', etc)
+<br>to it
 </td>
 </tr>
 <tr bgcolor='#DFDFDF'>
-<td class='nameCell' valign=top>delete_all_attachments</td><td class='valueCell' valign=top>
-id</td><td class='lineCell' valign=top>997</td><td class='commentCell' valign=top>deletes all attachments by their log_id
-<br>$id can be an array
+<td class='nameCell' valign=top>dateAnchor</td><td class='valueCell' valign=top>
+period = 'month'<br>date = ''<br>end = ''</td><td class='lineCell' valign=top>493</td><td class='commentCell' valign=top>looks at the current date and determines
+<br>the timestamp representing the start of the
+<br>current period (month, day, year, hour, etc)
+<br>if $end is given, then it anchors this item to
+<br>the first instance of the next period (hour, month, day, etc)
+<br>after the current one (i.e. just greater than the end!)
 </td>
 </tr>
 <tr bgcolor='#FFFFFF'>
-<td class='nameCell' valign=top>delete_attachment</td><td class='valueCell' valign=top>
-access_id</td><td class='lineCell' valign=top>982</td><td class='commentCell' valign=top>deletes attachments by attachment_id
-<br>can be an array
+<td class='nameCell' valign=top>dateDiff</td><td class='valueCell' valign=top>
+end = ''<br>start = ''<br>measure = 'seconds'<br>marker = ''</td><td class='lineCell' valign=top>337</td><td class='commentCell' valign=top>returns the difference in time between two dates
+<br>where:
+<br>$end - end date
+<br>$start - starting date
+<br>$measure - units to return diff in (seconds, minutes, hours, etc)
+<br>$marker - a variable name to store this difference in
+<br>this is a variable on the calling page (globalized)
+<br>and is used for marking times during script execution
 </td>
 </tr>
 <tr bgcolor='#DFDFDF'>
-<td class='nameCell' valign=top>delete_log</td><td class='valueCell' valign=top>
-id<br>flag = 0<br>archive_flag = 0</td><td class='lineCell' valign=top>907</td><td class='commentCell' valign=top>delete log entries for ticket with
-<br>$id, if $flag = 1, then deletes only
-<br>the entry with log_id of $id (i.e. by the
-<br>log id instead of ticket id)
-<br>id can be a string or an array
+<td class='nameCell' valign=top>dateIsMultiple</td><td class='valueCell' valign=top>
+frequency<br>start<br>date = ''<br>range = &quot;day&quot;</td><td class='lineCell' valign=top>599</td><td class='commentCell' valign=top>THIS FUNCTION IS STILL EXPERIMENTAL AND HAS NOT BEEN
+<br>THOROUGHLY TESTED YET
+<br>this function checks to see if
+<br>$date is a multiple of $start
+<br>using the frequency given (i.e. every &quot;2 months&quot;)
+<br>matching anything that falls within
+<br>$range (i.e. a day of $date)
+<br>$frequency is a number followed by a space followed
+<br>by an interval (&quot;x [months|days|years|hours]&quot;)
+<br>and $range is the lenght of allowed variance (1 hour, 1 day, 1 week, etc)
 </td>
 </tr>
 <tr bgcolor='#FFFFFF'>
-<td class='nameCell' valign=top>delete_prefs</td><td class='valueCell' valign=top>
-user_id</td><td class='lineCell' valign=top>1126</td><td class='commentCell' valign=top>deletes prefs entries by user_id
-<br>user_id can be an array
+<td class='nameCell' valign=top>dateMake</td><td class='valueCell' valign=top>
+vals</td><td class='lineCell' valign=top>359</td><td class='commentCell' valign=top>takes an array of date values and returns
+<br>a unix time from them
+<br>incoming array values are:
+<br>int hour, int minute, int second, int month, int day, int year [, int is_dst])
+<br>[0] - hour
+<br>[1] - minute
+<br>[2] - second
+<br>[3] - month
+<br>[4] - day
+<br>[5] - year
+<br>[6] - is daylight savings time? [optional]
 </td>
 </tr>
 <tr bgcolor='#DFDFDF'>
-<td class='nameCell' valign=top>delete_project</td><td class='valueCell' valign=top>
-pid<br>archive_flag = 0</td><td class='lineCell' valign=top>321</td><td class='commentCell' valign=top>drop project, all associated tickets
-<br>all log entries of those tickets, and
-<br>all their data from the db
-<br>if $archive_flag = 1, then deletes from the
-<br>archive table
+<td class='nameCell' valign=top>dateParse</td><td class='valueCell' valign=top>
+ctime = ''</td><td class='lineCell' valign=top>379</td><td class='commentCell' valign=top>takes a date input as &quot;yy-mm-dd[ hh:mm[:ss] [am/pm]]&quot;
+<br>or as &quot;mm/dd/yy[ hh:mm[:ss] [am/pm]]&quot;
+<br>and returns a unix time for the date
+<br>so that it can be used by the zenDate class
+<br>for advanced manipulations
 </td>
 </tr>
 <tr bgcolor='#FFFFFF'>
-<td class='nameCell' valign=top>delete_ticket</td><td class='valueCell' valign=top>
-id<br>archive_flag = 0</td><td class='lineCell' valign=top>846</td><td class='commentCell' valign=top>drop a ticket, its log entries, and
-<br>all associated data from the db
-<br>$id can be an array
+<td class='nameCell' valign=top>dateSplit</td><td class='valueCell' valign=top>
+utime = ''</td><td class='lineCell' valign=top>418</td><td class='commentCell' valign=top>returns an indexed array of values
+<br>from utime as follows:
+<br>&quot;seconds&quot; - seconds
+<br>&quot;minutes&quot; - minutes
+<br>&quot;hours&quot; - hours
+<br>&quot;mday&quot; - day of the month
+<br>&quot;wday&quot; - day of the week, numeric : from 0 as Sunday up to 6 as Saturday
+<br>&quot;mon&quot; - month, numeric
+<br>&quot;year&quot; - year, numeric
+<br>&quot;yday&quot; - day of the year, numeric; i.e. &quot;299&quot;
+<br>&quot;weekday&quot; - day of the week, textual, full; i.e. &quot;Friday&quot;
+<br>&quot;month&quot; - month, textual, full; i.e. &quot;January&quot;
 </td>
 </tr>
 <tr bgcolor='#DFDFDF'>
-<td class='nameCell' valign=top>delete_user</td><td class='valueCell' valign=top>
-user_id</td><td class='lineCell' valign=top>1045</td><td class='commentCell' valign=top>deletes a user from the db by the
-<br>user's id.  also deletes all access
-<br>and prefs entries for this user
-<br>$user_id can be an array
+<td class='nameCell' valign=top>dateSQL</td><td class='valueCell' valign=top>
+date = ''</td><td class='lineCell' valign=top>574</td><td class='commentCell' valign=top>creates an SQL date for insertion
+<br>into an SQL database as yyyy-mm-dd format
 </td>
 </tr>
-<tr><td colspan=4 class='subTitle'>F</td></tr>
 <tr bgcolor='#FFFFFF'>
-<td class='nameCell' valign=top>fetch_bin_roles</td><td class='valueCell' valign=top>
-bin_id<br>role = ''</td><td class='lineCell' valign=top>1309</td><td class='commentCell' valign=top>fetches members of bin with a particular
-<br>role.  If $role is given, fetches only
-<br>members listed as fulfilling that particular
-<br>role. Returns the user_id and their role in an
-<br>indexed array
+<td class='nameCell' valign=top>dateTimeSQL</td><td class='valueCell' valign=top>
+date = ''</td><td class='lineCell' valign=top>586</td><td class='commentCell' valign=top>constructs an SQL date and time for use
+<br>in SQL database as yyyy-mm-dd hh:mm:ss
+<br>using 4 digit year and military time(24 hour notation)
 </td>
 </tr>
 <tr bgcolor='#DFDFDF'>
-<td class='nameCell' valign=top>fetch_user_roles</td><td class='valueCell' valign=top>
-user_id<br>bin_id = ''</td><td class='lineCell' valign=top>1322</td><td class='commentCell' valign=top>fetches a specific user's roles in zenTrack
-<br>if bin_id is given, returns only roles for that specific bin
-<br>returns the bin_id and role in an indexed array
-</td>
-</tr>
-<tr bgcolor='#FFFFFF'>
-<td class='nameCell' valign=top>formatEmailMessage</td><td class='valueCell' valign=top>
-params</td><td class='lineCell' valign=top>1370</td><td class='commentCell' valign=top>takes a list of input parameters and makes
-<br>a formatted message to be sent, including links
-<br>and information about the ticket referenced
-<br>special params:
-<br>message - printed at the top of the email with
-<br>line breaks afterwards
-<br>body    - printed with extra line breaks
-<br>tid     - retrieves the ticket by this id and
-<br>includes it in the email body
-<br>log     - retrieves log entries for this ticket
-<br>by the id given by log, limited by the
-<br>system setting email_max_logs
-<br>link    - displays a link to the ticket
-<br>(this is done with the tid property too,
-<br>use this one instead of tid to display
-<br>the link only)
-<br>all others are printed as is, with html stripped
-</td>
-</tr>
-<tr bgcolor='#DFDFDF'>
-<td class='nameCell' valign=top>formatName</td><td class='valueCell' valign=top>
-user_id<br>flag = ''</td><td class='lineCell' valign=top>1337</td><td class='commentCell' valign=top>if the user properties are available, pass those here
-<br>otherwise pass the user id, and he/she will be retrieved
-<br>from the db (user properties can be passed as an array in
-<br>place of $id)
-<br>if $flag = 2, then returns &quot;initials&quot;
-<br>if $flag = 1, then returns &quot;lname, fname&quot;
-<br>if !$flag, then returns &quot;fname lname&quot;
-</td>
-</tr>
-<tr bgcolor='#FFFFFF'>
-<td class='nameCell' valign=top>format_name</td><td class='valueCell' valign=top>
-user_id<br>flag = ''</td><td class='lineCell' valign=top>1332</td><td class='commentCell' valign=top>alias for formatName()
+<td class='nameCell' valign=top>daysInMonth</td><td class='valueCell' valign=top>
+utime</td><td class='lineCell' valign=top>267</td><td class='commentCell' valign=top>returns the number of days in the month
+<br>of the given unix timestamp (as opposed to the month
+<br>number, as with get_daysInMonth() )
+<br>this will determine the year, and account for
+<br>leap year as well
 </td>
 </tr>
 <tr><td colspan=4 class='subTitle'>G</td></tr>
+<tr bgcolor='#FFFFFF'>
+<td class='nameCell' valign=top>get_dayOfWeek</td><td class='valueCell' valign=top>
+num</td><td class='lineCell' valign=top>244</td><td class='commentCell' valign=top>returns the name of the specified
+<br>weekday
+</td>
+</tr>
 <tr bgcolor='#DFDFDF'>
-<td class='nameCell' valign=top>get_access</td><td class='valueCell' valign=top>
-user_id<br>flag = 0</td><td class='lineCell' valign=top>27</td><td class='commentCell' valign=top>retrieves the access priviledges
-<br>by the user_id (user id)
-<br>if flag set to 1, then it returns
-<br>a simple array containing all the columns
-<br>( [0] = array(..all columns in db..) )
-<br>otherwise, returns an array indexed by bin_id,
-<br>with a value of the level for that bin
-<br>( [&quot;bin_id&quot;] = $bin_level )
+<td class='nameCell' valign=top>get_daysInMonth</td><td class='valueCell' valign=top>
+num<br>flag = ''</td><td class='lineCell' valign=top>253</td><td class='commentCell' valign=top>returns the number of days in the given month
+<br>$flag indicates that the year is divible by 4
+<br>(i.e. it's a leap year) and there are 29 days
+<br>in February
 </td>
 </tr>
 <tr bgcolor='#FFFFFF'>
-<td class='nameCell' valign=top>get_attachment</td><td class='valueCell' valign=top>
-access_id</td><td class='lineCell' valign=top>52</td><td class='commentCell' valign=top>retrieves all properties for a given attachment
-<br>this is by the attachment_id and not the ticket or log ID
-<br>and creates a file location to the actual
-<br>attachment which is stored as [&quot;location&quot;]
+<td class='nameCell' valign=top>get_monthName</td><td class='valueCell' valign=top>
+num</td><td class='lineCell' valign=top>235</td><td class='commentCell' valign=top>returns the name of the specified
+<br>month number
 </td>
 </tr>
 <tr bgcolor='#DFDFDF'>
-<td class='nameCell' valign=top>get_attachments</td><td class='valueCell' valign=top>
-id<br>flag = 0<br>indexed = 0</td><td class='lineCell' valign=top>66</td><td class='commentCell' valign=top>retrieves all attachements for a given ticket_id
-<br>indexed by log entry they are associated with
-<br>if $flag = 1, retrieves by log_id instead of ticket_id
-<br>if $indexed = 1, then retrieves in a complex array
-<br>indexed by ticket_id and log_id as follows:
-<br>$vals[&quot;ticket1&quot;][&quot;log1&quot;] = array(datarow)
-<br>otherwise, returns in a simple, non-indexed array
-</td>
-</tr>
-<tr bgcolor='#FFFFFF'>
-<td class='nameCell' valign=top>get_log</td><td class='valueCell' valign=top>
-lid</td><td class='lineCell' valign=top>93</td><td class='commentCell' valign=top>returns a specific logs data
-<br>FROM &quot;.$this-&gt;table_logs.&quot; WHERE lid = $lid&quot;;
-</td>
-</tr>
-<tr bgcolor='#DFDFDF'>
-<td class='nameCell' valign=top>get_logs</td><td class='valueCell' valign=top>
-id<br>sort = 'created DESC'<br>limit = ''</td><td class='lineCell' valign=top>99</td><td class='commentCell' valign=top>retrieve log entries for the given ticket id
-<br>$limit specifies the max number to return
-<br>FROM &quot;.$this-&gt;table_logs.&quot; WHERE ticket_id = $id&quot;;
-</td>
-</tr>
-<tr bgcolor='#FFFFFF'>
-<td class='nameCell' valign=top>get_project</td><td class='valueCell' valign=top>
-pid<br>archive_flag = 0</td><td class='lineCell' valign=top>110</td><td class='commentCell' valign=top>retrieves all properties from database for given
-<br>project.  Also returns the following:
-<br>children -  an array of tickets that belong to this project
-<br>est_hours - is the estimated time for all tickets associated with
-<br>this project
-<br>wkd_hours - is the total hours worked on all tickets for this project
-<br>percent_hours - is the percentage completion based on est_ and wkd_
-<br>if $archive_flag = 1, then will look in archived tickets instead of
-<br>active tickets table
-</td>
-</tr>
-<tr bgcolor='#DFDFDF'>
-<td class='nameCell' valign=top>get_projects</td><td class='valueCell' valign=top>
-params<br>sort = 'priority<br>otime desc'<br>archive_flag =0</td><td class='lineCell' valign=top>129</td><td class='commentCell' valign=top>retrieves a list of projects
-<br>see getTickets() for a list of valid params
-<br>(with the exception of 'type_id' which is set to
-<br>the id for projects)
-<br>note that this does not return an accurate result
-<br>for est_hours and wkd_hours.  Use getProjectHours()
-<br>to determine these values
-<br>if $archive_flag = 1, then retrieves from archive table
-</td>
-</tr>
-<tr bgcolor='#FFFFFF'>
-<td class='nameCell' valign=top>get_ticket</td><td class='valueCell' valign=top>
-id<br>archive_flag = 0</td><td class='lineCell' valign=top>143</td><td class='commentCell' valign=top>retrieves the properties for a
-<br>specific ticket by id
-<br>use get_project() instead for projects
-<br>to retreive accurate est_hours and wkd_hours relative
-<br>to a project and all it's children
-<br>$archive_flag retrieves tickets from archive db instead
-<br>of the ticket db
-</td>
-</tr>
-<tr bgcolor='#DFDFDF'>
-<td class='nameCell' valign=top>get_tickets</td><td class='valueCell' valign=top>
-params = ''<br>sort = 'priority<br>otime desc'<br>columns = ''<br>archive_flag = 0</td><td class='lineCell' valign=top>157</td><td class='commentCell' valign=top>retrieves a list of tickets
-<br>$params can contain:
-<br>bins  - string/array of bins to retrieve for
-<br>users - string/array of users to retrieve for
-<br>id    - an array of specific ticket ids to retrieve
-<br>the default columns returned can be overriden by using $columns to
-<br>specify what should be returned from this function.  Note that the
-<br>sort must correspond to the $columns values for SQL compatibility
-</td>
-</tr>
-<tr bgcolor='#FFFFFF'>
-<td class='nameCell' valign=top>get_user</td><td class='valueCell' valign=top>
-user_id</td><td class='lineCell' valign=top>182</td><td class='commentCell' valign=top>returns a specific user
-<br>by the user id
-</td>
-</tr>
-<tr bgcolor='#DFDFDF'>
-<td class='nameCell' valign=top>get_users</td><td class='valueCell' valign=top>
-bins = ''<br>level = 'level_view'<br>active = 1<br>sort = 'lname<br>fname'</td><td class='lineCell' valign=top>190</td><td class='commentCell' valign=top>creates a list of users
-<br>$bins is an optional array/string of binIDs
-<br>to which the users returned will have access
-<br>$level is the level of access required (&quot;level_view&quot;,&quot;level_user&quot;,etc)
-<br>which defaults to &quot;level_view&quot; if unspecified
-<br>if $active is set to 1, then only retrieves
-<br>accounts which are currently activated
-</td>
-</tr>
-<tr><td colspan=4 class='subTitle'>L</td></tr>
-<tr bgcolor='#FFFFFF'>
-<td class='nameCell' valign=top>login_user</td><td class='valueCell' valign=top>
-username<br>passphrase</td><td class='lineCell' valign=top>1246</td><td class='commentCell' valign=top>perform a login check for username and passphrase
-<br>returns the user's user_id
-</td>
-</tr>
-<tr bgcolor='#DFDFDF'>
-<td class='nameCell' valign=top>log_ticket</td><td class='valueCell' valign=top>
-id<br>user_id<br>action = 'LOG'<br>hours = ''<br>comments = ''</td><td class='lineCell' valign=top>574</td><td class='commentCell' valign=top>create an entry in the ticket log to track hours
-<br>or work done
-</td>
-</tr>
-<tr><td colspan=4 class='subTitle'>M</td></tr>
-<tr bgcolor='#FFFFFF'>
-<td class='nameCell' valign=top>move_ticket</td><td class='valueCell' valign=top>
-id<br>newBin<br>user_id = ''<br>comments = ''</td><td class='lineCell' valign=top>588</td><td class='commentCell' valign=top>moves the ticket to a new bin location
-<br>if comments field is set to 'skip_log' then
-<br>no log will be generated (assumed to have
-<br>been done before calling this)
-</td>
-</tr>
-<tr><td colspan=4 class='subTitle'>P</td></tr>
-<tr bgcolor='#DFDFDF'>
-<td class='nameCell' valign=top>percentWorked</td><td class='valueCell' valign=top>
-etc = 0<br>wkd = 0</td><td class='lineCell' valign=top>1361</td><td class='commentCell' valign=top>determines the percent completion for this
-<br>project
-</td>
-</tr>
-<tr><td colspan=4 class='subTitle'>R</td></tr>
-<tr bgcolor='#FFFFFF'>
-<td class='nameCell' valign=top>reject_ticket</td><td class='valueCell' valign=top>
-id<br>user_id<br>comments = ''</td><td class='lineCell' valign=top>630</td><td class='commentCell' valign=top>&nbsp;</td>
-</tr>
-<tr bgcolor='#DFDFDF'>
-<td class='nameCell' valign=top>relate_ticket</td><td class='valueCell' valign=top>
-id<br>relations<br>user_id = ''<br>comments = ''</td><td class='lineCell' valign=top>658</td><td class='commentCell' valign=top>takes either a comma delimited string
-<br>or an array of ticket ids
-<br>checks to insure they exist before performing
-<br>relations
-<br>THIS FUNCTION IS VERY INEFFICIENT AND NEEDS TO BE REVISED
-<br>IT'S A HORRIBLE HACK FIX NOW, AND PROBABLY REQUIRES
-<br>THE CREATION OF A NEW DB TABLE AND SOME EDITS
-<br>TO THIS FUNCTION (possibly the addition of an addRelation()
-<br>and dropRelation() method to encompass non-global updates)
-</td>
-</tr>
-<tr bgcolor='#FFFFFF'>
-<td class='nameCell' valign=top>reopen_ticket</td><td class='valueCell' valign=top>
-id<br>user_id = 'NULL'<br>tested = 0<br>approved = 0<br>comments = ''</td><td class='lineCell' valign=top>709</td><td class='commentCell' valign=top>opens a ticket that has been closed
-<br>this can be used to reopen tickets
-<br>closed in error, or to make modifications
-<br>to a closed ticket
-</td>
-</tr>
-<tr bgcolor='#DFDFDF'>
-<td class='nameCell' valign=top>reset_password</td><td class='valueCell' valign=top>
-user_id</td><td class='lineCell' valign=top>1134</td><td class='commentCell' valign=top>resets the users passphrase to the default value
-<br>for a user.  This will probably be the users last name
+<td class='nameCell' valign=top>get_WeekdaysInMonth</td><td class='valueCell' valign=top>
+weekday<br>utime = ''</td><td class='lineCell' valign=top>281</td><td class='commentCell' valign=top>returns an array containing the days of the
+<br>month that $weekday (integer 1-7) falls on
 </td>
 </tr>
 <tr><td colspan=4 class='subTitle'>S</td></tr>
 <tr bgcolor='#FFFFFF'>
-<td class='nameCell' valign=top>search_logs</td><td class='valueCell' valign=top>
-params<br>offset = 0<br>archive_flag = 0</td><td class='lineCell' valign=top>234</td><td class='commentCell' valign=top>search through log entries for given text
-<br>params is an indexed array with two elements:
-<br>$params[key][0] = LIKE, =, &gt;, &lt;, &gt;=, etc..
-<br>$params[key][1] = '%value', '%value%', lower('value'), etc
-<br>see db.class complexWhere() for more details concerning
-<br>the params array
-<br>this function requires the values to be provided with single
-<br>quotes and escape chars in place, they will not be added!
-<br>if archive_flag = 1, then searches ticket archives as well
-<br>if archive_flag = 2, then searches archives only
+<td class='nameCell' valign=top>secondsIn</td><td class='valueCell' valign=top>
+measure<br>num = 1</td><td class='lineCell' valign=top>305</td><td class='commentCell' valign=top>returns the number of seconds
+<br>(for unix timestamp conversions) in
+<br>another measure of time (such as minutes
+<br>or hours)
 </td>
 </tr>
 <tr bgcolor='#DFDFDF'>
-<td class='nameCell' valign=top>search_tickets</td><td class='valueCell' valign=top>
-params<br>andor = 'AND'<br>archive_flag = 0</td><td class='lineCell' valign=top>264</td><td class='commentCell' valign=top>search through tickets for given text
-<br>acceptable params are:
-<br>params is an indexed array with two elements:
-<br>$params[key][0] = LIKE, =, &gt;, &lt;, &gt;=, etc..
-<br>$params[key][1] = '%value', '%value%', lower('value'), etc
-<br>see db.class-&gt;build_search_clause() for details concerning
-<br>the params array
-<br>if archive_flag = 1, then searches ticket archives as well
-<br>if archive_flag = 2, then searches archives only
+<td class='nameCell' valign=top>showDate</td><td class='valueCell' valign=top>
+utime = ''<br>flag = ''</td><td class='lineCell' valign=top>157</td><td class='commentCell' valign=top>displays the date, either as mm/dd/yy (flag != 4)
+<br>or as mm/dd/YYYY (flag = 4)
 </td>
 </tr>
 <tr bgcolor='#FFFFFF'>
-<td class='nameCell' valign=top>search_users</td><td class='valueCell' valign=top>
-params<br>andor = &quot;AND&quot;</td><td class='lineCell' valign=top>289</td><td class='commentCell' valign=top>search for users and return a detailed list
-<br>of users who match the criteria given
-<br>see db.class-&gt;build_search_clause() for details about
-<br>constructing a $params array
-</td>
-</tr>
-<tr><td colspan=4 class='subTitle'>T</td></tr>
-<tr bgcolor='#DFDFDF'>
-<td class='nameCell' valign=top>test_ticket</td><td class='valueCell' valign=top>
-id<br>user_id<br>hours = ''<br>comments = ''</td><td class='lineCell' valign=top>755</td><td class='commentCell' valign=top>updates the testing parameter to reflect
-<br>a status of 'testing completed' for the ticket
-</td>
-</tr>
-<tr><td colspan=4 class='subTitle'>U</td></tr>
-<tr bgcolor='#FFFFFF'>
-<td class='nameCell' valign=top>update_access</td><td class='valueCell' valign=top>
-user_id<br>params</td><td class='lineCell' valign=top>1087</td><td class='commentCell' valign=top>deletes the users old access privileges
-<br>and replaces them with the ones given in
-<br>$params, $user_id is the user_id
+<td class='nameCell' valign=top>showDateTime</td><td class='valueCell' valign=top>
+utime = ''<br>flag = ''</td><td class='lineCell' valign=top>186</td><td class='commentCell' valign=top>display the date and time with the same options as both
+<br>showDate() and showTime()... i.e. if the flag were set
+<br>to 'M4' it would show a 4 digit year, and 24 hour notation
+<br>if flag set to M, it would show 24 hour notation and
+<br>2 digit year
 </td>
 </tr>
 <tr bgcolor='#DFDFDF'>
-<td class='nameCell' valign=top>update_bin</td><td class='valueCell' valign=top>
-bid<br>params</td><td class='lineCell' valign=top>1185</td><td class='commentCell' valign=top>update properties for a given bid (bin id)
+<td class='nameCell' valign=top>showDay</td><td class='valueCell' valign=top>
+utime = ''</td><td class='lineCell' valign=top>69</td><td class='commentCell' valign=top>displays the day of the month
+<br>from a unix timestamp
 </td>
 </tr>
 <tr bgcolor='#FFFFFF'>
-<td class='nameCell' valign=top>update_priority</td><td class='valueCell' valign=top>
-pid<br>params</td><td class='lineCell' valign=top>1194</td><td class='commentCell' valign=top>update properties for a given priority
+<td class='nameCell' valign=top>showDayOfYear</td><td class='valueCell' valign=top>
+utime = ''</td><td class='lineCell' valign=top>103</td><td class='commentCell' valign=top>returns day of the year (1-366)
 </td>
 </tr>
 <tr bgcolor='#DFDFDF'>
-<td class='nameCell' valign=top>update_setting</td><td class='valueCell' valign=top>
-setting_id<br>params</td><td class='lineCell' valign=top>1203</td><td class='commentCell' valign=top>update a setting based on it's setting_id
+<td class='nameCell' valign=top>showHour</td><td class='valueCell' valign=top>
+utime = ''<br>flag = ''</td><td class='lineCell' valign=top>177</td><td class='commentCell' valign=top>displays the hour only either as 0-23 (flag contains an M)
+<br>or 1-12 (flag not contain an M)
 </td>
 </tr>
 <tr bgcolor='#FFFFFF'>
-<td class='nameCell' valign=top>update_system</td><td class='valueCell' valign=top>
-sid<br>params</td><td class='lineCell' valign=top>1212</td><td class='commentCell' valign=top>update settings for a given
-<br>sid (system_id)
+<td class='nameCell' valign=top>showLongDate</td><td class='valueCell' valign=top>
+utime = ''<br>flag = ''</td><td class='lineCell' valign=top>202</td><td class='commentCell' valign=top>displays the full text date
+<br>if $flag contains an integer,
+<br>month and weekday are abbreviated
 </td>
 </tr>
 <tr bgcolor='#DFDFDF'>
-<td class='nameCell' valign=top>update_task</td><td class='valueCell' valign=top>
-task_id<br>params</td><td class='lineCell' valign=top>1222</td><td class='commentCell' valign=top>update a ticket task by task_id
+<td class='nameCell' valign=top>showLongDateTime</td><td class='valueCell' valign=top>
+utime = ''<br>flag = ''</td><td class='lineCell' valign=top>223</td><td class='commentCell' valign=top>uses the same options as showLongDate() and showLongTime()
 </td>
 </tr>
 <tr bgcolor='#FFFFFF'>
-<td class='nameCell' valign=top>update_ticket</td><td class='valueCell' valign=top>
-id<br>params</td><td class='lineCell' valign=top>858</td><td class='commentCell' valign=top>update properties of an existing
-<br>tickets with given params
+<td class='nameCell' valign=top>showLongTime</td><td class='valueCell' valign=top>
+utime = ''<br>flag = ''</td><td class='lineCell' valign=top>213</td><td class='commentCell' valign=top>displays the time with seconds and time zone formatting
+<br>if $flag contains 'M' then the time returned will be in 24 hour notation
 </td>
 </tr>
 <tr bgcolor='#DFDFDF'>
-<td class='nameCell' valign=top>update_type</td><td class='valueCell' valign=top>
-type_id<br>params</td><td class='lineCell' valign=top>1231</td><td class='commentCell' valign=top>update a ticket type by the type_id
+<td class='nameCell' valign=top>showMonth</td><td class='valueCell' valign=top>
+utime = ''<br>flag = ''</td><td class='lineCell' valign=top>121</td><td class='commentCell' valign=top>displays the name of the month
+<br>if $flag, then truncates the length to that specified
+<br>by $flag
 </td>
 </tr>
 <tr bgcolor='#FFFFFF'>
-<td class='nameCell' valign=top>update_user</td><td class='valueCell' valign=top>
-user_id<br>params</td><td class='lineCell' valign=top>1058</td><td class='commentCell' valign=top>updates user settings by user_id
-<br>do not encrypt the passphrase, this is done
-<br>automatically
+<td class='nameCell' valign=top>showMonthNum</td><td class='valueCell' valign=top>
+utime = ''</td><td class='lineCell' valign=top>135</td><td class='commentCell' valign=top>returns the number of the month (1-12)
 </td>
 </tr>
-<tr><td colspan=4 class='subTitle'>Y</td></tr>
 <tr bgcolor='#DFDFDF'>
-<td class='nameCell' valign=top>yank_ticket</td><td class='valueCell' valign=top>
-id<br>user_id<br>comments = ''</td><td class='lineCell' valign=top>779</td><td class='commentCell' valign=top>takes a ticket from it's current location and status
-<br>(whatever those might be) and
-<br>assigns it to the user specified
+<td class='nameCell' valign=top>showTime</td><td class='valueCell' valign=top>
+utime = ''<br>flag = ''</td><td class='lineCell' valign=top>167</td><td class='commentCell' valign=top>displays the time either as military time (flag contains an M)
+<br>or am/pm format (flag does not contain an M)
+</td>
+</tr>
+<tr bgcolor='#FFFFFF'>
+<td class='nameCell' valign=top>showWeekday</td><td class='valueCell' valign=top>
+utime = ''<br>flag = ''</td><td class='lineCell' valign=top>79</td><td class='commentCell' valign=top>displays the day of the week from a unix timestamp
+<br>if $flag is an integer, truncates the weekday to the length
+<br>given by $flag
+</td>
+</tr>
+<tr bgcolor='#DFDFDF'>
+<td class='nameCell' valign=top>showWeekdayNum</td><td class='valueCell' valign=top>
+utime = ''</td><td class='lineCell' valign=top>93</td><td class='commentCell' valign=top>returns the number (1-7) for the weekday
+<br>given by the unix timestamp $utime
+</td>
+</tr>
+<tr bgcolor='#FFFFFF'>
+<td class='nameCell' valign=top>showWeekNum</td><td class='valueCell' valign=top>
+utime = ''</td><td class='lineCell' valign=top>114</td><td class='commentCell' valign=top>returns the week of the year (1-53)
+</td>
+</tr>
+<tr bgcolor='#DFDFDF'>
+<td class='nameCell' valign=top>showYear</td><td class='valueCell' valign=top>
+utime = ''<br>flag = ''</td><td class='lineCell' valign=top>144</td><td class='commentCell' valign=top>returns the year
+<br>if $flag, truncates to length of $flag (from the right)
+</td>
+</tr>
+<tr><td colspan=4 class='subTitle'>Z</td></tr>
+<tr bgcolor='#FFFFFF'>
+<td class='nameCell' valign=top>zenDate</td><td class='valueCell' valign=top>
+currTime = ''</td><td class='lineCell' valign=top>662</td><td class='commentCell' valign=top>invokes the zenDate class
+<br>prepares some default values
 </td>
 </tr>
 </table>

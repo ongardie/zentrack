@@ -4,6 +4,11 @@
  Clean, simple interface, fully adaptable administration,
  100 percent object oriented and database abstracted. 
 
+----- UPCOMING ADDITIONS -----
+
+Email interface: Allow tickets to be created/closed/edited via email
+Graphs and Reports: 100% graphical user/project activity and hours reports
+
 ----- v2.0.3 Live () ------
 
 Created a zenTrack project with useful tickets to begin new users, and explain 

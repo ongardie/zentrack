@@ -23,17 +23,24 @@
 </p>
 
 <?
+  /*
+  **  This is the debugging section... please keep this intact, as
+  **  we use it extensively for support questions
+  */
   if( $zen->debug > 0 ) {
      print "<span color='#666666'>\n";
      print "<p>&nbsp;------DEBUG OVERVIEW-------&nbsp;</p>\n";
+     print "<a href='$rootUrl/phpinfo.php'>click here to view phpinfo</a><br>\n";
      print "USER: $HTTP_USER_AGENT<br>\n";
      print "SCRIPT: $SCRIPT_NAME<br>\n";
      print "URL: $HTTP_HOST<br>\n";
      print "DOCROOT: $DOCUMENT_ROOT<br>\n";
      print "COOKIE: $HTTP_COOKIE<br>\n";
      print "SERVER: {$_SERVER['SERVER_SOFTWARE']}<br>\n";
-     print "<p>".$zen->settings["attachment_types_allowed"]."</p>\n";
-     print "<a href='$rootUrl/phpinfo.php'>phpinfo</a><br>\n";
+     print "SYSTEM: ".`uname -a`."<br>\n";
+     print "rootUrl: $rootUrl<br>\n";
+     print "database: ".$zen->database_type."/".$zen->database_host."<br>\n";
+     print "<p>Attachments: ".$zen->settings["attachment_types_allowed"]."</p>\n";
      print "page_browser: $page_browser<br>\n";
      print "databaseConnection: ".$zen->db_link."<br>\n";
      print "settings count: ".count($zen->settings)."<br>\n";

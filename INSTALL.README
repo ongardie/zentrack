@@ -5,24 +5,6 @@
 	locally - zentrack_diretory/www/help/install.html
         online  - http://zentrack.phpzen.net/help/install.php
 
-  Help with any aspect of zenTrack is available:
-      
-	 Documentation
-	   local - zentrack_diretory/www/help/index.php
-	   online - http://zentrack.phpzen.net/help/
-	
-	 Support
-	   online - http://www.sourceforge.net/projects/zentrack (see the support pages)
-              This will get you a response, almost guaranteed
-	   email  - phpzen@users.sourceforge.net
-	      you may get a response if I'm bored
-
-  Troubleshooting:
-        Open includes/configVars.php and set $this->debug = 3;  This will produce
-        Highly useful output for debugging.  If you have trouble, send a support
-        request (see above) with the debug output pasted at the bottom of your message.
-
-
   QUICK AND DIRTY INSTALL INSTRUCTIONS:
 
      -place www/ in the httpd directory tree

@@ -18,6 +18,9 @@
     <? 
 
     foreach($settings as $s) {
+      if( preg_match("#^url_#",$s["name"]) ) {
+	$s["value"] = preg_replace("#^$rootUrl/?#i", "", $s["value"]);
+      }
       $k = $s["setting_id"];
       $class = ($class == "bars")? "cell" : "bars";
       print "<tr><td class='$class'>$k</td>\n";
@@ -56,3 +59,9 @@
       </table>
 
       </form>
+
+
+
+
+
+

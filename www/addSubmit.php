@@ -62,16 +62,6 @@
 	   $params["$f"] = $$f;
 	}
      }
-     if( $params["type_id"] == $zen->noteTypeID() ) {
-       $params["status"] = "CLOSED";
-       $params["tested"] = 0;
-       $params["approved"] = 0;
-       $params["ctime"] = time();
-       unset($params["user_id"]);
-     } else {
-       $params["status"] = "OPEN";
-     }
-
      $params["creator_id"] = $login_id;
      // add the ticket to db
      $id = $zen->add_ticket($params);

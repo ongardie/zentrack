@@ -16,8 +16,8 @@
   /*
   **  GET TICKET INFORMATION
   */
+  $page_title = "Ticket #$id";
   $ticket = $zen->get_ticket($id);
-  $page_title = "Ticket #$id - {$ticket['title']}";
 
   /*
   **  GET PARAMS FOR A PROJECT
@@ -25,13 +25,12 @@
   if( $ticket["type_id"] == $zen->projectTypeID() ) {
      unset($ticket);
      $ticket = $zen->get_project($id);
-     $page_section = "Project $id - ".substr($ticket['title'],0,40);
+     $page_section = "Project $id";
      $expand_projects = 1;
   } else {
      if( strtolower($login_mode) == 'tasks' )
 	$login_mode = 'details';
-     $page_section = $zen->types["{$ticket['type_id']}"]." #$id - "
-	.substr($ticket['title'],0,40);
+     $page_section = $zen->types["$ticket[type_id]"]." #$id";
      $expand_tickets = 1;     
   }
 

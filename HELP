@@ -1,0 +1,41 @@
+
+  Welcome to zenTrack!
+
+  See INSTALL.README for install instructions.
+
+  Documentation
+    local - zentrack_diretory/www/help/index.php
+    online - http://zentrack.phpzen.net/help/
+	
+  Troubleshooting:
+        Open includes/configVars.php and set $this->debug = 3;  This will produce
+        Highly useful output for debugging.  If you have trouble, send a support
+        request (see below) with the debug output pasted at the bottom of your message.
+
+  Support
+
+    CRITICAL!!  When submitting a support request, always begin by setting 
+                $this->debug = 3; in the includes/configVars.php file and then
+		pasting the results in the request.  If you can't get zenTrack to
+		run this far, THEN YOU MUST SUBMIT YOUR VERSION INFO for zenTrack,
+		your OS, your Browser, and your Server, so that we can re-create
+		the error.
+           
+
+    online - http://www.sourceforge.net/projects/zentrack (see the support pages)
+             (This will get you a response, probably in hours, maybe in days)
+
+    email  - phpzen@users.sourceforge.net
+             (you may get a response if I'm bored, maybe in hours, maybe never)
+
+    chat   - Please only use chat for important or critical issues.  If you are
+	     a registered tester for zenTrack, then you may chat directly for all
+	     of your issues.
+	     icq:  100360657
+	     msn:  havenshade@hotmail.com 	     
+             (You will be ignored unless you are a registered tester, I'm in a 
+	     good mood, or your problem is fairly challenging/original.)
+
+
+
+

@@ -62,6 +62,7 @@ if( is_array($tickets) && count($tickets) ) {
       if( $t["status"] == 'CLOSED' ) {
 	$row = $zen->settings["color_bars"];
 	$txt = $rollover_greytext;
+	$tx = "";
 	$text = $zen->settings["color_bar_text"];
       } else if( $t["priority"] <= $zen->settings["level_hot"] ) {
 	$row = $zen->settings["color_background"];
@@ -71,10 +72,12 @@ if( is_array($tickets) && count($tickets) ) {
       } else if( $t["priority"] <= $zen->settings["level_highlight"] ) {
 	$row = $zen->settings["color_background"];
 	$txt = $rollover_text;
+	$tx = "";
 	$text = $zen->settings["color_hot"];	 
       } else {
 	$row = $zen->settings["color_background"];
 	$txt = $rollover_text;
+	$tx = "";
 	$text = $zen->settings["color_text"];	 
       }
 
@@ -97,34 +100,34 @@ if( is_array($tickets) && count($tickets) ) {
 	</td>
 	<? } ?>
 	<? if( !$search_params["status"] || is_array($search_params["status"]) ) { ?>
-	<td height="25" <?=$tx?> valign="middle">
+	<td height="25" valign="middle">
 	  <?=$t["status"]?>
 	</td>
 	<? } ?>
 	<? if( !$search_params["user_id"] || is_array($search_params["user_id"]) ) { ?>
-	<td height="25" <?=$tx?> valign="middle">
+	<td height="25" valign="middle">
 	  <?=$zen->formatName($t["user_id"],2)?>
 	</td>
 	<? } ?>
 	<? if( !$search_params["type_id"] || is_array($search_params["type_id"]) ) { ?>
-	<td height="25" <?=$tx?> valign="middle">
+	<td height="25" valign="middle">
 	  <?=$zen->types["$t[type_id]"]?>
 	</td>
 	<? } ?>
 	<? if( !$search_params["system_id"] || is_array($search_params["system_id"]) ) { ?>
-	<td height="25" <?=$tx?> valign="middle">
+	<td height="25" valign="middle">
 	  <?=$zen->systems["$t[system_id]"]?>
 	</td>
 	<? } ?>
 	<? if( !$search_params["bin_id"] || is_array($search_params["bin_id"]) ) { ?>
-	<td height="25" <?=$tx?> valign="middle">
+	<td height="25" valign="middle">
 	  <?=$zen->bins["$t[bin_id]"]?>
 	</td>
 	<? } ?>
 	</tr>	 	   
 	<? if( $search_text && $search_fields["description"] && $t["description"] ) { ?>
 	<tr style="background:<?=$row?>;color:<?=$text?>">
-	  <td height="25" <?=$tx?> colspan="8">	
+	  <td height="25" colspan="8">	
 	   <?
 	     $t["description"] = ereg_replace("<br />", "<br>", $t["description"]);
 	     $parts = explode("<br>", $t["description"]);

@@ -26,6 +26,12 @@
 		   ($newSettings["$k"] != "on" && $newSettings["$k"] != "off") 
 		 ) {
 	  $errs[] = "$k must be set to 'on' or 'off'"; 
+	} else if( preg_match("#^url_#", $s["name"]) ) {
+	  $newSettings["$k"] = preg_replace("#^$rootUrl/?#i", "", $newSettings["$k"]);
+	  $v = preg_replace("#^$rootUrl/?#i", "", $s["value"]);
+	  if( $v != $newSettings["$k"] ) {
+	    $newparams["$k"] = $newSettings["$k"];
+	  }
 	} else if( $newSettings["$k"] != $s["value"] ) {
 	  $newparams["$k"] = $newSettings["$k"];
 	}
