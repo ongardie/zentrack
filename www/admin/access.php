@@ -8,7 +8,7 @@
   */
   
   
-  include("./admin_header.php");
+  include("admin_header.php");
 
   // security
   $user_id = ereg_replace("[^0-9]", "", $user_id);

@@ -7,7 +7,7 @@
   **
   */  
 
-  include("./admin_header.php");
+  include("admin_header.php");
 
   if( $TODO == 'MORE' ) {
     $more = $more+3;

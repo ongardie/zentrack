@@ -14,7 +14,7 @@
 
   // redirect if it doesn't exist
   if( !$aid || !is_array($att) ) {
-    include("./index.php");
+    include("index.php");
     exit;
     //header("Location: $rootUrl/index.php\n");
   }

@@ -7,7 +7,7 @@
   */
   
   
-  include("./admin_header.php");
+  include("admin_header.php");
 
   if( $user_id == 1 ) {
     $errs[] = "The root administrator account cannot be deleted";

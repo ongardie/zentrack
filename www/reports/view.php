@@ -6,7 +6,7 @@
   **
   */
   
-  include("./reports_header.php");
+  include("reports_header.php");
   $page_tile = "Admin Section";
   include_once("$libDir/nav.php");
 
@@ -55,7 +55,7 @@ if( !is_array($errs) ) {
   <td class='bars' colspan='3'>
 <? 
  if( $text_output > 0 ) {
-   include("./view_text.php");
+   include("view_text.php");
  }
  if( $text_output != 1 ) {
 ?>

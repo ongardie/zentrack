@@ -4,7 +4,7 @@
   **  HELP SECTION - FUTURE
   */
 
-  include("./help_header.php");
+  include("help_header.php");
 
   $page_title = "Future Plans";
   include("$libDir/nav.php");

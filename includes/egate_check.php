@@ -7,7 +7,7 @@
   $start = time();
 
   // include utils and config
-  include("./egate_utils.php");
+  include("egate_utils.php");
   
   // connect to mailbox
   $mb = @imap_open($smtp_string, $smtp_user, $smtp_pass);

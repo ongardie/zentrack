@@ -7,7 +7,7 @@
   */
   
   
-  include("./admin_header.php");
+  include("admin_header.php");
   $page_tile = "Admin Section";
   include("$libDir/nav.php");
   include("$templateDir/adminMenu.php");

@@ -7,7 +7,7 @@
   */
   
   
-  include("./reports_header.php");
+  include("reports_header.php");
   $page_tile = "Admin Section";
   include("$libDir/nav.php");
 

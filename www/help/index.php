@@ -4,7 +4,7 @@
   **  HELP SECTION
   */
 
-  include("./help_header.php");
+  include("help_header.php");
   
   $page_title = "Main Menu";
   include("$libDir/nav.php");

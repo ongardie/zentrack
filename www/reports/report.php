@@ -7,7 +7,7 @@
   **
   */
   
-  include("./reports_header.php");
+  include("reports_header.php");
 
   include("$libDir/zen.class");
   include("$libDir/zenGraph.class");
@@ -28,7 +28,7 @@
   $graph->graphSubtitle = "something";//$params["report_subtitle"];
 
   // create data set
-  include("./randomData.php");
+  include("randomData.php");
 
   // set the system params
   $graph->yHeading = "";

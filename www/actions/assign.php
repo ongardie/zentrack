@@ -8,7 +8,7 @@
   */
   
   $action = "assign";  
-  include("./action_header.php");
+  include("action_header.php");
   
   if( $actionComplete == 1 ) {
     $input = array(

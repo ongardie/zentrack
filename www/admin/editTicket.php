@@ -8,7 +8,7 @@
   */
   
   
-  include("./admin_header.php");
+  include("admin_header.php");
   $page_tile = "Edit Ticket";
   include("$libDir/nav.php");
 

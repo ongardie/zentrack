@@ -8,7 +8,7 @@
   */
 
   $action = "relate";  
-  include("./action_header.php");
+  include("action_header.php");
 
   if( $actionComplete == 1 ) {
      $relations = ereg_replace("[^0-9,\n]", "", $relations);

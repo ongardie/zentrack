@@ -6,7 +6,7 @@
   **
   */
   
-  include("./reports_header.php");
+  include("reports_header.php");
   $page_tile = "Drop Template";
   include("$libDir/nav.php");
 

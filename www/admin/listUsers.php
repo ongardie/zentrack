@@ -7,7 +7,7 @@
   */
   
   
-  include("./admin_header.php");
+  include("admin_header.php");
   $page_tile = "Search for Users";
   include("$libDir/nav.php");
 

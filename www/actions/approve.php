@@ -8,7 +8,7 @@
   */
   
   $action = "approve";  
-  include("./action_header.php");
+  include("action_header.php");
   
   $input = array(
 		 "id"       => "int",

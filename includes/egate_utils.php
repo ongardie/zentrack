@@ -8,7 +8,7 @@
   */
   
   // get configuration
-  include("./egate_config.php");
+  include("egate_config.php");
   
   // initialize log
   $log = array();

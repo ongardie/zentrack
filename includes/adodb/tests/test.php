@@ -1100,7 +1100,7 @@ Test <a href=test4.php>GetInsertSQL/GetUpdateSQL</a> &nbsp;
 if ($ADODB_FETCH_MODE != ADODB_FETCH_DEFAULT) print "<h3>FETCH MODE IS NOT ADODB_FETCH_DEFAULT</h3>";
 
 
-include('./testdatabases.inc.php');
+include('testdatabases.inc.php');
 ?>
 <p><i>ADODB Database Library  (c) 2000-2003 John Lim. All rights reserved. Released under BSD and LGPL.</i></p>
 </body>

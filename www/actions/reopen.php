@@ -8,7 +8,7 @@
   */
 
   $action = "reopen";  
-  include("./action_header.php");
+  include("action_header.php");
 
   if( $actionComplete == 1 ) {
      if( !$tested ) {

@@ -1,5 +1,5 @@
 <?
-  include("./help_header.php");
+  include("help_header.php");
 
   $page_title = "GPL 2.0 Liscence";
   include("$libDir/nav.php");

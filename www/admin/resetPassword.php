@@ -7,7 +7,7 @@
   */
   
   
-  include("./admin_header.php");
+  include("admin_header.php");
 
   if( $user_id == 1 && $login_id != 1 ) {
     $errs[] = "Only the root administrator can change the root administrator's passphrase";

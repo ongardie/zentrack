@@ -7,7 +7,7 @@
   */
   
   
-  include("./reports_header.php");
+  include("reports_header.php");
   $page_tile = "Save Submit";
 
   include("$libDir/nav.php");

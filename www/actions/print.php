@@ -1,7 +1,7 @@
 <?
   
   $action = "print";
-  include("./action_header.php");
+  include("action_header.php");
 
   if( !is_array($ticket) ) {
 	  die("Ticket not found.  Unable to load");

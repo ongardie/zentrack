@@ -5,7 +5,7 @@
   **  Displays saved reports
   */
   
-  include("./reports_header.php");
+  include("reports_header.php");
   $page_tile = "Show Report";
   include_once("$libDir/nav.php");
 
@@ -25,7 +25,7 @@ if( !$repid ) {
   <td class='bars' colspan='3'>
 <? 
  if( $params["text_output"] > 0 ) {
-   include("./view_text.php");
+   include("view_text.php");
  }
  if( $params["text_output"] != 1 ) {
 ?>

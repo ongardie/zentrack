@@ -9,7 +9,7 @@
   */
 
   $action = "accept";  
-  include("./action_header.php");
+  include("action_header.php");
 
    $res = $zen->accept_ticket($id, $login_id);
    if( $res ) {

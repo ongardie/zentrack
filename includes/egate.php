@@ -5,7 +5,7 @@
   */
 
   // include the utils and config
-  include("./egate_utils.php");
+  include("egate_utils.php");
   
   // read email from stdin
   $input = join("",file("php://stdin"));  

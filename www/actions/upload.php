@@ -8,7 +8,7 @@
   */
 
   $action = "upload";  
-  include("./action_header.php");
+  include("action_header.php");
 
   if( $actionComplete == 1 ) {
     // here we are converting this page to make it work

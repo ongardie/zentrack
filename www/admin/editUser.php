@@ -7,7 +7,7 @@
   */
   
   
-  include("./admin_header.php");
+  include("admin_header.php");
 
   $page_tile = "Edit User";
   include("$libDir/nav.php");

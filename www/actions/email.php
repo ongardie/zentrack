@@ -8,7 +8,7 @@
   */
 
   $action = "email";  
-  include("./action_header.php");
+  include("action_header.php");
 
    // Variables that must be in the form which submits
    // to this page:
