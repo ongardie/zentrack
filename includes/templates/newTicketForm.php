@@ -234,7 +234,7 @@ value="<?=($deadline)?$zen->showDate(strip_tags($deadline)):""?>">
   </td>
   <td class="bars">
     <input type="checkbox" name="tested" value="1" 
-  <?= $zen->getDefaultValue("default_tested_checked"); ?>>
+  <?= $zen->getDefaultValue("default_test_checked") ?>>
   </td>
 </tr>          
 <tr>
@@ -243,7 +243,7 @@ value="<?=($deadline)?$zen->showDate(strip_tags($deadline)):""?>">
   </td>
   <td class="bars">
     <input type="checkbox" name="approved" value="1" 
-    <?= $zen->getDefaultValue("default_aprv_checked"); ?>>
+    <?= $zen->getDefaultValue("default_aprv_checked") ?>>
   </td>
 </tr>
   

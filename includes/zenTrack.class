@@ -2797,20 +2797,50 @@ class zenTrack extends zen {
   }
 
   /**
+   * returns whether a zen->settings["field"] is an On/Off type
+   *
+   * the main reason for this method is that we will be updating
+   * the structure of the settings before long to become more rigid.
+   *
+   * @param string $field the name of field in settings
+   * @return boolen yes or no
+   */
+  function isOnOffSetting( $field ) {
+    return ($zen->settings[$field] == "on" || $zen->settings[$field] == "off");
+  }
+
+  /**
+   * returns whether this field is a date format
+   *
+   * the main reason for this method is that we will be updating
+   * the structure of the settings before long to become more rigid.
+   *
+   * @param string $field the name of field in settings
+   * @return boolen yes or no
+   */
+  function isDateFormatSetting( $field ) {
+    return ($field == "default_start_date" || $field == "default_deadline");
+  }
+
+  /**
    * returns default values for fields set in configuration settings
    *
    * @param string $field name of setting to check
    * @return string value to insert into form
    */
   function getDefaultValue( $field ) {
-    if( $field == "default_start_date" 
-	|| $field == "default_deadline" ) {
+    if( $this->isDateFormatSetting($field) ) {
+      // make a date
       $val = (strlen($this->settings[$field]))?
 	strtotime($this->settings[$field]) : "";
     }
-    else {
+    else if( $this->isOnOffSetting($field) ) {
+      // tell whether its checked
       $val = ($this->settings[$field] == "on")?
 	" checked " : "";
+    } else {
+      // there isn't one, so return the actual value
+      $val = $zen->settings[$field];
     }
     return $val;
   }

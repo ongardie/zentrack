@@ -11,6 +11,12 @@
   Adding more template forms missing in cvs
     - includes/templates/email/form_log.template
     - includes/templates/email/form_move.template
+  Updated move form to only show valid choices
+    - includes/templates/action/move.php 1.2
+  Fixed default_test_checked not working properly
+    - includes/zenTrack.class v1.77
+    - includes/templates/newTicketForm.php 1.21
+    - includes/templates/newProjectForm.php 1.17
 
 2003-03-12, MLively
   Created Translation Engine 
