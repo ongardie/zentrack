@@ -222,9 +222,9 @@ CREATE TABLE ZENTRACK_TYPES (
 #
 
 CREATE TABLE ZENTRACK_USERS (
-  uid int(12) NOT NULL auto_increment,
+  userID int(12) NOT NULL auto_increment,
   login varchar(25) default NULL,
-  access int(2) default NULL,
+  accessLevel int(2) default NULL,
   passwd varchar(32) default NULL,
   lname varchar(50) default NULL,
   fname varchar(50) default NULL,
@@ -233,5 +233,5 @@ CREATE TABLE ZENTRACK_USERS (
   notes varchar(255) default NULL,
   homebin int(12) default NULL,
   active int(1) default '1',
-  PRIMARY KEY (uid)
+  PRIMARY KEY (userID)
 ) TYPE=MyISAM;
