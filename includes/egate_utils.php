@@ -129,23 +129,28 @@
       }
 
       //todo: add a remove and add to the actions list, these will
-      // be used by the notify script, these should have some actionApplicable
-      // fields based on the settings for em...._notifylist and em...anonymous
+      //todo: be used by the notify script, these should have some actionApplicable
+      //todo: fields based on the settings for em...._notifylist and em...anonymous
 
-      //todo: determine whether or not to include a function index, and create this
-      // in the template/email directory
+      //todo: create an email user who will have all permissions available
+      //todo: via the email gateway
+      
+      //todo: add a function to parse the incoming email body
+      //todo: and determine what is comments, what is valid
+      //todo: template data, etc
 
-      //todo: create a footer template that details 
-      // the how of add/remove if actionApplicable
+      //todo: check actionApplicable 
+      //todo: (email_interface_anonymous|email_interface_notifylist)? noaccess=1
 
-      // check actionApplicable 
-      // (email_interface_anonymous|email_interface_notifylist)? noaccess=1
+      //todo: add docs for all of this
 
+      // check for "create" in the subject
+      // check for "help" in the subject      
+      // check for "options" in the subject
+      // check for "add" and "remove" in the subject
       // take an appropriate action
       // create log entry for action taken
       // add sender to notify list if appropriate
-
-      //todo: add docs for all of this
 
       // close up shop
       egate_log_write();
