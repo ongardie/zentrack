@@ -2295,6 +2295,7 @@ class ZenTargets {
                  "drop_database" => "Delete a database (use with caution!!)",
                  "extra_secure_mode" => "Tighten directory permissions(for unix, experimental)",
                  "full_install" => "Install a new zentrack version",
+                 "gen_schema_docs" => "Create documentation for the db schema (development tool)",
                  "gen_testunit" => "Create test unit classes (development tool)",
                  "merge_template_file" => "Merge existing config file into template(development tool)",
                  "prepare_install_files" => "Prepare install file(development tool)",
