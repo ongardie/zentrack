@@ -465,7 +465,8 @@ function matchBehaviorCriteria( formObject, behaviorMapField ) {
     return false; 
   }
 
-  fieldVal = getFormFieldValue(formField,behaviorMapField).toLowerCase();
+  fieldVal = getFormFieldValue(formField,behaviorMapField);
+  if( fieldVal ) { fieldVal = fieldVal.toLowerCase(); }
 
   // store result
   var res = false;
@@ -651,7 +652,7 @@ function genBehaviorFunction( fieldObject, oldFunction ) {
 function getFormFieldValue( formField, behaviorMapField ) {
   switch( formField.type ) {
   case "checkbox":
-    return formField.checked;
+    return formField.checked? 'true' : 'false';
   case "radio":
     for(var i=0; i < formField.length; i++) {
       if( formField[i].checked ) { return formField[i].value; }
