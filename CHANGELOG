@@ -16,8 +16,20 @@ abstraction, and endless possibilities for project expansion.
 2005-01-23, KATO
   Added more configurability to the set properties
   feature in egate_create (config file updated)
-
+    - zentrack_2/includes/egate_utils.php 1.39
+    - zentrack_2/install/egate_config.php.default 1.13
   Updated install, help, and upgrade docs
+    - zentrack_2/HELP 1.10
+    - zentrack_2/INSTALL.README 1.26
+    - zentrack_2/UPGRADE.readme 1.21
+    - zentrack_2/install/UPGRADE_mssqlserver.sql 1.26
+    - zentrack_2/install/UPGRADE_mysql.sql 1.34
+    - zentrack_2/install/UPGRADE_oracle.sql 1.33
+    - zentrack_2/install/UPGRADE_postgres.sql 1.25
+    - zentrack_2/install/previous/2.5.0.2.UPGRADE_mssqlserver.sql 1.1
+    - zentrack_2/install/previous/2.5.0.2.UPGRADE_mysql.sql 1.1
+    - zentrack_2/install/previous/2.5.0.2.UPGRADE_oracle.sql 1.1
+    - zentrack_2/install/previous/2.5.0.2.UPGRADE_postgres.sql 1.1
 
 2005-01-22, kato
   Added ability to set properties(such as bin) via
