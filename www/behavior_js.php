@@ -74,7 +74,7 @@ if( is_array($behaviors) ) {
     print "behaviorMap['$bid'] = new BehaviorMapEntry(";
     print $zen->fixJsVal($b['group_id']);
     print ",".$zen->fixJsVal($b['behavior_name']);
-    print ",".$zen->fixJsVal($b['match_all']);
+    print ",".($b['match_all']? 'true' : 'false');
     print ",".$zen->fixJsVal($b['field_name']);
     print ",".($b['field_enabled']? 'false' : 'true');
     print ");\n";
@@ -307,8 +307,9 @@ function setFormValsUsingGroup( fieldObj, group ) {
     // so we unencode it here and then replace occurences
     // of {form} with the form name
     var f = 'window.document.'+fieldObj.form.name;
-    var vals = evalJsString( unescape(group.evalText).replace( /\{form\}/, f) );
-    
+    var s = unescape(group.evalText);
+    var vals = evalJsString( unescape(group.evalText).replace( /{form}/ig, f) );
+
     // clear any existing values from fields array
     group.fields = new Array();
     
@@ -432,7 +433,7 @@ function checkBehaviorStatus( formObject, behaviorId ) {
   for(var i=0; i < behavior.fields.length; i++) {
     var f = behavior.fields[i];
     var matched = matchBehaviorCriteria( formObject, f );
-    behaviorDebug(3, f.name+" "+f.operator+" "+f.value+" ["+matched+"]");
+    behaviorDebug(3, "(checkBehaviorStatus)"+f.name+" "+f.operator+" '"+f.value+"' ["+matched+"]");
 
     // if matchall is set, then we must match every field
     // to succeed
@@ -448,7 +449,7 @@ function checkBehaviorStatus( formObject, behaviorId ) {
   // in the event that we fall through, the return value
   // is true for matchall cases (all were matched) and false
   // otherwise (because none matched)
-  return behavior.matchall;
+  return behavior.matchall? true : false;
 }
 
 /**
@@ -466,53 +467,75 @@ function matchBehaviorCriteria( formObject, behaviorMapField ) {
 
   fieldVal = getFormFieldValue(formField,behaviorMapField).toLowerCase();
 
+  // store result
+  var res = false;
+
   // otherwise, evaluate the match and deal accordingly
   switch( behaviorMapField.operator ) {
   case "eq":
     // equals
-    return behaviorMapField.value == fieldVal;
+    res = behaviorMapField.value == fieldVal;
+    break;
   case "ne":
     // not equal
-    return behaviorMapField.value != fieldVal;
+    res = behaviorMapField.value != fieldVal;
+    break;
   case "co":
     // contains
-    return fieldVal.indexOf(behaviorMapField.value) > -1;
+    res = fieldVal.indexOf(behaviorMapField.value) > -1;
+    break;
   case "nc":
     // does not contain
-    return fieldVal.indexOf(behaviorMapField.value) < 0;
+    res = fieldVal.indexOf(behaviorMapField.value) < 0;
+    break;
   case "sw":
     // starts with
-    return fieldVal.indexOf(behaviorMapField.value) == 0;
+    res = fieldVal.indexOf(behaviorMapField.value) == 0;
+    break;
   case "ew":
     // ends with
     var len1 = behaviorMapField.value.length;
     var len2 = fieldVal.length;
     var len3 = len2-len1;
-    return len3 >= 0 &&
+    res = len3 >= 0 &&
       fieldVal.substr(len3,len1) == behaviorMapField.value;
+    break;
   case "gt":
     // greater than
-    return fieldVal > behaviorMapField.value;
+    res = fieldVal > behaviorMapField.value;
+    break;
   case "lt":
     // less than
-    return fieldVal < behaviorMapField.value;
+    res = fieldVal < behaviorMapField.value;
+    break;
   case "ge":
     // greater than or equal
-    return fieldVal >= behaviorMapField.value;
+    res = fieldVal >= behaviorMapField.value;
+    break;
   case "le":
     // less than or equal
-    return fieldVal <= behaviorMapField.value;
+    res = fieldVal <= behaviorMapField.value;
+    break;
   case "js":
     // evaluate js code
     var f = 'window.document.'+formField.form.name;
-    behaviorMapField.value.replace(/\{form\}/, f);
-    behaviorMapField.value.replace(/\{field\}/, f+'.'+formField.name);
-    return eval(behaviorMapField.value);
+    behaviorMapField.value = behaviorMapField.value.replace(/{form}/ig, f);
+    behaviorMapField.value = behaviorMapField.value.replace(/{field}/ig, f+'.'+formField.name);
+    res = eval(behaviorMapField.value);
+    break;
   default:
-    behaviorDebug(1, "Invalid comparator: "+behaviorMap.operator);
-    return false;
+    behaviorDebug(1, "Invalid comparator: "+behaviorMapField.operator);
+    res = false;
+    break;
   }
+
+  behaviorDebug(3, "(matchBehaviorCriteria) "
+	+"'"+behaviorMapField.value+"' "
+	+behaviorMapField.operator+" "
+	+"'"+fieldVal+"' "
+	+" ["+res+"]");
   
+  return res;
 }
 
 /**
