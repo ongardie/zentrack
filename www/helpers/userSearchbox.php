@@ -6,6 +6,7 @@
   if( $search_bins ) {
     $search_param["homebin"] = $search_bins;
   }
+  $onechoice = isset($_GET['onechoice']) || isset($_POST['onechoice']);
 ?><html>
 <head>
   <title><?php echo tr("Search Users"); ?></title>
@@ -16,6 +17,9 @@
 
 <? if( !isset($dosearch) || !is_array($search_param) ) { ?>
 <form method='post' action='<?=$rootUrl?>/helpers/userSearchbox.php'>
+<? if( $onechoice ) { ?>
+<input type='hidden' name='onechoice' value='1'>
+<? } ?>
 <input type='hidden' name='return_form' value='<?=$zen->ffv($return_form)?>'>
 <input type='hidden' name='return_field' value='<?=$zen->ffv($return_field)?>'>
 <table width='<?=$table_width?>' align='center'>
@@ -117,15 +121,20 @@
    function saveValues() {
      var i;
      var val = "";
+     //var s = "";//debug
      for(i=0; i<document.helperForm.elements.length; i++) {
        element = document.helperForm.elements[i];
-       if( element.type == "checkbox" && element.checked == true && element.value != "skip" ) {
-	 if( val == "" )
-	   val = element.value;
-	 else
-	   val += ","+element.value;
-       } 
+       if( element.type == "<?=$onechoice? 'radio' : 'checkbox'?>" 
+            && element.checked == true && element.value != "skip" ) {
+         if( val == "" )
+           val = element.value;
+         else
+           val += ","+element.value;
+         //s += "selected "+element.name+": "+element.type+"\n";//debug
+       }
+       //else { s += "skipped "+element.name+": "+element.type+"\n"; }//debug
      }
+     //alert(s);//debug
      opener.document.<?=$return_form?>.<?=$return_field?>.value = val;
      window.self.close();
      return false;
@@ -164,7 +173,9 @@
 ?>
 <tr>
   <td class='subTitle'>
+  <? if( !$onechoice ) { ?>
     <input type='checkbox' name='allcheck' value='skip' onClick='checkAll()' class='searchbox'>
+  <? } else { print "&nbsp;"; } ?>
   </td>
   <td class='subTitle'>
     <?php echo tr("ID"); ?>
@@ -180,8 +191,14 @@
    foreach($results as $r) {
      $row = ($row == "cell")? "bars" : "cell";
      print "<tr>\n";
-     print "\t<td class='$row'><input type='checkbox' name='values[$i]' "
-       ." value='{$r['user_id']}'></td>\n";
+     if( !$onechoice ) {
+       print "\t<td class='$row'><input type='checkbox' name='values[$i]' "
+        ." value='{$r['user_id']}'></td>\n";
+     }
+     else {
+       print "\t<td class='$row'><input type='radio' name='values' "
+        ." value='{$r['user_id']}'></td>\n";
+     }
      print "\t<td class='$row'>{$r['user_id']}</td>\n";
      print "\t<td class='$row'>".$zen->formatName($r,1)."</td>\n";
      print "\t<td class='$row'>".$zen->getBinName($r['homebin'])."</td>\n";

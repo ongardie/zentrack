@@ -112,6 +112,7 @@ class DB {
   }
   
   function db_update( $table, $key, $val, $columns ) {
+    unset($columns[$key]);
     $set = $this->makeInsertVals( $columns, 1 );
     $query = "UPDATE $table SET $set WHERE $key = '$val'";
     $r = $this->db_result($query);
@@ -162,6 +163,27 @@ class DB {
     $query = "INSERT INTO $table ($cols) VALUES($vals)";
     $res = $this->db_link->Execute($query);
     $this->addDebug("db_insert","[$res]".$query,3);
+    if( !$res && strpos($this->database_type,"mssql")===0 ) {
+      // deal with sql server id issues by automagically
+      // incrementing the counter when a problem occurs
+      $query = "SELECT max($id_field) FROM $table";
+      $max = $this->db_get($query);
+      $this->addDebug("db_insert", "Checking $id vs max ($max)", 3);
+      if( $max >= $id ) {
+        $this->addDebug("db_insert", "Max id ($max) greater than current sequence ($id), will auto increment (this should only happen immediately after an install or upgrade)", 1);
+        // oops, we have a bad sequence set (this should only happen immediately
+        // after an install) so go ahead and increment until it works
+        while( $max >= $id ) {
+          $id = $this->db_insertID($sequence);
+        }
+        $this->addDebug("db_insert", "Sequence incremented to $id", 1);
+        // now try our query again
+        $params["$id_field"] = $id;
+        list($cols,$vals) = $this->makeInsertVals($params);
+        $query = "INSERT INTO $table ($cols) VALUES($vals)";
+        $res = $this->db_link->Execute($query);
+      }
+    }
     if( $res && $this->database_type == "mysql" ) {
       $id = $this->db_insertID();
     }

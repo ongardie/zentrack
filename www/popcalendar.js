@@ -176,9 +176,9 @@ var	today =	new	Date()
 	}
 
 	function hideCalendar()	{
-		crossobj.visibility="hidden"
-		if (crossMonthObj != null){crossMonthObj.visibility="hidden"}
-		if (crossYearObj !=	null){crossYearObj.visibility="hidden"}
+    if( crossobj ) { crossobj.visibility="hidden"; }
+		if (crossMonthObj != null){crossMonthObj.visibility="hidden";}
+		if (crossYearObj !=	null){crossYearObj.visibility="hidden";}
 
 	    showElement( 'SELECT' );
 		showElement( 'APPLET' );

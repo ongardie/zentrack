@@ -12,6 +12,7 @@
   }
   $userBins = $zen->getUsersBins($login_id,"level_view");
   $users = $zen->get_users( $userBins, "level_view" );
+  $onechoice = isset($_GET['onechoice']) || isset($_POST['onechoice']);
 ?><html>
 <head>
   <title><? echo tr("Search Projects"); ?></title>
@@ -24,6 +25,9 @@
 <form method='post' action='<?=$rootUrl?>/helpers/projectSearchbox.php'>
 <input type='hidden' name='return_form' value='<?=$zen->ffv($return_form)?>'>
 <input type='hidden' name='return_field' value='<?=$zen->ffv($return_field)?>'>
+<? if( $onechoice ) { ?>
+  <input type='hidden' name='onechoice' value='1'>
+<? } ?>
 <table width='<?=$table_width?>' align='center'>
 <tr><td class='titleCell' align='center' colspan='2'><?php echo tr("Search Tickets"); ?></td></tr>
 <tr>
@@ -150,12 +154,12 @@
      for(i=0; i<document.helperForm.elements.length; i++) {
        element = document.helperForm.elements[i];
        if( element.type == "checkbox" ) {
-	 if( curcheck == false ) {
-	   element.checked = true;
-	 }
-	 else {
-	   element.checked = false;
-	 }
+         if( curcheck == false ) {
+           element.checked = true;
+         }
+         else {
+           element.checked = false;
+         }
        }     
      }
      curcheck = (curcheck == false)? true : false;
@@ -166,11 +170,12 @@
      var val = "";
      for(i=0; i<document.helperForm.elements.length; i++) {
        element = document.helperForm.elements[i];
-       if( element.type == "checkbox" && element.checked == true && element.value != "skip" ) {
-	 if( val == "" )
-	   val = element.value;
-	 else
-	   val += ","+element.value;
+       if( element.type == "<?=$onechoice? 'radio' : 'checkbox'?>" 
+          && element.checked == true && element.value != "skip" ) {
+         if( val == "" )
+           val = element.value;
+         else
+           val += ","+element.value;
        } 
      }
      opener.document.<?=$return_form?>.<?=$return_field?>.value = val;
@@ -222,7 +227,9 @@
 ?>
 <tr>
   <td class='subTitle'>
+  <? if( $onechoice ) { print "&nbsp;"; } else { ?>
     <input type='checkbox' name='allcheck' value='skip' onClick='checkAll()' class='searchbox'>
+  <? } ?>
   </td>
   <td class='subTitle'>
     <?php echo tr("ID"); ?>
@@ -238,8 +245,14 @@
    foreach($results as $r) {
      $row = ($row == "cell")? "bars" : "cell";
      print "<tr>\n";
-     print "\t<td class='$row'><input type='checkbox' name='values[$i]' "
+     if( $onechoice ) {
+       print "\t<td class='$row'><input type='radio' name='values' "
        ." value='{$r['id']}'></td>\n";
+     }
+     else {
+       print "\t<td class='$row'><input type='checkbox' name='values[$i]' "
+         ." value='{$r['id']}'></td>\n";
+     }
      print "\t<td class='$row'>{$r['id']}</td>\n";
      print "\t<td class='$row'>{$r['title']}</td>\n";
      print "\t<td class='$row'>".$zen->getBinName($r["bin_id"])."</td>\n";

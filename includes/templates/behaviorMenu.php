@@ -21,18 +21,19 @@
 	   <b><?=tr("Edit the Behaviors")?></b>
 	 </td>
 	 </tr>
-	 <tr>
-	  <td width="30" class='cell' align='center'><b>ID</b></td>
-          <td class='cell' align='center'><b><?=tr("Enabled")?></b></td>
-          <td class='cell' align='center'><b><?=tr("Sort Order")?></b></td>
-          <td class='cell' align='center'><b><?=tr("Behavior Name")?></b></td>
-          <td class='cell' align='center'><b><?=tr("Match Type")?></b></td>
-          <td class='cell' align='center'><b><?=tr("Field Name")?></b></td>
-          <td class='cell' align='center'><b><?=tr("Group to apply")?></b></td>
-          <td class='cell' align='center'><b><?=tr("Field State")?></b></td>
-          <td class='cell' align='center'><b><?=tr("Actions")?></b></td>
-	 </tr>
-    <? 
+<tr>
+  <td class='subTitle' width='30' align='center'><b><?=tr("ID")?></b></td>
+  <td class='subTitle' align='center'><b><?=tr("Enabled")?></b></td>
+  <td class='subTitle' align='center'><b><?=tr("Sort Order")?></b></td>
+  <td class='subTitle' align='center'><b><?=tr("Behavior Name")?></b></td>
+  <td class='subTitle' align='center'><b><?=tr("Match Type")?></b></td>
+  <td class='subTitle' align='center'><b><?=tr("Field Name")?></b></td>
+  <td class='subTitle' align='center'><b><?=tr("Group to apply")?></b></td>
+  <td class='subTitle' align='center'><b><?=tr("Field State")?></b></td>
+  <td class='subTitle' align='center'><b><?=tr("Actions")?></b></td>
+</tr>
+
+<? 
    $behaviors = $zen->getBehaviorList(0);
    $groups=$zen->getDataGroups(0);
    $num = count($behaviors);

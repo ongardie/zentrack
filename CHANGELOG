@@ -13,6 +13,14 @@ abstraction, and endless possibilities for project expansion.
 
 ----- VERSION 2.5.0.3 (development) -----
 
+2005-01-31, Kato
+  Fixed SQL Server sequence id problem by adding an auto-increment feature
+  to catch up with the max id.
+  
+  Created administrative screen for the field map policies
+  
+  Added field map implementation to the create screen
+
 2005-01-29, Kato
   Added caching of system properties and data types to reduce
   database lookups

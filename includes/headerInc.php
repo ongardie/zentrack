@@ -63,6 +63,7 @@
   // in egate_utils.php as well!
   include_once("$libDir/translator.class");
   include_once("$libDir/zenTrack.class");
+  include_once("$libDir/ZenFieldMap.class");
   include_once("$libDir/zenTemplate.class");
   
   $zen = new zenTrack( $configFile );

@@ -1,7 +1,7 @@
 
-#
-# Load data for table 'ZENTRACK_ACCESS'
-#
+--
+-- Load data for table 'ZENTRACK_ACCESS'
+--
 
 INSERT INTO ZENTRACK_ACCESS (access_id, user_id, bin_id, lvl, notes) VALUES (1,2,2,1,NULL);
 INSERT INTO ZENTRACK_ACCESS (access_id, user_id, bin_id, lvl, notes) VALUES (2,2,3,1,NULL);
@@ -9,9 +9,9 @@ INSERT INTO ZENTRACK_ACCESS (access_id, user_id, bin_id, lvl, notes) VALUES (3,2
 INSERT INTO ZENTRACK_ACCESS (access_id, user_id, bin_id, lvl, notes) VALUES (4,2,4,1,NULL);
 INSERT INTO ZENTRACK_ACCESS (access_id, user_id, bin_id, lvl, notes) VALUES (5,2,3,1,NULL);
 
-#
-# Load data for table 'ZENTRACK_BINS'
-#
+--
+-- Load data for table 'ZENTRACK_BINS'
+--
 
 INSERT INTO ZENTRACK_BINS (bid, name, priority, active) VALUES (1,'Accounting',0,1);
 INSERT INTO ZENTRACK_BINS (bid, name, priority, active) VALUES (2,'Engineering',0,1);
@@ -21,15 +21,15 @@ INSERT INTO ZENTRACK_BINS (bid, name, priority, active) VALUES (5,'Tech Support'
 INSERT INTO ZENTRACK_BINS (bid, name, priority, active) VALUES (6,'Human Resources',0,1);
 INSERT INTO ZENTRACK_BINS (bid, name, priority, active) VALUES (7,'Test Bin',0,0);
 
-#
-# Load data for table 'ZENTRACK_LOGS'
-#
+--
+-- Load data for table 'ZENTRACK_LOGS'
+--
 
 INSERT INTO ZENTRACK_LOGS (lid, ticket_id, user_id, bin_id, created, action, hours, entry) VALUES (1,2,1,2,1019621210,'ACCEPTED',NULL,NULL);
 
-#
-# Load data for table 'ZENTRACK_PRIORITIES'
-#
+--
+-- Load data for table 'ZENTRACK_PRIORITIES'
+--
 
 INSERT INTO ZENTRACK_PRIORITIES (pid, name, priority, active) VALUES (1,'Critical',5,1);
 INSERT INTO ZENTRACK_PRIORITIES (pid, name, priority, active) VALUES (2,'High',4,1);
@@ -37,9 +37,9 @@ INSERT INTO ZENTRACK_PRIORITIES (pid, name, priority, active) VALUES (3,'Medium'
 INSERT INTO ZENTRACK_PRIORITIES (pid, name, priority, active) VALUES (4,'Low',2,1);
 INSERT INTO ZENTRACK_PRIORITIES (pid, name, priority, active) VALUES (6,'None',1,1);
 
-#
-# Load data for table 'ZENTRACK_SETTINGS'
-#
+--
+-- Load data for table 'ZENTRACK_SETTINGS'
+--
 
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (1,'admin_email','root@localhost','The email address of the zenTrack administrator');
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (2,'bot_name','zenBot','The system bots name');
@@ -148,9 +148,9 @@ INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (105
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (106,'default_start_date_hours','on','Include hours in default start date for new tickets');
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (107,'default_deadline_hours','on','Include hours in default deadline for new tickets');
 
-#
-# Load data for table 'ZENTRACK_SYSTEMS'
-#
+--
+-- Load data for table 'ZENTRACK_SYSTEMS'
+--
 
 INSERT INTO ZENTRACK_SYSTEMS (sid, name, priority, active) VALUES (1,'Apache',0,1);
 INSERT INTO ZENTRACK_SYSTEMS (sid, name, priority, active) VALUES (2,'Email',0,1);
@@ -160,9 +160,9 @@ INSERT INTO ZENTRACK_SYSTEMS (sid, name, priority, active) VALUES (5,'PC',0,1);
 INSERT INTO ZENTRACK_SYSTEMS (sid, name, priority, active) VALUES (6,'Printer',0,1);
 INSERT INTO ZENTRACK_SYSTEMS (sid, name, priority, active) VALUES (7,'Website',0,1);
 
-#
-# Load data for table 'ZENTRACK_TASKS'
-#
+--
+-- Load data for table 'ZENTRACK_TASKS'
+--
 
 INSERT INTO ZENTRACK_TASKS (task_id, name, priority, active) VALUES (1,'Action Taken',0,1);
 INSERT INTO ZENTRACK_TASKS (task_id, name, priority, active) VALUES (2,'Debugging',0,1);
@@ -176,16 +176,16 @@ INSERT INTO ZENTRACK_TASKS (task_id, name, priority, active) VALUES (9,'Solution
 INSERT INTO ZENTRACK_TASKS (task_id, name, priority, active) VALUES (10,'Testing',0,1);
 INSERT INTO ZENTRACK_TASKS (task_id, name, priority, active) VALUES (11,'Work',0,1);
 
-#
-# Load data for table 'ZENTRACK_TICKETS'
-#
+--
+-- Load data for table 'ZENTRACK_TICKETS'
+--
 
 INSERT INTO ZENTRACK_TICKETS (id, title, priority, status, description, otime, ctime, bin_id, type_id, user_id, system_id, creator_id, tested, approved, relations, project_id, est_hours, deadline, start_date, wkd_hours) VALUES (1,'Welcome to zenTrack!!',2,'OPEN','Welcome to the zenTrack system!\r<br />\n\r<br />\nCongratulations, your install was successful.\r<br />\n\r<br />\nYou can find more help in the help section on this site, and online at http://zentrack.phpzen.net.\r<br />\n\r<br />\nYou can find support for your product at the sourceforge project: http://www.sourceforge.net/projects/zentrack',1019621097,NULL,2,5,2,7,1,0,0,NULL,NULL,0.00,NULL,NULL,0.10);
 INSERT INTO ZENTRACK_TICKETS (id, title, priority, status, description, otime, ctime, bin_id, type_id, user_id, system_id, creator_id, tested, approved, relations, project_id, est_hours, deadline, start_date, wkd_hours) VALUES (2,'CHANGE ADMIN PASSWORD',1,'OPEN','You need to change the admin passphrase right away.\r<br />\n\r<br />\nIn addition, two other accounts, User, and Guest were created.  You will want to modify those or delete them as your system security and preferences determine.',1019621197,NULL,2,8,NULL,7,1,0,0,NULL,NULL,0.01,1022137200,NULL,1.00);
 
-#
-# Load data for table 'ZENTRACK_TYPES'
-#
+--
+-- Load data for table 'ZENTRACK_TYPES'
+--
 
 INSERT INTO ZENTRACK_TYPES (type_id, name, priority, active) VALUES (1,'Project',0,1);
 INSERT INTO ZENTRACK_TYPES (type_id, name, priority, active) VALUES (2,'Support Request',0,1);
@@ -197,9 +197,9 @@ INSERT INTO ZENTRACK_TYPES (type_id, name, priority, active) VALUES (7,'Service'
 INSERT INTO ZENTRACK_TYPES (type_id, name, priority, active) VALUES (8,'Task',0,1);
 INSERT INTO ZENTRACK_TYPES (type_id, name, priority, active) VALUES (9,'Note',0,1);
 
-#
-# Load data for table 'ZENTRACK_USERS'
-#
+--
+-- Load data for table 'ZENTRACK_USERS'
+--
 
 INSERT INTO ZENTRACK_USERS (user_id, login, access_level, passphrase, lname, fname, initials, email, notes, homebin, active) VALUES (1,'Administrator',5,'7b7bc2512ee1fedcd76bdc68926d4f7b','Administrator','zenTrack','ADMIN','root@localhost','This is the master login',2,2);
 INSERT INTO ZENTRACK_USERS (user_id, login, access_level, passphrase, lname, fname, initials, email, notes, homebin, active) VALUES (2,'Guest',0,'adb831a7fdd83dd1e2a309ce7591dff8','Visitor','Guest','GUEST',NULL,NULL,2,1);
@@ -207,9 +207,9 @@ INSERT INTO ZENTRACK_USERS (user_id, login, access_level, passphrase, lname, fna
 INSERT INTO ZENTRACK_USERS (user_id, login, access_level, passphrase, lname, fname, initials, email, notes, homebin, active) VALUES (4,'egate',2,NULL,'Gateway','Email','egate','zentrack@localhost','Email Gateway Account',1,0);
 
 
-#
-# Load data for table 'ZENTRACK_VARFIELD_IDX'
-#
+--
+-- Load data for table 'ZENTRACK_VARFIELD_IDX'
+--
 
 
 INSERT INTO ZENTRACK_VARFIELD_IDX (field_name,       field_label,       sort_order) 

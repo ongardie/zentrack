@@ -71,20 +71,19 @@
   **
   ** This will solve many of your troubles...
   ** please turn it on, and copy and paste
-  ** the output into any support requests
+  ** useful portions of the output into any 
+  ** support requests
   ** 
   **  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   **  VERY VERY VERY VERY IMPORTANT!!!!!!!
   **  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   **
-  ** Debugging is not for production use.  It can provide hints that hackers
-  ** might use to exploit your system.  Additionally, it comes at a cost, since
-  ** all of this additional information has to be stored in memory and written
-  ** to the page, slowing performance.
+  ** Debugging is not for production use.  Use it during
+  ** setup and then be sure to turn it off.  It provides
+  ** information about your system that is not for public
+  ** consumption.
   **
   */
-  //the overview of system settings, 0=off, 1=on
-  $Debug_Overview = 1;
 
   //set this from 0=off, 1=errors, 2=warnings, 3=notices(all)
   $Debug_Mode = 1;  

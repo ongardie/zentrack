@@ -1,7 +1,7 @@
 
-#
-# Table structure for `zentrack_agreement`
-#
+--
+-- Table structure for `zentrack_agreement`
+--
 
 CREATE TABLE ZENTRACK_AGREEMENT (
   agree_id int(12) NOT NULL auto_increment,
@@ -19,9 +19,9 @@ CREATE TABLE ZENTRACK_AGREEMENT (
   PRIMARY KEY  (agree_id)
 );
 
-#
-# Table structure for `zentrack_agreement_item`
-#
+--
+-- Table structure for `zentrack_agreement_item`
+--
 
 CREATE TABLE ZENTRACK_AGREEMENT_ITEM (
   item_id int(12) NOT NULL auto_increment,
@@ -36,9 +36,9 @@ CREATE TABLE ZENTRACK_AGREEMENT_ITEM (
   PRIMARY KEY  (item_id)
 );
 
-#
-# Table structure for `zentrack_company`
-#
+--
+-- Table structure for `zentrack_company`
+--
 
 CREATE TABLE ZENTRACK_COMPANY (
   company_id int(12) NOT NULL auto_increment,
@@ -64,9 +64,9 @@ CREATE TABLE ZENTRACK_COMPANY (
   PRIMARY KEY  (company_id)
 );
 
-#
-# Table structure for `zentrack_employee`
-#
+--
+-- Table structure for `zentrack_employee`
+--
 
 CREATE TABLE ZENTRACK_EMPLOYEE (
   person_id int(12) NOT NULL auto_increment,
@@ -88,9 +88,9 @@ CREATE TABLE ZENTRACK_EMPLOYEE (
   PRIMARY KEY  (person_id)
 );
 
-#
-# Table structure for `zentrack_related_contacts`
-#
+--
+-- Table structure for `zentrack_related_contacts`
+--
 
 CREATE TABLE ZENTRACK_RELATED_CONTACTS (
   clist_id int(12) NOT NULL auto_increment,
@@ -100,9 +100,9 @@ CREATE TABLE ZENTRACK_RELATED_CONTACTS (
   PRIMARY KEY  (clist_id)
 );
 
-#
-# Table structure for table 'ZENTRACK_NOTIFY_LIST'
-#
+--
+-- Table structure for table 'ZENTRACK_NOTIFY_LIST'
+--
 CREATE TABLE ZENTRACK_NOTIFY_LIST (
    notify_id int(12) NOT NULL auto_increment,
    ticket_id int(12) NOT NULL,
@@ -114,9 +114,9 @@ CREATE TABLE ZENTRACK_NOTIFY_LIST (
    PRIMARY KEY (notify_id)
 );
 
-#
-# Table structure for table 'ZENTRACK_ACCESS'
-#
+--
+-- Table structure for table 'ZENTRACK_ACCESS'
+--
 
 CREATE TABLE ZENTRACK_ACCESS (
   access_id int(12) NOT NULL auto_increment,
@@ -127,9 +127,9 @@ CREATE TABLE ZENTRACK_ACCESS (
   PRIMARY KEY (access_id)
 ) TYPE=MyISAM;
 
-#
-# Table structure for table 'ZENTRACK_ATTACHMENTS'
-#
+--
+-- Table structure for table 'ZENTRACK_ATTACHMENTS'
+--
 
 CREATE TABLE ZENTRACK_ATTACHMENTS (
   attachment_id int(12) NOT NULL auto_increment,
@@ -142,9 +142,9 @@ CREATE TABLE ZENTRACK_ATTACHMENTS (
   PRIMARY KEY (attachment_id)
 ) TYPE=MyISAM;
 
-#
-# Table structure for table 'ZENTRACK_BINS'
-#
+--
+-- Table structure for table 'ZENTRACK_BINS'
+--
 
 CREATE TABLE ZENTRACK_BINS (
   bid int(12) NOT NULL auto_increment,
@@ -154,9 +154,9 @@ CREATE TABLE ZENTRACK_BINS (
   PRIMARY KEY (bid)
 ) TYPE=MyISAM;
 
-#
-# Table structure for table 'ZENTRACK_LOGS'
-#
+--
+-- Table structure for table 'ZENTRACK_LOGS'
+--
 
 CREATE TABLE ZENTRACK_LOGS (
   lid int(12) NOT NULL auto_increment,
@@ -170,9 +170,9 @@ CREATE TABLE ZENTRACK_LOGS (
   PRIMARY KEY (lid)
 ) TYPE=MyISAM;
 
-#
-# Table structure for table 'ZENTRACK_PREFERENCES'
-#
+--
+-- Table structure for table 'ZENTRACK_PREFERENCES'
+--
 
 CREATE TABLE ZENTRACK_PREFERENCES (
   user_id  int(12) NOT NULL default '0',
@@ -181,9 +181,9 @@ CREATE TABLE ZENTRACK_PREFERENCES (
   index (user_id)
 ) TYPE=MyISAM;
 
-#
-# Table structure for table 'ZENTRACK_PRIORITIES'
-#
+--
+-- Table structure for table 'ZENTRACK_PRIORITIES'
+--
 
 CREATE TABLE ZENTRACK_PRIORITIES (
   pid int(12) NOT NULL auto_increment,
@@ -193,9 +193,9 @@ CREATE TABLE ZENTRACK_PRIORITIES (
   PRIMARY KEY (pid)
 ) TYPE=MyISAM;
 
-#
-# Table structure for table 'ZENTRACK_SETTINGS'
-#
+--
+-- Table structure for table 'ZENTRACK_SETTINGS'
+--
 
 CREATE TABLE ZENTRACK_SETTINGS (
   setting_id int(12) NOT NULL auto_increment,
@@ -205,9 +205,9 @@ CREATE TABLE ZENTRACK_SETTINGS (
   PRIMARY KEY (setting_id)
 ) TYPE=MyISAM;
 
-#
-# Table structure for table 'ZENTRACK_SYSTEMS'
-#
+--
+-- Table structure for table 'ZENTRACK_SYSTEMS'
+--
 
 CREATE TABLE ZENTRACK_SYSTEMS (
   sid int(12) NOT NULL auto_increment,
@@ -217,9 +217,9 @@ CREATE TABLE ZENTRACK_SYSTEMS (
   PRIMARY KEY (sid)
 ) TYPE=MyISAM;
 
-#
-# Table structure for table 'ZENTRACK_TASKS'
-#
+--
+-- Table structure for table 'ZENTRACK_TASKS'
+--
 
 CREATE TABLE ZENTRACK_TASKS (
   task_id int(12) NOT NULL auto_increment,
@@ -229,9 +229,9 @@ CREATE TABLE ZENTRACK_TASKS (
   PRIMARY KEY (task_id)
 ) TYPE=MyISAM;
 
-#
-# Table structure for table 'ZENTRACK_TICKETS'
-#
+--
+-- Table structure for table 'ZENTRACK_TICKETS'
+--
 
 CREATE TABLE ZENTRACK_TICKETS (
   id int(12) NOT NULL auto_increment,
@@ -257,9 +257,9 @@ CREATE TABLE ZENTRACK_TICKETS (
   PRIMARY KEY (id)
 ) TYPE=MyISAM;
 
-#
-# Table structure for table 'ZENTRACK_TYPES'
-#
+--
+-- Table structure for table 'ZENTRACK_TYPES'
+--
 
 CREATE TABLE ZENTRACK_TYPES (
   type_id int(12) NOT NULL auto_increment,
@@ -269,9 +269,9 @@ CREATE TABLE ZENTRACK_TYPES (
   PRIMARY KEY (type_id)
 ) TYPE=MyISAM;
 
-#
-# Table structure for table 'ZENTRACK_USERS'
-#
+--
+-- Table structure for table 'ZENTRACK_USERS'
+--
 
 CREATE TABLE ZENTRACK_USERS (
   user_id int(12) NOT NULL auto_increment,
@@ -288,9 +288,9 @@ CREATE TABLE ZENTRACK_USERS (
   PRIMARY KEY (user_id)
 ) TYPE=MyISAM;
 
-# 
-# Table structure for table 'ZENTRACK_REPORTS' 
-# 
+-- 
+-- Table structure for table 'ZENTRACK_REPORTS' 
+-- 
 
 CREATE TABLE ZENTRACK_REPORTS ( 
    report_id int(12) NOT NULL auto_increment, 
@@ -313,9 +313,9 @@ CREATE TABLE ZENTRACK_REPORTS (
    PRIMARY KEY (report_id) 
 );
 
-# 
-# Table structure for table 'ZENTRACK_REPORTS_INDEX' 
-# 
+-- 
+-- Table structure for table 'ZENTRACK_REPORTS_INDEX' 
+-- 
 
 CREATE TABLE ZENTRACK_REPORTS_INDEX ( 
    report_id int(12) default NULL, 
@@ -323,9 +323,9 @@ CREATE TABLE ZENTRACK_REPORTS_INDEX (
    user_id int(12) default NULL 
 );
 
-# 
-# Table structure for table 'ZENTRACK_REPORTS_TEMP' 
-# 
+-- 
+-- Table structure for table 'ZENTRACK_REPORTS_TEMP' 
+-- 
 
 CREATE TABLE ZENTRACK_REPORTS_TEMP ( 
    report_id int(12) NOT NULL auto_increment, 
@@ -350,9 +350,9 @@ CREATE TABLE ZENTRACK_REPORTS_TEMP (
    KEY tempreports_created(created) 
 );
 
-#
-# Release 2.5 new tables
-#
+--
+-- Release 2.5 new tables
+--
 
 CREATE TABLE ZENTRACK_BEHAVIOR (
   behavior_id int(12) NOT NULL auto_increment,

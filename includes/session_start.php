@@ -59,7 +59,7 @@ if( isset($_COOKIE) ) {
 // which use /bin/php as the SCRIPT_NAME rather
 // than the actual script
 if( (isset($PHP_SELF)&&strlen($PHP_SELF)) 
-    && (!isset($SCRIPT_NAME)||strpos(".php",$SCRIPT_NAME) === false) ) {
+    && (!isset($SCRIPT_NAME)||strpos($SCRIPT_NAME,".php") === false) ) {
   $SCRIPT_NAME = $PHP_SELF;
 }
 

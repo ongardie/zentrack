@@ -73,7 +73,7 @@ class zenTemplate {
       $this->_text = file($this->_template);
     }
     else {
-      $this->_text = array("Template file $template could not be found.");
+      $this->_text = array("Template file {$this->_template} could not be found.");
     }
   }
 
@@ -220,6 +220,7 @@ class zenTemplate {
    **/
   function _parseString( $text ) {
     $text = str_replace('\\"', '"', $text);
+    $text = str_replace("\\'", "'", $text);
     // parse the string to print
     $vals = explode("+",trim($text));
     $str = "";
