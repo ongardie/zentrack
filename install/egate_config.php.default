@@ -7,25 +7,33 @@
   
   // use the absolute path (not the url)
   // to the www/header.php file
-  $header_file_location = "/path/to/zentrack/www/header.php";
-
-  // the notify level determines when we will send
-  // an email reply to the sender
-  //    0 - never
-  //    1 - on high level errors only
-  //    2 - on any warning
-  //    3 - on any information logged
-  $egate_notify_level = 1;
-  
-  // this is primarily for debugging.  Any email address
-  // entered here will recieve a BCC of all emails sent
-  // by the egate system
-  $egate_bcc_address = "";
+  $header_file_location = "/web/...zentrack/www/header.php";
 
   // the user account that will be used to control
   // permissions while using the egate interface
   // (provide the login name here, the password is not needed)
   $egate_account = "EgateUser";
+  
+  // the notify level determines what we will
+  // send an email to the sender for
+  //    0 - never
+  //    1 - on high level errors only
+  //    2 - on any warning
+  //    3 - on any information
+  $egate_notify_level = 3;
+
+  // the log level determines what we will
+  // place within the log
+  //    0 - never
+  //    1 - on high level errors only
+  //    2 - on any warning
+  //    3 - on any information
+  $egate_log_level = 3;
+  
+  // this is primarily for debugging.  Any email address
+  // entered here will recieve a BCC of all emails sent
+  // by the egate system
+  $egate_bcc_address = "your@email.com";
   
   /*
   **  IF USING THE PIPE TO EGATE OPTION, you are done
@@ -35,16 +43,16 @@
   
   // use an ip address, 
   // a fully qualified domain name, or locahost
-  $smtp_host = "localhost";
+  $smtp_host = "mail.yourstmpsite.com";
   
   // this probably doesn't need to change
   $smtp_port = "110";
   
   // the username to log in with
-  $smtp_user = "yourname";
+  $smtp_user = "username";
   
   // the password to log in with
-  $smtp_pass = "yourpass";    
+  $smtp_pass = "password";    
 
   // this is a basic pop3 config
   // you probably don't need to change this at all
