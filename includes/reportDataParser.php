@@ -11,32 +11,35 @@ if( is_array($params) ) {
   if( !is_array($params["data_set"]) )
     $params["data_set"] = explode(",",$params["data_set"]);
   $params["chart_options"] = explode(",",$params["chart_options"]);
-
+  
   $zen->addDebug("reportDataParser",
-   "Report generated with id: {$params['report_id']}",2);
+		 "Report generated with id: {$params['report_id']}",2);
   
   // set up the date configuration
   // and the xlabels
   if( !$params["date_low"] || $params["date_selector"] == "range" ) {
     $today = $zen->dateAnchor("day");
     $params["date_low"] = $zen->dateAdjust(-$params["date_value"], 
-                  $params["date_range"],$today);
+					   $params["date_range"],$today);
   }
   // create data set
   // calculate the compact
   // calculate the legend
   if( preg_match("@([a-z]+) ID@i", $params["report_type"], $matches) ) {
     $set_index = array();
-    $n = "get_".strtolower($matches[1]);
+    $m = strtolower($matches[1]);
+    $n = "get_$m";
     $type_column = str_replace(" ","_",strtolower($params["report_type"]));
-    $tbl_column = $zen->getTableId(strtolower($matches[1]));
+    $t = $m == 'ticket'? 'tickets' : $m == 'project'? 'tickets' : 'users';
+    
+    $tbl_column = $zen->getTableId($t);
     foreach($params["data_set"] as $d) {
       $vals = $zen->$n($d);
       $k = $vals["$tbl_column"];
       if( $tbl_column == "user_id" ) {
-   $val = $zen->formatName($vals,1);
+	$val = $zen->formatName($vals,1);
       } else {
-   $val = substr($vals["title"],0,$title_length);
+	$val = substr($vals["title"],0,$title_length);
       }
       $set_index["$k"] = $val;
     }    
@@ -45,12 +48,20 @@ if( is_array($params) ) {
     $set_index = $zen->$n();
     $type_column = strtolower($params["report_type"])."_id";
   }
+
+  //print "<pre>\n";//debug
+  //Zen::printArray($vals,'vals');//debug
+  //print "tbl_column: $tbl_column\n";//debug
+  //Zen::printArray($set_index,'set_index');//debug
+  //print "</pre>\n";//debug
+  //exit;
+  
   $date_set = array();
   $date_labels = array();
   $step = ($params["date_value"] >= 20)?
     ceil($params["date_value"]/10) : 1;
   $end_date = $zen->dateAdjust($params["date_value"],$params["date_range"],
-                $params["date_low"]);
+			       $params["date_low"]);
   for($i=0; $i<$params["date_value"]; $i+=$step) {
     $cdate = ($i>0)? 
       $zen->dateAdjust($i,$params["date_range"],$params["date_low"]) : 
@@ -69,9 +80,9 @@ if( is_array($params) ) {
       $key = strftime("%Y",$cdate);
     } else if( $sub == "ho" || $sub == "mi" ) {
       if( $params["date_value"] > 24 ) {
-   $key = strftime($zen->date_fmt_short." ".$zen->time_fmt,$cdate);
+	$key = strftime($zen->date_fmt_short." ".$zen->time_fmt,$cdate);
       } else {
-   $key = strftime($zen->time_fmt,$cdate);
+	$key = strftime($zen->time_fmt,$cdate);
       }
     } else {
       $key = " $i";
@@ -79,12 +90,12 @@ if( is_array($params) ) {
     $date_set[] = array($cdate,$edate);
     $date_labels[] = $key;
   }
-
+  
   if( $params["chart_combine"] > 0 ) {
     $params["data_set"] = array($params["data_set"]);
     $set_index["Array"] = ucwords(tr("combined"))." {$report_type}s";
   }
-  
+
   $data_array = array();
   $rows_count = array();
   $rows_hours = array();
