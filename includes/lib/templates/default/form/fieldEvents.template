@@ -1,0 +1,5 @@
+    {if:pval[onBlur]:"onBlur=&quot;"+pval[onBlur]+"&quot;"}
+    {if:pval[onChange]:"onChange=&quot;"+pval[onChange]+"&quot;"}
+    {if:pval[onClick]:"onClick=&quot;"+pval[onClick]+"&quot;"}
+    {if:pval[onMouseOver]:"onClick=&quot;"+pval[onOnMouseOver]+"&quot;"}
+    {if:pval[onMouseOut]:"onClick=&quot;"+pval[onOnMouseOut]+"&quot;"}

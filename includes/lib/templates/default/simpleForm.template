@@ -1,0 +1,11 @@
+
+<form name='{name}' method='{method}' action='{action}'>
+<table width='500'>
+{if:title:%"simpleForm/title.template"%}
+{if:description:%"simpleForm/description.template"%}
+{list:fields:"form/"+value[type]+".template"}
+<tr>
+ <td colspan='2'><input type='submit' value='{submit="Submit"}'></td>
+</tr>
+</table>
+</form>

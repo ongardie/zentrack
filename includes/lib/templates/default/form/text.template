@@ -1,0 +1,7 @@
+
+  <input type="textarea"
+    name="{pval[name]}"
+    size="12" 
+    maxlength="{pval[size]}" 
+    value="{pval[default]=""}"
+    {include:"form/fieldEvents"}>
