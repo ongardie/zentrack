@@ -211,10 +211,10 @@
   */
 
   // title of x axis
-  $this->xHeading = "X Axis";
+  $this->xHeading = "";
   
   // title of y axis
-  $this->yHeading = "Y Axis";
+  $this->yHeading = "";
   
   // size of x/y headings, in pixels with TTF, otherwise 1 - 5
   $this->headingSize = 12;
@@ -241,13 +241,13 @@
 
   // subtitle of x axis
   // blank is fine
-  $this->xSubHeading = "(X Subtitle)";
+  $this->xSubHeading = "";
   
   // subtitle of y axis
   // can be blank.. if set to "auto", then
   // the system will set this based on the
   // dataFormat option
-  $this->ySubHeading = "(Y Subtitle)";
+  $this->ySubHeading = "";
 
   // size of x/y subheadings, in pixels with TTF, otherwise 1-5
   $this->subHeadingSize = 10;
