@@ -34,14 +34,14 @@
    *  <li>{zen:category:varname} - inserts value from database settings using {@link Zen::getSetting()}
    *  <li>{ini:category:varname} - inserts value from ini settings using {@link Zen::getIniVal()}
    *  <li>{foreach:varname:"text"+index+"more text"+value} - loops through indexed array and prints name/value
-   *  <li>{foreach:varname:%sub-template%} - loops through the indexed array and passes name/value to sub-template
+   *  <li>{foreach:varname:%"sub-template"%} - loops through the indexed array and passes name/value to sub-template
    *  <li>{list:varname:"text"+value+"text"} - loops through array and prints values
-   *  <li>{list:varname:%sub-template%} - loops through the array, passing values to the sub-template
-   *  <li>{include:template_name} - inserts another template into this one
+   *  <li>{list:varname:%"sub-template"%} - loops through the array, passing values to the sub-template
+   *  <li>{include:"template_name"} - inserts another template into this one (template_name is a string)
    *  <li>{if:field:"text to print"+field+"text to print"} - inserts text if field exists
-   *  <li>{if:field:%sub-template%} - inserts sub-template if field exists
+   *  <li>{if:field:%"sub-template"%} - inserts sub-template if field exists
    *  <li>{if:field=something:"text to print"+field+"more text"} - inserts text if field = something
-   *  <li>{if:field=something:%sub-template%} - inserts sub-template if field = something
+   *  <li>{if:field=something:%"sub-template"%} - inserts sub-template if field = something
    *  <li>{function:function_name:param1,param2,param3} - runs a global function and inserts the return value
    *  <li>{helper:file_name} - runs a helper script located in includes/lib/helpers and inserts results
    *  <li>{script:file_name} - runs a script located in includes/users/code and inserts results
@@ -80,6 +80,10 @@ class ZenTemplate {
     ZenUtils::safeDebug($this, "ZenTemplate", "initializing template '$template'", 0, LVL_NOTE);
     if( isset($GLOBALS) && isset($GLOBALS['templateDir']) ) {
       $this->_templateDir = $GLOBALS['templateDir'];
+    }
+    else {
+      $this->_templateDir = ZenUtils::getIni('directories','dir_templates')
+        +"/"+ZenUtils::getIni('layout','template_set');
     }
     $this->_template = $template;
     $this->_get();
@@ -467,16 +471,12 @@ class ZenTemplate {
    * @return the expanded sub-template
    */
   function _parseSubtemplate( $template, $value, $key = '' ) {
-    $tpl = new zenTemplate($this->_templateDir."/".$tplname);
+    $template = $this->_parseString($template);
+    $tpl = new zenTemplate($this->_templateDir."/".$template);
     
-    if( is_array($value) ) {
-      // $value is an indexed array to be passed to the sub-template
-      $tpl->values($value);
-    } else {
-      // $value/$key are a string pair to be passed as {pkey} and {pval}      
-      $tpl->values(array("pkey" => $key, "pval" => $value));
-    }
-    
+    // $value/$key are a string pair to be passed as {pkey} and {pval}      
+    $tpl->values(array("pkey" => $key, "pval" => $value));
+   
     return $tpl->process();
   }
 

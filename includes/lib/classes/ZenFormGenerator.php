@@ -130,20 +130,37 @@ class ZenFormGenerator extends Zen {
   }
 
   /**
+   * Set a value that will be used by template, some common values
+   * are Title (the title to show on form), Description (a quick blurb
+   * about the form), etc.
+   *
+   * @param string $name
+   * @param mixed $val
+   */
+  function setVal($name, $val) {
+    $this->_vals[$name] = $val;
+  }
+
+  /**
    * Render the html form for display
    *
    * @return string containing html output
    */
   function render() {
     // generate values to pass to form
-    $vals = array(
-                  "name" => $this->_name,
-                  "action" => $this->_action,
-                  "method" => $this->_method    
-                  );
+    $vals = $this->_vals;
+    $vals["name"] = $this->_name;
+    $vals["action"] = $this->_action;
+    $vals["method"] = $this->_method;
+    $vals["fields"] = array();
     foreach($this->_table->listFields as $f) {
       $field = $this->_table->getMetaField($f);
       $vals["fields"][] = $field->getFieldArray();
+      //todo
+      //todo
+      //todo special fields like helpers and
+      //todo select fields need to be handled
+      //todo here
     }
     
     // render the form
@@ -167,6 +184,8 @@ class ZenFormGenerator extends Zen {
   /** @var string $_method the form post method */
   var $_method = 'POST';
 
+  /** @var array $_vals values to pass to template */
+  var $_vals = array();
 }
 
 ?>
