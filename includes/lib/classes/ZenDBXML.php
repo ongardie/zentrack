@@ -30,12 +30,14 @@ class ZenDBXML {
    * @param string $ouptut is directory to output xml data to
    * @param string $table [optional] dumps only one table
    * @param string $compress compression type (null, gzip or zip)
-   * @return boolean true/false if succeeded
+   * @return array [0]files attempted, [1]files successfully dumped
    */
   function dumpDatabaseData( $output, $table, $compress ) { 
-    if( $table ) { $tables = array( $this->_schema->getTableArray($table) ); }
+    if( $table ) { $tables = array($table); }
     else { $tables = $this->_schema->listTables(); }
+    $results = array(0,0);
     foreach( $tables as $t ) {
+      $results[0]++;
       $text = "<dataDump>\n";
       $file = $output."/$t.xml";
       $query = Zen::getNewQuery();
@@ -49,8 +51,12 @@ class ZenDBXML {
         $text .= "\t</dataRow>\n";
       }
       $text .= "</dataDump>\n";
-      $this->_dumpToFile($ouptut, $text, $compress);
+      if( !$this->_dumpToFile($ouptut, $text, $compress) ) {
+        ZenUtils::safeDebug(true, $this, 'dumpDatabaseData', "Unable to dump $t!", 20, LVL_ERROR);
+      }
+      else { $results[1]++; }
     }
+    return $results;
   }
 
   /**
@@ -58,64 +64,87 @@ class ZenDBXML {
    *
    * @param string $dir is the source directory where xml dump is stored
    * @param string $table if provided, then only this table will be loaded
+   * @return array [0]tables attempted, [1]tables successfully loaded
    */
   function loadDatabaseData( $dir, $table = null ) {
-    //todo
-    //todo
-    //todo implement this, check out simpleInsert and ZenQuery
-    //todo remember to convert table names if using execute()
+    $nums = array(0,0);
+    $dh = opendir($dir);
+    if( !$dh ) { 
+      ZenUtils::safeDebug(true, $this, 'loadDatabaseData', "Invalid directory: $dir", 105, LVL_ERROR);
+      return false; 
+    }
+    $files = array();
+    while( ($file = readdir($dh)) == true ) {
+      if( !strpos($file, '.') === 0 && preg_match('/\.(gz|xml)$/', $file) ) {
+        $files[] = $file;
+      }
+      else if( !strpos($file, '.')===0 ) {
+        ZenUtils::safeDebug(true, $this, 'loadDatabaseData', "Invalid file: $file, skipping", 
+                            25, LVL_WARN);
+      }
+    }
+    $nums[0] = count($files);
+    foreach($files as $f) {
+      $rows = $this->_loadDataFromXML("$dir/$file");
+      $table = substr($f, 0, strpos($f, '.'));
+      if( $rows ) {
+        $count = 0;
+        $row = 1;
+        foreach($rows as $r) {
+          if( !Zen::simpleInsert($table, $r) ) {
+            ZenUtils::safeDebug(true, $this, 'loadDatabaseData', 
+                                "Insert $row of ".count($rows)." failed for table $table", 
+                                26, LVL_ERROR);
+          }
+          else { $count++; }
+        }
+        if( $count == count($rows) ) { $nums[1]++; }
+      }
+    }
+    return $nums;
   }
   
   /**
    * Deletes all data from database.  This does not backup the data!  Use with care.
    *
    * @param string $table if provided, only deletes this table
+   * @return array [0]number of deletes attempted, [1]number of deletes successful
    */
   function deleteDatabaseData( $table = null ) {
-    //todo
-    //todo
-    //todo implement this, check out the ZenQuery to see if it will do
-    //todo remember to convert table names if using execute()
+    $tables = $table? array($table) : $this->_schema->listTables();
+    $nums = array(count($tables), 0);
+    foreach($tables as $t) {
+      $query = Zen::getNewQuery();
+      $query->table($t);
+      if( $query->delete() ) { $nums[1]++; }
+      else { 
+        ZenUtils::safeDebug(true, $this, 'deleteDatabaseData',
+                            "Could not truncate $t", 220, LVL_ERROR);
+      }
+    }
+    return $nums;
   }
   
-
-  /**
-   * Dumps database schema to xml for storage, optionally gzip or zip data
-   *
-   * @param string $ouptut is the file to write to
-   * @param string $table [optional] dumps only one table
-   * @param string $compress compression type (null, gzip or zip)
-   * @return boolean true/false if succeeded
-   */
-  function dumpDatabaseSchema( $output, $table, $compress ) {
-    //todo
-    //todo
-    //todo
-    //todo set this up to use adodb if possible, otherwise just
-    //todo try to read the schema
-  }
-
   /**
    * Loads a schema from xml to the database
    *
    * @param string $xmlfile is the xml file to load
    * @param boolean $drop will cause the load to drop each table before creation
-   * @return int number of tables added successfully
+   * @return array [0]number of adds attempted, [1]number of adds succeeded
    */
   function loadSchemaToDB( $xmlfile, $drop = false ) {
-    $num = 0;
+    $num = array(0,0);
     $schema = new ZenDbSchema( $xmlfile, false ); 
     $tables = $schema->getAllTables();
     foreach($tables as $name=>$table) {
+      $num[0]++;
       $dbt = $this->_dbobj->makeTableName($name);
       if( $drop ) {
-        //todo
-        //todo
-        //todo
-        //todo add some error validation
-        //todo
         $sql = $this->_dbTypeInfo->dropTableSyntax($dbt);
-        $this->_dbobj->execute($sql);
+        if( !$this->_dbobj->execute($sql) ) {
+          ZenUtils::safeDebug(true, $this, 'loadSchemaToDB', 
+                              "Unable to drop table: $name", 00, LVL_NOTE);           
+        }        
       }
       $inheritedFields = $schema->getInheritedFields($name);
       if( is_array($inheritedFields) ) {
@@ -125,11 +154,6 @@ class ZenDBXML {
           }
         }
       }
-      
-      //todo
-      //todo
-      //todo add some error validation
-      //todo
       $sql = $this->_dbTypeInfo->addTableSyntax($dbt, $table['fields'], 
                                                 ($table['transactions'] == true));
       if( $this->_dbobj->execute($sql) ) { 
@@ -137,13 +161,17 @@ class ZenDBXML {
         if( $indices ) {
           foreach($indices as $index=>$columns) {
             $sql = $this->_dbTypeInfo->addIndexSyntax($index, $dbt, $columns, false);
-            $res = $this->_dbobj->execute($sql);
-            //todo
-            //todo
-            //todo do some error validation
+            if( !$this->_dbobj->execute($sql) ) {
+              ZenUtils::safeDebug(true, $this, 'loadSchemaToDB', 
+                                  "Unable to create index: $index", 220, LVL_ERROR); 
+            }            
           }
         }
-        $num++;
+        $num[1]++;
+      }
+      else {
+        ZenUtils::safeDebug(true, $this, 'loadSchemaToDB', "Unable to load table: $name", 
+                            220, LVL_ERROR);
       }
     }
     return $num;
@@ -153,10 +181,13 @@ class ZenDBXML {
    * Compares existing database schema to new schema and updates as needed
    *
    * @params string $newxml is the full path and filename of the new xml schema to load
+   * @return array [0]number of updates attempted, [1]number successfully completed
    */
   function updateDbSchema( $newxml ) {
+    $res = array(0,0);
     $updates = $this->compareXmlSchemas($newxml);
     foreach( $updates as $u ) {
+      $res[0]++;
       $tbl = $this->_dbobj->makeTableName($u['table']);
       switch($u['action']) {
       case "droptable":
@@ -179,12 +210,13 @@ class ZenDBXML {
         $sql = $this->_dbTypeInfo->addIndexSyntax($u['index'], $tbl, $u['columns'], false);
         break;
       }
-      $res = $this->_dbobj->execute($sql);
-      //todo
-      //todo
-      //todo
-      //todo some error validation here
+      if( !$this->_dbobj->execute($sql) ) {
+        ZenUtils::safeDebug(true, $this, 'updateDbSchema', "{$u['action']}->{$u['table']} failed: $sql", 
+                            220, LVL_ERROR);
+      }
+      else { $res[1]++; }
     }
+    return $res;
   }
 
   /**
@@ -192,6 +224,7 @@ class ZenDBXML {
    * which will convert the old layout to the new layout
    *
    * @param string $newxml is the full path and filename to new xml schema info
+   * @return array containing list of updates to perform
    */
   function compareXmlSchemas( $newxml ) {
     $updates = array();
@@ -290,15 +323,42 @@ class ZenDBXML {
   }
 
   /**
-   * Loads data from xml file into an array 
+   * Loads data from xml file into an array.  This can read gzipped files
    *
    * @param string $file
    * @return array mapped data_row->array( (String)column -> (mixed)value )
    */
   function _loadDataFromXml( $file ) {
-    //todo
-    //todo
-    //todo implement this
+    // read gzipped files
+    if( preg_match('/.gz$/', $file) ) {
+      if( !function_exists('gzopen') ) {
+        ZenUtils::safeDebug(true, $this, '_loadDataFromXml',
+                            "ZLib doesn't appear to be compiled into php, unable to read gzipped files!",
+                            22, LVL_ERROR);
+        return false;
+      }
+      $file = join('',gzfile($file));
+    }
+
+    // parse xml data
+    $parser = new ZenXMLParser();
+    $root =& $parser->parse($file);
+
+    // obtain all <dataRow> nodes
+    $vals = $root->getChild('dataRow');
+
+    // load dataRow vals into array
+    $rows = array();
+    $i=0;
+    foreach($vals as $v) {
+      $set = $v->toArray(true);
+      foreach( $set['children'] as $key=>$val ) {
+        $rows[$i][$key] = $val['data'];
+      }
+    }
+
+    // return vals
+    return $rows;
   }
   
   /**
@@ -310,16 +370,20 @@ class ZenDBXML {
    * @param boolean $append if true, data is appended, otherwise file is overwritten
    */
   function _dumpToFile( $file, $data, $compress, $append = false ) {
-    //todo
-    //todo
-    //todo
-    //todo check the method for appending
-    //todo add zip functionality
     if( !@file_exists($file) ) { return false; }
-    $fp = fopen($file, ($append? 'w+' : 'w'));
+    if( $compress ) {
+      $gz = function_exists('gzopen');
+      if( !$gz ) {
+        ZenUtils::safeDebug(true, $this, '_dumpToFile', 
+                            "Looks like ZLib isn't compiled into php, unable to compress file",
+                            22, LVL_WARN);
+      }
+    }
+    $fp = $gz? gzopen($file, ($append? 'a9' : 'w9')) : fopen($file, ($append? 'a' : 'w'));
     if( !$fp ) { return false; }
     fputs($fp, $data);
     fclose($fp);
+    return true;
   }
 
   /* VARIABLES */
@@ -335,6 +399,9 @@ class ZenDBXML {
 
   /** @var string $_xmlfile is the xml file holding db schema info */
   var $_xmlfile;
+
+  /** @var ZenDbSchema $_schema holds the schema for the database */
+  var $_schema;
 
 }
 

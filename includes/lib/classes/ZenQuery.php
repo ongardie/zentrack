@@ -188,6 +188,21 @@ class ZenQuery extends Zen {
   }
 
   /**
+   * Pass a ZenSearchParms object here to perform complex searches.
+   *
+   * Do not attempt to use this and use {@link match()} together.  This method will override
+   * anything passed to the match() method.
+   *
+   * @param ZenSearchParms $parms
+   * @return boolean true if valid parms provided
+   */
+  function search( $parms ) {
+    if( !ZenUtils::isInstanceOf('ZenSearchParms', $parms) ) { return false; }
+    $this->_searchParms = $parms->getParms();
+    return true;
+  }
+
+  /**
    * Sets conditions for where clause that should be excluded from results. The $operator clause should be obtained from the constants defined by this class.
    *
    * @access public
@@ -608,7 +623,49 @@ class ZenQuery extends Zen {
    * @return string
    */
   function _whereClause() {
-    if (count($this->_wheres) > 0) {
+    if( $this->_searchParms ) {
+      // open the clause
+      $clause = 'WHERE ';
+      // init the andor conditions
+      $andors = array();
+      // this says whether or not to add the andor condition 
+      // for the next where statement
+      $add = false;
+      foreach($this->_searchParms as $s) {
+        if( !is_array($s) ) {
+          // this is closing tag
+          $clause .= "$s ";
+          $andor = array_pop($andors);
+          // insure that a junction appears after the ')'
+          $add = true;
+        }
+        else if( count($s) == 2 ) {
+          // this is an opening tag and a new andor condition
+          $clause .= "{$s[0]} ";
+          $andor = $s[1];
+          array_push($andors, $andor);
+          // we don't want to put a junction after a '('
+          $add = false;  
+        }
+        else {
+          // this is a match set
+          if( $s[3] ) { $s[0] = $this->_fixName($s[3],$s[0]); }
+          if( $where = $this->_basicWhere($s[0], $s[2], $s[1]) ) {
+            $clause .= $add? "$andor " : '';
+            $clause .= $where.' ';
+          }
+          else {
+            $this->debug($this, "_whereClause", 
+                         "Faulty search param: $s[0], $s[1], $s[2], $s[3]", 
+                         105, LVL_ERROR);
+          }
+          // we need a junction before we add any more values
+          $add = true;
+        }
+      }
+      return $clause;
+    }
+    else if (count($this->_wheres) > 0) {
       return 'WHERE ' . implode(' AND ', $this->_wheres);
     }
     else {
@@ -784,6 +841,13 @@ class ZenQuery extends Zen {
    * @var array
    */
   var $_wheres = array();
+
+  /**
+   * An advanced set of matching conditions
+   * @access private
+   * @var array()
+   */
+  var $_searchParms = null;
 
   /**
    * The primary key (as declared by setPrimaryKey) or null if not set

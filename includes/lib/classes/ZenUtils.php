@@ -546,6 +546,7 @@ class ZenUtils {
   /**
    * Unserialize and restore data from file
    *
+   * @static
    * @param string $file is the full path to access the writable file
    * @return mixed whatever was in the file or false if failed
    */
@@ -555,6 +556,18 @@ class ZenUtils {
       return unserialize($serializedData);
     }
     return false; 
+  }
+
+  /**
+   * STATIC: Provides a safe method for checking for object types
+   *
+   * @static
+   * @param string $expected
+   * @param Object $obj
+   * @return boolean
+   */
+  function isInstanceOf( $expected, $obj ) {
+    return is_object($obj) && strtolower(get_class($obj)) == strtolower($expected);
   }
 
   /**

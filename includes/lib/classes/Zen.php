@@ -165,6 +165,7 @@ class Zen {
     foreach( $vals as $key=>$val ) {
       $query->field($key, $val);
     }
+    return $query->insert();
   }
 
   /**
