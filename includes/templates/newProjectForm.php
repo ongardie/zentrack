@@ -108,10 +108,7 @@ value="<?=strip_tags($title)?>">
     * sequential as the "key" is just going to 0,1,2...N while the user_ids 
     * can be out of order if users are deleted from the Admin interface.
     */
-   $userBins = $zen->getUsersBins($login_id);
-   if( is_array($userBins) && $zen->settings["allow_assign"] == "on" ) {
-     $users = $zen->get_users($userBins);
-     if( is_array($users) ) {
+    if( is_array($users) ) {
        asort($users);
        foreach($users as $usr) {
          $check = ( $usr["user_id"] == $login_id )? "selected" : "";
@@ -120,8 +117,7 @@ value="<?=strip_tags($title)?>">
          print $usr["lname"].", ".$usr["fname"];
          print "</option>\n";
        }
-     }
-   }
+    }
 ?>
 
     </select>&nbsp;(optional)
