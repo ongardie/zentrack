@@ -28,6 +28,7 @@
 			 "chart_combine"  => "int",
 			 "data_set"       => "array",
 			 "text_output"    => "int",
+			 "show_data_vals" => "int"
 			 );
   $required_report_params = array("report_type","date_selector","date_range","date_value","chart_title","chart_type","text_output","data_set","chart_options");
 

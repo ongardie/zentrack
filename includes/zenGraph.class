@@ -3491,18 +3491,6 @@ class zenGraph extends Zen {
 	$this->yMax;
     }
 
-    // y2params
-    if( is_array($this->y2Labels) ) {
-      $y2min = $this->y2Labels[0];
-      $n = count($this->y2Labels)-1;
-      $y2max = $this->y2Labels[$n];
-      $this->y2Range = abs($y2max - $y2min);
-      if( $this->y2Range > 0 )
-	$this->y2Scale = $this->graphHeight / $this->y2Range;
-      else
-	$this->y2Scale = 0;
-    }
-
     // gap
     if( $this->gap < 0 ) { $this->gap = 0; }
 
@@ -3691,6 +3679,18 @@ class zenGraph extends Zen {
     // yScale
     $this->yScale = $this->graphHeight / $this->yRange;
 
+    // y2params
+    if( is_array($this->y2Labels) ) {
+      $y2min = $this->y2Labels[0];
+      $n = count($this->y2Labels)-1;
+      $y2max = $this->y2Labels[$n];
+      $this->y2Range = abs($y2max - $y2min);
+      if( $this->y2Range > 0 )
+	$this->y2Scale = $this->graphHeight / $this->y2Range;
+      else
+	$this->y2Scale = 0;
+    }
+
     // yZero
     $this->yZero = ($this->yMin < 0)?
       $this->yBase + $this->yMin * $this->yScale : $this->yBase;
@@ -3750,9 +3750,10 @@ class zenGraph extends Zen {
 		    ."yStep: "      .$this->yStep       ."<br>\n"
 		    ."yZero: "      .$this->yZero       ."<br>\n"
 		    ."yZeroOffset: ".$this->yZeroOffset ."<br>\n"
-		    ."y2Div: "      .$this->y2Div       ."<br>\n"
 		    .((is_array($this->y2Labels))?
 		     "y2Scale: "    .$this->y2Scale     ."<br>\n"
+		    ."y2Div: "      .$this->y2Div       ."<br>\n"
+		    ."y2Range: "    .$this->y2Range     ."<br>\n"
 		    ."y2Step: "     .$this->y2Step      ."<br>\n"
 		      : "")
 		    ."</ul>",
@@ -4440,6 +4441,10 @@ class zenGraph extends Zen {
     $this->configureSettings( $settings );
     $this->defaultSettings = $settings;
 
+    // courtesy check for user error
+    if( $this->valueFontSize < 1 )
+      $this->valueFontSize = 1;
+
     $this->addDebug("zenGraph($settings)","INVOKED!",3);    
   }
 
@@ -4525,6 +4530,7 @@ class zenGraph extends Zen {
   var $yMin;    // the lowest value on the y axis
   var $yNum;    // the number of segments on the y axis
   var $yRange;  // the distance from yMin to yMax
+  var $y2Range; // the distance from y2min to y2max
   var $yScale;  // the length of each segment on y axis
   var $y2Scale; // the length of each segment of y2 axis
   var $yStep;   // the number of pixels in each xDiv

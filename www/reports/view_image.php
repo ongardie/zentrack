@@ -40,6 +40,9 @@
   $graph->imageWidth = $zen->reportImageWidth;
   $graph->valueFontColor = $zen->settings["color_text"];
   $graph->yMin = 0;
+  if( $params["show_data_vals"] > 0 ) {
+    $graph->showValueOnGraph = 1;
+  }
 
   $graph->yHeading = $y_heading;
   if( $y_2_set && count($y_2_set) ) {
@@ -49,7 +52,8 @@
 
   // change the font angle if we have a lot
   // of stuff to graph, so it will fit better
-  if( count($date_labels) * count($set_index) > 25 )
+  if( ($params["chart_type"] == "column" || $params["chart_type"] == "stack")
+      && count($date_labels) * count($set_index) > 25 )
 	$graph->valueFontAngle = 90;
 
   if( count($date_labels) > 10 ) {
@@ -64,8 +68,8 @@
   }
   // set up layers
   $layer_params = array(
-			"name" => "",
-			"depth" => 10,
+			"name"    => "",
+			"depth"   => 10,
 			"gap"     => 20
 			);
   if( $compact > 1 )
@@ -82,6 +86,17 @@
   $colors = $graph->getColorScheme("default-30");
   if( count($params["data_set"]) > 1 && !$params["chart_combine"] ) {
     foreach($chart_options as $o) {
+      if( isset($y2_set_type) && $y2_set_type != "" ) {
+	if( ($y2_set_type == "Hours" && in_array($o,$rows_hours))
+	    ||
+	    ($y2_set_type == "Quantity" && in_array($o,$rows_count))
+	    )
+	  $xoptions = array("y2scale"=>1);
+	else
+	  $xoptions = null;
+     } else {
+       $xoptions = null;
+     }
       if( count($chart_options) > 0 )
 	$layer_params["name"] = $option_names["$o"];
       else
@@ -90,7 +105,8 @@
       foreach($params["data_set"] as $d) {
 	$data = $data_array["$o"]["$d"];
 	$name = $set_index["$d"];
-	$graph->addData($data,$name,$params["chart_type"],scam_a_color($colors));
+	$graph->addData($data,$name,$params["chart_type"],
+			scam_a_color($colors),$xoptions);
       }
     } 
   } else {
@@ -98,9 +114,21 @@
       $layer_params["name"] = "";//$set_index["$d"];
       $graph->addLayer($layer_params);
       foreach($chart_options as $o) {
+	if( isset($y2_set_type) && $y2_set_type != "" ) {
+	  if( ($y2_set_type == "Hours" && in_array($o,$rows_hours))
+	      ||
+	      ($y2_set_type == "Quantity" && in_array($o,$rows_count))
+	      )
+	    $xoptions = array("y2scale"=>1);
+	  else
+	    $xoptions = null;
+	} else {
+	  $xoptions = null;
+	}
 	$data = $data_array["$o"]["$d"];
 	$name = $option_names["$o"];
-	$graph->addData($data,$name,$params["chart_type"],scam_a_color($colors));
+	$graph->addData($data,$name,$params["chart_type"],
+			scam_a_color($colors),$xoptions);
       }
     }
   }

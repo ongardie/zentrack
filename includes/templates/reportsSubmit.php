@@ -34,7 +34,8 @@
     if( is_array($chart_options) ) {
       $zen->hiddenField("chart_options",$chart_options);
     }
-    $zen->hiddenField($chart_view);
+    //$zen->hiddenField($chart_view);
+    $zen->hiddenField("show_data_vals",$show_data_vals);
 ?>
 <tr>
   <td class='bars' colspan='3'><input type='submit' class='submit' value=' View Chart '></td>

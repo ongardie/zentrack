@@ -38,7 +38,7 @@
   global $zen;
 
   // type of image to output
-  $this->imageType = "jpeg";
+  $this->imageType = "png";
 
   // quality of image, if jpeg type
   // integer from 0 to 100(best)
@@ -321,9 +321,10 @@
   **  PLOTTED VALUES
   */
   // 0-off 1-on, shows values on graph
-  $this->showValueOnGraph = 1;  
+  $this->showValueOnGraph = 0;  
   // size of plotted values
-  $this->valueFontSize = $this->fontSize-2;
+  $this->valueFontSize = ($this->ttfEnabled)? 
+	$this->fontSize-2 : $this->fontSize-1;
   // angle of plotted values
   $this->valueFontAngle = 45;
   // this can be a color value (#hhhhhh or array(rr,gg,bb))

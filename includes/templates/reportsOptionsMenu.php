@@ -100,8 +100,10 @@
   <td class="bars">
     <select name='chart_type'>
 <!-- onChange='document.reportOptionForm.submit()'> -->
-      <option<?=($chart_type=="Bar Chart")?" SELECTED":""?>>Bar Chart</option>
       <option<?=($chart_type=="Line Chart")?" SELECTED":""?>>Line Chart</option>
+      <option<?=($chart_type=="Bar Chart")?" SELECTED":""?>>Bar Chart</option>
+      <option<?=($chart_type=="Line Chart")?" SELECTED":""?>>Stack Chart</option>
+      <option<?=($chart_type=="Line Chart")?" SELECTED":""?>>Scatter Chart</option>
 <!--  <option<?=($chart_type=="Pie Chart")?" SELECTED":""?>>Pie Chart</option>  -->
     </select>
     <br><span class='note'>A large number of elements will appear better in a line chart, bar charts tend to be more pleasing with smaller numbers.</span>
@@ -130,10 +132,15 @@
   </td>
   <td class="bars">
 <? if(count($data_set)>1) { ?>
-    <input type='checkbox' name='chart_add_ttl' value='1'<?=($chart_add_ttl)?" CHECKED":""?>>
+    <input type='checkbox' name='chart_add_ttl' 
+	value='1'<?=($chart_add_ttl)?" CHECKED":""?>>
      &nbsp;Add a total figure
-    <br><input type='checkbox' name='chart_add_avg' value='1'<?=($chart_add_avg)?" CHECKED":""?>>
+    <br><input type='checkbox' name='chart_add_avg' 
+	value='1'<?=($chart_add_avg)?" CHECKED":""?>>
      &nbsp;Add an average figure
+    <br><input type='checkbox' name='show_data_vals' 
+	value='1'<?=($show_data_vals)?" CHECKED":""?>>
+     &nbsp;Display Values
     <br><input type='checkbox' name='chart_combine' 
 	value='1'<?=($chart_combine>0)?" CHECKED":""?>>
 	&nbsp;Combine selected <?=strip_tags($report_type)?>s
