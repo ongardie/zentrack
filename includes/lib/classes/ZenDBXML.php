@@ -117,7 +117,7 @@ class ZenDBXML {
    * compares xml file to the current db and creates sql needed to alter db to match xml file
    *
    * @param ZenXNode $xml is the parsed xml data
-   * @return array of sql statements to update db
+   * @return xml data file representing differences and how to update
    */
   function updateSchemaFromXML( $xml ) { 
 
@@ -129,7 +129,7 @@ class ZenDBXML {
     //todo 
     //todo run createSqlFromXML
     //todo
-    //todo return sql code
+    //todo return xml diff schema
 
   }
 

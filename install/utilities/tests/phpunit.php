@@ -401,6 +401,15 @@ else
 <?php
 } // !$dirValid
 ?>
+
+<br><br><br>
+<p>------ DEBUG ------</p>
+<?
+  $list = Zen::getMessageList();
+  print $list->outputHTML();
+?>
+
+
   </body>
 </html>
 <?php

@@ -98,7 +98,7 @@
       // test $GLOBALS['ADODB_CACHE_DIR'] for result
       $oldval = $GLOBALS['ADODB_CACHE_DIR'];
 
-      $bool = $this->_dbo->setCacheDirectory( "not really a directory" );
+      $bool = $this->_dbo->setCacheDirectory( "invalid_directory" );
       Assert::equals( $GLOBALS['ADODB_CACHE_DIR'], $oldval, "Cache directory set to an invalid directory!" );
       Assert::equalsFalse( $bool, "Return result indicates true, should be false for invalid directory" );
 

@@ -59,11 +59,12 @@
      *  <param name='value'>field_name:the value of the field</param>
      *  <param name='match'>field_name:{ZEN_EQ|ZEN_CONTAINS|etc...}:string[:table_name]</match>
      *  <param name='exclude'>field_name:{ZEN_EQ|ZEN_CONTAINS|etc...}:string[:table_name]</match>
-     *  <param name='method'>[get|select|insert|update|delete|replace=field]</param>
+     *  <param name='method'>{get|select|insert|update|delete|replace=field}</param>
      *  <param name='passfail' eval='true'>boolean</param> (whether this query should succeed or fail)
      *  <param name='limit'>integer</param> (optional)
      *  <param name='offset'>integer</param> (optional, only useful with limit)
-     *  <param name='sort'>list,of,fields</param> (optional)
+     *  <param name='sort'>field</param> (optional, can be a comma separated list, or multiple param tags)
+     *  <param name='rsort'>field</param> (desc sort, optional,  can be a comma separated list, or multiple param tags)
      *  <param name='join'>table1,table2,field1[,field2]</param> (optional)
      *  <param name='primarykey'[ eval='true']>field_name</param> (optional, use null and eval=true to test auto-generate)
      *  <param name='expected'>value</param> (optional, required for method=get, return value of first row, first column)
@@ -78,6 +79,10 @@
       // set properties of query
       foreach($vals as $key=>$val) {
         switch($key) {
+        case "rsort":
+          if( !is_array($val) ) { $val = explode(',',$val); }
+          $query->sort( $val, true );
+          break;
         case "sort":
           if( !is_array($val) ) { $val = explode(',',$val); }
           $query->sort( $val );
@@ -86,8 +91,9 @@
         case "exclude":
           if( !is_array($val) ) { $val = array($val); }
           foreach( $val as $v ) {
-            list($field,$method,$string,$table) = explode(':',$v);
-            $query->$key( $field, constant($method), $string, $table);
+            $set = explode(':',$v);
+            if( !isset($set[3]) ) { $set[3] = null; }
+            $query->$key( $set[0], constant($set[1]), $set[2], $set[3] );
           }
         case "table":
         case "field":
@@ -109,8 +115,9 @@
         case "join":
           if( !is_array($val) ) { $val = array($val); }
           foreach($val as $v) {
-            list($table1,$table2,$field1,$field2) = explode(',',$v);
-            $query->join($table1,$table2,$field1,$field2);
+            $set = explode(',',$v);
+            if( !isset($set[3]) ) { $set[3] = null; }
+            $query->join($set[0], $set[1], $set[2], $set[3]);
           }
         case "primarykey":
           $zen->setPrimaryKey($val);
@@ -133,9 +140,9 @@
 
       // test passfail
       if( !$vals['passfail'] ) {
-        Assert::equalsTrue( $retval === false, "Expected to fail, but did not<br>($query)" );
+        Assert::equalsTrue( $retval === false || (is_array($retval) && count($retval)===0), "Expected to fail, but did not<br>($query)" );
       }
-      else if( !$retval && isset($vals['count']) || isset($vals['expected']) ) {
+      else if( (isset($vals['count']) || isset($vals['expected'])) && !$retval && !is_array($retval) ) {
         Assert::equalsTrue( false, "A return value/count was expected, but not recieved<br>($query)" );
       }
       else {
@@ -161,7 +168,7 @@
       }
     }
 
-    function testFailUntilDone() { Assert::equalsTrue( false, "Not complete, need to add more tests to xml code" ); }
+    function testNeedsJoin() { Assert::equalsTrue( false, "need to add a join test" ); }
 
   }
 
