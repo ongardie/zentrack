@@ -14,6 +14,17 @@ abstraction, and endless possibilities for project expansion.
 ----- VERSION 2.5.0.3 (development) -----
 
 2005-02-24, cfalonso
+  Enabled email_accept option
+    - zentrack_2/includes/zenTrack.class 1.173
+    - zentrack_2/install/UPGRADE_mssqlserver.sql 1.31
+    - zentrack_2/install/UPGRADE_mysql.sql 1.41
+    - zentrack_2/install/UPGRADE_oracle.sql 1.37
+    - zentrack_2/install/UPGRADE_postgres.sql 1.29
+    - zentrack_2/install/seed_mssqlserver.sql 1.32
+    - zentrack_2/install/seed_mysql.sql 1.44
+    - zentrack_2/install/seed_oracle.sql 1.38
+    - zentrack_2/install/seed_postgres.sql 1.34
+
   When creating a new ticket, the cal.gif image didn't appear if your
   images directory was not directly under website root (Fixed).
     - zentrack_2/includes/ZenFieldMap.class 1.5
