@@ -116,12 +116,6 @@
   
   include("$libDir/nav.php");
   
-  if( strtolower($zen->types["$type_id"]) == "project" ) {
-    include("$templateDir/projectView.php");
-  } else {
-    include("$templateDir/ticketView.php");     
-  }
-  
-  include("$libDir/footer.php");
-  
+  include("$rootWWW/ticket.php");
+
 }?>
