@@ -17,6 +17,7 @@
   $_GLOBALS['includesDir'] = $includesDir;
   $_GLOBALS['cacheDir'] = $cacheDir;
   $_GLOBALS['templateDir'] = $templateDir;
+  $_GLOBALS['dbConnection'] = null;
 
   /**
    * @var array $_GLOBALS['loadstat'] is an array of all the static objects which have been loaded

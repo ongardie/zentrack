@@ -68,7 +68,7 @@ class ZenList extends Zen {
    * @param mixed $value the value to filter by
    * @param string $operator the operator to use
    */
-  function criteria($field, $value, $operator = "equals") { }
+  function criteria($field, $value, $operator = ZEN_EQ) { }
 
   /**
    * sets the method used to sort the results
@@ -97,6 +97,13 @@ class ZenList extends Zen {
   function next() { }
 
   /**
+   * Tells if there is another item in the list
+   *
+   * @return boolean there is another item after this one
+   */
+  function hasNext() { return $this->_position < $this->_count() }
+
+  /**
    * resets the list counter to the first result
    */
   function reset() { }
@@ -108,6 +115,8 @@ class ZenList extends Zen {
 
   /**
    * gets data from the database and loads it into $this->_rawdata
+   *
+   * This method also sets $this->_count and $this->_loaded
    *
    * @return integer number of records stored in $this->_rawdata
    * @private

@@ -37,6 +37,13 @@ class ZenTicket extends ZenDataType {
    * @return ZenRelatedList list of tickets related to this one
    */
   function getRelations() { }
+
+  /**
+   * returns a list of actions which are available to this ticket
+   * 
+   * @return ZenActionList list of actions (note that some of these actions may be disabled by ticket status)
+   */
+  function getActions() { }
   
   /**
    * Perform next action in flowpath

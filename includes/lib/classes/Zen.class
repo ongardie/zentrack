@@ -63,7 +63,17 @@ class Zen {
    *
    * @return object databaseObject
    */
-  function getDbConnection() { }
+  function getDbConnection() { 
+    if( !isset($_GLOBALS['dbConnection']) || $_GLOBALS['dbConnection'] == null ) {
+      $db = $_GLOBALS['zen']['database'];
+      $_GLOBALS['dbConnection'] = new ZenDatabase($db['database_type'], 
+                                                  $db['database_host'],
+                                                  $db['database_user'],
+                                                  $db['database_pass'],
+                                                  $db['database_instance']);
+    }
+    return $_GLOBALS['dbConnection'];
+  }
 
   /**
    * returns a ZenMessageList of system messages matching criteria
