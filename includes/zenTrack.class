@@ -630,7 +630,7 @@ class zenTrack extends zen {
     $columns = array(
                      "lid",     "ticket_id", 
                      "user_id",  "action",
-                     "entry",   "bin_id"
+                     "entry",   "bin_id", "created"
                      );
 
     $where = $this->build_search_clause($params, "AND");
@@ -3391,6 +3391,7 @@ class zenTrack extends zen {
     $this->time_fmt       = $this->settings["date_fmt_time"];
     $this->elapsed_unit   = $this->settings["time_elapsed_unit"];
     $this->date_and_time  = $this->date_fmt_short." ".$this->time_fmt;
+    $this->euroEnabled    = ($this->settings['use_euro_date'] == "on");
 
     // set language params
     $this->language       = ($language)? $language : $this->settings["language_default"];

@@ -62,6 +62,8 @@ class zenDate extends DB {
       31
    );
 
+   var $euroEnabled = false;
+
    function zenDate( $currTime = '' ) {
       $this->nowParts = getdate(time());
       $this->now = time();
@@ -295,9 +297,26 @@ class zenDate extends DB {
      // takes almost any date format
      // and returns the unix timestamp for
      // that date
+     $ctime = trim($ctime);
      if( !$ctime )
        $ctime = $this->currTime;
-     return strtotime($ctime);
+     // separator to parse euro date
+     $sep = '[/.-,]';
+     // if we have eurodate = true and the date is in the format dd/mm/yy[yy] then parse as euro
+     if( $this->euroEnabled && preg_match("/[0-9]{2}$sep[0-9]{2}$sep[0-9]{2,4}/", $ctime) ) {
+       // split date and time
+       list($date, $time) = explode(' ', $ctime);
+       // break up date
+       list($day, $month, $year) = split($sep, $date);
+       // break up time
+       list($hours, $mins, $seconds) = explode(':', $time);
+       // create a unix timestamp and return
+       return mktime($hours, $mins, $seconds, $month, $day, $year);
+     }
+     // otherwise it's english to treat it so
+     else {
+       return strtotime($ctime);
+     }
    }
    
    function dateSplit($utime = '') {

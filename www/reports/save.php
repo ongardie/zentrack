@@ -72,9 +72,10 @@ if( !$tempid || !is_array($template)) {
 <?
    $userBins = $zen->getUsersBins($login_id,"level_view");
    if( is_array($userBins) ) {
-     foreach($userBins as $k=>$v) {
+     for($i=0; $i<count($userBins); $i++) {
+       $k = $userBins[$i];
        if( $k ) {
-         $check = (is_array($set_bins)&&in_array($k,$set_bins) )?
+         $check = (is_array($set_bins) && in_array($k,$set_bins) )?
            "selected" : "";
          $n = $zen->bins["$k"];
          print "<option $check value='$k'>$n</option>\n";

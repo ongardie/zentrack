@@ -159,7 +159,6 @@
   }
 
   // security
-     
   $vars = array();
   $msg = array();
   $errs = "";
@@ -204,8 +203,7 @@
       "Notify",
       "System"
       );
-
-   
+        
   /*
   **  ROLLOVER EFFECTS
   */

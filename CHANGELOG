@@ -7,6 +7,19 @@
 
 ----- V2.4.3 (Development, See CVS) ----
 
+2003-09-26, Kato
+  European date support(new admin setting)
+
+  Login form update
+
+  Corrected search bug with open date
+  Thanks to B. Wilson for note
+
+  Fixed bin display bug in report save screen
+  Fixed comparison bug in report saveSubmit
+  Thanks to K. Evans for fixes
+
+
 2003-07-28, Kato
   Created a seperate access level for creating projects,
   this is no longer determined using the level_create prop

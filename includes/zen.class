@@ -1,4 +1,4 @@
-<?
+<? /* -*- Mode: C; c-basic-indent: 3; indent-tabs-mode: nil -*- ex: set tabstop=3 expandtab: */ 
 
 include_once("$libDir/zenDate.class");  
   
@@ -543,7 +543,7 @@ class zen extends zenDate {
      }
      return $vals;
    }
-
+   
    /**
     * Prints the debug output collected by addDebug()
     */
@@ -578,10 +578,10 @@ class zen extends zenDate {
     * @param array $vals the vals to replace ? chars with
     * @return string the translated string
     */
-    function ptrans( $string, $vals ) {
-      //return $this->_translator->ptrans($string,$vals);    
-      return $this->trans($string, $vals);
-    }
+   function ptrans( $string, $vals ) {
+     //return $this->_translator->ptrans($string,$vals);    
+     return $this->trans($string, $vals);
+   }
    
    /**
     * Translate strings using the translate class
@@ -591,27 +591,42 @@ class zen extends zenDate {
     * @param array $vals the vals to replace any ? chars with
     * @return string the translated text
     */
-    function trans( $string, $vals = '' ) {
-      //if (!is_a($this->_translator, 'Translator')) {
-      //   $this->_translator = new Translator;
-      //   $this->_translator->bindZen($init['zen']);
-      //   $this->_translator->bindDomain($init['domain'], $init['path']);
-      //   $this->_translator->textDomain($init['domain']);
-      //   $this->_translator->setLocale($init['locale']);
-      //   return true;
-      // }
-      //return $this->_translator->trans($string);
-      return tr($string, $vals);
+   function trans( $string, $vals = '' ) {
+     //if (!is_a($this->_translator, 'Translator')) {
+     //   $this->_translator = new Translator;
+     //   $this->_translator->bindZen($init['zen']);
+     //   $this->_translator->bindDomain($init['domain'], $init['path']);
+     //   $this->_translator->textDomain($init['domain']);
+     //   $this->_translator->setLocale($init['locale']);
+     //   return true;
+     // }
+     //return $this->_translator->trans($string);
+     return tr($string, $vals);
+   }
+
+   /**
+    * Returns a boolean indicating that euro dates are enabled
+    */
+   function euroDateEnabled() {
+     return $this->euroEnabled;
+   }
+
+   function popupDateFormat() {
+     if( $this->euroDateEnabled() ) {
+       return "dd/mm/yyyy";
+     }
+     else {
+       return "mm/dd/yyyy";
+     }
    }
    
-
    /*
    **  SYSTEM METHODS
    */
    
    
    function zen() {
-      $this->zenDate();
+     $this->zenDate();
    }
    
    /*

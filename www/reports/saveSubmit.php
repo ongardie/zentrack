@@ -26,7 +26,7 @@
     if( !is_array($select_bins) ) {
       $select_bins = "";
     }
-    if( $save_method = "new" ) {
+    if( $save_method == "new" ) {
       $report_name = strip_tags($report_name);
     } else {
       $report = $zen->getReportParams($report_id);

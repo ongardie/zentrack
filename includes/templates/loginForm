@@ -1,34 +1,16 @@
 
 <blockquote><br>
   <p>&nbsp;</p>
-  <p>Visit the zenTrack home page for everything zen related (including docs/faqs): <a href='http://zendocs.phpzen.net/zentrack'>http://zendocs.phpzen.net/zentrack</a></p>
-  <p><span class="big"><b>Welcome!  Please Log On.</b></span>
+  <p><span class="big"><b>Welcome!  Please Log On.</b></span></p>
+  <p><b><i style="color:red">Login and passphrase are case sensitive!</i></b></p>
   <form method="post" action="<?=$SCRIPT_NAME?>">
   <input type=text name=username value='<?=strip_tags($zentrackUsername)?>' width=20 maxlength=20>&nbsp;Login Name
   <br>
   <input type="password" name="passphrase" width=20 maxlength=20>&nbsp;Password
   <p>
-  <input type=hidden name=redirect value='<?=$redirect?>'>
+  <input type=hidden name=redirect value='<?=strip_tags($redirect)?>'>
   <input type=submit name=TODO value="Log On">
   </form>
-  <p>
-  <b><i style="color:red">Login and passphrase are case sensitive!</i></b>
-  <ul><b>
-    <li>Administrator / admin
-    <li>User / User
-    <li>Guest / Guest
-  </b></ul>
-  <p>
-  <b><i style="color:red">Email Gateway</i></b>
-  <ul>
-   <p> If you wish to try out the new email gateway, simply send an email to zentrack@phpzen.net with a subject of help, and that will get you started.  Note that you will need to add your email address to the notify list for a ticket before you can perform actions on it.
-  </ul>
-  <p>
-  <b><i style="color:red">Simple Ticket Create Via Email</i></b>
-  <ul>
-   <p>To create a ticket using the simple email create utility, send an email to newticket@phpzen.net.  The subject becomes the title, the body becomes the details of the ticket. (the ticket will appear in the Tech Support bin)
-  </ul>
-  <P>Visit the zenTrack development site <a href='http://sourceforge.net/projects/zentrack/'>http://sourceforge.net/projects/zentrack/</a> for project and support information.
 </blockquote>
 
 

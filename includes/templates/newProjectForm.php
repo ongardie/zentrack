@@ -188,7 +188,7 @@ value="<?=strip_tags($title)?>">
     <input type="text" name="start_date" size="12" maxlength="10"
 	value="<?=($start_date)?$zen->showDate(strip_tags($start_date)):""?>">
     <img name="date_button" src='<?=$rootUrl?>/images/cal.gif' 
-	onClick="popUpCalendar(this,document.newProjectForm.start_date, 'mm/dd/yyyy')"
+	onClick="popUpCalendar(this,document.newProjectForm.start_date, '<?=$zen->popupDateFormat()?>')"
 	alt="Select a Date">
     &nbsp;(<?=tr("optional")?>)
   </td>
@@ -201,7 +201,7 @@ value="<?=strip_tags($title)?>">
     <input type="text" name="deadline" size="12" maxlength="10"
 value="<?=($deadline)?$zen->showDate(strip_tags($deadline)):""?>">
     <img name="date_button" src='<?=$rootUrl?>/images/cal.gif' 
-	onClick="popUpCalendar(this,document.newProjectForm.deadline, 'mm/dd/yyyy')"
+	onClick="popUpCalendar(this,document.newProjectForm.deadline, '<?=$zen->popupDateFormat()?>')"
 	alt="Select a Date">
     &nbsp;(<?=tr("optional")?>)
   </td>
