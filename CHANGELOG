@@ -7,6 +7,17 @@
 
 ----- V2.5 LIVE (in testing) -----
 
+----- V2.5 RC2 [Pre 2] (2004-08-30) -----
+	
+2004-08-29, Kato
+  Audited zenTrack.class for security flaws
+
+  Added postgres install files
+  Upgraded version number to RC2
+
+  Updated install/readme docs
+  
+	
 2004-08-25, Kato
   Added htaccess authentication
   Fixed typo in UPGRADE scripts

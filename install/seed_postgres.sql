@@ -110,7 +110,7 @@ INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (70,
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (71,'allow_pwd_save','off','Allows users to save passphrase in a cookie(fairly secure/not available until v2.1)');
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (72,'check_pwd_simple','on','System will refuse lazy passwords');
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (73,'level_reports','1','Level required to access and view reports');
-INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (74,'version_xx','2.4.4','The version of zentrack, this cannot be edited');
+INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (74,'version_xx','2.5 RC2','The version of zentrack, this cannot be edited');
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (75,'date_fmt_long','%A %d, %b %Y','Long date format');
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (76,'date_fmt_short','%m/%d/%Y','Short Date Format');
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (77,'date_fmt_time','%H:%M','Time Format');
@@ -132,6 +132,10 @@ INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (92,
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (93,'log_email','on','Create a log entry when tickets are emailed.');
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (94,'level_create_proj','2','Access level required to create projects.');
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (95,'use_euro_date','off','On if using European format(dd/mm/yyyy) instead of american(mm/dd/yyyy)');
+INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (96,'level_edit_varfields','2','Access level required to edit fields on the "custom" tab.');
+INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (97,'varfield_tab_name', 'Custom', 'Name to appear on the variable fields tab');
+INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (98,'allow_htaccess', 'on', 'If on, will attempt to authenticate users based on apache htaccess (username and password must match ZT)');
+
 
 ---
 --- Loading data for table 'ZENTRACK_SYSTEMS'
@@ -190,3 +194,42 @@ INSERT INTO ZENTRACK_USERS (user_id, login, access_level, passphrase, lname, fna
 INSERT INTO ZENTRACK_USERS (user_id, login, access_level, passphrase, lname, fname, initials, email, notes, homebin, active) VALUES (2,'Guest',0,'adb831a7fdd83dd1e2a309ce7591dff8','Visitor','Guest','GUEST',NULL,NULL,2,1);
 INSERT INTO ZENTRACK_USERS (user_id, login, access_level, passphrase, lname, fname, initials, email, notes, homebin, active) VALUES (3,'User',3,'8f9bfe9d1345237cb3b2b205864da075','User','Default','USER',NULL,'Default User Account',2,1);
 INSERT INTO ZENTRACK_USERS (user_id, login, access_level, passphrase, lname, fname, initials, email, notes, homebin, active) VALUES (4,'egate',2,NULL,'Gateway','Email','egate','zentrack@havenshade.com','Email Gateway Account',1,0);
+
+---
+--- Loading data for table 'ZENTRACK_VARFIELD'
+---
+
+INSERT INTO ZENTRACK_VARFIELD (ticket_id) SELECT id FROM ZENTRACK_TICKETS;
+
+---
+--- Loading data for table 'ZENTRACK_VARFIELD_IDX'
+---
+
+INSERT INTO ZENTRACK_VARFIELD_IDX (field_name,       field_label,       sort_order) 
+                           VALUES ('custom_menu1', 'Custom Menu 1', 1         );
+INSERT INTO ZENTRACK_VARFIELD_IDX (field_name,       field_label,       sort_order) 
+                           VALUES ('custom_menu2', 'Custom Menu 2', 1         );
+
+INSERT INTO ZENTRACK_VARFIELD_IDX (field_name,       field_label,       sort_order) 
+                           VALUES ('custom_string1', 'Custom String 1', 1         );
+INSERT INTO ZENTRACK_VARFIELD_IDX (field_name,       field_label,       sort_order) 
+                           VALUES ('custom_string2', 'Custom String 2', 1         );
+
+INSERT INTO ZENTRACK_VARFIELD_IDX (field_name,       field_label,       sort_order) 
+                           VALUES ('custom_number1', 'Custom Number 1', 1         );
+INSERT INTO ZENTRACK_VARFIELD_IDX (field_name,       field_label,       sort_order) 
+                           VALUES ('custom_number2', 'Custom Number 2', 1         );
+
+INSERT INTO ZENTRACK_VARFIELD_IDX (field_name,       field_label,       sort_order) 
+                           VALUES ('custom_boolean1', 'Custom Boolean 1', 1         );
+INSERT INTO ZENTRACK_VARFIELD_IDX (field_name,       field_label,       sort_order) 
+                           VALUES ('custom_boolean2', 'Custom Boolean 2', 1         );
+
+INSERT INTO ZENTRACK_VARFIELD_IDX (field_name,       field_label,       sort_order) 
+                           VALUES ('custom_date1', 'Custom Date 1', 1         );
+INSERT INTO ZENTRACK_VARFIELD_IDX (field_name,       field_label,       sort_order) 
+                           VALUES ('custom_date2', 'Custom Date 2', 1         );
+
+INSERT INTO ZENTRACK_VARFIELD_IDX (field_name,       field_label,       sort_order) 
+                           VALUES ('custom_text1', 'Custom Text 1', 1         );
+

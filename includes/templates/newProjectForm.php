@@ -68,6 +68,7 @@
 value="<?=strip_tags($title)?>">
   </td>
 </tr>
+
 <tr>
   <td class="bars">
     <?=tr("System")?>
@@ -90,8 +91,7 @@ value="<?=strip_tags($title)?>">
     </select>
   </td>
 </tr>
-<tr>
-  <td>
+
 <tr>
   <td class="bars" width="125">
     <?=tr("Owner")?>
@@ -224,6 +224,33 @@ value="<?=($deadline)?$zen->showDate(strip_tags($deadline)):""?>">
     <?= $zen->getDefaultValue("default_aprv_checked"); ?>>
   </td>
 </tr>
+
+<?
+ $varfields = $zen->getCustomFields(0,'Project', 'New');
+ if( is_array($varfields) && count($varfields) ) {
+?>
+<tr>
+  <td colspan="2" class="subtitle">
+    <?=tr("Other Fields")?>
+  </td>
+</tr>
+<?
+    foreach($varfields as $v) {
+      $k = $v['field_name'];
+      $val = isset($$k)? $$k : $v['field_value'];
+?>
+<tr>
+  <td class="bars">
+   <?=tr($v['field_label'])?>
+  </td>
+  <td class="bars">
+   <?= genVarfield( 'newProjectForm', $v, $val ) ?>
+  </td>
+</tr>
+<?
+   }
+ }
+?>
   
 <tr>
   <td colspan="2" class="subtitle">

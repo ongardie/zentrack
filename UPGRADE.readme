@@ -1,17 +1,37 @@
 
+UPGRADE INSTRUCTIONS FOR 2.5 RC2
+
+THIS IS A RELEASE CANDIDATE!!
+    This release probably contains bugs.  If you are not interested
+    in helping us test, then wait for the live release in a couple
+    of weeks before upgrading.
 
 REQUIREMENTS
 
-    PHP: 4.2.0 or greater (4.3 for email gateway) 
-    GD: [optional] 2.0 or higher needed to use reports
-    Freetype libraray required to view reports
+    PHP: 4.3 or greater (will not run with PHP 5, sorry next version)
+
     Supported Servers: Apache 1.3, 2.0, IIS
     Supported OS: Windows 2000, Linux 
        Other Tested OS: FreeBSD, NT, MacOS, Debian, Gentoo
     Supported DBs: Mysql, Oracle 8i/9i, Postgres
        Other Possible DBs: DB2, SQLServer
+    GD: [optional] 2.0 or higher needed to use reports
+    Freetype libraray required to view reports
 
-UPGRADE FROM 2.4.3
+UPGRADE FROM 2.5 RC1
+ 
+  Be sure to BACKUP CONFIG FILES:
+      www/header.php
+      includes/egate_config.php
+
+  REPLACE Your entire zentrack directory structure with the
+  included files: includes/ should overwrite your existing includes,
+  www/ should overwrite your existing www/
+
+  You do not have to update your database structure to
+  upgrade from 2.5 RC1 to 2.5 RC2.  
+
+UPGRADE FROM 2.4.4
 
   Be sure to BACKUP CONFIG FILES:
       www/header.php
@@ -27,10 +47,15 @@ UPGRADE FROM 2.4.3
      -chmod 777 includes/cache
      -chmod 777 includes/translations
 
-  This new does not contain any database changes from 2.4.3 (there is no update sql to run)
+  Run the sql file install/UPGRADE_[yourdb].sql file to upgrade structure
+  from 2.4.3 to 2.4.5 (there are no sql changes for version 2.4.4)
 
-  If you wish to update your version number, you can do so with the following sql query:
-      UPDATE ZENTRACK_SETTINGS SET value = '2.4.4' WHERE name = 'version_xx';
+UPGRADE FROM 2.4.3
+  
+  Follow install instructions for 2.4.4
+
+  (Because there are no database changes between 2.4.3 and 2.4.4, the
+  install procedure for 2.4.3 is exactly the same as 2.4.4.)
 
 UPGRADE FROM 2.4.2
 
@@ -43,21 +68,16 @@ UPGRADE FROM 2.4.2
       www/header.php
       includes/egate_config.php
 
-  REPLACE Your entire zentrack directory structure with the
-  included files: includes/ should overwrite your existing includes,
-  www/ should overwrite your existing www/
-
-  Set directory permissions (probably only necessary on unix)
-     -chmod 777 includes/attachments (if using attachments)
-     -chmod 777 includes/logs
-     -chmod 777 includes/cache
-     -chmod 777 includes/translations
-
   Run the sql file install/previous/2.4.3.UPGRADE_[yourdb].sql file using your favorite
   sql interface (you can open the file and run the statements directly if
-  this is easier for you)
+  this is easier for you).  This will upgrade you to 2.4.3 database.
 
+  Follow upgrade instructions for version 2.4.3
 
+UPGRADE FROM EALIER THAN 2.4.2
+
+  Please contact the ZT Team so that they can assist you in importing
+  your existing data from past versions.
 
 
 

@@ -31,7 +31,17 @@
     }
   }
 
+  // insure group name is unique
+  if( !$errs ) {
+    $oldGroup = $zen->get_data_group($group_id);
+    if( $oldGroup['group_name'] != $NewGroupName ) {
+      if( $zen->getDataGroupId($NewGroupName) ) {
+	$errs[] = "The group '{$NewGroupName}' already exists.  The group name must be unique.";	
+      }
+    }
+  }
 
+  // add to database (or show demo mode message)
   if( !$errs ) {
     if( $zen->demo_mode == "on" ) {
       $msg = tr("Process successful.  Group was not updated, because this is a demo site.");

@@ -1,8 +1,12 @@
 
-  Welcome to zenTrack!
+  THIS IS A RELEASE CANDIDATE!!
+  This release probably has bugs.  If you aren't interested in
+  helping us test this new RC, then we suggest that you wait
+  for the live release in a couple weeks.  If you cannot wait,
+  then download the last live release instead.
 
-  The complete installation instructions can be found in formatted form:
-        online  - http://zendocs.phpzen.net/zentrack/
+
+  Welcome to zenTrack!
 
   If you checked this version out from the CVS repository you will need
 	run ./setup_from_cvs from the zentrack/ install directory, or
@@ -67,6 +71,11 @@
 
     SUPPORT
       -Check the HELP file in this directory for more info about obtaining support.
+
+    HEADER.PHP MISSING
+      -This is probably a cvs checkout.  Just go to the directory where
+       you unzipped zentrack and run setup_from_cvs (.cmd on windows) to
+       build directories, permissions, and the header.php file.
 
     LOGIN PROBLEMS
       -Logins are case sensitive

@@ -115,5 +115,5 @@ set identity_insert ZENTRACK_SETTINGS off;
 INSERT INTO ZENTRACK_VARFIELD (ticket_id) SELECT id FROM ZENTRACK_TICKETS;
 
 -- Change the version number
-UPDATE ZENTRACK_SETTINGS SET value='2.5' WHERE setting_id=74;
+UPDATE ZENTRACK_SETTINGS SET value='2.5 RC2' WHERE setting_id=74;
 

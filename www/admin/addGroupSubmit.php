@@ -31,6 +31,15 @@
     }
   }
 
+  // insure that group name is unique
+  if( !$errs ) {
+    $group_id = $zen->getDataGroupId( $NewGroupName );
+    if( $group_id ) {
+      $errs[] = "The group '{$NewGroupName}' already exists.  The group name must be unique.";
+    }
+  }
+
+  // add to database (or do demo mode message)
   if( !$errs ) {
     if( $zen->demo_mode == "on" ) {
       $msg = tr("Process successful.  Group was not added, because this is a demo site.");
@@ -40,11 +49,11 @@
       if( $group_id ) {
 	$vars = $zen->generateDataGroupInfo( array($group_id) );
 	$_SESSION['data_groups'][$group_id] = $vars[$group_id];
-        $msg = tr("Group '?' (ID=?) was added successfully. ? to edit this group's entries.",
-                             array($NewGroupName, $group_id, "--link--" . tr("Click Here") . "</a>", $NewGroupName));
-        $msg = str_replace("--link--", "<br><a href='$rootUrl/admin/editGroupDetails.php?group_id=$group_id'>", $msg);
+	$msg = tr("Group '?' (ID=?) was added successfully. ? to edit this group's entries.",
+		  array($NewGroupName, $group_id, "--link--" . tr("Click Here") . "</a>", $NewGroupName));
+	$msg = str_replace("--link--", "<br><a href='$rootUrl/admin/editGroupDetails.php?group_id=$group_id'>", $msg);
       } else {
-      $errs[] = tr("System Error: Could not add ? to the system", array($NewGroupName));
+	$errs[] = tr("System Error: Could not add ? to the system", array($NewGroupName));
       }
     }
   }
