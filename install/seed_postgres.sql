@@ -123,7 +123,7 @@ INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (83,
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (84,'default_notify_tester','on','Add bin tester to notify list by default.');
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (85,'default_notify_creator','on','Add ticket creator to notify list by default.');
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (86,'default_notify_owner','on','Add ticket owner to notify list by default.');
-
+INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (87,'sql_cache_time',0,'Number of seconds to cache db results, set to 0 to disable sql caching');
 
 ---
 --- Loading data for table 'ZENTRACK_SYSTEMS'

@@ -15,7 +15,10 @@
   $userBins = $zen->getUsersBins($login_id);
   
   if( is_array($userBins) || count($userBins) < 1 ) {
-     $params = array("status"=>array('OPEN','PENDING'));
+     $params = array(
+		     "status"  => array('OPEN','PENDING'),
+		     "type_id" => $zen->notProjectTypeIDs()
+		     );
      if( $login_bin ) {
 	$params["bin_id"] = $login_bin;
      } else {

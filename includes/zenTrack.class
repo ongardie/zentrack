@@ -2970,6 +2970,16 @@ class zenTrack extends zen {
     return $this->projectTypeIDs;
   }
 
+  function notProjectTypeIds() {
+    $vars = array();
+    foreach( $this->getTypes() as $k=>$v ) {
+      if( !preg_match("@project@i",$v) ) {
+	$vars[] = $k;
+      }
+    }
+    return $vars;
+  }
+
   function inProjectTypeIDs($type_id) {
     // determines whether the id provided
     // is a valid project id
@@ -3035,6 +3045,9 @@ class zenTrack extends zen {
 
     // set language params
     $this->language       = ($language)? $language : $this->settings["language_default"];
+
+    // cache length
+    $this->cache_time = $this->settings["sql_cache_time"];
 
   }
 

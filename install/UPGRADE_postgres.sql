@@ -16,5 +16,3 @@ CREATE TABLE ZENTRACK_NOTIFY_LIST (
    priority int(12) default NULL,
    notes varchar(255) default NULL
 );
-
-
