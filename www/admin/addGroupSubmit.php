@@ -62,9 +62,15 @@
       if( $group_id ) {
         $vars = $zen->generateDataGroupInfo( array($group_id) );
         $_SESSION['data_groups'][$group_id] = $vars[$group_id];
-        $msg = tr("Group '?' (ID=?) was added successfully. ? to edit this group's entries.",
-        array($NewGroupName, $group_id, "--link--" . tr("Click Here") . "</a>", $NewGroupName));
-        $msg = str_replace("--link--", "<br><a href='$rootUrl/admin/editGroupDetails.php?group_id=$group_id'>", $msg);
+
+        // print useful messages for user
+        $msg = tr("Group '?' was updated successfully.", array($NewGroupName));
+        if( $NewEvalType == 'Matches' ) {
+          $msg .= tr("? to customize this group's entries.",array("--link--"));
+          $msg = str_replace("--link--",
+            "<br><a href='$rootUrl/admin/editGroupDetails.php?group_id=$group_id'>"
+            .tr("Click Here")."</a>",$msg);
+        }
       } else {
         $errs[] = tr("System Error: Could not add ? to the system", array($NewGroupName));
       }
