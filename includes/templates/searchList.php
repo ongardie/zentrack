@@ -1,4 +1,6 @@
 <?  
+$cf = $zen->getCustomFields(1,"","S");
+
 if( is_array($tickets) && count($tickets) ) {
  
    $link = $zen->settings["url_view_ticket"];   
@@ -7,7 +9,7 @@ if( is_array($tickets) && count($tickets) ) {
    
 ?>
 <table width="100%" cellspacing='1' cellpadding='2' bgcolor='<?=$zen->settings["color_alt_background"]?>'>
-<tr><td class='titleCell' colspan="9" align='center'><?=($c>1)? tr("? Matches",array($c)) : tr("1 Match");?></td></tr>
+<tr><td class='titleCell' colspan="<?=9+count($cf) ?>" align='center'><?=($c>1)? tr("? Matches",array($c)) : tr("1 Match");?></td></tr>
 <tr bgcolor="<?=$zen->settings["color_title_background"]?>" >
 <?
 
@@ -58,6 +60,35 @@ if ($orderby == "id asc") {
 </A>
 </td>
 <?
+
+//#####################################################
+//custom fields asc desc box begin
+//#####################################################
+
+foreach($cf as $k=>$v) {
+
+  if ((is_array($search_fields) && in_array("$k",$search_fields))
+            || !is_array($search_fields)) { ?>
+    <td<?=$nav_rollover_text?> width="32" height="25" valign="middle" title="<?=tr("$v")?>">
+    <?
+    if ($orderby == "$k asc") {
+	   $i = "$k desc";
+	   $image = "/desc_order.gif";
+    } elseif($orderby == "$k desc") {
+	   $i = "$k asc";
+	   $image = "/asc_order.gif";
+    } else {
+	  $image = "";
+	  $i = "$k asc";
+    }
+    ?>
+    <A class='menuLink' HREF="<?=$zen->create_link($SCRIPT_NAME,$TODO,$i,$search_text,$search_fields,$search_params)?>">
+    <div align="center"><span style="color:<?=$zen->settings["color_title_txt"]?>"><b><span class="small"><?=tr(substr($v,0,15))?><?if (!empty($image)) {?>&nbsp;<IMG SRC="<?echo $imageUrl,$image ;?>" border="0"><?}?></span></b></span></div>
+    </A>
+    </td>
+    <? 
+    } 
+}
 
 //#####################################################
 //priority asc desc box begin
@@ -263,7 +294,21 @@ if( !$search_params["bin_id"] || is_array($search_params["bin_id"]) ) { ?>
       <td height="25" valign="middle" <?=$td_ttl?>>
         <a class="rowLink" href="<?=$link?>?id=<?=$t["id"]?>"><?=$t["title"]?></a>
       </td>
-      
+    
+    <?
+    foreach($cf as $k=>$v) {
+                                                                                                                             
+      if ((is_array($search_fields) && in_array("$k",$search_fields))
+            || !is_array($search_fields)) { ?>
+        <td height="25" <?=$tx?> valign="middle">
+           <?=$t["$k"]?>
+        </td>
+    <? } 
+    }  ?>
+ 
+
+
+  
     <? if( !$search_params["priority"] || is_array($search_params["priority"]) ) { ?>
       <td height="25" <?=$tx?> valign="middle">
          <?=$zen->priorities["$t[priority]"]?>
@@ -305,7 +350,7 @@ if( !$search_params["bin_id"] || is_array($search_params["bin_id"]) ) { ?>
    
    <? if( $search_text && $search_fields["description"] && $t["description"] ) { ?>
    <tr style="background:<?=$row?>;color:<?=$text?>">
-     <td height="25" colspan="9">   
+     <td height="25" colspan="<?=9+count($cf) ?>">   
        <?
        $t["description"] = ereg_replace("<br />", "<br>", $t["description"]);
        $parts = explode("<br>", $t["description"]);
@@ -328,7 +373,7 @@ if( !$search_params["bin_id"] || is_array($search_params["bin_id"]) ) { ?>
 
    <tr>
      <form method="post" action="<?=$SCRIPT_NAME?>">
-       <td colspan="9" class="titleCell">
+       <td colspan="<?=9+count($cf) ?>" class="titleCell">
           <input type="submit" class="smallSubmit" value="<?=tr("Modify Search")?>">
           <input type="hidden" name="search_text" value="<?=strip_tags($search_text)?>">
           <input type="hidden" name="search_fields[title]" value="<?=strip_tags($search_fields["title"])?>">
