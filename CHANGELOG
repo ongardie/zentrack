@@ -8,12 +8,18 @@
 ----- V2.4 (development, see CVS) ----
 
 2003-03-24, Kato
+  Updated docs
+    - zentrack/INSTALL.README 1.17
+    - zentrack/UPGRADE.readme 1.8
+  Added GD info and PHP version to debug
+    - zentrack/includes/footer.php 1.17
   Fixed parse error
-
+    - zentrack/includes/templates/searchList.php 1.9
   PostgresSQL Testing/Cleanup
-
+    - zentrack/includes/zenTrack.class 1.83
+    - zentrack/install/build_postgres.sql 1.10
   Fixed misnamed directories
-
+    - zentrack/includes/zen.class 1.17
 
 2003-03-23, Kato
   Text correction in UPGRADE instructions
