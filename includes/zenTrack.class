@@ -2022,14 +2022,24 @@ class zenTrack extends zen {
       // if flag is set, then it retrieves all
       // data for the settings into an array
       // otherwise, just sets a string equal to the value
-      
+      global $rootUrl;			
+			
       $fields = ($flag)? "*" : "name, value";
       if( $flag )
-	$order = " ORDER BY name";
+	  	$order = " ORDER BY name";
       $query = "SELECT $fields FROM ".$this->table_settings." $order";
       $vars = $this->db_queryIndexed($query);
       foreach($vars as $v) {
-	 $vals["$v[name]"] = ($flag)? $v : $v["value"];
+			 if( preg_match("@^url_@",$v["name"]) ) {
+				  if(preg_match("@/$@", $rootUrl) && preg_match("@^/@", $v["value"]) ) {
+				 		preg_replace("@/$@", $rootUrl) . $v["value"];
+					} else if( !preg_match("@/$@", $rootUrl) && !preg_match("@^/@", $v["value"]) ) {
+						$v["value"] = $rootUrl ."/".$v["value"];		
+					} else {
+						$v["value"] = $rootUrl . $v["value"];
+					}
+			 }
+			 $vals["{$v['name']}"] = ($flag)? $v : $v["value"];
       }
       return($vals);
    }
@@ -2166,11 +2176,11 @@ class zenTrack extends zen {
       $this->tasks       = $this->getTasks();
       
       if( $user ) {
-	 $this->user = $this->get_user($user_id);
-	 $this->access = $this->get_access($user_id);
+	 			$this->user = $this->get_user($user_id);
+	 			$this->access = $this->get_access($user_id);
       }
       if( $language )
-	$this->language = $language;
+			$this->language = $language;
    }
    
   

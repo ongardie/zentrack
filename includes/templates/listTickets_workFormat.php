@@ -2,7 +2,7 @@
   
 if( is_array($tickets) ) {
  
-   $link = $zen->settings["url_view_ticket"];   
+   $link = $rootUrl."/".$zen->settings["url_view_ticket"];   
       ?>
         <table width="100%" cellspacing='1' cellpadding='2' bgcolor='<?=$zen->settings["color_alt_background"]?>'>
 	<tr bgcolor="<?=$zen->settings["color_title_background"]?>">
