@@ -5,6 +5,26 @@
  object oriented and database abstracted design lend to 
  endless possibilities for project expansion. 
 
+----- V2.5 (in development) ----
+
+2004-07-18, Kato
+  Added new methods for groups, variable fields, and behaviors
+    - zentrack_2/includes/db.class 1.25
+    - zentrack_2/includes/zenTrack.class 1.122
+    - zentrack_2/install/configVars.php.default 1.6
+
+2004-07-01, Kato
+  Added search sorting and search by date enhancements
+  Thanks to Johan Lammers for this contribution
+    - zentrack_2/includes/zenTrack.class 1.119
+    - zentrack_2/includes/templates/searchForm.php 1.8
+    - zentrack_2/includes/templates/searchList.php 1.11
+    - zentrack_2/includes/templates/searchResults.php 1.6
+    - zentrack_2/includes/templates/userAdd.php 1.12
+    - zentrack_2/www/images/asc_order.gif 1.1
+    - zentrack_2/www/images/desc_order.gif 1.1
+
+
 ----- V2.4.4 (Released: 2004-03-02) ----
 
 2004-02-26, Kato

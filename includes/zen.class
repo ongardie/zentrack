@@ -298,10 +298,10 @@ class zen extends zenDate {
          $vals["$k"] = $this->checkAlphaNum($v," _-");
          break;
        case "text":
-         $vals["$k"] = htmlspecialchars($v);
+         $vals["$k"] = htmlspecialchars("$v");
          break;
        default:
-         $vals["$k"] = strip_tags($v, $this->html_allowed);
+         $vals["$k"] = strip_tags("$v", $this->html_allowed);
        }
      }       
    }
