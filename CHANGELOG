@@ -9,9 +9,13 @@
 
 2003-09-02, Kato
   Enhanced debugging output (two settings now, some help messages)
-
+    - zentrack_2/includes/footer.php 1.21
+    - zentrack_2/includes/zen.class 1.20
+    - zentrack_2/includes/session_start.php 1.18
   Fixed the click on title in project details to be sticky (rather
   than automatically going to tasks)
+    - zentrack_2/includes/templates/ticket_detailsBox.php 1.9
+    - zentrack_2/www/ticket.php 1.17
 
 2003-08-28, Kato
   Fixed access screen issues with blank bin fields, improper saving
