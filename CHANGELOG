@@ -13,6 +13,10 @@ abstraction, and endless possibilities for project expansion.
 
 ----- VERSION 2.5.0.3 (development) -----
 
+2005-03-15, cfalonso
+  Standard fields don't respect ID in search page when used as menu fields  -Fixed
+    - zentrack_2/includes/ZenFieldMap.class 1.11
+
 2005-03-14, cfalonso
   Some bugfixes
     - zentrack_2/includes/zenTemplate.class 1.8
