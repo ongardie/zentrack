@@ -10,6 +10,9 @@
   if( file_exists("header.php") ) {
     include_once("header.php");
   }
+  else if( file_exists("../header.php") ) {
+    include_once("../header.php");
+  }
 
   if( $page != "project" )
       $page = "ticket";

@@ -1244,7 +1244,7 @@ class zenTrack extends zen {
       if( is_array($recipients) && count($recipients) ) {
         $subject = $this->ptrans("Ticket #?: reopened",array($id));
         $eParams = array(
-                         "message" => $this->ptrans("Ticket has been reopened.") . '',
+                         "message" => $this->ptrans("Ticket ? has been reopened.",array($id)) . '',
                          "From"    => $this->bins["$t[bin_id]"], 
                          "Time"    => $this->showDateTime(),
                          "By"      => $this->formatName($user_id)        
