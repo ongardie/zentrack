@@ -5,6 +5,12 @@
  object oriented and database abstracted design lend to 
  endless possibilities for project expansion.
 
+----- V2.4.3 (Development, See CVS) ----
+
+2003-06-11, MLively
+  Retweaked fix for security update to include login_id
+  - zentrack/includes/session_start.php 1.16
+
 ----- V2.4.2 (Development, See CVS) ----
 
 2003-05-28, Rob Hillis
