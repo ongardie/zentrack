@@ -4,8 +4,8 @@
   See INSTALL.README for install instructions.
 
   Documentation
-    Docs - http://zendocs.phpzen.net/bin/view/Zentrack/IndexPage
-    FAQ - http://zendocs.phpzen.net/bin/view/Zentrack/ZentrackFAQ
+    Docs - http://docs.zentrack.net
+    FAQ - http://www.zentrack.net
 	
   Troubleshooting:
         Open includes/configVars.php and set $this->debug = 1,2, or 3;  
@@ -20,15 +20,7 @@
                 results in the request.  If you can't get zenTrack to run this
                 far, THEN YOU MUST SUBMIT YOUR VERSION INFO for zenTrack, your OS,
                 your Browser, and your Server, so that we can re-create the error.
-           
 
-    online - http://www.sourceforge.net/projects/zentrack (see the support pages)
-             (This will get you a response, probably in hours, maybe in days, but
-              you will get one)
-
-    irc    - zentrack now has a home on irc.sourceforge.net, #zentrack, this may
-             be a good place to find some help with more in depth issues.
-             (usually a response in minutes, sometimes ignored)
 
     mailing list - zentrack-users is a great place to get help.  Answers usually
              within an hour.  http://sourceforge.net/mail/?group_id=22724, never
