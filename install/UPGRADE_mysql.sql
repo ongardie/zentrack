@@ -30,7 +30,7 @@ CREATE TABLE ZENTRACK_GROUP (
 
 CREATE TABLE ZENTRACK_GROUP_DETAIL (
   group_id int(12) NOT NULL,
-  value varchar(255),
+  field_value varchar(255),
   sort_order int(3),
   INDEX (group_id, sort_order)
 );
@@ -95,3 +95,10 @@ INSERT INTO ZENTRACK_VARFIELD_IDX (field_name,       field_label,       sort_ord
 
 INSERT INTO ZENTRACK_VARFIELD_IDX (field_name,       field_label,       sort_order) 
                            VALUES ('custom_text1', 'Custom Text 1', 1         );
+
+INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (96,'level_edit_varfields','2','Access level required to edit fields on the "custom" tab.');
+INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (97,'varfield_tab_name', 'Custom', 'Name to appear on the variable fields tab');
+
+
+/* CREATE AN ENTRY FOR EACH EXISTING TICKET IN THE VARFIELDS TABLE */
+INSERT INTO ZENTRACK_VARFIELD (ticket_id) SELECT id FROM ZENTRACK_TICKETS;

@@ -22,29 +22,33 @@
       for( $i=0; $i<count($newFieldLabel); $i++ ) {
 	if( $newFieldLabel[$i] ) {
           $varfield_check = array(
-                            'newFieldName[$i]'      => "alphanum",
-                            'newFieldLabel[$i]'     => "alphanum",
-                            'newSortOrder[$i]'      => "int",
-                            'newIsRequired[$i]'     => "int",
-                            'newUseForProject[$i]'  => "int",
-                            'newUseForTicket[$i]'   => "int",
-                            'newShowInSearch[$i]'   => "int",
-                            'newShowInList[$i]'     => "int",
-                            'newShowInCustom[$i]'   => "int",
-                            'newShowInDetail[$i]'   => "int"
+                            "newFieldName[$i]"      => "alphanum",
+                            "newFieldLabel[$i]"     => "alphanum",
+			    "newFieldValue[$i]"     => "text",
+                            "newSortOrder[$i]"      => "int",
+                            "newIsRequired[$i]"     => "int",
+                            "newUseForProject[$i]"  => "int",
+                            "newUseForTicket[$i]"   => "int",
+                            "newShowInSearch[$i]"   => "int",
+                            "newShowInList[$i]"     => "int",
+                            "newShowInCustom[$i]"   => "int",
+                            "newShowInDetail[$i]"   => "int",
+			    "newShowInNew[$i]"
                              );
           $zen->cleanInput($varfield_check);
 	  $updateParams = array( 
                 "field_name"		=> $newFieldName[$i],
                 "field_label"		=> $newFieldLabel[$i],
+		"field_value"           => $newFieldValue[$i],
                 "sort_order"		=> $newSortOrder[$i],
-                "is_required"		=> (strlen($newIsRequired[$i])?    $newIsRequired[$i]:0),
-                "use_for_project"	=> (strlen($newUseForProject[$i])? $newUseForProject[$i]:0),
-                "use_for_ticket"	=> (strlen($newUseForTicket[$i])?  $newUseForTicket[$i]:0),
-                "show_in_search"	=> (strlen($newShowInSearch[$i])?  $newShowInSearch[$i]:0),
-                "show_in_list"		=> (strlen($newShowInList[$i])?    $newShowInList[$i]:0),
-                "show_in_custom"	=> (strlen($newShowInCustom[$i])?  $newShowInCustom[$i]:0),
-                "show_in_detail"	=> (strlen($newShowInDetail[$i])? $newShowInDetail[$i]:0)
+                "is_required"		=> (strlen($newIsRequired[$i])?    $newIsRequired[$i]    : 0),
+                "use_for_project"	=> (strlen($newUseForProject[$i])? $newUseForProject[$i] : 0),
+                "use_for_ticket"	=> (strlen($newUseForTicket[$i])?  $newUseForTicket[$i]  : 0),
+                "show_in_search"	=> (strlen($newShowInSearch[$i])?  $newShowInSearch[$i]  : 0),
+                "show_in_list"		=> (strlen($newShowInList[$i])?    $newShowInList[$i]    : 0),
+                "show_in_custom"	=> (strlen($newShowInCustom[$i])?  $newShowInCustom[$i]  : 0),
+                "show_in_detail"	=> (strlen($newShowInDetail[$i])?  $newShowInDetail[$i]  : 0),
+                "show_in_new"	        => (strlen($newShowInNew[$i])?     $newShowInNew[$i]     : 0)
 				);
 	  $res = $zen->update_custom_field_idx($newFieldName[$i], $updateParams); 
 	  if( $res )

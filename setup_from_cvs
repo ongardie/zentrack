@@ -3,6 +3,7 @@
 mkdir includes/attachments
 mkdir includes/logs
 mkdir includes/cache
+mkdir includes/users
 
 cp -ib install/configVars.php.default includes/configVars.php
 cp -ib install/header.php.default www/header.php
@@ -17,3 +18,4 @@ chmod 755 www/javascript.js
 chmod 755 www/styles.php
 chmod 755 includes/egate_check.php
 chmod 755 includes/egate.php
+chmod 755 includes/users

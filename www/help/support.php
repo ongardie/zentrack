@@ -14,46 +14,29 @@
   <blockquote>
   <span class='bigBold'>Support for <?=$zen->settings["system_name"]?></span>
   <p>Much of the documentation for zenTrack is still under construction and changes from
-  time to time.  For the latest information, please refer to the following pages: -</p>
-  <table border=0 align="center" cellspacing="5">
-  	<tr>
-	  <td>Documentation:</td>
-	  <td><a href="http://zendocs.phpzen.net/bin/view/Zentrack/IndexPage">http://zendocs.phpzen.net/bin/view/Zentrack/IndexPage</a></td>
-	</tr>
-	<tr>
-	  <td>FAQ</td>
-	  <td><a href="http://zendocs.phpzen.net/bin/view/Zentrack/ZentrackFAQ">http://zendocs.phpzen.net/bin/view/Zentrack/ZentrackFAQ</a></td>
-	</tr>
-  </table>
-  <p>If the solution to your problem is not to be found in the manual or in the FAQ, it is worthwhile trying one
-  of the following places for some help: -</p>
+  time to time.  For the latest information, please refer to the following pages:</p>
+  <ul>
+    <b>Documentation: <a href="http://docs.zentrack.net">http://docs.zentrack.net</a></b>
+  </ul>
+  <p>If the solution to your problem is not to be found in the manual, it is worthwhile trying one
+  of the following places for some help:</p>
   
   <table border=0 cellspacing=5>
-    <tr valign="top">
+	<tr>
+	  <td valign="top"><a href="http://sourceforge.net/mail/?group_id=22724">Mailing List</a></td>
+	  <td>zentrack-users is a great place to get help.  Answers usually
+          within 12-24 hours.</td>
+	</tr>
+        <tr valign="top">
 	  <td valign="top"><a href="http://www.sourceforge.net/projects/zentrack">Online</a></td>
 	  <td>(see the support pages)  This will get you a response, probably in hours, maybe in days, but
            you will get one.</td>
 	</tr>
 	<tr>
-	  <td valign="top"><a href="irc://irc.sourceforge.net/#zentrack">IRC</a></td>
-	  <td>zentrack now has a home on irc.sourceforge.net, #zentrack, this may
-   	      be a good place to find some help with more in depth issues.
-          (usually a response in minutes, sometimes ignored)</td>
-	</tr>
-	<tr>
-	  <td valign="top"><a href="http://sourceforge.net/mail/?group_id=22724">Mailing List</a></td>
-	  <td>zentrack-users is a great place to get help.  Answers usually
-          within 12 hours.  Never ignored.</td>
-	</tr>
-	<tr>
-	  <td valign="top"><a href="http://sourceforge.net/forum/forum.php?forum_id=71806">Online Forums</a></td>
-	  <td>The Open Disucssion forum on SourceForge is monitored by several experienced
-	      users and developers.  One of the best places to get help.</td>
-	</tr>
-	<tr>
 	  <td valign="top"><a href="mailto:phpzen@users.sourceforge.net">E-mail</a></td>
-	  <td>If you are a registered tester, you will get a reply, otherwise
-          you may get a response if I'm bored, maybe in hours, maybe never</td>
+           <td>If you are a registered tester, you can email me directly.  If you are not 
+               a registered tester you will have better luck on the  mailing list.
+           </td>
 	</tr>
   </table>
 

@@ -57,22 +57,43 @@
 		   "system_id"
 		   );
   $zen->cleanInput($fields);
+
   // check for required fields
   foreach($required as $r) {
      if( !$$r ) {
 	$errs[] = tr("Required field missing:") . " " . ucfirst($r);
      }
   }
+
+  // parse variable fields which appear in new ticket screen, 
+  // store them in $varfield_params
+  // insure that all requirements are met before proceeding
+  // with the ticket save process
+  if( !$errs ) {
+    $customFieldsArray = $zen->getCustomFields(0, $page_type, 'New');
+    if( $customFieldsArray && count($customFieldsArray) ) {
+      include("$libDir/parseVarfields.php");
+    }
+  }
+
   if( !$errs ) {
      // create an array of existing fields
+     // to be inserted for the ticket
      foreach(array_keys($fields) as $f) {
 	if( strlen($$f) ) {
 	   $params["$f"] = $$f;
 	}
      }
      $params["creator_id"] = $login_id;
-     // add the ticket to db
+
+     // add the ticket to database
      $id = $zen->add_ticket($params);
+
+     // update the variable field entries for this ticket
+     if( $id && $customFieldsArray && count($customFieldsArray) ) {
+       $res = $zen->updateVarfieldVals($id, $varfield_params);
+     }
+
      // check for errors
      if( !$id ) {
 	$errs[] = tr("Could not create ticket."). " ".$zen->db_error;

@@ -227,7 +227,6 @@ function runFieldBehaviors( fieldObject ) {
  * This method returns the field affected by the behavior.
  */
 function executeBehavior( formObj, behaviorId ) {
-  alert("running behavior: "+formObj.name+" ][ "+behaviorId);//debug
   behaviorDebug(3, "(executeBehavior)executing behavior "+behaviorId+"->"+formObj.name);
   var behavior = behaviorMap[ behaviorId ];
   var group = groupMap[ behavior.group_id ];
@@ -253,7 +252,8 @@ function executeBehavior( formObj, behaviorId ) {
  * Set the values of a form field to the list provided
  */
 function setFormValsUsingGroup( fieldObj, group ) {
-  behaviorDebug(3, "(setFormValsUsingGroup)updating "+fieldObj.name+" using "+group.name);
+  behaviorDebug(3, "(setFormValsUsingGroup)updating "+fieldObj.name
+		+" using "+group.name+"["+fieldObj.type+"]");
   switch( fieldObj.type ) {
   case "button":
   case "checkbox":
@@ -265,7 +265,6 @@ function setFormValsUsingGroup( fieldObj, group ) {
   case "select":
   case "select-one":
   case "select-multiple":
-    alert("running with "+group.fields.length+" entries from group "+group.name);
     fieldObj.length = group.fields.length;
     for(var i=0; i < group.fields.length; i++) {
       var f = group.fields[i];

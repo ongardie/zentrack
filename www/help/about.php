@@ -17,12 +17,11 @@
      <a href='http://sourceforge.net/projects/zentrack'>zenTrack project</a>. It
      is protected under the <a href='<?=$helpUrl?>/gpl.php'>GPL 2.0 License</a>.</p>
 
-  <p>The system was originally written by <a href='http://kato.was-here.org'>Michael 
-   "Kato" Richardson</a> (<a href='mailto:phpzen@users.sourceforge.net?subject=zenTrack'>phpzen@users.sourceforge.net</a>).  
+  <p>The system was originally written by <a href='http://kato.was-here.org'>Kato Richardson</a> (<a href='mailto:phpzen@users.sourceforge.net?subject=zenTrack'>phpzen@users.sourceforge.net</a>).  
   It is now maintained by Kato and an small, experienced group of developers through the 
   source forge foundry.</p>
 
-  <p>Much more information about zenTrack can be found at: <a href='http://zendocs.phpzen.net/bin/view/Zentrack/IndexPage'>http://zendocs.phpzen.net/bin/view/Zentrack/IndexPage</a>.</p>
+  <p>Much more information about zenTrack can be found at the home page: <a href='http://www.zentrack.net'>http://www.zentrack.net</a>.</p>
 
   </blockquote>
 <?

@@ -59,7 +59,7 @@
   }
 
   // allow creator of ticket to view (if setting is on) even if no access
-  $is_creator = ($login_id == $ticket["creator_id"] && $zen->settings["allow_cview"] == "on");
+  $is_creator = $zen->checkCreator($login_id, $id);
 
   /*
   ** PRINT OUT THE PAGE

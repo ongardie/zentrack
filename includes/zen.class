@@ -112,12 +112,9 @@ class zen extends zenDate {
    function checkNum( $val = 0, $decimal=false ) {
      // converts values to integer or 
      // decimal if $decimal == true;
-     if( !strlen($val) ) {
-       return 0;
-     }     
-     return( ($decimal)? 
-        preg_replace("@[^0-9.]@", "", $val) :
-        preg_replace("@[^0-9]@", "", $val) );
+     $val = ($decimal)? 
+        preg_replace("@[^0-9.]@", "", $val) : preg_replace("@[^0-9]@", "", $val);
+     return strlen($val)? $val : 0;
    }
 
    function checkEmail( $val = '' ) {
@@ -259,102 +256,103 @@ class zen extends zenDate {
      **
      */
 
-      if( is_array($vals) ) {
-   $vars = $vals;
-   $vals = array();
-   foreach($vars as $k=>$v ) {
-     if( is_array($fields) ) {
-       $f = $fields["$k"];
-     } else if( $fields ) {
-       $f = $fields;
-     }
-     if( !$k ) {
-       $vals[] = strip_tags( $v, $this->html_allowed );
-     } else if( !$f ) {
-       $vals["$k"] = strip_tags( $v, $this->html_allowed );
-     } else {
-       switch( $f ) {
-       case "alpha":
-         $vals["$k"] = $this->checkAlpha($v);
-         break;
-       case "alphanum":
-         $vals["$k"] = $this->checkAlphaNum($v);
-         break;      
-       case "array":
-         $vals["$k"] = (is_array($v))? $v : array();
-         break;        
-       case "date":
-         $vals["$k"] = ereg_replace("[^0-9/: -]", "", $v);
-         break;
-       case "email":
-         $vals["$k"] = ereg_replace("[^0-9a-zA-Z@._-]", "", $v);
-         break;              
-       case "html": 
-         $vals["$k"] = $this->stripPHP( $v );
-         break;
-       case "int":
-         $vals["$k"] = $this->checkNum($v);
-         break;        
-       case "ignore":
-         $vals["$k"] = $v;
-         break;
-       case "num":
-         $vals["$k"] = $this->checkNum($v,true);
-         break;
-       case "string":
-         $vals["$k"] = $this->checkAlphaNum($v," _-");
-         break;
-       case "text":
-         $vals["$k"] = htmlspecialchars("$v");
-         break;
-       default:
-         $vals["$k"] = strip_tags("$v", $this->html_allowed);
+     if( is_array($vals) ) {
+       $vars = $vals;
+       $vals = array();
+       foreach($vars as $k=>$v ) {
+         if( is_array($fields) ) {
+           $f = $fields["$k"];
+         } else if( $fields ) {
+           $f = $fields;
+         }
+         if( !$k ) {
+           $vals[] = strip_tags( $v, $this->html_allowed );
+         } else if( !$f ) {
+           $vals["$k"] = strip_tags( $v, $this->html_allowed );
+         } else if( !strlen($v) ) {
+           $vals["$k"] = null;
+         } else {
+           switch( $f ) {
+           case "alpha":
+             $vals["$k"] = $this->checkAlpha($v);
+             break;
+           case "alphanum":
+             $vals["$k"] = $this->checkAlphaNum($v);
+             break;      
+           case "array":
+             $vals["$k"] = (is_array($v))? $v : array();
+             break;        
+           case "date":
+             $vals["$k"] = ereg_replace("[^0-9/: -]", "", $v);
+             break;
+           case "email":
+             $vals["$k"] = ereg_replace("[^0-9a-zA-Z@._-]", "", $v);
+             break;              
+           case "html": 
+             $vals["$k"] = $this->stripPHP( $v );
+             break;
+           case "int":
+             $vals["$k"] = $this->checkNum($v);
+             break;        
+           case "ignore":
+             $vals["$k"] = $v;
+             break;
+           case "num":
+             $vals["$k"] = $this->checkNum($v,true);
+             break;
+           case "string":
+             $vals["$k"] = $this->checkAlphaNum($v," _-");
+             break;
+           case "text":
+             $vals["$k"] = htmlspecialchars("$v");
+             break;
+           default:
+             $vals["$k"] = strip_tags("$v", $this->html_allowed);
+           }
+         }       
        }
-     }       
-   }
-   return $vals;
-      } else {
-    foreach( $fields as $k=>$v ) {
-       global $$k;
-       switch( strtolower($v) ) {
+       return $vals;
+     } else {
+       foreach( $fields as $k=>$v ) {
+         global $$k;
+         switch( strtolower($v) ) {
          case "alpha":
-          $$k = $this->checkAlpha($$k);
-          break;
+           $$k = $this->checkAlpha($$k);
+           break;
          case "alphanum":
-          $$k = $this->checkAlphaNum($$k);
-          break;     
+           $$k = $this->checkAlphaNum($$k);
+           break;     
          case "array":
-          $$k = (is_array($$k))? $$k : null;
-          break;       
+           $$k = (is_array($$k))? $$k : null;
+           break;       
          case "date":
-          $$k = ereg_replace("[^0-9/: -]", "", $$k);
-          break;
+           $$k = ereg_replace("[^0-9/: -]", "", $$k);
+           break;
          case "email":
-          $$k = ereg_replace("[^0-9a-zA-Z@._-]", "", $$k);
-          break;             
+           $$k = ereg_replace("[^0-9a-zA-Z@._-]", "", $$k);
+           break;             
          case "html": 
-          $$k = $this->stripPHP( $$k );
-          break;
+           $$k = $this->stripPHP( $$k );
+           break;
          case "int":
-          $$k = $this->checkNum($$k);
-          break;       
+           $$k = $this->checkNum($$k);
+           break;       
          case "ignore":
-          $$k = $$k;
-          break;
+           break;
          case "num":
-          $$k = $this->checkNum($$k,true);
-          break;
+           $$k = $this->checkNum($$k,true);
+           break;
          case "string":
-          $$k = $this->checkAlphaNum($$k," _-");
-          break;
+           $$k = $this->checkAlphaNum($$k," _-");
+           break;
          case "text":
-          $$k = htmlspecialchars($$k);
-          break;
+           $$k = htmlspecialchars($$k);
+           break;
          default:
-          $$k = strip_tags($$k, $this->html_allowed);
-       }  
-    }
-      }
+           $$k = strip_tags($$k, $this->html_allowed);
+         }  
+       }
+     }
    }
 
    function hiddenField( $name, $value = '' ) {

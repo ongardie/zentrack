@@ -166,7 +166,7 @@
     unset($login_messages);
   }
 
-function genVarfield( $formName, $varfield, $value = '' ) {
+  function genVarfield( $formName, $varfield, $value = '' ) {
     // generates html form element to represent
     // the variable field array
     global $zen;
@@ -195,6 +195,8 @@ function genVarfield( $formName, $varfield, $value = '' ) {
       break;
     case "date":
       // format for use in date
+      if( $value == 'NULL' ) { $value = ''; }
+      if( $value == 0 ) { $value = ""; }
       if( strlen($value) && preg_match("/^[0-9]+$/", $value) ) { 
 	$value = $zen->showDateTime($value); 
       }
@@ -207,12 +209,14 @@ function genVarfield( $formName, $varfield, $value = '' ) {
         ."  alt='".tr("Select a Date")."'>\n";
       break;
     case "number":
+      if( $value == 'NULL' ) { $value = ''; }
       $inp = "<input type='text' name='{$varfield['field_name']}' "
 	." value='{$value}' size='10' maxlength='100'{$onblur}>\n";      
       break;
     case "menu":
       $v = $varfield['field_value'];
-      $group = $_SESSION['data_groups'][$v];
+      $group = $_SESSION['data_groups']["$v"];
+      print "looking for group $v: $group<br>\n";//debug
       if( $group ) {
 	// get the fields for our group
 	$opts = $group['fields'];
@@ -279,14 +283,14 @@ function genVarfield( $formName, $varfield, $value = '' ) {
   // to a file called ticket_[name]Box.php which is included in
   // includes/templates dir
   $tabs = array(
-      "Details",
-      "Custom",
-      "Log",
-      "Related",     
-      "Attachments",
-      "Notify",
-      "System"
-      );
+		"details"     => tr("Details"),
+		"custom"      => tr($zen->settings['varfield_tab_name']),
+		"log"         => tr("Log"),
+		"related"     => tr("Related"),     
+		"attachments" => tr("Attachments"),
+		"notify"      => tr("Notify"),
+		"system"      => tr("System")
+		);
         
   /*
   **  ROLLOVER EFFECTS
@@ -329,10 +333,9 @@ function genVarfield( $formName, $varfield, $value = '' ) {
      include_once("$libDir/login.php");
   }     
 
-  /*
-  **  LISTS THAT SHOULD PROBABLY BE DYNAMIC, BUT AREN'T
-  */
-
+  /**
+   * The list of valid log action types
+   */
   $log_actions = $zen->getActivities();
 
 // you can't have any spaces after this closing tag!

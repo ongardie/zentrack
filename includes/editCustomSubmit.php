@@ -4,70 +4,39 @@
 //} else if( !$zen->actionApplicable($id,"edit_custom",$login_id) ) {
 //  $errs[] = $zen->ptrans("Ticket #? cannot be edited in its current status",array($id));
 //}
-                                                                                                                             
-  $page_tile = tr("Commit Edited Ticket's Custom Fields");
-  $expand_admin = 1;
-                                                                                                                             
+  $page_tile = tr("Ticket #$id: Save Custom Fields");
   $fields = array();
   $required = array();
-                                                                                                                             
-  $cfd=$zen->getCustomFields(0,$page_type,"C");
-  foreach($cfd as $f) {
-    $k=$f['field_name'];
-    $v=$f['field_label'];
-    $r=$f['is_required'];
-    $varfield_type=ereg_replace("[^a-z_]", "", $k);
-    switch($varfield_type) {
-      case "custom_number":
-        $cfv=($$k)?$$k : 0;
-        $cft="int";
-        break;
-      case "custom_date":
-        $cfv=($$k)?$zen->dateParse($$k) : "n/a";
-        $cft="num";
-        break;
-      default:
-        $cfv=$$k;
-        $cft="text";
-        break;
-    }
-    $fields[$k]=$cft;
-    $$k=$cfv;
-    // check for required fields
-    if ($r && !$$k) {
-      $errs[] = ucfirst($v)." ".tr("is a required field");
-    }
-  }
-
-  $zen->cleanInput($fields);
+  // the TODO is saved, even if the save failed
+  $TODO = 'SAVED';
+                                
   if( !$errs ) {
-     $params = array();
-     // create an array of existing fields
-     foreach(array_keys($fields) as $f) {
-         $params["$f"] = $$f;
-     }
-     // update the ticket info
-     $res = $zen->updateVarfieldVals($id,$params);
-     // check for errors
-     if( !$res ) {
-   $errs[] = tr("System Error").": ".tr("Ticket could not be edited.")." ".$zen->db_error;
-     }
+    $customFieldsArray = $zen->getCustomFields(0,$page_type, 'Custom Tab');
+    include("$libDir/parseVarfields.php");
   }
 
   if( !$errs ) {
-     add_system_messages(tr("Edited ticket's custom fields")." $id.");
+    // update the ticket info
+    $res = $zen->updateVarfieldVals($id,$varfield_params);
+    // check for errors
+    if( !$res ) {
+      $errs[] = tr("System Error").": ".tr("Ticket could not be edited.")." ".$zen->db_error;
+    }
+  }
+
+  if( !$errs ) {
+    add_system_messages(tr("Variable fields updated: ")." $id.");
+    $save_message = tr("Fields updated successfully");
      //header("Location:$rootUrl/ticket.php?id=$id&setmode=Custom");
-     $setmode = "Custom";
-     if( $zen->inProjectTypeIDs($bin_id) ) {
-       include("../project.php");
-     } else {
-       include("../ticket.php");
-     }
-     exit;
+    $setmode = "custom";
+    if( $zen->inProjectTypeIDs($bin_id) ) {
+      include("../project.php");
+    } else {
+      include("../ticket.php");
+    }
+    exit;
   } else {
      include_once("$libDir/nav.php");
-     $zen->print_errors($errs);
-     $TODO = 'EDIT';
      if( $zen->inProjectTypeIDs($bin_id) )
        include("$templateDir/projectView.php");
      else

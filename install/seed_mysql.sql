@@ -163,7 +163,7 @@ INSERT INTO ZENTRACK_TASKS (task_id, name, priority, active) VALUES (7,'Research
 INSERT INTO ZENTRACK_TASKS (task_id, name, priority, active) VALUES (8,'Review',0,1);
 INSERT INTO ZENTRACK_TASKS (task_id, name, priority, active) VALUES (9,'Solution',0,1);
 INSERT INTO ZENTRACK_TASKS (task_id, name, priority, active) VALUES (10,'Testing',0,1);
- INSERT INTO ZENTRACK_TASKS (task_id, name, priority, active) VALUES (11,'Work',0,1);
+INSERT INTO ZENTRACK_TASKS (task_id, name, priority, active) VALUES (11,'Work',0,1);
 
 #
 # Load data for table 'ZENTRACK_TICKETS'

@@ -13,8 +13,8 @@
   include_once("../header.php");
 
   // set the ticket mode to system
-  $page_mode = 'system';
-  $setmode = 'system';
+  //$page_mode = 'system';
+  //$setmode = 'system';
 
   // check to insure a ticket id was passed
   $id = ereg_replace("[^0-9]", "", $id);

@@ -54,9 +54,8 @@
     <?
       $bins = $zen->getUsersBins($login_id);
       if( is_array($bins) ) {
-	$params["bin_id"] = $bins;
-	$params["status"] = "OPEN";
-	$projects = $zen->get_projects($params,title);
+	$params = array("bin_id" => $bins, "status" => "OPEN");
+	$projects = $zen->get_projects($params,'title');
       } 
       if( is_array($projects) ) {
 	foreach($projects as $p) {
@@ -175,6 +174,9 @@
   <td class="bars">
     <input type="text" name="relations" size="20" maxlength="255"
 value="<?=strip_tags($relations)?>">
+    &nbsp;<input type='button' class='searchbox' value=' ... ' 
+	onClick='popupWindowScrolls("<?=$rootUrl?>/helpers/ticketSearchbox.php?return_form=ticketForm&return_field=relations","popupHelper",375,500)'>
+
   <br>(<?=tr("Enter multiple ids, separated by a comma")?>)
   </td>
 </tr>          
@@ -260,7 +262,7 @@ value="<?=($deadline)?$zen->showDate(strip_tags($deadline)):""?>">
 </tr>
 
 <?
- $varfields = $zen->getCustomFields(0,'T');
+ $varfields = $zen->getCustomFields(0,'Ticket', 'New');
  if( is_array($varfields) && count($varfields) ) {
 ?>
 <tr>
@@ -270,14 +272,15 @@ value="<?=($deadline)?$zen->showDate(strip_tags($deadline)):""?>">
 </tr>
 <?
     foreach($varfields as $v) {
+      $k = $v['field_name'];
+      $val = isset($$k)? $$k : $v['field_value'];
 ?>
 <tr>
   <td class="bars">
    <?=tr($v['field_label'])?>
   </td>
   <td class="bars">
-    <input type="checkbox" name="<?=$v['field_name']?>" value="1" 
-    <?= $zen->getDefaultValue("default_aprv_checked") ?>>
+   <?= genVarfield( 'ticketForm', $v, $val ) ?>
   </td>
 </tr>
 <?

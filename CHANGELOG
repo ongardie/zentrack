@@ -7,6 +7,13 @@
 
 ----- V2.5 (in development) ----
 
+2004-08-07, Kato
+  Updated documentation
+
+  Tested/debugged custom fields, implemented in create screens
+
+  Updated upgrade scripts
+
 2004-08-04, Kato
   Completed behaviors, which now work on edit and new ticket/project screens
   Added the custom_menu variable field type (including default values)

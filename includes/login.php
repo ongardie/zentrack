@@ -7,14 +7,6 @@
     $login_level = "";
   }
 
-  // if there is no login id then include the form
-  // or process the form results
-  if( $login_level == 'first_login' && !ereg("pwc\.php",$SCRIPT_NAME) ) {
-    include_once("$libDir/nav.php");
-    include_once("$templateDir/pwcForm.php");
-    include_once("$libDir/footer.php");
-    exit;    
-  }
   if( !$login_id ) {
     if( isset($username) && $username && isset($passphrase) ) {
       $login_id = $zen->login_user( $username, $passphrase );
@@ -32,10 +24,6 @@
 	$login_bin   = $zen->user["homebin"];
 	$prefs = $zen->get_prefs($login_id, "language");
 	if(isset($prefs["language"])) { $login_language = $prefs["language"]; }
-	include_once("$libDir/nav.php");
-	include_once("$templateDir/pwcForm.php");
-	include_once("$libDir/footer.php");
-	exit;    
 	$skip = 1;
       } else if( $login_id ) {
 	// this will log the user in successfully
@@ -76,6 +64,16 @@
        include("$libDir/footer.php");
        exit;
      }          
+
+    // if there is no login id then include the form
+    // or process the form results
+    if( "$login_level" == "first_login" && !ereg("pwc\.php",$SCRIPT_NAME) ) {
+      include_once("$libDir/nav.php");
+      include_once("$templateDir/pwcForm.php");
+      include_once("$libDir/footer.php");
+      exit;    
+    }
+
   } 
 
 ?>

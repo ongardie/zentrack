@@ -111,6 +111,43 @@
    <tr colspan="5" height="5">
     <td><img src="<?=$rootUrl?>/images/empty.gif" width="2" height="5"></td>  
    </tr>
+
+<?
+  $cfd=$zen->getCustomFields(1,$page_type,"D");
+  foreach($cfd as $k => $v) {
+    $varfield_type=ereg_replace("[^a-z_]", "", $k);
+    switch($varfield_type) {
+      case "custom_number":
+        $cfv = strlen($varfields["$k"])? $varfields["$k"] : 'n/a';
+        break;
+      case "custom_date":
+        $cfv = $varfields["$k"]? $zen->showDateTime($varfields["$k"]) : "n/a";
+        break;
+      default:
+        $cfv = $varfields["$k"]? htmlspecialchars($varfields["$k"]) : 'n/a';
+        break;
+    }
+?>
+   <tr>
+    <td colspan="3" class="smallTitleCell" height="<?=$height_num?>"><?=$v?></td>
+    <td colspan='2'>&nbsp;</td>
+   </tr>
+   <tr>
+      <td colspan="3"<?= $varfield_type == 'custom_text'? " class='outlined'" : '' ?>>
+      <?= 
+	 $varfield_type == 'custom_text'?
+           (get_magic_quotes_runtime()? nl2br(stripslashes($cfv)) : nl2br($cfv)) : htmlspecialchars($cfv);
+      ?>
+    </td>
+    <td colspan='2'>&nbsp;</td>
+   </tr>
+<?
+  }
+?>
+
+   <tr colspan="5" height="5">
+    <td><img src="<?=$rootUrl?>/images/empty.gif" width="2" height="5"></td>  
+   </tr>
    <tr>
     <td colspan="5" class="smallTitleCell" height="<?=$height_num?>"><?=uptr("Description")?></td>
    </tr>
@@ -119,32 +156,5 @@
    <?=(get_magic_quotes_runtime())?nl2br(stripslashes($description)):nl2br($description); ?>
     </td>
    </tr>  
-<?
-  $cfd=$zen->getCustomFields(1,$page_type,"D");
-  foreach($cfd as $k => $v) {
-    $varfield_type=ereg_replace("[^a-z_]", "", $k);
-    switch($varfield_type) {
-      case "custom_number":
-        $cfv=($varfields["$k"])?$varfields["$k"] : 0;
-        break;
-      case "custom_date":
-        $cfv=($varfields["$k"])?$zen->showDateTime($varfields["$k"]) : "n/a";
-        break;
-      default:
-        $cfv=$varfields["$k"];
-        break;
-    }
-?>
-   <tr>
-    <td colspan="5" class="smallTitleCell" height="<?=$height_num?>"><?=$v?></td>
-   </tr>
-   <tr>
-    <td colspan="5" class="outlined">
-   <?=(get_magic_quotes_runtime())?nl2br(stripslashes($cfv)):nl2br($cfv); ?>
-    </td>
-   </tr>
 
-<?
-  }
-?>
    </table>

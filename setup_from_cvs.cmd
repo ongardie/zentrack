@@ -2,6 +2,7 @@
 mkdir includes\attachments
 mkdir includes\logs
 mkdir includes\cache
+mkdir includes\users
 
 copy install\configVars.php.default includes\configVars.php
 copy install\header.php.default www\header.php

@@ -71,7 +71,7 @@
   $zen->printErrors($errs);
   if( !$skip ) {  
     $type = "system";
-    $id_type = "sid";	
+    $id_type = $zen->getDataTypeId($type);	
     include("$templateDir/configForm.php");
   } else {
     include("$templateDir/adminMenu.php");

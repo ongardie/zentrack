@@ -52,10 +52,14 @@
 
   $i = 1;
 
+  $vx = $zen->getCustomFields(1, $page_type, 'Custom');
   $counts = $zen->get_ticket_stats($id);
-  foreach( $tabs as $t ) {
-    $lt = strtolower($t);
-    if( $page_mode == $lt ) {
+  foreach( $tabs as $key=>$t ) {
+    if( $key == 'custom' && (!$vx || !count($vx)) ) {
+      // only display the custom tab if there are fields on it
+      continue;
+    }
+    if( $page_mode == $key ) {
       $class = 'tabOn';
       $lclass = "tabsOn";
     } else {
@@ -65,12 +69,12 @@
     
     // Possible translations: (for the benefit of translation maintenance tools)
     // tr("Related"); tr("Notify"); tr("Tasks");
-    $txt = (isset($counts[$lt]) && $counts[$lt])?
-      tr($t)." (".$counts["$lt"].")" : tr($t);
-    $link = ($t == 'System')? $SCRIPT_NAME : $pageUrl;
-    $w = ($lt == "attachments")? 85 : 60;
+    $txt = (isset($counts[$key]) && $counts[$key])?
+      $t." (".$counts["$key"].")" : $t;
+    $link = ($key == 'system')? $SCRIPT_NAME : $pageUrl;
+    $w = ($key == "attachments")? 85 : 60;
     print "<td class='$class' height='$height_num' width='$w'>";
-    print "<a href='$link?id=$id&setmode=$t' class='$lclass'>$txt</a></td>\n";
+    print "<a href='$link?id=$id&setmode=$key' class='$lclass'>$txt</a></td>\n";
     if( $i < count($tabs) ) {
       print "<td width='3'><img src='$rootUrl/images/empty.gif' width='3' height='1'></td>\n";
     }
@@ -91,10 +95,11 @@
   */
   $name = "ticket_".$page_mode."Box.php";
   $name = ereg_replace("[.]{2}", "", $name);
+
   // check for valid filename
   if( !file_exists("$templateDir/$name") ) {
     $name = "ticket_systemBox.php";
-    $this->addDebug("ticket_box","Invalid filename $name declared... redirecting",1);
+    $zen->addDebug("ticket_box","Invalid filename $name declared... redirecting",1);
   }
   include("$templateDir/$name");
 ?>

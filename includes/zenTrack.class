@@ -867,6 +867,14 @@ class zenTrack extends zen {
    * @param array $field_values mapped (String)field_name -> (String)value
    */
   function updateVarfieldVals( $ticket_id, $field_values ) { 
+    foreach($field_values as $key=>$val) {
+      if( strpos($key, 'date') > 0 && $val == 0 ) {
+        $val = 'NULL';
+      }
+      else if( strpos($key, 'number') > 0 && is_null($val) ) {
+        $val = 'NULL';
+      }
+    }
     return $this->db_update( $this->table_varfield, "ticket_id", $ticket_id, $field_values );
   }
 
@@ -1945,6 +1953,12 @@ class zenTrack extends zen {
     // perform the ticket insert
     $id = $this->db_insert($this->table_tickets,$params);
     if( $id ) {
+      // create an entry in the varfield table
+      $query = "INSERT INTO ".$this->table_varfield." (ticket_id) VALUES($id)";
+      if( !$this->db_result($query) ) {
+        $this->addDebug('add_ticket', 'varfield query failed: $query', 1);
+      }
+
       // create the notify list for this ticket
       $notify_list = array();
       // the bin owners
@@ -3045,16 +3059,22 @@ class zenTrack extends zen {
   function getDataTypeFields( $table ) {
     switch( strtoupper($table) ) {
     case "ZENTRACK_BINS":
+    case "BINS":
       return "bid,name";
     case "ZENTRACK_PRIORITIES":
+    case "PRIORITIES":
       return "pid,name";
     case "ZENTRACK_SYSTEMS":
+    case "SYSTEMS":
       return "sid,name";
     case "ZENTRACK_TASKS":
+    case "TASKS":
       return "task_id,name";
     case "ZENTRACK_TYPES":
+    case "TYPES":
       return "type_id,name";
     case "ZENTRACK_USERS":
+    case "USERS":
       return "user_id,lname,fname,initials";
     }
     return null;
@@ -3068,12 +3088,18 @@ class zenTrack extends zen {
     // and for bins, the name field
     switch( strtoupper($table) ) {
     case "ZENTRACK_BINS":
+    case "BINS":
     case "ZENTRACK_PRIORITIES":
+    case "PRIORITIES":
     case "ZENTRACK_SYSTEMS":
+    case "SYSTEMS":
     case "ZENTRACK_TASKS":
+    case "TASKS":
     case "ZENTRACK_TYPES":
+    case "TYPES":
       return $vals['name'];
     case "ZENTRACK_USERS":
+    case "USERS":
       return $this->formatName($vals);
     }
     return null;
@@ -3083,12 +3109,18 @@ class zenTrack extends zen {
     // be careful using this, it's still limited
     switch( strtoupper($table) ) {
     case "ZENTRACK_BINS":
+    case "BINS":
     case "ZENTRACK_PRIORITIES":
+    case "PRIORITIES":
     case "ZENTRACK_SYSTEMS":
+    case "SYSTEMS":
     case "ZENTRACK_TASKS":
+    case "TASKS":
     case "ZENTRACK_TYPES":
+    case "TYPES":
       return "priority";
     case "ZENTRACK_USERS":
+    case "USERS":
       return "lname, fname";
     }
     return null;
@@ -3098,16 +3130,22 @@ class zenTrack extends zen {
     // be careful using this, it's still limited
     switch( strtoupper($table) ) {
     case "ZENTRACK_BINS":
+    case "BINS":
       return "bid";
     case "ZENTRACK_PRIORITIES":
+    case "PRIORITIES":
       return "pid";
     case "ZENTRACK_SYSTEMS":
+    case "SYSTEMS":
       return "sid";
     case "ZENTRACK_TASKS":
+    case "TASKS":
       return "task_id";
     case "ZENTRACK_TYPES":
+    case "TYPES":
       return "type_id";
     case "ZENTRACK_USERS":
+    case "USERS":
       return "user_id";
     }
     return null;
@@ -3206,7 +3244,7 @@ class zenTrack extends zen {
     return( $user_id == $ticket["creator_id"] );
   }
 
-  function checkAccess( $user_id, $bin_id, $action = '' ) {
+  function checkAccess( $user_id, $bin_id, $action = 'level_view' ) {
     // takes the user_id, the bin_id and the action in
     // question, and determines whether the logged in
     // user can perform it
@@ -3557,6 +3595,14 @@ class zenTrack extends zen {
                                "egate"    => 1,
                                "level"    => $this->settings["level_view"]
                                );
+      $actions["varfield_edit"] = array(
+                                        "owner"    => 1,
+                                        "access"   => 1, 
+                                        "status"   => array('OPEN','PENDING'),
+                                        "override" => 1,
+                                        "egate"    => 0,
+                                        "level"    => $this->settings["level_varfield_edit"]
+                                        );
       $actions["yank"] = array(
                                "owner"    => 4,
                                "access"   => 1,
@@ -3589,7 +3635,7 @@ class zenTrack extends zen {
    *
    * @param int $indexedMode if set, returns the field_label indexed by field_name, otherwise all data is returned
    * @param string $filterUse "P"roject, "T"icket or blank
-   * @param string $filterShow "S"earch, "L"ist, "C"ustom, "D"etail or blank
+   * @param string $filterShow "S"earch, "L"ist, "C"ustom, "D"etail, "N"ew Ticket Screen, or blank
    * @return array of custom fields
    */
   function getCustomFields($indexedMode = 1, $filterUse = "", $filterShow = "") {
@@ -3609,11 +3655,11 @@ class zenTrack extends zen {
     // in tickets or projects
     switch ( strtoupper(substr($filterUse,0,1)) ) {
       case "P":
-        $query .= $connector . "use_for_project=1";
+        $query .= $connector . " use_for_project = 1 ";
         $connector = " AND ";
         break;
       case "T":
-        $query .= $connector . "use_for_ticket=1";
+        $query .= $connector . " use_for_ticket = 1 ";
         $connector = " AND ";
         break;
     }
@@ -3623,21 +3669,24 @@ class zenTrack extends zen {
     // configured to appear in this location
     switch ( strtoupper(substr($filterShow,0,1)) ) {
       case "S":
-        $query .= $connector . "show_in_search=1";
+        $query .= $connector . " show_in_search = 1 ";
         $connector = " AND ";
         break;
       case "L":
-        $query .= $connector . "show_in_list=1";
+        $query .= $connector . " show_in_list = 1 ";
         $connector = " AND ";
         break;
       case "C":
-        $query .= $connector . "show_in_custom=1";
+        $query .= $connector . " show_in_custom = 1 ";
         $connector = " AND ";
         break;
       case "D":
-        $query .= $connector . "show_in_detail=1";
+        $query .= $connector . " show_in_detail = 1 ";
         $connector = " AND ";
         break;
+      case "N":
+        $query .= $connector . " show_in_new = 1 ";
+      
     }
     $query .= " ORDER BY sort_order, field_label";
 
@@ -3646,8 +3695,9 @@ class zenTrack extends zen {
     if ( $indexedMode ) {
       $vals = array();
       $vars = $this->db_query($query);
-      foreach ($vars as $v) {
-        $vals["$v[0]"] = $v[1];
+      for($i=0; $i<count($vars); $i++) {
+        $k = $vars[$i][0];
+        $vals["$k"] = $vars[$i][1];
       }
       return( $vals );
     } 

@@ -282,6 +282,10 @@ else {
    font-size:   <?=$zen->settings["font_size_small"]?>px;
 }
 
+.bold {
+  font-weight: bold;
+}
+
 .smallBold {
    font-weight: bold;
 }
