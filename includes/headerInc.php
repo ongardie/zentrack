@@ -20,7 +20,7 @@
   ** SESSION MANAGEMENT
   */
 
-  include("$libDir/session_start.php");
+  include_once("$libDir/session_start.php");
 
 
   /*
@@ -50,7 +50,7 @@
   **  CLASS OBJECTS
   */
 
-  include("$libDir/zenTrack.class");
+  include_once("$libDir/zenTrack.class");
   $zen = new zenTrack( $configFile, $login_id );
 
 
@@ -201,7 +201,7 @@
   */
 
   if( !eregi("(/help/|styles[.]php)",$SCRIPT_NAME) ) {
-     include("$libDir/login.php");
+     include_once("$libDir/login.php");
   }     
 
   /*

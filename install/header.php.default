@@ -120,6 +120,6 @@
   **  LEAVE THIS PART ALONE
   */
   
-  include("$libDir/headerInc.php");
+  include_once("$libDir/headerInc.php");
   
 }?>
