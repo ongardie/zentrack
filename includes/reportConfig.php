@@ -38,7 +38,7 @@
   global $zen;
 
   // type of image to output
-  $this->imageType = "png";
+  $this->imageType = "jpeg";
 
   // quality of image, if jpeg type
   // integer from 0 to 100(best)
@@ -167,6 +167,46 @@
   $this->colorYGuidelines   = array(180,180,100,80);
 
   /*
+  **  TEXT SETTINGS
+  */
+  
+  // the numeric format to show data
+  // T[,x],H[,x],K[,x]|M[,x]|B[,x]|A[,x]
+  // (tens,hundreds,thousands,millions,billions,actual[leave as is])
+  // where x is the number of decimals (if left off, defaults to zero)
+  // example: "K,2' would truncate to thousands, plus 2 decimals (2.02 thousand)
+  // "M" would truncate to millions, zero decimals (412 million)
+  // if blank, the system will not format number or limit decimal digits
+  $this->dataFormat = "";         
+
+  // size of plain text, in pixels with TTF, otherwise 1-5
+  $this->fontSize = 8;
+  
+  // used only with TTF, this is the font to display
+  $this->font = "arial.ttf";
+  
+  // size of the graph title, in pixels with TTF, otherwise 1 - 5
+  $this->titleSize = 14;
+  
+  // used only with TTF, this is the font to display
+  $this->titleFont = "arial.ttf";
+
+  // color of the graph title
+  $this->titleColor = array(255,255,255,0);
+  
+  // 0 or 1, tells whether TTF support is enabled
+  $this->ttfEnabled = 1;
+  
+  // the default TTF font to use
+  $this->ttfDefault = "arial.ttf";
+  
+  // graph title
+  $this->graphTitle = "Graphical Analysis";
+  
+  // graph subtitle
+  $this->graphSubtitle = "Of Something Unknown";
+
+  /*
   **  HEADINGS
   */
 
@@ -219,20 +259,6 @@
   $this->subHeadingFont = "courier_italic.ttf";
 
   /*
-  **  PLOTTED VALUES
-  */
-  // 0-off 1-on, shows values on graph
-  $this->showValueOnGraph = 1;  
-  // size of plotted values
-  $this->valueFontSize = $this->fontSize-2;
-  // angle of plotted values
-  $this->valueFontAngle = 45;
-  // this can be a color value (#hhhhhh or array(rr,gg,bb))
-  // or null which will set it to the color
-  // of the plotted element
-  $this->valueFontColor = null;        
-
-  /*
   **  LABELS
   */
 
@@ -274,54 +300,36 @@
   // otherwise, this is 0 or 90
   $this->yLabelsAngle = 45;
 
-
   // labels for right side of y axis (alternate labels)
   // leave blank and they will not be displayed
+  // if you use these, they must be set appropriately...
+  // that is... the lowest value must correspond to the lowest
+  // value of the yLabels, and the hightest value must correspond
+  // to the highest value of the yLabels (they do not have to have
+  // the same number of elements) because they will be scaled
+  // to match
+  // you may use an optional parameter in the addData call as follows:
+  // "y2scale"=1, which will cause a particular row of data (except pies)
+  // to be scaled to the y2 axis rather than the y axis
   $this->y2Labels = null;
   
   // if using TTF, this is the angle to display the y2 axis labels at  
   // otherwise, this is 0 or 90
-  $this->y2LabelsAngle = 320;
+  $this->y2LabelsAngle = 0;
 
   /*
-  **  TEXT SETTINGS
+  **  PLOTTED VALUES
   */
-  
-  // the numeric format to show data
-  // T[,x],H[,x],K[,x]|M[,x]|B[,x]|A[,x]
-  // (tens,hundreds,thousands,millions,billions,actual[leave as is])
-  // where x is the number of decimals (if left off, defaults to zero)
-  // example: "K,2' would truncate to thousands, plus 2 decimals (2.02 thousand)
-  // "M" would truncate to millions, zero decimals (412 million)
-  // if blank, the system will not format number or limit decimal digits
-  $this->dataFormat = "";         
-
-  // size of plain text, in pixels with TTF, otherwise 1-5
-  $this->fontSize = 8;
-  
-  // used only with TTF, this is the font to display
-  $this->font = "arial.ttf";
-  
-  // size of the graph title, in pixels with TTF, otherwise 1 - 5
-  $this->titleSize = 14;
-  
-  // used only with TTF, this is the font to display
-  $this->titleFont = "arial.ttf";
-
-  // color of the graph title
-  $this->titleColor = array(255,255,255,0);
-  
-  // 0 or 1, tells whether TTF support is enabled
-  $this->ttfEnabled = 1;
-  
-  // the default TTF font to use
-  $this->ttfDefault = "arial.ttf";
-  
-  // graph title
-  $this->graphTitle = "Graphical Analysis";
-  
-  // graph subtitle
-  $this->graphSubtitle = "Of Something Unknown";
+  // 0-off 1-on, shows values on graph
+  $this->showValueOnGraph = 1;  
+  // size of plotted values
+  $this->valueFontSize = $this->fontSize-2;
+  // angle of plotted values
+  $this->valueFontAngle = 45;
+  // this can be a color value (#hhhhhh or array(rr,gg,bb))
+  // or null which will set it to the color
+  // of the plotted element
+  $this->valueFontColor = null;        
 
   /*
   **  3D EFFECTS

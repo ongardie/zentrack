@@ -21,8 +21,6 @@
   // create headings and labels
   $graph->graphTitle = $params["chart_title"];
   $graph->graphSubtitle = $params["chart_subtitle"];
-  $graph->yHeading = $params["report_type"];
-  $graph->ySubHeading = "";
   $graph->xHeading = ucwords($params["date_range"]);
   $graph->xSubHeading = "";
   //  $graph->yLabels = '';
@@ -40,19 +38,30 @@
   $graph->labelColor = $zen->settings["color_text"];
   $graph->imageHeight = $zen->reportImageHeight;
   $graph->imageWidth = $zen->reportImageWidth;
-
+  $graph->valueFontColor = $zen->settings["color_text"];
   $graph->yMin = 0;
+
+  $graph->yHeading = $y_heading;
+  if( $y_2_set && count($y_2_set) ) {
+    $graph->ySubHeading = "($y2_set_type on right axis)";
+    $graph->y2Labels = $y_2_set;
+  }
+
+  // change the font angle if we have a lot
+  // of stuff to graph, so it will fit better
+  if( count($date_labels) * count($set_index) > 25 )
+	$graph->valueFontAngle = 90;
 
   if( count($date_labels) > 10 ) {
     $compact = 2;
   } else {
     $compact = 1;
   }
+
   $graph->xLabels = array(0=>"");
   for($i=$compact-1; $i<count($date_labels); $i+=$compact) {
     $graph->xLabels[] = $date_labels[$i];
   }
-
   // set up layers
   $layer_params = array(
 			"name" => "",
@@ -61,7 +70,6 @@
 			);
   if( $compact > 1 )
     $layer_params["compact"] = $compact;
-
   $colors = $graph->getColorScheme();
   function scam_a_color(&$colors) {
     global $graph;

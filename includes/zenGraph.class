@@ -1333,6 +1333,7 @@ class zenGraph extends Zen {
       $data = $this->layers[$layer]["data"];
       for($i=0; $i < $num; $i++) {
 	$row = $areas[$i];
+	$y2tf = (isset($config[$row]["y2scale"])&&$config[$row]["y2scale"]>0);
 	$points = array();
 	// set up points based on values
 	for($j=0; $j<$this->xMax; $j++) {	  
@@ -1341,7 +1342,7 @@ class zenGraph extends Zen {
 	    if( $xzero + $step * $j <= $this->xEnd + $coffset ) {	      
 	      $points[] = $this->checkRange($xzero + $step*$j, 'x', $coffset);
 	      $points[] = $this->checkRange($yzero - 
-					    $this->scaleY($data[$row][$j]), 'y', $cdepth);
+		       $this->scaleY($data[$row][$j],$y2tf), 'y', $cdepth);
 	    }
 	  }	  
 	}
@@ -1360,12 +1361,14 @@ class zenGraph extends Zen {
     // plots all column charts
     // for the given layer
     
-    $gap = (strlen($this->layers[$layer]["gap"]))? $this->layers[$layer]["gap"] : $this->gap;
+    $gap = (strlen($this->layers[$layer]["gap"]))? 
+	$this->layers[$layer]["gap"] : $this->gap;
     $config = $this->layers[$layer]["config"];
+    $compact = $this->layers[$layer]["settings"]["compact"];
     $num = count($columns);
     $this->addDebug("plotColumns($layer)", "number of rows to plot: $num", 2);
     if( $this->layers[$layer]["settings"]["compact"] ) {
-      $step = ($this->xStep - $gap) / $this->layers[$layer]["settings"]["compact"];
+      $step = ($this->xStep - $gap) / $compact;
     } else {
       $step = $this->xStep;
     }
@@ -1403,6 +1406,7 @@ class zenGraph extends Zen {
 	  $hide_top = 0;
 	  if( is_array($data[$row]) && strlen($data[$row][$j]) ) {
 	    $v = $data[$row][$j];
+	    $y2tf = (isset($config[$row]["y2scale"]) && $config[$row]["y2scale"]>0);
 	    if( $config[$row]["type"] == "column" || $i == 0 ) {
 	      // move the x location right one bar..
 	      // add in some space for any blank bars
@@ -1410,35 +1414,34 @@ class zenGraph extends Zen {
 	      $x1 += $barWidth;
 	      if( $v < 0 ) {
 		$y1 = $yzero;
-		$y2 = $y1 - $this->scaleY($v);
+		$y2 = $y1 - $this->scaleY($v,$y2tf);
 	      } else {
 		$y2 = $yzero;
-		$y1 = $y2 - $this->scaleY($v);
+		$y1 = $y2 - $this->scaleY($v,$y2tf);
 	      }
 	    } else {
 	      // draw in the stacks on top of their
 	      // respective bars
 	      if( $v < 0 ) {
 		$y1 = $y2;
-		$y2 = $y1 - $this->scaleY($v);
+		$y2 = $y1 - $this->scaleY($v,$y2tf);
 		$hide_top = 1;
 	      } else {
 		$y2 = $y1;
-		$y1 = $y2 - $this->scaleY($v);
+		$y1 = $y2 - $this->scaleY($v,$y2tf);
 	      }	      
 	    }
 	    $x2 = $x1 + $barWidth;
+	    $x2 = $this->checkRange($x2,'x');
 	    $y1 = $this->checkRange($y1);
 	    $y2 = $this->checkRange($y2);
 	    // set the color
 	    $color = array($row,$j);
 	    // draw the column if we are on the chart
-	    if( $this->checkRange($x2,'x!',0) ) {	     	      
-	      $this->drawColumn($x1+$xoff,$y1-$yoff,
-				$x2+$xoff,$y2-$yoff,
-				$color,$depth,$hide_top);
-	      $this->drawValue($x1+$xoff,$y1-$yoff,$v,$color);
-	    }
+	    $this->drawColumn($x1+$xoff,$y1-$yoff,
+			      $x2+$xoff,$y2-$yoff,
+			      $color,$depth,$hide_top);
+	    $this->drawValue($x1+$xoff,$y1-$yoff,$v,$color);
 	  } else if( $config[$row]["type"] == "column" ) {
 	    $x1 += $barWidth;
 	  } 
@@ -1457,6 +1460,9 @@ class zenGraph extends Zen {
 
     $yoff = $this->currentDepth - $depth;
     $xoff = $this->currentOffset - $offset;
+
+    $y2tf = (isset($this->layers[$layer]["config"][$row]["y2scale"])
+	     &&$this->layers[$layer]["config"][$row]["y2scale"]>0);
 
     if( $this->layers[$layer]["settings"]["compact"] ) {
       $div = $this->xDiv * $this->layers[$layer]["settings"]["compact"];
@@ -1479,9 +1485,9 @@ class zenGraph extends Zen {
 	$x1 = $this->xBase + $step * $i + $center;
 	if( $i == 0 )
 	  $x1 -= $center;
-	$y1 = $this->checkRange( $this->yZero - $this->scaleY($data[$i]) );
+	$y1 = $this->checkRange( $this->yZero - $this->scaleY($data[$i],$y2tf) );
 	$x2 = $this->xBase + $step * $j + $center;
-	$y2 = $this->checkRange( $this->yZero - $this->scaleY($data[$j]) );
+	$y2 = $this->checkRange( $this->yZero - $this->scaleY($data[$j],$y2tf) );
 	$t1 = $this->checkRange( $x1, 'x!' );
 	$t2 = $this->checkRange( $x2, 'x!' );
 	if( $t1 && !$t2 ) {
@@ -1898,14 +1904,15 @@ class zenGraph extends Zen {
       $step = $this->xStep;
     }
     $config = $this->layers[$layer]["config"];
+    $y2tf = (isset($config[$row]["y2scale"])&&$config[$row]["y2scale"]>0);
     $num = count($data);
     $this->addDebug("plotScatter($data,$row)", "plotting a scatter array", 2);
     for( $i=0; $i<$num; $i++ ) {
       if( strlen($data[$i]) ) {
 	$x = $i * $step + $this->xZero + $xoff;
-	$y = $this->yZero - $this->scaleY( $data[$i] ) - $yoff;
+	$y = $this->yZero - $this->scaleY( $data[$i],$y2tf ) - $yoff;
 	$col = $this->getDataColor( $row, $i );
-	if( $this->checkRange($x,'x!',$depth) && $this->checkRange($y,'y!',$depth) ) {
+	if( $this->checkRange($x,'x!') && $this->checkRange($y,'y!',$depth) ) {
 	  $this->drawPoint($x, $y, $col, $type);
 	  $this->drawValue($x,$y,$data[$i],array($row,$i));
 	}
@@ -2808,30 +2815,37 @@ class zenGraph extends Zen {
 	$x = $this->xZero + $this->space + $this->depth;
       } 
       else {
-	$y = $this->yZero - $this->space - $this->depth;
+	$y = $this->yZeroOffset - $yspan - $this->space - $this->depth;
       }
     }
     else {
       // greater than zero, put it on the top of the element
       if( $horizontal ) {
-	$x += $this->space + $this->depth;
-	// if it's too far, then move it behind the element
-	if( $x + $xspan >= $this->xEndOffset )
-	  $x = $xv - $this->space - $xspan;
+	$x = $xv - $this->space - $xspan;
       }
       else {
-	$y -= $this->space + $this->yspan + $this->depth;
-	// if its too high, then move it down below the element
-	if( $y <=  $this->yBaseOffset )
-	  $y = $yv + $this->space;
+	$y = $yv + $this->space;
       }
     }
     // allocate the color
     $col = ($this->valueFontColor != null)?
       $this->getColor($this->valueFontColor) : $this->getColor($color);
+    if( $this->valueFontColor == null || $col == $this->getColor($color) ) {
+      if( $horizontal ) {
+	$x += $this->space + $this->depth;
+      }
+      else {
+	$y = $yv - ($this->space + $yspan + $this->depth);
+      }
+    }
+    if( $y > $this->yBaseOffset )
+      $y = $this->yBaseOffset - ($this->space + $yspan);
     // graph it already
     $this->printString( $valueFormatted, $x, $y, $this->valueFontSize,
-			$col, $this->valueFontAngle, $this->font );    
+			$col, $this->valueFontAngle, $this->font );   
+    $this->addDebug("drawValue",
+		    "x: $x, y: $y, formatted: "
+		    ."$valueFormatted, original: $value", 3);
   }  
 
   function shadeBar( $x1, $y1, $x2, $y2, $color, $depth ) {
@@ -3421,7 +3435,7 @@ class zenGraph extends Zen {
 
     // yMax
     if( !strlen($this->yMax) ) 
-      { $this->yMax = $this->findMaximum( $this->layers ); }
+      { $this->yMax = ceil($this->findMaximum($this->layers)/10)*10; }
 
     // yMin
     if( !strlen($this->yMin) ) { 
@@ -3475,6 +3489,18 @@ class zenGraph extends Zen {
       $this->yDiv = (is_array($this->yLabels) && count($this->yLabels) )? 
 	count($this->yLabels)-1 : 
 	$this->yMax;
+    }
+
+    // y2params
+    if( is_array($this->y2Labels) ) {
+      $y2min = $this->y2Labels[0];
+      $n = count($this->y2Labels)-1;
+      $y2max = $this->y2Labels[$n];
+      $this->y2Range = abs($y2max - $y2min);
+      if( $this->y2Range > 0 )
+	$this->y2Scale = $this->graphHeight / $this->y2Range;
+      else
+	$this->y2Scale = 0;
     }
 
     // gap
@@ -3725,7 +3751,10 @@ class zenGraph extends Zen {
 		    ."yZero: "      .$this->yZero       ."<br>\n"
 		    ."yZeroOffset: ".$this->yZeroOffset ."<br>\n"
 		    ."y2Div: "      .$this->y2Div       ."<br>\n"
+		    .((is_array($this->y2Labels))?
+		     "y2Scale: "    .$this->y2Scale     ."<br>\n"
 		    ."y2Step: "     .$this->y2Step      ."<br>\n"
+		      : "")
 		    ."</ul>",
 		    3);
   }
@@ -3904,12 +3933,14 @@ class zenGraph extends Zen {
     return $value * $this->xScale;
   }
 
-  function scaleY( $value ) {
+  function scaleY( $value, $y2tf = false ) {
     // creates an y axis value based on
     // data value and yScale
     // and relative to $base
-    $this->addDebug("scaleY($value)/".$this->yScale,$value*$this->yScale,3);
-    return $value * $this->yScale;
+    $newval = ($y2tf && $this->y2Scale > 0)? 
+      $this->y2Scale*$value : $this->yScale*$value;
+    $this->addDebug("scaleY","y2tf:$y2tf, value:$value/$newval",3);
+    return $newval;
   }
 
   function totalRows( $data ) {
@@ -4164,7 +4195,7 @@ class zenGraph extends Zen {
 	      : $val;
 	    if( $valh == $bgch ) {
 	      $this->addDebug("getColorScheme",((is_array($val))?join(",",$val):$val)
-			      ." skipped... same as graph background",1);
+			      ." skipped... same as graph background",3);
 	    } else if( $flag || !$key ) {
 	      $vars[] = $val;
 	    } else {
@@ -4488,11 +4519,14 @@ class zenGraph extends Zen {
   var $xZero;   // the location of the x value of zero
   var $yBase;   // the location of the left edge of the chart
   var $yDiv;    // the number of labelled divisions on the y axis
+  var $y2Div;   // number of label divisions on y2 axis
   var $yMax;    // the highest value on the y axis
+  var $y2Max;   // the highest value on the y2 axis
   var $yMin;    // the lowest value on the y axis
   var $yNum;    // the number of segments on the y axis
   var $yRange;  // the distance from yMin to yMax
   var $yScale;  // the length of each segment on y axis
+  var $y2Scale; // the length of each segment of y2 axis
   var $yStep;   // the number of pixels in each xDiv
   var $yZero;   // the location of the y value of zero
 

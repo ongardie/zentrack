@@ -83,6 +83,8 @@ if( is_array($params) ) {
   }
   
   $data_array = array();
+  $rows_count = array();
+  $rows_hours = array();
   foreach($params["chart_options"] as $o) {
     // activity
     // count
@@ -94,25 +96,31 @@ if( is_array($params) ) {
       $fcall = "reportActivity";
       $date1 = "created";
       $date2 = "created";
+      $rows_count[] = $o;
       break;
     case "count":
       $fcall = "reportTickets";
       $date1 = "ctime";
       $date2 = "otime";
+      $rows_count[] = $o;
       break;
     case "hours_estimated":
       $fcall = "reportEstimated";
       $date1 = "ctime";
       $date2 = "otime";
+      $rows_hours[] = $o;
+      break;
     case "hours_actual":
       $fcall = "reportHours";
       $date1 = "created";
       $date2 = "created";
+      $rows_hours[] = $o;
       break;
     case "time":
       $fcall = "reportElapsed";
       $date1 = "ctime";
       $date2 = "otime";
+      $rows_hours[] = $o;
     }
     foreach($params["data_set"] as $d) {      
       if( $params["report_type"] == "Project ID" ) {
@@ -160,6 +168,61 @@ if( is_array($params) ) {
 	$data_array["$o"]["$d"][] = $zen->$fcall($sprms);
       }
     }
+  }
+  // check for 2 y axis
+  if( count($rows_count) && count($rows_hours) ) {
+    // get max of each axis
+    $mc = 0;
+    $mh = 0;
+    foreach($rows_count as $o) {
+      foreach($data_array["$o"] as $d=>$vals) {
+	foreach($vals as $v) {
+	  if( $v > $mc ) {
+	    $mc = $v;
+	  }
+	}
+      }
+    }
+    foreach($rows_hours as $o) {
+      foreach($data_array["$o"] as $d=>$vals) {
+	foreach($vals as $v) {
+	  if( $v > $mh ) {
+	    $mh = $v;
+	  }
+	}
+      }
+    }    
+    // round the values
+    $mh = ceil($mh/10)*10;
+    $mc = ceil($mc/10)*10;
+    // create the y2labels
+    // if they aren't equal
+    if( $mh != $mc ) {
+      $y_2_set = array();
+      if( $mc < 10 && $mh >= 10 )
+	$mc = 10;
+      else if( $mh < 10 && $mc >= 10 )
+	$mh = 10;
+      $v = ($mh > $mc)? $mc : $mh;
+      for($i=0; $i<=5; $i++) {
+	if( $i == 0 )
+	  $n = 0;
+	else
+	  $n = round($v/5*$i,1);
+	$y_2_set[] = $n;
+      }      
+      if( $mh > $mc ) {
+	$y_heading = "Hours";
+	$y2_set_type = "Quantity";     
+      } else {
+	$y_heading = "Quantity";
+	$y2_set_type = "Hours";
+      }
+    } else {
+      $y_heading = "Hours/Quantity";
+    }
+  } else {
+    $y_heading = (count($rows_count))? "Quantity" : "Hours";
   }
 }
     
