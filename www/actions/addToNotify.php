@@ -44,7 +44,7 @@
         $i++;
       }
       else if( $res && $res == "duplicate" ) {
-        add_system_message("user_id $u already on notify "
+        add_system_messages("user_id $u already on notify "
          ."list for #$ticket-id");        
       }
     }
