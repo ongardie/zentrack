@@ -45,7 +45,7 @@ if(isset($create_time)) { ?>
 
 <tr>
   <td class="bars" >
-    <?=tr("Contract ID")?>:
+    <?=tr("Agreement ID")?>:
   </td>
   <td class="bars">
     <input type="text" name="contractnr" size="20" maxlength="25"
