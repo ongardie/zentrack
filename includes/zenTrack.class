@@ -792,6 +792,29 @@ class zenTrack extends zen {
 
 
   /**
+   * Return the information of the data group specified by $group_id
+   *
+   * @param integer $group_id
+   * @return array with information about the data group
+   */
+  function get_data_group( $group_id ) {
+    $query = "SELECT * FROM ".$this->table_group." WHERE group_id = $group_id";
+    return( $this->db_quickIndexed($query) );
+  }
+                                                                                                                             
+  /**
+   * Return the information of the data group detail specified by $group_id
+   *
+   * @param integer $group_id
+   * @return array with information about the data group detail
+   */
+  function get_data_group_details( $group_id ) {
+    $query = "SELECT * FROM ".$this->table_group_detail." WHERE group_id = $group_id";
+    return( $this->db_queryIndexed($query) );
+  }
+                                                                                                                             
+
+  /**
    * returns information about available data groups
    *
    * if flag is set, retrieves a full

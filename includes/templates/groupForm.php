@@ -19,6 +19,7 @@
     <? 
          $tables=$zen->getDataGroupTablesArray();
          $elnk="$rootUrl/admin/editGroup.php";
+         $llnk="$rootUrl/admin/editGroupDetails.php";
          unset($js_vals);
          $num = count($vars);
 	 if( is_array($vars) ) {
@@ -41,6 +42,8 @@
 
              print "<span class='small'>"
                  . "[<a href='".$elnk."?group_id=".$v['group_id']."'>".uptr('edit')."</a>]";
+             print "<span class='small'>"
+                 . "[<a href='".$llnk."?group_id=".$v['group_id']."'>".uptr('edit details')."</a>]";
 
              print "$te";
 
