@@ -21,7 +21,7 @@
   $chart_options = $params["chart_options"];
 
   $graph = new zenGraph( "$libDir/reportConfig.php" );
-  $graph->debug = 0; // set this only if viewing the image directly
+  $graph->debug = 2; // set this only if viewing the image directly
 
   // create headings and labels
   $graph->graphTitle = $params["chart_title"];
