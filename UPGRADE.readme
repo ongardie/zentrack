@@ -38,6 +38,10 @@ UPGRADE FROM 2.5.0.2
   QUICK UPGRADE:
   --------------
     
+    IMPORTANT:  If you are not comfortable with patches, and you have any love for your current
+    installation, might I recommend the manual install?  Patches are not trivial if they do
+    not go as expected.
+    
     -> Windows Users:  Unless you have and understand cygwin, use the manual upgrade.
     -> '/web/zentrack' refers to your current ZT installation
     -> '/tmp/zentrack_2.5.0.3' refers to your newly uncompressed install files. 
