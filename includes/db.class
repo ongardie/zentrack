@@ -279,14 +279,18 @@ class DB {
    }            
       
    function db_get_fields( $table, $flag = 0 ) {
-      // returns the names of the columns
-      // in $table of the current database
-      // if $flag is set, returns the ADODB meta object
-      // containing all parameters for the fields
-      // (see ADODB method MetaColumns() for more info)
-      // otherwise, just an array of names
-      
-      return( $this->db_link->MetaColumnNames($table) );
+     // returns the names of the columns
+     // in $table of the current database
+     // if $flag is set, returns the ADODB meta object
+     // containing all parameters for the fields
+     // (see ADODB method MetaColumns() for more info)
+     // otherwise, just an array of names
+     
+     // postgres hack until adodb fixes this bug
+     if( preg_match("@^postgr@", $this->db_type) ) {
+       $table = strtolower($table);
+     }
+     return( $this->db_link->MetaColumnNames($table) );
    }   
    
    function switchQueryMode($mode = 1) {
