@@ -28,7 +28,7 @@
       // the log and attachments
       if( $l["entry"] ) {
 	print "<br>\n";
-	$l["entry"] = nl2br(stripslashes($l["entry"]));
+	$l["entry"] = nl2br(htmlspecialchars(stripslashes($l["entry"])));
 	$l["entry"] = preg_replace("#\&amp;#", "&", $l["entry"]);
 	$l["entry"] = preg_replace("#(https?://[a-zA-Z_/.-]+[a-zA-Z])#", 
 			  "<a href='\\1' target='_blank'>\\1</a>", $l["entry"]);
