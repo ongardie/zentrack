@@ -10,3 +10,4 @@ chmod 755 www/styles.php
 
 cp install/configVars.php.default includes/configVars.php
 cp install/header.php.default www/header.php
+cp install/egate_config.php.default includes/egate_config.php
