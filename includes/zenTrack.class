@@ -3225,6 +3225,7 @@ class zenTrack extends zen {
     $set = $this->makeInsertVals($params,1);
     $query = "UPDATE ".$this->table_varfield_idx." SET $set WHERE field_name = '$field_name'";
     $this->addDebug("update_custom_field_idx()Query",$query,2);
+    $this->_session->clearCustomFields();
     return( $this->db_result($query) );
   }
 
