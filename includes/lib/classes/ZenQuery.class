@@ -176,6 +176,7 @@ class ZenQuery extends Zen {
    * @param string $field the db field to match
    * @param string $value the value to be matched
    * @param string $operator is a condition like (equals, contains, etc)
+   * @param string $table provide table if there is more than one choice for tables
    */
   function match( $field, $value, $operator, $table = null ) {
     if( $table )
@@ -382,6 +383,8 @@ class ZenQuery extends Zen {
    * @since 1.0
    */
   function insert() {
+    // todo
+    // make this generate and return an id
     $this->_queryType = 'INSERT';
     return $this->_execute(false);
   } 

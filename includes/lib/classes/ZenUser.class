@@ -13,7 +13,7 @@ class ZenUser extends ZenDataType {
    * @param ZenUserList $list (optional)loads the user from a ZenUserList rather than database
    */
   function ZenUser( $user_id = null, $list = null ) {
-    $this->ZenDataType( $this, $user_id, $list );
+    $this->ZenDataType( $user_id, $list );
   }
 
   /**

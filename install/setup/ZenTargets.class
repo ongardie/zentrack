@@ -46,7 +46,7 @@ class ZenTargets {
       }      
     }
     if( !file_exists($ini) ) {
-      print "The ini file ($matches[1]) was not found or not readable, exiting.";
+      print "The ini file ($ini) was not found or not readable, exiting.";
       return false;
     }
     $this->_ini = Zen::read_ini($ini);
@@ -124,6 +124,7 @@ class ZenTargets {
     case "clean_cache_data":  return $this->_clean_cache_data();
     case "copy_class_files":  return $this->_copy_class_files( $p );
     case "copy_config_files": return $this->_copy_config_files( $this->_getBooleanParm($target,0,false) );
+    case "create_database":   return $this->_create_database();
     case "cvs_update":        return $this->_cvs_update();
     case "extra_secure_mode":
       {
@@ -155,10 +156,10 @@ class ZenTargets {
           print "   Where host can be localhost or possibly '', and instance is the database name, or TNS file for oracle\n";
 	  return false;
 	}
-	return $this->_verify_db_connection( $p, $this->_getParm($target, 1),
-                                             $this->_getParm($target, 2), 
-                                             $this->_getParm($target, 3),
-                                             $this->_getParm($target, 4));
+	return $this->_try_db_connection( $p, $this->_getParm($target, 1),
+                                          $this->_getParm($target, 2), 
+                                          $this->_getParm($target, 3),
+                                          $this->_getParm($target, 4));
       }
     case "update_db_schema":
       {
@@ -177,6 +178,10 @@ class ZenTargets {
           return false;
         }
         return $this->_update( $p );
+      }
+    case "verify_db_connection":
+      {
+        return $this->_verify_db_connection();
       }
     default:
       {
@@ -462,17 +467,18 @@ class ZenTargets {
   function _copy_class_files( $dir = null ) {
     print "- Copying class files to setup/\n";
 
-    // try to find the source directory
-    if( !$dir && @is_dir( $this->_ini['directories']['dir_classes'] ) ) {
-      $dir = $this->_ini['directories']['dir_classes'];
-    }
-    else if( !$dir && @is_dir("../includes/lib/classes") ) {
-      $dir = "../includes/lib/classes";
+    // get the class directory
+    if( !$dir ) {
+      $dir = $this->_find_classes_directory();
     }
     if( !$dir ) {
       $this->_printerr("_copy_class_files", "Cannot find class files for copy");
       return false;
-    }    
+    }
+    else if( !@is_dir($dir) ) {
+      $this->_printerr("_copy_class_files", "Supplied directory($dir) is invalid");
+      return false;
+    }
 
     print "   Source directory: $dir\n";
 
@@ -663,17 +669,30 @@ class ZenTargets {
     return true;
 
     // confirm
+    if( !$this->_confirm("This will overwrite existing files at destination and existing database tables, continue?") ) {
+      print "   Aborted!\n";
+      return false;
+    }
 
-    // make directories
+    // test directory structures and permissions
+    if( !$this->_check_directories( true ) ) { return false; }
+    
+    // check the permissions
+    if( !$this->_check_permissions() ) { return false; }
 
-    // copy files
+    // copy config files if flag set
+    if( !$this->_copy_config_files() ) { $success = false; }
+    
+    // check database connection
+    if( !$this->_verify_db_connection() ) { return false; }
 
-    // copy config files
+    // create database
+    //todo
 
-    // check db connections
+    // load initial data
+    //todo    
 
-    // create database schema
-
+    return $success;
   }
   
   /**
@@ -788,8 +807,12 @@ class ZenTargets {
     return true;
 
     // confirm
-    //todo
-    //todo
+    if( !$this->_confirm("This will overwrite existing data with new changes,"
+                         ." config files will be backed up/merged, database will be backed up/merged,"
+                         ." other files will be overwritten... continue?") ) {
+      print "   Aborted!\n";
+      return false;
+    }
 
     // backup data
     if( !$this->_backup_all() ) { return false; }
@@ -817,18 +840,20 @@ class ZenTargets {
     //todo
     //todo
 
+    return $success;
+
   }
 
   function _try_db_connection( $type, $host, $instance, $user, $passwd ) {
-    print "- Checking database connection\n";
-    $db = $GLOBALS['zen']['db'];
+    $db = $this->_ini['db'];
     print "   Connecting to {$type}//{$user}@{$host}:{$instance}\n";
-    
-    $GLOBALS['zen']['db']['db_type'] = $type;
-    $GLOBALS['zen']['db']['db_host'] = $host;
-    $GLOBALS['zen']['db']['db_instance'] = $instance;
-    $GLOBALS['zen']['db']['db_user'] = $user;
-    $GLOBALS['zen']['db']['db_pass'] = $passwd;
+    // set params
+    $this->_ini['db']['db_type'] = $type;
+    $this->_ini['db']['db_host'] = $host;
+    $this->_ini['db']['db_instance'] = $instance;
+    $this->_ini['db']['db_user'] = $user;
+    $this->_ini['db']['db_pass'] = $passwd;
+    // insure db connection isn't cached
     $GLOBALS['dbConnection'] = null;
     return $this->_verify_db_connection();
   }
@@ -840,10 +865,26 @@ class ZenTargets {
    */
   function _verify_db_connection() {
     print "- Checking database connection\n";
-    $db = $GLOBALS['zen']['db'];
+    // set up the params
+    $db = $this->_ini['db'];
     print "   Connecting to {$db['db_type']}//{$db['db_user']}@{$db['db_host']}:{$db['db_instance']}\n";
-    
-    return is_object(Zen::getDbConnection());
+    // establish and test connection
+    $GLOBALS['dbConnection'] = null;  //delete any cached connection
+    $dbc = $this->_get_db_connection();
+    return $dbc->isConnected();
+  }
+
+  /** Establish a database connection */
+  function _get_db_connection() {
+    // find adodb and include
+    $dir = $this->_ini['directories']['dir_classes'];
+    if( !@is_dir($dir) ) {
+      $this->_printerr("_get_db_connection","Cannot find the class files to enable adodb, unable to establish db connection");
+      return false;
+    }
+    include_once("$dir/adodb/adodb.inc.php");
+    $GLOBALS['zen'] = $this->_ini;
+    return Zen::getDbConnection();    
   }
 
   /**
@@ -859,6 +900,8 @@ class ZenTargets {
     //todo
 
     // confirm
+
+    // establish db connection (remember to include adodb)
     
     // backup the data
 
@@ -867,12 +910,32 @@ class ZenTargets {
     // collect the old schema
 
     // perform the update (or preview)
+    
+    // determine if there is new data to be uploaded
 
   }
 
   /*****************************************************
    ****   UTILITIES
    ****************************************************/
+
+  /**
+   * Attempts to locate the directory where the classes are
+   * located
+   */
+  function _find_classes_directory() {
+    $dir = null;
+    if( @is_dir( $this->_ini['directories']['dir_classes'] ) ) {
+      $dir = $this->_ini['directories']['dir_classes'];
+    }
+    else if( @is_dir("../includes/lib/classes") ) {
+      $dir = "../includes/lib/classes";
+    }
+    else if( @is_dir("../lib/classes") ) {
+      $dir = "../lib/classes";
+    }
+    return $dir;
+  }
 
   /**
    * Prints the zen.php file header when a target is run
@@ -909,7 +972,7 @@ class ZenTargets {
    */
   function _getBooleanParm( $target, $index, $default = false ) {
     $p = $this->_getParm($target,$index);
-    if( is_bool( $p ) ) { return $p; }
+    if( is_bool($p) ) { return $p; }
     else { return $default; }
   }
 

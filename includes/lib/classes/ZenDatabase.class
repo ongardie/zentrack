@@ -243,10 +243,18 @@ class ZenDatabase extends Zen {
   function _connect() {
     if (!$this->_adodb->Connect($this->_dbhost, $this->_dbuser, $this->_dbpass, $this->_dbinst)) {
       $this->debug($this, "connect", $this->_adodb->ErrorMsg(), 202, 1);
+      $this->_connected = false;
       return false;
     }
+    $this->_connected = true;
     return true;
   }
+
+  /**
+   * Reports whether connected to a database or not
+   * @return boolean connection is open
+   */
+  function isConnected() { return $this->_connected; }
 
   /**
    * Returns a db connection / database object
@@ -340,6 +348,13 @@ class ZenDatabase extends Zen {
    * @since 1.3 
    */
   var $_prefix = "";
+
+  /**
+   * Tells whether we are connected
+   * @var string
+   * @access private
+   */
+  var $_connected = false;
 
 }
 

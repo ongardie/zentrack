@@ -48,7 +48,7 @@ class ZenTrigger extends ZenDataType {
    * @param ZenTriggerList $list (optional)loads the trigger from a ZenTriggerList rather than database
    */
   function ZenTrigger( $trigger_id = null, $list = null ) { 
-    $this->ZenDataType($this, $trigger_id, $list);
+    $this->ZenDataType( $trigger_id, $list);
   }
 
   /**

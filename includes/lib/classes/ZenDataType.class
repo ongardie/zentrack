@@ -18,18 +18,21 @@ class ZenDataType extends Zen {
    * @param integer $id the id to load
    * @param ZenList $zenlist (optional) passing this avoids a database call to load the object
    */
-  function ZenDataType( $child, $id, $zenlist = null ) { 
+  function ZenDataType( $id, $zenlist = null ) { 
     $this->Zen();
-    $this->_childobj = $child;
+    // set the params
+    $this->_id = $id;
+    $this->_table = Zen::tableNameFromClass($this);
+    $this->_primarykey = getPrimaryKey( $this );
+    // load the data
     if( $id && is_object($zenlist) ) {
-      $this->_loadFromData($zenlist,$id);
+      if( Zen::tableNameFromClass($zenlist)!=$this->_table || !$this->_loadFromListData($zenlist,$id) ) {
+        $this->debug($this,"ZenDataType","Unable to constuct this object from list type ".class_name($zenlist),102,1);
+      }
     }
     else if( $id ) {
       $this->_load($id);
     }
-    // set the primary key field for this table
-    $this->_primarykey = getPrimaryKey( $this->_childobj );
-    
   }
 
   /**
@@ -37,7 +40,7 @@ class ZenDataType extends Zen {
    *
    * @return ZenMetaTable object containing meta info for this data type
    */  
-  function getMetaInfo() { }
+  function getMetaInfo() { $this->getMetaData($this); }
   
 
   /*****************************
@@ -59,7 +62,7 @@ class ZenDataType extends Zen {
    * @param string $field the field name to fetch
    * @return mixed value of the field or false if the field is not valid
    */
-  function getField( $field ) { }
+  function getField( $field ) { return $this->_fields[$field]; }
 
   /**
    * Sets the value of a field
@@ -70,7 +73,14 @@ class ZenDataType extends Zen {
    * @param mixed $value the value to set
    * @return boolean validated and set
    */
-  function setField( $field, $value ) { }
+  function setField( $field, $value ) { 
+    if( !isset($this->_fields[$field]) && $this->_id ) {
+      $this->_debug($this,"setField","The field $field does not exist",122,1);
+      return false;
+    }
+    $this->_changed = true;
+    return $this->_fields[$field] = $value;
+  }
 
   /**
    * Saves changes to database
@@ -86,25 +96,63 @@ class ZenDataType extends Zen {
    *
    * @return boolean succeeded
    */
-  function save() { }
+  function save() { 
+    if( !$this->_changed ) {
+      return false;
+    }
+    // create a query
+    $query = $this->getNewQuery();
+    // add the table
+    $query->table( $this->_table );
+    // add fields/values
+    foreach($this->_fields as $k=>$v) {
+      $query->field($k, $v);
+    }
+    // update if we have an id
+    if( $this->_id ) {
+      if( $query->update() ) {
+        $this->_debug($this, "save", "updated ".$this->_table." record ".$this->_id, 00, 1);
+        $this->_changed = false; 
+      }
+      else {
+        $this->_debug($this, "save", "failed to update ".$this->_table." row ".$this->_id, 220, 1);
+      }
+    }
+    // or insert
+    else {
+      $result = $query->insert();
+      if( $result ) { 
+        $this->_debug($this, "save", "created new ".$this->_table." row with id $result", 00, 3);
+        $this->_changed = false; 
+      }
+      else {
+        $this->_debug($this, "save", "failed to create ".$this->_table." entry", 220, 1);
+      }        
+    }
+    return $result;
+  }
 
   /**
    * Fetches all triggers associated with this action
    *
    * @return ZenTriggerList containing all triggers associated with this action
    */
-  function getTriggers() { }
+  function getTriggers() { 
+    //todo
+  }
 
   /**
    * Loads the Object from its corresponding db entry
    *
    * Only works if $this->_id has been set
-   * Checks $this->loaded() and causes an error message if already loaded
    *
    * @param integer $id is the id to be loaded (stored in $this->_id on success)
    * @return boolean load succeeded, id was valid (actually returns $this->loaded())
    */
-  function _load( $id ) { }
+  function _load( $id ) {
+    $vars = $this->simpleQuery( $this->_table, $this->_primaryKey, $id );
+    $this->_fields = $vars[0];
+  }
 
   /**
    * Static method to create a data type object from a data set provided by a ZenList class type
@@ -116,7 +164,14 @@ class ZenDataType extends Zen {
    * @param integer $id is the id to load (stored in $this->_id if successful)
    * @return boolean validated and loaded (true if the item is found in the list)
    */
-  function _loadFromListData( $zenlist, $id ) { }
+  function _loadFromListData( $zenlist, $id ) { 
+    $fields = $zenlist->find($id);
+    if( is_array($fields) && count($fields) ) {
+      $this->_fields = $fields;
+      return true;
+    }
+    return false;
+  }
 
   /****************
    * VARIABLES
@@ -125,11 +180,11 @@ class ZenDataType extends Zen {
   /** @var integer $_id the id associated with this object (used by loaded() */
   var $_id = 0;
 
+  /** @var string $_table the db table for this data type */
+  var $_table;
+
   /** @var mixed $_fields are the fields of the current object */
   var $_fields = array();  
-
-  /** @var string $_childobj is a $this reference to the calling class */
-  var $_childobj;
 
   /** @var ZenTriggerList $_triggers all triggers associated with this object */
   var $_triggers;

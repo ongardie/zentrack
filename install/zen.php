@@ -65,8 +65,6 @@
   include("setup/ZenTemplate.class");
   include("setup/ZenTargets.class");
 
-  print `whoami`;
-
   $z = new ZenTargets();
   $z->args( $argv );
   if( $z->run() ) {

@@ -20,11 +20,12 @@
    * @var array $GLOBALS['tcache'] temporary cache to store ZenDataTypes for life of page
    */
   $GLOBALS['tcache'] = array(
-                             "access"  => array(),
-                             "action"  => array(),                           
-                             "ticket"  => array(),
-                             "trigger" => array(),
-                             "user"    => array()
+                             "access"   => array(),
+                             "action"   => array(),                           
+                             "ticket"   => array(),
+                             "trigger"  => array(),
+                             "user"     => array(),
+                             "settings" => array()
                              );
 
   // generate some session settings
@@ -33,6 +34,9 @@
     foreach($global_data_types as $t) {
       $_SESSION['cache']['data_types'][$t] = Zen::loadDataTypeArray($t);
     }
+  }
+  if( getGlobal('cache','common_settings') == null ) {
+    $_SESSION['cache']['common_settings'] = array();
   }
 
   // clean up page variables

@@ -48,8 +48,8 @@ class Zen {
    * @return string value of the setting or null if it isn't found
    */
   function getSetting($cat, $name) { 
-    
-
+    $cat = $this->_loadSettings($cat);
+    return isset($cat[$name])? $cat[$name] : null;
   }
 
   /**
@@ -60,7 +60,27 @@ class Zen {
    *
    * @param string $cat is the category
    */
-  function _loadSettings( $cat ) { }
+  function _loadSettings( $cat ) { 
+    if( $cat == "common" ) {
+      if( !isset($_SESSION['cache']['common_settings']) ) {
+        $query = getNewQuery();
+        $query->table("SETTING");
+        $query->match("set_category", "common", ZEN_EQ);
+        $vars = $query->select(0, true);
+        $_SESSION['cache']['common_settings'] = $this->keySet($vars, "set_name", "set_value");
+      }
+      return $_SESSION['cache']['common_settings'];
+    }
+    else {
+      if( !isset($GLOBALS['tcache']['settings'][$cat]) ) {
+        $GLOBALS['tcache']['settings'][$cat] = $this->keySet($this->simpleQuery("SETTING", "set_category", $cat),
+                                                             "set_name",
+                                                             "set_value");
+      }
+      return ($GLOBALS['tcache']['settings'][$cat];
+    }
+
+  }
 
   /**
    * STATIC: returns a db connection / database object
@@ -104,6 +124,33 @@ class Zen {
   function getNewQuery() {
     $db = &Zen::getDbConnection();
     return $db->newQuery();
+  }
+
+  /**
+   * STATIC: Returns a ZenQuery result from a simple query set
+   *
+   * @param string $table the table to query
+   * @param string $field the field to match
+   * @param string $value the field value to match
+   * @param string $sort the field to sort on(if any)
+   */
+  function simpleQuery($table, $field, $value, $sort = null) {
+    $query = $this->getNewQuery();
+    $query->table($table);
+    $query->match($field,$value);
+    if( $sort ) { $query->sort($sort); }
+    return $query->select($this->getCacheTime(), true);
+  }
+
+  /**
+   * Determine time to cache general sql queries
+   */
+  function getCacheTime() {
+    $time = $this->getSetting("common", "cache_time");
+    if( !$time ) {
+      $time = 0;
+    }
+    return $time;
   }
 
   /**
@@ -198,48 +245,88 @@ class Zen {
    * @return string the name of the primary key column
    */
   function getPrimaryKey( $class ) {
-    if( is_object($class) ) {
-      $n = class_name($class);
-    }
-    else {
-      $n = $class;
-    }
-    $n = preg_replace("/List$/", "", $n);
-    return preg_replace("/^Zen/", "", $n) . "_id";
+    return Zen::tableNameFromClass($class)."_id";
   }
 
   /**
-   * Returns the meta data for this table
+   * STATIC: Returns the meta data for this table
    * in the form of a ZenMetaTable object
    *
    * The data is obtained from the TABLE_DEFS and FIELD_DEFS db tables, which are
    * constructed from the xml during db generation
    *
    * @param mixed $class a $this reference or a string containing the classname
-   * @return ZenMetaTable object or false if no db table corresponds to this
+   * @return ZenMetaTable object
    */
-  function getMetaData( $class ) { }
+  function getMetaData( $class ) {
+    $cname = Zen::tableNameFromClass( $class );
+    if( !isset($GLOBALS['tcache']) ) { $GLOBALS['tcache'] = array(); }
+    if( !isset($GLOBALS['tcache']['metaTables']) ) { $GLOBALS['tcache']['metaTables'] = array(); }
+    if( !isset($GLOBALS['tcache']['metaTables'][$cname]) ) {
+      $GLOBALS['tcache']['metaTables'][$cname] = new ZenMetaTable($cname);
+    }
+    return $GLOBALS['tcache']['metaTables'][$cname];
+  }
 
   /**
-   * Returns the name of the db table corresponding to this class object
+   * STATIC: Returns the name of the db table corresponding to this class object
    *
    * @param mixed $class is a $this object reference or a string containing class name
    * @param string name of table or false if none
    */
-  function tableNameFromClass( $class ) { }
+  function tableNameFromClass( $class ) { 
+    $cname = strtolower(is_object($class)? class_name($class) : $class);
+    // remove Zen from beginning of name
+    if( strpos( $cname, "Zen" ) === 0 ) {
+      $cname = substr($cname, 3);    
+    }
+    // remove .class from end if necessary
+    if( strpos( $cname, ".class" ) ) {
+      $cname = substr($cname, 0, -4);
+    }
+    // remove List from end if necessary
+    if( strpos( $cname, 'list' ) == strlen($cname)-4 ) {
+      $cname = substr($cname, 0, -4);
+    }
+    return $cname;
+  }
 
   /**
-   * Returns the name of a class corresponding to a db table
+   * STATIC: Returns the name of a class corresponding to a db table
    *
    * @param string $table name of the db table
    * @return string full class name corresponding to table or false if none
    */
-  function classNameFromTable( $table ) { }
+  function classNameFromTable( $table ) { 
+    // return with proper case and Zen prefix
+    return "Zen".ucfirst(strtolower($table));
+  }
 
 
   /*********************************
    * UTILITIES 
    ********************************/
+
+  /**
+   * Takes a simple array and returns an associative array in the form key=>value
+   *
+   * @param array $vals the simple array to get data from
+   * @param string|int $key is the field to use for the key
+   * @param string|int $val is the field to use for val, if this is omitted, then whole array goes in val spot
+   */
+  function keySet( $vals, $key, $val = null ) {
+    $newvals = array();
+    for($i=0; $i<count($vals); $i++) {
+      if( isset($vals[$i]) && is_array($vals[$i]) ) {
+        if( isset($vals[$i][$key]) && strlen($vals[$i][$key]) ) {
+          $k = $vals[$i][$key];
+          $v = ($val)? $vals[$i][$val] : $vals[$i];
+          $newvals[$k] = $v;
+        }
+      }
+    }
+    return $newvals;
+  }
 
   /**
    * STATIC: Flatten an multi-dimensional associative array to depth of 1

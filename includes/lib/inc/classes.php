@@ -20,7 +20,7 @@
                  "ZenTemplate.class",
                  "ZenTranslator.class",
                  "ZenXMLParser.class",
-                 "adodb/adodb.inc.php" );    
+                 "adodb/adodb.inc.php" );
   }
 
   function getDataTypeClasses() {
