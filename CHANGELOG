@@ -5,6 +5,14 @@
  100 percent object oriented and database abstracted. 
 
 ----- V2.2.3 (development, see CVS) ----
+2003-02-23, Altman
+  Fixed bins issues in various SELECT boxes as reported in Bug #682075.  
+  Thanks to whoever this was (anonymous)!
+    - www/helpers/projectSearchbox.php v1.6
+    - includes/templates/searchForm.php v1.4
+    - includes/templates/searchLogsForm.php v1.4
+    - includes/templates/homebinForm.php v1.4
+
 2003-02-17, Darktroll, Kato
   Fixed total hours issues
     - includes/zenTrack.class v1.53
