@@ -62,7 +62,7 @@
      if( !$errs ) {
 	$res = $zen->sendEmail($recipients, $subject, $message, $login_id);
 	if( $res ) {
-	   add_system_messages(tr("Ticket ? emailed to selected recipients"));
+	   add_system_messages(tr("Ticket ? emailed to selected recipients", array($id)));
 	   $setmode = "system";
 	   include("../ticket.php");
 	   exit;
