@@ -29,7 +29,7 @@
      $start_date = $zen->dateParse($start_date);
   }
 
-  $description = nl2br(htmlspecialchars($description));
+  $description = htmlspecialchars($description);
 
   $fields = array(
 		  "title"       => "text",

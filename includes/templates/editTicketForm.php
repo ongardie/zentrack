@@ -14,6 +14,7 @@
      } else {
        $TODO = 'EDIT';
        extract($ticket);
+       $description = preg_replace("@<br ?/?>@","\n",$description); 
        if( $zen->projectTypeID() == $ticket["type_id"] )
 	 include("$templateDir/newProjectForm.php");
        else

@@ -202,26 +202,26 @@ class DB {
       // if $set is 1, then this method will return an update formatted list
       // rather than two insert formatted lists
  
-      if( !$set ) {
-    foreach($params as $k=>$v) {
-       $cols .= ($cols)? ", $k" : "$k";
-       if( ereg("^(NULL|FALSE|TRUE|[0-9]+)$", $v) ) {
-          $vals .= ($vals)? ", $v" : "$v"; 
-       } else {
-          $vals .= ($vals)? ", ".$this->checkSlashes($v) : $this->checkSlashes($v);
+     if( !$set ) {
+       foreach($params as $k=>$v) {
+	 $cols .= ($cols)? ", $k" : "$k";
+	 if( ereg("^(NULL|FALSE|TRUE|[0-9]+)$", $v) ) {
+	   $vals .= ($vals)? ", $v" : "$v"; 
+	 } else {
+	   $vals .= ($vals)? ", ".$this->checkSlashes($v) : $this->checkSlashes($v);
+	 }
        }
-    }
-    return(array($cols,$vals));
-      } else {
-    foreach($params as $k=>$v) {
-       if( ereg("^(NULL|FALSE|TRUE|[0-9]+)$", $v) ) {
-          $vals .= ($vals)? ", $k = $v" : "$k = $v"; 
-       } else {
-          $vals .= ($vals)? ", $k = ".$this->checkSlashes($v) : "$k = ".$this->checkSlashes($v);
+       return(array($cols,$vals));
+     } else {
+       foreach($params as $k=>$v) {
+	 if( ereg("^(NULL|FALSE|TRUE|[0-9]+)$", $v) ) {
+	   $vals .= ($vals)? ", $k = $v" : "$k = $v"; 
+	 } else {
+	   $vals .= ($vals)? ", $k = ".$this->checkSlashes($v) : "$k = ".$this->checkSlashes($v);
+	 }
        }
-    }
-    return( $vals );
-      }
+       return( $vals );
+     }
    }
    
    function simpleWhere( $params, $andor = 'AND' ) {
