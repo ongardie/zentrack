@@ -24,55 +24,14 @@ class ZenAction extends Zen {
   function ZenAction( $action_id ) { }
 
   /**
-   * Fetches all triggers associated with this action
-   */
-  function getTriggers() { }
-
-  /**
-   * Performs this action, performs all associated triggers
+   * Performs action (also checks all associated triggers)
    *
    * @param array $params specifies the required parameters for the action
    */
   function activate( $params ) { }
 
-  /**
-   * Fetches a field in this action
-   *
-   * @param string $field the field name to fetch
-   * @return mixed value of the field
-   */
-  function getField( $field ) { }
-
-  /**
-   * Sets the value of an Action field
-   * 
-   * @param string $field the field to set
-   * @param mixed $value the value to set
-   * @return boolean validated and set
-   */
-  function setField( $field, $value ) { }
-
-  /**
-   * Saves changes to database
-   *
-   * @return boolean succeeded
-   */
-  function save() { }
-
 
   /* VARIABLES */
-
-  /** @var array $_fields the fields for the action */
-  var $_fields;
-
-  /** @var ZenTriggerList $_triggerList is a trigger list for this action */
-  var $_triggerList;
-
-  /** @var boolean $_changed tells if setField() has been used */
-  var $_changed;
-
-  /** @var integer $_id the id of the action */
-  var $_id;
 
 }
 

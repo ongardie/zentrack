@@ -11,19 +11,9 @@ class ZenUser extends Zen {
    *
    * @param integer $user_id is the id of the user to be loaded (optional)
    */
-  function ZenUser( $user_id ) {
-    if( $user_id ) {
-      $this->load($user_id);
-    }
+  function ZenUser( $user_id = null ) {
+    $this->ZenBase( $this, $user_id );
   }
-
-  /**
-   * Load a ZenUser from the database
-   *
-   * @param integer $user_id unique user id to be loaded
-   * @return boolean user_id found, record loaded
-   */
-  function load( $user_id ) { }
 
   /**
    * Load a ZenUser by their unique login
@@ -46,44 +36,12 @@ class ZenUser extends Zen {
    */
   function checkAccess( $bin_id, $action_id ) { }
 
-  /**
-   * Returns the value from the user's loaded data
-   *
-   * @param string $field the name of the field to load (matches db column)
-   * @return mixed the value of the field
-   */
-  function getField( $field ) { }
-
-  /**
-   * Sets a field value in this object
-   *
-   * @param string $field the field to set
-   * @param mixed $value the new field value
-   * @return boolean validated and set
-   */
-  function setField( $field, $value ) { } 
-
-  /**
-   * Saves the ZenUser object in the database
-   *
-   * @return boolean succeeded
-   */
-  function save() { }
-
 
   /* VARIABLES */
 
-  /** @var integer $_id the user_id for this record */
-  var $_id;
-
-  /** @var array $_fields the fields associated with this record */
-  var $_fields;
-
-  /** @var boolean $_changed tells if setField() has been used */
-  var $_changed;
-
   /** @var ZenAccess $_access stores user's access priviledges */
   var $_access;
+
 }
 
 ?>

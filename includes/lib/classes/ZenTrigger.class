@@ -37,9 +37,21 @@
  * @package zen 
  */
 
-class ZenTrigger extends Zen {
+class ZenTrigger extends ZenBase {
+
+  /**
+   * CONSTRUCTOR
+   *
+   * Either creates a blank trigger or loads an existing trigger
+   *
+   * @param integer $trigger_id the trigger to load (optional)
+   */
+  function ZenTrigger( $trigger_id = null ) { 
+    $this->ZenBase($this, $trigger_id);
+  }
 
 
+  // ... needs structure defined before stubs are put here
 }
 
 ?>

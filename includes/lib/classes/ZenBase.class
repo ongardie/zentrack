@@ -1,0 +1,116 @@
+<? /* -*- Mode: C; c-basic-indent: 3; indent-tabs-mode: nil -*- ex: set tabstop=3 expandtab: */ 
+
+/** 
+ * @package zen 
+ * 
+ * The purpose of the ZenBase object is to extract all common functionality between various
+ * object types such as ZenTicket, ZenUser, ZenAction, ZenTrigger, etc.
+ *
+ * All Objects which directly correspond to a single data row in the db should extend this object.
+ */
+
+class ZenBase extends Zen {
+
+  /**
+   * CONSTRUCTOR - initialize Zen class and load data if appropriate
+   *
+   * @param Object $child is a $this reference from the calling object
+   * @param integer $id the id to load
+   */
+  function ZenBase( $child, $id ) { 
+    $this->Zen();
+    $this->_childobj = $child;
+    if( $id ) {
+      $this->_id = $id;
+      $this->_load();
+    }
+  }  
+
+  /*****************************
+   * COMMON METHODS
+   ****************************/
+  
+  /**
+   * tells whether a valid database entry is loaded in this object
+   *
+   * note that new objects return false(invalid) until save() has been called
+   *
+   * @return boolean contain a system ID
+   */
+  function loaded() { return ($this->_id > 0 && count($this->_fields)) }
+  
+  /**
+   * Fetches a field in this object
+   *
+   * @param string $field the field name to fetch
+   * @return mixed value of the field or false if the field is not valid
+   */
+  function getField( $field ) { }
+
+  /**
+   * Sets the value of a field
+   *
+   * This sets the $this->_changed flag to true
+   * 
+   * @param string $field the field to set
+   * @param mixed $value the value to set
+   * @return boolean validated and set
+   */
+  function setField( $field, $value ) { }
+
+  /**
+   * Returns the meta data for all fields associated with this Object type
+   * in the form of a ZenMetaTable object
+   */
+  function getMetaData() { }
+
+  /**
+   * Saves changes to database
+   *
+   * This should check all associated fields for obvious
+   * validation issues and return false and set a message
+   * if there is an integrity issue
+   *
+   * Most likely this will be overridden by several methods
+   * This sets the $this->_changed flag to false upon completion
+   *
+   * @return boolean succeeded
+   */
+  function save() { }
+
+  /**
+   * Fetches all triggers associated with this action
+   *
+   * @return ZenTriggerList containing all triggers associated with this action
+   */
+  function getTriggers() { }
+
+
+  /**
+   * @private Loads the Object from its corresponding db entry
+   *
+   * Only works if $this->_id has been set
+   * Checks $this->loaded() and causes an error message if already loaded
+   *
+   * @return boolean load succeeded, id was valid (actually returns $this->loaded())
+   */
+  function _load() { }
+
+  /** @var integer $_id the id associated with this object (used by isEmtpy() */
+  var $_id = 0;
+
+  /** @var mixed $_fields are the fields of the current object */
+  var $_fields = array();  
+
+  /** @var string $_childobj is a $this reference to the calling class */
+  var $_childobj;
+
+  /** @var ZenTriggerList $_triggers all triggers associated with this object */
+  var $_triggers;
+
+  /** @var boolean $_changed tells whether properties have been changed since last save */
+  var $_changed;
+
+}
+
+?>

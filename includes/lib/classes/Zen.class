@@ -7,6 +7,9 @@ class Zen {
   /**
    * CONSTRUCTOR: constructs common vars and objects
    * 
+   * This method relies on the global array: $_GLOBALS['zen']
+   * which is created in header.php in the www/ directory.
+   *
    * This method should be invoked by all child constructors
    * This should set up the following vars, pulled from the
    * config.ini file:
@@ -21,12 +24,37 @@ class Zen {
    *    <li>Db_Host
    *    <li>Db_Instance
    * </ul>
-   *
-   * @param string $ini the location of the .ini file
    */
-  function Zen( $ini ) { }
+  function Zen() { }
 
-  /* STATIC METHODS (prevent multiple objects when possible, rely on static page array $loaded_data) */
+  /**********************************
+   * STATIC METHODS (prevent multiple objects when possible, rely on static page array $loaded_data) 
+   *
+   * These static methods should be written in a manner that will allow them to be called via
+   * the approach Zen::getSetting($cat,$name) ... etc
+   *********************************/
+
+  /**
+   * returns a system setting
+   *
+   * this method will return a system setting... some sort of static/global setup
+   * would be best to invoke here, to avoid redundant calls
+   *
+   * @param string $cat is the category for the setting (tickets, 
+   * @param string $name of the setting
+   * @return string value of the setting or null if it isn't found
+   */
+  function getSetting($cat, $name) { }
+
+  /**
+   * loads system settings into memory
+   *
+   * This method should employ a static list from the GLOBAL settings to avoid
+   * redundant calls to this
+   *
+   * @param string $cat is the category (common should be loaded on construction)
+   */
+  function _loadSettings() { }
 
   /**
    * returns a db connection / database object
@@ -77,45 +105,9 @@ class Zen {
   function getUser( $user_id ) { }
 
 
-  /* COMMON METHODS */
-  
-  /**
-   * tells whether this object refers to a valid database entry
-   *
-   * note that new objects return false(invalid) until save() has been called
-   *
-   * @return boolean contain a system ID
-   */
-  function isValid() { return $this->_id > 0 }
-  
-
-  /* SETTINGS METHODS */
-
-  /**
-   * returns a system setting
-   *
-   * this method will return a system setting... some sort of static/global setup
-   * would be best to invoke here, to avoid redundant calls
-   *
-   * @param string $cat is the category for the setting (tickets, 
-   * @param string $name of the setting
-   * @return string value of the setting or null if it isn't found
-   */
-  function getSetting($cat, $name) { }
-
-  /**
-
-  /**
-   * loads system settings into memory
-   *
-   * This method should employ a static list from the GLOBAL settings to avoid
-   * redundant calls to this
-   *
-   * @param string $cat is the category (common should be loaded on construction)
-   */
-  function _loadSettings() { }
-
-  /* UTILITIES */
+  /*********************************
+   * UTILITIES 
+   ********************************/
 
   /**
    * Creates a string in title case
@@ -180,11 +172,10 @@ class Zen {
   function dateFallsOn( $utime, $step, $period, $base ) { }
 
    
-  /* VARIABLES */
+  /********************************
+   * VARIABLES 
+   *******************************/
  
-  
-  /* PRIVATE VARIABLES */
-  
   /** @var array $_settings the system settings */
   var $_settings;
 
@@ -196,9 +187,6 @@ class Zen {
   
   /** @var array $_errors contains the error objects */
   var $_errors;
-
-  /** @var integer $_id the id associated with this object (used by isEmtpy() */
-  var $_id;
 
   /** @var array $_lcwords is a list of words that should be lower case in title structure */
   var $_lcwords;

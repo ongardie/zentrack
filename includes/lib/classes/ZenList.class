@@ -25,11 +25,13 @@ class ZenList extends Zen {
   /**
    * CONSTRUCTOR
    *
-   * This method recieves the DbQuery object, and utilizes this to find out
+   * This method recieves the ZenQuery object, and utilizes this to find out
    * which columns and tables are valid for use by this object. This allows for 
    * validation of the incoming params.
    *
-   * @param DbQuery $dbquery a DbQuery object
+   * The ZenQuery object should be prepared as follows: table names to reference set
+   *
+   * @param ZenQuery $dbquery a ZenQuery object corresponding to this data type
    */
   function ZenList( $dbquery ) { }
 

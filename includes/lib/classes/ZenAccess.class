@@ -31,7 +31,7 @@ class ZenAccess extends Zen {
    * @param integer $action_id the action to check
    * @return integer or null if no entry
    */
-  function get( $bin_id, $action_id ) { }
+  function getLevel( $bin_id, $action_id ) { }
 
   /**
    * Retrieves the access level for the bin and action in question
@@ -47,14 +47,7 @@ class ZenAccess extends Zen {
    * @param integer $level the new level
    * @return boolean validated and set
    */
-  function set( $bin_id, $action_id, $level ) { }
-
-  /**
-   * Save the access permissions if they have changed
-   *
-   * @return integer number of rows updated
-   */
-  function save() { }
+  function setLevel( $bin_id, $action_id, $level ) { }
 
 
   /* VARIABLES */
@@ -67,9 +60,6 @@ class ZenAccess extends Zen {
 
   /** @var integer $_userid the user in question */
   var $_userid;
-
-  /** @var boolean $_changed whether set() has been called */
-  var $_changed;
 
 }
 
