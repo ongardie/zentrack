@@ -58,7 +58,7 @@
    *  DATABASE SETTINGS
   */
 
-   // for oracle, the order of items may be changed
+   // ORACLE USERS! the order of items may be changed
    // it may be that the entry will be:
    //      database_host: serverip:port#
    //      database_login: scott
@@ -68,7 +68,14 @@
    //      database_host: ""
    //      database_login: scott
    //      database_pass:  tiger
-   //      database_intance: TNSName (try the TNSname here, then try the whole connection string!)      
+   //      database_intance: TNSName (try the TNSname here, then try the whole connection string!)   
+	 // also... you may need to uncomment the following for oracle to work properly:
+	 // the database instance
+   //   putenv("ORACLE_SID=ORACLE");
+   // the oracle installation directory
+   //   putenv("ORACLE_HOME=/opt/oracle/oracle/8.0.3");
+   // the directory of the tnsnames.ora file
+   //   putenv("TNS_ADMIN=/opt/oracle/product/8.1.5/network/admin");
 
    $this->database_type      = 'mysql';
 	// the database types that can be used here are:

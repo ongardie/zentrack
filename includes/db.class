@@ -387,12 +387,8 @@ class DB {
       // create the object
       $this->db_link = &ADONewConnection($this->database_type);
       $ADODB_FETCH_MODE = ADODB_FETCH_ASSOC;      
-      if( $this->database_type == 'oracle' || $this->database_type == 'oci8' || $this->database_type == "oci8po" ) {
-	 putenv( "ORACLE_SID=".$this->database_instance); 
-	 //oracle specific requirement
-      }
       if( $this->sql_debug == "on" )
-	$this->db_link->debug = true;
+				$this->db_link->debug = true;
       $this->db_connect($host, $user, $password, $database);
    }
       
