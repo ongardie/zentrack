@@ -1,7 +1,37 @@
-<?{
 
+<?{
+	
   // integrity
   unset($params);
+  
+	//#####################################################
+	//organize the date
+	//#####################################################
+	//start date
+	if (!empty($date)){
+	  $search_params["otime"] = $zen->dateParse(strip_tags($date));
+	  $search_params["otime_end"] = $search_params[otime] + 86400;
+	}
+	   
+  	//begin date
+  	if (!empty($begin)){
+	  $search_params["begin"] = $zen->dateParse(strip_tags($begin));
+	}
+		
+    //end date
+    if (!empty($end)){
+	  $search_params["end"] = $zen->dateParse(strip_tags($end)) + 86400;
+	}
+	$date = NULL;
+	$begin = NULL;
+	$end = NULL;
+  
+ 	//#####################################################
+  	//orderby checken
+  	//#####################################################
+  	if ($orderby == "") {
+	  $orderby="status DESC, priority DESC";
+ 	}
   
   // organize the search params
   if( is_array($search_params) ) {
@@ -10,6 +40,18 @@
 	switch($k) {
 	case "priority":
 	  $params[] = array($zen->table_tickets.".$k","<=",$v,1);
+	  break;
+	case "otime":
+	  $params[] = array("otime", ">=",$v,1);
+	  break;
+	case "otime_end":
+	  $params[] = array("otime", "<=",$v,1);
+	  break;
+	case "begin":
+	  $params[] = array("otime", ">=",$v,1);
+	  break;
+	case "end":
+	  $params[] = array("otime", "<=",$v,1);
 	  break;
 	default: 
 	  $params[] = array($k,"=",$v,1);
@@ -56,7 +98,7 @@
     }
     $zen->addDebug("searchResults.php-params[]",join("|",$dp),3);
     // debug
-    $tickets = $zen->search_tickets($params, "AND");
+    $tickets = $zen->search_tickets($params, "AND","0",$orderby);//"status DESC, priority DESC"
   }
-
 }?>
+    

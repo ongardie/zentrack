@@ -1,5 +1,5 @@
 
-<form action="<?=$SCRIPT_NAME?>">
+<form action="<?=$SCRIPT_NAME?>" name="searchForm">
 <input type="hidden" name="TODO" value="SEARCH">
   
 <table width="640" align="left" cellpadding="2" cellspacing="2" bgcolor="<?=$zen->settings["color_background"]?>">
@@ -32,7 +32,10 @@
    $sft = ((is_array($search_fields) && in_array("title",$search_fields)) 
 	     || 
            !is_array($search_fields));
-   $sfd = (is_array($search_fields) && in_array("description",$search_fields));
+   //   $sfd = (is_array($search_fields) && in_array("description",$search_fields));
+   //default checked
+   $sfd = ((is_array($search_fields) && in_array("description",$search_fields))
+	    || !is_array($search_fields)); 
   ?>
   <input type="checkbox" name="search_fields[title]" value="title"<?=($sft)?" checked":""?>>
    &nbsp;<?=tr("Title")?>
@@ -41,6 +44,60 @@
    &nbsp;<?=tr("Description")?>
   </td>
 </tr>
+
+
+<?
+//#####################################################
+//create Date field - Johan test
+//#####################################################
+?>
+
+<tr>
+  <td colspan="2" class="subTitle">
+    <?=tr("By Date")?>
+  </td>
+</tr>
+<tr>
+  <td class="bars">
+    <?=tr("Date")?>
+  </td>
+  <td class="bars">
+    <input type="text" name="date" size="12" maxlength="10"
+value="<?if (!empty($search_params[otime])) {echo $zen->showDate($search_params[otime]);}?>">
+    <img name="date_button" src='<?=$rootUrl?>/images/cal.gif' 
+  onClick="popUpCalendar(this, document.searchForm.date, '<?=$zen->popupDateFormat()?>')"
+  alt="Select a Date">
+  </td>
+</tr>   
+<?  
+//#####################################################
+// between date field
+//#####################################################
+?>
+<tr>
+  <td class="bars">
+
+    <?=tr("From")?>
+  </td>
+  <td class="bars">
+    <input type="text" name="begin" size="12" maxlength="10" 
+value="<?if (!empty($search_params[begin])) {echo $zen->showDate($search_params[begin]);}?>">
+    <img name="date_button" src='<?=$rootUrl?>/images/cal.gif' 
+  onClick="popUpCalendar(this,document.searchForm.begin, '<?=$zen->popupDateFormat()?>')"
+  alt="Select a Date">
+    &nbsp;(<?=tr("to")?>)&nbsp;
+    <input type="text" name="end" size="12" maxlength="10"
+value="<?if (!empty($search_params[end])) {echo $zen->showDate($search_params[end]);}?>">
+    <img name="date_button" src='<?=$rootUrl?>/images/cal.gif' 
+  onClick="popUpCalendar(this,document.searchForm.end, '<?=$zen->popupDateFormat()?>')"
+  alt="Select a Date">
+  </td>
+</tr>
+<?
+//#####################################################
+// end of from to field
+//#####################################################
+?>
 
 <tr>
   <td colspan="2" class="subTitle">

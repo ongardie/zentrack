@@ -94,7 +94,7 @@
     <select name="homebin">
       <?
        if( is_array($zen->bins) ) {
-         print "<option $check value='-1'>-All-</option>\n";
+         print "<option $check value='all'>-All-</option>\n";
          foreach($zen->getBins(1) as $v) {
            $k = $v["bid"];
            print ($k == $homebin)? 

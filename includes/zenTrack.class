@@ -3652,7 +3652,28 @@ class zenTrack extends zen {
     return array($tables,$where);
   }
 
-
+  
+  //#####################################################
+  //create link for the search 
+  //#####################################################
+  function create_link($SCRIPT_NAME,$TODO,$i,$search_text,$search_fields,$search_params){
+    $urlp1 = $SCRIPT_NAME."?TODO=".$TODO;  
+    $urlp2 = "&orderby=" .$i;
+    $urlp3 = "&search_text=" .$search_text;
+    if (strip_tags($search_fields["title"]) == "title"){
+      $urlp4 = "&search_fields[title]=".strip_tags($search_fields["title"]);
+    }
+    if (strip_tags($search_fields["description"]) == "description"){
+      $urlp5 = "&search_fields[description]=".strip_tags($search_fields["description"]);
+    }
+    $a = "";
+    foreach($search_params as $k=>$v){
+      $a = $a."&search_params[$k]=".strip_tags($v);
+    }
+    $url = $urlp1. $urlp2. $urlp3. $urlp4. $urlp5. $a; 
+    return ($url);
+  }
+  
   /*
   **  VARIABLES TO CONFIGURE (in config file)
   */
