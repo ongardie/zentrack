@@ -38,6 +38,8 @@
            this will populate your db
 	
      -chmod 777 includes/attachments (if using attachments)
+     -log in as Administrator/admin and configure the system to taste.
+     -the other test accounts are Guest/Guest and User/User
 
    
   TROUBLESHOOTING
