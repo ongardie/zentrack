@@ -88,7 +88,7 @@
 	     }
              print "<br>";
 	     print "<span class='small'>"
-		 . "[<a href='".$dlnk."?group_id=".$v['group_id']."'>"
+		 . "[<a href='".$dlnk."?group_id=".$v['group_id']."' onclick='return confirm(\"Delete this group permanently?\")'>"
 		 .uptr('delete')."</a>]";
 	     print $te;
 	       

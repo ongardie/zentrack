@@ -253,7 +253,8 @@ value="<?=($deadline)?$zen->showDate(strip_tags($deadline)):""?>">
 <?
     foreach($varfields as $v) {
       $k = $v['field_name'];
-      $val = isset($$k)? $$k : $v['field_value'];
+      $type = getVarfieldDataType($v['field_name']);
+      $val = isset($$k)? $$k : $type == 'menu'? '' : $v['field_value'];
 ?>
 <tr>
   <td class="bars">

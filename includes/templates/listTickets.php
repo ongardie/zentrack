@@ -34,7 +34,7 @@ if( is_array($tickets) && count($tickets) ) {
    </tr>
       <?      
 
-   $td_ttl = "title='".tr("Click here to view the ?", $page_type)."'";
+   $td_ttl = "title='".tr("Click here to view the ?", array($page_type))."'";
    foreach($tickets as $t) {
       $row = $zen->settings["color_background"];
       if( $zen->inProjectTypeIDs($t["type_id"]) ) {

@@ -45,24 +45,24 @@
       $msg = tr("Process successful.  Behavior was not updated, because this is a demo site.");
     } else {
       $updflds = array(
-                  "behavior_name" => $NewBehaviorName,
-                  "group_id"      => $NewGroupId,
-                  "is_enabled"    => $NewIsEnabled,
-                  "sort_order"    => $NewSortOrder,
-                  "field_name"    => $NewFieldName,
-                  "field_enabled" => $NewFieldEnabled,
-                  "match_all"     => $NewMatchAll
-                       );
+      "behavior_name" => $NewBehaviorName,
+      "group_id"      => $NewGroupId,
+      "is_enabled"    => $NewIsEnabled,
+      "sort_order"    => $NewSortOrder,
+      "field_name"    => $NewFieldName,
+      "field_enabled" => $NewFieldEnabled,
+      "match_all"     => $NewMatchAll
+      );
       $res = $zen->updateBehavior($behavior_id,$updflds);
       if( $res ) {
-	$msg = tr("Behavior ? was updated successfully. ? to customize behavior ?'s details.",
-		  array($NewBehaviorName,
-			"--link--",
-			$NewBehaviorName));
-	$msg = str_replace("--link--","<br><a href='$rootUrl/admin/editBehaviorDetails.php?behavior_id=$behavior_id'>"
-			   .tr("Click Here")."</a>",$msg);
+        $msg = tr("Behavior ? was updated successfully. ? to customize behavior ?'s details.",
+        array($NewBehaviorName,
+        "--link--",
+        $NewBehaviorName));
+        $msg = str_replace("--link--","<br><a href='$rootUrl/admin/editBehaviorDetails.php?behavior_id=$behavior_id'>"
+        .tr("Click Here")."</a>",$msg);
       } else {
-	$errs[] = tr("System Error: Could not update ?", array($NewBehaviorName));
+        $errs[] = tr("System Error: Could not update ?", array($NewBehaviorName));
       }
     }
   }

@@ -85,8 +85,9 @@
             print "<input type='hidden' name='NewComparator[{$j}]' value='eq'>";
           }
           $item['field_value'] = $zen->ffv($item['field_value']);
+          $x = $groupIsFile? 3 : 20;
           print "{$t}<input type='text' name='NewMatchValue[{$j}]' "
-              ." value='{$item['field_value']}' size='20' maxlength='255'>{$te}";
+              ." value='{$item['field_value']}' size='$x' maxlength='255'>{$te}";
             
           // the sort order, normally.  In the case of groups coming from
           // files, this is used as the column index
@@ -128,15 +129,19 @@
         print "$te";
         print "{$t}<input type='text' name='NewMatchValue[{$j}]' "
         ." value='' size='20' maxlength='255'>{$te}";
+        // the sort order or the column index
+        print "$t"."<input type='text' name='NewSortOrder[{$j}]' "
+        ." value='' size='3' maxlength='3'>{$te}";
       }
       else {
+        print $t;
         print "<input type='hidden' name='NewComparator[{$j}]' value='eq'>";
-        print "<input type='hidden' name='NewMatchValue[{$j}]' value=''>";
+        print "<input type='text' name='NewMatchValue[{$j}]' value='' size='3' maxlength='20'>";
+        // the sort order or the column index
+        print "<input type='hidden' name='NewSortOrder[{$j}]' value='' size='3' maxlength='3'>";
+        print $te;
       }
       
-      // the sort order or the column index
-      print "$t"."<input type='text' name='NewSortOrder[{$j}]' "
-      ." value='' size='3' maxlength='3'>{$te}";
       print "</tr>\n";
       $j++;
     }

@@ -17,8 +17,12 @@
   // use the complete system path
   $libDir = "/web/zentrack/includes";
 
-  // the directory where zentrack www docs are kept
+  // the base url used to reach zentrack
   $rootUrl = "http://www.yourhost.com/zentrack";
+
+  // the directory where the www files are stored
+  $rootWWW = dirname(__FILE__);  //this will work for most installs
+  //$rootWWW = "/web/zentrack/www"; //uncomment if the previous line fails
 
   /*
   **
@@ -122,7 +126,6 @@
   /*
   **  LEAVE THIS PART ALONE
   */
-  $rootWWW = dirname(__FILE__);  
   include_once("$libDir/headerInc.php");
   
 }?>

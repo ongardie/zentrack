@@ -115,14 +115,14 @@ class DB {
     $set = $this->makeInsertVals( $columns, 1 );
     $query = "UPDATE $table SET $set WHERE $key = '$val'";
     $r = $this->db_result($query);
-    $this->addDebug("db_update", $query, 3);
+    $this->addDebug("db_update", "[$r]".$query, 3);
     return $r;
   }
   
   function db_delete( $table, $key, $val ) {
     $query = "DELETE FROM $table WHERE $key = '$val'";
     $r = $this->db_result($query);
-    $this->addDebug("db_delete", $query, 3);
+    $this->addDebug("db_delete", "[$r]".$query, 3);
     return $r;
   }
   
@@ -151,25 +151,17 @@ class DB {
         $sequence .= "_id_seq";
       }
       $id = $this->db_insertID($sequence);
-      $fields = $this->db_get_fields($table);
-      $id_field = $fields[0];
-      if( !$id_field ) { $id_field = ZenTrack::getTableId($table); }
+      $id_field = ZenTrack::getTableId($table);
+      if( !$id_field ) {
+        $fields = $this->db_get_fields($table);
+        $id_field = $fields[0];
+      }
       $params["$id_field"] = $id;
     }
-    // this allows us to insert the generated id in sql server
-    // see http://msdn.microsoft.com/library/default.asp?url=/library/en-us/tsqlref/ts_set-set_7zas.asp
-    // if( !(strpos($this->database_type, 'mssql') === false) ) {
-      // $query = "SET IDENTITY_INSERT $table ON";
-      // $this->db_result($query);
-    // }
     list($cols,$vals) = $this->makeInsertVals($params);
     $query = "INSERT INTO $table ($cols) VALUES($vals)";
-    $this->addDebug("db_insert",$query,3);
     $res = $this->db_link->Execute($query);
-    // if( !(strpos($this->database_type, 'mssql') === false) ) {
-      // $query = "SET IDENTITY_INSERT $table OFF";
-      // $this->db_result($query);
-    // }
+    $this->addDebug("db_insert","[$res]".$query,3);
     if( $res && $this->database_type == "mysql" ) {
       $id = $this->db_insertID();
     }
@@ -212,16 +204,15 @@ class DB {
     // by the [0] column and containing the [1] column
     $this->switchQueryMode(0);
     $recordSet = &$this->db_link->Execute($query);
+    $vals = array();
     if( $recordSet ) {
       $vars = $recordSet->getArray();
-      if( is_array($vars) && count($vars) > 0 ) {
-        foreach($vars as $v) {
-          $k = $v[0];
-          $vals["$k"] = $v[1];
-        }
-        return($vals);
+      for($i=0; $i<count($vars); $i++) {
+        $v = $vars[$i];
+        $vals["{$v[0]}"] = $v[1];
       }
-    }     
+    }
+    return($vals);
   }
   
   /*

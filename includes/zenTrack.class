@@ -262,25 +262,35 @@ class zenTrack extends zen {
     
     $tables = $this->table_tickets." t";
     if( $tf_pri ) {
-      $tbl = $this->table_tickets;
       $tblpri = $this->table_priorities;
       $tables .= ", $tblpri p";
       $sort = str_replace("priority", "ppri", $sort);
     }
 
-    if( !is_array($columns) )
+    if( !is_array($columns) ) {
       $columns = $tf_pri? 
          array('id', 'title', 't.priority priority', 'status',
                'description', 'otime', 'ctime', 'bin_id', 'type_id',
                'user_id', 'system_id', 'creator_id', 'tested', 'approved',
                'relations','project_id','est_hours','deadline','start_date',
                'wkd_hours','p.priority ppri') : array("*");
-
-    $where = ($tf_pri)? " WHERE t.priority = p.pid " : "";
-    if( is_array($params) ) {
-      $where = $where? "$where AND " : "WHERE ";
-      $where .= $this->simpleWhere($params);
     }
+    else if( $tf_pri ) {
+      if( !in_array("p.priority ppri", $columns) ) {
+        $columns[] = "p.priority ppri"; 
+      }
+    }
+
+    if( is_array($params) ) {
+      $where = $this->simpleWhere($params);
+    }
+    if( $tf_pri ) {
+      $where = " WHERE t.priority = p.pid ".($where? " AND $where" : "");      
+    }
+    else {
+      $where = $where? "WHERE $where" : '';
+    }
+      
     $query = "SELECT ".join(",",$columns)." FROM $tables $where";
 
     if( $sort )
@@ -1079,8 +1089,10 @@ class zenTrack extends zen {
    *
    * @param array $behavior array containing the behavior's properties
    * @param array $group array containing the group properties
+   * @param array $validBins bins that the current user can access
+   * @param array $mode create, edit, or view (for bin/user/ticket access)
    */
-   function getBehaviorFileSet( $behavior, $group ) {
+   function getBehaviorFileSet( $behavior, $group, $validBins ) {
      // generate file contents
      $fn = $this->libDir."/user_data/{$group['name_of_file']}";
      $vals = array();
@@ -1091,13 +1103,20 @@ class zenTrack extends zen {
      $contents = file($fn);
      
      // determine which column contains the value so that we don't have
-     // to do this during each iteration
+     // to do this during each iteration.  We will also buffer the possible
+     // values for each column now, so that we can check them while iterating
+     // the values (without mutliple db calls)
+     $possibleValues = array();
      $valueColumnIndex = null;
      foreach($behavior['fields'] as $f) {
        if( $f['field_name'] == 'value_column' ) {
           $valueColumnIndex = $f['field_value']-1;
-          break;
+          $fn = $behavior['field_name'];
        }
+       else {
+          $fn = $f['field_name'];
+       }
+       $possibleValues[$fn] = $this->getValsForTicketField( $fn, $validBins);
      }
      
      // blow up and burn in fiery death
@@ -1109,6 +1128,7 @@ class zenTrack extends zen {
      }
      
      // get the index for columns to be read
+     $rowCount=0;
      foreach($contents as $lineOfData) {
        $dataRow = explode("\t",trim($lineOfData));
        $key = $this->_genMatchesKey($behavior, $group, $dataRow);
@@ -1127,18 +1147,78 @@ class zenTrack extends zen {
              continue;
            }
            if( $field['field_name'] != 'value_column' ) {
+             $v = $dataRow[$i];
+             if( strlen($v) ) {
+               // attempt to retrieve the valid id and label for this field based
+               // on the value provided here.
+               $w = $this->_getValFromSet($possibleValues, $field['field_name'], $v);
+               if( !strlen($w) ) {
+                  $this->addDebug('getBehaviorFileSet', "The requested match value "
+                    ." ($v) appears to be invalid", 2);
+               }
+               else {
+                  $v = $w['field_value']; 
+               }
+             }
              $vals[$key]['matches'][] = array('field_name'     => $n, 
-                                              'field_operator' => 'eq',
-                                              'field_value'    => $dataRow[$i]);
+                  'field_operator' => 'eq',
+                  'field_value'    => $v);
            }
          }
        }
        
        // add the value to our data set
-       $vals[$key]['values'][] = $dataRow[$valueColumnIndex];
+       $d = $dataRow[$valueColumnIndex];
+       if( !strlen($d) ) {
+         $this->addDebug('getBehaviorFileSet', "$key: file missing value column at line $rowCount", 1);
+       }
+       else {
+         $v = $this->_getValFromSet($possibleValues, $behavior['field_name'], $d);
+         $vals[$key]['values'][] = $v? array('field_value'=>$v[0],'label'=>$v[1]) : $d;
+         $this->addDebug('getBehaviorFileSet', "$key: adding value '".($v? $v[0].'->'.$v[1]: $d)."'", 3);
+       }
      }
 
      return $vals;
+   }
+   
+  /**
+   * Extract value from an indexed array of id/label pairs.
+   *
+   * @param array $vals the set containing rows of id/label pairs
+   * @param int $key the associative array to look in
+   * @param mixed $value an id OR a label (can search either way)
+   * @return mixed array containing (id, label) or null (if not found)
+   */
+   function _getValFromSet( $vals, $key, $value ) {
+     if( !strlen($value) ) {
+       $this->addDebug('_getValFromSet', "$vals, $key, $value: value empty, nothing to fetch", 2);
+       return null; 
+     }
+     if( !array_key_exists("$key", $vals) || !strlen($vals["$key"]) ) {
+       $this->addDebug('_getValFromSet', "$vals, $key, $value: '$key' not a valid key(data type)", 3);
+       return null;
+     }
+     if( preg_match('/^[0-9]+$/', $value) ) {
+       // this is an id
+       if( !array_key_exists("$value", $vals["$key"]) ) {
+         $this->addDebug('_getValFromSet', "id \$vals['{$key}']['{$value}'] not found, probably invalid", 1);
+          return null; 
+       }
+       else {
+         return array($value, $vals[$key]["$value"]);
+       }
+     }
+     else {
+       // this is a label
+       foreach($vals["$key"] as $k=>$v) {
+         if( strtolower($v) == strtolower($value) ) {
+            return array($k,$v); 
+         }
+       }
+       $this->addDebug('_getValFromSet', "id \$vals['{$key}']['{$value}'] not found, probably invalid", 1);
+       return null;
+     }
    }
    
   /**
@@ -1417,11 +1497,15 @@ class zenTrack extends zen {
            . " set use_for_project=0, use_for_ticket=0, field_value=NULL"
            . " where field_value='$group_id'"
            . " and field_name like 'custom_menu%'";
-    $this->db_result($query);
+    $res = $this->db_result($query);
+    $this->addDebug('disableReferencesToDataGroup', 
+        "Disable variable fields [$res]{$query}", $res? 3 : 1); 
     $query = "UPDATE ".$this->table_behavior
-           . " set is_enabled=0, group_id=NULL"
+           . " set is_enabled=0, group_id=0"
            . " where group_id=$group_id";
-    $this->db_result($query);
+    $res = $this->db_result($query);
+    $this->addDebug('disableReferencesToDataGroup', 
+      "Disable behaviors [$res]{$query}", $res? 3 : 1);
   }
 
   /**
@@ -1435,11 +1519,15 @@ class zenTrack extends zen {
            . " set field_value = '$new_data_group'"
            . " where field_value = '$old_group_id'"
            . " and field_name like 'custom_menu%'";
-    $this->db_result($query);
+    $res = $this->db_result($query);
+    $this->addDebug('moveReferencesToDataGroup', 
+        "Move variable fields [$res]{$query}", $res? 3 : 1);     
     $query = "UPDATE ".$this->table_behavior
            . " set group_id = $new_data_group"
-           . " where group_id = $group_id";
-    $this->db_result($query);
+           . " where group_id = $old_group_id";
+    $res = $this->db_result($query);
+    $this->addDebug('moveReferencesToDataGroup', 
+        "Move behaviors [$res]{$query}", $res? 3 : 1);     
   }
 
 
@@ -3770,6 +3858,63 @@ class zenTrack extends zen {
       default:
         return '';
     }
+  }
+  
+  /**
+   * Using a field from ZENTRACK_TICKETS only, this will return
+   * the appropriate table of the data type.  If the field provided
+   * is not a data type id, then null will be returned.
+   *
+   * Note that this method can also handle the special cases for user_id
+   * and for ticket_id.  It uses the validBins array and collects a list of
+   * valid users and tickets (or projects) for the items in question.
+   */
+  function getValsForTicketField( $dataTypeId, $validBins ) {
+    $vals = array();
+    switch( strtolower($dataTypeId) ) {
+      case "priority":
+        $vals = $this->priorities;
+        break;
+      case "bin_id":
+        $vals = $this->bins;
+        break;
+      case "type_id":
+        $vals = $this->types;
+        break;
+      case "system_id":
+        $vals = $this->systems;
+        break;
+      case "creator_id":
+      case "user_id":
+        if( !$validBins ) { return null; }
+        $users = $this->get_users( $validBins, "level_user" );
+        $vals = array();
+        for($i=0; $i<count($users); $i++) {
+          $u = $users[$i];
+          $vals["{$u['user_id']}"] = $this->formatName($u);
+        }
+        break;
+      case "id":
+        if( !$validBins ) { return null; }
+        $tickets = $this->get_tickets(
+          array('bin_id'=>$validBins)
+        );
+        for($i=0; $i<count($tickets); $i++) {
+          $t = $tickets[$i];
+          $vals["{$t['id']}"] = $t['title'];
+        }
+        break;
+      case "project_id":
+        $tickets = $this->get_tickets(
+          array('type_id'=>$this->projectTypeIds(),'bin_id'=>$bins)
+        );
+        break;
+      default:
+        return null;
+    }
+    $this->addDebug('getValsForTicketField()', "dataTypeId=$dataTypeId, $mode=$mode, "
+      .count($bins)." bins, ".count($vals)." results",3);
+    return $vals;
   }
 
   function get_report_id( $n ) {

@@ -197,7 +197,8 @@ value="<?=strip_tags($relations)?>">
       foreach($zen->getPriorities(1) as $v) {
      $k = $v["pid"];
      $v = $v["name"];
-     $check = ( $k == $priority )? "selected" : "";
+     //$check = ( $k == $priority )? "selected" : "";
+      $check = (  ( strlen($priority) && $k == $priority ) || (!strlen($priority) && $v == 'Medium' ) )? 'selected' : '';
      print "<option $check value='$k'>$v</option>\n";
   }
     } else {

@@ -11,7 +11,7 @@
 
   $page_tile = tr("Create a New Project");
   $expand_projects = 1;
-  $onLoad = array("behavior_js.php?formset=newProjectForm");
+  $onLoad[] = "behavior_js.php?formset=newProjectForm&mode=create";
 
   include("$libDir/nav.php");
 

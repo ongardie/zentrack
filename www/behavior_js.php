@@ -74,6 +74,10 @@
         print ");\n";
       }      
     }
+    
+    $mode = $zen->checkAlpha($_GET['mode']);
+    if( !$mode ) { $mode = 'view'; }
+    $userBins = $zen->getUsersBins($login_id,"level_$mode");  
   
 ?>
 //<pre>
@@ -184,7 +188,7 @@ if( is_array($behaviors) ) {
       if( $group && $group['eval_type'] == 'File' ) {
         // this is a file group, we have a more complex match here, since
         // one behavior can map to many sets of matches.
-        $sets = $zen->getBehaviorFileSet( $b, $group );
+        $sets = $zen->getBehaviorFileSet( $b, $group, $userBins, $mode );
         if( $sets && count($sets) ) {
           foreach($sets as $setid=>$vals) {
             genBehaviorFields($bid, $vals['matches'], &$fieldMap, $setid); 
@@ -429,7 +433,7 @@ function setFormValsUsingGroup( fieldObj, group, setid ) {
       fieldObj.length = 0;
       for(var i=0; i < fields.length; i++) {
         var f = fields[i];
-        behaviorDebug(3, "(setFormValsUsingGroup)Setting option "+i+" to ["+f.label+"]"+f.value);
+        behaviorDebug(3, "(setFormValsUsingGroup)Setting option "+i+" to ["+f.value+"]"+f.label);
         fieldObj.options[i] = new Option();
         fieldObj.options[i].text = f.label;
         fieldObj.options[i].value = f.value;
@@ -562,7 +566,7 @@ function matchBehaviorCriteria( formObject, behaviorMapField ) {
   }
 
   fieldVal = getFormFieldValue(formField,behaviorMapField);
-  if( fieldVal ) { fieldVal = fieldVal.toLowerCase(); }
+  if( fieldVal && fieldVal.toLowerCase ) { fieldVal = fieldVal.toLowerCase(); }
 
   // store result
   var res = false;
@@ -709,7 +713,7 @@ function pageLoadedBehavior() {
     behaviorDebug(3, "(pageLoadedBehavior)loading form: "+behaviorFormSet[x].getAttribute('name'));
     for( var i=0; i < behaviorFormSet[x].elements.length; i++ ) {
       if( fieldMap[ behaviorFormSet[x].elements[i].name ] ) {
-	setBehaviorOnChange( behaviorFormSet[x].elements[i] );
+        setBehaviorOnChange( behaviorFormSet[x].elements[i] );
       }
       runFieldBehaviors( behaviorFormSet[x].elements[i] );
     }
@@ -723,8 +727,14 @@ function pageLoadedBehavior() {
  * Generate a function to handle onchange events for us
  */
 function setBehaviorOnChange( formElement ) {
-  var oldFun = formElement.onchange;
-  formElement.onchange = genBehaviorFunction( formElement, oldFun );
+  if( formElement.type == 'checkbox' ) {
+    var oldFun = formElement.onclick;
+    formElement.onclick = genBehaviorFunction( formElement, oldFun );
+  }
+  else {
+    var oldFun = formElement.onchange;
+    formElement.onchange = genBehaviorFunction( formElement, oldFun );
+  }
 }
 
 /**
@@ -748,7 +758,7 @@ function genBehaviorFunction( fieldObject, oldFunction ) {
 function getFormFieldValue( formField, behaviorMapField ) {
   switch( formField.type ) {
   case "checkbox":
-    return formField.checked? 'true' : 'false';
+    return formField.checked? 1 : 0;
   case "radio":
     for(var i=0; i < formField.length; i++) {
       if( formField[i].checked ) { return formField[i].value; }

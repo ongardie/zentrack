@@ -13,7 +13,8 @@
 </table>
 
 <br clear="all">
-  
+
+<!--
 <p>&nbsp;</p>
 <p align="left">
    <A href="http://sourceforge.net" target="_new">
@@ -21,6 +22,7 @@
          width="88" height="31" border="0" alt="SourceForge Logo">
    </A>
 </p>
+-->
 
 <?
 

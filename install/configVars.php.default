@@ -109,4 +109,9 @@
   // email address of the logged-in user)
   $this->fromuser   = "me@domain.com";
 
+  // address to put in from field for bug reports
+  $this->bugFrom = 'bot@zentrack.net';
+  
+  // address to put in to field for bug reports
+  $this->bugTo = 'bugs@zentrack.net';
 }?>

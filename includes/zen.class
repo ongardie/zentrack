@@ -357,7 +357,7 @@ class zen extends zenDate {
            $$k = $this->checkAlphaNum($$k, "_.-");
            break;
          case "text":
-           $$k = $this->ffv("$$k");
+           $$k = $this->ffv($$k);
            break;
          default:
            $$k = strip_tags($$k, $this->html_allowed);

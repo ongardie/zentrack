@@ -18,6 +18,7 @@
     $page_section .= " - ".$zen->bins["$login_bin"];
   }
   $expand_projects = 1;
+  $page_type = 'project';
   include("$libDir/nav.php");
   
   $userBins = $zen->getUsersBins($login_id);
