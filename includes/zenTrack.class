@@ -2130,6 +2130,16 @@ class zenTrack extends zen {
     $params["bin_id"] = $newBin;
     if ($this->settings["retain_owner_move"] != "on") {
       $params["user_id"] = NULL;
+    } else {
+      $currentOwner=$this->checkNum($t['user_id']);
+      $ownerAccess = $this->get_access($currentOwner,1);
+      if( strlen($ownerAccess["$newBin"]) < 1 ) {
+        $params["user_id"] = NULL;
+      } else {
+        if( $ownerAccess["$newBin"] < $this->settings["level_user"] ) {
+          $params["user_id"] = NULL;
+        }
+      }
     }
     $res = $this->update_ticket($id, $params);
     if( $res && $this->settings["log_move"] == "on" ) {

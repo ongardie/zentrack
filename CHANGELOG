@@ -13,6 +13,10 @@ abstraction, and endless possibilities for project expansion.
 
 ----- VERSION 2.5.0.2(development -----
 
+2004-10-26, cfalonso
+  If a MOVE is required and the current owner doesn't have access to the destination Bin, the owner is set to NULL
+    - zentrack_2/includes/zenTrack.class 1.159
+
 2004-10-22, cfalonso
   Fixed a mistake I made in move_ticket function
     - zentrack_2/includes/zenTrack.class 1.158
