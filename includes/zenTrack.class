@@ -35,18 +35,19 @@ class zenTrack extends zen {
       // with a value of the level for that bin
       //  ( ["bin_id"] = $bin_level )
       
-      $query = "SELECT * FROM ".$this->table_access." WHERE user_id = $user_id";
+      $query = "SELECT * FROM ".$this->table_access." WHERE user_id = $user_id "
+	." AND lvl is not null";
       $this->addDebug("get_access()Query",$query,3);
       $vars = $this->db_queryIndexed($query);
       if( $flag ) {
-    return $vars;
-      } else {
-    if( is_array($vars) ) {
-       foreach($vars as $v) {
-          $vals["$v[bin_id]"] = $v["lvl"];
-       }
-    }
-    return( $vals );
+	return $vars;	
+      } else {	
+	if( is_array($vars) ) {
+	  foreach($vars as $v) {
+	    $vals["$v[bin_id]"] = $v["lvl"];
+	  }
+	}
+	return( $vals );
       }
    }   
    
@@ -573,12 +574,16 @@ class zenTrack extends zen {
     if( $res && $this->settings["email_pending"] == "on" ) {
        $bin = $t["bin_id"];
        $vars = $this->fetch_bin_roles($bin,'manager');
-       $recipient = $vars[0]["user_id"];
-       if( $recipient ) {
+       if( is_array($vars) ) {
+	 foreach($vars as $v) {
+	   $recipient[] = $v["user_id"];
+	 }
+       }
+       if( is_array($recipient) ) {
           $subject = "[".$this->settings["system_name"]."] ticket #$id closed";
           $emailParams["Close Time"] = $this->showDateTime($this->currTime);
           if( $comments )
-       $emailParams["body"] = htmlentities($comments);
+	    $emailParams["body"] = htmlentities($comments);
           $emailParams["tid"] = $id;
           $message = $this->formatEmailMessage($emailParams);
           $this->sendEmail($recipient,$subject,$message,$user_id);
@@ -603,76 +608,78 @@ class zenTrack extends zen {
    }
    
    function move_ticket( $id, $newBin, $user_id = '', $comments = '' ) {
-      // moves the ticket to a new bin location
-      // if comments field is set to 'skip_log' then
-      // no log will be generated (assumed to have 
-      // been done before calling this)
-      
-      $t = $this->get_ticket($id);      
-      $params = array(
-            "bin_id"  => $newBin,
-            "user_id" => 'NULL'
-            );
-      $res = $this->update_ticket($id, $params);
-      if( $res && $this->settings["log_move"] == "on" ) {
-    $logParams["action"] = "MOVED";
-    $logParams["bin_id"] = $t["bin_id"];
-    $logParams["entry"] = "MOVED TO ".$this->bins["$newBin"];
-    $logParams["ticket_id"] = $id;
-    if( $user_id )
-      $logParams["user_id"] = $user_id;
-    if( $comments )
-      $logParams["entry"] .= "\n\n".$comments;
-    $this->add_log($id,$logParams);
-      }
-      if( $res && $this->settings["email_arrival"] == "on" ) {
-    $recipient = $this->fetch_bin_roles($t["bin_id"]);
-    if( $recipient ) {
-       $to = $recipient[0]["user_id"];
-       $eParams = array(
-              "From" => $this->bins["$t[bin_id]"], 
-              "Sent" => $this->showDateTime(),
-              "By"   => $this->formatName($user_id)
-              );
+     // moves the ticket to a new bin location
+     // if comments field is set to 'skip_log' then
+     // no log will be generated (assumed to have 
+     // been done before calling this)
+     
+     $t = $this->get_ticket($id);      
+     $params = array(
+		     "bin_id"  => $newBin,
+		     "user_id" => 'NULL'
+		     );
+     $res = $this->update_ticket($id, $params);
+     if( $res && $this->settings["log_move"] == "on" ) {
+       $logParams["action"] = "MOVED";
+       $logParams["bin_id"] = $t["bin_id"];
+       $logParams["entry"] = "MOVED TO ".$this->bins["$newBin"];
+       $logParams["ticket_id"] = $id;
+       if( $user_id )
+	 $logParams["user_id"] = $user_id;
        if( $comments )
-         $eParams["body"] = $comments;
-       $eParams["tid"] = $id;
-       $message = $this->formatEmailMessage($eParams);
-       $this->sendEmail($to,$subject,$message,$user_id);
-    }
-      }
-      return($res);
+	 $logParams["entry"] .= "\n\n".$comments;
+       $this->add_log($id,$logParams);
+     }
+     if( $res && $this->settings["email_arrival"] == "on" ) {
+       $recipient = $this->fetch_bin_roles($t["bin_id"]);
+       if( is_array($recipient) ) {
+	 foreach($recipient as $r) {
+	   $to[] = $r["user_id"];
+	 }
+	 $eParams = array(
+			  "From" => $this->bins["$t[bin_id]"], 
+			  "Sent" => $this->showDateTime(),
+			  "By"   => $this->formatName($user_id)
+			  );
+	 if( $comments )
+	   $eParams["body"] = $comments;
+	 $eParams["tid"] = $id;
+	 $message = $this->formatEmailMessage($eParams);
+	 $this->sendEmail($to,$subject,$message,$user_id);
+       }
+     }
+     return($res);
    }
    
    function reject_ticket( $id, $user_id, $comments = '' ) {
-      $sender = $this->getTicketSender($id);
-      if( !$sender["bin_id"] && $sender["user_id"] )
-   $res = $this->assign_ticket($id,$sender["user_id"],$user_id);
-      else if( $sender["bin_id"] )
-   $res = $this->move_ticket( $id, $sender["bin_id"], $sender["user_id"] );
-      $t = $this->get_ticket($id);
-      if( $res && $this->settings["log_reject"] == "on" ) {
-    $logParams["action"] = "REJECTED";
-    $logParams["bin_id"] = $t["bin_id"];
-    $logParams["user_id"] = $user_id;
-    $logParams["ticket_id"] = $t["id"];
-    if( $comments )
-      $logParams["entry"] = $comments;
-    $this->add_log($id,$logParams);
-      }
-      if( $res && $this->settings["email_reject"] == "on" && $senderID ) {
-    $eParams = array(
-           "From" => $this->bins["$t[bin_id]"], 
-           "Time" => $this->showDateTime(),
-           "By"   => $this->formatName($user_id)           
-           );
-    if( $comments )
-       $eParams["body"] = $comments;
-    $eParams["tid"] = $id;
-    $message = $this->formatEmailMessage($eParams);
-    $this->sendEmail($senderID,$subject,$message,$user_id);
-      }      
-      return($res);
+     $sender = $this->getTicketSender($id);
+     if( !$sender["bin_id"] && $sender["user_id"] )
+       $res = $this->assign_ticket($id,$sender["user_id"],$user_id);
+     else if( $sender["bin_id"] )
+       $res = $this->move_ticket( $id, $sender["bin_id"], $sender["user_id"] );
+     $t = $this->get_ticket($id);
+     if( $res && $this->settings["log_reject"] == "on" ) {
+       $logParams["action"] = "REJECTED";
+       $logParams["bin_id"] = $t["bin_id"];
+       $logParams["user_id"] = $user_id;
+       $logParams["ticket_id"] = $t["id"];
+       if( $comments )
+	 $logParams["entry"] = $comments;
+       $this->add_log($id,$logParams);
+     }
+     if( $res && $this->settings["email_reject"] == "on" && $senderID ) {
+       $eParams = array(
+			"From" => $this->bins["$t[bin_id]"], 
+			"Time" => $this->showDateTime(),
+			"By"   => $this->formatName($user_id)           
+			);
+       if( $comments )
+	 $eParams["body"] = $comments;
+       $eParams["tid"] = $id;
+       $message = $this->formatEmailMessage($eParams);
+       $this->sendEmail($senderID,$subject,$message,$user_id);
+     }      
+     return($res);
    }
    
    function relate_ticket( $id, $relations, $user_id = '', $comments = '' ) {
@@ -727,101 +734,103 @@ class zenTrack extends zen {
    }
    
    function reopen_ticket( $id, $user_id = 'NULL', $tested = 0, $approved = 0, $comments = '' ) {
-      // opens a ticket that has been closed
-      // this can be used to reopen tickets
-      // closed in error, or to make modifications
-      // to a closed ticket
-      
-      $t = $this->get_ticket($id);      
-      $params = array(
-            "ctime"    =>   'NULL',
-            "user_id"   =>   $user_id,
-            "status"   =>   'OPEN',
-            "bin_id"    =>   $t["bin_id"],
-            "tested"   =>   $tested,
-            "approved" =>   $approved
-            );
-      $res = $this->update_ticket($id, $params);
-      if( $res ) {
-    $logParams["action"] = "REOPENED";
-    $logParams["bin_id"] = $t["bin_id"];
-    $logParams["user_id"] = $user_id;
-    $logParams["ticket_id"] = $t["ticket_id"];   
-    $logParams["entry"] = "Ticket $id opened in ".$this->bins["$bin_id"];
-    if( $comments )
-      $logParams["entry"] .= "\n\n".$comments;
-    $this->add_log($id,$logParams);
-      }
-      if( $res && $this->settings["email_arrival"] == "on" ) {
-    $recipient = $this->fetch_bin_roles($t["bin_id"],'manager');
-    if( $recipient ) {
-       $to = $recipient[0]["user_id"];
-       $eParams = array(
-              "message" => "This ticket has been reopened.",
-              "From"    => $this->bins["$t[bin_id]"], 
-              "Time"    => $this->showDateTime(),
-              "By"      => $this->formatName($user_id)        
-              );
+     // opens a ticket that has been closed
+     // this can be used to reopen tickets
+     // closed in error, or to make modifications
+     // to a closed ticket
+     
+     $t = $this->get_ticket($id);      
+     $params = array(
+		     "ctime"    =>   'NULL',
+		     "user_id"   =>   $user_id,
+		     "status"   =>   'OPEN',
+		     "bin_id"    =>   $t["bin_id"],
+		     "tested"   =>   $tested,
+		     "approved" =>   $approved
+		     );
+     $res = $this->update_ticket($id, $params);
+     if( $res ) {
+       $logParams["action"] = "REOPENED";
+       $logParams["bin_id"] = $t["bin_id"];
+       $logParams["user_id"] = $user_id;
+       $logParams["ticket_id"] = $t["ticket_id"];   
+       $logParams["entry"] = "Ticket $id opened in ".$this->bins["$bin_id"];
        if( $comments )
+	 $logParams["entry"] .= "\n\n".$comments;
+       $this->add_log($id,$logParams);
+     }
+     if( $res && $this->settings["email_arrival"] == "on" ) {
+       $recipient = $this->fetch_bin_roles($t["bin_id"],'manager');
+       if( $recipient ) {
+	 foreach($recipient as $r) {
+	   $to[] = $r["user_id"];
+	 }
+	 $eParams = array(
+			  "message" => "This ticket has been reopened.",
+			  "From"    => $this->bins["$t[bin_id]"], 
+			  "Time"    => $this->showDateTime(),
+			  "By"      => $this->formatName($user_id)        
+			  );
+	 if( $comments )
          $eParams["body"] = $comments;
-       $eParams["tid"] = $id;
-       $message = $this->formatEmailMessage($eParams);
-       $this->sendEmail($to,$subject,$message,$user_id);
-    }
-      }
-      return( $res );
+	 $eParams["tid"] = $id;
+	 $message = $this->formatEmailMessage($eParams);
+	 $this->sendEmail($to,$subject,$message,$user_id);
+       }
+     }
+     return( $res );
    }
       
    function test_ticket( $id, $user_id, $hours = '', $comments = '' ) {
       // updates the testing parameter to reflect
       // a status of 'testing completed' for the ticket
       
-      $t = $this->get_ticket($id);
-      $res = $this->update_ticket($id, array("tested"=>2));
-      if( $res && $this->settings["log_test"] ) {
-    $logParams["action"] = "TESTED";
-    $logParams["bin_id"] = $t["bin_id"];
-    $logParams["user_id"] = $user_id;
-    $logParams["ticket_id"] = $t["ticket_id"];   
-    if( $comments )
-      $logParams["entry"] = $comments;
-    $this->add_log($id,$logParams);  
-      }
-      if( $t["approved"] != 1 ) {
-    // go ahead and close the ticket
-    // since it doesn't need to be
-    // approved       
-    $this->close_ticket($id);
-      }         
-      return( $res );
+     $t = $this->get_ticket($id);
+     $res = $this->update_ticket($id, array("tested"=>2));
+     if( $res && $this->settings["log_test"] ) {
+       $logParams["action"] = "TESTED";
+       $logParams["bin_id"] = $t["bin_id"];
+       $logParams["user_id"] = $user_id;
+       $logParams["ticket_id"] = $t["ticket_id"];   
+       if( $comments )
+	 $logParams["entry"] = $comments;
+       $this->add_log($id,$logParams);  
+     }
+     if( $t["approved"] != 1 ) {
+       // go ahead and close the ticket
+       // since it doesn't need to be
+       // approved       
+       $this->close_ticket($id);
+     }         
+     return( $res );
    }
    
    function yank_ticket( $id, $user_id, $comments = '' ) {
-      // takes a ticket from it's current location and status 
-      // (whatever those might be) and 
-      // assigns it to the user specified
-      
-      $t = $this->get_ticket($id);
-      $bin_id = $t["bin_id"];
-      if( is_array($t) ) {
-    if( $this->settings["log_yank"] == "on" ) {
-       $lParams = array(
-              "action"   =>   "YANKED",
-              "user_id"   =>   $user_id,
-              "bin_id"    =>   $bin_id
-              );
-       if( $comments )
-         $lParams["entry"] = $comments;
-       $this->add_log($id,$lParams);
-    }
-    if( $t["status"] == 'CLOSED' ) {
-       $tested = ($t["tested"] == 2)? 1:0;
-       $approved = ($t["approved"] == 2)? 1:0;
-       $this->reopen_ticket($id, $user_id, $tested, $approved, $comments);
-    }
-    $this->assign_ticket($id,$user_id);
-    return( 1 );
-      }
+     // takes a ticket from it's current location and status 
+     // (whatever those might be) and 
+     // assigns it to the user specified
+     
+     $t = $this->get_ticket($id);
+     $bin_id = $t["bin_id"];
+     if( is_array($t) ) {
+       if( $this->settings["log_yank"] == "on" ) {
+	 $lParams = array(
+			  "action"   =>   "YANKED",
+			  "user_id"   =>   $user_id,
+			  "bin_id"    =>   $bin_id
+			  );
+	 if( $comments )
+	   $lParams["entry"] = $comments;
+	 $this->add_log($id,$lParams);
+       }
+       if( $t["status"] == 'CLOSED' ) {
+	 $tested = ($t["tested"] == 2)? 1:0;
+	 $approved = ($t["approved"] == 2)? 1:0;
+	 $this->reopen_ticket($id, $user_id, $tested, $approved, $comments);
+       }
+       $this->assign_ticket($id,$user_id);
+       return( 1 );
+     }
    }
    
    /*
@@ -830,62 +839,61 @@ class zenTrack extends zen {
    
    
    function add_ticket( $params ) {
-      // create a new ticket with the
-      // given params and return the new
-      // insert ID for that ticket
-      
+     // create a new ticket with the
+     // given params and return the new
+     // insert ID for that ticket
+     
      $id = $this->db_insert($this->table_tickets,$params);
      if( $id ) {
        $lParams = array(
-         "action"   =>   "CREATED",
-         "user_id"   =>   $params["creator_id"],
-         "bin_id"    =>   $params["bin_id"]
-         );
+			"action"   =>   "CREATED",
+			"user_id"   =>   $params["creator_id"],
+			"bin_id"    =>   $params["bin_id"]
+			);
        $this->add_log($id,$lParams);
      }
      return $id;
    }
-
+   
    function archive_ticket( $id ) { 
-      // send a ticket and all of it's log
-      // entries to the archive db
+     // send a ticket and all of it's log
+     // entries to the archive db
+     
+     $ticket = $this->get_ticket($id);
+     if( $ticket["type_id"] == $this->projectTypeID() )
+       return( $this->archive_project($id) );
       
-      $ticket = $this->get_ticket($id);
-      if( $ticket["type_id"] == $this->projectTypeID() )
-   return( $this->archive_project($id) );
-      
-      $fields = $this->db_get_fields($this->table_tickets_archived);
-      $query = "INSERT INTO "
-   .$this->table_tickets_archived." ($fields) SELECT $fields FROM ".$this->table_tickets
-   ." WHERE id = $id";      
+     $fields = $this->db_get_fields($this->table_tickets_archived);
+     $query = "INSERT INTO "
+       .$this->table_tickets_archived
+       ." ($fields) SELECT $fields FROM ".$this->table_tickets
+       ." WHERE id = $id";      
       $this->db_result($query);
       $this->archive_log($id);
       $this->delete_ticket($id);
    }   
       
    function delete_ticket( $id, $archive_flag = 0 ) {
-      // drop a ticket, its log entries, and 
-      // all associated data from the db
-      // $id can be an array
-      $this->delete_log($id, $archive_flag);
-      $table = ($flag)? 
-   $this->table_tickets_archived : $this->table_tickets;
-      $where = (is_array($id))? " id IN(".join(",",$id).")" : " id = $id";
-      $query = "DELETE FROM $table WHERE $where";
-      $this->addDebug("delete_ticket",$query,2);
-      return( $this->db_result($query) );
+     // drop a ticket, its log entries, and 
+     // all associated data from the db
+     // $id can be an array
+     $this->delete_log($id, $archive_flag);
+     $table = ($flag)? 
+       $this->table_tickets_archived : $this->table_tickets;
+     $where = (is_array($id))? " id IN(".join(",",$id).")" : " id = $id";
+     $query = "DELETE FROM $table WHERE $where";
+     $this->addDebug("delete_ticket",$query,2);
+     return( $this->db_result($query) );
    }
    
    function update_ticket( $id, $params ) {
       // update properties of an existing
-      // tickets with given params
-      $set = $this->makeInsertVals($params,1);
-      $query = "UPDATE ".$this->table_tickets." SET $set WHERE id = $id";
-      $this->addDebug("update_ticket",$query,3);
-      return( $this->db_result($query) );
-   }
-   
-
+     // tickets with given params
+     $set = $this->makeInsertVals($params,1);
+     $query = "UPDATE ".$this->table_tickets." SET $set WHERE id = $id";
+     $this->addDebug("update_ticket",$query,3);
+     return( $this->db_result($query) );
+   }      
    
    /*
     *  LOG AND TIME FUNCTIONS 
@@ -893,162 +901,165 @@ class zenTrack extends zen {
    
    
    function add_log( $id, $params ) {
-      // add a new log entry for ticket
-      // with $id
-      // params can include any of the 
-      // following indexes:
-      //    user_id
-      //    bin_id
-      //    action (the action logged)
-      //    entry (the log entry)
-      //    ticket_id
-      
-      // set up the parameters for the insert statement
-      $table = $this->table_logs;
-      $params["ticket_id"] = $id;
-      $params["created"] = $this->currTime;
-      if( !$params["action"] )
-   $params["action"] = "LOG";
-      if( !$params["user_id"] )
-   $params["user_id"] = 0;//$this->settings["bot_name"];
-      if( !$params["bin_id"] ) {
-    $ticket = $this->get_ticket($id);
-    $params["bin_id"] = $ticket["bin_id"];
-      }
-      // add hours to the ticket's total
-      if( $params["hours"] ) {
-    if( !$ticket )
-      $ticket = $this->get_ticket($id);
-    $wkd = $params["hours"] + $ticket["wkd_hours"];
-    $query = "UPDATE ".$this->table_tickets." set wkd_hours = $wkd WHERE id = $id";
-    $this->db_result($query);
-      }
-      return( $this->db_insert($table, $params) );      
+     // add a new log entry for ticket
+     // with $id
+     // params can include any of the 
+     // following indexes:
+     //    user_id
+     //    bin_id
+     //    action (the action logged)
+     //    entry (the log entry)
+     //    ticket_id
+     
+     // set up the parameters for the insert statement
+     $table = $this->table_logs;
+     $params["ticket_id"] = $id;
+     $params["created"] = $this->currTime;
+     if( !$params["action"] )
+       $params["action"] = "LOG";
+     if( !$params["user_id"] )
+       $params["user_id"] = 0;//$this->settings["bot_name"];
+     if( !$params["bin_id"] ) {
+       $ticket = $this->get_ticket($id);
+       $params["bin_id"] = $ticket["bin_id"];
+     }
+     // add hours to the ticket's total
+     if( $params["hours"] ) {
+       if( !$ticket )
+	 $ticket = $this->get_ticket($id);
+       $wkd = $params["hours"] + $ticket["wkd_hours"];
+       $query = "UPDATE ".$this->table_tickets
+	 ." set wkd_hours = $wkd WHERE id = $id";
+       $this->db_result($query);
+     }
+     return( $this->db_insert($table, $params) );      
    }
    
    function delete_log( $id, $flag = 0, $archive_flag = 0 ) {
-      // delete log entries for ticket with
-      // $id, if $flag = 1, then deletes only
-      // the entry with log_id of $id (i.e. by the
-      // log id instead of ticket id)
-      // id can be a string or an array
-      
-      $column = ($flag)? "lid" : "ticket_id";
-      if( is_array($id) )
-   $where = " $column IN(".join(",",$id).")";
-      else
-   $where = " $column = $id";
-      $table = ($archive_flag)? 
-   $this->table_logs_archived :
-        $this->table_logs;
-      if( !$archive_flag ) {
-    $attachments = $this->get_attachments($id, $flag);
-    if( is_array($attachments) ) {
-       foreach($attachments as $a) {
-          $att[] = $a["attachment_id"];
-       }
-       $this->delete_attachment($att);
-    }  
-      }
-      $query = "DELETE FROM $table WHERE $where";
-      return( $this->db_result($query) );
+     // delete log entries for ticket with
+     // $id, if $flag = 1, then deletes only
+     // the entry with log_id of $id (i.e. by the
+     // log id instead of ticket id)
+     // id can be a string or an array
+     
+     $column = ($flag)? "lid" : "ticket_id";
+     if( is_array($id) )
+       $where = " $column IN(".join(",",$id).")";
+     else
+       $where = " $column = $id";
+     $table = ($archive_flag)? 
+       $this->table_logs_archived :
+       $this->table_logs;
+     if( !$archive_flag ) {
+       $attachments = $this->get_attachments($id, $flag);
+       if( is_array($attachments) ) {
+	 foreach($attachments as $a) {
+	$att[] = $a["attachment_id"];
+	 }
+	 $this->delete_attachment($att);
+       }  
+     }
+     $query = "DELETE FROM $table WHERE $where";
+     return( $this->db_result($query) );
    }
    
    function archive_log( $id, $flag = 0 ) {
-      // moves logs for ticket with $id to the 
-      // db archives.  if $flag = 1, then moves
-      // only logs with an lid(log id) matching $id
-      // instead of by ticket_id
-      // attachments are deleted from the db
-      // when a ticket is archived
+     // moves logs for ticket with $id to the 
+     // db archives.  if $flag = 1, then moves
+     // only logs with an lid(log id) matching $id
+     // instead of by ticket_id
+     // attachments are deleted from the db
+     // when a ticket is archived
       
-      $f = ($flag)? "lid" : "ticket_id";
-      $fields = $this->db_get_fields($this->table_tickets_archived);
-      $query = "INSERT INTO "
-   .$this->table_tickets_archived." ($fields) SELECT $fields FROM ".$this->table_tickets
-   ." WHERE $f = $id";            
-      $attachments = $this->get_attachments($id, $flag);
-      if( is_array($attachments) ) {
-    foreach($attachments as $a) {
-       $att[] = $a["attachment_id"];
-    }
-    $this->delete_attachment($att);
-      }   
-      return( $this->db_result($query) );
+     $f = ($flag)? "lid" : "ticket_id";
+     $fields = $this->db_get_fields($this->table_tickets_archived);
+     $query = "INSERT INTO "
+       .$this->table_tickets_archived." ($fields) SELECT $fields FROM "
+       .$this->table_tickets
+       ." WHERE $f = $id";            
+     $attachments = $this->get_attachments($id, $flag);
+     if( is_array($attachments) ) {
+       foreach($attachments as $a) {
+	 $att[] = $a["attachment_id"];
+       }
+       $this->delete_attachment($att);
+     }   
+     return( $this->db_result($query) );
    }
-      
+   
    function add_attachment( $name, $filename, $filetype, $ticket_id, $log_id = '', $description = '' ) {
-      // adds an attachment to the db for tracking
-      // does not add the actual file, just it's associations
-      // with logs and tickets, log_id is optional, the ticket_id is not
-      // filetype represents the complete mime type as will be used
-      // to supply the file back to the user when requested
-      
-      if( !$ticket_id ) {
-    $log = $this->get_log($log_id);
-    $ticket_id = $log["ticket_id"];
-      }
-      $params = array(
-            "log_id"       => $log_id,
-            "ticket_id"    => $ticket_id,
-            "name"        => $name,
-            "filename"    => $filename,
-            "filetype"    => $filetype
-            );
-      if( $description )
-   $params["description"] = $description;
-      $table = $this->table_attachments;
-      return( $this->db_insert($table,$params) );
+     // adds an attachment to the db for tracking
+     // does not add the actual file, just it's associations
+     // with logs and tickets, log_id is optional, the ticket_id is not
+     // filetype represents the complete mime type as will be used
+     // to supply the file back to the user when requested
+     
+     if( !$ticket_id ) {
+       $log = $this->get_log($log_id);
+       $ticket_id = $log["ticket_id"];
+     }
+     $params = array(
+		     "log_id"       => $log_id,
+		     "ticket_id"    => $ticket_id,
+		     "name"        => $name,
+		     "filename"    => $filename,
+		     "filetype"    => $filetype
+		     );
+     if( $description )
+       $params["description"] = $description;
+     $table = $this->table_attachments;
+     return( $this->db_insert($table,$params) );
    }
    
    function delete_attachment( $access_id ) { 
-      // deletes attachments by attachment_id
-      // can be an array
-      
-      if( !is_array($access_id) )
-   $access_id = array($access_id);
-      for( $i=0; $i<count($access_id); $i++ ) {
-    $att = $this->get_attachment($access_id[$i]);
-    $file = $this->attachmentDir."/$att[name]";
-    unlink($file);   
-      }
-      $query = "DELETE FROM ".$this->table_attachments." WHERE attachment_id IN(".join(",",$id).")";
-      return( $this->db_result($query) );
+     // deletes attachments by attachment_id
+     // can be an array
+     
+     if( !is_array($access_id) )
+       $access_id = array($access_id);
+     for( $i=0; $i<count($access_id); $i++ ) {
+       $att = $this->get_attachment($access_id[$i]);
+       $file = $this->attachmentDir."/$att[name]";
+       unlink($file);   
+     }
+     $query = "DELETE FROM ".$this->table_attachments
+       ." WHERE attachment_id IN(".join(",",$id).")";
+     return( $this->db_result($query) );
    }
    
    function delete_all_attachments( $id ) {
-      // deletes all attachments by their log_id
-      // $id can be an array
-      
-      if( !is_array($id) )
-   $id = array($id);
-      foreach($id as $i) {
-    $att = $this->get_attachments($i, $flag);
-    for( $i=0; $i<count($att); $i++ ) {
-       $access_id[] = $att["attachment_id"];
-    }
-      }
-      return( $this->deleteAttachment($access_id) );
+     // deletes all attachments by their log_id
+     // $id can be an array
+     
+     if( !is_array($id) )
+       $id = array($id);
+     foreach($id as $i) {
+       $att = $this->get_attachments($i, $flag);
+       for( $i=0; $i<count($att); $i++ ) {
+	 $access_id[] = $att["attachment_id"];
+       }
+     }
+     return( $this->deleteAttachment($access_id) );
    }
    
    
    /*
     *  USER ADMINISTRATION
-   */
+    */
    
    
    function add_user( $params ) {
-      // creates a new user entry in the db
-      // if $params["access"] is an array
-      // then it will also run add_access()
-      // with this array once the user has
-      // been created
-      // if ["passphrase"] is given, it should
-      // be the unencrypted value.. if blank,
-      // ["passphrase"] will be set automatically
-      // to the users last name until that user
-      // logs into the system and changes it
-      
+     // creates a new user entry in the db
+     // if $params["access"] is an array
+     // then it will also run add_access()
+     // with this array once the user has
+     // been created
+     // if ["passphrase"] is given, it should
+     // be the unencrypted value.. if blank,
+     // ["passphrase"] will be set automatically
+     // to the users last name until that user
+     // logs into the system and changes it
+     
      if( $params["access"] ) {
        $access = $params["access"];
        unset($params["access"]);
@@ -1091,19 +1102,26 @@ class zenTrack extends zen {
    }
    
    function add_access( $user_id, $params ) {
-      // adds new access parameters for the 
-      // given user, ignores ones that 
-      // currently exist for that user
-      // $params is an indexed array containing:
-      //   "bin_id" => level (integer)
-
-      foreach($params as $k=>$v) {
-    $query = "INSERT INTO ".$this->table_access." (user_id,bin_id,lvl) VALUES($user_id,$k,$v)";
-    $res = $this->db_result($query);
-    if( $res )
-      $i++;
-      }
-      return($i);
+     // adds new access parameters for the 
+     // given user, ignores ones that 
+     // currently exist for that user
+     // $params is an indexed array containing:
+     //   "bin_id" => level (integer)
+     
+     foreach($params as $k=>$v) {
+       if( !strlen($v[0]) )
+	 $v[0] = 'NULL';
+       if( !strlen($v[1]) )
+	 $v[1] = 'NULL';
+       else
+	 $v[1] = "'$v[1]'";
+       $query = "INSERT INTO ".$this->table_access
+	 ." (user_id,bin_id,lvl,notes) VALUES($user_id,$k,$v[0],$v[1])";
+       $res = $this->db_result($query);
+       if( $res )
+	 $i++;
+     }
+     return($i);
    }
    
    function update_access( $user_id, $params ) {
@@ -1333,11 +1351,14 @@ class zenTrack extends zen {
       // role. Returns the user_id and their role in an
       // indexed array
       
+     if( preg_match("@[^0-9]@", $role) ) {
+       $role = $this->getRoleID($role);
+     }
      $where = ($role)? " bin_id = $bin_id and notes = '$role'" : 
        " bin_id = $bin_id";
      $fields = ($role)? " user_id " : " user_id, notes ";
      $query = "SELECT $fields FROM ".$this->table_access
-       ." WHERE $where ORDER BY priority";
+       ." WHERE $where AND notes IS NOT NULL) ";
      return( $this->db_queryIndexed($query) );
    }
    
@@ -1349,7 +1370,8 @@ class zenTrack extends zen {
      $where = ($bin_id)? " user_id = $user_id AND bin_id = $bin_id " : 
        " user_id = $user_id ";
      $query = "SELECT bin_id, notes FROM "
-       .$this->table_access." WHERE $where ORDER BY priority";
+       .$this->table_access." WHERE $where"
+       ." AND (notes IS NOT NULL) ";
      return( $this->db_queryIndexed($query) );
    }
    
@@ -1531,34 +1553,38 @@ class zenTrack extends zen {
 	 $recipient_address .= ", ";
        if( eregi("^[0-9]+$", $r) ) {
 	 $s = $this->get_user($r);
-	 $recipient_address .= $s["email"];
+	 if( $s["email"] ) {
+	   $recipient_address .= $s["email"];
+	 }
        } else {
 	 $recipient_address .= $r;
        }  
      }
      
-     // create headers and CC fields
-     $headers .= "From: $sender_address\n";
-     if( $cc ) {
-       if( !is_array($cc) )
-	 $cc = array($cc);
-       foreach($cc as $c) {
-	 if( $cc_address )
-	   $cc_address .= ", ";
-	 if( eregi("^[0-9]+$", $c) ) {
-	   $s = $this->get_user($c);
-	   $cc_address .= $s["email"];
-	 } else {
-	   $cc_address .= $c;
+     if( strlen($recipient_address) ) {
+       // create headers and CC fields
+       $headers .= "From: $sender_address\n";
+       if( $cc ) {
+	 if( !is_array($cc) )
+	   $cc = array($cc);
+	 foreach($cc as $c) {
+	   if( $cc_address )
+	     $cc_address .= ", ";
+	   if( eregi("^[0-9]+$", $c) ) {
+	     $s = $this->get_user($c);
+	     $cc_address .= $s["email"];
+	   } else {
+	     $cc_address .= $c;
+	   }
 	 }
+	 $headers .= "cc: $cc_address\n";
        }
-       $headers .= "cc: $cc_address\n";
+       
+       // finalize and send the message
+       $message = (get_magic_quotes_gpc())? $message : addslashes($message);
+       $subject = (get_magic_quotes_gpc())? $subject : addslashes($subject);
+       return( @mail( $recipient_address, $subject, $message, $headers ) );      
      }
-     
-     // finalize and send the message
-     $message = (get_magic_quotes_gpc())? $message : addslashes($message);
-     $subject = (get_magic_quotes_gpc())? $subject : addslashes($subject);
-     return( @mail( $recipient_address, $subject, $message, $headers ) );      
    }
    
    function getTicketCount( $status = '', $bin_id = '' ) {
@@ -2055,7 +2081,36 @@ class zenTrack extends zen {
      } else {
        return( $vals );
      }
-   }   
+   }
+
+   function getRoleName($id) {
+     // returns the name
+     // for a given role id
+     $roles = $this->getRoles();
+     return $roles["$id"]["name"];
+   }
+
+   function getRoleID($name) {
+     // returns the id for
+     // a given role name
+     $roles = $this->getRoles();
+     foreach($roles as $k=>$v) {
+       if( strtolower($v["name"]) == strtolower($name) )
+	 return $k;
+     }
+   }
+
+   function getRoles($active = 1) {
+     // planning for the future
+     // we will probably want to add these
+     // to the database
+     // to make them customizeable and
+     // available for triggers and flowpaths
+     return array(
+		  "1"=>array("role_id"=>1,"name"=>"Manager"),
+		  "2"=>array("role_id"=>2,"name"=>"Tester")
+		  );
+   }
    
    function getTasks($flag = 0,$active = 1) {
      // if flag is set, retrieves an

@@ -1,9 +1,9 @@
 <?{
 
   /*
-  **  ADMIN INDEX PAGE
+  **  ACCESS
   **  
-  **  Checks access and shows settings menus for qualified users
+  **  Add/update custom user access priviledges
   **
   */
   
@@ -17,28 +17,31 @@
     unset($bins);
     if( is_array($binLevels) ) {
       foreach($binLevels as $k=>$v) {
-        if( strlen($v) && $k ) {
+        if( $k && (strlen($v) || strlen($binRoles["$k"])) ) {
 	  if( strlen($bins["$k"]) ) {
 	    $errs[] = "Two or more bins were submitted with the same name";
 	    break;
 	  }
-          $bins["$k"] = $v;
+          $bins["$k"] = (strlen($binRoles["$k"]))?
+	    array($v,$binRoles["$k"]) : array($v,null);
         }
       }
     }
     for( $i=0; $i<count($newFields); $i++ ) {
       $k = $newFields[$i];
-      if( strlen($newVals[$i]) && $k ) {
+      if( $k && (strlen($newVals[$i]) || strlen($newRoles[$i])) ) {
 	if( strlen($bins["$k"]) ) {
 	  $errs[] = "Two or more bins were submitted with the same name";
 	  break;
 	}
-        $bins["$k"] = $newVals[$i];
+        $bins["$k"] = (strlen($newRoles[$i]))?
+	  array($newVals[$i],$newRoles[$i]):array($newVals[$i],null);
       }
     }
     if( !$errs ) {
       if( $zen->demo_mode == "on" ) {
-	$msg = "Process completed successfully.  No privileges were changed, because this is a demo site.";
+	$msg = "Process completed successfully.  "
+	  ."No privileges were changed, because this is a demo site.";
 	$skip = 1;
       } else if( !is_array($bins) || !count($bins) ) {
 	$res = $zen->delete_access($user_id);

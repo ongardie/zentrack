@@ -27,7 +27,15 @@ if( isset($_COOKIE) ) {
   extract($_COOKIE);
 }
 
-// initialize values we need
+// fix $SCRIPT_NAME for some php binary installations
+// which use /bin/php as the SCRIPT_NAME rather
+// than the actual script
+if( (isset($PHP_SELF)&&strlen($PHP_SELF)) 
+    && (!isset($SCRIPT_NAME)||strpos(".php",$SCRIPT_NAME) === false) ) {
+  $SCRIPT_NAME = $PHP_SELF;
+}
+
+// Initialize values we need
 $session_vars = array("login_name",
 		      "login_id",
 		      "login_level",
@@ -46,4 +54,6 @@ foreach($session_vars as $s) {
 // need to be set in $_SERVER before we close up the page
 extract($_SESSION);
 
+
+// you can't have any spaces after this closing tag!
 ?>
