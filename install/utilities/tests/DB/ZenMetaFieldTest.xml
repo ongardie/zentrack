@@ -36,7 +36,64 @@
   -->
 
   <setup>
-    <param name='xmlfile'>ZenDbSchema_config.xml</param>
+    <!-- set the db schema to use, load some fields for testing -->
+    <xmlfile>dbtest.xml</xmlfile>
+    <field>
+      <name>an_integer</name>
+      <label>an integer</label>
+      <size>10</size>
+      <type>integer</type>
+      <ftype>text</ftype>
+      <notnull>1</notnull>
+      <criteria type='zen'>bins</criteria>
+      <reference>DBTEST.column_primarykey</reference>
+      <default>2</default>
+      <description>a description</description>
+      <custom>0</custom>
+      <table>DATATYPE_TEST</table>
+    </field>
+    <field>
+      <name>a_byte</name>
+      <label>a byte</label>
+      <type>byte</type>
+      <ftype>checkbox</ftype>
+      <description>another description</description>
+      <table>DATATYPE_TEST</table>
+    </field>
+    <field>
+      <name>a_string</name>
+      <label>a string</label>
+      <size>50</size>
+      <type>string</type>
+      <ftype>text</ftype>
+      <notnull>1</notnull>
+      <required>1</required>
+      <criteria type='list'>a,b,c</criteria>
+      <reference>DBTEST.column_primarykey</reference>
+      <default>2</default>
+      <description>a description</description>
+      <custom>0</custom>
+      <table>DATATYPE_TEST</table>
+    </field>
+    <field>
+      <name>a_primarykey</name>
+      <label>a primary key</label>
+      <type>primarykey</type>
+      <ftype>immutable</ftype>
+      <description>a primarykey desription</description>
+      <table>DATATYPE_TEST</table>
+    </field>
+    <field>
+      <name>a_custom_email</name>
+      <label>a custom email</label>
+      <type>email</type>
+      <ftype>text</ftype>
+      <notnull>1</notnull>
+      <required>1</required>
+      <description>a custom email description</description>
+      <table>DATATYPE_TEST</table>
+      <unique>1</unique>
+    </field>
   </setup>
 
 

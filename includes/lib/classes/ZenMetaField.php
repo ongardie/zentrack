@@ -92,35 +92,35 @@ class ZenMetaField extends Zen {
    *
    * @return string
    */
-  function name() { return $this->_getProp('name'); }
+  function name() { return $this->getProp('name'); }
 
   /**
    * Returns the table of this field
    *
    * @return string
    */
-  function table() { return $this->_getProp('table'); }
+  function table() { return $this->getProp('table'); }
 
   /**
    * Returns the data type of this field
    *
    * @return string
    */
-  function dataType() { return $this->_getProp('type'); }
+  function dataType() { return $this->getProp('type'); }
 
   /**
    * Returns the form type of this field
    *
    * @return string
    */
-  function formType() { return $this->_getProp('ftype'); }
+  function formType() { return $this->getProp('ftype'); }
 
   /**
    * Tells if this is a custom(user defined) field
    *
    * @return boolean
    */
-  function isCustom() { return $this->_getProp('custom'); }
+  function isCustom() { return $this->getProp('custom'); }
 
   /**
    * Tells if this field is required
@@ -128,8 +128,8 @@ class ZenMetaField extends Zen {
    * @return boolean
    */
   function isRequired() { 
-    return $this->_getProp('required') || 
-      ($this->_getProp('notnull') && !strlen($this->_getProp('default'))); 
+    return $this->getProp('required') || 
+      ($this->getProp('notnull') && !strlen($this->getProp('default'))); 
   }
 
   /**
@@ -186,11 +186,10 @@ class ZenMetaField extends Zen {
   /**
    * Determine if value provided is valid for db insertion
    *
-   * @param string $property
    * @param mixed $value
    * @return mixed true if ok or a string containing the error
    */
-  function validate( $property, $value ) {
+  function validate( $value ) {
     //todo
     //todo
     //todo
@@ -207,15 +206,16 @@ class ZenMetaField extends Zen {
     case "integer":
     case "long":
     case "primarykey":
-      if( !is_numeric($value) ) { return "Not an integer"; }
-      if( strpos($value, '.') !== false ) { return "Not an integer"; }
+    case "byte":
+      if( !is_numeric($value) || !preg_match("/^[0-9-]+$/", $value) ) { return "Not an integer"; }
       break;
     case "decimal":
-      if( !is_numeric($value) ) { return "Not a decimal number"; }
+      if( !is_numeric($value) || !preg_match("/^[0-9.-]+$/", $value) ) { return "Not a decimal number"; }
       break;
     case "email":
       if( !preg_match("/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@([0-9a-z][0-9a-z.-]*[0-9a-z]\.)+[a-z]{2,3}$/i", $value) )
         return "Not an email address";
+      print "valid email\n";
       break;
     }
     return true;

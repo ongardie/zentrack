@@ -22,7 +22,15 @@ class ZenDbSchema extends Zen {
     $this->Zen();
 
     // develop mode?
-    $this->_devmode = $devmode? $devmode : ZenUtils::getIni('debug','develop_mode');
+    $this->_devmode = !is_null($devmode)? $devmode : ZenUtils::getIni('debug','develop_mode');
+
+    // during phpunit testing
+    if( isset($GLOBALS['testingSchemaOverride']) ) {
+      $use_cache = false;
+      $xmlfile = $GLOBALS['testingSchemaOverride'];
+      $this->_devmode = true;
+      $devmode = true;
+    }
 
     $cacheFile = ZenUtils::getIni('directories','dir_cache').'/dbSchemaInfo';
     $this->_tables = false;
@@ -49,6 +57,7 @@ class ZenDbSchema extends Zen {
         ZenUtils::serializeDataToFile( $cacheFile, $this->_tables );
       }
     }
+    
   }
 
   /**
@@ -68,6 +77,7 @@ class ZenDbSchema extends Zen {
    * <ul>
    *   <li>name [string]
    *   <li>description [string]
+   *   <li>version [string]
    *   <li>inherits [array] all tables inherited by current
    *   <li>is_abstract [boolean]
    *   <li>has_transactions [boolean]
@@ -86,7 +96,7 @@ class ZenDbSchema extends Zen {
    *    <li>required - if set, is required on form entries
    *    <li>criteria - used to create pulldowns or defaults
    *    <li>reference - the foriegn key for field (if any)
-   *    <li>namefield - the field containing name/label in reference table(optional, defaults to field_name)
+   *    <li>showfield - the field containing name/label in reference table(optional, defaults to field_name)
    *    <li>default - default value
    *    <li>description - a detailed description of this field and its use
    *    <li>custom - tells if this is a custom field
@@ -98,7 +108,8 @@ class ZenDbSchema extends Zen {
    * @param string $table name of table to retrieve
    * @return array mapped as above or false
    */
-  function getTableArray( $table ) { 
+  function getTableArray( $table ) {
+    $table = strtoupper($table);
     return isset($this->_tables[$table])? $this->_tables[$table] : false;
   }
 
@@ -109,6 +120,7 @@ class ZenDbSchema extends Zen {
    * @return array see getTableArray()
    */
   function getMergedTableArray( $table ) {
+    $table = strtoupper($table);
     if( !isset($this->_tables[$table]) ) { return false; }
     $table = $this->_tables[$table];
     foreach( $this->getInheritedFields($table) as $key=>$val ) {
@@ -139,6 +151,8 @@ class ZenDbSchema extends Zen {
    * @return array or false
    */
   function getFieldArray( $table, $column ) {
+    $table = strtoupper($table);
+    $column = strtolower($column);
     return isset($this->_tables[$table]['fields'][$column])? 
       $this->_tables[$table]['fields'][$column] : false;
   }
@@ -176,8 +190,7 @@ class ZenDbSchema extends Zen {
       foreach( $updates->child('query') as $node ) {
         $this->_loadUpdateQuery( $node );
       }
-    } 
-
+    }
   }
 
   /**
@@ -188,11 +201,11 @@ class ZenDbSchema extends Zen {
    * @param boolean $abstract
    */
   function _loadTable( $node, $abstract = false ) {
-    $n = $node->prop('name');
+    $n = strtoupper($node->prop('name'));
     $c = $node->children();
     $t = array( 'name' => $n, 'fields' => array() );
-    $d = $node->child('description',0);
-    $t['description'] = $d? $d->data() : null;
+    $t['description'] = $node->childData('description');
+    $t['version'] = $node->childData('version');
     $t['inherits'] = array();
     if( $node->count('inherit') > 0 ) {
       foreach($node->child('inherit') as $i) {
@@ -211,7 +224,7 @@ class ZenDbSchema extends Zen {
 
     // see if table supports transactions
     $tfnode = $node->child('transactions',0);
-    $t['has_transactions'] = $tfnode? ZenUtils::parseBoolean( $tfnode->data() ) : false;
+    $t['has_transactions'] = ZenUtils::parseBoolean( $node->childData('transactions'),false);
 
     // the table may not have any columns (could simply inherit, or be an abstract with no columns)
     if( $node->count('columns') > 0 ) {
@@ -270,18 +283,22 @@ class ZenDbSchema extends Zen {
   function _loadField( $field, $is_custom = false ) {
     $f = $field->props();
     foreach( $this->_columnTags as $t ) {
+      $t = strtolower($t);
+      if( isset($f[$t]) ) {
+        // this is an element of the tag properties
+        // so don't try to get it from child nodes
+        continue;
+      }
       if( $t == 'criteria' && $field->count('criteria')>0 ) {
         $criteria = $field->child('criteria','0');
         $f[$t] = array($criteria->prop('type'), $criteria->data());
       }
       else if( $t == 'required' ) {
-        $tfnode = $field->child($t,0);
-        $val = $tfnode? ZenUtils::parseBoolean( $tfnode->data() ) : false;
+        $val = ZenUtils::parseBoolean( $field->childData('required'), false );
         $f[$t] = $val? 1 : 0;
       }
       else {
-        $val = $field->child($t,0);
-        $f[$t] = $val? $val->data() : null;
+        $f[$t] = $field->childData($t,0);
       }
     }
     $f['custom'] = $is_custom;
@@ -325,6 +342,7 @@ class ZenDbSchema extends Zen {
    * @return boolean
    */
   function dropTable( $name ) {
+    $name = strtoupper($name);
     if( !isset($this->_tables[$name]) ) { return false; }
     unset($this->_tables[$name]);
     return true;
@@ -359,6 +377,8 @@ class ZenDbSchema extends Zen {
    * @return boolean
    */
   function addColumn( $table, $name, $label, $custom, $type, $ftype, $props ) {
+    $table = strtoupper($table);
+    $name = strtolower($name);
     if( !isset($this->_tables[$table]) ) { return false; }
     $this->_tables[$table]['fields'][$name] = 
       compact( array('name','label','custom','type','ftype') );
@@ -375,6 +395,8 @@ class ZenDbSchema extends Zen {
    * @param string $column
    */
   function dropColumn( $table, $column ) {
+    $table = strtoupper($table);
+    $column = strtolower($column);
     if( isset($this->_tables[$table]) && isset($this->_tables[$table]['fields'][$column]) ) {
       unset($this->_tables[$table]['fields'][$column]);
       return true;
@@ -391,6 +413,8 @@ class ZenDbSchema extends Zen {
    * @param mixed $value
    */
   function setColumnProperty( $table, $column, $property, $value ) {
+    $table = strtoupper($table);
+    $column = strtolower($column);
     if( isset($this->_tables[$table]['fields'][$column]) && ZenMetaField::isProperty($property) ) {
       $this->_tables[$table]['fields'][$column][$property] = $value;
       return true;
@@ -501,7 +525,7 @@ class ZenDbSchema extends Zen {
   var $_columnTags = array('size','unique','notnull',
 			   'required','default','description',
 			   'version','order','criteria','reference',
-                           'namefield');
+                           'showfield');
 
   /** 
    * @var array $_tables is a mapped array of (string)table_name -> (array)table_info

@@ -112,7 +112,8 @@
     </table>
 
     <table name="ABSTRACT_TEST">
-      <description>Testing and development tables inherit from here (only created if develop=true)</description>
+      <description>Testing and development tables.  Any table inheriting this abstract is
+                   only created if develop_mode is true</description>
       <columns />
     </table>
  </abstractTables>
@@ -277,9 +278,17 @@
       </indexList>
     </table>
 
+    <table name="DATATYPE_TEST">
+      <description>Test data for PHPUnit tests, used to create fake data types</description>
+      <inherit>ABSTRACT_TEST</inherit>
+      <inherit>ABSTRACT_DATA_NAMED</inherit>
+      <columns>
+        <column name="datatype_test_id" type="primarykey" ftype="immutable" label="ID" />
+      </columns>
+    </table>
 
     <table name="DBTEST">
-      <description>Test data for PHPUnit tests, should only be uploaded if develop=true</description>
+      <description>Test data for PHPUnit tests</description>
       <inherit>ABSTRACT_TEST</inherit>
       <transactions>true</transactions>      
       <columns>

@@ -190,6 +190,17 @@ class ZenMetaTable extends Zen {
   }
 
   /**
+   * Validates a single field from this table
+   *
+   * @param string $field
+   * @param mixed $value
+   * @return mixed true if all succeeded or an array mapped (string)field -> (string)error
+   */
+  function validateField($field, $value) {
+    return $this->validate( array($field=>$value) );
+  }
+
+  /**
    * Saves any changes to this table or fields to database
    *
    * @return boolean

@@ -51,7 +51,6 @@ class ZenList extends Zen {
     $this->_data = null;
     $this->_position = -1;
     $this->_count = -1;
-    $this->_changed = array();
   }
 
   /**
@@ -104,8 +103,8 @@ class ZenList extends Zen {
    * @param boolean $desc sort in reverse order(descending)?
    */
   function sort($field, $desc = false) { 
-    if( !array_key_exists($field, $this->_sortFields) ) {
-      $this->_sortFields[$field] = $desc;
+    if( !array_key_exists($field, $this->_sortCriteria) ) {
+      $this->_sortCriteria[$field] = $desc;
     }
   }
 
@@ -134,8 +133,8 @@ class ZenList extends Zen {
     if( $this->_criteria ) {
       $query->search($criteria);
     }
-    if( count($this->_sortFields) ) {
-      foreach($this->_sortFields as $field=>$desc) {
+    if( count($this->_sortCriteria) ) {
+      foreach($this->_sortCriteria as $field=>$desc) {
         $query->sort($field, $desc);
       }
     }
@@ -184,7 +183,6 @@ class ZenList extends Zen {
 
     // reset some params
     $this->_count = count($this->_data);
-    $this->_changed = array();
     $this->_loaded = true;
     $this->_position = 0;
     return $this->count();
@@ -295,9 +293,6 @@ class ZenList extends Zen {
 
   /** @var array $_sortCriteria array containing array( (String)field, (boolean)descending ) elements */
   var $_sortCriteria;
-
-  /** @var array $_changed array mapped (String)id -> (boolean)has_changed */
-  var $_changed;
 
   /** @var array $_sortByIds if set, this list of ids will be used to sort results, instead of sort parms */
   var $_sortByIds = null;

@@ -168,12 +168,13 @@ class ZenUtils {
     $cname = strtolower(is_object($class)? get_class($class) : $class);
     // remove Zen from beginning of name
     if( strpos( $cname, "zen" ) === 0 ) {
-      $cname = substr($cname, 3);    
+      $cname = substr($cname, 3);
     }
-    // remove .class from end if necessary
-    if( strpos( $cname, ".class" ) ) {
-      $cname = substr($cname, 0, -4);
+    // remove .class or .php from end if necessary
+    if( strpos( $cname, "." ) ) {
+      $cname = substr($cname, 0, strpos($cname, '.') );
     }
+    
     // remove List from end if necessary
     if( strpos( $cname, 'list' ) == strlen($cname)-4 ) {
       $cname = substr($cname, 0, -4);
@@ -247,7 +248,7 @@ class ZenUtils {
     print "<pre>\n";
     print_r($vals);
     print "</pre>\n";
-    if( $title ) { print "</div>\n"; }
+    if( $title ) { print "</div></p>\n"; }
     return true;
   }
 

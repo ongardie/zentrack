@@ -21,28 +21,27 @@
   class ZenMetaFieldTest extends Test {
 
     /** The db schema object */
-    var $obj;
+    var $_schema;
 
     /** Constructor */
     function ZenMetaFieldTest() { }
 
     /** Load config file (gets params from <setup> node) */
     function load( $vals ) {
-      $vals = ZenXMLParser::getParmSet( $vals->getChild('param') );
+      $vals = ZenXMLParser::getParmSet( $vals->child('xmlfile',0) );
       // delete cache file to make sure it gets created with fresh data
       $this->unload();
       // load the schema
-      $this->obj = new ZenDbSchema( dirname(__FILE__).'/'.$vals['xmlfile'], true );
+      $this->_schema = new ZenDbSchema( dirname(__FILE__).'/'.$vals['xmlfile'], true );
     }
 
     /** Clear out cached data and reset system */
     function unload() {
       // clear out any cached data
-      $cachefile =  ZenUtils::getIni('directories','dir_cache').'/dbSchemaInfo';
-      if( file_exists($cachefile) ) {
-        unlink(  ZenUtils::getIni('directories','dir_cache').'/dbSchemaInfo'  );
-      }
+      ZenMetaDb::clearCacheInfo();
     }
+
+    
 
     function testNotCompleted( ) { Assert::equalsTrue( false, "More tests to write" ); }
 

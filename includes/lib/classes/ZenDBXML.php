@@ -696,7 +696,7 @@ class ZenDBXML {
    * in a special format for use by install prog
    */
   function msg( $txt ) {
-    if( $GLOBALS['installMode'] > 0 ) {
+    if( isset($GLOBALS['installMode']) && $GLOBALS['installMode'] > 0 ) {
       print "   $txt\n";
     }
   }

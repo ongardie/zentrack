@@ -447,6 +447,18 @@ class ZenXNode {
   function data() { return $this->getData(); }
 
   /**
+   * Locates the child node and returns the getData() results from that node, or null
+   *
+   * @param string $child name of node
+   * @param integer $index the index of the node matching name
+   * @return String data or null if child node isn't found
+   */
+  function childData( $child, $index = 0 ) {
+    $child = $this->child($child,$index);
+    return $child? $child->data() : null;
+  }
+
+  /**
    * Alias for {@link data()}
    */
   function getData() { return $this->_data; }
@@ -467,12 +479,28 @@ class ZenXNode {
    *
    * @return array associative array of (string)name => array(ZenXNode) objects representing children of this node
    */
-  function children() { return $this->getChildren(); }
+  function children() { return $this->_children; }
 
   /**
    * Alias for {@link children()}
    */
-  function getChildren() { return $this->_children; }
+  function getChildren() { return $this->children(); }
+
+  /**
+   * Returns a unique array of children for this node.  If more than one child exists for any name, only
+   * the first one will be returned
+   *
+   * @param boolean $dataonly return data only, instead of entire node
+   * @return array associative array contains (string)name mapped to either (ZenXNode)child or (String)data 
+   *         (based on value of $dataonly)
+   */
+  function childSet() {
+    $vals = array();
+    foreach($this->_children as $k=>$n) {
+      $vals[$k] = $n[0];
+    }
+    return $vals;
+  }
 
   /** 
    * Returns a child object by name

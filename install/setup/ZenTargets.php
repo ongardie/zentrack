@@ -892,7 +892,9 @@ class ZenTargets {
     
     // parse the xml data
     $dbo =& $this->getDbConnection();
-    $dbSchema = new ZenDbSchema($source, false, $this->_ini['debug']['develop_mode']);
+    // we pretend develop mode is true here since we want to load
+    // the test tables too.
+    $dbSchema = new ZenDbSchema($source, false, true);
 
     // generate the list of tables
     // and the abstract tables
@@ -932,7 +934,7 @@ class ZenTargets {
       }
 
       // set style
-      $vals['cellStyle'] = $vals['is_abstract']? 'abstractRow' : '';
+      $vals['cellS2tyle'] = $vals['is_abstract']? 'abstractRow' : '';
 
       // get the field values
       $color = 'rowA';

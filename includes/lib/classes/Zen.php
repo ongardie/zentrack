@@ -161,7 +161,8 @@ class Zen {
     $query = Zen::getNewQuery();
     $query->table($table);
     $query->matchId($id);
-    return $query->selectRow(Zen::getCacheTime(), true);
+    $vals = $query->selectRow(Zen::getCacheTime(), true);
+    return $vals;
   }
 
   /**

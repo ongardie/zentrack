@@ -521,6 +521,7 @@ class ZenQuery extends Zen {
 
   /**
    * Returns the query string for debugging(only useful after calling {@link ZenQuery::execute()}
+   * @return string
    */
   function getQueryString() {
     return $this->_queryString;
@@ -541,7 +542,7 @@ class ZenQuery extends Zen {
       return implode(', ', $this->_fields);
     }
     else {
-      $this->debug($this, '_selectFieldsClause', 'No fields were specified. Defaulting to "*"', 104, LVL_NOTE);
+      $this->debug($this, '_selectFieldsClause', 'No fields were specified. Defaulting to "*"', 104, LVL_DEBUG);
       return '*';
     }
   }

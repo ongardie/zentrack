@@ -14,7 +14,7 @@ class ZenDataType extends Zen {
   /**
    * CONSTRUCTOR - initialize Zen class and load data if appropriate
    *
-   * @param integer $id the id to load
+   * @param integer $id the id to load (use null for an empty object)
    * @param ZenList $zenlist (optional) passing this avoids a database call to load the object
    */
   function ZenDataType( $id, $zenlist = null ) { 
@@ -22,20 +22,30 @@ class ZenDataType extends Zen {
     // set the params
     $this->_id = $id;
     $this->_table = ZenUtils::tableNameFromClass($this);
-    $this->_primarykey = ZenUtils::getPrimaryKey( $this );
+    $this->_primaryKey = ZenUtils::getPrimaryKey( $this );
     // load the data
     if( $id && is_object($zenlist) ) {
       if( ZenUtils::tableNameFromClass($zenlist)!=$this->_table || !$this->_loadFromListData($zenlist,$id) ) {
-        $this->debug($this,"ZenDataType","Unable to constuct this object from list type "
+        ZenUtils::safeDebug($this,"ZenDataType","Unable to constuct this object from list type "
                      .class_name($zenlist),102,LVL_ERROR);
       }
-      $this->debug($this, "ZenDataType", "Constructed object with id {$this->_id} from list data", 0, LVL_DEBUG);
+      ZenUtils::safeDebug($this, "ZenDataType", 
+                          "Constructed object with id {$this->_id} from list data", 
+                          0, LVL_DEBUG);
     }
     else if( $id ) {
       $this->_load($id);
-      $this->debug($this, "ZenDataType", "Constructed object with id {$this->_id} from database", 0, LVL_DEBUG);
+      ZenUtils::safeDebug($this, 
+                          "ZenDataType", "Constructed object with id {$this->_id} from database", 
+                          0, LVL_DEBUG);
     }
-    $this->_id = $id;
+    else {
+      $info = $this->getMetaInfo();
+      $this->_fields = array();
+      foreach($info->listFields() as $f) {
+        $this->_fields[$f] = null;
+      }
+    }
     $this->_changed = false;
   }
 
@@ -44,7 +54,7 @@ class ZenDataType extends Zen {
    *
    * @return ZenMetaTable object containing meta info for this data type
    */  
-  function getMetaInfo() { $this->getMetaData($this); }
+  function getMetaInfo() { return $this->getMetaData($this); }
   
 
   /*****************************
@@ -66,14 +76,20 @@ class ZenDataType extends Zen {
    * @return boolean contain a system ID
    */
   function loaded() { return ($this->_id > 0 && count($this->_fields)); }
-  
+
   /**
    * Fetches a field in this object
    *
    * @param string $field the field name to fetch
    * @return mixed value of the field or false if the field is not valid
    */
-  function getField( $field ) { return $this->_fields[$field]; }
+  function getField( $field ) { 
+    if( !array_key_exists($field, $this->_fields) ) {
+      ZenUtils::safeDebug($this, "getField", "Invalid field name ($field)", 105, LVL_WARN);
+      return null;
+    }
+    return $this->_fields[$field]; 
+  }
 
   /**
    * Sets the value of a field
@@ -96,22 +112,19 @@ class ZenDataType extends Zen {
    * @return boolean true if updated, false if unchanged, or String containing validation error
    */
   function setField( $field, $value ) { 
-    if( !isset($this->_fields[$field]) && $this->_id ) {
-      $this->_debug($this,"setField","The field $field does not exist",122,LVL_ERROR);
+    if( !array_key_exists($field, $this->_fields) ) {
+      ZenUtils::safeDebug($this,"setField","The field $field does not exist",122,LVL_ERROR);
       return "Field $field does not exist, unable to set";
     }
     
-    // see if the value has changed
-    if( isset($this->_fields[$field]) ) {
+    // validate the return value
+    $mt = Zen::getMetaData($this->_table);
+    $valid = $mt->validateField($field, $value);
+    if( $valid === true ) {
+      // see if the value has changed
       if( $value == $this->_fields[$field] ) {
         return false;
       }
-    }
-
-    // validate the return value
-    $mt = Zen::getMetaData($this->_table);
-    $valid = $mt->validate($field, $value);
-    if( $valid === true ) {
       // set the new value
       $this->_changed = true;
       $this->_fields[$field] = $value;
@@ -158,22 +171,22 @@ class ZenDataType extends Zen {
     // update if we have an id
     if( $this->_id ) {
       if( $query->update() ) {
-        $this->_debug($this, "save", "updated ".$this->_table." record ".$this->_id, 00, LVL_NOTE);
+        ZenUtils::safeDebug($this, "save", "updated ".$this->_table." record ".$this->_id, 00, LVL_NOTE);
         $this->_changed = false; 
       }
       else {
-        $this->_debug($this, "save", "failed to update ".$this->_table." row ".$this->_id, 220, LVL_ERROR);
+        ZenUtils::safeDebug($this, "save", "failed to update ".$this->_table." row ".$this->_id, 220, LVL_ERROR);
       }
     }
     // or insert
     else {
       $result = $query->insert();
       if( $result ) { 
-        $this->_debug($this, "save", "created new ".$this->_table." row with id $result", 00, LVL_NOTE);
+        ZenUtils::safeDebug($this, "save", "created new ".$this->_table." row with id $result", 00, LVL_NOTE);
         $this->_changed = false; 
       }
       else {
-        $this->_debug($this, "save", "failed to create ".$this->_table." entry", 220, LVL_ERROR);
+        ZenUtils::safeDebug($this, "save", "failed to create ".$this->_table." entry", 220, LVL_ERROR);
       }        
     }
     return $result;
@@ -188,9 +201,9 @@ class ZenDataType extends Zen {
    * @return boolean load succeeded, id was valid (actually returns $this->loaded())
    */
   function _load( $id ) {
-    $vals = Zen::getDataRow( $this->_table, $this->_primaryKey, $id );
+    $vals = Zen::getDataRow( $this->_table, $id );
     if( !is_array($vals) || !count($vals) ) {
-      ZenUtils::safeDebug($this, '_load', "Invalid id: $id", LVL_WARN);
+      ZenUtils::safeDebug($this, '_load', "Invalid id: $id", 105, LVL_WARN);
       return false;
     }
     $this->_fields = $vals;
@@ -211,11 +224,24 @@ class ZenDataType extends Zen {
     $fields = $zenlist->findData($id);
     if( !is_array($fields) || !count($fields) ) {
       $class = get_class($zenlist);
-      ZenUtils::safeDebug($this, '_load', "ID ($id) not in List ($class)", LVL_WARN);
+      ZenUtils::safeDebug($this, '_load', "ID ($id) not in List ($class)", 105, LVL_WARN);
       return false;
     }
     $this->_fields = $fields;
     return true;
+  }
+
+  /**
+   * STATIC: Loads a ZenDataType object of the appropriate type for the table provided
+   *
+   * @static
+   * @param string $table the db table it will be loaded from, MUST INHERIT ABSTRACT_DATA_TYPE!
+   * @param integer $id the primary key for the data row to load
+   * @return Object of the appropriate ZenDataType
+   */
+  function abstractDataType( $table, $id ) {
+    $class = ZenUtils::classNameFromTable($table);
+    return new $class($id);
   }
 
   /****************
@@ -237,8 +263,8 @@ class ZenDataType extends Zen {
   /** @var boolean $_changed tells whether properties have been changed since last save */
   var $_changed;
 
-  /** @var string $_primarykey the column used for a primary key by this data type */
-  var $_primarykey;
+  /** @var string $_primaryKey the column used for a primary key by this data type */
+  var $_primaryKey;
 
 }
 

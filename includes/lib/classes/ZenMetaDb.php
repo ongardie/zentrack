@@ -32,7 +32,8 @@ class ZenMetaDb extends Zen {
       return;
     }
     if( $use_cache ) {
-      $this->_tables = ZenUtils::unserializeFileToData( ZenUtils::getIni('directories','dir_cache').'/metaDbInfo' );
+      $this->_tables = ZenUtils::unserializeFileToData( ZenUtils::getIni('directories','dir_cache')
+                                                        .'/metaDbInfo' );
       if( $this->_tables ) {
         Zen::debug($this, 'ZenMetaDb', 'metaDbInfo loaded from file', 01, LVL_DEBUG);      
       }
@@ -41,7 +42,8 @@ class ZenMetaDb extends Zen {
       Zen::debug($this, 'ZenMetaDb', 'metaDbInfo loaded from database(cache file not found)', 00, LVL_NOTE);      
       $this->_load();
       if( $use_cache ) {
-        ZenUtils::serializeDataToFile( ZenUtils::getIni('directories','dir_cache').'/metaDbInfo', $this->_tables );
+        ZenUtils::serializeDataToFile( ZenUtils::getIni('directories','dir_cache').'/metaDbInfo', 
+                                       $this->_tables );
       }
     }
   }
@@ -50,12 +52,11 @@ class ZenMetaDb extends Zen {
    * Load schema from xml and def tables into memory
    */
   function _load() {
-    $this->_schema = new ZenDbSchema( ZenUtils::getIni('directories','dir_config')."/database.xml" );
     $this->_tables = array();
     $tableInfo = Zen::simpleQuery('TABLE_DEFS',null,null);
     $fieldInfo = Zen::simpleQuery('FIELD_DEFS',null,null);
     foreach( $tableInfo as $t ) {
-      $table = strtoupper($t['tbl_name']);
+      $table = $t['tbl_name'];
       $this->_tables[$table] = $this->_schema->getTableArray($table);
       if( count($this->_tables[$table]['inherits']) > 0 ) {
         $newfields = $this->_schema->getInheritedFields($table);
@@ -70,7 +71,7 @@ class ZenMetaDb extends Zen {
     foreach( $fieldInfo as $f ) {
       $field = strtolower($f['col_name']);
       $table = strtoupper($f['table_name']);
-      $this->_tables[$table]['fields'][$field] = $this->_tables[$table]['fields'][$field];
+      $this->_tables[$table]['fields'][$field] = array();
       foreach( $f as $key=>$val ) {
         if( $key == 'col_criteria' ) {
           $val = explode('=',$val);
@@ -80,7 +81,8 @@ class ZenMetaDb extends Zen {
         }
       }
     }
-    Zen::debug($this, '_load', count($this->_tables)." tables were loaded, containing ".count($fieldInfo)." fields", 01, LVL_DEBUG);    
+    Zen::debug($this, '_load', count($this->_tables)." tables were loaded, containing "
+               .count($fieldInfo)." fields", 01, LVL_DEBUG);
   }
 
   /**
@@ -253,7 +255,7 @@ class ZenMetaDb extends Zen {
   }
 
   /**
-   * Clear out the serialized/cached dbSchema and metaDb info.  This is
+   * STATIC: Clear out the serialized/cached dbSchema and metaDb info.  This is
    * used when database info is changed, or configuration settings are
    * changed.
    *
@@ -266,8 +268,10 @@ class ZenMetaDb extends Zen {
     $metaDb = ZenUtils::getIni('directories','dir_cache').'/metaDbInfo';
     if( file_exists($dbSchema) ) { @unlink($dbSchema); }
     if( file_exists($metaDb) ) { @unlink($metaDb); }
-    unset($GLOBALS['tcache']['metaDb']);
-    unset($GLOBALS['tcache']['dbSchema']);
+    if( isset($GLOBALS['tcache']) ) {
+      unset($GLOBALS['tcache']['metaDb']);
+      unset($GLOBALS['tcache']['dbSchema']);
+    }
     Zen::debug($this, 'clearDbSchema', "DB cache emptied", 00, LVL_DEBUG);
   }
 
