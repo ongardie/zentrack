@@ -1,5 +1,18 @@
 
-UPGRADE FROM 2.2.1
+
+REQUIREMENTS
+
+    PHP: 4.2.0 or greater 
+    GD: [optional] 2.0 or higher needed to use reports
+    Freetype libraray required to view reports
+    Supported Servers: Apache 1.3, 2.0, IIS
+    Supported OS: Windows 2000, Linux 
+       Other Tested OS: FreeBSD, NT, MacOS, Debian, Gentoo
+    Supported DBs: Mysql, Oracle 8i/9i
+       Other Possible DBs: Postgres, DB2, SQLServer
+
+
+UPGRADE FROM 2.2.2
 
   MAKE A BACKUP OF YOUR www/header.php file
   
@@ -13,65 +26,16 @@ UPGRADE FROM 2.2.1
 
   RESTORE YOUR includes/attachments files to the new directory
 
-  Run the following sql command against your zentrack database:
-     UPDATE ZENTRACK_SETTINGS SET value = '2.2.2' WHERE name = 'version_xx';
+  Locate and run the appropriate UPGRADE_[database].sql and 
+    UPGRADE_SEED_[database].sql files.
 
-UPGRADE FROM >= 2.0
-
-  MAKE A BACKUP OF YOUR includes/configVars.php	and www/header.php
-
-  These will no longer be useful.. but you may want settings from them.
-
-  Make a backup of your attachments directory!  You will need this.
-
-  Documentation and Install info will continue to grow at:
-     http://zendocs.phpzen.net/bin/view/Zentrack/IndexPage
-
-  REQUIREMENTS
-
-    PHP: 4.2.0 or greater 
-    GD: [optional] 2.0 or higher needed to use reports
-    Supported Servers: Apache 1.3, 2.0
-       Other Tested Servers: IIS 
-    Supported OS: Windows 2000, Linux 
-       Other Tested OS: FreeBSD, NT
-    Supported DBs: Mysql, Oracle 8i/9i
-       Other Tested DBs: Postgres, DB2, SQLServer
-
-
-  QUICK INSTALL STEPS
-
-    - Differences from previous versions
-	* There is no longer a need to modify includes/configVars.php
-	* This code should work as is with PHP 4.2.x, no register_globals 
-	    problems
-	* There are several additions to the DB, but they shouldn't harm
-	    your existing content
-    - Setting up the code
-	* Make a backup of your includes/configVars.php and www/header.php files
-	* Backup any modifications you have made to the code
-	* Replace your existing code with the new install code
-	    It's probably a good idea to move the existing install
-	    to a .old directory and keep it for a bit.. then place the
-	    new code in the vacant directory
-    - Configuring zenTrack
-	* Modify the www/header.php file to reflect your database and system 
-            settings.  Many of the things you found previously in configVars 
-            are either here, or moved into the database.	
-    - Modifying your database
-	* It's a good idea to make a dump of your data first... although you 
-	    will most likely be just fine
-	* Create a filespace(instance) on your database and create/assign a 
-	    user access permissions to this DB
-	* Find the script called installs/Upgrade.your_db_type and load this
-	    script into your SQL interface
-	* Open your web browser, browse to admin->Configuration Settings, and 
-	    configure the new settings to your taste.
-     - Chmod 777 includes/attachments
-     - Copy old attachments to new directory
-
-  TROUBLESHOOTING/SUPPORT
-
-    - See the INSTALL.readme file
+  If you intend to use the email gateway, please read the online docs
+      which give a thorough overview of how to set this up:
+      http://zendocs.phpzen.net/bin/view/Zentrack/ManualInstallation#Setting_Up_Email_Gateway
+ 
+  Please let us know!  
+      send an email, log into irc.sourceforge.net #zentrack, 
+      or visit our forum and tell us what platform your install
+      was successful on.  We can also add your company/url to our user list.  
 
 

@@ -997,7 +997,7 @@ class zenTrack extends zen {
 	  $eParams["body"] = $comments;	
 	$eParams["tid"] = $id;
 	$message = $this->formatEmailMessage($eParams);
-	$subject = "Log entry from ".$zen->formatName($user_id,2);
+	$subject = "Log entry from ".$this->formatName($user_id,2);
 	$this->sendEmail($recipients,$subject,$message,$user_id);
       }
     }

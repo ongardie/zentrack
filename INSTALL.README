@@ -2,34 +2,33 @@
   Welcome to zenTrack!
 
   The installation instructions can be found in formatted form:
-	locally - zentrack_diretory/www/help/install.html
-        online  - http://zendocs.phpzen.net/zentrack/
+        online  - http://zendocs.phpzen.net/zentrack/	
 
   If you checked this version out from the CVS repository you will need
-	run ./setup_from_cvs from the zentrack/ root directory, or 
-	emulate the commands in this file (windows: see the online docs)
+	run ./setup_from_cvs from the zentrack/ install directory, or
+        use setup_from_cvs.cmd for windows
 
   REQUIREMENTS
 
     PHP: 4.2.0 or greater 
     GD: [optional] 2.0 or higher needed to use reports
     Freetype libraray required to view reports
-    Supported Servers: Apache 1.3, 2.0
-       Other Tested Servers: IIS 
+    Supported Servers: Apache 1.3, 2.0, IIS
     Supported OS: Windows 2000, Linux 
-       Other Tested OS: FreeBSD, NT
+       Other Tested OS: FreeBSD, NT, MacOS, Debian, Gentoo
     Supported DBs: Mysql, Oracle 8i/9i
-       Other Tested DBs: Postgres, DB2, SQLServer
+       Other Possible DBs: Postgres, DB2, SQLServer
 
 
   QUICK AND DIRTY INSTALL INSTRUCTIONS:
-     -if installing from cvs, run setup_from_cvs from the command line (./setup_from_cvs)
+     -if installing from cvs, run setup_from_cvs from the install directory
      -place www/ in the httpd(wwwroot) directory tree
-     -place includes/ in a non-httpd directory (safest method)
+     -place includes/ in a non-httpd directory (security measure)
      
      -configure the header file:
    	www/header.php
 	   you must configure $libDir and $rootUrl or nothing will work!!!
+	   look through this file carefully
 
      -build the database
         create a database instance and a user with access to this DB
@@ -39,12 +38,19 @@
            this will populate your db
 	
      -chmod 777 includes/attachments (if using attachments)
+     -chmod 777 includes/logs
+     -chmod 777 includes/cache
      -log in as Administrator/admin and configure the system to taste.
      -the other test accounts are Guest/Guest and User/User
+
+     -if you intend to use the email gateway, please read the online docs
+        which give a thorough overview of how to set this up:
+        http://zendocs.phpzen.net/bin/view/Zentrack/ManualInstallation#Setting_Up_Email_Gateway
  
-     -please let us know!  send an email, log into irc.sourceforge.net #zentrack, 
-      or visit our forum and tell us what platform your install was successful on.  
-      We can also add your company/url to our user list.
+     -please let us know!  
+        send an email, log into irc.sourceforge.net #zentrack, 
+        or visit our forum and tell us what platform your install
+        was successful on.  We can also add your company/url to our user list.
 
    
   TROUBLESHOOTING
@@ -59,11 +65,8 @@
 
       -Via Sourceforge (recommended): 
 	http://www.sourceforge.net/projects/zentrack
-      -Via Email (registered testers and emergencies only please)
-	phpzen@users.sourceforge.net
-      -Via Instant Messenger (registered testers only please)
-	MSN: havenshade@hotmail.com
- 	ICQ: 100360657
+      -Via Chat (also highly useful):
+        irc.sourceforge.net #zentrack
 
     LOGIN PROBLEMS
       -Logins are case sensitive
@@ -74,21 +77,22 @@
       -The Administrator password is admin, User password is User, Guest
        password is Guest.
 
+      -Sessions have to be working properly, cookies enabled
+
     REPORT IMAGE PROBLEMS
+      -Broken images
+        You must have GD 2.0 and freetype installed
+
       -Problems viewing png images
 	You can manually set the image type to "jpeg" if you have
 	trouble with pngs by opening includes/reportConfig.php
 	and finding the line called image_type.
 
     POSTGRES USERS
-      -A patch for postgres hasn't been created yet... 
-	this shouldn't be much of an effort.
-        Just grab a copy of the UPGRADE_mysql.sql file
-        and edit the three tables and 5 inserts presented
-        there.
+      - Not ready for production, but close.  A little more testing and debugging
 
-      -Please provide us with your patch, if you do, so that
-       we may pass it on to other users.
+    MS SQL SERVER USERS
+      - Beta, give it a try
 
     OTHER DATABASE USERS
       -We can support, upon request, DB2, Sybase, or other

@@ -12,7 +12,7 @@
     - includes/tranlator.class 1.1
     - includes/headerInc.php 1.20
 
------ V2.3 (development, see CVS) ----
+----- V2.3 (2003-03-12) ----
 
 2003-03-11, Kato
   Fixed problem with user lists not having correct permissions

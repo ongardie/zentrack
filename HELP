@@ -4,8 +4,8 @@
   See INSTALL.README for install instructions.
 
   Documentation
-    local - zentrack_diretory/www/help/index.php
-    online - http://zendocs.phpzen.net/zentrack/
+    Docs - http://zendocs.phpzen.net/bin/view/Zentrack/IndexPage
+    FAQ - http://zendocs.phpzen.net/bin/view/Zentrack/ZentrackFAQ
 	
   Troubleshooting:
         Open includes/configVars.php and set $this->debug = 3;  This will produce
@@ -23,16 +23,20 @@
            
 
     online - http://www.sourceforge.net/projects/zentrack (see the support pages)
-             (This will get you a response, probably in hours, maybe in days)
+             (This will get you a response, probably in hours, maybe in days, but
+              you will get one)
+
+    irc    - zentrack now has a home on irc.sourceforge.net, #zentrack, this may
+   	     be a good place to find some help with more in depth issues.
+             (usually a response in minutes, sometimes ignored)
+
+    mailing list - zentrack-users is a great place to get help.  Answers usually
+             within an hour.  http://sourceforge.net/mail/?group_id=22724, never
+             ignored.
 
     email  - phpzen@users.sourceforge.net
              (if you are a registered tester, you will get a reply.. otherwise
               you may get a response if I'm bored, maybe in hours, maybe never)
-
-    irc    - zentrack now has a home on irc.sourceforge.net, #zentrack, this may
-   	     be a good place to find some help with more in depth issues.
-
-
 
 
 
