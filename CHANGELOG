@@ -15,9 +15,77 @@ abstraction, and endless possibilities for project expansion.
 
 2005-02-05, kato
   Replaced mispelled page_tile variables with page_title
+    - zentrack_2/includes/editCustomSubmit.php 1.6
+    - zentrack_2/includes/editTicketSubmit.php 1.11
+    - zentrack_2/includes/templates/optionsMenu.php 1.5
+    - zentrack_2/includes/templates/searchResults.php 1.9
+    - zentrack_2/includes/templates/ticket_detailsBox.php 1.14
+    - zentrack_2/www/addAgreementSubmit.php 1.4
+    - zentrack_2/www/addContactSubmit.php 1.3
+    - zentrack_2/www/addContacteSubmit.php 1.3
+    - zentrack_2/www/assignedProjects.php 1.8
+    - zentrack_2/www/admin/addBehaviorSubmit.php 1.6
+    - zentrack_2/www/admin/addGroupSubmit.php 1.12
+    - zentrack_2/www/admin/addUser.php 1.5
+    - zentrack_2/www/admin/addUserSubmit.php 1.12
+    - zentrack_2/www/admin/admin_header.php 1.12
+    - zentrack_2/www/admin/config.php 1.10
+    - zentrack_2/www/admin/editBehaviorSubmit.php 1.5
+    - zentrack_2/www/admin/editGroupSubmit.php 1.10
+    - zentrack_2/www/admin/editTicket.php 1.7
+    - zentrack_2/www/admin/editUser.php 1.6
+    - zentrack_2/www/admin/editUserSubmit.php 1.12
+    - zentrack_2/www/reports/custom.php 1.5
+    - zentrack_2/www/reports/drop.php 1.6
+    - zentrack_2/www/reports/index.php 1.7
+    - zentrack_2/www/reports/reports_header.php 1.7
+    - zentrack_2/www/reports/save.php 1.12
+    - zentrack_2/www/reports/saveSubmit.php 1.9
+    - zentrack_2/www/reports/show.php 1.6
+    - zentrack_2/www/reports/view.php 1.7
+    - zentrack_2/www/admin/index.php 1.5
+    - zentrack_2/www/admin/listUsers.php 1.5
+    - zentrack_2/www/admin/resetPassword.php 1.7
+    - zentrack_2/www/misc/homebin.php 1.6
+    - zentrack_2/www/misc/language.php 1.4
+    - zentrack_2/www/misc/pwc.php 1.11
   
   Added pulldowns for default values and fixed several small
   field_map bugs
+    - zentrack_2/includes/ZenFieldMap.class 1.3
+    - zentrack_2/includes/headerInc.php 1.53
+    - zentrack_2/includes/zen.class 1.33
+    - zentrack_2/includes/zenTrack.class 1.168
+    - zentrack_2/includes/templates/fieldMapForm.php 1.4
+    - zentrack_2/includes/templates/listTickets.php 1.22
+    - zentrack_2/includes/templates/newTicketForm.php 1.38
+    - zentrack_2/install/UPGRADE_mssqlserver.sql 1.29
+    - zentrack_2/install/UPGRADE_mysql.sql 1.38
+    - zentrack_2/install/UPGRADE_oracle.sql 1.35
+    - zentrack_2/install/UPGRADE_postgres.sql 1.27
+    - zentrack_2/install/build_mssqlserver.sql 1.14
+    - zentrack_2/install/build_mysql.sql 1.18
+    - zentrack_2/install/build_oracle.sql 1.17
+    - zentrack_2/install/build_postgres.sql 1.18
+    - zentrack_2/install/drop_tables.sql 1.7
+    - zentrack_2/install/seed_mssqlserver.sql 1.30
+    - zentrack_2/install/seed_mysql.sql 1.42
+    - zentrack_2/install/seed_oracle.sql 1.36
+    - zentrack_2/install/seed_postgres.sql 1.32
+    - zentrack_2/www/addProjectSubmit.php 1.16
+    - zentrack_2/www/addSubmit.php 1.22
+    - zentrack_2/www/behavior_js.php 1.17
+    - zentrack_2/www/exportSearch.php 1.2
+    - zentrack_2/www/index.php 1.14
+    - zentrack_2/www/newProject.php 1.8
+    - zentrack_2/www/newTicket.php 1.8
+    - zentrack_2/www/options.php 1.7
+    - zentrack_2/www/projects.php 1.11
+    - zentrack_2/www/styles.php 1.22
+    - zentrack_2/www/actions/edit.php 1.7
+    - zentrack_2/www/actions/editSubmit.php 1.9
+    - zentrack_2/www/admin/access.php 1.8
+    - zentrack_2/www/admin/fieldMap.php 1.3
 
 2005-02-02, cfalonso
   The field_type value wasn't evaluated in the field map form. Fixed (TK 68)

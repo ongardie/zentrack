@@ -74,6 +74,7 @@ function mClk(src) {
 
 function ticketClk( url ) {
   window.location = url;
+  return false;
 }
 
 function mClassX( obj, classname, hand ) {
