@@ -32,8 +32,8 @@ class ZenDatabase extends Zen {
     $this->_dbpass = $dbpass;
     $this->_persist = $persistent;
     Zen::debug("ZenDatabase", "ZenDatabase", 
-               "Initializing db: [host]".$dbhost.", [inst]".$dbinst
-               .", [user]".$dbuser.", [pass hidden]", 0, 3);
+               "establishing $dbtype connection {$this->randomNumber}: $dbuser@$dbhost/$dbinst"
+               ." [persist]".($persistent?"true":"false"), 0, LVL_NOTE);
     ZenDatabase::_getDbConnection();
   }
 
@@ -50,7 +50,7 @@ class ZenDatabase extends Zen {
       return true;
     }
     else {
-      Zen::debug("ZenDatabase", "setCacheDirectory", "$directory is not writable", 40, 1);
+      Zen::debug("ZenDatabase", "setCacheDirectory", "$directory is not writable", 40, LVL_ERROR);
       return false;
     }
   }
@@ -70,6 +70,23 @@ class ZenDatabase extends Zen {
    * @return string
    */
   function getPrefix() { return $this->_prefix; }
+
+  /**
+   * Create a correct table name, adding prefix and setting correct case
+   *
+   * @param string $name is the name of the table
+   * @param string $field if provided, it is the name of a field and will be appended as such: table_name.field_name
+   */
+  function makeTableName( $tableName, $field = null ) {
+    $prefix = $this->getPrefix();
+    $case = $this->getPreferredCase();    
+    if( $case == "upper" )
+      return strtoupper($prefix.$tableName).($field? ".$field" : "");
+    else if( $case == "lower" )
+      return strtolower($prefix.$tableName).($field? ".$field" : "");
+    else
+      return $prefix.$tableName.($field? ".$field" : "");
+  }
 
   /**
    * Returns the preferred case for table names used by this db
@@ -120,7 +137,7 @@ class ZenDatabase extends Zen {
    * @return resource
    */
   function execute( $query, $cacheTime = 0, $limit = 0, $offset = 0 ) {
-    $this->debug($this, "execute", "[cachetime:$cacheTime]$query", 0, 3);
+    $this->debug($this, "execute", "[cachetime:$cacheTime]$query", 0, LVL_NOTE);
     if (!strlen($cacheTime) || !isset($GLOBALS['ADODB_CACHE_DIR']) || !strlen($GLOBALS['ADODB_CACHE_DIR'])) {
       if( $limit )
         $result = &$this->_adodb->SelectLimit($query, $limit, $offset);
@@ -133,8 +150,14 @@ class ZenDatabase extends Zen {
       else
         $result = &$this->_adodb->cacheExecute($cacheTime, $query);
     }
-    if (!$result) {
-      $this->_genDbError( 'execute', "There was an error in the query ($query)" );
+    if ($result === false) {
+      $msg = $this->_adodb->ErrorMsg();
+      if( $msg ) {
+        $this->_genDbError( 'execute', "SQL Error", 220, LVL_ERROR );
+      }
+      else {
+        $this->debug( $this, 'execute', "Query returned no results", 0, LVL_WARN );
+      }
       return false;
     }
     return $result;
@@ -149,6 +172,7 @@ class ZenDatabase extends Zen {
    * @return the old value of fetchMode
    */
   function setFetchMode( $indexed = false ) {
+    $this->debug($this, "setFetchMode", "Fetch mode is ".($indexed? 'true':'false'), 0, LVL_DEBUG);
     if ($indexed) {
       return $this->_adodb->SetFetchMode(ADODB_FETCH_ASSOC);
     }
@@ -167,11 +191,15 @@ class ZenDatabase extends Zen {
    * @return string
    */
   function executeGetOne( $query, $cacheTime = 0) {
-    $result = $this->_adodb->cacheGetOne($cacheTime, $query);
-    if (!$result) {
-      $this->debug($this, 'executeGetOne', "There was an error in the query ($query): " 
-                   . $this->_adodb->ErrorMsg(), 200, 1);
-      return;
+    if (!strlen($cacheTime) || !isset($GLOBALS['ADODB_CACHE_DIR']) || !strlen($GLOBALS['ADODB_CACHE_DIR'])) {
+      $result = $this->_adodb->getOne($query);
+    }
+    else {
+      $result = $this->_adodb->cacheGetOne($cacheTime, $query);
+    }
+    if ($result === false && $this->_adodb->errorMsg() ) {
+      $this->_genDbError('executeGetOne', "There was an error in the query ($query)", 200, LVL_ERROR);
+      return false;
     }
     return $result;
   }
@@ -185,14 +213,14 @@ class ZenDatabase extends Zen {
    * @access public
    * @since 1.0
    * @param string $table table name
-   * @param array $fieldArray associative array of data (you must quote strings yourself).
+   * @param array $fieldArray associative array of data (you must quote strings yourself)
    * @param mixed $keyCol the primary key field name or if compound key, array of field names
    * @return int
    */
   function replace($table, $arrFields, $keyCols) {
     $result = $this->_adodb->Replace($table, $arrFields, $keyCols, true);
     if (!$result) {
-      $this->debug($this, 'replace', $this->_adodb->ErrorMsg(), 200, 1);
+      $this->_genDbError('replace', "SQL Error", 220, LVL_ERROR);
     }
     return $result;
   }
@@ -209,17 +237,19 @@ class ZenDatabase extends Zen {
    * @return string
    */
   function quote( $text ) {    
-    $this->debug($this, "quote", "Quoting string: "+$text, 0, 3);
     if (is_array($text)) {
       $quotedText = array();
+      $t = "";
       foreach ($text as $name => $value) {
-        $quotedText[$name] = $this->_adodb->qstr($value);
+        $quotedText[$name] = $this->_adodb->quote($value);
+        $t .= "[$name]".$quotedText[$name];
       }
+      $this->debug($this, "quote", "Quoted array: ".$t, 0, LVL_DEBUG);
       return $quotedText;
     }
     else {
-      $res = $this->_adodb->qstr($text);
-      $this->debug($this, "quote", "Quoted string: "+$res, 0, 3);
+      $res = $this->_adodb->quote($text);
+      $this->debug($this, "quote", "Quoted string: ".$res, 0, LVL_DEBUG);
       return $res;
     }
   }
@@ -234,7 +264,19 @@ class ZenDatabase extends Zen {
   function affectedRows() {
     return $this->_adodb->Affected_Rows();
   }
-  
+
+  /**
+   * Returns any error message recieved by last query
+   *
+   * @return string
+   */
+  function getErrorMessage() {
+    if( $this->_adodb->ErrorMsg() ) { 
+      return "[".$this->_adodb->ErrorNo()."]".$this->_adodb->ErrorMsg();
+    }
+    return null;
+  }
+
   /**
    * Generates an ID to use in inserting the next record into a specified table. Returns the 
    * generated ID.
@@ -245,7 +287,31 @@ class ZenDatabase extends Zen {
    * @return int
    */
   function generateID($table) {
-    return $this->_adodb->GenID($table);
+    //todo
+    //todo make an alternate way to deal with this if transactions are not enabled
+    //todo add an option to enable/disable transactions
+    //todo extract transaction code 
+    //todo
+    // generate the update query (which will create a unique id) and the sql query (which will retrieve the id)
+    $update = "UPDATE ".$this->makeTableName('TABLE_IDS')
+      ." SET current_id = current_id + 1 where name_of_table = '$table'";
+    $query = "SELECT current_id FROM ".$this->makeTableName('table_ids')." where name_of_table = '$table'";
+    $this->setFetchMode(false);
+    // do this in a transaction to insure a unique value
+    // note that the update must come first to guarantee proper transaction locking in oracle
+    $this->_adodb->StartTrans();
+    $this->_adodb->Execute($update);
+    $id = $this->_adodb->GetOne($query);
+    // show error if we didn't get one
+    if( !$this->_adodb->CompleteTrans() ) {
+      $this->_genDbError("generateID", "Generate id for $table failed ($query)", 220, LVL_ERROR);
+    }
+    else {
+      $this->debug($this, "generateID", "Generated id $id for $table", 0, LVL_DEBUG);
+    }
+    // return the result if we got one
+    if( $id ) { return $id; }
+    else { return null; }
   }
 
   /* UTILITIES */
@@ -267,7 +333,7 @@ class ZenDatabase extends Zen {
       $bool = $this->_adodb->Connect($this->_dbhost, $this->_dbuser, $this->_dbpass, $this->_dbinst);
     }
     if ( !$bool ) {
-      $this->debug($this, "connect", $this->_adodb->ErrorMsg(), 202, 1);
+      $this->_genDbError("connect", "Connection error", 202, LVL_ERROR);
       $this->_connected = false;
       return false;
     }
@@ -322,7 +388,8 @@ class ZenDatabase extends Zen {
   function _genDbError( $method, $message = 'Database error', $errnum = 200, $level = 1 ) {
     $this->_errmsg = $this->_adodb->ErrorMsg();
     $this->_errnum = $this->_adodb->ErrorNo();
-    return $this->debug($this, $method, $message.":[".$this->_adodb->ErrorNo()."]".$this->_adodb->ErrorMsg(), $errnum, $level);      
+    return $this->debug($this, $method, $message." [".$this->_adodb->ErrorNo()
+                        ."]".$this->_adodb->ErrorMsg(), $errnum, $level);      
   }
 
 

@@ -1,4 +1,11 @@
 
+ REQUIREMENTS
+ 
+  PHP >= 4.3.1
+  SQL Database which supports transactions
+  Mysql 3.23 users: you must enable innodb tables(for transactions): http://www.mysql.com/doc/en/InnoDB_in_MySQL_3.23.html
+
+
 This will be the help file for installations.
 
 Basically, the process will involve opening the php.ini file that will be in this directory, and editing the contents.

@@ -27,11 +27,14 @@ class ZenDataType extends Zen {
     // load the data
     if( $id && is_object($zenlist) ) {
       if( ZenUtils::tableNameFromClass($zenlist)!=$this->_table || !$this->_loadFromListData($zenlist,$id) ) {
-        $this->debug($this,"ZenDataType","Unable to constuct this object from list type ".class_name($zenlist),102,1);
+        $this->debug($this,"ZenDataType","Unable to constuct this object from list type "
+                     .class_name($zenlist),102,LVL_ERROR);
       }
+      $this->debug($this, "ZenDataType", "Constructed object with id {$this->_id} from list data", 0, LVL_DEBUG);
     }
     else if( $id ) {
       $this->_load($id);
+      $this->debug($this, "ZenDataType", "Constructed object with id {$this->_id} from database", 0, LVL_DEBUG);
     }
   }
 
@@ -75,7 +78,7 @@ class ZenDataType extends Zen {
    */
   function setField( $field, $value ) { 
     if( !isset($this->_fields[$field]) && $this->_id ) {
-      $this->_debug($this,"setField","The field $field does not exist",122,1);
+      $this->_debug($this,"setField","The field $field does not exist",122,LVL_ERROR);
       return false;
     }
     $this->_changed = true;
@@ -111,22 +114,22 @@ class ZenDataType extends Zen {
     // update if we have an id
     if( $this->_id ) {
       if( $query->update() ) {
-        $this->_debug($this, "save", "updated ".$this->_table." record ".$this->_id, 00, 1);
+        $this->_debug($this, "save", "updated ".$this->_table." record ".$this->_id, 00, LVL_NOTE);
         $this->_changed = false; 
       }
       else {
-        $this->_debug($this, "save", "failed to update ".$this->_table." row ".$this->_id, 220, 1);
+        $this->_debug($this, "save", "failed to update ".$this->_table." row ".$this->_id, 220, LVL_ERROR);
       }
     }
     // or insert
     else {
       $result = $query->insert();
       if( $result ) { 
-        $this->_debug($this, "save", "created new ".$this->_table." row with id $result", 00, 3);
+        $this->_debug($this, "save", "created new ".$this->_table." row with id $result", 00, LVL_NOTE);
         $this->_changed = false; 
       }
       else {
-        $this->_debug($this, "save", "failed to create ".$this->_table." entry", 220, 1);
+        $this->_debug($this, "save", "failed to create ".$this->_table." entry", 220, LVL_ERROR);
       }        
     }
     return $result;

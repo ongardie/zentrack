@@ -3,6 +3,7 @@
 /**
  * Drop this file in the web directory to run PHPUnit tests
  *
+ * Documentation: {@link 
  * @package PHPUnit
  */
 
@@ -139,10 +140,10 @@ class Test {
 	    $val = $valset[0];
 	    $children = $val->getChild('param');
 	    $parms = ZenXMLParser::getParmSet( $children );
-	    $this->_openRow( "$method [$testname]" );
+	    $this->_openRow( substr($method,4).": <i>$testname</i>" );
 	    $this->$method( $parms );
 	    if( !$ERROR_FOUND ) { $TESTS_COMPLETED++; }
-	    $this->_closeRow( $ERROR_FOUND );	    
+	    $this->_closeRow( $ERROR_FOUND );
 	  }
 	}
 	else {
@@ -161,7 +162,7 @@ class Test {
     static $css;
     $css = ($css=='light')? 'dark' : 'light';
     echo "\t<tr>\n";
-    echo "\t  <td class=$css width=200 nowrap valign=top>";
+    echo "\t  <td class=$css width=300 nowrap valign=top>";
     echo "$name</td>\n";
     echo "\t  <td class=$css valign=top>";
   }
@@ -286,7 +287,7 @@ else
 ?>
   <h2>Set the Test Directory</h2>
   <form>
-    <b>Directory</b>: <input type=text name="directory" value="<?php echo $directory ?>" 
+    <b>Directory</b>: <input type=text name="directory" value="<?= strip_tags($directory) ?>" 
     size=30> <input type=submit value="Run Tests">
   </form>
   <p>

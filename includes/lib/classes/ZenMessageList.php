@@ -1,5 +1,30 @@
 <? /* -*- Mode: C; c-basic-indent: 3; indent-tabs-mode: nil -*- ex: set tabstop=3 expandtab: */ 
 
+/** 
+ * @constant LVL_NONE for ZenMessage: specifies no output
+ */
+define("LVL_NONE", 0);
+
+/** 
+ * @constant LVL_ERROR for ZenMessage: specifies highest error level (minimal output)
+ */
+define("LVL_ERROR", 1);
+
+/** 
+ * @constant LVL_WARN for ZenMessage: specifies warnings
+ */
+define("LVL_WARN", 2);
+
+/** 
+ * @constant LVL_NOTE for ZenMessage: specifies general notices (good for most stuff)
+ */
+define("LVL_NOTE", 3);
+
+/** 
+ * @constant LVL_DEBUG for ZenMessage: specifies lowest error level (maximum output, very verbose)
+ */
+define("LVL_DEBUG", 4);
+
 /**
  * The ZenMessageList is a utility for error reporting and logging
  *
@@ -17,7 +42,7 @@ class ZenMessageList extends Zen {
    * @return ZenMessageList the static instance of the message list class
    */
   function &getInstance() {
-    if( !isset($GLOBALS['messageList']) || !is_array($GLOBALS['messageList']) ) {
+    if( !isset($GLOBALS['messageList']) || !is_object($GLOBALS['messageList']) ) {
       $file = Zen::getIniVal('directories','dir_config')."/".Zen::getIniVal('debug','debug_configfile');
       $GLOBALS['messageList'] = new ZenMessageList( $file );
     }
@@ -62,7 +87,11 @@ class ZenMessageList extends Zen {
    * @return boolean whether message was added or not
    */
   function add( $class, $method, $message, $errnum, $level = 3 ) { 
-    if( is_object($class) ) { $class = get_class($class); }
+    $classid = null;
+    if( is_object($class) ) { 
+      if( isset($class->randomNumber) ) { $classid = $class->randomNumber; }
+      $class = get_class($class); 
+    }
     if( !strlen($class) ) {
       $class = "default";
       $method = "default";
@@ -80,7 +109,7 @@ class ZenMessageList extends Zen {
       $level = 0;
     }
     if( $this->_isValid( $level, $class, $method, $errnum ) ) {
-      $this->_messages[] = new ZenMessage($class,$method,$message,$errnum,$level);
+      $this->_messages[] = new ZenMessage($class,$method,$message,$errnum,$level,$classid);
       $this->_addCount($level);
       return true;
     }
@@ -103,7 +132,8 @@ class ZenMessageList extends Zen {
     $txt = $this->_blockformat[0]."\n";
     foreach($vars as $m) {
       $l = $m->getLevel();      
-      $s = "[".$m->getNumber()."] ".$m->get();
+      $s = ($m->getNumber()>0)? "[".$m->getNumber()."] " : "";
+      $s .= $m->get();
       if( $debug )
         $s = $m->getClass()."->".$m->getMethod().": ".$s;
       $txt .= $this->_msgformat[$l][0].$s.$this->_msgformat[$l][1]."\n";
@@ -126,14 +156,13 @@ class ZenMessageList extends Zen {
    */
   function outputText( $debug ) {
     $txt = "";
-    foreach($this->_messages as $m) {
-      if( $this->_show($m) ) {
-        $l = $m->getLevel();      
-        $s = "[".$m->getNumber()."] ".$m->get();
-        if( $debug )
-          $s = $m->getClass()."->".$m->getMethod().": ".$s;
-        $txt .= "\t".$s."\n";
-      }
+    $vars = $this->getArray();
+    foreach($vars as $m) {
+      $l = $m->getLevel();      
+      $s = "[".$m->getNumber()."] ".$m->get();
+      if( $debug )
+        $s = $m->getClass()."->".$m->getMethod().": ".$s;
+      $txt .= "\t".$s."\n";
     }
 
     // close the outer block
@@ -333,12 +362,14 @@ class ZenMessageList extends Zen {
    * @return integer 0-failed, 1-loaded from session, 2-loaded from file
    */
   function _loadConfig( $xmlfile ) {
-    if( isset($_SESSION['cache']) && is_array($_SESSION['cache']['messageListConfig']) ) {
+    if( isset($_SESSION['cache']) && is_array($_SESSION['cache']['messageListConfig'])
+        && $_SESSION['cache']['messageListConfig']['configFileName'] == $xmlfile ) {
       $this->_levels = $_SESSION['cache']['messageListConfig'];
       return 1;
     }
     else {
       $res = $this->_loadXMLConfig($xmlfile);
+      $this->_levels['configFileName'] = $xmlfile;
       if( $res > 0 ) $_SESSION['cache']['messageListConfig'] = $this->_levels;
       return $res;
     }
@@ -360,7 +391,7 @@ class ZenMessageList extends Zen {
     $msgs = $this->_processNodes($vals);
     // do some debugging checks
     if( !isset($this->_levels["default"]) ) {
-      $msgs[] = array(1, 143, "The &lt;root&gt; node was not found.  A root node is required");
+      $msgs[] = array(LVL_ERROR, 143, "The &lt;root&gt; node was not found.  A root node is required");
     }
     if( is_array($msgs) && count($msgs) ) {
       foreach($msgs as $m) {
@@ -387,7 +418,8 @@ class ZenMessageList extends Zen {
       if( $cat == 'root' ) {
         $v = $vars[0];
         if( isset($v["properties"]["level"]) ) {
-          $this->_levels["default"] = array("default"=>$v["properties"]["level"]);
+          $this->_levels["default"] = 
+            array("default"=>$this->_parseLevelText($v["properties"]["level"]));
         } 
       }
       else if( $cat == 'class' ) {
@@ -421,13 +453,13 @@ class ZenMessageList extends Zen {
     if( !isset($this->_levels[$n]) ) {
       $this->_levels[$n] = array();
       if( isset($node["properties"]["level"]) )
-        $this->_levels[$n]["default"] = $node["properties"]["level"];
+        $this->_levels[$n]["default"] = $this->_parseLevelText($node["properties"]["level"]);
     }
     foreach($node["children"] as $name=>$vals) {
       if( $name == "method" ) {
         foreach($vals as $c) {
           $cn = $c["properties"]["name"];
-          $this->_levels[$n][$cn] = $c["properties"]["level"]; 
+          $this->_levels[$n][$cn] = $this->_parseLevelText($c["properties"]["level"]);
         }
       }
       else { $msgs[] = array(2, 141, "{$n}->{$c['name']} invalid - ignored"); }
@@ -448,6 +480,10 @@ class ZenMessageList extends Zen {
       if( $n == "block" ) {
         $this->_blockformat = array($c["children"]["open"][0]["data"], $c["children"]["close"][0]["data"]);
       }
+      else if( strpos($n, "LVL_") === 0 ) {
+        $m = constant($n);
+        $this->_msgformat[$m] = array($c["children"]["open"][0]["data"], $c["children"]["close"][0]["data"]);
+      }
       else if( preg_match("/^level([0-9]+)$/", $n, $matches) ) {
         $m = $matches[1];
         $this->_msgformat[$m] = array($c["children"]["open"][0]["data"], $c["children"]["close"][0]["data"]);
@@ -458,12 +494,30 @@ class ZenMessageList extends Zen {
   }
 
   /**
+   * Reads an xml value and determines if its a number or a constant to be evaluated
+   */
+  function _parseLevelText( $text ) {
+    if( strpos($text, "LVL_") === 0 && defined($text) ) { return constant($text); }
+    return intval($text);
+  }
+
+  /**
    * Prints out the debug level settings in raw text format
    */
   function printDebugSettings() { 
     ZenUtils::printArray($this->_levels, "Levels"); 
     ZenUtils::printArray($this->_filters, "Filters"); 
     ZenUtils::printArray($this->_counts, "Counts"); 
+    ZenUtils::printArray($this->_messages, "Messages"); 
+    print "<p><b>Formatting</b><div style='font-size:11px'>\n";
+    print "<pre>\n";
+    print "Block: ".htmlentities($this->_blockformat[0])."  ".htmlentities($this->_blockformat[1])."\n";
+    foreach($this->_msgformat as $k=>$m) {
+      print "$k: ".htmlentities($m[0])."  ".htmlentities($m[1])."\n";
+    }
+    print "</pre>\n";
+    print "</div>\n";
+    return true;
   }
 
   /* VARIABLES */
@@ -493,9 +547,10 @@ class ZenMessageList extends Zen {
   var $_blockformat = array( "<ul>\n", "</ul>\n" ); 
 
   /** @var array $_msgformat how to format output messages @see show() */
-  var $_msgformat = array( 1 => array("<li class='err'>","</li>"),
-                           2 => array("<li class='warn'>","</li>"),
-                           3 => array("<li class='msg'>","</li>") );
+  var $_msgformat = array( LVL_ERROR => array("<li class='err'>","</li>"),
+                           LVL_WARN => array("<li class='warn'>","</li>"),
+                           LVL_NOTE => array("<li class='msg'>","</li>"),
+                           LVL_DEBUG => array("<li class='msg'>","</li>") );
 
 
 }

@@ -1,47 +1,47 @@
 <? /* -*- Mode: C; c-basic-indent: 3; indent-tabs-mode: nil -*- ex: set tabstop=3 expandtab: */ 
 
 /** 
- * @var ZEN_EQ for ZenQuery: field EQUALS value
+ * @constant ZEN_EQ for ZenQuery: field EQUALS value
  */
 define("ZEN_EQ", "=");
 
 /** 
- * @var ZEN_LT for ZenQuery: field < value
+ * @constant ZEN_LT for ZenQuery: field < value
  */
 define("ZEN_LT", "<");
 
 /** 
- * @var ZEN_EQ for ZenQuery: field <= value
+ * @constant ZEN_EQ for ZenQuery: field <= value
  */
 define("ZEN_LE", "<=");
 
 /** 
- * @var ZEN_EQ for ZenQuery: field > value
+ * @constant ZEN_EQ for ZenQuery: field > value
  */
 define("ZEN_GT", ">");
 
 /** 
- * @var ZEN_EQ for ZenQuery: field >= value
+ * @constant ZEN_EQ for ZenQuery: field >= value
  */
 define("ZEN_GE", ">=");
 
 /** 
- * @var ZEN_EQ for ZenQuery: field in ( value )
+ * @constant ZEN_EQ for ZenQuery: field in ( value )
  */
 define("ZEN_IN", "IN");
 
 /** 
- * @var ZEN_EQ for ZenQuery: field like "value%"
+ * @constant ZEN_EQ for ZenQuery: field like "value%"
  */
 define("ZEN_BEGINS", "=%");
 
 /** 
- * @var ZEN_EQ for ZenQuery: field like "%value"
+ * @constant ZEN_EQ for ZenQuery: field like "%value"
  */
 define("ZEN_ENDS", "%=");
 
 /** 
- * @var ZEN_EQ for ZenQuery: field like "%value%"
+ * @constant ZEN_EQ for ZenQuery: field like "%value%"
  */
 define("ZEN_CONTAINS", "%=%");
 
@@ -68,16 +68,12 @@ class ZenQuery extends Zen {
 
   /**
    * Creates a correct table name from user input value
+   *
+   * @param string $name is the name of the table
+   * @param string $field if provided, it is the name of a field and will be appended as such: table_name.field_name
    */
   function _fixName( $name, $field = null ) {
-    $prefix = $this->_dbobject->getPrefix();
-    $case = $this->_dbobject->getPreferredCase();    
-    if( $case == "upper" )
-      return strtoupper($prefix.$name).($field? ".$field" : "");
-    else if( $case == "lower" )
-      return strtolower($prefix.$name).($field? ".$field" : "");
-    else
-      return $prefix.$name.($field? ".$field" : "");
+    return $this->_dbobject->makeTableName($name, $field);
   }
 
   /**
@@ -85,7 +81,7 @@ class ZenQuery extends Zen {
    *
    * @access public
    * @since 1.0
-   * @param mixed $table the table to be included (can be an array of table names)
+   * @param mixed $table the table(s) to be included
    */
   function table( $table ) {
     if (is_array($table)) {
@@ -99,7 +95,7 @@ class ZenQuery extends Zen {
       return true;
     }
     else {
-      $this->debug($this, 'table', 'Invalid Argument Passed: $table', 102, 2);
+      $this->debug($this, 'table', 'Invalid Argument Passed: $table', 102, LVL_WARN);
       return false;
     }
   }
@@ -123,17 +119,17 @@ class ZenQuery extends Zen {
       if( $table )
 	$field = $this->_fixName($table,$field);
       $this->_fields[] = $field;
-      if (is_string($value)) {
+      if (is_string($value) || is_numeric($value)) {
 	$this->_vals[$field] = $value;
 	return true;
       }
       elseif (isset($value)) {
-	$this->debug($this, 'field', 'Invalid Argument Passed: $value', 102, 2);
+	$this->debug($this, 'field', "Bad value: $value", 102, LVL_WARN);
 	return false;
       }
     }
     else {
-      $this->debug($this, 'field', 'Invalid Argument Passed: $field', 102, 2);
+      $this->debug($this, 'field', "Bad field: $field", 102, LVL_WARN);
       return false;
     }
   }
@@ -175,11 +171,11 @@ class ZenQuery extends Zen {
    * @access public
    * @since 1.0
    * @param string $field the db field to match
-   * @param string $value the value to be matched
    * @param string $operator is a condition like (equals, contains, etc)
+   * @param string $value the value to be matched
    * @param string $table provide table if there is more than one choice for tables
    */
-  function match( $field, $value, $operator, $table = null ) {
+  function match( $field, $operator, $value, $table = null ) {
     if( $table )
       $field = $this->_fixName($table,$field);
     if ($whereClause = $this->_basicWhere($field, $value, $operator)) {
@@ -199,8 +195,9 @@ class ZenQuery extends Zen {
    * @param string $field the db field to match
    * @param string $value the value to be matched
    * @param string $operator is a condition like (equals, contains, etc)
+   * @param string $table provide table if there is more than one choice for tables
    */
-  function exclude( $field, $value, $operator, $table = null ) {
+  function exclude( $field, $operator, $value, $table = null ) {
     if( $table )
       $field = $this->_fixName($table,$field);
     if ($whereClause = $this->_basicWhere($field, $value, $operator)) {
@@ -211,9 +208,25 @@ class ZenQuery extends Zen {
       return false;
     }
   }
+
+  /**
+   * Sets the primary key field for this query.  This is only useful for inserts, and only works
+   * if the table has already been set.
+   *
+   * @param string $key overrides the default 'tablename_id' if provided
+   * @see ZenQuery::table()
+   */
+  function setPrimaryKey( $key = null ) {
+    if( !$key ) { $key = strtolower($this->_tables[0]."_id"); }
+    $this->_key = $key;
+    $this->_fields[] = $key;
+    $this->_vals[$key] = $this->_dbobject->generateId($this->_tables[0]);
+    Zen::debug($this, "setPrimaryKey", "Primary key set: {$key}->{$this->_vals[$key]}", 0, LVL_DEBUG);
+    return $this->_vals[$key];
+  }
   
   /**
-   * Returns a basic where clause. 
+   * Returns a basic where clause.
    *
    * If the where clause is valid then a simple where clause is returned. If it is invalid then a 
    * boolean false is returned.
@@ -221,53 +234,36 @@ class ZenQuery extends Zen {
    * @access private
    * @since 1.0
    * @param string $field the db field to match
-   * @param string $value the value to be matched
+   * @param mixed $value the value to be matched (must pass array if operator is ZEN_IN, otherwise string)
    * @param string $operator is a condition like (equals, contains, etc)
    * @return mixed
    */
   function _basicWhere( $field, $value, $operator) {
     switch ($operator) {
     case ZEN_EQ:
-      $whereClause = $field . ' = ' .  $this->_dbobject->quote($value);
-      break;
     case ZEN_LT:
-      $whereClause = $field . ' < ' . $this->_dbobject->quote($value);
-      break;
     case ZEN_LE:
-      $whereClause = $field . ' <= ' . $this->_dbobject->quote($value);
-      break;
     case ZEN_GT:
-      $whereClause = $field . ' > ' . $this->_dbobject->quote($value);
-      break;
     case ZEN_GE:
-      $whereClause = $field . ' >= ' . $this->_dbobject->quote($value);
+      $whereClause = $field . " $operator " . $this->_dbobject->quote($value);
       break;
     case ZEN_IN:
-      $inStringArray = array();
-      if (is_array($value)) {
-	foreach ($value as $valueName) {
-	  $inStringArray[] = $this->_dbobject->quote($valueName);
-	}
-	$inString = implode(', ', $inStringArray);
-      } else {
-	$inString = $this->_dbobject->quote($valueName);
-      }
-      $whereClause = $field . ' IN(' . $inString . ')';
+      $whereClause = $field . ' IN(' . join(",",$this->_dbobject->quote($value)) . ')';
       break;
     case ZEN_BEGINS:
-      $whereClause = $field . ' LIKE ' . $this->_dbobject->quote($valueName) . "%";
+      $whereClause = $field . ' LIKE ' . $this->_dbobject->quote("$value%");
       break;
     case ZEN_ENDS:
-      $whereClause = $field . ' LIKE ' . "%" . $this->_dbobject->quote($valueName);
+      $whereClause = $field . ' LIKE ' . $this->_dbobject->quote("%$value");
       break;
     case ZEN_CONTAINS:
-      $whereClause = $field . ' LIKE ' . "%" . $this->_dbobject->quote($valueName) . "%";
+      $whereClause = $field . ' LIKE ' . $this->_dbobject->quote("%$value%");
       break;
     }
     if (isset($whereClause)) {
       return $whereClause;
     } else {
-      $this->debug($this, '_basicWhere', 'No where clause added', 121, 2);
+      $this->debug($this, '_basicWhere', 'No where clause added', 121, LVL_WARN);
       return false;
     }
   }
@@ -283,11 +279,11 @@ class ZenQuery extends Zen {
    */
   function join( $table1, $table2, $field1, $field2 = null ) {
     if (!is_string($table1) || !is_string($table2)) {
-      $this->debug($this, 'join', 'Invalid table', 102, 2);		
+      $this->debug($this, 'join', 'Invalid table', 102, LVL_ERROR);
       return false;
     }
     if (!is_string($field1)) {
-      $this->debug($this, 'join', 'Invalid field', 102, 2);
+      $this->debug($this, 'join', 'Invalid field', 102, LVL_ERROR);
       return false;
     }
     if( !isset($field2) ) { $field2 = $field1; }
@@ -305,11 +301,11 @@ class ZenQuery extends Zen {
    */
   function limit( $limit, $offset = 0 ) {    
     if (!is_int($limit)) {
-      $this->debug($this, 'limit', 'Invalid limit', 102, 2);	
+      $this->debug($this, 'limit', 'Invalid limit', 102, LVL_WARN);
       return false;
     }
     if (!is_int($offset)) {
-      $this->debug($this, 'limit', 'Invalid offset', 102, 2);		
+      $this->debug($this, 'limit', 'Invalid offset', 102, LVL_WARN);
       return false;
     }
     $this->_limit = $limit;
@@ -330,22 +326,23 @@ class ZenQuery extends Zen {
    */
   function get($cacheTime = 0) {
     if (count($this->_fields) > 1) {
-      $this->debug($this, 'get', 'This function may be called only when one value is requested.', 160, 1);
+      $this->debug($this, 'get', 'This function may be called only when one value is requested.', 160, LVL_ERROR);
       return false;
     }
     if (count($this->_fields) < 1) {
-      $this->debug($this, 'get', 'No columns were specified', 161, 1);
+      $this->debug($this, 'get', 'No columns were specified', 161, LVL_ERROR);
       return false;
     }
     if ($this->_limit != 1) {
-      $this->debug($this, 'get', 'This query has been marked to return more than one row. Modifying query to truncate result set.', 0, 2);
+      $this->debug($this, 'get', 'This query has been marked to return more than one row.'
+                   .'Modifying query to truncate result set.', 0, LVL_NOTE);
       $this->_limit = 1;
     }
     $this->_queryType = 'SELECT';
     $query = $this->_buildQuery();
     
     if ($query === false) {
-      $this->debug($this, 'get', '_buildQuery() failed', 103, 1);
+      $this->debug($this, 'get', '_buildQuery() failed', 103, LVL_ERROR);
       return false;
     }
     return $this->_dbobject->executeGetOne($query, $cacheTime);
@@ -368,12 +365,8 @@ class ZenQuery extends Zen {
     $this->_queryType = 'SELECT';
     $result = $this->_execute($cacheTime);
     if ($result) {
-      return $result->GetRows();
+      return $result->GetArray();
     } 
-    else {
-      $this->debug($this, 'select', 'The Query Failed', 200, 1);
-      return false;
-    }
   }
 
   /**
@@ -387,7 +380,10 @@ class ZenQuery extends Zen {
     // todo
     // make this generate and return an id
     $this->_queryType = 'INSERT';
-    return $this->_execute(false);
+    if( $this->_execute(false) ) {
+      return $this->_vals[$this->_key];
+    }
+    else { return false; }
   } 
   
   /**
@@ -437,7 +433,7 @@ class ZenQuery extends Zen {
     
     $fieldsArray = array();
     foreach ($this->_fields as $name) {
-      $fieldsArray[$name] = $this->_dbobject->quote($this->_valse[$name]);
+      $fieldsArray[$name] = $this->_dbobject->quote($this->_vals[$name]);
     }
     
     return $this->_dbobject->replace($table, $fieldsArray, $field);	
@@ -454,30 +450,15 @@ class ZenQuery extends Zen {
    * @return mixed
    */
   function _execute($cacheTime = 0) {
-    // if this is an insert, generate an id
-    if( $this->_queryType == 'INSERT' ) {
-      $key = ZenUtils::getPrimaryKey($this->_tables[0]);
-      $this->_fields[$key] = $this->_dbobject->generateID($this->_tables[0]);
-    }
-
     // generate query
     $query = $this->_buildQuery();
     if ($query === false) {
-      $this->debug($this, '_execute', '_buildQuery() failed', 1);
+      $this->debug($this, '_execute', '_buildQuery() failed', LVL_ERROR);
       return false;
     }
 
     // get the results
-    $result = $this->_dbobject->execute($query, $cacheTime, $this->_limit, $this->_offset);
-
-    // if this is an insert, then return the id
-    if( $this->_queryType == 'INSERT' ) {
-      if( !$result ) { return false; }
-      return $this->_fields[$key];
-    }
-
-    // otherwise just return results
-    return $result;
+    return $this->_dbobject->execute($query, $cacheTime, $this->_limit, $this->_offset);    
   }
   
   /**
@@ -495,13 +476,13 @@ class ZenQuery extends Zen {
       return implode(', ', $this->_fields);
     }
     else {
-      $this->debug($this, '_selectFieldsClause', 'No fields were specified. Defaulting to "*"', 104, 3);
+      $this->debug($this, '_selectFieldsClause', 'No fields were specified. Defaulting to "*"', 104, LVL_NOTE);
       return '*';
     }
   }
 
   /**
-   * Creates a field set to be inserted or updated into the database based on given parameters.
+   * Creates a field set to be updated into the database based on given parameters.
    *
    * Returns a string that can be used in the SET clause of an INSERT or UPDATE statement. If there
    * was an error building the statement then a value of false is returned.
@@ -521,9 +502,29 @@ class ZenQuery extends Zen {
       return implode(', ', $setFields);
     }
     else {
-      $this->debug($this, '_setFieldsClause', 'No fields were specified.', 101, 1);
+      $this->debug($this, '_setFieldsClause', 'No fields were specified.', 101, LVL_ERROR);
 	  return false;
     }
+  }
+
+  /**
+   * Creates an array containing field names and values for insert statement
+   *
+   * @access private
+   * @return array array( (String)field_names, (String)field_values )
+   */
+  function _insertFieldsClause() {
+    if( !is_array($this->_vals) || count($this->_vals) < 1 ) {
+      $this->debug($this, "_insertFieldsClause", "No fields/values found for insert", 101, LVL_ERROR);
+      return false;
+    }
+    $keys = "";
+    $vals = "";
+    foreach($this->_vals as $key=>$val) {
+      $keys .= $keys? ",$key" : $key;
+      $vals .= ( $vals? ",":"" ).$this->_dbobject->quote($val);
+    }
+    return array($keys,$vals);
   }
 
   /**
@@ -541,7 +542,7 @@ class ZenQuery extends Zen {
       return implode(", ",$this->_tables);
     }
     else {
-      $this->debug($this, '_tablesClause', 'No tables were specified.', 101, 1);
+      $this->debug($this, '_tablesClause', 'No tables were specified.', 101, LVL_ERROR);
       return false;
     }
   }
@@ -563,6 +564,7 @@ class ZenQuery extends Zen {
       }
     }
     else {
+      $this->debug($this, "_joinsClause", "No joins found", LVL_DEBUG);
       return '';
     }
   }
@@ -582,6 +584,7 @@ class ZenQuery extends Zen {
       return 'WHERE ' . implode(' AND ', $this->_wheres);
     }
     else {
+      $this->debug($this, "_whereClause", "No where clause generated", 0, LVL_DEBUG);
       return '';
     }
   }
@@ -601,6 +604,7 @@ class ZenQuery extends Zen {
       return 'ORDER BY ' . implode(', ', $this->_sorts);
     }
     else {
+      $this->debug($this, "_orderByClause", "No orderBy clause generated", LVL_DEBUG);
       return '';
     }
   }
@@ -622,7 +626,6 @@ class ZenQuery extends Zen {
       $query .= 'SELECT ' . $this->_selectFieldsClause();
       $tables = $this->_tablesClause();
       if ($tables === false) {
-	$this->debug($this, '_buildQuery', 'Invalid table requested', 103, 1);
 	return false;
       }
       $query .= " FROM $tables ";
@@ -632,26 +635,23 @@ class ZenQuery extends Zen {
     case 'INSERT':
       $tables = $this->_tablesClause();
       if ($tables === false) {
-	$this->debug($this, '_buildQuery', 'Invalid table requested', 103, 1);
 	return false;
       }
-      $fields = $this->_setFieldsClause();
-      if ($fields === false) {
-	$this->debug($this, '_buildQuery', 'Invalid field(s) requested', 103, 1);
+      $vals = $this->_insertFieldsClause();
+      if ($vals === false) {
 	return false;
       }
+      list($fields,$values) = $vals;
       $query .= 'INSERT INTO ' . $tables;
-      $query .= ' SET ' . $fields;
+      $query .= " ($fields) VALUES($values) ";
       break;
     case 'UPDATE':
       $tables = $this->_tablesClause();
       if ($tables === false) {
-	$this->debug($this, '_buildQuery', 'Invalid table requested', 103, 1);
 	return false;
       }
       $fields = $this->_setFieldsClause();
       if ($fields === false) {
-	$this->debug($this, '_buildQuery', 'Invalid field(s) requested', 103, 1);
 	return false;
       }
       $query .= "UPDATE $tables ";
@@ -661,7 +661,6 @@ class ZenQuery extends Zen {
     case 'DELETE':
       $tables = $this->_tablesClause();
       if ($tables === false) {
-	$this->debug($this, '_buildQuery', 'Invalid table requested', 103, 1);
 	return false;
       }
       $query .= "DELETE FROM $tables ";
@@ -757,6 +756,13 @@ class ZenQuery extends Zen {
    * @var array
    */
   var $_wheres = array();
+
+  /**
+   * The primary key (as declared by setPrimaryKey) or null if not set
+   *
+   * @var string
+   */
+  var $_key;
 
   /** 
    * The maximum number of records to return

@@ -14,7 +14,7 @@ class Zen {
    *
    * This method should be invoked by all child constructors
    * This should set up the following vars, pulled from the
-   * config.ini file:
+   * zen.ini file:
    * <ul>
    *    <li>libDir: the includes directory
    *    <li>templateDir: the templates directory
@@ -27,7 +27,7 @@ class Zen {
    *    <li>Db_Instance
    * </ul>
    */
-  function Zen() { $this->randomNumber = mt_rand(1,1000)."-".mt_rand(1,1000); }
+  function Zen() { $this->randomNumber = mt_rand(1,10000)."-".mt_rand(1,10000); }
 
   /** Used for debugging (to check references) */
   var $randomNumber;
@@ -40,10 +40,7 @@ class Zen {
    *********************************/
 
   /**
-   * STATIC: returns a system setting
-   *
-   * this method will return a system setting... some sort of static/global setup
-   * would be best to invoke here, to avoid redundant calls
+   * STATIC: returns a system setting from database
    *
    * @param string $cat is the category for the setting (tickets, 
    * @param string $name of the setting
@@ -55,22 +52,12 @@ class Zen {
   }
 
   /**
-   * STATIC: retrieve an ini setting from the parsed global data
+   * STATIC: wrapper for {@link ZenUtils::getIni()}
    *
-   * This method requires that $_SESSION['zen'] or $GLOBALS['zen'] are set
-   * the the correctly parsed in data using {@link ZenUtils::read_ini}
-   *
-   * @param string $cat is the ini file section to look in
-   * @param string $setting is the name of setting to read
-   * @return string value of the ini property or null if not found
+   * @see ZenUtils::getIni()
    */
-  function getIniVal( $cat, $setting ) {
-    if( !isset($_SESSION) && !isset($GLOBALS) ) { return false; }
-    if( isset($_SESSION) ) {
-      return (isset($_SESSION['zen'][$cat]) && isset($_SESSION['zen'][$cat][$setting]))? 
-        $_SESSION['zen'][$cat][$setting] : null;
-    }
-    return (isset($GLOBALS['zen'][$cat]) && isset($GLOBALS['zen'][$cat][$setting]))? $GLOBALS['zen'][$cat][$setting] : null;
+  function getIniVal( $cat, $setting = null ) {
+    return ZenUtils::getIni($cat, $setting);
   }
 
   /**
@@ -124,17 +111,10 @@ class Zen {
    */
   function &getDbConnection() {
     if( !isset($GLOBALS['dbConnection']) || $GLOBALS['dbConnection'] == null ) {
-      Zen::debug("Zen", "getDbConnection", "Creating database connection (cache empty)", 0, 3);
-      if( isset($_SESSION['zen']) ) {
-        $db = $_SESSION['zen']['db'];
-        $dir_cache = $_SESSION['zen']['directories']['dir_dbcache'];
-        $prefix = $_SESSION['zen']['db']['db_prefix'];
-      }
-      else {
-        $db = $GLOBALS['zen']['db'];
-        $dir_cache = $GLOBALS['zen']['directories']['dir_dbcache'];
-        $prefix = $GLOBALS['zen']['db']['db_prefix'];
-      }
+      Zen::debug("Zen", "getDbConnection", "Creating database connection (cache empty)", 0, LVL_NOTE);
+      $db = ZenUtils::getIni('db');
+      $dir_cache = ZenUtils::getIni('directories','dir_dbcache');
+      $prefix = ZenUtils::getIni('db','db_prefix');
       $GLOBALS['dbConnection'] = new ZenDatabase($db['db_type'], 
                                                   $db['db_host'],
                                                   $db['db_user'],
@@ -175,6 +155,25 @@ class Zen {
     $query->match($field,$value);
     if( $sort ) { $query->sort($sort); }
     return $query->select(Zen::getCacheTime(), true);
+  }
+
+  /**
+   * STATIC: Performs a simple insert into a table.
+   *
+   * The rowId will be generated automagically, and it is assumed
+   * that the primary key is named "tablename_id"
+   *
+   * @param string $table is the table to insert into
+   * @param array(indexed) $vals is a map of column->value to be inserted
+   * @return integer the rowId of the inserted value (or null/false for failure)
+   */
+  function simpleInsert( $table, $vals ) {
+    $query = Zen::getNewQuery();
+    $query->table($table);
+    $query->setPrimaryKey();
+    foreach( $vals as $key=>$val ) {
+      $query->field($key, $val);
+    }
   }
 
   /**
@@ -348,7 +347,7 @@ class Zen {
     static $states;
 
     if( $ucwords == null || $lcwords == null || $states == null ) {
-      Zen::debug('Zen', 'titleCase', 'Generating static vars for this method', 00, 4);
+      Zen::debug('Zen', 'titleCase', 'Generating static vars for this method', 0, LEVEL_DEBUG);
       $dir = Zen::getIniVal('directories','dir_lib');
       $ucwords = ZenUtils::parse_datafile( "$dir/lists/ucwords", null );
       $lcwords = ZenUtils::parse_datafile( "$dir/lists/lcwords", null );

@@ -51,6 +51,17 @@ class DbTypeInfo {
   }
 
   /**
+   * creates sql needed to add a table which will use transactions
+   *
+   * @param string $table
+   * @param array $columns array of (string) column syntax
+   * @return array of sql statements
+   */
+  function addTransactionTableSyntax( $table, $columns ) { 
+    return $this->getStatement('addtable', array('table'=>$table, 'columns'=>join(",",$columns)), true);
+  }
+
+  /**
    * creates sql needed to drop a column
    *
    * @param string $table
@@ -159,14 +170,17 @@ class DbTypeInfo {
    *
    * @param string $type is the type of sqlInfo node to use
    * @param array $vals is an associative array of (string)param=>(string)val to parse into statement
+   * @param string $transaction_enabled tells whether this table will use transactions
    * @return string parsed syntax or null if not found
    */
-  function getStatement( $type, $vals ) {
+  function getStatement( $type, $vals, $transaction_enabled = false ) {
     $text = $this->getSyntax($type);
     if( !$text ) { return $text; }
     foreach($vals as $k=>$v) {
       $text = str_replace("%{$k}%", $v, $text);
     }
+    if( $type == "addtable" && $transaction_enabled == true 
+        && $this->getSyntax('transaction_table') ) { $text .= " ".$this->getSyntax('transaction_table'); }
     return $text;
   }
   
@@ -189,7 +203,7 @@ class DbTypeInfo {
    */
   function makeTypeDef( $type, $length = 0 ) {
     if( !isset($this->_dataTypes[$type]) ) {
-      Zen::debug($this, "makeTypeDef", "Data type $type is invalid", 102, 2);
+      Zen::debug($this, "makeTypeDef", "Data type $type is invalid", 102, LVL_WARN);
       return false;
     }
 
@@ -204,12 +218,12 @@ class DbTypeInfo {
     if( $props['fixed'] == 'false' ) {
       // check the size attribute
       if( !$props['size'] && !$length ) {
-        Zen::debug($this, "makeTypeDef", "Data type $type requires a length", 101, 2);
+        Zen::debug($this, "makeTypeDef", "Data type $type requires a length", 101, LVL_WARN);
         return false;
       }
       if( $length > $props['max'] ) {
         Zen::debug($this, "makeTypeDef", "Maximum length exceeded for data type $type ($length)"
-                   ."using max instead({$props['max']})", 123, 2);
+                   ."using max instead({$props['max']})", 123, LVL_WARN);
       }
       // format and return the element
       $num = ($length)? $length : $props['size'];
@@ -241,7 +255,7 @@ class DbTypeInfo {
     // locate config file
     $file = $this->_dir."/".$this->_dbo->getDbType().".xml";
     if( !file_exists($file) ) {
-      Zen::debug($this, "_load", "Config file $file not found", 21, 1);
+      Zen::debug($this, "_load", "Config file $file not found", 21, LVL_ERROR);
       return false;
     }
 
@@ -258,7 +272,7 @@ class DbTypeInfo {
     // validate dbinfo
     foreach($this->required_dbInfoNodes as $key) {
       if( !isset($this->_dbInfo[$key]) ) {
-        Zen::Debug($this, "_load", "dbInfo required node $key missing", 101, 2);
+        Zen::Debug($this, "_load", "dbInfo required node $key missing", 101, LVL_ERROR);
         $success = false;
       }
     }
@@ -267,19 +281,19 @@ class DbTypeInfo {
     $types = $root->getChild("dataTypes",0);
     foreach($types->getChild("dataType") as $v) {
       // set data type info
-      $n = $v->getName();
+      $n = $v->getProperty('name');
       $d = $v->getData();
       // validate name
       if( isset($this->_dataTypes[$n]) || !$n ) {        
         $msg = $n? "Duplicate node $n detected" : "Name invalid/missing for dataType node";
-        Zen::Debug($this, "_load", $msg, 103, 2);        
+        Zen::Debug($this, "_load", $msg, 103, LVL_WARN);
         $success = false;
       }
       $this->_dataTypes[$n] = $v->getProps();
       // validate data type properties
       foreach($this->required_dataTypeProps as $key) {
         if( !isset($this->_dataTypes[$n][$key]) ) {
-          Zen::Debug($this, "_load", "Node $n missing required property $key", 101, 2);
+          Zen::Debug($this, "_load", "Node $n missing required property $key", 101, LVL_ERROR);
           $success = false;
         }
       }
@@ -287,7 +301,7 @@ class DbTypeInfo {
     // validate data types all present
     foreach($this->required_dataTypeNodes as $key) {
       if( !isset($this->_dataTypes[$key]) ) {
-        Zen::Debug($this, "_load", "dataTypes required node $key missing", 101, 2);
+        Zen::Debug($this, "_load", "dataTypes required node $key missing", 101, LVL_ERROR);
         $success = false;
       }
     }
@@ -300,7 +314,7 @@ class DbTypeInfo {
       $n = $child->getName();
       $d = $child->getData();
       $p = $child->getProps();
-      if( in_array($n,$this->_locations) && isset($p['location']) ) {        
+      if( in_array($n,$this->_locations) && isset($p['location']) ) {
         $this->_locations[$n] = $p['location'];
       }
       $this->_sqlCriteria[$n] = array('syntax'=>$d, 'props'=>$p);
@@ -308,7 +322,7 @@ class DbTypeInfo {
     // validate sqlInfo nodes
     foreach($this->required_sqlInfoNodes as $key) {
       if( !isset($this->_sqlCriteria[$n]) ) {
-        Zen::Debug($this, "_load", "sqlInfo node $key missing", 101, 2);
+        Zen::Debug($this, "_load", "sqlInfo node $key missing", 101, LVL_ERROR);
         $success = false;
       }
     }

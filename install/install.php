@@ -40,12 +40,6 @@
   //todo
 
 
-  // make sure we have parameters to work with
-  if( count($argv) < 1 || (preg_match("/--ini_file=/",$argv[0]) && count($argv) < 2) ) {
-    print "Nothing to do: please specify a target\n\n";
-    exit;
-  }
-
   // check and make sure we have a valid ini file
   if( preg_match("/--ini_file=([^ ])/",$argv[0],$matches) ) {
     $ini_file = $matches[1];
@@ -75,7 +69,7 @@
     if( !@file_exists("$thisdir/setup/$c") ) {
       if( $argv[0] != '-copy_class_files' &&
 	  ($argv[1] != '-copy_class_files' || !(strpos($argv[0], '--') === 0)) ) {
-	die("ERROR: The required class file $c was not found, try running 'zen.php -copy_class_files'\n");
+	die("ERROR: The required class file $c was not found, try running 'install.php -copy_class_files'\n");
       }
     }
     else {
@@ -86,10 +80,24 @@
   $ini_set = ZenUtils::read_ini($ini_file);
   $dir_classes = $ini_set['directories']['dir_classes'];
   include_once($ini_set['directories']['dir_lib']."/inc/classes.php");
+  load_classes($classes_all, $dir_classes);
 
   // run the targets
   $z = new ZenTargets($ini_set);
+
+  // make sure we have parameters to work with
+  if( count($argv) < 1 || (preg_match("/--ini_file=/",$argv[0]) && count($argv) < 2) ) {
+    print "Nothing to do: please specify a target\n\n";
+    foreach( $z->validTargets as $key=>$val ) {
+      print "\t$key - $val\n";
+    }
+    exit;
+  }
+
+  // prepare to run
   $z->args( $argv );
+
+  // run
   if( $z->run() ) {
     print "\nSUCCESS: All targets completed successfully\n";
   }

@@ -1,16 +1,16 @@
 <debug_settings>
 
   <!-- show errors for all classes -->
-  <root level="1" />
+  <root level="4" />
 
   <!-- show warnings and errors -->
-  <class name="ZenDatabase" level="2" />
+<!--  <class name="ZenDatabase" level="2" />  -->
 
   <!-- show differing levels for certain methods -->
-  <class name="Zen">
+<!--  <class name="Zen">
     <method name="getTicket" level="3" />
     <method name="getSetting" level="2" />
-  </class>
+  </class> -->
 
   <format>
     <block>
@@ -21,30 +21,38 @@
         <![CDATA[</ul>]]>
       </close>
     </block>
-    <level1>
+    <LVL_ERROR>
       <open>
         <![CDATA[<li class='error'>]]>
       </open>
       <close>
         <![CDATA[</li>]]>
       </close>
-    </level1>
-    <level2>
+    </LVL_ERROR>
+    <LVL_WARN>
       <open>
         <![CDATA[<li class='warn'>]]>
       </open>
       <close>
         <![CDATA[</li>]]>
       </close>
-    </level2>
-    <level3>
+    </LVL_WARN>
+    <LVL_NOTE>
       <open>
         <![CDATA[<li class='msg'>]]>
       </open>
       <close>
         <![CDATA[</li>]]>
       </close>
-    </level3>
+    </LVL_NOTE>
+    <LVL_DEBUG>
+      <open>
+        <![CDATA[<li class='msg'>]]>
+      </open>
+      <close>
+        <![CDATA[</li>]]>
+      </close>
+    </LVL_DEBUG>
   </format>
 
 </debug_settings>

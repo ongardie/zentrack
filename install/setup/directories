@@ -16,6 +16,10 @@
 paths:path_includes::0755
 paths:path_www::0755
 
+# user directories
+directories:dir_user::0755
+directories:dir_user:code:0755
+
 # cach directories
 
 directories:dir_cache::0777
@@ -43,7 +47,7 @@ directories:dir_backups:attachments:0700
 directories:dir_lib::0755
 directories:dir_lib:classes:0755
 directories:dir_lib:inc:0755
-directories:dir_lib:scripts:0700
+directories:dir_lib:helpers:0700
 
 # logs
 

@@ -15,7 +15,7 @@ class ZenDBXML {
   function ZenDBXML( &$dbobject ) {     
     $this->_dbobj =& $dbobject;
     $this->_dbtype = $this->_db->getDbType();
-    $this->_dbTypeInfo = new DbTypeInf( &$dbobject );
+    $this->_dbTypeInfo = new DbTypeInfo( &$dbobject );
   }
 
   /* HIGH LEVEL METHODS */

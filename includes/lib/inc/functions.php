@@ -80,6 +80,14 @@
   }
 
   /**
+   * Parse a microtime to real time
+   */
+  function parsemicrotime( $micro ) {
+    $p = explode(" ",$micro);
+    return ((float)$p[0] + (float)$p[1]);
+  }
+
+  /**
    * Displays a microtime
    */
   function showmicrotime( $time ) {
@@ -90,11 +98,7 @@
    * Parses and returns difference of two microtimes
    */
   function diffmicrotimes($end, $start) {
-    $e = explode(" ",$end);
-    $s = explode(" ",$start);
-    $etime = (float)$e[0] + (float)$e[1];
-    $stime = (float)$s[0] + (float)$s[1];
-    return showmicrotime($etime - $stime);
+    return showmicrotime(parsemicrotime($end) - parsemicrotime($start));
   }
 
   /**
@@ -102,13 +106,16 @@
    */
   function printPTimes() {
     endPTime( "total" );
+    $base = parsemicrotime($GLOBALS['ptimes']['total'][0]);
     print "<table border='1' cellpadding='2'>\n";
-    print "<tr><th colspan='4'>Performance Times:</td></tr>\n";
+    print "<tr><th colspan='4'>Performance Times<br>(seconds)</td></tr>\n";
     print "<tr><th>Section</th><th>Start</th><th>Stop</th><th>Elapsed</th></tr>\n";
     foreach( $GLOBALS['ptimes'] as $k=>$v ) {
+      $s = parsemicrotime($v[0]) - $base;
+      $e = parsemicrotime($v[1]) - $base;
       print "<tr>\n";
       // basics
-      print "<td>$k</td><td>".showmicrotime($v[0])."</td><td>".showmicrotime($v[1])."</td>";
+      print "<td>$k</td><td>".showmicrotime($s)."</td><td>".showmicrotime($e)."</td>";
       // elapsed
       print "<td>".diffmicrotimes($v[1],$v[0])."</td>\n";
       print "</tr>\n";

@@ -9,7 +9,7 @@
 	  <size>50</size>
 	  <description>The name or title of the entry</description>
 	</column>
-	<column name="description" type="string" ftype="text" label="Description"/>      
+	<column name="description" type="string" ftype="text" label="Description" />      
 	<column name="last_update" type="date" ftype="hidden">
 	  <default>NOW</default>
 	</column>
@@ -37,7 +37,7 @@
     <table name="ABSTRACT_FILTER_TYPE">
       <description>Filter data is inherited from this abstract</description>
       <columns>
-	<column name="table_name" type="value" ftype="hidden"/>
+	<column name="table_name" type="value" ftype="hidden" />
 	<column name="field_name" type="value" ftype="select">
 	  <criteria type="helper">field:table_name</criteria>
 	</column>
@@ -47,7 +47,7 @@
 	<column name="field_comp" type="value" ftype="select" label="Operator">
 	  <criteria type="standard">comparison</criteria>
 	</column>
-	<column name="field_value" type="string" ftype="text" label="Value"/>
+	<column name="field_value" type="string" ftype="text" label="Value" />
       </columns>
     </table>
 
@@ -75,7 +75,7 @@
 
     <table name="ABSTRACT_TEST">
       <description>Testing and development tables inherit from here (only created if develop=true)</description>
-      <columns/>
+      <columns />
     </table>
  </abstractTables>
 
@@ -83,7 +83,7 @@
     <table name="ACCESS">
       <description>Access Priviledges</description>
       <columns>
-        <column name="access_id" type="primarykey" ftype="hidden"/>
+        <column name="access_id" type="primarykey" ftype="hidden" />
 	<column name="bin_id" type="integer" ftype="selection">
 	  <reference>bin.bin_id</reference>
 	</column>
@@ -107,13 +107,13 @@
       <description>Actions and their properties</description>
       <inherit>ABSTRACT_DATA_TYPE</inherit>
       <columns>
-        <column name="action_id" type="primarykey" ftype="hidden"/>
+        <column name="action_id" type="primarykey" ftype="hidden" />
 	<column name="action_type" type="value" ftype="selection" label="Action Type">
 	  <criteria type="list">Normal,Script,URL</criteria>
 	  <default>Normal</default>
 	</column>
-	<column name="helper" type="value" ftype="text" label="Action Helper"/>
-	<column name="is_button" type="byte" ftype="checkbox"/>
+	<column name="helper" type="value" ftype="text" label="Action Helper" />
+	<column name="is_button" type="byte" ftype="checkbox" />
 	<column name="icon_name" type="value" ftype="text" label="Icon">
 	  <description>Leave blank to disable icon</description>
 	</column>
@@ -147,8 +147,8 @@
     <table name="ACTION_PARAMS">
       <description>Action parameters to be passed for each action</description>
       <columns>
-        <column name="action_params_id" type="primary_key" ftype="hidden"/>
-	<column name="param_number" type="shortint" ftype="text" label="Order"/>
+        <column name="action_params_id" type="primary_key" ftype="hidden" />
+	<column name="param_number" type="shortint" ftype="text" label="Order" />
 	<column name="param_type" type="value" ftype="select" label="Parameter Type">
 	  <!-- the selections for special value may require a definition in the value field -->
 	  <criteria type="list">
@@ -178,7 +178,7 @@
 	     Text: pass whatever is typed in the Value field	     
 	   </description>
 	</column>
-	<column name="param_value" type="string" ftype="text" label="Value"/>
+	<column name="param_value" type="string" ftype="text" label="Value" />
       </columns>
       <indexList>
          <index name="act_prms_ordr">param_number</index>
@@ -189,15 +189,15 @@
       <description>References attachments (physically stored in includes/cache/attachments)</description>
       <inherit>ABSTRACT_DESCRIPTORS</inherit>
       <columns>
-        <column name="attachment_id" type="primarykey" ftype="immutable"/>
+        <column name="attachment_id" type="primarykey" ftype="immutable" />
 	<column name="ticket_id" type="integer" ftype="immutable" label="Ticket ID">
 	  <reference>ticket.ticket_id</reference>
 	</column>
 	<column name="log_id" type="integer" ftype="immutable" label="Log Entry">
 	  <reference>log.log_id</reference>
 	</column>
-	<column name="file_name" type="value" ftype="immutable" label="File Name"/>
-	<column name="file_type" type="value" ftype="immutable" label="File Type"/>
+	<column name="file_name" type="value" ftype="immutable" label="File Name" />
+	<column name="file_type" type="value" ftype="immutable" label="File Type" />
       </columns>
       <indexList>
         <index name="attchmt_ordr">name</index>
@@ -208,7 +208,7 @@
       <description>Bins and their properties</description>
       <inherit>ABSTRACT_DATA_TYPE</inherit>
       <columns>
-        <column name="bin_id" type="primarykey" ftype="immutable" label="Bin ID"/>
+        <column name="bin_id" type="primarykey" ftype="immutable" label="Bin ID" />
       </columns>
       <indexList>
         <index name="bin_ordr">priority,name</index>
@@ -219,44 +219,45 @@
     <table name="DBTEST">
       <description>Test data for PHPUnit tests, should only be uploaded if develop=true</description>
       <inherit>ABSTRACT_TEST</inherit>
+      <transactions>true</transactions>      
       <columns>
-        <column name="column_primarykey" type='primarykey' ftype='immutable' label='PrimeKey'/>	
-        <column name="column_value" type='value' ftype='text' label='Value'/>
-        <column name="column_string" type='string' ftype='text' label='String'/>
-        <column name="column_integer" type='integer' ftype='text' label='Integer'/>	
-        <column name="column_byte" type='byte' ftype='text' label='Byte'/>	
+        <column name="column_primarykey" type='primarykey' ftype='immutable' label='PrimeKey' />	
+        <column name="column_value" type='value' ftype='text' label='Value' />
+        <column name="column_string" type='string' ftype='text' label='String' />
+        <column name="column_integer" type='integer' ftype='text' label='Integer' />	
+        <column name="column_byte" type='byte' ftype='text' label='Byte' />	
       </columns>
     </table>
     
     <table name="FIELD_DEFS">
       <description>The information about tables and their fields</description>
       <columns>
-	<column name="col_unique" type="byte" ftype="hidden"/>
-	<column name="col_ftype" type="value" ftype="hidden"/>
-	<column name="col_notnull" type="byte" ftype="hidden"/>
-	<column name="col_default" type="string" ftype="immutable"/>
+	<column name="col_unique" type="byte" ftype="hidden" />
+	<column name="col_ftype" type="value" ftype="hidden" />
+	<column name="col_notnull" type="byte" ftype="hidden" />
+	<column name="col_default" type="string" ftype="immutable" />
 	<column name="col_reference" type="string" ftype="hidden">
 	  <size>50</size>
 	</column>
-        <column name="col_crit_type" type="value" ftype="hidden"/>
-	<column name="col_criteria" type="text" ftype="hidden"/>	
-        <column name="table_name" type="value" ftype="immutable" label="Table"/>
+        <column name="col_crit_type" type="value" ftype="hidden" />
+	<column name="col_criteria" type="text" ftype="hidden" />	
+        <column name="table_name" type="value" ftype="immutable" label="Table" />
 	<column name="col_name" type="value" ftype="immutable" label="Name">
 	  <description>The actual name of the column in the database</description>
 	</column>
-	<column name="col_type" type="value" ftype="immutable" label="Type"/>
+	<column name="col_type" type="value" ftype="immutable" label="Type" />
 	<!-- if this is a custom field, the status will be 1-visible or 2-hidden
 	     regular fields have a status of 0-permanent -->
 	<column name="col_status" type="byte" ftype="select" label="Visible">
 	  <criteria type="helper">field:col_name</criteria>
 	</column>
-	<column name="col_size" type="integer" ftype="immutable" label="Length"/>
-	<column name="col_updated" type="date" ftype="immutable" label="Last Upated"/>
-	<column name="col_order" type="smallint" ftype="text" label="Order"/>
+	<column name="col_size" type="integer" ftype="immutable" label="Length" />
+	<column name="col_updated" type="date" ftype="immutable" label="Last Upated" />
+	<column name="col_order" type="smallint" ftype="text" label="Order" />
 	<column name="col_label" type="value" ftype="text" label="Label">
 	  <description>The name displayed for this column to users</description>
 	</column>
-	<column name="col_description" type="string" ftype="text" label="Description"/>	
+	<column name="col_description" type="string" ftype="text" label="Description" />	
       </columns>
       <indexList>
         <index name="fldefs_tblname">table_name</index>
@@ -269,7 +270,7 @@
       <description>Filter properties and info</description>
       <inherit>ABSTRACT_DATA_TYPE</inherit>
       <columns>
-        <column name="filter_id" type="primarykey" ftype="hidden"/>
+        <column name="filter_id" type="primarykey" ftype="hidden" />
       </columns>
     </table>
 
@@ -287,8 +288,22 @@
       <description>Index for determining access to the filters</description>
       <inherit>ABSTRACT_INDEX_BASE</inherit>
       <columns>
-        <column name="filter_index_id" type="primarykey" ftype="hidden"/>
+        <column name="filter_index_id" type="primarykey" ftype="hidden" />
       </columns>
+    </table>
+
+    <table name="TABLE_IDS">
+      <description>Transaction enabled table that stores unique ids for each table</description>
+      <transactions>true</transactions>
+      <columns>
+        <column name="name_of_table" type="string">
+	  <unique>true</unique>
+	</column>
+	<column name="current_id" type="long"  />
+      </columns>
+      <indexList>
+        <index name="name_idx">name_of_table</index>
+      </indexList>
     </table>
 
     <table name="LOG">
@@ -296,18 +311,18 @@
       <inherit>ABSTRACT_INDEX_LIST</inherit>
       <inherit>ABSTRACT_DATA_TYPE</inherit>
       <columns>
-        <column name="log_id" type="primarykey" ftype="hidden"/>
+        <column name="log_id" type="primarykey" ftype="hidden" />
 	<column name="ticket_id" type="integer">
 	  <reference>ticket.ticket_id</reference>
 	</column>
 	<column name="task_id" type="integer" ftype="select">
 	  <reference>task.task_id</reference>
 	</column>
-	<column name="ctime" type="date" ftype="hidden"/>
+	<column name="ctime" type="date" ftype="hidden" />
 	<column name="hours" type="decimal" ftype="text" label="Hours Worked">
 	  <description>Hours associated with this log entry, decimals are acceptable here</description>
 	</column>
-	<column name="entry" type="text" ftype="textarea" label="Details"/>	  
+	<column name="entry" type="text" ftype="textarea" label="Details" />	  
       </columns>
       <customList>
 	<column name="action_id" type="integer">
@@ -329,7 +344,7 @@
     <table name="NOTIFY">
       <description>Store notify lists</description>
       <columns>
-        <column name="notify_id" type="primarykey" ftype="hidden"/>
+        <column name="notify_id" type="primarykey" ftype="hidden" />
 	<column name="bin_id" type="integer" ftype="hidden">
 	  <reference>bin.bin_id</reference>
 	</column>
@@ -342,7 +357,7 @@
 	<column name="name" type="string" ftype="text" label="Name">
 	  <size>50</size>
 	</column>
-	<column name="email" type="email" ftype="text" label="Email"/>
+	<column name="email" type="email" ftype="text" label="Email" />
 	<column name="priority" type="byte" ftype="select" label="Notify Volume">
 	  <criteria type="list">[1]Low,[2]Medium,[3]High</criteria>
 	  <default>3</default>
@@ -357,8 +372,8 @@
 	  <default>{login_id}</default>
 	  <reference>user.user_id</reference>
 	</column>
-	<column name="pref_name" type="value" ftype="hidden"/>
-	<column name="pref_value" type="string" ftype="hidden"/>
+	<column name="pref_name" type="value" ftype="hidden" />
+	<column name="pref_value" type="string" ftype="hidden" />
       </columns>
     </table>
 
@@ -366,7 +381,7 @@
       <description>Priorities and their properties</description>
       <inherit>ABSTRACT_DATA_TYPE</inherit>
       <columns>
-	<column name="priority_id" type="primary_key" ftype="hidden"/>
+	<column name="priority_id" type="primary_key" ftype="hidden" />
 	<column name="colorpick" type="value" ftype="colorbox">
 	  <description>The color provided here will be used to highlight tickets in the list view, leaving this blank will use the default background color</description>
 	</column>
@@ -376,7 +391,7 @@
     <table name="REPORT">
       <description>Report template properties</description>
       <columns>
-        <column name="report_id" type="primarykey" ftype="hidden"/>
+        <column name="report_id" type="primarykey" ftype="hidden" />
 	<column name="report_type" type="byte" ftype="select">
 	  <criteria type="list">[0]Text,[1]Image,[2]Both</criteria>
 	  <default>1</default>
@@ -386,7 +401,7 @@
 	  <notnull>true</notnull>
 	  <description>The name of this report template</description>
 	</column>
-	<column name="description" type="string" ftype="text" label="Description"/>
+	<column name="description" type="string" ftype="text" label="Description" />
 	<column name="rep_title" type="string" ftype="text" label="Chart Title">
 	  <size>50</size>
 	</column>
@@ -421,7 +436,7 @@
         <column name="report_id" type="integer" ftype="hidden">
 	  <reference>report.report_id</reference>
 	</column>
-	<column name="table_name" type="value" ftype="hidden"/>
+	<column name="table_name" type="value" ftype="hidden" />
 	<column name="field_name" type="value" ftype="select" label="Field Name">
 	  <criteria type="helper">field:table_name</criteria>
 	</column>
@@ -436,7 +451,7 @@
       <description>Control who views each report template</description>
       <inherit>ABSTRACT_INDEX_BASE</inherit>
       <columns>
-        <column name="report_id" type="integer" ftype="hidden"/>
+        <column name="report_id" type="integer" ftype="hidden" />
       </columns>
       <indexList>
         <index name="repind_find">bin_id,user_id</index>
@@ -447,7 +462,7 @@
       <description>User roles and their properties</description>
       <inherit>ABSTRACT_DATA_TYPE</inherit>
       <columns>
-        <column name="role_id" type="primarykey" ftype="hidden"/>
+        <column name="role_id" type="primarykey" ftype="hidden" />
       </columns>
       <indexList>
         <index name="role_sort">priority,name</index>
@@ -459,11 +474,11 @@
       <description>System settings</description>
       <inherit>ABSTRACT_DESCRIPTORS</inherit>
       <columns>
-        <column name="setting_id" type="primary_key" ftype="hidden"/>
-	<column name="set_category" type="value" ftype="immutable" label="Category"/>
-	<column name="field_type" type="value" ftype="hidden"/>
-	<column name="field_criteria" type="string" ftype="hidden"/>
-	<column name="set_name" type="value" ftype="immutable" label="Name"/>
+        <column name="setting_id" type="primary_key" ftype="hidden" />
+	<column name="set_category" type="value" ftype="immutable" label="Category" />
+	<column name="field_type" type="value" ftype="hidden" />
+	<column name="field_criteria" type="string" ftype="hidden" />
+	<column name="set_name" type="value" ftype="immutable" label="Name" />
 	<column name="set_value" type="string" ftype="setting" label="Value">
 	  <criteria type="helper">field:field_type,field:field_criteria</criteria>
 	</column>	
@@ -480,7 +495,7 @@
       <description>Stages of ticket progress</description>
       <inherit>ABSTRACT_DATA_TYPE</inherit>
       <columns>
-        <column name="stage_id" type="primarykey" ftype="hidden"/>	
+        <column name="stage_id" type="primarykey" ftype="hidden" />	
       </columns>
       <indexList>
         <index name="stage_sort">priority,name</index>
@@ -492,7 +507,7 @@
       <description>Systems and their properties</description>
       <inherit>ABSTRACT_DATA_TYPE</inherit>
       <columns>
-        <column name="system_id" type="primary_key" ftype="hidden"/>
+        <column name="system_id" type="primary_key" ftype="hidden" />
       </columns>
       <indexList>
         <index name="sys_sort">priority,name</index>
@@ -504,10 +519,10 @@
     <table name="TABLE_DEFS">
       <description>Meta data describing how tables are structures</description>
       <columns>
-        <column name="tbl_name" type="value" ftype="immutable" label="Name"/>
-	<column name="tbl_inherits" type="string" ftype="immutable" label="Inherited From"/>
-	<column name="tbl_version" type="value" ftype="immutable" label="Version"/>
-	<column name="tbl_updated" type="date" ftype="immutable" label="Last Update"/>
+        <column name="tbl_name" type="value" ftype="immutable" label="Name" />
+	<column name="tbl_inherits" type="string" ftype="immutable" label="Inherited From" />
+	<column name="tbl_version" type="value" ftype="immutable" label="Version" />
+	<column name="tbl_updated" type="date" ftype="immutable" label="Last Update" />
       </columns>
       <indexList>
         <index name="tbldef_name">tbl_name</index>
@@ -520,7 +535,7 @@
       <description>Log entry types</description>
       <inherit>ABSTRACT_DATA_TYPE</inherit>
       <columns>
-        <column name="task_id" type="primarykey" ftype="hidden"/>
+        <column name="task_id" type="primarykey" ftype="hidden" />
       </columns>
       <indexList>
         <index name="task_sort">priority,name</index>
@@ -532,9 +547,9 @@
       <description>Ticket entries and their properties</description>
       <inherit>ABSTRACT_DESCRIPTORS</inherit>
       <columns>
-        <column name="ticket_id" type="primarykey" ftype="immutable" label="Ticket ID"/>
-	<column name="otime" type="date" ftype="immutable" label="Opened"/>
-	<column name="ctime" type="date" ftype="immutable" label="Closed"/>
+        <column name="ticket_id" type="primarykey" ftype="immutable" label="Ticket ID" />
+	<column name="otime" type="date" ftype="immutable" label="Opened" />
+	<column name="ctime" type="date" ftype="immutable" label="Closed" />
 	<column name="stage_id" type="integer" ftype="immutable" label="Status">
 	  <reference>stage.stage_id</reference>
 	</column>
@@ -563,7 +578,7 @@
 	</column>
       </columns>
       <customList>
-        <column name="customer" type="string" ftype="text" label="Customer"/>
+        <column name="customer" type="string" ftype="text" label="Customer" />
       </customList>
       <indexList>
         <index name="tckt_usr">user_id</index>
@@ -581,7 +596,7 @@
       <description>Trigger mechanisms and properties</description>
       <inherit>ABSTRACT_DATA_TYPE</inherit>
       <columns>
-        <column name="trigger_id" type="primarykey" ftype="hidden"/>
+        <column name="trigger_id" type="primarykey" ftype="hidden" />
       </columns>
       <indexList>
         <column name="trgr_sort">priority,name</column>
@@ -625,7 +640,7 @@
       <description>Ticket types and their related fields</description>
       <inherit>ABSTRACT_DATA_TYPE</inherit>
       <columns>
-        <column name="type_id" type="primarykey" ftype="hidden"/>
+        <column name="type_id" type="primarykey" ftype="hidden" />
       </columns>
       <indexList>
         <index name="type_get">type_id,isactive</index>
@@ -723,7 +738,7 @@
       <description>Users and their properties</description>
       <inherit>ABSTRACT_DATA_TYPE</inherit>
       <columns>
-        <column name="user_id" type="primarykey" ftype="hidden"/>
+        <column name="user_id" type="primarykey" ftype="hidden" />
 	<column name="auth_type" type="byte" ftype="select" label="Auth Type">
 	  <criteria type="list">[0]Normal,[1]LDAP,[2]Script</criteria>
 	  <default>0</default>
@@ -745,7 +760,7 @@
 	<column name="inits" value="string" ftype="text" label="Inits">
 	  <size>5</size>
 	</column>
-	<column name="email" value="string" ftype="email" label="Email"/>
+	<column name="email" value="string" ftype="email" label="Email" />
 	<column name="homebin" value="integer" ftype="select" label="Home Bin">
 	  <reference>bin.bin_id</reference>
 	  <criteria type="helper"></criteria>
@@ -754,8 +769,8 @@
 	</column>
       </columns>
       <customList>
-	<column name="notes" value="string" ftype="text" label="Comments"/>
-	<column name="phone" value="value" ftype="text" label="Phone"/>	
+	<column name="notes" value="string" ftype="text" label="Comments" />
+	<column name="phone" value="value" ftype="text" label="Phone" />	
       </customList>
       <indexList>
         <index name="user_get">user_id,isactive</index>

@@ -16,6 +16,10 @@
 paths:path_includes::0540
 paths:path_www::0550
 
+# user directories
+directories:dir_user::0550
+directories:dir_user:code:0550
+
 # cach directories
 
 directories:dir_cache::0770
@@ -43,7 +47,7 @@ directories:dir_backups:db:0700
 directories:dir_lib::0550
 directories:dir_lib:classes:0550
 directories:dir_lib:inc:0550
-directories:dir_lib:scripts:0500
+directories:dir_lib:helpers:0500
 
 # logs
 

@@ -31,6 +31,7 @@
     <index location="external" uniquelabel="UNIQUE">
       CREATE %unique% INDEX %name% ON %table%(%columns%)
     </index>
+    <transaction_table>TYPE = InnoDB</transaction_table>
     <dropindex></dropindex>
     <tablecolumn uniquelabel="" notnull="NOT NULL">%name% %datatype% %attr% </tablecolumn>
     <addcolumn>ALTER TABLE %table% ADD COLUMN %def% %after%</addcolumn>

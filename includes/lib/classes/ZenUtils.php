@@ -9,13 +9,6 @@
  */
 class ZenUtils {
 
-  function ZenUtils() { 
-    Zen::debug('ZenUtils','ZenUtils',
-	       'This class cannot need to be instantiated, all methods are STATIC, call with ZenUtils::method()',
-	       160, 2); 
-    $this = null;
-  }
-
   /**
    * STATIC: Takes a data type and returns the primary key of that table field
    *
@@ -27,6 +20,49 @@ class ZenUtils {
    */
   function getPrimaryKey( $class ) {
     return ZenUtils::tableNameFromClass($class)."_id";
+  }
+
+  /**
+   * STATIC: Returns the parsed ini file array
+   * <p>Retrieval is done as follows:
+   * <ol>
+   *    <li>Check <code>$_SESSION</code>
+   *    <li>Check <code>$_GLOBALS</code>
+   *    <li>Find <code>$file</code> and parse (assuming one was provided)
+   * </ol>
+   *
+   *
+   * @param string $file full directory path to ini file (optional), only used if ini file not found in session or memory
+   * @return Array containing parsed zen.ini directives organized by category
+   */
+  function findIni( $file = null ) {
+    if( !empty($_SESSION) && !empty($_SESSION['zen']) ) {
+      return $_SESSION['zen'];
+    }
+    if( !empty($GLOBALS) && !empty($GLOBALS['zen']) ) {
+      return $GLOBALS['zen'];
+    }
+    if( $file ) {
+      if( !file_exists($file) && class_exists("Zen") ) {
+        return null;
+      }
+      return ZenUtils::read_ini($file);
+    }
+  }
+
+  /**
+   * STATIC: Searches the global arras for zen.ini file data  and returns indexed value
+   *
+   * @param String $category is the ini file category to look in
+   * @param String $property is the ini file property to retrieve (if omitted, returns entire category)
+   * @return mixed value
+   * @see ZenUtils::findIni()
+   */
+  function getIni( $category, $property = null ) {
+    $ini = ZenUtils::findIni();
+    if( !is_array($ini) ) { return null; }
+    else if( !strlen($property) ) { return $ini[$category]; }
+    else { return $ini[$category][$property]; }
   }
 
   /**

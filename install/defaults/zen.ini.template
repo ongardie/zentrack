@@ -124,6 +124,7 @@ dir_classes       = "{dir_classes}"
 dir_config        = "{dir_config}"
 dir_logs          = "{dir_logs}"
 dir_templates     = "{dir_templates}"
+dir_user          = "{dir_user}"
 
 [login requirements]
 ; any directories or files entered here will be excluded from login requirements

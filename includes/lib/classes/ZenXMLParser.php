@@ -31,7 +31,7 @@
    * @return ZenXNode xnode object containing root xml node
    */
   function parse($xmlstring="") {
-    if( @file_exists($xmlstring) ) {
+    if( strpos($xmlstring,"\n") === false && @file_exists($xmlstring) ) {
       $xmlstring = join("",file($xmlstring));
     }
     // set up a new XML parser to do all the work for us
@@ -293,7 +293,7 @@ class ZenXNode {
    */
   function createNodeFromFile( $xmlFile ) {
     if( !@file_exists($xmlFile) ) {
-      Zen::debug('ZenXMLParser', 'createNodeFromFile', 'Unable to load $xmlFile', 21, 1);
+      Zen::debug('ZenXMLParser', 'createNodeFromFile', 'Unable to load $xmlFile', 21, LVL_ERROR);
       return null;
     }
     $xml = join("",file($xmlFile));

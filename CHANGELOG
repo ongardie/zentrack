@@ -1,6 +1,10 @@
 
 --- V3.0 RC1 (beta,in CVS) ---	
 
+2003-10-24, Kato
+  Updated adodb directory to latest release
+  Fixed adodb.inc.php and adodb-csvinc.php to work with phpunit (must check file_exists before fopen or unlink)
+
 2003-10-01, CFAlonso
   Modified the following files to start fixing some of the errors reported by phpDocumentor:
     - zentrack/includes/lib/classes/adodb/adodb-connection.inc.php

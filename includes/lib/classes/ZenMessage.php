@@ -13,13 +13,14 @@ class ZenMessage extends Zen {
    * @param integer $errnum error number (http://zendocs.phpzen.net/bin/view/Zentrack/ErrorMessages)
    * @param integer $level the level of the message
    */
-  function ZenMessage( $class, $method, $message, $errnum = 0, $level = 3 ) { 
+  function ZenMessage( $class, $method, $message, $errnum = 0, $level = 3, $id = null ) { 
     $this->Zen();
     $this->_class = $class;
     $this->_method = $method;
     $this->_message = $message;
     $this->_errnum = $errnum;
     $this->_level = $level;
+    $this->_classid = $id;
   }
 
   /**
@@ -105,6 +106,9 @@ class ZenMessage extends Zen {
 
   /** @var string $_message */
   var $_message;
+
+  /** @var string $_classid is a unique id assigned to each Zen object for identification */
+  var $_id;
 
 }
 
