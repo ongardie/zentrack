@@ -13,6 +13,12 @@ abstraction, and endless possibilities for project expansion.
 
 ----- VERSION 2.5.0.3 (development) -----
 
+2005-03-02, cfalonso
+  Found that if you are in custom tab, then go to the ticket list 
+  and select a list, you get the custom tab with no behaviors 
+  loaded. Now it's fixed.
+    - zentrack_2/www/ticket.php 1.24
+
 2005-03-01, cfalonso
   Migrated default values from varfield_idx to field_map
     - zentrack_2/includes/ZenFieldMap.class 1.8
