@@ -4,9 +4,9 @@ mkdir includes/attachments
 mkdir includes/logs
 mkdir includes/cache
 
-cp install/configVars.php.default includes/configVars.php
-cp install/header.php.default www/header.php
-cp install/egate_config.php.default includes/egate_config.php
+cp -ib install/configVars.php.default includes/configVars.php
+cp -ib install/header.php.default www/header.php
+cp -ib install/egate_config.php.default includes/egate_config.php
 
 chmod 777 includes/attachments
 chmod 777 includes/logs

@@ -26,7 +26,7 @@ class zenTrack extends zen {
   */
 
   
-  function get_access( $user_id, $flag = 0 ) {
+  function get_access( $user_id, $flag = 0, $withnull = false ) {
     // retrieves the access priviledges
     // by the user_id (user id)
     // if flag set to 1, then it returns
@@ -36,21 +36,23 @@ class zenTrack extends zen {
     // with a value of the level for that bin
     //  ( ["bin_id"] = $bin_level )
     
-    $query = "SELECT * FROM ".$this->table_access." WHERE user_id = $user_id "
-      ." AND lvl is not null";
+    $query = "SELECT * FROM ".$this->table_access." WHERE user_id = $user_id ";
+    if( !$widthnull ) { $query .= " AND lvl is not null"; }
     $this->addDebug("get_access()Query",$query,3);
     $vars = $this->db_queryIndexed($query);
     if( $flag ) {
       return $vars;  
-    } else { 
-      if( is_array($vars) ) {
-        foreach($vars as $v) {
-          $vals["$v[bin_id]"] = $v["lvl"];
+    } else {
+      $bins = $this->getBins();
+      for($i=0; $i<count($vars); $i++) {
+        $n = $vars[$i]['bin_id'];
+        if( isset($bins["$n"]) ) {
+          $vals["$n"] = $vars[$i]['lvl'];
         }
       }
       return( $vals );
     }
-  }   
+  }
 
   function get_attachment($access_id) {
     // retrieves all properties for a given attachment
@@ -2107,6 +2109,12 @@ class zenTrack extends zen {
       .$this->table_access." WHERE $where"
       ." AND (notes IS NOT NULL) ";
     $vals = $this->db_queryIndexed($query);
+    // remove inactive bins
+    $bins = $this->getBins();
+    for($i=0; $i<count($vals); $i++) {
+      $n = $vals[$i]['bin_id'];
+      if( !isset($bins["$n"]) ) { unset($vals[$i]); }
+    }
     $this->addDebug("fetch_user_roles","result: ".count($vals)
                     .", query: $query",3);
     return( $vals );
@@ -2944,7 +2952,7 @@ class zenTrack extends zen {
     // returns the name of a bin
     // from the given bin id
     $bins = $this->getBins(0,0);
-    return((isset($bins["$id"]))? $bins["$id"] : "");
+    return( isset($bins["$id"])? $bins["$id"] : "" );
   }
 
   function getBins($flag = 0,$active = 1) {

@@ -5,10 +5,10 @@
   // determine what bins we are working with
   // and create a list of bins and their
   // access levels
+  $bins = array();
   if( $TODO == 'MORE' || $TODO == 'LESS' ) {
     $n = ($more < 4)? 2 : 4;
     $more += ($TODO == 'MORE')? $n : -$n;
-    $bins = array();
     if( is_array($binLevels) ) {
       ksort($binLevels);
       foreach($binLevels as $k=>$v) {
@@ -34,9 +34,11 @@
 	$bins["$k"] = array($v,"");
       }
     }
+
     $roles = $zen->fetch_user_roles($user_id);
-    foreach($roles as $r) {
-      $n = $r["bin_id"];
+    for($i=0; $i<count($roles); $i++) {
+      $r = $roles[$i];
+      $n = $r["bin_id"];	
       if( is_array($bins["$n"]) ) {
 	$bins["$n"][1] = $r["notes"];
       } else {
@@ -77,12 +79,13 @@
     }
   }
 
+?>
+<script language='javascript'>
   function setTodo( val ) {
     document.accessForm.TODO.value = val;
     return true;
   }
-
-?>
+</script>
 
 <form method="post" action="<?=$SCRIPT_NAME?>" name="accessForm">
 <input type="hidden" name="more" value="<?= strip_tags($more) ?>">
@@ -154,7 +157,7 @@
    &nbsp;&nbsp;&nbsp;&nbsp;
     <input type="submit" value="<?=uptr("less")?>" onClick="return setTodo('LESS')">
    &nbsp;&nbsp;&nbsp;&nbsp;
-    <input type="submit" value="<?=tr("Update")?>" class="submit" onClick="return setTodo('UPDATE')">
+    <input type="submit" value="<?=tr("Update")?>" class="submit" onClick="return setTodo('Update')">
     &nbsp;&nbsp;&nbsp;&nbsp;
    <input type="submit" value="<?=tr("Reset")?>" class="submit" onClick="return setTodo('RESET')">
   </td>
