@@ -226,7 +226,8 @@
       }
       $inp = "<select name='{$varfield['field_name']}'{$onblur}>\n";
       foreach($opts as $o) {
-	$inp .= "<option value='{$o['field_value']}'>{$o['label']}</option>\n";
+        $sel=($o['field_value']==$value)?" selected" : "";
+	$inp .= "<option value='{$o['field_value']}'$sel>{$o['label']}</option>\n";
       }
       $inp .= "</select>\n";
       break;
