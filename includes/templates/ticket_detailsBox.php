@@ -116,7 +116,7 @@
    </tr>
    <tr>
     <td colspan="5" class="outlined">
-   <?= nl2br(stripslashes($description)); ?>
+   <?=(get_magic_quotes_runtime())?nl2br(stripslashes($description)):nl2br($description); ?>
     </td>
    </tr>  
    </table>

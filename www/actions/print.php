@@ -195,7 +195,15 @@
   <td  colspan=4>
     <b><?php echo tr("DESCRIPTION"); ?></b>
     <ul>
-      <?=nl2br(htmlspecialchars(stripslashes($ticket["description"])))?>
+      <?
+        $d = $ticket["description"];
+        if (get_magic_quotes_runtime()) {
+           $d = stripslashes($d);
+        }
+        $d = nl2br(htmlspecialchars($d));
+        
+        echo $d;
+      ?>
     </ul>
   </td>
 </tr>
@@ -263,12 +271,17 @@
      print tr("No Log Entries");	  
   } else {
      foreach( $logs as $l ) {
-	print ($l["entry"])? 
+	$e = $l["entry"];
+   if (get_magic_quotes_runtime()) {
+       $e = stripslashes($e);
+   }
+   $e = nl2br(htmlentities($e));
+   print ($l["entry"])? 
 	  $zen->showDateTime($l["created"])."  "
 	  .$l["action"]."-"
 	  .$zen->formatName($l["user_id"])
 	  ."-".$zen->bins["$l[bin_id]"]
-	  .":<br><i>".nl2br(htmlentities(stripslashes($l["entry"])))."</i><P>"
+	  .":<br><i>".$e."</i><P>"
 	  : 
 	  $zen->showDateTime($l["created"])."  "
 	  .$l["action"]."-"

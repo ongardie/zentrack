@@ -10,6 +10,9 @@
 2003-04-17, Rob Hillis
   Tweak fix for UNC path display
     - zentrack/includes/templates/ticket_logBox.php 1.14
+  Fix display of UNC paths in printed tickets and ticket descriptions
+    - zentrack/www/actions/print.php 1.9
+    - zentrack/includes/templates/ticket_detailsBox.php 1.7
 
 2003-04-16, Rob Hillis
   Modified regexp when displaying logs to properly link entire URL, including punctuation
