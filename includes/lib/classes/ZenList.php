@@ -22,8 +22,9 @@
  * {@link hasNext()}, {@link reset()}, and {@link count()} methods can be used to iterate
  * through the elements of the list.
  *
- * This class should not be called, rather, it should be extended and used
- * by a child class.
+ * If this constructor is called a super, there is no need to call the load()
+ * method.  However, if this class is initiated directly instead of through
+ * a child class, you must call the load() method.
  *
  * @package Zen 
 */
@@ -32,6 +33,10 @@ class ZenList extends Zen {
   /**
    * CONSTRUCTOR
    *
+   * If this constructor is called a super, there is no need to call the load()
+   * method.  However, if this class is initiated directly instead of through
+   * a child class, you must call the load() method.
+   * 
    * This method recieves the ZenMetaTable object, and utilizes this to find out
    * which columns and tables are valid for use by this object. This allows for 
    * validation of the incoming params.
@@ -40,15 +45,11 @@ class ZenList extends Zen {
     // call Zen()
     $this->Zen();
 
-    // find the meta info
-    $this->_dataType = preg_replace('/List$/', '', get_class($this));
-    $this->_metaTable = Zen::getMetaData($this);
-
-    /** @var integer $_thisid id of the currently indexed element */
-    $this->_thisid = null;
-
-    /** @var string $_primarykey the column used as primary key for this data type */
-    $this->_primarykey = ZenUtils::getPrimaryKey( $this );
+    // call the load method if we inherited a usable data type
+    $data_type = get_class($this);
+    if( strtolower($data_type) != "zenlist" ) {
+      $this->loadAbstract($data_type);
+    }
 
     // initialize params
     $this->_criteria = null;
@@ -56,6 +57,25 @@ class ZenList extends Zen {
     $this->_data = null;
     $this->_position = -1;
     $this->_count = -1;
+  }
+
+  /**
+   * Load the data type information manually (used if this class is called directly
+   * instead of using an inherited class)
+   *
+   * @param string $data_type the inherited ZenDataType for this class
+   */
+  function loadAbstract( $data_type ) {
+    // find the meta info
+    $this->_dataType = preg_replace('/List$/', '', $data_type);
+    $this->_table = ZenUtils::tableNameFromClass($data_type);
+    $this->_metaTable = Zen::getMetaData($this);
+
+    /** @var integer $_thisid id of the currently indexed element */
+    $this->_thisid = null;
+
+    /** @var string $_primarykey the column used as primary key for this data type */
+    $this->_primarykey = ZenUtils::getPrimaryKey( $this );
   }
 
   /**
@@ -126,15 +146,24 @@ class ZenList extends Zen {
   }
 
   /**
-   * performs the match and loads results
+   * performs the match and loads results.  
+   *
+   * If this class is being used directly (i.e. not an inherited class) the 
+   * loadAbstract() method must be called before attempting to use this.
    *
    * @param integer $limit is the maximum number to load
    * @param integer $offset is the offset to use (i.e. start with 10 instead of 1)
    * @return integer the number matched
    */
   function load($limit = 0, $offset = 0) { 
+    if( !$this->_table ) {
+      $this->debug($this, "load", 
+                   "The list has not been properly initialized (probably need to call loadAbstract)", 
+                   161, LVL_ERROR);
+      return false;
+    }
     $query = Zen::getNewQuery();
-    $query->table( ZenUtils::tableNameFromClass($this) );
+    $query->table( $this->_table );
 
     // create search and sort criteria
     if( $this->_criteria ) {
@@ -266,12 +295,22 @@ class ZenList extends Zen {
     return $this->_dataType;
   }
 
+  /**
+   * Get the source table this list recieves data from
+   */
+  function getTable() {
+    return $this->_table;
+  }
+
   
 
   /* VARIABLES */
 
   /** @var String $_dataType the source type for this List */
   var $_dataType;
+
+  /** @var String $_table the source table for this List */
+  var $_table;
 
   /** @var array $_ids the ids, in order they were recieved from db */
   var $_ids;

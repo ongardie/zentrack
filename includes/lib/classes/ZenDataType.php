@@ -70,7 +70,7 @@ class ZenDataType extends Zen {
    *
    * @param string $table the database table to use
    * @param integer $id the row id
-   * @param ZenList $list if 
+   * @param ZenList $list (preferred) extract data from list, rather than a db query
    */
   function loadAbstract( $table, $id, $list = null ) {
     // set the params
@@ -79,9 +79,9 @@ class ZenDataType extends Zen {
     $this->_primarykey = ZenUtils::getPrimaryKey($table);
     // load the data
     if( $id && is_object($zenlist) ) {
-      if( ZenUtils::tableNameFromClass($zenlist)!=$this->_table || !$this->_loadFromListData($zenlist,$id) ) {
+      if( $zenlist->getTable() != $this->_table || !$this->_loadFromListData($zenlist,$id) ) {
         ZenUtils::safeDebug($this,"ZenDataType","Unable to constuct this object from list type "
-                     .class_name($zenlist),102,LVL_ERROR);
+                     .$zenlist->getD,102,LVL_ERROR);
       }
       ZenUtils::safeDebug($this, "ZenDataType", 
                           "Constructed object with id {$this->_id} from list data", 
@@ -278,7 +278,7 @@ class ZenDataType extends Zen {
   function _loadFromListData( $zenlist, $id ) { 
     $fields = $zenlist->findData($id);
     if( !is_array($fields) || !count($fields) ) {
-      $class = get_class($zenlist);
+      $class = $zenlist->getDataType();
       ZenUtils::safeDebug($this, '_load', "ID ($id) not in List ($class)", 105, LVL_WARN);
       return false;
     }
