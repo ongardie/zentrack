@@ -94,8 +94,10 @@
   if( $verbose ) { print "Checking for ini file\n"; }
   if( !$makeini && ( !file_exists($ini_file) || !is_readable($ini_file) ) ) {
     print "The ini file ($ini_file) could not be read.\n\n";
-    print "You must either run this script from the same directory as the zen.ini file,";
-    print "or specify a valid ini file\n\n";
+    print "You can correct this by doing one of the following:\n";
+    print "   - run this script from the same directory as existing zen.ini\n";
+    print "   - specify a valid zen.ini file (using --ini=filename)\n";
+    print "   - if this is a cvs checkout, run --makeini to create a new ini file\n";
     exit;
   }
 

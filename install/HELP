@@ -4,6 +4,22 @@
     Docs - http://zendocs.phpzen.net/bin/view/Zentrack/IndexPage
     FAQ - http://zendocs.phpzen.net/bin/view/Zentrack/ZentrackFAQ
 
+  Running CLI Scripts (the install script)
+   
+    If you have trouble running the install script on windows, try prefixing
+    your command with the location of the CLI executable, for instance:
+       c:\php\cli\php.exe install.php -test_db_connection
+
+    If you have trouble on unix, try editing the #!/ statement in the first
+    line of the install.php script to point to your cli executable.
+
+    If the script complains ""You must use the CLI(command line) binary ...."
+    this means that you are not using a CLI compatable binary.  Try running
+    php -v to see what version you have.  You may have an alternate binary
+    in your php install directory (under cli/) which you can use.  If not,
+    you will need to compile one (you may compile both a CLI and CGI/sapi
+    version on the same box, just be careful where you output the binary
+    to (i.e. don't overwrite one with the other)
 	
   Debugging
 

@@ -1,29 +1,32 @@
 
  REQUIREMENTS
  
-  PHP >= 4.3.1
-  SQL Database which supports transactions
-  Mysql 3.23 users: you must enable innodb tables(for transactions): http://www.mysql.com/doc/en/InnoDB_in_MySQL_3.23.html
+   PHP >= 4.3.1
+   SQL Database which supports transactions
+   Mysql 3.23 users: you must enable innodb tables(for transactions): 
+      http://www.mysql.com/doc/en/InnoDB_in_MySQL_3.23.html
 
+ 
+ INSTALLATION
+  
+   1. Open shell/dos prompt, navigate to the install/ directory
+   2. CVS CHECKOUTS ONLY: Run install.php --makeini (if there is no zen.ini file)
+   3. Edit the zen.ini file to meet your system needs
+   4. Run install.php -try_db_connection (if desired)
+   5. Run install.php -full_install
 
-This will be the help file for installations.
+ SECURITY (experimental)
 
-Basically, the process will involve opening the php.ini file that will be in this directory, and editing the contents.
+  In a unix environment, to improve system security, you can run -extra_secure_mode.
+  This will change permissions on all directories to the most secure setting.  Note
+  that you should do this only after completing your setup.
 
-Then run installer Install or installer Upgrade as appropriate.
-
-
-
-
-
- SECURITY
-
-  In a unix environment, to improve system security, log in as super user and run 
+  Log in as super user and run:
       
-    zen.php -extra_secure_mode apache_user apache_group
+    install.php -extra_secure_mode apache_user apache_group
 
-    ..apache_user - the user your apache process runs as (nobody)
-    ..apache_group - the group your apache process runs as (nobody)
+    apache_user - the user your apache process runs as (nobody|apache)
+    apache_group - the group your apache process runs as (nobody|apache)
 
   You must be the super user to run this.  You must know the user
   and group of you server to accomplish this.
@@ -36,3 +39,5 @@ Then run installer Install or installer Upgrade as appropriate.
 
   Note that you must run the extra_secure_mode after each upgrade to ensure compliance
 
+  Note also that you must relax permissions again before you will be able
+  to make edits and changes to your setup.
