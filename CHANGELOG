@@ -5,6 +5,11 @@
  100 percent object oriented and database abstracted. 
 
 ----- V2.2.2 (not released) -----
+2003-02-06, Kato
+  Added error message enhancements
+  Thanks to Jeremy G for this tip
+    - www/actions/upload.php v1.6
+
 2003-02-05, Kato
   Fixed reset password bug
     - includes/zenTrack.class v1.37
