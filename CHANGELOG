@@ -5,6 +5,11 @@
  100 percent object oriented and database abstracted. 
 
 ----- V2.2.2 (not released) -----
+2003-02-08, Altman
+  Fixed bug that caused logs on tickets to produce only a partial 
+  URL in a log entry should there have been a URL typed in.
+  - includes/templates/ticket_logBox.php v1.8
+
 2003-02-07, Altman
   Fixed bug that caused Approval Required on new Tickets to 
   not read default settings.
