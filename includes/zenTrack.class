@@ -135,6 +135,10 @@ class zenTrack extends zen {
     // if $archive_flag = 1, then will look in archived tickets instead of 
     // active tickets table
 
+    // check the cached data
+    $t = $this->_getDataCache('tickets',$id);
+    if( $t ) { return $t; }
+
     $table = ($archive_flag)? 
       $this->table_tickets_archived : $this->table_tickets;
     $pid = $this->checkNum($pid);
@@ -145,6 +149,10 @@ class zenTrack extends zen {
         $this->getProjectHours($pid, $archive_flag);
         $vars["children"] = $this->getProjectChildren($pid, NULL, $archive_flag);
     }
+    
+    // store in data cache
+    $this->_storeDataCache('tickets',$id,$vars);
+    
     return($vars);
   }
 
@@ -171,6 +179,11 @@ class zenTrack extends zen {
     // $archive_flag retrieves tickets from archive db instead
     // of the ticket db
 
+    // check the cached data
+    $t = $this->_getDataCache('tickets',$id);
+    if( $t ) { return $t; }
+    
+    // load from database
     $id = $this->checkNum($id);
     $table = ($archive_flag)? 
       $this->table_tickets_archived : $this->table_tickets;
@@ -178,6 +191,10 @@ class zenTrack extends zen {
     $vals = $this->db_quickIndexed($query);
     $this->addDebug("get_ticket","result: ".(is_array($vals)?"success":"failed")
                     ."/".$query,3);
+                    
+    // add to the cache
+    $this->storeDataCache('tickets',$id,$vals);
+                    
     return( $vals );
   }
   
@@ -1714,6 +1731,7 @@ class zenTrack extends zen {
     $this->delete_log($pid, NULL, $archive_flag);
     $table = ($archive_flag)? $this->table_tickets_archived : $this->table_tickets;
     $query = "DELETE FROM $table WHERE id = $pid";
+    $this->_clearDataCache('tickets',$id);
     return( $this->db_result($query) );
   }
 
@@ -1732,8 +1750,10 @@ class zenTrack extends zen {
       for( $i=0; $i<count($children); $i++ ) {
         $this->close_ticket($children[$i]);    
       }
+      $this->_clearDataCache('tickets',$id);
       return( $this->change_status($pid, 'CLOSED', $params) );    
     }
+    return false;
   }
 
 
@@ -2327,7 +2347,8 @@ class zenTrack extends zen {
         $message = $this->formatEmailMessage($eParams);
         $this->sendEmail($recipients,$subject,$message,$user_id);
       }
-    }      
+    } 
+    $this->_clearDataCache('tickets',$id);
     return($res);
   }
 
@@ -2529,6 +2550,7 @@ class zenTrack extends zen {
       }
       $this->assign_ticket($id,$user_id);
       return( 1 );
+      $this->_clearDataCache('tickets',$id);
     }
   }
 
@@ -2645,6 +2667,7 @@ class zenTrack extends zen {
     }
     $query = "DELETE FROM $table WHERE $where";
     $this->addDebug("delete_ticket",$query,2);
+    $this->_clearDataCache('tickets',$id);
     return( $this->db_result($query) );
   }
 
@@ -2690,6 +2713,7 @@ class zenTrack extends zen {
     $query = "UPDATE ".$this->table_tickets." SET $set WHERE id = $id";
     $this->update_notify_list($t,$params);
     $this->addDebug("update_ticket",$query,3);
+    $this->_clearDataCache('tickets',$id);
     return $this->db_result($query);
   }      
 
@@ -2924,6 +2948,7 @@ class zenTrack extends zen {
     $query = "DELETE FROM ".$this->table_users." WHERE $where";
     $this->addDebug("delete_user()Query",$query,2);
     $this->delete_access($user_id);
+    $this->_clearDataType('userbins');
     return( $this->db_result($query) );
   }
 
@@ -2956,6 +2981,7 @@ class zenTrack extends zen {
     $set = $this->makeInsertVals($params,1);
     $query = "UPDATE ".$this->table_users." SET $set WHERE user_id = $user_id";
     $this->addDebug("update_user()Query",$query,2);
+    $this->_clearDataType('userbins');
     return( $this->db_result($query) );
   }
 
@@ -2982,6 +3008,7 @@ class zenTrack extends zen {
       if( $res )
       $i++;
     }
+    $this->_clearDataType('userbins');
     return($i);
   }
 
@@ -2992,6 +3019,7 @@ class zenTrack extends zen {
 
     $user_id = $this->checkNum($user_id);
     $this->delete_access( $user_id );
+    $this->_clearDataType('userbins');
     return( $this->add_access($user_id, $params) );
   }
 
@@ -3020,10 +3048,17 @@ class zenTrack extends zen {
     }
     $query = "DELETE FROM ".$this->table_access." WHERE $where";
     $this->addDebug("delete_access()Query",$query,2);
+    $this->_clearDataType('userbins');
     return( $this->db_result($query) );
   }
 
   function get_prefs( $user_id, $pref = '' ) {
+    // try to retrieve from session
+    $prefSet = $this->_getDataType('prefs');
+    if( isset($prefSet) && isset($prefSet["U$user_id") ) { return $prefSet["U$user_id"]; }
+    if( !isset($prefSet) ) { $prefSet = array(); }
+    
+    // retrieve from database
     $user_id = $this->checkNum($user_id);
     $query = "SELECT * FROM ".$this->table_preferences
       ." WHERE user_id = $user_id";
@@ -3038,12 +3073,18 @@ class zenTrack extends zen {
         $vals["$n"] = $v["prefval"];
       }
     }
+    
+    // store in session
+    $prefSet["U$user_id"] = $vals;
+    $this->_storeDataType("prefs",$prefSet);
+    
     return $vals;
   }
 
   function update_prefs( $user_id, $params, $prefname = '' ) {
     $user_id = $this->checkNum($user_id);
     $this->delete_prefs($user_id, $prefname);
+    $this->_clearDataType('prefs');
     return $this->add_prefs($user_id,$params);
   }
 
@@ -3066,6 +3107,7 @@ class zenTrack extends zen {
       }
       $this->addDebug("add_prefs","$res/$query",3);
     }
+    $this->_clearDataType('prefs');    
     return( $i );
   }
 
@@ -3079,6 +3121,7 @@ class zenTrack extends zen {
     }
     $res = $this->db_result($query);
     $this->addDebug("delete_prefs","$res/$query",3);
+    $this->_clearDataType('prefs');
     return( $res );
   }
 
@@ -3102,31 +3145,37 @@ class zenTrack extends zen {
 
   function add_bin( $params ) {
     // add a new bin to the bins table
+    $this->_clearDataType('bins');
     return( $this->db_insert( $this->table_bins, $params ) );
   }
 
   function add_priority( $params ) {
     // add a new priorty
+    $this->_clearDataType('priorities');    
     return( $this->db_insert( $this->table_priorities, $params ) );
   }
 
   function add_setting( $params ) {
     // add a new setting into the db
+    $this->_clearDataType('settings');
     return( $this->db_insert($this->table_settings, $params) );
   }
 
   function add_system( $params ) {
     // add a new system to the db
+    $this->_clearDataType('systems');
     return( $this->db_insert( $this->table_systems, $params ) );      
   }
 
   function add_task( $params ) {
     // add a new task to the system
+    $this->_clearDataType('tasks');
     return( $this->db_insert( $this->table_tasks, $params) );
   }
 
   function add_type( $params ) {
     // add a new ticket type
+    $this->_clearDataType('types');
     return( $this->db_insert($this->table_types, $params) );
   }
 
@@ -3145,6 +3194,7 @@ class zenTrack extends zen {
     $set = $this->makeInsertVals($params,1);
     $query = "UPDATE ".$this->table_bins." SET $set WHERE bid = $bid";
     $this->addDebug("update_bin()Query",$query,2);
+    $this->_clearDataType('bins');
     return( $this->db_result($query) );
   }
 
@@ -3154,6 +3204,7 @@ class zenTrack extends zen {
     $set = $this->makeInsertVals($params,1);
     $query = "UPDATE ".$this->table_priorities." SET $set WHERE pid = $pid";
     $this->addDebug("update_priority()Query",$query,2);
+    $this->_clearDataType('priorities');
     return( $this->db_result($query) );
   }
 
@@ -3163,6 +3214,7 @@ class zenTrack extends zen {
     $set = $this->makeInsertVals($params,1);
     $query = "UPDATE ".$this->table_settings." SET $set WHERE setting_id = $setting_id";
     $this->addDebug("update_setting()Query",$query,2);
+    $this->_clearDataType('settings');
     return( $this->db_result($query) );
   }
 
@@ -3173,6 +3225,7 @@ class zenTrack extends zen {
     $set = $this->makeInsertVals($params,1);
     $query = "UPDATE ".$this->table_systems." SET $set WHERE sid = $sid";
     $this->addDebug("update_system()Query",$query,2);
+    $this->_clearDataType('systems');
     return( $this->db_result($query) );      
   }
 
@@ -3182,6 +3235,7 @@ class zenTrack extends zen {
     $set = $this->makeInsertVals($params,1);
     $query = "UPDATE ".$this->table_tasks." SET $set WHERE task_id = $task_id";
     $this->addDebug("update_task()Query",$query,2);
+    $this->_clearDataType('tasks');
     return( $this->db_result($query) );            
   }
 
@@ -3191,6 +3245,7 @@ class zenTrack extends zen {
     $set = $this->makeInsertVals($params,1);
     $query = "UPDATE ".$this->table_types." SET $set WHERE type_id = $type_id";
     $this->addDebug("update_type()Query",$query,2);
+    $this->_clearDataType('types');
     return( $this->db_result($query) );            
   }
 
@@ -3990,6 +4045,18 @@ class zenTrack extends zen {
     // this function caches results for efficiency, so repeating
     // calls for the same user will not result slow the system
 
+    // set what we have in the session
+    $userBins = $this->_getDataType('userbins');
+    if( !isset($userBins) ) { $userBins = array(); }
+    if( !isset($userBins["U$user_id"]) ) { $userBins["U$user_id"] = array(); }
+    if( isset($userBins["U$user_id"]["L$level"]) ) { return $userBins["U$user_id"]["L$level"]; }
+    
+    // insure that our session cache doesn't become excessive
+    if( count($userBins) > 5 ) {
+      array_shift($userBins);
+    }
+    
+    // load this user/level into the cache
     $user_id = $this->checkNum($user_id);
     $access = $this->getAccess($user_id);
     $user   = $this->getUser($user_id);
@@ -4008,9 +4075,15 @@ class zenTrack extends zen {
         }
       }
     }
+
+    // store results in session
+    $userBins["U$user_id"]["L$level"] = $vars;
+    $this->_storeDataType('userbins', $userBins);
+
+    // debug and return results
     $adp = (is_array($vars))? 
       join(",",$vars) : "-none-";
-    $this->addDebug("getUsersBins()results",$adp,3);
+    $this->addDebug("getUsersBins", "user bins loaded from database: ".$adp,3);
     return $vars;
   }
   
@@ -4548,6 +4621,11 @@ class zenTrack extends zen {
    */
   function getBins($flag = 0,$active = 1) {
     if( !$flag ) {
+      // try loading from session
+      $vals = $this->_getDataType('bins');
+      if( $vals ) { return $vals; }
+      
+      // query database if needed
       $query = "SELECT bid, name FROM ".$this->table_bins;
       if( $active )
         $query .= " WHERE active = $active";       
@@ -4555,13 +4633,71 @@ class zenTrack extends zen {
       foreach($vars as $v) {
         $vals["$v[0]"] = $v[1];
       }
+      
+      // store in session before we finish
+      $this->_storeDataType('bins',$vals);
       return($vals);
     } else {
+      // never store or retrieve complete info from session
       $query = "SELECT * FROM ".$this->table_bins;
       if( $active )
         $query .= " WHERE active = $active";
       $query .= " ORDER BY priority DESC, name";
       return( $this->db_queryIndexed($query) );
+    }
+  }
+  
+  function _storeDataType( $type, $vals ) {
+    if( isset($_SESSION) ) {
+      // store results in session for later use
+      if( !isset($_SESSION['ztDataTypes']) ) { $_SESSION['ztDataTypes'] = array(); }
+      $this->addDebug("_storeDataType", "Storing $type values in session",3);
+      $_SESSION['ztDataTypes'][$type] = $vals;
+      return true;
+    }    
+    return false;
+  }
+  
+  function _getDataType( $type ) {
+    if( isset($_SESSION) && isset($_SESSION['ztDataTypes']) ) {
+      // check session before bothering with the lookup
+      if( isset($_SESSION['ztDataTypes'][$type] ) {
+        $this->addDebug("_getDataType","$type: loaded "
+          .count($_SESSION['ztDataTypes'][$type])." from session",3);
+        return $_SESSION['ztDataTypes'][$type];
+      }
+    }
+    return false;
+  }
+  
+  function _clearDataType( $type ) {
+    if( isset($_SESSION) ) {
+      unset($_SESSION[$type]);
+    }
+  }
+  
+  function _getDataCache( $type, $id ) {
+    if( isset($GLOBALS) && isset($GLOBALS['ztDataCache']) ) {
+      return isset($GLOBALS['ztDataCache']["id$id"])? $GLOBALS["id$id"] : null;
+    }
+  }
+  
+  function _storeDataCache( $type, $id, $vals ) {
+    if( isset($GLOBALS) ) {
+      if( !isset($GLOBALS['ztDataCache']) ) { $GLOBALS['ztDataCache'] = array(); }
+      if( !isset($GLOBALS['ztDataCache'][$type]) ) { $GLOBALS['ztDataCache'][$type] = array(); }
+      $GLOBALS[$type][$id] = $vals;
+    }
+  }
+  
+  function _clearDataCace( $type, $id = null ) {
+    if( isset($GLOBALS) && isset($GLOBALS['ztDataCache']) ) {
+      if( $id ) {
+        unset($GLOBALS[$type]["id$id"];
+      }
+      else {
+        unset($GLOBALS[$type]);
+      }
     }
   }
 
@@ -4676,6 +4812,10 @@ class zenTrack extends zen {
     // and alphebetized      
 
     if( !$flag ) {
+      // try loading from session
+      $vals = $this->_getDataType('tasks');
+      if( $vals ) { return $vals; }
+
       $query = "SELECT task_id, name, priority FROM ".$this->table_tasks;
       if( $active )
         $query .= " WHERE active = $active";
@@ -4685,6 +4825,10 @@ class zenTrack extends zen {
           $vals["$v[0]"] = $v[1];
         }
       }
+      
+      // place in session before we finish
+      $this->_storeDataType('tasks',$vals);
+      
       return $vals;
     } else {
       $where = ($active)? " WHERE active = $active" : "";
@@ -4700,6 +4844,10 @@ class zenTrack extends zen {
     // an array of names indexed by id
 
     if( !$flag ) {
+      // try loading from session
+      $vals = $this->_getDataType('systems');
+      if( $vals ) { return $vals; }
+
       $query = "SELECT sid, name FROM ".$this->table_systems;
       if( $active )
         $query .= " WHERE active = $active ORDER BY priority DESC, name";
@@ -4709,6 +4857,10 @@ class zenTrack extends zen {
           $vals["$v[0]"] = $v[1];
         }
       }
+      
+      // store in session
+      $this->_storeDataType('systems',$vals);
+      
       return($vals);
     } else {
       $where = ($active)? " WHERE active = $active" : "";
@@ -4724,6 +4876,10 @@ class zenTrack extends zen {
     // list sorted by priority
 
     if( !$flag ) {
+      // try loading from session
+      $vals = $this->_getDataType('priorities');
+      if( $vals ) { return $vals; }
+      
       $query = "SELECT pid,priority,name FROM ".$this->table_priorities;
       if( $active )
         $query .= " WHERE active = $active";
@@ -4732,6 +4888,10 @@ class zenTrack extends zen {
         $p = $vars[$i][0];
         $vals["$p"] = $vars[$i][2];
       }
+      
+      // store in session
+      $this->_storeDataType('priorities',$vals);
+      
       return($vals);
     } else {
       $where = ($active)? " WHERE active = $active" : "";
@@ -4753,6 +4913,68 @@ class zenTrack extends zen {
     }
     return $pri;
   }
+  
+  /**
+   * Returns field map, which explains how fields should be displayed, and which
+   * screens they will appear on.  This array is indexed first by view, and then
+   * by the field_name
+   *
+   * <p>This information is cached in the session.
+   *
+   * @param boolean $nocache if true, clears cache and loads from database
+   */
+  function getFieldMap($flag = false) {
+
+    // try to retrieve from session
+    if( !$flag ) {
+      $map = $this->_getDataType('fieldmap');
+      if( $map ) { return $map; }
+    }
+    
+    // retrieve from database
+    $query = "SELECT * FROM ".$this->table_field_map." ORDER BY SORT_ORDER";
+    $vals = $this->db_queryIndexed($query);
+    $set = array();
+    for($i=0; $i<count($vals); $i++) {
+      $v = $vals[$i];
+      if( !array_key_exists($v['which_view'], $set) ) { $set[ $v['which_view'] ] = array(); }
+      $set[ $v['which_view'] ] [ $v['field_name'] ] = $v;
+    }
+    if( isset($_SESSION) ) { $_SESSION['ztFieldMap'] = $set; }
+    $this->addDebug("getFieldMap", "Loaded $i rows into field_map from database",3);
+    
+    // store in session
+    $this->_storeDataType('fieldmap',$set);
+    
+    return $set;
+  }
+  
+  /**
+   * Updates the database and the session with new field map values
+   *
+   * @param array $newvals an array structured identical to getFieldMap() results
+   * @return int number of rows updated
+   */
+  function updateFieldMap( $newvals ) {
+    $updateVals = array();
+    foreach($_SESSION['ztFieldMap'] as $screen=>$fields) {
+      foreach($fields as $k=>$v) {
+        if( $newvals[$screen][$k] != $v ) {
+          $updateVals[] = $v;
+        }
+      }
+    }
+    for($i=0; $i<count($updateVals); $i++) {
+      $v = $updateVals[$i];
+      $res = $this->db_update($this->table_field_map, 'field_map_id', $v['field_map_id'], $v);
+      $this->addDebug('updateFieldMap', "Updating {$v['which_view']}->{$v['field_name']}", 3);
+    }
+    
+    // clear cache so it reloads next time
+    $this->_clearDataType('fieldmap');
+    
+    return $i;
+  }
 
   function getSettings($flag = 0) {
     // pulls the variables from the settings table
@@ -4760,8 +4982,15 @@ class zenTrack extends zen {
     // if flag is set, then it retrieves all
     // data for the settings into an array
     // otherwise, just sets a string equal to the value
-    global $rootUrl;        
-
+    
+    // attempt to retrieve from the session if possible
+    if( !$flag ) {
+      $settings = $this->_getDataType('settings');
+      if( $settings ) { return $settings; }
+    }
+    
+    // load from the database
+    global $rootUrl;
     $fields = ($flag)? "*" : "name, value";
     if( $flag )
       $order = " ORDER BY name";
@@ -4769,8 +4998,8 @@ class zenTrack extends zen {
       $order = "";
     $query = "SELECT $fields FROM ".$this->table_settings." $order";
     $vars = $this->db_queryIndexed($query);
-    if( isset($rootUrl) && $rootUrl != "" ) {
-      foreach($vars as $v) {
+    foreach($vars as $v) {
+      if( isset($rootUrl) && $rootUrl != "" ) {
         if( preg_match("@^url_@",$v["name"]) ) {
           if(preg_match("@/$@", $rootUrl) && preg_match("@^/@", $v["value"]) ) {
             preg_replace("@/$@", $rootUrl) . $v["value"];
@@ -4781,10 +5010,16 @@ class zenTrack extends zen {
             $v["value"] = $rootUrl . $v["value"];
           }
         }
-        $vals["{$v['name']}"] = ($flag)? $v : $v["value"];
       }
-      return($vals);
+      $vals["{$v['name']}"] = ($flag)? $v : $v["value"];
     }
+    
+    $this->addDebug('getSettings', "Retrieved ".count($vals)." settings from database", 3);
+    
+    // store vals in session
+    $this->_storeDataType('settings',$vals);
+    
+    return($vals);
   }
 
   function getTypeName($id) {
@@ -4799,8 +5034,11 @@ class zenTrack extends zen {
     // indexed array, otherwise, just
     // a list of names ordered by priority
     // and alphebetized
-
     if( !$flag ) {
+      // try loading from session
+      $vals = $this->_getDataType('types');
+      if( $vals ) { return $vals; }
+      
       $query = "SELECT type_id,name FROM ".$this->table_types;
       if( $active )
         $query .= " WHERE active = $active ORDER BY priority DESC, name";
@@ -4810,6 +5048,10 @@ class zenTrack extends zen {
           $vals["$v[0]"] = $v[1];
         }
       }
+      
+      // store in session
+      $this->_storeDataType('types',$vals);
+      
       return($vals);
     } else {
       $where = ($active)? " WHERE active = $active" : "";

@@ -13,6 +13,13 @@ abstraction, and endless possibilities for project expansion.
 
 ----- VERSION 2.5.0.3 (development) -----
 
+2005-01-29, Kato
+  Added caching of system properties and data types to reduce
+  database lookups
+  
+  Installed methods for reading and updating the field map (for new
+  configurable fields in views)
+
 2005-01-23, KATO
   Added more configurability to the set properties
   feature in egate_create (config file updated)
