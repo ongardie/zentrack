@@ -6,170 +6,175 @@
  endless possibilities for project expansion.
 
 ----- V2.2.3 (development, see CVS) ----
+2003-02-27, Kato
+  Added mssqlserver build and seed files to install
+  Thanks to Jim Martin for this contribution!
+    - install/*_sqlserver.sql 1.1
+
 2003-02-26, Kato
   Made date formats for report images
   more compatible with windows setups
-    - includes/reportDataParser.php v1.7
+    - includes/reportDataParser.php 1.7
   Fixed actionApplicable() typo
   Thanks to Jamin W. Collins (jamincollins)
-    - includes/templates/ticket_attachmentsBox.php v1.5
+    - includes/templates/ticket_attachmentsBox.php 1.5
   
 2003-02-24, Kato
   Added some default settings for start_date and deadlines.
     - installs/seed_*.sql
     - installs/UPGRADE_*.sql
-    - includes/templates/newTicketForm.php v1.15, v1.16
+    - includes/templates/newTicketForm.php 1.15, 1.16
   Fixed some email problems with reopen and reject
   Thanks to Claudio for his notes
-    - includes/zenTrack.class v1.58
+    - includes/zenTrack.class 1.58
 
 2003-02-23, Altman
   Fixed bins issues in various SELECT boxes as reported in Bug #682075.  
   Thanks to whoever this was (anonymous)!
-    - www/helpers/projectSearchbox.php v1.6
-    - includes/templates/searchForm.php v1.4
-    - includes/templates/searchLogsForm.php v1.4
-    - includes/templates/homebinForm.php v1.4
+    - www/helpers/projectSearchbox.php 1.6
+    - includes/templates/searchForm.php 1.4
+    - includes/templates/searchLogsForm.php 1.4
+    - includes/templates/homebinForm.php 1.4
 
 2003-02-17, Darktroll, Kato
   Fixed total hours issues
-    - includes/zenTrack.class v1.53
-    - includes/templates/listTickets_workFormat.php v1.9
+    - includes/zenTrack.class 1.53
+    - includes/templates/listTickets_workFormat.php 1.9
 
 2003-02-17, Darktroll
   Fixed sorting of systems by replacing $zen->systems with $zen->getSystems(1)
   Thanks to efeldhaus ( Erwin Feldhaus ) for reporting this anomaly, and suggestions on the improvement
-    - includes/templates/newTicketForm.php v1.12
-    - includes/templates/newProjectForm.php v1.14
+    - includes/templates/newTicketForm.php 1.12
+    - includes/templates/newProjectForm.php 1.14
 
 2003-02-15, Altman
   Completed the get_notify_recipients($ticket_id) method of the zenTrack
   class.  It has been tested and fits the give requirements.
-    - includes/zenTrack.class v1.48
+    - includes/zenTrack.class 1.48
   The rest of the functions have been filled out and put through some quick 
   sanity testing.  Needs some more thourough testing probably.
-    - includes/zenTrack.class v1.49
+    - includes/zenTrack.class 1.49
 
 2003-02-14, Altman
   Stubbed out functions in zenTrack.class and added entry for new table
   in configVars.php.default.
-    - install/configVars.php.default v1.2
-    - includes/zenTrack.class v1.47
+    - install/configVars.php.default 1.2
+    - includes/zenTrack.class 1.47
   Added schema changes to support Notify List feature addition.
-    - install/UPGRADE_postgres.sql v1.5
-    - install/UPGRADE_mysql.sql v1.4
-    - install/UPGRADE_oracle.sql v1.4
-    - install/UPGRADE_SEED_postgres.sql v1.1
-    - install/UPGRADE_SEED_mysql.sql v1.2
-    - install/UPGRADE_SEED_oracle.sql v1.1
-    - install/build_postgres.sql v1.5
-    - install/build_mysql.sql v1.4
-    - install/build_oracle.sql v1.5
-    - install/seed_postgres.sql v1.5
-    - install/seed_mysql.sql v1.9
-    - install/seed_oracle.sql v1.6
-    - install/previous/2.2.2.1.UPGRADE_postgres.sql v1.1
-    - install/previous/2.2.2.1.UPGRADE_mysql.sql v1.1
-    - install/previous/2.2.2.1.UPGRADE_oracle.sql v1.1
+    - install/UPGRADE_postgres.sql 1.5
+    - install/UPGRADE_mysql.sql 1.4
+    - install/UPGRADE_oracle.sql 1.4
+    - install/UPGRADE_SEED_postgres.sql 1.1
+    - install/UPGRADE_SEED_mysql.sql 1.2
+    - install/UPGRADE_SEED_oracle.sql 1.1
+    - install/build_postgres.sql 1.5
+    - install/build_mysql.sql 1.4
+    - install/build_oracle.sql 1.5
+    - install/seed_postgres.sql 1.5
+    - install/seed_mysql.sql 1.9
+    - install/seed_oracle.sql 1.6
+    - install/previous/2.2.2.1.UPGRADE_postgres.sql 1.1
+    - install/previous/2.2.2.1.UPGRADE_mysql.sql 1.1
+    - install/previous/2.2.2.1.UPGRADE_oracle.sql 1.1
 
 2003-02-15, Kato
   Fixed problem displaying bins with quotes in name
-    - includes/templates/binForm.php v1.3
+    - includes/templates/binForm.php 1.3
 
 2003-02-14, Kato
   Abstracted actions from actionApplicable and checkAccess
   This is in preparation for db/administrative tools for these
   As well as upcoming functions/enhancements
-    - includes/zenTrack.class v1.45
+    - includes/zenTrack.class 1.45
   Fixed problem with changing bins while viewing ticket
   (fatal error: zenTrack.class cannot be redefined)
-    - www/index.php v1.7    
+    - www/index.php 1.7    
 
 ----- V2.2.2.1 (2003-02-12) ----
 2003-02-12, Kato
   Fixed bug with closing tickets caused by new
   object method implementation
-    - includes/zenTrack.class v1.44
+    - includes/zenTrack.class 1.44
   Fixed CVS images uploaded as ascii rather than binary
-    - www/images/cal.gif v1.3
+    - www/images/cal.gif 1.3
     - www/images/calendar/*
 	
 ----- V2.2.2 (2003-02-10) -----
 2003-02-09, Kato
   Ability to reopen tickets from pending status
-    - includes/zenTrack.class v1.42
-    - www/actions/reopen.php v1.4
+    - includes/zenTrack.class 1.42
+    - www/actions/reopen.php 1.4
   Header Redirects (blank pages with IIS) removed
-    - includes/editTicketSubmit.php v1.3
-    - www/addProjectSubmit.php v1.8
-    - www/addSubmit.php v1.11
-    - www/ticket.php v1.12
-    - www/viewAttachment.php v1.4
-    - www/admin/admin_header.php v1.6
-    - www/admin/editTicketSubmit.php v1.4
+    - includes/editTicketSubmit.php 1.3
+    - www/addProjectSubmit.php 1.8
+    - www/addSubmit.php 1.11
+    - www/ticket.php 1.12
+    - www/viewAttachment.php 1.4
+    - www/admin/admin_header.php 1.6
+    - www/admin/editTicketSubmit.php 1.4
     - www/actions/*.php
   Email notification enhancements
-    - includes/zenTrack.class v1.39 & v1.40
-    - www/actions/close.php v1.8
+    - includes/zenTrack.class 1.39 & 1.40
+    - www/actions/close.php 1.8
   Enhanced popup calendar
-    - www/popcalendar.js v1.2
-    - www/images/cal.gif v1.1 [new]
-    - includes/templates/newTicketForm.php v1.13
-    - includes/templates/newProjectForm.php v1.11
-    - www/addProjectSubmit.php v1.9
+    - www/popcalendar.js 1.2
+    - www/images/cal.gif 1.1 [new]
+    - includes/templates/newTicketForm.php 1.13
+    - includes/templates/newProjectForm.php 1.11
+    - www/addProjectSubmit.php 1.9
   Disallowed duplicate login names
-    - includes/zenTrack.class v1.43
-    - includes/templates/userAdd.php v1.6
-    - www/admin/addUserSubmit.php v1.6
-    - www/admin/addUserSubmit.php v1.6
-    - www/admin/editUserSubmit.php v1.5
+    - includes/zenTrack.class 1.43
+    - includes/templates/userAdd.php 1.6
+    - www/admin/addUserSubmit.php 1.6
+    - www/admin/addUserSubmit.php 1.6
+    - www/admin/editUserSubmit.php 1.5
   Fixed some postgres sql bugs
   Thanks to Marc Dyksterhouse (usimarit) for
   Tons of work on this one
-    - install/build_postgres.sql v1.3
-    - includes/db.class v1.16
+    - install/build_postgres.sql 1.3
+    - includes/db.class 1.16
   Fixed SCRIPT_NAME issues with php binary installs as CGI executable
-    - includes/session_start.php v1.5
+    - includes/session_start.php 1.5
   Enhanced the access/roles functions
   Thanks to David Reite(Darktroll) for pointing out my laziness here
-    - includes/templates/userAdd.php v1.5
-    - includes/zenTrack.class v1.38
-    - includes/templates/accessForm.php v1.4
-    - www/admin/access.php v1.4
+    - includes/templates/userAdd.php 1.5
+    - includes/zenTrack.class 1.38
+    - includes/templates/accessForm.php 1.4
+    - www/admin/access.php 1.4
   minor cosmetic fixes to admin screens (titles)
-    - www/admin/admin_header.php v1.7
-    - www/admin/config.php v1.6
+    - www/admin/admin_header.php 1.7
+    - www/admin/config.php 1.6
 
 2003-02-08, Altman
   Fixed bug that caused logs on tickets to produce only a partial 
   URL in a log entry should there have been a URL typed in.
-  - includes/templates/ticket_logBox.php v1.8
+  - includes/templates/ticket_logBox.php 1.8
 
 2003-02-07, Altman
   Fixed bug that caused Approval Required on new Tickets to 
   not read default settings.
-  - includes/templates/newTicketForm.php v1.12
-  - includes/templates/newProjectForm.php v1.10
+  - includes/templates/newTicketForm.php 1.12
+  - includes/templates/newProjectForm.php 1.10
 
 2003-02-07, Altman
   Fixed misspellings found by Jeremy Griffith (atlantisal)
-  - includes/leftTickets.php v1.6
-  - includes/templates/searchList.php v1.6
-  - includes/templates/searchLogList.php v1.5
+  - includes/leftTickets.php 1.6
+  - includes/templates/searchList.php 1.6
+  - includes/templates/searchLogList.php 1.5
 
 2003-02-06, Kato
   Added error message enhancements
   Thanks to Jeremy G for this tip
-    - www/actions/upload.php v1.6
+    - www/actions/upload.php 1.6
 
 2003-02-05, Kato
   Fixed reset password bug
-    - includes/zenTrack.class v1.37
+    - includes/zenTrack.class 1.37
   Fixed upload issues due to yet another PHP major function change
-    - www/actions/upload.php v1.5
+    - www/actions/upload.php 1.5
   Fixed old redirect, username cookie, and some session issues
-    - includes/login.php v1.17
-    - includes/session_start.php v1.4
+    - includes/login.php 1.17
+    - includes/session_start.php 1.4
 	
 2003-02-01, Altman
   Added a javascript calendar that was written by Tan 
@@ -178,41 +183,41 @@
   in the Administration's Configuration interface to be "%m/%d/%Y"
   for those users that are using MySQL.
     Added:
-    - www/popcalendar.js v1.1
-    - www/actions/images/calendar/*.gif v1.1
-    - www/images/calendar/*.gif v1.1
+    - www/popcalendar.js 1.1
+    - www/actions/images/calendar/*.gif 1.1
+    - www/images/calendar/*.gif 1.1
     Modified:
-    - includes/nav.php v1.6
-    - includes/templates/newProjectForm.php v1.9
-    - includes/templates/newTicketForm.php v1.11
-    - install/seed_mysql.sql v1.6
+    - includes/nav.php 1.6
+    - includes/templates/newProjectForm.php 1.9
+    - includes/templates/newTicketForm.php 1.11
+    - install/seed_mysql.sql 1.6
 
 2003-01-31, Altman
   Updated build_oracle.sql per comments from Maxim Maletsky
   reported in bug #677582.  Thanks Maxim (s-maxim).
-    - install/build_oracle.sql v1.4
+    - install/build_oracle.sql 1.4
 
 2003-01-30, Kato
   Fixed problem with display descriptions and newline chars
   Thanks to Jamin W. Collins (jamincollins)
-    - includes/templates/listTickets.php v1.9
+    - includes/templates/listTickets.php 1.9
 
 2003-01-30, Kato
   Fixed problem with display descriptions and newline chars
   Thanks to Hitman for reporting this
-    - includes/templates/editTicketForm.php v1.2
-    - includes/templates/ticket_detailsBox.php v1.5
-    - www/addSubmit.php v1.10
+    - includes/templates/editTicketForm.php 1.2
+    - includes/templates/ticket_detailsBox.php 1.5
+    - www/addSubmit.php 1.10
 
 2003-01-28, Kato
   Fixed directory names in setup_from_cvs shell script
-   - setup_from_cvs v1.2
+   - setup_from_cvs 1.2
 
 ----- V2.2.1 (2003-01-27) ------
 
 2003-01-25, Altman
  Fixed assignment problems on project create
-   - www/newProjectForm.php v1.8
+   - www/newProjectForm.php 1.8
 
 2003-01-2, Kato
  Cleaned up some form input
@@ -221,45 +226,45 @@
 
 2003-01-20, Kato
  Corrected some blank page issues for IIS users
-   - www/action/action_header.php v1.6
-   - www/admin/admin_header.php v1.5
+   - www/action/action_header.php 1.6
+   - www/admin/admin_header.php 1.5
 
 ----- v2.2.0 (2003-01-14) ------
 
 2003-01-17, Kato
   Form input javascript errors
-    - www/javascript.js v1.5
+    - www/javascript.js 1.5
     - includes/templates/loginForm.php v
 
 2003-01-15, Kato
   Changed homebin behavior, no longer able to select "All" for homebin.
-    - www/misc/homebin.php v1.3
+    - www/misc/homebin.php 1.3
 
 2003-01-13, Kato
   php 4.2 compliant (register_globals fun)
-    - includes/session_start.php v1.0
-    - includes/session_save.php v1.0
-    - includes/headerInc.php v1.8
+    - includes/session_start.php 1.0
+    - includes/session_save.php 1.0
+    - includes/headerInc.php 1.8
 
 2003-01-13, Kato
   Fixed display issues between tickets and projects
   also fixed sticky tabs (same code changes)
-    - includes/templates/ticket_*.php v1.?
-    - www/project.php v1.4
-    - www/ticket.php v1.4
+    - includes/templates/ticket_*.php 1.?
+    - www/project.php 1.4
+    - www/ticket.php 1.4
     - others?
 
 2003-01-13, Kato
   Fixed reject ticket bug
-    - includes/zenTrack.class v1.33
+    - includes/zenTrack.class 1.33
 
 2003-01-12, Kato
   Added usage reports, graphical and html
-    - www/reports/* v1.0
-    - includes/zenGraph.php v1.0
-    - includes/reportsConfig.php v1.0
-    - includes/reportDataParser.php v1.0
-    - includes/colors/* v1.0
+    - www/reports/* 1.0
+    - includes/zenGraph.php 1.0
+    - includes/reportsConfig.php 1.0
+    - includes/reportDataParser.php 1.0
+    - includes/colors/* 1.0
 
 ----- v2.1.0 (not released) ------
 
@@ -389,15 +394,15 @@ yyyy-mm-dd, YourName
   Your comments about the update, indented 2 spaces, it can be
   multiple lines and very long, and should be kept to about this
   with, which is around 60-80 columns
-    - includes/subdir/filename2.php v 2.21
-    - www/subdir/filename2.php v 3.01
+    - includes/subdir/filename2.php 2.21
+    - www/subdir/filename2.php 3.01
 
 yyyy-mm-dd, MyName
   My comments about the update, indented 2 spaces, it can be
   multiple lines and very long, and should be kept to about this
   with, which is around 60-80 columns
-    - includes/subdir/filename.php v 1.21
-    - www/subdir/filename.php v 2.01 (tagged SPECIAL_TAG)
+    - includes/subdir/filename.php 1.21
+    - www/subdir/filename.php 2.01 (tagged SPECIAL_TAG)
 
 ----- Vx.x.x ------
 more......
