@@ -12,6 +12,7 @@
 
   $vars = array();
   $vars = $zen->getDataGroups(1);
+  $counts = $zen->getDataGroupCounts();
 
   $page_title = ($skip)? tr("Admin Section") : tr("Edit Data Groups");
   include("$libDir/nav.php");

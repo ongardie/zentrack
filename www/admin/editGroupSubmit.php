@@ -36,6 +36,11 @@
     } else {
       $res = $zen->updateDataGroup($group_id,$NewGroupName,$NewTableName,( strlen($NewDescript) )?$NewDescript : "NULL");
       if( $res ) {
+	// update session info with changes
+	$vars = $zen->generateDataGroupInfo( array($group_id) );
+	$_SESSION['data_groups'][$group_id] = $vars[$group_id];
+
+	// print useful messages for user
 	$msg = tr("Group ? was updated successfully. ? to customize group ?'s details.",
 		  array($NewGroupName,
 			"--link--",

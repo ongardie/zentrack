@@ -87,6 +87,13 @@ class zen extends zenDate {
      return $val;
    }
 
+   function fixJsVal( $val ) {
+     // escape any js sensitive characters for use in strings
+     if( is_null($val) ) { return "null"; }
+     if( strlen($val) == 0 ) { return "''"; }
+     return "'".str_replace("'", "\\'", str_replace("\\", "\\\\", $val))."'";
+   }
+
    function checkAlpha( $val = '', $special = '_' ) {
      // strips all chars not in a-z, A-Z and $special
      if( !strlen($val) )
@@ -492,11 +499,11 @@ class zen extends zenDate {
       // prints an array of errors
       // in red, as a formatted list
       if( is_array($errs) ) {
-    print "<span class='red'><b>Errors Detected</b>";
+    print "<span class='error'><b>Errors Detected</b>";
     print "<br>If problems persist, contact your "
       ."<a href='{$this->settings['admin_email']}'>Administrator</a>\n<ul>\n";
     foreach($errs as $e)
-      print "<li>$e</li>\n";
+      print "<li class='error'>$e</li>\n";
     print "</ul></span>";
       }
    }
@@ -572,6 +579,23 @@ class zen extends zenDate {
        print "</ul>------<b>MESSAGES</b>------</p>\n";
      }
    }
+
+  /**
+   * STATIC: Prints an array out as formatted text (debug utility)
+   *
+   * @param array $vals can be key/value, multi-level, etc
+   * @param string $title printed as title of array
+   * @return boolean true if the object was valid and printed
+   */
+  function printArray( $vals, $title = null ) {
+    if( $title ) { print "<p><b>$title</b><div style='font-size:11px'>\n"; }
+    if( !is_array($vals) ) { print "<p style='color:red'>-not_array-</p>"; }
+    print "<pre>\n";
+    print_r($vals);
+    print "</pre>\n";
+    if( $title ) { print "</div></p>\n"; }
+    return true;
+  }
    
    /**
     * Translate prepared strings using the translate class

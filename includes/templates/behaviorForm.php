@@ -9,18 +9,19 @@
       <input type='hidden' name='TODO' value=''>
       <table cellpadding="4" cellspacing="1" class='cell'>
 	 <tr>
-	 <td class='titleCell' align='center' colspan='7'>
-	   <b>Edit the Behaviors</b>
+	 <td class='titleCell' align='center' colspan='8'>
+	   <b><?=tr("Edit the Behaviors")?></b>
 	 </td>
 	 </tr>
 	 <tr>
-	 <td width="30" class='cell' align='center'><b>ID</b></td>
-	 <td class='cell' align='center'><b>Enabled</b></td>
-	 <td class='cell' align='center'><b>Sort Order</b></td>
-	 <td class='cell' align='center'><b>Behavior Name</b></td>
-	 <td class='cell' align='center'><b>Match Type</b></td>
-	 <td class='cell' align='center'><b>Field Name</b></td>
-	 <td class='cell' align='center'><b>Group to apply</b></td>
+	  <td width="30" class='cell' align='center'><b>ID</b></td>
+          <td class='cell' align='center'><b><?=tr("Enabled")?></b></td>
+          <td class='cell' align='center'><b><?=tr("Sort Order")?></b></td>
+          <td class='cell' align='center'><b><?=tr("Behavior Name")?></b></td>
+          <td class='cell' align='center'><b><?=tr("Match Type")?></b></td>
+          <td class='cell' align='center'><b><?=tr("Field Name")?></b></td>
+          <td class='cell' align='center'><b><?=tr("Group to apply")?></b></td>
+          <td class='cell' align='center'><b><?=tr("Actions")?></b></td>
 	 </tr>
     <? 
          $groups=$zen->getDataGroups(0);
@@ -42,10 +43,10 @@
              print "$t";
 
              print "<span class='small'>"
-                 . "[<a href='".$elnk."?behavior_id=".$v['behavior_id']."'>".uptr('edit')."</a>]";
+                 . "[<a href='".$elnk."?behavior_id=".$v['behavior_id']."'>".uptr('properties')."</a>]";
              print "<br>";
              print "<span class='small'>"
-                 . "[<a href='".$llnk."?behavior_id=".$v['behavior_id']."'>".uptr('edit details')."</a>]";
+                 . "[<a href='".$llnk."?behavior_id=".$v['behavior_id']."'>".uptr('matches')."</a>]";
 
              print "$te";
 
@@ -56,7 +57,7 @@
 	 }
     ?>
 <tr>
-  <td class="titleCell" colspan="7">
+  <td class="titleCell" colspan="8">
     <?=tr('Press NEW to create new behaviors')?>
     <br>
     <?=tr('Press DONE when you have finished with the edition')?>

@@ -6,7 +6,7 @@
   **
   */  
   
-  include_once("header.php");
+  include_once(dirname(__FILE__)."/header.php");
 
   $page_title = tr("Welcome to zenTrack");
   $expand_tickets = 1;

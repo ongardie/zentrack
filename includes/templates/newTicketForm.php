@@ -127,8 +127,6 @@
   </td>
 </tr>
 <tr>
-  <td>
-<tr>
   <td class="bars" width="125">
     <?=tr("Owner")?>
   </td>

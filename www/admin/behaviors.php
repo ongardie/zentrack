@@ -11,7 +11,7 @@
   include("admin_header.php");
 
   $vars = array();
-  $vars = $zen->getBehaviorList();
+  $vars = $zen->getBehaviorList(0);
 
   $page_title = ($skip)? tr("Admin Section") : tr("Edit Behaviors");
   include("$libDir/nav.php");

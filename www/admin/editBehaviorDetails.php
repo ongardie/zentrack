@@ -23,8 +23,8 @@
       if( $NewFieldName[$i] && strlen($NewFieldName[$i])>0 ) {
         $elements[] = array(
                         "field_name" => $NewFieldName[$i],
-                        "comparator" => $NewComparator[$i],
-                        "match_value"=> $NewMatchValue[$i],
+                        "field_operator" => $NewComparator[$i],
+                        "field_value"=> $NewMatchValue[$i],
                         "sort_order" => $NewSortOrder[$i]
                         );
       }
@@ -40,8 +40,8 @@
         if( $NewFieldName[$i] && strlen($NewFieldName[$i])>0 ) {
           $elements[] = array(
                         "field_name" => $NewFieldName[$i],
-                        "comparator" => $NewComparator[$i],
-                        "match_value"=> $NewMatchValue[$i],
+                        "field_operator" => $NewComparator[$i],
+                        "field_value"=> $NewMatchValue[$i],
                         "sort_order" => $NewSortOrder[$i]
                               );
           $j++;
@@ -53,8 +53,8 @@
       $skip = 1;
     }
   } else {
-    $behavior         = $zen->getBehaviorList( array($behavior_id) );
-    $behavior_details = $behavior[$behavior_id]['fields'];
+    $behavior         = $zen->getBehavior( $behavior_id );
+    $behavior_details = $behavior['fields'];
     if ( !is_array($behavior_details) ) {
       $behavior_details=array();
     }

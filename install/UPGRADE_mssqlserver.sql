@@ -14,8 +14,8 @@ CREATE TABLE ZENTRACK_BEHAVIOR (
 CREATE TABLE ZENTRACK_BEHAVIOR_DETAIL (
   behavior_id NUMERIC(12) NOT NULL,
   field_name VARCHAR(50),
-  comparator VARCHAR(2),
-  match_value VARCHAR(255),
+  field_operator VARCHAR(2),
+  field_value VARCHAR(255),
   sort_order NUMERIC(3)
 );
 
@@ -29,7 +29,7 @@ CREATE TABLE ZENTRACK_GROUP (
 
 CREATE TABLE ZENTRACK_GROUP_DETAIL (
   group_id NUMERIC(12) NOT NULL,
-  value VARCHAR(255),
+  field_value VARCHAR(255),
   sort_order NUMERIC(3)
 );
 

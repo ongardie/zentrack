@@ -1,5 +1,5 @@
 <?
-  include_once("./header.php");  
+  include_once(dirname(__FILE__)."/header.php");  
 ?>
 <!--
  

@@ -63,6 +63,13 @@
   include_once("$libDir/zenTemplate.class");
 
   $zen = new zenTrack( $configFile );
+
+  /**
+   * Generate group info, since it takes several queries
+   */
+  if( is_array($_SESSION) && !$_SESSION['data_groups'] ) {
+    $_SESSION['data_groups'] = $zen->generateDataGroupInfo();
+  }
  
   /**
    * Translator Object Initialization (mlively)
@@ -166,6 +173,7 @@
   }
 
   // security
+  $onLoad = false;
   $vars = array();
   $msg = array();
   $errs = "";
@@ -249,7 +257,7 @@
   **  determine if a login is required
   */
 
-  if( !eregi("(/help/|styles[.]php)",$SCRIPT_NAME) ) {
+  if( !eregi("(/help/|styles[.]php|behavior_js[.]php)",$SCRIPT_NAME) ) {
      include_once("$libDir/login.php");
   }     
 

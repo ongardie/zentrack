@@ -178,7 +178,8 @@ class DB {
       $vars = $recordSet->getArray();
       if( is_array($vars) && count($vars) > 0 ) {
 	foreach($vars as $v) {
-          $vals[] = $v[0];
+	  $k = $v[0];
+          $vals["$k"] = $v[1];
 	}
 	return($vals);
       }

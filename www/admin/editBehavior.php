@@ -13,14 +13,9 @@
   } else {
     $page_title = ( $TODO == "NEW" )? "New Behavior" : "Edit Behavior";
     if ( $TODO != "NEW" ) {
-      $beh_arr = $zen->getBehaviorList(array($behavior_id));
-      if( is_array($beh_arr) ) {
-        $behavior=$beh_arr[$behavior_id];
-        $TODO = "EDIT";
-        extract($behavior);
-      } else {
-        $skip=2;
-      }
+      $behavior = $zen->getBehavior( $behavior_id );
+      $TODO = "EDIT";
+      extract($behavior);
     }
   }
 

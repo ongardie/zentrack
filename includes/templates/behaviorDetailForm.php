@@ -26,24 +26,23 @@
            foreach ($elements as $item) {
              if (isset($item['field_name'])) {
 	       print "<tr>\n";
-               print "$t<select name='NewFieldName[".$j."]'>\n";
+               print "$t<select name='NewFieldName[{$j}]'>\n";
                print "<option value=''>".tr('-new/delete-')."</option>\n";
                foreach($field_list as $fl=>$fn) {
                  $sel=($item['field_name']==$fn)? " selected" : "";
-                 print "<option value='$fn'$sel>$fl</option>\n";
+                 print "<option value='{$fn}'{$sel}>{$fl}</option>\n";
                }
                print "$te";
-               print "$t<select name='NewComparator[".$j."]'>\n";
-               foreach($comp_opers as $cl=>$cn) {
-                 $sel=($item['comparator']==$cn)? " selected" : "";
-                 print "<option value='$cn'$sel>$cl</option>\n";
+               print "$t<select name='NewComparator[{$j}]'>\n";
+               foreach($comp_opers as $key=>$label) {
+                 $sel=($item['field_operator']==$key)? " selected" : "";
+                 print "<option value='{$key}'{$sel}>{$label}</option>\n";
                }
                print "$te";
-               print "$t"."<input type='text' name='NewMatchValue[".$j."]' value='";
-               print $item['match_value'];
-               print "' size='20' maxlength='255'>"."$te";
-               print "$t"."<input type='text' name='NewSortOrder[".$j."]' value='".$item['sort_order'];
-               print "' size='3' maxlength='3'>"."$te";
+               print "{$t}<input type='text' name='NewMatchValue[{$j}]' "
+		 ." value='{$item['field_value']}' size='20' maxlength='255'>{$te}";
+               print "{$t}<input type='text' name='NewSortOrder[{$j}]' "
+		 ." value='{$item['sort_order']}' size='3' maxlength='3'>{$te}";
 	       print "</tr>\n";
 	       $j++;
              }
@@ -51,23 +50,22 @@
 	 }
 	 for( $i=0; $i<$more; $i++ ) {
 	   print "<tr>\n";
-           print "$t<select name='NewFieldName[".$j."]'>\n";
+           print "$t<select name='NewFieldName[{$j}]'>\n";
            print "<option value='' selected>".tr('-new/delete-')."</option>\n";
            foreach($field_list as $fl=>$fn) {
              print "<option value='$fn'>$fl</option>\n";
            }
            print "$te";
-           print "$t<select name='NewComparator[".$j."]'>\n";
+           print "$t<select name='NewComparator[{$j}]'>\n";
            foreach($comp_opers as $cl=>$cn) {
              $sel=($cn=='equals')? " selected" : "";
-             print "<option value='$cn'$sel>$cl</option>\n";
+             print "<option value='{$cn}'{$sel}>{$cl}</option>\n";
            }
            print "$te";
-           print "$t"."<input type='text' name='NewMatchValue[".$j."]' value='";
-           print $item['match_value'];
-           print "' size='20' maxlength='255'>"."$te";
-           print "$t"."<input type='text' name='NewSortOrder[".$j."]' value='".$item['sort_order'];
-           print "' size='3' maxlength='3'>"."$te";
+           print "{$t}<input type='text' name='NewMatchValue[{$j}]' "
+	     ." value='{$item['field_value']}' size='20' maxlength='255'>{$te}";
+           print "$t"."<input type='text' name='NewSortOrder[{$j}]' "
+	     ." value='{$item['sort_order']};' size='3' maxlength='3'>{$te}";
 	   print "</tr>\n";
 	   $j++;
 	 }

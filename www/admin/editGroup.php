@@ -29,8 +29,9 @@
   if( $skip == 1 ) {
     include("$templateDir/adminMenu.php");
   } else if ( $skip == 2 ) {
-    print "<ul><b>" . tr("That group could not be found") . "</b>";
-    print "<br><a href='$rootUrl/admin/groups.php'>" . tr("Click Here to view available groups") . "</a></ul>\n";
+    print "<ul><div class='error'>" . tr("That group could not be found") . "</div>";
+    print "<a href='$rootUrl/admin/groups.php'>" 
+      . tr("Click Here to view available groups") . "</a></ul>\n";
   } else {
     include("$templateDir/groupAdd.php");
   }

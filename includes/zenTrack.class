@@ -615,17 +615,33 @@ class zenTrack extends zen {
    */
 
   /**
+   * Returns a single behavior by id
+   *
+   * @param integer $behavior_id
+   * @return array
+   */
+  function getBehavior( $behavior_id ) {
+    $vals = $this->getBehaviorList(0, array($behavior_id));
+    return $vals["{$behavior_id}"];
+  }
+
+  /**
    * Returns a list of behaviors mapped by the behavior_id with the detail fields for each.  The list
    * will be sorted by the sort_order from the behavior table.
    *
    * @param array $ids is a list of behavior ids to retrieve, if ommitted, all behaviors are listed
+   * @param integer $active 1=active only, 0=all
    * @return array containing behavior_id -> array( data values... )
    */
-  function getBehaviorList( $ids = null ) {
+  function getBehaviorList( $active = 1, $ids = null ) {
     // construct sql statement to retrieve behaviors
     $query = "SELECT * FROM ".$this->table_behavior;
     if( $ids ) {
       $query .= " WHERE behavior_id IN(".join(',',$ids).")";
+    }
+    if( $active ) {
+      $query .= $ids? " AND " : " WHERE ";
+      $query .= " is_enabled = 1 ";
     }
     $query .= " ORDER BY sort_order, behavior_name";
     $this->addDebug("getBehaviorListQuery:",$query,3);
@@ -638,7 +654,7 @@ class zenTrack extends zen {
       foreach( $vals as $v ) {
         $k = $v['behavior_id'];
         $v['fields'] = array();
-        $map[$k] = $v;
+        $map["{$k}"] = $v;
       }
 
       // collect the fields for our list of behaviors
@@ -653,7 +669,7 @@ class zenTrack extends zen {
       if ( is_array($fieldVals) ) {
         foreach($fieldVals as $f) {
           $b = $f['behavior_id'];
-          $map[$b]['fields'][] = $f;
+          $map["{$b}"]['fields'][] = $f;
         }
       }
     }
@@ -745,7 +761,7 @@ class zenTrack extends zen {
                tr("Start Date") => "start_date");
     $custom=$this->getCustomFields(1);
     foreach($custom as $k => $v) {
-      $field_list[$v]=$k;
+      $field_list["{$v}"]=$k;
     }
     ksort($field_list);
     return($field_list);
@@ -757,24 +773,22 @@ class zenTrack extends zen {
    * @return array mapped translated_operator_name -> operator_name sorted by key
    */
   function getBehaviorOperators() {
-    $beh_opers=array(
-                tr("Equals")                   => "eq",
-                tr("Not equal")                => "ne",
-                tr("Contains")                 => "co",
-                tr("Does not contain")         => "nc",
-                tr("Starts with")              => "sw",
-                tr("Ends with")                => "ew",
-                tr("Greater than")             => "gt",
-                tr("Less than")                => "lt",
-                tr("Greater than or equal")    => "ge",
-                tr("Less than or equal")       => "le"
+    return array(
+                "eq"   =>   tr("Equals"),
+                "ne"   =>   tr("Not equal"),
+                "co"   =>   tr("Contains"),
+                "nc"   =>   tr("Does not contain"),
+                "sw"   =>   tr("Starts with"),
+                "ew"   =>   tr("Ends with"),
+                "gt"   =>   tr("Greater than"),
+                "lt"   =>   tr("Less than"),
+                "ge"   =>   tr("Greater than or equal"),
+                "le"   =>   tr("Less than or equal"),
+                "js"   =>   tr("Evaluate")                
                     );
-    ksort($beh_opers);
-    return($beh_opers);
+    //natsort($beh_opers);
+    //return($beh_opers);
   }
-
-
-
 
 
 
@@ -861,20 +875,114 @@ class zenTrack extends zen {
    * DATA GROUP FUNCTIONS
    */
 
+  /**
+   * Return info about data groups, including the field values and the
+   * generated labels for each field.
+   *
+   * @param array $group_ids if provided, only these groups are retrieved, otherwise all groups
+   */
+  function generateDataGroupInfo( $group_ids = null ) {
+    // this will store all of the group information which is to be
+    // returned to the caller
+    $groups = array();
+    
+    // this will store relationships between tables and the groups
+    // which reference each table
+    $tables = array();
+    
+    // collect a list of groups and map them
+    // into useful arrays
+    $query = "SELECT * FROM ".$this->table_group;
+    if( $group_ids ) {
+      $query .= " WHERE group_id IN(".join(",",$group_ids).") ";
+    }
+    $vals = $this->db_queryIndexed($query);
+    // if there are no groups, then skip this process
+    if( !$vals || !count($vals) ) {
+      $this->addDebug("generateDataGroupInfo", "There appear to be no data groups, skipping", 2);
+      return $groups;
+    }
+    foreach($vals as $v) {
+      $k = $v['group_id'];
+      $t = $v['table_name'];
+      $v['fields'] = array();
+      $groups["$k"] = $v;
+      if( $t ) {
+        // if this is a custom group, there will be no
+        // table reference, so we will custom generate the
+        // labels
+        if( !$tables["$t"] ) { $tables["$t"] = array(); }
+        $tables["$t"][] = $k;
+      }
+    }
+    
+    // collect a list of the group details and map them
+    // into the existing groups arrays
+    $query = "SELECT * FROM ".$this->table_group_detail." ORDER BY sort_order";
+    if( $group_ids ) {
+      $query .= " WHERE group_id IN(".join(",",$group_ids).") ";
+    }
+    $vals = $this->db_queryIndexed($query);
+    if( is_array($vals) ) {
+      foreach($vals as $v) {
+        $k = $v['group_id'];
+        // We go ahead and store the label here since the custom groups have no table
+        // and the label is the same as the value.  Additionally, it serves as a good
+        // default.
+        $groups["$k"]['fields'][] = array('field_value'=>$v['field_value'], 'label'=>$v['field_value']);    
+      }
+    }
+
+    // collect the labels for each detail.  We do this process enmasse
+    // to reduce the number of db queries and increase the overall speed
+    foreach($tables as $table=>$grps) {
+      // first we generate a list of all valid entries for the table
+      // and map them in a useful array
+      $id_field = $this->getDataTypeId($table);
+      $fields = $this->getDataTypeFields($table);
+
+      // don't bother trying to specify ids here, we will just get them all
+      // since several groups are likely to use this reference, and it is possible
+      // that the number of ids to match could soar into the thousands.  Just
+      // get them all and sort them out.
+      $vals = $this->db_queryIndexed("SELECT {$fields} FROM {$table}");
+      $set = array();
+      if( is_array($vals) ) {
+        foreach($vals as $v) {
+          $k = $v[$id_field];
+          $set["$k"] = $this->getDataTypeLabel($table,$v);
+        }
+      }
+        
+      // then we iterate through the groups that use this table
+      // and assign labels to all the values in the group
+      foreach($grps as $g) {
+        for($i=0; $i<count($groups["$g"]['fields']); $i++) {
+          // by retrieving each field in the groups map, we will
+          // find the appropriate lable from our set and put it in.
+          $f = $groups["$g"]['fields'][$i]['field_value'];
+          $groups["$g"]['fields'][$i]['label'] = $set["$f"];
+        }
+      }
+    }
+    return $groups;
+  }
+
 
   /**
    * Return the information of the data group specified by $group_id
    *
    * @param integer $group_id
-   * @return array with information about the data group
+   * @return mixed array containin data or false if not found
    */
   function get_data_group( $group_id ) {
     $query = "SELECT * FROM ".$this->table_group." WHERE group_id = $group_id";
     $vals = $this->db_quickIndexed($query);
+    if( !is_array($vals) || !count($vals) ) { return false; }
     $vals['details'] = $this->get_data_group_details($group_id);
     return $vals;
   }
-                                                                                                                             
+                                                                                                          
   /**
    * Return the information of the data group detail specified by $group_id
    *
@@ -903,7 +1011,7 @@ class zenTrack extends zen {
     }
     $ids = array();
     foreach($details as $d) {
-      $ids[] = $d['value'];
+      $ids[] = $d['field_value'];
     }
     $query = "SELECT * FROM {$table} WHERE {$idfield} IN( ".join(",",$ids).")";
     $query .= " ORDER BY {$sortfield}";
@@ -939,6 +1047,15 @@ class zenTrack extends zen {
       $query .= " ORDER BY group_name";
       return( $this->db_queryIndexed($query) );
     }
+  }
+
+  /**
+   * Return a count of entries for each data group
+   */
+  function getDataGroupCounts() {
+    $query = "SELECT group_id, count(*) FROM ".$this->table_group_detail
+      ." GROUP BY group_id";
+    return $this->db_listIndexed($query);
   }
 
   /**
@@ -982,8 +1099,13 @@ class zenTrack extends zen {
    * @param string $table the updated table for the group
    */
   function updateDataGroup( $group_id, $name, $table, $descript ) { 
+    $group = $this->get_data_group($group_id);
+    if( $group['table_name'] != $table ) {
+      $this->db_delete($table_group_detail, "group_id", $group_id);
+    }
     return $this->db_update($this->table_group, "group_id", $group_id, 
-			    array("group_name"=>$name,"table_name"=>$table,"descript"=>$descript));
+			    array("group_name"=>$name,"table_name"=>$table,
+                                  "descript"=>$descript));
   }
 
   /**
@@ -995,7 +1117,7 @@ class zenTrack extends zen {
    */
   function updateDataGroupDetails( $group_id, $vals ) { 
     $this->db_delete($this->table_group_detail, "group_id", $group_id);
-    $this->_insertGroupDetails($group_id, $vals);
+    return $this->_insertGroupDetails($group_id, $vals);
   }
 
   /**
@@ -1012,12 +1134,16 @@ class zenTrack extends zen {
    * Inserts group details into the database
    */
   function _insertGroupDetails( $group_id, $vals ) {
+    $c = 0;
     foreach($vals as $v) {
       // make sure we add in the group id to each row
       $v['group_id'] = $group_id;
       list($ck,$cv) = $this->makeInsertVals($v);
-      $this->db_result("INSERT INTO ".$this->table_group_detail." ($ck) VALUES($cv)");
+      $query = "INSERT INTO ".$this->table_group_detail." ($ck) VALUES($cv)";
+      $this->addDebug("_insertGroupDetails", $query, 3);
+      if( $this->db_result($query) ) { $c++; }
     }
+    return $c;
   }
 
 
@@ -2916,6 +3042,24 @@ class zenTrack extends zen {
    *  SYSTEM UTILS 
    */
 
+  function getDataTypeFields( $table ) {
+    switch( strtoupper($table) ) {
+    case "ZENTRACK_BINS":
+      return "bid,name";
+    case "ZENTRACK_PRIORITIES":
+      return "pid,name";
+    case "ZENTRACK_SYSTEMS":
+      return "sid,name";
+    case "ZENTRACK_TASKS":
+      return "task_id,name";
+    case "ZENTRACK_TYPES":
+      return "type_id,name";
+    case "ZENTRACK_USERS":
+      return "user_id,lname,fname,initials";
+    }
+    return null;
+  }
+
   function getDataTypeLabel( $table, $vals ) {
     // be careful using this, it's still limited
     // $vals is a data row from the data type table
@@ -2945,7 +3089,7 @@ class zenTrack extends zen {
     case "ZENTRACK_TYPES":
       return "priority";
     case "ZENTRACK_USERS":
-      return "last_name, first_name";
+      return "lname, fname";
     }
     return null;
   }

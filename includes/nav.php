@@ -5,8 +5,17 @@
   <script language="javascript">
     var imageUrl = "<?=$imageUrl?>";
   </script>
+
   <script language="javascript" src="<?=$rootUrl?>/javascript.js"></script>
   <script language="javascript" src="<?=$rootUrl?>/popcalendar.js"></script>
+  <?
+  if( is_array($onLoad) ) {
+    foreach($onLoad as $s) {
+      print "<script language='javascript' src='$rootUrl/$s'></script>\n";
+    }
+  }
+  ?>
+
   </head>
   
 <body>

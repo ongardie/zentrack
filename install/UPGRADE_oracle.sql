@@ -13,8 +13,8 @@ CREATE TABLE ZENTRACK_BEHAVIOR (
 CREATE TABLE ZENTRACK_BEHAVIOR_DETAIL (
   behavior_id NUMBER(12) CONSTRAINT bdid_notnull NOT NULL,
   field_name varchar2(50),
-  comparator varchar2(2),
-  match_value varchar2(255),
+  field_operator varchar2(2),
+  field_value varchar2(255),
   sort_order NUMBER(3)
 );
 

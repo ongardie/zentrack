@@ -250,10 +250,10 @@ var	today =	new	Date()
 				if (i==monthSelected){
 					sName =	"<B>" +	sName +	"</B>"
 				}
-				sHTML += "<tr><td id='m" + i + "' onmouseover='this.style.backgroundColor=\"#FFCC99\"' onmouseout='this.style.backgroundColor=\"\"' style='cursor:pointer' onclick='monthConstructed=false;monthSelected=" + i + ";constructCalendar();popDownMonth();event.cancelBubble=true'>&nbsp;" + sName + "&nbsp;</td></tr>"
+				sHTML += "<tr><td id='m" + i + "' onmouseover='this.style.backgroundColor=\"#FFCC99\"' onmouseout='this.style.backgroundColor=\"\"' style='cursor:pointer' onclick='monthConstructed=false;monthSelected=" + i + ";constructCalendar();popDownMonth();if(event)event.cancelBubble=true;else if(window.event)window.event.cancelBubble=true'>&nbsp;" + sName + "&nbsp;</td></tr>"
 			}
 
-			document.getElementById("selectMonth").innerHTML = "<table width=70	style='font-family:arial; font-size:11px; border-width:1; border-style:solid; border-color:#a0a0a0;' bgcolor='#FFFFDD' cellspacing=0 onmouseover='clearTimeout(timeoutID1)'	onmouseout='clearTimeout(timeoutID1);timeoutID1=setTimeout(\"popDownMonth()\",100);event.cancelBubble=true'>" +	sHTML +	"</table>"
+			document.getElementById("selectMonth").innerHTML = "<table width=70	style='font-family:arial; font-size:11px; border-width:1; border-style:solid; border-color:#a0a0a0;' bgcolor='#FFFFDD' cellspacing=0 onmouseover='clearTimeout(timeoutID1)'	onmouseout='clearTimeout(timeoutID1);timeoutID1=setTimeout(\"popDownMonth()\",100);if(event)event.cancelBubble=true;else if(window.event)window.event.cancelBubble=true;'>" +	sHTML +	"</table>"
 
 			monthConstructed=true
 		}
@@ -323,7 +323,7 @@ var	today =	new	Date()
 					sName =	"<B>" +	sName +	"</B>"
 				}
 
-				sHTML += "<tr><td id='y" + j + "' onmouseover='this.style.backgroundColor=\"#FFCC99\"' onmouseout='this.style.backgroundColor=\"\"' style='cursor:pointer' onclick='selectYear("+j+");event.cancelBubble=true'>&nbsp;" + sName + "&nbsp;</td></tr>"
+				sHTML += "<tr><td id='y" + j + "' onmouseover='this.style.backgroundColor=\"#FFCC99\"' onmouseout='this.style.backgroundColor=\"\"' style='cursor:pointer' onclick='selectYear("+j+");if(event)event.cancelBubble=true;else if(window.event)window.event.cancelBubble=true;'>&nbsp;" + sName + "&nbsp;</td></tr>"
 				j ++;
 			}
 
@@ -597,7 +597,7 @@ var	today =	new	Date()
 	}
 
 	document.onkeypress = function hidecal1 () { 
-		if (event.keyCode==27) 
+		if (window.event && window.event.keyCode==27) 
 		{
 			hideCalendar()
 		}
@@ -616,5 +616,22 @@ var	today =	new	Date()
 	}
 	else
 	{
-		window.onload=init
+	  //var oldOnLoad = window.onload;
+	  //window.onload = mergeOnload(oldOnLoad, init);
+	  window.onload = mergeInit(window.onload, init);
 	}
+
+function mergeInit(fxn1, fxn2) {
+  if( fxn1 ) {
+    return function() {
+      var fx = fxn1;
+      var fy = fxn2;
+      fx();
+      fy();
+    }
+  }
+  else {
+    return fxn2;
+  }
+}
+

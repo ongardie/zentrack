@@ -79,6 +79,11 @@
      $zen->printDebugMessages();
      print "</span>\n";
   }
+
+  if( $Debug_Mode ) { 
+    // used by behavior_js.php
+    print "<div id='behaviorDebugDiv'></div>\n";
+  }
 ?>
 
 </body>

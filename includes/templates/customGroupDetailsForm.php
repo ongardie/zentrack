@@ -1,117 +1,74 @@
       <br>
-      <p class='error'><?=tr("This screen will let you list, add, edit and delete data group details.") . '  '
-          .tr("Please refer to documentation.")?></p>
+      <p class='error'><?=tr("Select the items that will appear in this group and their order.")?></p>
       <ul>
-      <form name='customGroupDetailsForm' action='<?=$SCRIPT_NAME?>' method='post'>
+      <form name='groupDetailsForm' action='<?=$SCRIPT_NAME?>' method='post'>
       <input type='hidden' name='TODO' value=''>
+      <input type='hidden' name='more' value='<?=$more?>'>
       <input type='hidden' name='group_id' value='<?=$group_id?>'>
       <table cellpadding="2" cellspacing="1" class='plainCell'>
 	 <tr>
-	 <td class='titleCell' align='center' colspan='4'>
-	   <b>Edit the Custom Data Group Details</b>
-	 </td>
+	   <td class='titleCell' align='center' colspan='3'>
+ 	    <b><?=tr("Custom Group Details")?></b>
+	   </td>
 	 </tr>
 	 <tr>
-	 <td class='cell' align='center'><b>Item</b></td>
-	 <td width="30" class='cell' align='center'><b>Sort Order</b></td>
-	 <td width="30" class='cell' align='center'><b>Delete</b></td>
+           <td class='cell' align='center'><b><?=tr("Delete")?></b></td>
+           <td class='cell' align='center'><b><?=tr("Value")?></b></td>
+           <td class='cell' align='center'><b><?=tr("Order")?></b></td>
 	 </tr>
     <? 
-         unset($js_vals);
-         $num = count($elements) + $more;
-	 if( is_array($elements) ) {
-	   $j = 0;
-	   $t = "\t<td class='bars'>";
-	   $te = "</td>\n";
-           foreach ($elements as $item) {
-             if (isset($item['value'])) {
-	       print "<tr>\n";
-               print "$t"."<input type='text' name='NewValue[".$j."]' value='";
-//               print ($item['value']) ? "$item['value']" : "-new-";
-               print $item['value'];
-               print "' size='20' maxlength='255' onChange='return checkDetails($j, this)'>"."$te";
-               print "$t"."<input type='text' name='NewSortOrder[".$j."]' value='".$item['sort_order'];
-               print "' size='3' maxlength='3'>"."$te";
-	       print "$t<input type='checkbox' name='NewDelete[$j]' value='1'";
-	       print ( $NewDelete[$j] ) ? " checked>$te" : ">$te";
-	       print "</tr>\n";
-               $js_vals[]=($item['value'])?$item['value'] : 0;
-	       $j++;
-             }
-	   }
-	 }
-	 for( $i=0; $i<$more; $i++ ) {
-	   print "<tr>\n";
-           print "$t"."<input type='text' name='NewValue[".$j."]' value='";
-           print "-new-";
-           print "' size='20' maxlength='255' onChange='return checkDetails($j, this)'>"."$te";
-           print "$t"."<input type='text' name='NewSortOrder[".$j."]' value='0";
-           print "' size='3' maxlength='3'>"."$te";
-	   print "$t<input type='checkbox' name='NewDelete[$j]' value='1'";
-	   print ">$te";
-	   print "</tr>\n";
-	   $js_vals[] = 0;
-	   $j++;
-	 }
-
+      for($i=0; $i<count($elements); $i++) {
+	$e = $elements[$i];
+	$val = $zen->ffv($e['field_value']);
+	$sort = $zen->ffv($e['sort_order']);
+	$checked = isset($e['new_delete']) && $e['new_delete']? " CHECKED" : ""; 
     ?>
+      <tr>
+        <td class='cell'>
+	  <input type='checkbox' name='NewDelete[<?=$i?>]' value='1'<?=$checked?>>
+        </td>
+        <td class='cell'>
+	  <input type='textbox' name='NewValue[<?=$i?>]' value='<?=$val?>'> 
+        </td>
+        <td class='cell'>
+	  <input type='textbox' name='NewSortOrder[<?=$i?>]' value='<?=$sort?>'> 
+        </td>
+      </tr>
+    <?
+       }
+    ?>
+
 <tr>
-  <td class="titleCell" colspan="4">
+  <td class="titleCell" colspan="3">
     <?=tr('Press MORE to create new detail items')?>
     <br>
     <?=tr('Press LESS to remove blank rows')?>
     <br>
-    <?=tr('Press Save to save changes')?>
+    <?=tr('Press Save to store your changes')?>
     <br>
-    <?=tr('Press Reset to return to original values')?>
+    <?=tr('Press Reset to ignore them')?>
   </td>
 </tr>
       <tr>
-	 <td class='cell' colspan='4'>
+	 <td class='cell' colspan='3'>
 	 <input type='submit' value='<?=uptr('More')?>' onClick="return setTodo('MORE')">
          &nbsp;
          <input type='submit' value='<?=uptr('less')?>' onClick="return setTodo('LESS')">
 	 &nbsp;
-	 <input type='submit' class='submit' value='<?=tr('Save')?>' onClick="return setTodo('Save')">
-	 &nbsp;
-	 <input type='submit' class='submitPlain' value='<?=tr('Reset')?>' onClick="return setTodo('Reset')">
+         <input type='submit' class='submit' value='<?=tr('Save')?>' onClick="return setTodo('Save')">
+         &nbsp;
+         <input type='submit' class='submitPlain' value='<?=tr('Reset')?>' onClick="return setTodo('Reset')">
          </td>
       </tr>
       </table>
       </ul>
 
-      <input type='hidden' name='more' value='<?=$more?>'>
       </form>
+
+	 <div class='note'>You can enter a blank field by entering <b>-blank-</b></div>
+
       <script language='javascript'>
-	 var i;
-         var ci;
-         var detail = [ <?=join(",",$js_vals)?> ];
-         function checkDetails( num, f ) {
-	   if( num == "" )
-	     num = 0;
-	   val = f.selectedIndex+"";
-	   for( i=0; i<detail.length; i++ ) {
-	     if( i != num ) {
-	       if( detail[i] > 0 && detail[i] == val ) {
-		 alert("There is already a detail item with that value.");
-		 f.selectedIndex = detail[num];
-		 return false;
-	       }
-	     }
-	   }
-	   detail[num] = val;
-	   return true;
-	 }
-
-	 function setTodo( val ) {
-	   document.customGroupDetailsForm.TODO.value = val;
-	 } 	 
-      </script> 
-
-
-
-
-
-
-
-
+          function setTodo( val ) {
+           document.groupDetailsForm.TODO.value = val;
+         }
+      </script>

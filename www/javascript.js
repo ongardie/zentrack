@@ -46,7 +46,9 @@ function mOvr(src,clrOver,txtOver) {
 	src.style.cursor = 'hand'; 
 	src.style.backgroundColor = clrOver;
 	if( txtOver != null &&  txtOver != "" ){
-	  src.children.tags('A')[0].style.color = txtOver;
+	  if( src.children ) {
+	    src.children.tags('A')[0].style.color = txtOver;
+	  }
 	}
 }
 
@@ -54,11 +56,14 @@ function mOut(src,clrIn,txtIn) {
     src.style.cursor = 'default'; 
     src.style.backgroundColor = clrIn; 
     if( txtIn != null && txtIn != "" ){
-      src.children.tags('A')[0].style.color = txtIn;
+      if( src.children ) {
+	src.children.tags('A')[0].style.color = txtIn;
+      }
    }
 }
 
 function mClk(src) {
+  if( !src.children ) { return; }
   if( src.children.tags('A') && src.children.tags('A').length > 0 ) {
     src.children.tags('A')[0].click();
   }
@@ -84,6 +89,25 @@ function mClassX( obj, classname, hand ) {
   }
   else {
     obj.setAttribute('class',classname);
+  }
+}
+
+function makeTimeString() {
+  var date = new Date();
+  return date.getHours()+":"+date.getMinutes()+":"+date.getSeconds()+"-"+date.getMilliseconds();
+}
+
+function mergeFunctions(fxn1, fxn2) {
+  if( fxn1 ) {
+    return function() {
+      var fx = fxn1;
+      var fy = fxn2;
+      fx();
+      fy();
+    }
+  }
+  else {
+    return fxn2;
   }
 }
 

@@ -6,14 +6,14 @@
       <input type='hidden' name='group_id' value='<?=$group_id?>'>
       <table cellpadding="2" cellspacing="1" class='plainCell'>
 	 <tr>
-	 <td class='titleCell' align='center' colspan='3'>
-	   <b>Edit the Data Group Details</b>
-	 </td>
+	   <td class='titleCell' align='center' colspan='3'>
+  	     <b><?=tr("Data Group Details")?></b>
+	   </td>
 	 </tr>
 	 <tr>
-	 <td width="30" class='cell' align='center'><b>Show</b></td>
-	 <td class='cell' align='center'><b>Item</b></td>
-	 <td class='cell' align='center'><b>Order</b></td>
+           <td width="30" class='cell' align='center'><b><?=tr("Show")?></b></td>
+           <td class='cell' align='center'><b><?=tr("Item")?></b></td>
+           <td class='cell' align='center'><b><?=tr("Order")?></b></td>
 	 </tr>
     <? 
 	 if( is_array($elements) ) {
@@ -25,7 +25,7 @@
              print "$t"."<input type='checkbox' name='NewUseInGroup[".$j."]' value='".$elements[$i][0]."'";
              $so=0;
              for($k=0; $k<count($group_details); $k++) {
-               if($group_details[$k]['value'] == $elements[$i][0]) {
+               if($group_details[$k]['field_value'] == $elements[$i][0]) {
                  print " checked ";
                  $so=$group_details[$k]['sort_order'];
                }
@@ -62,10 +62,6 @@
            document.groupDetailsForm.TODO.value = val;
          }
       </script>
-                                                                                                                             
-
-
-
 
 
 
