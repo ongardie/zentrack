@@ -1,5 +1,5 @@
 
-To move ticket, select reply, and fill out the form below.  If the ticket id doesn't appear in the subject, simply insert #nnnn: into the subject, before the action, where nnnn is the ticket's id.
+To move ticket, select reply, and fill out the form below.  Make sure that "#nnnn: move" appears in the subject, where nnnn is the id of the ticket.
 
 @Bin:
 (*place an x in the appropriate box*)

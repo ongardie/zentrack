@@ -767,7 +767,7 @@ class zenTrack extends zen {
     if( $res && $this->settings["email_assign"] == "on" ) {
       $recipients = $this->get_notify_recipients($id);
       if( is_array($recipients) && count($recipients) ) {
-	$subject = "ticket #$id accepted by $name";
+	$subject = "ticket #$id: accepted by $name";
 	$emailParams["Assigned by"] = $this->formatName($user_id);
 	if( $comments )
 	  $emailParams["body"] = htmlentities($comments);
@@ -812,7 +812,7 @@ class zenTrack extends zen {
       $recipients = $this->get_notify_recipients($id);
       if( is_array($recipients) && count($recipients) ) {
 	$bin = $t["bin_id"];
-	$subject = "ticket #$id closed";
+	$subject = "ticket #$id: closed";
 	$emailParams["Close Time"] = $this->showDateTime($this->currTime);
 	if( $comments )
 	  $emailParams["body"] = htmlentities($comments);
@@ -869,7 +869,7 @@ class zenTrack extends zen {
       if( is_array($recipients) && count($recipients) ) {
 	if( !$name )
 	  $name = $this->formatName($recipient,1);
-	$subject = "ticket #$id assigned to $name";
+	$subject = "ticket #$id: assigned to $name";
 	$emailParams["Assigned by"] = $this->formatName($user_id);
 	$emailParams["Assigned to"] = $name;
 	if( $comments )
@@ -959,7 +959,7 @@ class zenTrack extends zen {
 	$recipients = $this->get_notify_recipients($id);
 	if( is_array($recipients) && count($recipients) ) {
 	  $bin = $t["bin_id"];
-	  $subject = "Ticket #$id closed";
+	  $subject = "Ticket #$id: closed";
 	  $emailParams["Close Time"] = $this->showDateTime($this->currTime);
 	  if( $comments )
 	    $emailParams["body"] = htmlentities($comments);
@@ -998,7 +998,7 @@ class zenTrack extends zen {
 	$recipients = $this->get_notify_recipients($id);
 	if( is_array($recipients) && count($recipients) ) {
 	  $bin = $t["bin_id"];
-	  $subject = "Ticket #$id closed";
+	  $subject = "Ticket #$id: closed";
 	  $emailParams["Close Time"] = $this->showDateTime($this->currTime);
 	  if( $comments )
 	    $emailParams["body"] = htmlentities($comments);
@@ -1244,7 +1244,7 @@ class zenTrack extends zen {
       $bin = $t["bin_id"];
       $recipients = $this->get_notify_recipients($id);
       if( is_array($recipients) ) {
-	$subject = "Ticket #$id closed";
+	$subject = "Ticket #$id: closed";
 	$emailParams["Close Time"] = $this->showDateTime($this->currTime);
 	if( $comments )
 	  $emailParams["body"] = htmlentities($comments);
@@ -1278,9 +1278,9 @@ class zenTrack extends zen {
 	$recipients = $this->get_notify_recipients($id);
 	$name = $this->formatName($user_id);
 	if( is_array($recipients) && count($recipients) ) {
-	  $subject = "Ticket #$id assigned to $name";
+	  $subject = "Ticket #$id: assigned to $name";
 	  $emailParams["Assigned To"] = $name;
-	  $emailParams["body"] = "Ticket #$id was reassigned by $name";
+	  $emailParams["body"] = "Ticket #$id: was reassigned by $name";
 	  $emailParams["tid"] = $id;
 	  $message = $this->formatEmailMessage($emailParams);
 	  $this->sendEmail($recipients,$subject,$message,$user_id);
@@ -1362,7 +1362,7 @@ class zenTrack extends zen {
 	 $recipients = $this->get_notify_recipients($id);
 	 if( is_array($recipients) && count($recipients) ) {
 	   $recipient = array_unique($recipients);
-	   $subject = "Ticket #$id created";
+	   $subject = "Ticket #$id: created";
 	   $emailParams["Open Time"] = $this->showDateTime($this->currTime);
 	   if( $comments )
 	     $emailParams["body"] = htmlentities($comments);
@@ -2128,20 +2128,25 @@ class zenTrack extends zen {
 	$headers .= "cc: $cc_address\n";
       }
 
-      // load the header and footer
-      $hd_tmp = new zenTemplate($this->templateDir."/email/heading.template");
-      $ft_tmp = new zenTemplate($this->templateDir."/email/footer.template");
-      // try to find the id
-      if( preg_match("/ticket #?([0-9]+)/i",$subject,$mt) ) {
-	$id = $mt[1];
+      if( $this->settings["email_interface_enabled"] ) {
+	// load the header and footer
+	$hd_tmp = new zenTemplate($this->templateDir."/email/heading.template");
+	$ft_tmp = new zenTemplate($this->templateDir."/email/footer.template");
+	// try to find the id
+	if( preg_match("/ticket #?([0-9]+)/i",$subject,$mt) ) {
+	  $id = $mt[1];
+	}
+	else {
+	  $id = "nnnn";
+	}
+	$ft_tmp->values(array("id"=>$id));
+	// finalize and send the message
+	$message = (get_magic_quotes_gpc())? $message : addslashes($message);
+	$message = $hd_tmp->process().$message.$ft_tmp->process();
       }
       else {
-	$id = "nnnn";
+	$message = (get_magic_quotes_gpc())? $message : addslashes($message);
       }
-      $ft_tmp->values(array("id"=>$id));
-      // finalize and send the message
-      $message = (get_magic_quotes_gpc())? $message : addslashes($message);
-      $message = $hd_tmp->process().$message.$ft_tmp->process();
       $subject = (get_magic_quotes_gpc())? $subject : addslashes($subject);
       $headers = str_replace("\n", "\r\n", $headers);
       $this->addDebug("sendEmail","$recipient_address,$subject,$headers",3);

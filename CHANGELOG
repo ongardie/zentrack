@@ -15,28 +15,41 @@
 ----- V2.3.1 (2003-03-19) ----
 
 2003-03-19, Kato
+  Enhanced egate system to always send a reply if possible
+  Some errors did not recieve a reply message.  Also corrected
+  some errors with emails send from web pages.
+    - 
   Fixed email notifications which were not working
   (ticket create, assign, and close)
-  
+    - zentrack/includes/zenTrack.class 1.79
   Removed some extraneous queries by passing the ticket
   array rather than the id
-
+    - zentrack/includes/zenTrack.class 1.79
+    - zentrack/includes/templates/ticket_actionBar.php 1.4
   Fixed notify bug causing blank entries in notify list
-
+    - zentrack/includes/zenTrack.class 1.79
   Fixed error with assigning tickets to users who don't
   have access to bin ticket is in. (Tickets can now only be
   assigned to users with access to the ticket's current bin)
-
+    - zentrack/includes/zenTrack.class 1.79
+    - zentrack/includes/templates/actions/assign.php 1.5
+    - zentrack/www/actions/assign.php 1.6
   Fixed issue with tab counts: related always displaying 1, 
   even if should be 0
-
+    - zentrack/includes/zenTrack.class 1.79
   Fixed problem with logs showing action as LOG, even if a different
   one is chosen.
-
+    - zentrack/includes/templates/actions/log.php 1.3
+    - zentrack/www/actions/log.php 1.6
+  Fixed log urls with caps and ? in them to format properly
+    - zentrack/includes/templates/ticket_logBox.php 1.9
   Corrected date shown in search log results.
-
+    - zentrack/includes/templates/searchLogList.php 1.6
   Correcting user names not showing correctly in generated reports
-
+    - zentrack/includes/reportDataParser.php 1.8
+  Filtered projects from the Assigned to ... list
+    - zentrack/www/assignedProjects.php 1.6
+    - zentrack/www/assignedTickets.php 1.7
 
 2003-03-13, Kato
   Adding more template forms missing in cvs

@@ -1,5 +1,5 @@
 
-Select reply, and fill out the form below to create a log entry for the ticket.  If the ticket id doesn't appear in the subject, simply insert #nnnn: into the subject, before the action, where nnnn is the ticket's id.
+Select reply, and fill out the form below to create a log entry for the ticket.  Make sure that "#nnnn: log" appears in the subject, where nnnn is the id of the ticket.
 
 @Activity:
 (*required: check the appropriate box*)

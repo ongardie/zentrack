@@ -66,7 +66,7 @@
    *
    * @param string $template is the template name to include
    */
-  function egate_store_template( $template ) {
+  function egate_store_template( $template, $id = 0 ) {
     global $email_templates;
     // create a subject if appropriate
     $sub = egate_get_subject();
@@ -76,7 +76,10 @@
       $tmp = str_replace("form_","",$tmp);
       // we only want it if it's a real template value
       if( in_array($tmp,$form_template_list) ) {
-	egate_store_subject(ucwords(str_replace("_"," ",$tmp)));
+	$txt = ucwords(str_replace("_"," ",$tmp));
+	if( $id )
+	  $txt = "#$id: $txt";
+	egate_store_subject($txt);
       }
     }
     // store our template
@@ -1110,7 +1113,7 @@
 	global $form_template_list;
 	$str = strtolower(get_subject_param($params,"template",$body));
 	if( in_array($str,$form_template_list) ) {
-	  egate_store_template("form_$str.template");
+	  egate_store_template("form_$str.template", $id);
 	  egate_log("returning $str form",3);
 	}
 	else {
@@ -1208,35 +1211,20 @@
       // peform the action
       $success = perform_ticket_action($name,$email,$action,$ticket,$body,$params);
 
-      // todo: send a reply email
-      $rec = array(array("name"=>$name,"email"=>$email));
-      $rep = send_reply_mail( $rec, $ticket["id"], $success, $action );
-      if( !$rep ) {
-	egate_log("reply email failed to $name <$email>",2);
-      }
+    }
+
+    // todo: send a reply email
+    $rec = array(array("name"=>$name,"email"=>$email));
+    $rep = send_reply_mail( $rec, $ticket["id"], $success, $action );
+    if( !$rep ) {
+      egate_log("reply email failed to $name <$email>",2);
     }
 
     // write the log entry
     egate_log_write();
 
-    //
-    // todo: fix the formatEmail in zenTrack.class to use templates
-    // todo: and make sendEmail create some custom options for
-    // todo: including special templates for user activities such
-    // todo: as sending approve blurb to approval person when
-    // todo: ticket is set to pending, etc
-    //
     // todo: fix user_id to match person sending, rather than egate for
     //       checking owner of ticket/valid actions
-    //
-    // todo: add docs for all of this
-    //
-    // todo: email_notify config setting
-    //
-    // todo: check email in notify list, reject from non-notify users
-    //
-    // todo: testing
-    //
 
     // success
     return $success;
