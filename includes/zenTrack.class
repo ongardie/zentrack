@@ -5388,8 +5388,8 @@ class zenTrack extends zen {
   //paging feature
   function build_geturl()
    {
-    list($fullfile, $voided) = explode("?", $_ENV['REQUEST_URI']);
-    $cgi = $_ENV['REQUEST_METHOD'] == 'GET' ? $_GET : $_POST;
+    list($fullfile, $voided) = explode("?", $_SERVER['REQUEST_URI']);
+    $cgi = $_SERVER['REQUEST_METHOD'] == 'GET' ? $_GET : $_POST;
 
     reset ($cgi);
     while (list($key, $value) = each($cgi)) {

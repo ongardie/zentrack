@@ -8,7 +8,7 @@
 <script type="text/javascript">
 function printpopup(varialbe)
 {
-location.href ="<?=$_ENV['SCRIPT_NAME']?>?id=<?=$id?>&company_id="+varialbe
+location.href ="<?=$_SERVER['SCRIPT_NAME']?>?id=<?=$id?>&company_id="+varialbe
 }
 </script>
 

@@ -7,7 +7,7 @@
   
   $adminUrl = $helpUrl."/admin";
   
-  $script = basename($_ENV['SCRIPT_NAME']);
+  $script = basename($_SERVER['SCRIPT_NAME']);
   if( $script == 'varfields.php' ) {
      $page_name = 'Variable Fields';
   }

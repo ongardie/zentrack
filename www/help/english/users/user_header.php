@@ -9,8 +9,8 @@
 ?>
 <p class='bigBold' align='center'>
 <?=
-  basename($_ENV['SCRIPT_NAME']) == 'index.php'?
+  basename($_SERVER['SCRIPT_NAME']) == 'index.php'?
      'Overview' : 
-     ucwords(str_replace('_', ' ', str_replace('.php','',basename($_ENV['SCRIPT_NAME']))));
+     ucwords(str_replace('_', ' ', str_replace('.php','',basename($_SERVER['SCRIPT_NAME']))));
 ?>
 </p>

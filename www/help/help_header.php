@@ -30,7 +30,7 @@
     $helpBase = $GLOBALS['helpBase'];
 
     // find out where we are in the list
-    $thisPage = basename($_ENV['SCRIPT_NAME']);
+    $thisPage = basename($_SERVER['SCRIPT_NAME']);
     $keys = array_keys($list);
     $lastPage = null;
     $nextPage = null;
