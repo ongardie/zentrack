@@ -40,7 +40,7 @@
       $d = preg_replace('/([A-Z])/', ' \\1', $d);
       $d = str_replace('_', ' ', $d);
       $d = ucwords($d);
-      $errs[] = tr("$d is required");
+      $errs[] = tr("? is required",array($d));
     }
   }
   

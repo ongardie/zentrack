@@ -94,7 +94,7 @@
     if( $id && $customFieldsArray && count($varfield_params) ) {
       $res = $zen->updateVarfieldVals($id, $varfield_params);
       if( !$res ) {
-        $errs[] = tr("? created, but variable fields could not be saved", tr('Ticket'));
+        $errs[] = tr("? created, but variable fields could not be saved", array(tr('Ticket')));
       }      
     }
     

@@ -85,7 +85,7 @@
        if( $customFieldsArray && count($varfield_params) ) {
          $res = $zen->updateVarfieldVals($id, $varfield_params, $login_id, $bin_id);
          if( !$res ) {
-           $errs[] = tr("? updated, but variable fields could not be saved", tr($x));
+           $errs[] = tr("? updated, but variable fields could not be saved", array(tr($x)));
          }
        }
      }

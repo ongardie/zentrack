@@ -61,7 +61,7 @@
   
   if( !is_array($ticket) || !count($ticket) ) {
     $pt = $page_type == 'project'? 'projects.php' : 'index.php';
-    $msg = tr("Invalid ? id requested", tr($page_type));
+    $msg = tr("Invalid ? id requested", array(tr($page_type)));
     include("$rootWWW/$pt");
     exit;
   }
