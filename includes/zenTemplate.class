@@ -136,7 +136,15 @@ class zenTemplate {
 	    $str = $this->_parseString($parts[2]);
 	    // loop the list and make output text
 	    foreach($vars as $k=>$v) {
-	      $tmp = str_replace("{index}", $k, $str);
+              $tmp=$str;
+              if($this->_getVar("field_value")==$k) {
+                $tmp = str_replace("{selected}", " selected", $tmp);
+                $tmp = str_replace("{checked}", " checked", $tmp);
+              } else {
+                $tmp = str_replace("{selected}", "", $tmp);
+                $tmp = str_replace("{checked}", "", $tmp);
+              }
+	      $tmp = str_replace("{index}", $k, $tmp);
 	      $txt .= str_replace("{value}", $v, $tmp);
 	    }
 	    return $txt;
@@ -238,6 +246,14 @@ class zenTemplate {
       else if( $v == "value" ) {
 	$str .= "{value}";
       }
+      // this is used for list elements and is set to " selected" when the key equals the field_value
+      else if( $v == "selected" ) {
+	$str .= "{selected}";
+      }
+      // this is used for list elements and is set to " checked" when the key equals the field_value
+      else if( $v == "checked" ) {
+	$str .= "{checked}";
+      }
       // this is another variable
       else {
 	$str .= $this->_getVar($v);
@@ -266,7 +282,6 @@ class zenTemplate {
   var $_zen;
   var $_text;  //the template data loaded and ready for parsing
   var $_vars;  //the variables to use for template parsing
-
 }
 
 ?>
