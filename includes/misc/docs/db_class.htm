@@ -1,0 +1,218 @@
+<html>
+<head>
+<title>Reflection Test</title>
+<LINK REL=StyleSheet HREF="stylesheet.css" TYPE="text/css">
+</head>              
+<body bgcolor='#FFFFFF' text='#000000' link='#000066' vlink='#006666'>
+<a name='top'></a>
+<ul>
+  <table bgcolor='#EEEEEE' width=600>
+  <tr>
+    <td colspan=4 class=titleCell>
+       Pick a Script to Analyze
+    </td>
+  </tr>
+  <tr>
+   <td><b>Script:</b></td>
+   <form method=post action='/reflectTest/reflectTest.php'>
+   <td colspan=3>/web/phpzen/sub/devtrack/&nbsp;<input type=text name='file' size=50 maxlength=500 value='includes/db.class'></td>
+  </tr>
+  <tr>
+    <td><b>Type:</b></td>
+    <td colspan=3>
+       <select name=type>
+<option SELECTED>PHP</option><option>PERL</option><option>JSP</option>       </select>
+    </td>
+  </tr>
+  <tr>
+   <td>
+     Show:
+   </td>
+   <td>
+     <input type=checkbox name=s_d CHECKED>&nbsp;Details
+     <br>
+     <input type=checkbox name=s_s >&nbsp;Sessions
+     <br>
+     <input type=checkbox name=s_g >&nbsp;Globals
+   </td>
+   <td valign=top>
+     <input type=checkbox name=s_i CHECKED>&nbsp;Includes
+     <br>
+     <input type=checkbox name=s_f CHECKED>&nbsp;Functions
+   </td>
+   <td valign=top>
+     <input type=checkbox name=s_sys >&nbsp;Syscalls
+     <br>
+     <input type=checkbox name=s_v >&nbsp;Vars
+   </td>
+  </tr>
+  <tr>
+    <td colspan=4 class='titleCell'><input type=submit value='View'></td>
+  </tr>
+  </form>
+  </table>
+  <a href='/reflectTest/reflectTest.php?hlp=1&file=/reflectTest/reflectTest.php'>Help</a>&nbsp;&nbsp;<a href='/reflectTest/reflectTest.php'>Reset</a>
+</ul>
+     &nbsp;<P>
+     <b><font size=4 color="#000099">includes/db.class</font></b>
+     </p>
+     <P>
+     <a href='#details'>Details</a>&nbsp;|&nbsp;<a href='#includes'>Includes</a>&nbsp;|&nbsp;<a href='#functions'>Functions</a>&nbsp;|&nbsp;<a href='/reflectTest/reflectTest.php?src=1&file=includes/db.class&s_s=&s_g=&s_i=on&s_f=on&s_sys=&s_d=on&s_v='>Show Source</a>
+ 
+     
+                                               
+       </p><P>&nbsp;<a name='details'></a>
+       <P>
+       <hr align=left width=400 color='teal'>
+       <b>Page Details</b>
+       <hr align=left width=400 color='teal'>
+       <ul>
+       <P><i>
+<br>
+</i>
+ 
+      </ul>
+       <P><a href='#top'>top</a><P>&nbsp;<a name='includes'></a>
+      
+       
+       
+       <hr align=left width=400 color='teal'>
+       <b>Included Files</b>
+       <hr align=left width=400 color='teal'>
+       <ul>
+       
+<font color='#999999'>No includes found</font>       </ul>
+       <P><a href='#top'>top</a><P>&nbsp;<a name='sessions'></a>
+       
+           	
+	    <hr align=left width=400 color='teal'>
+	    <b>Functions:</b>
+	    <hr align=left width=400 color='teal'>
+	    <ul>
+	    <table bgcolor='#EEEEEE' width=600><tr><td class="titleCell">Name</td><td class='titleCell'>Parameters</td><td class='titleCell'>Line</td><td class='titleCell'>Comments</td></tr>
+<tr><td colspan=4 class='subTitle'>C</td></tr>
+<tr bgcolor='#FFFFFF'>
+<td class='nameCell' valign=top>checkSlashes</td><td class='valueCell' valign=top>
+val = ''</td><td class='lineCell' valign=top>200</td><td class='commentCell' valign=top>checks incoming data for proper escaped ' marks
+<br>to insure insertion integrity
+</td>
+</tr>
+<tr bgcolor='#DFDFDF'>
+<td class='nameCell' valign=top>complexWhere</td><td class='valueCell' valign=top>
+params</td><td class='lineCell' valign=top>262</td><td class='commentCell' valign=top>takes an indexed array as a list of columns and
+<br>an array containing the operator and value of each
+<br>to match and makes them into an sql
+<br>format ready for use in a WHERE statement
+<br>the format is [&quot;column_name&quot;] = array(&quot;operator&quot;,&quot;value&quot;)
+<br>where operator is a comparitor like =,&gt;,&gt;=,LIKE,etc
+</td>
+</tr>
+<tr><td colspan=4 class='subTitle'>D</td></tr>
+<tr bgcolor='#FFFFFF'>
+<td class='nameCell' valign=top>DB</td><td class='valueCell' valign=top>
+host = ''<br>user = ''<br>password = ''<br>database = ''</td><td class='lineCell' valign=top>332</td><td class='commentCell' valign=top>INVOKE
+</td>
+</tr>
+<tr bgcolor='#DFDFDF'>
+<td class='nameCell' valign=top>db_connect</td><td class='valueCell' valign=top>
+host = ''<br>user = ''<br>password = ''<br>database = ''</td><td class='lineCell' valign=top>302</td><td class='commentCell' valign=top>DB RELATED
+</td>
+</tr>
+<tr bgcolor='#FFFFFF'>
+<td class='nameCell' valign=top>db_get</td><td class='valueCell' valign=top>
+query</td><td class='lineCell' valign=top>71</td><td class='commentCell' valign=top>returns a single value from a db query
+</td>
+</tr>
+<tr bgcolor='#DFDFDF'>
+<td class='nameCell' valign=top>db_get_fields</td><td class='valueCell' valign=top>
+table</td><td class='lineCell' valign=top>275</td><td class='commentCell' valign=top>returns the names of the columns
+<br>in $table of the current database
+</td>
+</tr>
+<tr bgcolor='#FFFFFF'>
+<td class='nameCell' valign=top>db_insert</td><td class='valueCell' valign=top>
+table<br>params</td><td class='lineCell' valign=top>83</td><td class='commentCell' valign=top>requires abstraction because
+<br>returning the insert_id varies
+<br>in method from db to db
+<br>for instance:  in oracle or postgres
+<br>it is easiest to SELECT nextval() the
+<br>sequence/trigger/etc and then insert
+<br>the query with that value attached
+<br>so that the insertID can then be returned
+<br>.. in mysql, there is no SELECT nextval()
+<br>so it is easieast to run the query, then return
+<br>the mysql function mysql_insert_id()
+</td>
+</tr>
+<tr bgcolor='#DFDFDF'>
+<td class='nameCell' valign=top>db_insertID</td><td class='valueCell' valign=top>
+</td><td class='lineCell' valign=top>195</td><td class='commentCell' valign=top>UTILITIES
+</td>
+</tr>
+<tr bgcolor='#FFFFFF'>
+<td class='nameCell' valign=top>db_list</td><td class='valueCell' valign=top>
+query</td><td class='lineCell' valign=top>178</td><td class='commentCell' valign=top>retrieves a single column from the db
+<br>and returns the results in a simple list
+<br>array
+</td>
+</tr>
+<tr bgcolor='#DFDFDF'>
+<td class='nameCell' valign=top>db_query</td><td class='valueCell' valign=top>
+query</td><td class='lineCell' valign=top>30</td><td class='commentCell' valign=top>returns an array of results
+<br>from $query
+</td>
+</tr>
+<tr bgcolor='#FFFFFF'>
+<td class='nameCell' valign=top>db_queryIndexed</td><td class='valueCell' valign=top>
+query</td><td class='lineCell' valign=top>13</td><td class='commentCell' valign=top>QUERIES
+</td>
+</tr>
+<tr bgcolor='#DFDFDF'>
+<td class='nameCell' valign=top>db_quick</td><td class='valueCell' valign=top>
+query</td><td class='lineCell' valign=top>58</td><td class='commentCell' valign=top>returns a row (1 row only) of
+<br>results from $query
+</td>
+</tr>
+<tr bgcolor='#FFFFFF'>
+<td class='nameCell' valign=top>db_quickIndexed</td><td class='valueCell' valign=top>
+query</td><td class='lineCell' valign=top>45</td><td class='commentCell' valign=top>returns an indexed row (1 row only)
+<br>from $query
+</td>
+</tr>
+<tr bgcolor='#DFDFDF'>
+<td class='nameCell' valign=top>db_result</td><td class='valueCell' valign=top>
+query</td><td class='lineCell' valign=top>164</td><td class='commentCell' valign=top>performs an insert, update, delete
+<br>or other query which does not retrieve
+<br>data
+</td>
+</tr>
+<tr bgcolor='#FFFFFF'>
+<td class='nameCell' valign=top>db_switch</td><td class='valueCell' valign=top>
+db</td><td class='lineCell' valign=top>317</td><td class='commentCell' valign=top>switch database instance in use
+</td>
+</tr>
+<tr><td colspan=4 class='subTitle'>M</td></tr>
+<tr bgcolor='#DFDFDF'>
+<td class='nameCell' valign=top>makeInsertVals</td><td class='valueCell' valign=top>
+params<br>set = 0</td><td class='lineCell' valign=top>209</td><td class='commentCell' valign=top>takes an indexed array of parameters and creates a list of columns
+<br>and values to insert into the database
+<br>is sensitive to things like NULL and numbers
+<br>if $set is 1, then this method will return an update formatted list
+<br>rather than two insert formatted lists
+</td>
+</tr>
+<tr><td colspan=4 class='subTitle'>S</td></tr>
+<tr bgcolor='#FFFFFF'>
+<td class='nameCell' valign=top>simpleWhere</td><td class='valueCell' valign=top>
+params</td><td class='lineCell' valign=top>240</td><td class='commentCell' valign=top>takes an indexed array as a list of columns and
+<br>their values to match and makes them into an sql
+<br>format ready for use in a WHERE statement
+</td>
+</tr>
+</table>
+	    </ul>
+	    <P><a href='#top'>top</a>&nbsp;<a name='vars'></a>
+	    
+	    
+</body>
+</html>
