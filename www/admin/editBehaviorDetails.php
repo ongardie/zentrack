@@ -7,7 +7,7 @@
   */
   
   
-  include("admin_header.php");
+  include_once("admin_header.php");
 
   if( $TODO == 'MORE' ) {
     $more = $more+3;
@@ -70,15 +70,15 @@
   $field_list=$zen->getBehaviorDestinationFieldsArray();
   $comp_opers=$zen->getBehaviorOperators();
 
-  include("$libDir/nav.php");
+  include_once("$libDir/nav.php");
   $zen->printErrors($errs);
 
   if( !$skip ) {
     include("$templateDir/behaviorDetailForm.php");
   } else {
-    include("$templateDir/adminMenu.php");
+    include("$templateDir/behaviorMenu.php");
   }
-  include("$libDir/footer.php");
+  include_once("$libDir/footer.php");
 
 
 ?>

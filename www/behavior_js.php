@@ -151,6 +151,11 @@ var behaviorDebugMessages = new Array();
 // set this to 1 to enable debuggins
 var useBehaviorDebug = <?= $Debug_Mode ?>;
 
+// stores a list of the most recently entered values for a given field
+// this prevents updating a list with the values it already contains
+// and also prevents inifinite loops
+var behaviorHistoryMap = new Array();
+
 /**
  * When a field value is changed, we will run it through
  * the fieldChangedBehavior() method and see if any behaviors
@@ -246,12 +251,26 @@ function executeBehavior( formObj, behaviorId ) {
   if( setFormValsUsingGroup(fieldObj, group) ) {
     return behavior.field;
   }
+  return false;
 }
 
 /**
  * Set the values of a form field to the list provided
  */
 function setFormValsUsingGroup( fieldObj, group ) {
+  // we keep a history to avoid redundantly setting the values if they
+  // already are and to prevent infinite loops
+  if( behaviorHistoryMap[ fieldObj.name ] == group.id ) {
+    behaviorDebug(3, "(setFormValsUsingGroup)field "+fieldObj.name
+		  +" is already set to "+group.name+" (skipping)");
+    return false;
+  }
+
+  // record the group_id that we have used to generate the field's
+  // current entries
+  behaviorHistoryMap[ fieldObj.name ] = group.id;
+  
+  // set the field values
   behaviorDebug(3, "(setFormValsUsingGroup)updating "+fieldObj.name
 		+" using "+group.name+"["+fieldObj.type+"]");
   switch( fieldObj.type ) {
@@ -265,6 +284,10 @@ function setFormValsUsingGroup( fieldObj, group ) {
   case "select":
   case "select-one":
   case "select-multiple":
+    if( fieldObj.selectedIndex ) {
+      // store the currently selected value and try to reproduce in a minute
+      var oldValue = fieldObj.options[ fieldObj.selectedIndex ].value;
+    }
     fieldObj.length = group.fields.length;
     for(var i=0; i < group.fields.length; i++) {
       var f = group.fields[i];
@@ -272,6 +295,10 @@ function setFormValsUsingGroup( fieldObj, group ) {
       fieldObj.options[i] = new Option();
       fieldObj.options[i].text = f.label;
       fieldObj.options[i].value = f.value;
+      // try to set to the same value if possible
+      if( f.value == oldValue ) {
+	fieldObj.options[i].selected = true;
+      }
     }
     break;
   //case "radio":

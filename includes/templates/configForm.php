@@ -27,7 +27,7 @@
 	 <td width="30" class='cell' align='center'><b><?=tr("Active")?></b></td>
 	 </tr>
     <? 
-         unset($js_vals);
+         $js_vals = array();
          $num = count($vars) + $more;
 	 if( is_array($vars) ) {
 	   $newtext = "-".tr("new")."-";

@@ -26,7 +26,6 @@
 	 </tr>
     <? 
          $tables=$zen->getDataGroupTablesArray();
-         unset($js_vals);
          $num = count($vars);
 	 if( is_array($vars) ) {
 	   $j = 0;
@@ -70,7 +69,6 @@
              print $te;
 
 	     print "</tr>\n";
-             $js_vals[] = ($v["group_name"])? $v["group_name"] : 0;
 	     $j++;
 	   }
 	 }

@@ -1,85 +1,120 @@
 <?
-         $elnk="$rootUrl/admin/editBehavior.php";
-         $llnk="$rootUrl/admin/editBehaviorDetails.php";
+  // generate some text to display based on whether this
+  // is an edit page or an add page
+  $td = ($TODO == 'EDIT');
+  $blurb = ($td)? "Modify Behavior" : "Create New Behavior";
+  $button = ($td)? "Save Changes" : "Create Behavior";
+  $url = ($td)? "edit" : "add";
 ?>
-      <br>
-      <p class='error'><?=tr("Edit existing behaviors or create a new one.")?></p>
-      <ul>
-      <form name='behaviorForm' action='<?=$elnk?>' method='post'>
-      <input type='hidden' name='TODO' value=''>
-      <table cellpadding="4" cellspacing="1" class='cell'>
-	 <tr>
-	 <td class='titleCell' align='center' colspan='8'>
-	   <b><?=tr("Edit the Behaviors")?></b>
-	 </td>
-	 </tr>
-	 <tr>
-	  <td width="30" class='cell' align='center'><b>ID</b></td>
-          <td class='cell' align='center'><b><?=tr("Enabled")?></b></td>
-          <td class='cell' align='center'><b><?=tr("Sort Order")?></b></td>
-          <td class='cell' align='center'><b><?=tr("Behavior Name")?></b></td>
-          <td class='cell' align='center'><b><?=tr("Match Type")?></b></td>
-          <td class='cell' align='center'><b><?=tr("Field Name")?></b></td>
-          <td class='cell' align='center'><b><?=tr("Group to apply")?></b></td>
-          <td class='cell' align='center'><b><?=tr("Actions")?></b></td>
-	 </tr>
-    <? 
-         $groups=$zen->getDataGroups(0);
-         unset($js_vals);
-         $num = count($vars);
-	 if( is_array($vars) ) {
-	   $j = 0;
-	   $t = "\t<td class='bars'>";
-	   $te = "</td>\n";
-	   foreach($vars as $k => $v) {
-	     print "<tr>\n";
-	     print "$t".$k."$te";
-	     print "$t".$zen->ffv(($v['is_enabled'])?tr("Yes") : tr("No"))."$te";
-	     print "$t".$v['sort_order']."$te";
-	     print "$t".$zen->ffv($v['behavior_name'])."$te";
-	     print "$t".$zen->ffv(($v['match_all'])?tr("All rules") : tr("Any rule"))."$te";
-	     print "$t".$zen->ffv($v['field_name'])."$te";
-             print "$t".$groups[$v['group_id']]."$te";
-             print "$t";
-
-             print "<span class='small'>"
-                 . "[<a href='".$elnk."?behavior_id=".$v['behavior_id']."'>".uptr('properties')."</a>]";
-             print "<br>";
-             print "<span class='small'>"
-                 . "[<a href='".$llnk."?behavior_id=".$v['behavior_id']."'>".uptr('matches')."</a>]";
-
-             print "$te";
-
-	     print "</tr>\n";
-             $js_vals[] = $k;
-	     $j++;
-	   }
-	 }
-    ?>
+<form method="post" action="<?=$rootUrl?>/admin/<?=$url?>BehaviorSubmit.php">
+<? if( $td ) { print "<input type='hidden' name='behavior_id' value='".strip_tags($behavior_id)."'>\n"; } ?>
+  
+<table width="640" align="left" cellpadding="2" cellspacing="2" bgcolor="<?=$zen->settings["color_background"]?>">
 <tr>
-  <td class="titleCell" colspan="8">
-    <?=tr('Press NEW to create new behaviors')?>
-    <br>
-    <?=tr('Press DONE when you have finished with the edition')?>
+  <td colspan="2" width="640" class="titleCell" align="center">
+  <?=$blurb?>
   </td>
 </tr>
-      <tr>
-         <td class='cell' colspan='3'>
-         <input type='submit' class='submit' value='<?=tr('New')?>' onClick="return setTodo('NEW')">
-         &nbsp;
-         <input type='submit' class='submit' value='<?=tr('Done')?>' onClick="return setTodo('DONE')">
-         </td>
-      </tr>
-      </table>
-      </ul>
+<tr>
+  <td colspan="2" class="subTitle">
+    <?=tr("Behavior Information")?> (<?=tr("* = required")?>)
+  </td>
+</tr>  
+<tr>
+  <td class="bars">
+    <?=tr("Behavior Name")?>*
+  </td>
+  <td class="bars">
+    <input type="text" name="NewBehaviorName" value="<?=strip_tags($behavior['behavior_name'])?>" size="40" maxlength="100">
+  </td>
+</tr>
+<tr>
+  <td class="bars">
+    <?=tr("Data Group")?>*
+  </td>
+    <?
+             $t = "\t<td class='bars'>";
+             $te = "</td>\n";
+             $groups=$zen->getDataGroups(0);
+             print "$t<select name='NewGroupId'>\n";
+             foreach($groups as $grp_k=>$grp_v) {
+               $sel=($behavior['group_id']==$grp_k)? " selected" : "";
+               print "<option value='$grp_k'$sel>$grp_v</option>\n";
+             }
+             print "$te";
+    ?>
+  </td>
+</tr>
+<tr>
+  <td class="bars">
+    <?=tr("Sort Order")?>*
+  </td>
+  <td class="bars">
+    <input type="text" name="NewSortOrder" value="<?=strip_tags($behavior['sort_order'])?>" size="40" maxlength="255">
+  </td>
+</tr>
+<tr>
+  <td class="bars">
+    <?=tr("Field to change")?>*
+  </td>
+    <?
+             $t = "\t<td class='bars'>";
+             $te = "</td>\n";
+             print "$t<select name='NewFieldName'>\n";
+             foreach($field_list as $fl=>$fn) {
+               $sel=($behavior['field_name']==$fn)? " selected" : "";
+               print "<option value='$fn'$sel>$fl</option>\n";
+             }
+             print "$te";
+    ?>
+  </td>
+</tr>
+<tr>
+  <td class="bars">
+    <?=tr("Match Type")?>*
+  </td>
+    <?
+             $t = "\t<td class='bars'>";
+             $te = "</td>\n";
+             print "$t<select name='NewMatchAll'>\n";
+             print "<option value='0'";
+             print ($behavior['match_all']==1)?"" : " selected";
+             print ">".tr("Match Any Rule")."</option>\n";
+             print "<option value='1'";
+             print ($behavior['match_all']==1)?" selected" : "";
+             print ">".tr("Match All Rules")."</option>\n";
+             print "$te";
+    ?>
+  </td>
+</tr>
+<tr>
+  <td class="bars">
+    <?=tr("Is Enabled")?>*
+  </td>
+    <?
+             $t = "\t<td class='bars'>";
+             $te = "</td>\n";
+             print "$t<select name='NewIsEnabled'>\n";
+             print "<option value='1'";
+             print ($td && $behavior['is_enabled']==0)?"" : " selected";
+             print ">".tr("Yes")."</option>\n";
+             print "<option value='0'";
+             print ($td && $behavior['is_enabled']==0)?" selected" : "";
+             print ">".tr("No")."</option>\n";
+             print "$te";
+    ?>
+  </td>
+</tr>
+<tr>
+  <td colspan="2" class="subTitle">
+    <?=tr("Click ? to ?",array($button,$blurb))?>.
+  </td>
+</tr>  
+<tr>
+  <td colspan="2" class="bars">
+   <input type="submit" value="<?=$button?>" class="submit">
+  </td>
+</tr>
+</table>
 
-      </form>
-
-
-      <script language='javascript'>
-          function setTodo( val ) {
-           document.behaviorForm.TODO.value = val;
-         }
-      </script>
-                                                                                                                             
-
+</form>

@@ -46,7 +46,6 @@
          </td>
        </tr>
     <?
-         unset($js_vals);
          $num = count($vars);
 	 if( is_array($vars) ) {
 	   $j = 0;
@@ -103,7 +102,6 @@
 	     print ($v["show_in_new"])? " checked" : "";
 	     print ">$te";
 	     print "</tr>\n";
-	     $js_vals[] = ($v["sort_order"])? $v["sort_order"] : 0;
 	     $j++;
 	   }
 	 }
