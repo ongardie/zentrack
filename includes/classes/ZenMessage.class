@@ -1,4 +1,4 @@
-<?
+<? /* -*- Mode: C; c-basic-indent: 3; indent-tabs-mode: nil -*- ex: set tabstop=3 expandtab: */ 
 
 /** @package zen */
 
@@ -11,9 +11,10 @@ class ZenMessage extends Zen {
    * @param string $class the class or page responsible
    * @param string $method the method or section responsible
    * @param string $message the message to store
+   * @param integer $errnum error number (http://zendocs.phpzen.net/bin/view/Zentrack/ErrorMessages)
    * @param integer $level the level of the message
    */
-  function ZenMessage( $class, $method, $message, $level = 3 ) { }
+  function ZenMessage( $class, $method, $message, $errnum = 0, $level = 3 ) { }
 
   /**
    * returns the message, formatted for printing (with proper bolding for it's level)
@@ -24,6 +25,11 @@ class ZenMessage extends Zen {
    * returns the message string, without formatting
    */
   function getPlain() { }
+
+  /**
+   * logs the messages according to current log settings
+   */
+  function log() { }
 
   /* VARIABLES */
 
@@ -38,6 +44,11 @@ class ZenMessage extends Zen {
 
   /** @var string $_message */
   var $_message;
+
+  /** @var array $_formatting how to format output messages @see show() */
+  var $_formatting = array( 1 => array("<li class='error'>","</li>\n"),
+                            2 => array("<li class='warn'>","</li>\n"),
+                            3 => array("<li class='msg'>","</li>\n") );
 
 }
 

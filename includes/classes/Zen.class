@@ -1,4 +1,4 @@
-<?
+<? /* -*- Mode: C; c-basic-indent: 3; indent-tabs-mode: nil -*- ex: set tabstop=3 expandtab: */ 
 
 /** @package zen */
 
@@ -37,7 +37,7 @@ class Zen {
    * @return ZenMessageList object containing valid system messages
    * @see ZenMessageList
    */
-  function getMessages( $class = '', $method = '' ) { }
+  function getDebug( $class = '', $method = '' ) { }
 
   /**
    * stores a message in the ZenMessageList
@@ -98,7 +98,8 @@ class Zen {
   /**
    * Creates a string in title case
    *
-   * This will not capitalize articles or prepositions
+   * This will not capitalize articles or prepositions, and will retain acronyms and proper nouns
+   * as specified by lists/ucwords and lists/lcwords
    *
    * @param string $string the string to capitalize
    * @return string the capitalized string
@@ -137,6 +138,25 @@ class Zen {
    */
   function showTime( $utime = '' ) { }
 
+  /**
+   * Parses a date into a unix timestamp (necessary since strtotime() is beginning to fall short here)
+   *
+   * @param string $date is the date to parse
+   * @return integer unix timestamp representative of date
+   */
+  function parseDate( $date ) { }
+
+  /**
+   * Determines if a date lies on the interval of a date range
+   *
+   * @param integer $utime the unix timestamp to compare
+   * @param integer $step the increment of our interval (every $step periods)
+   * @param string $period is the period traversed (days,hours,weeks,months,years)
+   * @param integer $base is any unix timestamp occuring on the desired interval
+   * @return boolean is on the interval of the range given
+   */
+  function dateFallsOn( $utime, $step, $period, $base ) { }
+
    
   /* VARIABLES */
  
@@ -157,6 +177,12 @@ class Zen {
 
   /** @var integer $_id the id associated with this object (used by isEmtpy() */
   var $_id;
+
+  /** @var array $_lcwords is a list of words that should be lower case in title structure */
+  var $_lcwords;
+ 
+  /** @var array $_ucwords is a list of words that should be upper case in title structure */
+  var $_ucwords;
 
 }
 

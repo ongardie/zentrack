@@ -1,0 +1,112 @@
+<? /* -*- Mode: C; c-basic-indent: 3; indent-tabs-mode: nil -*- ex: set tabstop=3 expandtab: */ 
+
+/** 
+ * This is a base class to allow for retrieving lists of various things.  Several primary purposes
+ * exist for this class: 
+ * <ol>
+ *  <li>Abstraction of redundant code for obtaining lists
+ *  <li>Standardization of search procedures
+ *  <li>(hopefully)get enough info in results to avoid producing a seperate object for each item
+ *  <li>Provide methods for sorting results on the fly
+ *  <li>Allow for possible serialization and passing between pages (reducing system load considerably)
+ * </ol>
+ *
+ * This class should not be called, rather, it should be extended and used
+ * by a child class.
+ *
+ * All child classes must define the DbQuery object in their constructor, specifying
+ * the tables to be used, and preparing this class for use
+ *
+ * @package zen 
+*/
+
+class ZenList extends Zen {
+
+  /**
+   * CONSTRUCTOR
+   *
+   * This method recieves the DbQuery object, and utilizes this to find out
+   * which columns and tables are valid for use by this object. This allows for 
+   * validation of the incoming params.
+   *
+   * @param DbQuery $dbquery a DbQuery object
+   * @param array $fields a list of fields that should be returned in the data rows
+   */
+  function ZenList( $dbquery ) { }
+
+  /**
+   * sets search criteria for populating the list
+   *
+   * Must be called before load()
+   * The operator can be any of the following:
+   * <ul>
+   *  <li>Contains: $value is a string to be matched
+   *  <li>Begins: $value is a string to be matched
+   *  <li>Ends: $value is a string to be matched
+   *  <li>Equals: $value is a string to be matched
+   *  <li>In: $value is an array of possible choices
+   * </ul>
+   * Any of the operators may be preceeded by a ! to indicate
+   * not [condition].
+   *
+   * @param string $field the field to filter by
+   * @param mixed $value the value to filter by
+   * @param string $operator the operator to use
+   */
+  function criteria($field, $value, $operator = "equals") { }
+
+  /**
+   * sets the method used to sort the results
+   *
+   * must be called before load()
+   *
+   * @param string $field the field to sort on
+   * @param boolean $desc sort in reverse order?
+   */
+  function sort($field, $desc = false) { }
+
+  /**
+   * performs the match and loads results
+   *
+   * @param integer $limit is the maximum number to load
+   * @param integer $offset is the offset to use (i.e. start with 10 instead of 1)
+   * @return integer the number matched
+   */
+  function load($limit = 0, $offset = 0) { }
+
+  /**
+   * gets the next result in the list
+   *
+   * @return ZenTicket object or false if no more results
+   */
+  function next() { }
+
+  /**
+   * resets the list counter to the first result
+   */
+  function reset() { }
+
+
+  /* VARIABLES */
+
+  /** @var integer $_position the current position in the result list */
+  var $_position;
+
+  /** @var integer $_count the number matched */
+  var $_count;
+
+  /** @var boolean $_loaded whether load() has been called */
+  var $_loaded;
+
+  /** @var array $_list the list of ZenTicket objects matched */
+  var $_list;
+
+  /** @var DbQuery $_dbquery the DbQuery object provided by the extending class */
+  var $_dbquery;
+
+  /** @var array $_columns is the list of valid columns, and their data types... provided by the constructor */
+  var $_columns;
+
+}
+
+?>
