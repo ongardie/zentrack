@@ -8,6 +8,14 @@
 ----- V2.5 (in development) ----
 
 2004-08-02, cfalonso
+  Added new tab in ticket's display page: "Custom" tab.
+  It allows user to edit custom fields for the current ticket.
+    -zentrack_2/includes/templates/ticket_customBox.php 1.1
+    -zentrack_2/includes/headerInc.php 1.33
+    -zentrack_2/includes/editCustomSubmit.php 1.1
+    -zentrack_2/www/actions/editCustomSubmit.php 1.1
+
+2004-08-02, cfalonso
   Added missing file to CVS:
     -zentrack_2/includes/templates/customGroupDetailsForm.php
 
