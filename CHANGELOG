@@ -7,6 +7,40 @@
 
 ----- V2.4 (development, see CVS) ----
 
+2003-03-21, MLively (with much help from Kato: he actually did most of the work :P)
+  Changed Translation engine interface [tr()] to work with the ptrans() function
+    - includes/headerInc.php 1.3
+    - includes/translator.class 1.24
+  Integrated tr() function to translate static text
+    - www/helpers/projectSearchbox.php 1.7
+    - www/helpers/ticketSearchbox.php 1.5
+    - www/helpers/userSearchbox.php 1.6
+    - www/misc/homebin.php 1.4
+    - www/misc/pwc.php 1.9
+    - www/reports/custom.php 1.4
+    - www/reports/drop.php 1.4
+    - www/reports/index.php 1.6
+    - www/reports/projectSearchbox.php 1.2
+    - www/reports/report.php 1.3
+    - www/reports/reports_header.php 1.6
+    - www/reports/save.php 1.9
+    - www/reports/saveSubmit.php 1.6
+    - www/reports/show.php 1.5
+    - www/reports/ticketSearchbox.php 1.2
+    - www/reports/view.php 1.6
+    - www/addProjectSubmit.php 1.11
+    - www/addSubmit.php 1.14
+    - www/assignedProjects.php 1.7
+    - www/assignedTickets.php 1.8
+    - www/index.php 1.9
+    - www/newProject.php 1.4
+    - www/newTicket.php 1.4
+    - www/options.php 1.6
+    - www/projects.php 1.7
+    - www/search.php 1.6
+    - www/searchLogs.php 1.4
+    - www/ticket.php 1.14
+
 2003-03-21, Kato
   Added a new method ptrans() to translate strings with vars
   Filtered all strings in the includes/ directory through trans()
