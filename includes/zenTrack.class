@@ -908,7 +908,7 @@ class zenTrack extends zen {
 	 $bin = $t["bin_id"];
 	 if( $params["user_id"] )
 	   $recipient[] = $params["user_id"];
-	 $vals = $this->get_bin_roles($params["bin_id"],"manager");
+	 $vals = $this->fetch_bin_roles($params["bin_id"],"manager");
 	 if( is_array($vals) ) {
 	   foreach($vals as $v) {
 	     $recipient[] = $v["user_id"];
@@ -922,7 +922,7 @@ class zenTrack extends zen {
 	     $emailParams["body"] = htmlentities($comments);
 	   $emailParams["tid"] = $id;
 	   $message = $this->formatEmailMessage($emailParams);
-	   $this->sendEmail($recipient,$subject,$message,$user_id);       
+	   $this->sendEmail($recipient,$subject,$message,$params["creator_id"]);
 	 }
        } 
      }
@@ -1623,7 +1623,7 @@ class zenTrack extends zen {
 			     array("<",">",'"',"&"),
 			     $message);
      if( !$sender ) {
-       $sender_address = $this->settings["botEmail"];
+       $sender_address = $this->settings["admin_email"];
      } else {
        if( eregi("^[0-9]+$", $sender) ) {
 	 $s = $this->get_user($sender);

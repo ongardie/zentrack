@@ -80,6 +80,7 @@
   }
 
   if( !$errs ) {
+    $setmode = "details";
     include("./ticket.php");
     exit;
     //header("Location:$rootUrl/ticket.php?id=$id");

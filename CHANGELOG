@@ -16,7 +16,7 @@
     - www/admin/editTicketSubmit.php v1.4
     - www/actions/*.php
   Email corrections
-    - includes/zenTrack.class v1.39
+    - includes/zenTrack.class v1.39 & v1.40
     - www/actions/close.php v1.8
   Fixed some postgres sql bugs
     - install/build_postgres.sql v1.3
@@ -24,6 +24,8 @@
     - www/popcalendar.js v1.2
     - www/images/cal.gif v1.1 [new]
     - includes/templates/newTicketForm.php v1.13
+    - includes/templates/newProjectForm.php v1.11
+    - www/addProjectSubmit.php v1.9
   Fixed SCRIPT_NAME issues with php binary installs as CGI executable
     - includes/session_start.php v1.5
   Enhanced the access/roles functions
@@ -32,6 +34,9 @@
     - includes/zenTrack.class v1.38
     - includes/templates/accessForm.php v1.4
     - www/admin/access.php v1.4
+  minor cosmetic fixes to admin screens (titles)
+    - www/admin/admin_header.php v1.7
+    - www/admin/config.php v1.6
 
 2003-02-08, Altman
   Fixed bug that caused logs on tickets to produce only a partial 
