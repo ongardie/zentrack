@@ -17,6 +17,8 @@
     - zentrack/install/LICENSE-GPL-2.0 1.1
   Fix minor typos in INSTALL.README
     - zentrack/INSTALL.README 1.23
+  Include missing instructions for upgrading database in UPGRADE.readme
+    - zentrack/UPGRADE.readme 1.10
 
 2003-04-19, Rob Hillis
   More work for sorting of bins: create and search menus

@@ -32,6 +32,9 @@ UPGRADE FROM 2.3.x
   
   RESTORE YOUR includes/egate_config.php settings to the new file (do not replace)
 
+  Update your database by running the install/UPGRADE_[database].sql and
+  install/UPGRADE_SEED_[database].sql queries on your database.
+
 UPGRADE FROM OLDER VERSIONS:
 
   Check the install/previous directory for upgrade docs and utilities for previous
