@@ -8,12 +8,14 @@
 
   if( is_array($_SESSION) ) {
     foreach($session_vars as $s) {
-      $_SESSION["$s"] = $$s;
+      $x = $$s;
+      $_SESSION["$s"] = $x;
     }
   }
   else if( is_array($HTTP_SESSION_VARS) ) {
     foreach($session_vars as $s) {
-      $HTTP_SESSION_VARS["$s"] = $$s;
+      $x = $$s;
+      $HTTP_SESSION_VARS["$s"] = $x;
     }
   }
 

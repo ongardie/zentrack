@@ -22,7 +22,8 @@ CREATE TABLE ZENTRACK_GROUP (
   table_name varchar(50) NOT NULL,
   group_name varchar(100),
   descript varchar(255),
-  PRIMARY KEY (group_id)
+  PRIMARY KEY (group_id),
+  INDEX (group_name)
 );
 
 CREATE TABLE ZENTRACK_GROUP_DETAIL (

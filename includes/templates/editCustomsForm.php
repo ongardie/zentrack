@@ -16,17 +16,31 @@
 	 </td>
 	 </tr>
 	 <tr>
-	 <td width="60" class='cell' align='center'><b>Field Name</b></td>
-	 <td class='cell' align='center'><b>Field Label</b></td>
-	 <td class='cell' align='center'><b>Order</b></td>
-	 <td width="30" class='cell' align='center'><b>Required</b></td>
-	 <td width="30" class='cell' align='center'><b>For Project</b></td>
-	 <td width="30" class='cell' align='center'><b>For Ticket</b></td>
-	 <td width="30" class='cell' align='center'><b>In Search</b></td>
-	 <td width="30" class='cell' align='center'><b>In List</b></td>
-	 <td width="30" class='cell' align='center'><b>In Custom Tab</b></td>
-	 <td width="30" class='cell' align='center'><b>In Detail Tab</b></td>
-	 </tr>
+	 <td width="60" class='subTitle' align='center'><b>Field Name</b></td>
+	 <td class='subTitle' align='center'><b>Field Label</b></td>
+	 <td class='subTitle' align='center'><b>Order</b></td>
+	 <td width="30" class='subTitle' align='center' title="Is this field required?">
+	   <b>Required</b>
+         </td>
+	 <td width="30" class='subTitle' align='center' title="Used for projects?">
+           <b>Projects</b>
+         </td>
+	 <td width="30" class='subTitle' align='center' title="Used for tickets?">
+	   <b>Tickets</b>
+         </td>
+	 <td width="30" class='subTitle' align='center' title="Used for searches?">
+	   <b>Search</b>
+         </td>
+	 <td width="30" class='subTitle' align='center' title="Ticket lists?">
+	   <b>List</b>
+         </td>
+	 <td width="30" class='subTitle' align='center' title="Show in custom tab?">
+	   <b>Custom Tab</b>
+         </td>
+	 <td width="30" class='subTitle' align='center' title="Show in detail tab?">
+	   <b>Detail Tab</b>
+         </td>
+       </tr>
     <?
          unset($js_vals);
          $num = count($vars);

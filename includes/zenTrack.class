@@ -786,6 +786,7 @@ class zenTrack extends zen {
     return $this->db_update( $this->table_varfield, "ticket_id", $ticket_id, $field_values );
   }
 
+
   /**
    * DATA GROUP FUNCTIONS
    */
@@ -799,7 +800,9 @@ class zenTrack extends zen {
    */
   function get_data_group( $group_id ) {
     $query = "SELECT * FROM ".$this->table_group." WHERE group_id = $group_id";
-    return( $this->db_quickIndexed($query) );
+    $vals = $this->db_quickIndexed($query);
+    $vals['details'] = $this->get_data_group_details($group_id);
+    return $vals;
   }
                                                                                                                              
   /**
@@ -809,10 +812,10 @@ class zenTrack extends zen {
    * @return array with information about the data group detail
    */
   function get_data_group_details( $group_id ) {
-    $query = "SELECT * FROM ".$this->table_group_detail." WHERE group_id = $group_id";
+    $query = "SELECT * FROM ".$this->table_group_detail." WHERE group_id = $group_id "
+      ." ORDER BY sort_order";
     return( $this->db_queryIndexed($query) );
   }
-                                                                                                                             
 
   /**
    * returns information about available data groups
@@ -826,7 +829,7 @@ class zenTrack extends zen {
    */
   function getDataGroups($flag = 0) {
     if( !$flag ) {
-      $query = "SELECT group_id, group_name FROM ".$this->table_group;
+      $query = "SELECT group_id, group_name FROM ".$this->table_group." ORDER BY group_name";
       $vars = $this->db_query($query);
       foreach($vars as $v) {
         $vals["$v[0]"] = $v[1];
@@ -838,10 +841,6 @@ class zenTrack extends zen {
       return( $this->db_queryIndexed($query) );
     }
   }
-
-
-
-
 
   /**
    * Create a new group with the provided information
@@ -906,7 +905,10 @@ class zenTrack extends zen {
    *
    * @param integer $group_id
    */
-  function removeDataGroup( $group_id ) { }
+  function removeDataGroup( $group_id ) { 
+    $this->db_delete($this->table_group_detail, "group_id", $group_id);
+    return $this->db_delete($this->table_group, "group_id", $group_id);
+  }
 
   /**
    * Inserts group details into the database
@@ -920,8 +922,8 @@ class zenTrack extends zen {
     }
   }
 
-  
-  
+
+
   /*
    *  SEARCH FUNCTIONS 
    */
@@ -3342,6 +3344,8 @@ class zenTrack extends zen {
         break;
     }
     $query .= " ORDER BY sort_order, field_label";
+
+    $this->addDebug("getCustomFields", $query, 3);
     
     if ( $indexedMode ) {
       $vals = array();
