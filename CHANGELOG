@@ -5,6 +5,10 @@
  100 percent object oriented and database abstracted. 
 
 ----- V2.2.2 (not released) -----
+2003-01-31, Altman
+  Updated build_oracle.sql per comments from Maxim Maletsky
+  reported in bug #677582.  Thanks Maxim (s-maxim).
+    - install/build_oracle.sql v1.4
 
 2003-01-30, Kato
   Fixed problem with display descriptions and newline chars
