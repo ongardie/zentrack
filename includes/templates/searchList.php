@@ -27,7 +27,7 @@ if( is_array($tickets) && count($tickets) ) {
 	  </td>
         <? } ?>
 	<? if( !$search_params["user_id"] || is_array($search_params["user_id"]) ) { ?>
-	  <td width="32" height="25" valign="middle" title="Person ticket is assinged to">
+	  <td width="32" height="25" valign="middle" title="Person ticket is assigned to">
 	  <div align="center"><span style="color:<?=$zen->settings["color_title_txt"]?>">
              <b><span class="small"><?=$zen->prn("Owner")?></span></b></span></div>
 	  </td>
