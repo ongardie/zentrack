@@ -8,8 +8,8 @@
 2003-02-17, Darktroll
   Fixed sorting of systems by replacing $zen->systems with $zen->getSystems(1)
   Thanks to efeldhaus ( Erwin Feldhaus ) for reporting this anomaly, and suggestions on the improvement
-    - includes/templates/newTicketForm.php
-    - includes/templates/newProjectForm.php
+    - includes/templates/newTicketForm.php v1.12
+    - includes/templates/newProjectForm.php v1.14
 
 2003-02-15, Altman
   Completed the get_notify_recipients($ticket_id) method of the zenTrack

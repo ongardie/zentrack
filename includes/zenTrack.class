@@ -2559,57 +2559,74 @@ class zenTrack extends zen {
 	}
    
 	function getTypes($flag = 0, $active = 1) {
-		// if flag is not set, retrieves an
-		// indexed array, otherwise, just
-		// a list of names ordered by priority
-		// and alphebetized
-     
-		if( !$flag ) {
-			$query = "SELECT type_id,name FROM ".$this->table_types;
-			if( $active )
-				$query .= " WHERE active = $active";
-			$vars = $this->db_query($query);
-			if( is_array($vars) ) {
-				foreach($vars as $v) {
-					$vals["$v[0]"] = $v[1];
-				}
-			}
-			return($vals);
-		} else {
-			$where = ($active)? " WHERE active = $active" : "";
-			$query = "SELECT * FROM ".$this->table_types." $where ORDER BY priority DESC, name";
-			return( $this->db_queryIndexed($query) );
-		}            
+	  // if flag is not set, retrieves an
+	  // indexed array, otherwise, just
+	  // a list of names ordered by priority
+	  // and alphebetized
+	  
+	  if( !$flag ) {
+	    $query = "SELECT type_id,name FROM ".$this->table_types;
+	    if( $active )
+	      $query .= " WHERE active = $active";
+	    $vars = $this->db_query($query);
+	    if( is_array($vars) ) {
+	      foreach($vars as $v) {
+		$vals["$v[0]"] = $v[1];
+	      }
+	    }
+	    return($vals);
+	  } else {
+	    $where = ($active)? " WHERE active = $active" : "";
+	    $query = "SELECT * FROM ".$this->table_types." $where ORDER BY priority DESC, name";
+	    return( $this->db_queryIndexed($query) );
+	  }            
 	}
    
 	function getProjectChildren( $pid, $columns = '', $archive_flag = 0 ) {
-		// returns array of tickets for the project by its pid ($pid)
-		// this is seperated from the get_tickets() for abstraction
-		// (i.e. future expansion compatability)
-		// the returned values of getProjectChildren() will always be
-		// unsorted if using $columns (sorry!)
-      
-		$params = array("project_id"=>$pid);
-		$sort = "status desc, priority, otime desc";
-		$vars = $this->get_tickets($params, $sort, $columns, $archive_flag);
-		return( $vars );
+	  // returns array of tickets for the project by its pid ($pid)
+	  // this is seperated from the get_tickets() for abstraction
+	  // (i.e. future expansion compatability)
+	  // the returned values of getProjectChildren() will always be
+	  // unsorted if using $columns (sorry!)
+	  
+	  $params = array("project_id"=>$pid);
+	  $sort = "status desc, priority, otime desc";
+	  $vars = $this->get_tickets($params, $sort, $columns, $archive_flag);
+	  return( $vars );
 	}
+
+	function getTicketHours( $id ) {
+	  // returns a total count of the number of hours associated with this ticket
+	  // if you just want the estimated and actual worked, and none of the sub-tickets
+	  // then just use get_ticket and look at those columns directly
+
+	  $ticket = $this->get_ticket($id);
+	  $est_hours = $ticket["est_hours"];
+	  $wkd_hours = $ticket["wkd_hours"];
+
+	  // get the children for this project
+	  $columns = array("id","est_hours","wkd_hours","type_id");
+	  $children = $this->getProjectChildren($pid,$columns,$archive_flag);
+	  if( is_array($children) ) {
+	    for( $i=0; $i<count($children); $i++ ) {
+	      $t = $children[$i];
+	      if( $t["type_id"] == $this->projectTypeID() ) {
+		list($eh,$wh) = $this->getProjectHours($t["id"],$archive_flag);
+		$est_hours += $eh;
+		$wkd_hours += $wh;
+	      } else {
+		$est_hours += $t["est_hours"];
+		$wdk_hours += $t["wkd_hours"];
+	      }
+	    }
+	  }
+	  return( array($est_hours,$wkd_hours) );	  
+ 	}
    
 	function getProjectHours( $pid, $archive_flag = 0 ) {
-		$columns = array("id","est_hours","wkd_hours","type_id");
-		$tickets = $this->getProjectChildren($pid,$columns,$archive_flag);
-		for( $i=0; $i<count($tickets); $i++ ) {
-			$t = $tickets[$i];
-			if( $t["type_id"] == $this->projectTypeID() ) {
-				list($eh,$wh) = $this->getProjectHours($t["id"],$archive_flag);
-				$est_hours += $eh;
-				$wkd_hours += $wh;
-			} else {
-				$est_hours += $t["est_hours"];
-				$wdk_hours += $t["wkd_hours"];
-			}
-		}
-		return( array($est_hours,$wkd_hours) );
+	  // alias to getTicketHours
+	  // just to keep things sane, for now
+	  return $this->getTicketHours($pid);
 	}   
    
 	function getTicketSender( $id ) {

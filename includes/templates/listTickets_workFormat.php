@@ -66,25 +66,20 @@ if( is_array($tickets) ) {
 	$text = $zen->settings["color_text"];	 
       }     
       
-      if( $zen->inProjectTypeIDs($t["type_id"]) ) {
-	 list($est,$wkd) = $zen->getProjectHours($t["id"]);
-	 $ttl_est += $est;
-	 $ttl_wkd += ($wkd > $est)? $est : $wkd;
-	 $ttl_ext += ($wkd > $est)? $wkd - $est : 0;
+      // calculate the total hours
+      // and format the ticket's hours
+      list($est,$wkd) = $zen->getTicketHours($t["id"]);
+      $ttl_est += $est;
+      $ttl_wkd += ($wkd > $est)? $est : $wkd;
+      $ttl_ext += ($wkd > $est)? $wkd - $est : 0;
+      if( $est <= 0 )
+	$est = "n/a";
+      if( $wkd <= 0 )
+	$wkd = 0;
+      if( $zen->inProjectTypeIDs($t["type_id"]) ) {	
 	$link = $projectUrl;
       } else {
 	$link = $ticketUrl;
-	 if( $t["est_hours"] > 0 ) {
-	    $est = $t["est_hours"];
-	    $ttl_est += $est;
-	 } else {
-	    $est = "n/a";
-	 }	 
-	 if( $t["wkd_hours"] > 0 ) {
-	    $wkd = $t["wkd_hours"];
-	    $ttl_wkd += ($wkd > $est)? $est : $wkd;
-	    $ttl_ext += ($wkd > $est)? $wkd - $est : 0;	    
-	 }
       }
       if( $est > 0 )
 	$per = round($zen->percentWorked($est,$wkd),1)."%";
