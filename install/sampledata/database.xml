@@ -1,15 +1,35 @@
 <database>
+ <!--
+   This file contains the database structure used by ZenTrack.
+
+   Editing this file without proper understanding can have
+   catastrophic effects.
+
+   After editing this file, be sure to run install.php -changed_config
+   to update the cached/compiled data resulting from this file.
+
+   Note that it is probably necessary to backup the database data
+   and then delete the old db structure and create a new one, then
+   to load the backed up data into the new structure.
+
+   Details on this recreate procedure can be found in the 
+   official project documentation:
+    http://docs.zentrack.net
+    http://www.zentrack.net
+    http://www.sourceforge.net/projects/zentrack
+ -->
+
  <version>3.0.0a</version>
 
  <abstractTables>
     <table name="ABSTRACT_DESCRIPTORS">
       <description>Descriptive columns common to many tables</description>
       <columns>
-	<column name="descript" type="maxstring" ftype="text" label="Description" />      
-	<column name="last_update" type="date" ftype="hidden">
+	<column name="descript" type="maxstring" ftype="text" label="Description" />
+	<column name="last_update" type="date" ftype="hidden" label="Last Updated">
 	  <default>NOW</default>
 	</column>
-	<column name="syslock" type="byte" ftype="hidden">
+	<column name="syslock" type="byte" ftype="hidden" label="System Lock">
 	  <default>0</default>
 	  <description>If set to 1, field is locked(restricted access)</description>
 	</column>
@@ -69,11 +89,11 @@
     <table name="ABSTRACT_INDEX_BASE">
       <description>Includes common index fields for associations</description>
       <columns>
-        <column name="user_id" type="integer" ftype="searchbox">
+        <column name="user_id" type="integer" ftype="searchbox" label="User ID">
 	  <reference>USER.user_id</reference>
 	  <notnull>true</notnull>
 	</column>
-        <column name="bin_id" type="integer" ftype="select">
+        <column name="bin_id" type="integer" ftype="select" label="Bin ID">
 	  <reference>BIN.bin_id</reference>
 	  <notnull>true</notnull>
 	</column>
@@ -84,7 +104,7 @@
       <description>Includes the common primary keys</description>
       <inherit>ABSTRACT_INDEX_BASE</inherit>
       <columns>
-        <column name="ticket_id" type="integer" ftype="searchbox">
+        <column name="ticket_id" type="integer" ftype="searchbox" label="Ticket ID">
 	  <reference>TICKET.ticket_id</reference>
 	  <notnull>true</notnull>
 	</column>
@@ -152,7 +172,7 @@
     <table name="ACTION_STEPS">
       <description>System actions to be performed by this action</description>
       <columns>
-        <column name="action_steps_id" type="primarykey" ftype="hidden" />
+        <column name="action_steps_id" type="primarykey" ftype="hidden" label="ID" />
 	<column name="action_id" type="integer" ftype="immutable" label="Action ID" />
 	<column name="action_type" type="value" ftype="select" label="Type">
 	  <criteria type="list">
@@ -187,7 +207,7 @@
           <reference>PARM_SET.parm_set_id</reference>
         </column>        
         <column name="action_fail" type="byte" ftype="checkbox" label="Continue on Fail" />
-        <column name="action_pri" type="smallint" ftype="text" label="Order" />
+        <column name="action_pri" type="shortint" ftype="text" label="Order" />
       </columns>
       <indexList>
         <index name="act_steps_get">action_id</index>
@@ -238,7 +258,7 @@
            <criteria type='list'>AND,OR</criteria>
          </column>
         <column name="onfail" type="byte" ftype="checkbox" label="Continue on Fail" />         
-      </column>
+      </columns>
     </table>
 
     <table name="CRITERIA">
@@ -250,7 +270,7 @@
          <column name="criteria_set_id" type="integer" ftype="hidden" label="Set ID">
            <reference>CRITERIA_SET.criteria_set_id</reference>
          </column>
-      </column>
+      </columns>
       <indexList>
         <index name="crit_sort_idx">field_pri</index>
         <index name="crit_get_idx">criteria_set_id</index>
@@ -276,10 +296,13 @@
       <columns>
         <column name="field_defs_id" type="primarykey" ftype="hidden" label="PrimeKey" />
 	<column name="table_name" type="value" ftype="immutable" label="Table">
+          <notnull>true</notnull>
 	  <description>The table this field is in</description>
 	  <reference>TABLE_DEFS.tbl_name</reference>
 	</column>
-	<column name="col_name" type="value" ftype="immutable" label="Name" />
+	<column name="col_name" type="value" ftype="immutable" label="Name">
+          <notnull>true</notnull>
+        </column>
 	<column name="col_label" type="string" ftype="text" label="Label">
 	  <description>What to call this field when it is displayed</description>
 	  <size>50</size>
@@ -287,6 +310,7 @@
 	<column name="col_form_type" type="value" ftype="select" label="Input Type">
 	   <description>Type of field to show on forms</description>
 	   <criteria type='standard'>ftypes</criteria>
+           <notnull>true</notnull>
 	</column>
 	<column name="col_required" type="byte" ftype="checkbox" label="Required" />
 	<column name="col_criteria" type="string" ftype="textbox" label="Criteria" />
@@ -442,7 +466,7 @@
         <column name="parm_cat3" type="value" ftype="popselect" label="Match">
           <criteria type="helper" />
         </column>
-        <column name="parm_cat4" type="string" ftype="popselect" label="Value" />
+        <column name="parm_cat4" type="string" ftype="popselect" label="Value">
           <criteria type="helper" />
         </column>
       </columns>
@@ -473,7 +497,7 @@
     <table name="PREFS">
       <description>User Preferences</description>
       <columns>
-	<column name="user_id" type="integer" ftype="hidden">
+	<column name="user_id" type="integer" ftype="hidden" label="User">
 	  <default>{login_id}</default>
 	  <reference>USER.user_id</reference>
 	</column>
@@ -890,12 +914,13 @@
     <table name="USER_ROLES">
       <description>Define user roles</description>
       <columns>
-        <column name="user_id" type="integer" ftype="select">
+        <column name="user_id" type="integer" ftype="select" label="User">
 	  <reference>USER.user_id</reference>
+          <showfield>full_name</showfield>
 	</column>
-	<column name="role_id" type="integer" ftype="select">
-	  <criteria type="helper">field:user_id</criteria>
+	<column name="role_id" type="integer" ftype="select" label="Role">
 	  <reference>ROLE.role_id</reference>
+          <showfield>field_name</showfield>
 	</column>
       </columns>
       <indexList>

@@ -36,7 +36,7 @@
     clearZenSessionCache();
     $_SESSION['configLastUpdated'] = $ft;
     $_SESSION['zen'] = ZenUtils::read_ini( $ini_file );
-    ZenDbSchema::clearDbCacheInfo();
+    ZenMetaDb::clearCacheInfo();
   }
   unset($ft);
 

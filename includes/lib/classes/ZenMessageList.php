@@ -118,7 +118,7 @@ class ZenMessageList extends Zen {
 
     // close the outer block
     $txt .= $this->_blockformat[1];
-    
+
     // return results
     return $txt;
   }
@@ -157,7 +157,7 @@ class ZenMessageList extends Zen {
    */
   function getArray() { 
     $vals = array();
-    foreach($this->_messages as $m) {
+    foreach($this->_messages as $m) {      
       if( $this->_show($m) ) {
 	$vals[] = $m;
       }

@@ -183,7 +183,7 @@ class ZenQuery extends Zen {
   function match( $field, $operator, $value, $table = null ) {
     if( $table )
       $field = $this->_fixName($table,$field);
-    if ($whereClause = $this->_basicWhere($field, $value, $operator)) {
+    if ($whereClause = $this->_basicWhere($table, $field, $value, $operator)) {
       $this->_wheres[] = '(' . $whereClause . ')';
       return true;
     }
@@ -231,7 +231,7 @@ class ZenQuery extends Zen {
   function exclude( $field, $operator, $value, $table = null ) {
     if( $table )
       $field = $this->_fixName($table,$field);
-    if ($whereClause = $this->_basicWhere($field, $value, $operator)) {
+    if ($whereClause = $this->_basicWhere($table, $field, $value, $operator)) {
       $this->_wheres[] = '!(' . $whereClause . ')';
       return true;
     }
@@ -270,7 +270,7 @@ class ZenQuery extends Zen {
    * @param string $operator is a condition like (equals, contains, etc)
    * @return mixed
    */
-  function _basicWhere( $field, $value, $operator) {
+  function _basicWhere( $table, $field, $value, $operator) {
     switch ($operator) {
     case ZEN_EQ:
     case ZEN_LT:
@@ -672,8 +672,8 @@ class ZenQuery extends Zen {
         else {
           // this is a match set
           if( $s[3] ) { $s[0] = $this->_fixName($s[3],$s[0]); }
-          if( $where = $this->_basicWhere($s[0], $s[2], $s[1]) ) {
-            if( $s[4] && $s[4] == 'exclude' ) { $where = "!($where)";
+          if( $where = $this->_basicWhere($s[3], $s[0], $s[2], $s[1]) ) {
+            if( $s[4] && $s[4] == 'exclude' ) { $where = "!($where)"; }
             $clause .= $add? "$andor " : '';
             $clause .= $where.' ';
           }
@@ -685,7 +685,7 @@ class ZenQuery extends Zen {
           // we need a junction before we add any more values
           $add = true;
         }
-      }
+      }      
       return $clause;
     }
     else if (count($this->_wheres) > 0) {
@@ -800,6 +800,26 @@ class ZenQuery extends Zen {
 		 'offset' => $this->_offset,
 		 'queryType' => $this->_queryType,
 		 );
+  }
+
+  /**
+   * Quote a field for db use
+   *
+   * @param string $table
+   * @param string $field
+   * @param mixed $value
+   * @return mixed quoted text for insertion
+   */
+  function _getQuote( $table, $field, $value ) {
+    if( is_array($value) ) {
+      for($i=0; $i<count($value); $i++) {
+        $value[$i] = $this->_quote($table,$field,$value[$i]);
+      }
+      return $value;
+    }
+    $metaTable = Zen::getMetaInfo($table);
+    $metaField = $metaTable->getMetaField($field);
+    return $this->quote( $value, $metaField->dataType() );
   }
 
   /** 

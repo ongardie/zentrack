@@ -310,13 +310,45 @@ class Zen {
    * @return ZenMetaTable object
    */
   function getMetaData( $class ) {
-    $cname = ZenUtils::tableNameFromClass( $class );
+    $table = ZenUtils::tableNameFromClass( $class );
+    $metaDb = Zen::getMetaDb();
+    return $metaDb->getMetaTable($table);
+  }
+
+  /**
+   * Returns a singleton instance of ZenDbSchema.  This call is cached for the life of the page.
+   *
+   * @return ZenDbSchema (singleton)
+   */
+  function &getZenDbSchema() {
+    // the array may not be initialized if we did not run variables.php, so
+    // we will manually create it
     if( !isset($GLOBALS['tcache']) ) { $GLOBALS['tcache'] = array(); }
-    if( !isset($GLOBALS['tcache']['metaTables']) ) { $GLOBALS['tcache']['metaTables'] = array(); }
-    if( !isset($GLOBALS['tcache']['metaTables'][$cname]) ) {
-      $GLOBALS['tcache']['metaTables'][$cname] = new ZenMetaTable($cname);
+    // if our metaDb hasn't been cached, then we will create it now
+    if( !isset($GLOBALS['tcache']['dbSchema']) ) {
+      $xmlfile = ZenUtils::getIni('directories','dir_config')."/database.xml";
+      $GLOBALS['tcache']['dbSchema'] = new ZenDbSchema( $xmlfile );
     }
-    return $GLOBALS['tcache']['metaTables'][$cname];
+    // get the value from the cache
+    return $GLOBALS['tcache']['dbSchema'];
+  }
+
+  /**
+   * Returns a singleton instance of ZenMetaDB.  This call is cached for life of page.
+   *
+   * @return ZenMetaDB (singleton)
+   */
+  function &getMetaDb() {
+    // the array may not be initialized if we did not run variables.php, so
+    // we will manually create it
+    if( !isset($GLOBALS['tcache']) ) { $GLOBALS['tcache'] = array(); }
+    // if our metaDb hasn't been cached, then we will create it now
+    if( !isset($GLOBALS['tcache']['metaDb']) ) {
+      $xmlfile = ZenUtils::getIni('directories','dir_config')."/database.xml";
+      $GLOBALS['tcache']['metaDb'] = new ZenMetaDb( $xmlfile );
+    }
+    // get the value from the cache
+    return $GLOBALS['tcache']['metaDb'];
   }
 
   /*********************************
@@ -435,19 +467,20 @@ class Zen {
    *******************************/
  
   /**
-   * Loads a data type set into an array
+   * STATIC: Loads a data type set into an array
    *
    * Note that this is only applicable for the standard types: bin, priority, stage, system, task, type
    *
+   * @static
    * @param string $type represents the type, as listed in the description above
    * @return array contains the data type list indexed by id and sorted by priority and name
    */
   function loadDataTypeArray( $type ) {
     if( in_array($type, array("bin","priority","stage","system","task","type")) ) {
-      $vars = ZenUtils::getGlobal('cache','data_types');
+      $vars = ZenUtils::findGlobal('cache','data_types');
       if( !isset($vars[$type]) ) {
         $vals = array();
-        $name = $this->_mapTypeToClass($type)."List";
+        $name = Zen::mapTypeToClass($type)."List";
         $list = new $name();
         $list->sort('field_pri');
         $list->sort('field_name');
@@ -470,13 +503,14 @@ class Zen {
   }
 
   /**
-   * PRIVATE: Maps standard data types from their primitive name to a class name
+   * STATIC: Maps standard data types from their primitive name to a class name
    * 
+   * @static
    * @access private
    * @param string $type is one of: bin, priority, stage, system, task, type
    */
-  function _mapTypeToClass( $type ) {
-    return "Zen"+ucfirst(strtolower($type));
+  function mapTypeToClass( $type ) {
+    return "Zen".ucfirst(strtolower($type));
   }
 
   /********************************

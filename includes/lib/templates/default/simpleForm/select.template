@@ -1,0 +1,6 @@
+
+  <select name='{pval[name]}'
+    {if:multiple:"size='"+multiple+"'"}
+    {include:"simpleForm/fieldEvents.template"}>
+{list:choices:%"simpleForm/option.template"%}
+  </select>

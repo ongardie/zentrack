@@ -1,0 +1,29 @@
+<html>
+<head>
+  <title>Nav Menu</title>
+<style type="text/css">
+UL {
+  padding-left: 10px;
+  font-size: 90%;
+}
+</style>
+</head>
+<body>
+
+<p><a href='menu.html' target='content'>Home</a></p>
+
+<p><b>Tables</b></p>
+<ul>
+  {list:tables:"<a href='"+value+".html' target='content'>"+value+"</a><br>\n"}
+</ul>
+
+<p>
+<b>Abstract Tables</b>
+ <br>
+ <i>Abstract tables are included by inheritance to construct the real db tables</i>
+</p>
+<ul>
+  {list:abstract:"<a href='"+value+".html' target='content'>"+value+"</a><br>\n"}
+</ul>
+
+{include:"schema/footer.template"}

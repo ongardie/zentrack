@@ -25,5 +25,5 @@ directories:dir_config:database.xml:0:0744:sampledata:r
 paths:path_www:header.php:1:0744:defaults:m
 
 # user files
-directories:dir_user:user_functions.php:0:0744:s
-directories:dir_user:user_javascript.php:0:0755:s
+directories:dir_user:user_functions.php:0:0744:defaults:s
+directories:dir_user:user_javascript.js:0:0755:defaults:s

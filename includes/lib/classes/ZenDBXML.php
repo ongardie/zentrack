@@ -636,7 +636,7 @@ class ZenDBXML {
                  "col_default"     => $props['default'],
                  "col_description" => $props['description'],
                  "col_order"       => $props['order'],
-                 "col_unique"      => $props['unique']);
+                 "col_unique"      => ($props['unique']? 1 : 0));
   }
   
   /**

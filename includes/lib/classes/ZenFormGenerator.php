@@ -28,6 +28,8 @@ class ZenFormGenerator extends Zen {
    * @param string $template the template file to use for creating form output
    */
   function ZenFormGenerator($table, $template) {
+    print "name: "+$table->name();//debug
+    ZenUtils::printArray($table->listFields(), 'fields');//debug
     $this->_table = $table;
     $this->_template = $template;
     $this->_name = 'aForm';
@@ -245,8 +247,8 @@ class ZenFormGenerator extends Zen {
     $vals["method"] = $this->_method;
     $vals["fields"] = array();
     $vals["settext"] = array();
-    $vals["choices"] = array();
-    foreach($this->_table->listFields as $f) {
+    $vals["choices"] = array();    
+    foreach($this->_table->listFields() as $f) {
       $metafield = $this->_table->getMetaField($f);
       $field = $metafield->getFieldArray();
       if( !isset($field['default']) ) { $field['default'] = null; }
@@ -263,7 +265,7 @@ class ZenFormGenerator extends Zen {
         if( !isset($field['checkval']) ) { $field['checkval'] = null; }
         break;
       case 'helper':
-        $vals['settext'] = $this->_generateArgs($field);
+        $vals['settext'] = $this->_getHelperResult($field);
         break;
       case 'radio':
       case 'select':
@@ -271,24 +273,72 @@ class ZenFormGenerator extends Zen {
         $vals['choices'][$f] = $this->_generateChoices($field);
         break;
       case 'popselect':
-        //todo: read criteria and reference, process
+        //todo
+        //todo set source table and field
+        //todo set dest table and field
+        //todo pass criteria and reference
+        //todo set label or title... have
+        //todo popselect util take care of
+        //todo permissions, form generation
+        //todo and returning selected value
+        //todo
+        //todo use a standard format for our popup
+        //todo field types:
+        //todo    open new window,
+        //todo    pass source/dest table/field by session
+        //todo    pass calling form field via url
+        //todo    have popup return value to form by reading
+        //todo      field type and taking appropriate action
+        //todo
+        //todo probably include to handle javascript for returning
+        //todo value and reading the incoming parms.
+        //todo
         break;
       case 'yesno':
         $field['type'] = 'select';
         $vals['choices'][$f] = array('1'=>'Yes','0'=>'No');
         break;
       case 'datebox':
+        //todo
+        //todo
         //todo: convert date, determine format
+        //todo
+        //todo
         break;
       case 'colorbox':
+        //todo
+        //todo
         //todo: read criteria, set default
+        //todo
+        //todo
+        break;
+      case 'searchbox':
+        //todo
+        //todo pass source table and field
+        //todo pass criteria and reference
+        //todo pass dest table and field
+        //todo set label or title
+        //todo have searchbox take care of
+        //todo permissions and returning value
+        //todo
         break;
       case 'setting':
+        //todo
+        //todo
         //todo: get field type from db criteria
+        //todo: get values and validation criteria
+        //todo
+        //todo
         break;        
-      }      
+      }
       $vals["fields"][] = $field;
+      //todo
+      //todo set up js validation array
+      //todo have special php for creating this
+      //todo
     }
+    
+    ZenUtils::printArray($vals);//debug
     
     // render the form
     $template = new ZenTemplate($this->_template);
@@ -488,9 +538,9 @@ class ZenFormGenerator extends Zen {
   }
 
   /**
-   * Generate arguments for helper type criteria
+   * Generate string from helper type criteria
    */
-  function _genHelperArgs($field) {
+  function _getHelperResult($field) {
     $def = $field['default'];
     $parms = array();
     $parts = explode(",", $field['criteria'][1]);
@@ -511,7 +561,7 @@ class ZenFormGenerator extends Zen {
         break;
       case 'setting':
         // database setting
-        $vals = Zen::getSetting($pts[2],$pts[3]);
+        $val = Zen::getSetting($pts[2],$pts[3]);
         break;
       default:
         ZenUtils::safeDebug($this, '_genHelperArgs', "The text $p was not a valid arg entry", 103, LVL_ERROR);

@@ -22,6 +22,7 @@
   require_once("$dir_lib/inc/classes.php");
   load_classes( $classes_standard, $dir_classes );
   load_classes( $classes_data_types, $dir_classes );
+  load_classes( $classes_other, $dir_classes );
 
   set_error_handler('zenErrorWrapper');
 
@@ -32,10 +33,11 @@
   require_once("$dir_lib/inc/environment.php");
 
   // include all global variables
-  require_once("$dir_lib/inc/variables.php");
+  //require_once("$dir_lib/inc/variables.php");
 
   // include standard criteria
   require_once("$dir_lib/inc/standard_criteria.php");
 
   endPTime( 'global.php' );
+
 }?>

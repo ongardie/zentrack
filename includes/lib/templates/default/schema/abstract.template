@@ -1,0 +1,36 @@
+
+{include:"schema/header.template"}
+
+<p style='font-weight:bold; text-size: 125%'>ABSTRACT: {name}</p>
+
+<p><b>Properties</b></p>
+<ul>
+  {foreach:properties:"<b>"+index+"&#58;</b> "+value+"<br>\n"}
+</ul>
+</p>
+
+<p><b>Inherits</b>: 
+  {list:inherits:"<a href='"+value+".html'>"+value+"</a>,&nbsp;\n"}
+</p>
+
+<p><b>Inherited By</b>: 
+  {list:children:"<a href='"+value+".html'>"+value+"</a>,&nbsp;\n"}
+</p>
+
+<p><b>Fields</b></p>
+<table border='1' cellspacing='0' cellpadding='2'>
+<tr class='rowHeading'>
+  <th>Name</th>
+  <th>Data Type</th>
+  <th>Label</th>
+  <th>Foreign Key</th>
+  <th>Form Type</th>
+  <th>Order</th>
+  <th>Notes</th>
+</tr>
+
+{list:fields:%"schema/field.template"%}
+
+</table>
+
+{include:"schema/footer.template"}

@@ -18,10 +18,13 @@ class ZenTargets {
     $this->_dirs = $this->_parseConfigData("directories");
     $this->_configFiles = $this->_parseConfigData("configFiles");
     $this->_ini = $ini_array;
-    $this->_pathExps = $this->_ini['paths'];
-    foreach($this->_pathExps as $key=>$val) {
-      $this->_pathExps[$key] = '|^'.$val.'|';
-    }
+    $paths = array($this->_installdir);
+    foreach($this->_ini['paths'] as $val) { $paths[] = $val; }
+    foreach( $paths as $key=>$val ) {
+      $val = preg_replace('|[\\\\/]|', '[\\\\\\\\/]', $val);
+      $this->_pathExps[] = '|^'.$val.'|';
+    }    
+    $GLOBALS['templateDir'] = $this->_ini['directories']['dir_templates']."/".$this->_ini['layout']['template_set'];
   }
 
   /**
@@ -165,6 +168,19 @@ class ZenTargets {
       }
     case "install":
     case "full_install":      return $this->_full_install();
+    case "gen_schema_docs":
+      {
+        if( !$this->_ini['debug']['develop_mode'] ) {
+          $this->_printerr("target", "The gen_schema_docs method is only available in develop_mode");
+          return false;
+        }
+        $p2 = $this->_getParm($target, 1);
+        if( !$p || !$p2 ) {
+          $this->_help($target);
+          return false;
+        }
+        return $this->_gen_schema_docs($p, $p2);
+      }
     case "load_data":
       {
         if( !$p ) {
@@ -175,8 +191,12 @@ class ZenTargets {
       }
     case "merge_template_file":    
       {
+        if( !$this->_ini['debug']['develop_mode'] ) {
+          $this->_printerr("target", "The merge_template_file method is only available in develop_mode");
+          return false;
+        }
         $p2 = $this->_getParm($target,1);
-        $p3 = $this->getParm($target,2);
+        $p3 = $this->_getParm($target,2);
         if( !$p || !$p2 || !$p3 ) {
           $this->_help($target);
           return false;
@@ -279,6 +299,13 @@ class ZenTargets {
         print "   - you must be a superuser to run this command\n";
         print "   - this command means nothing to windows\n";
         break;
+      }
+    case "gen_schema_docs":
+      {
+        print "   Usage: install.php [modifiers] -$target source_file output_dir\n";
+        print "   - source_file: the xml file containing db schema\n";
+        print "   - output_dir: where the html files will be created\n";
+        print "   - this will create html docs describing the db schema\n";
       }
     case "load_data":
       {
@@ -441,6 +468,9 @@ class ZenTargets {
 
     // create directory tree and 
     // remove windows root references(i.e. c:)
+    if( strpos($dest,'\\') === 0 || strpos($dest,'/') === 0 ) {
+      $dest = substr($dest,1);
+    }
     $des = preg_split('#[\\\\/]#', preg_replace("#^$base#", "", $dest));
     if( preg_match('#[a-zA-Z]:#', $des[0]) ) { array_shift($des); }
 
@@ -467,12 +497,12 @@ class ZenTargets {
     
     // if no source, return gracefully
     if( !file_exists($source) ) {
-      print "   S $source not found: skipped\n";
+      print "   S $source not found: backup skipped\n";
       return $required? false : true;
     }
     
     // copy file
-    print "   C $dest\n";      
+    print "   B $dest\n";      
     if( !copy( $source, $dest ) ) {
       $this->_printerr("_backup_file", "Backup of $name failed ({$source}->{$dest})");
       return false;
@@ -666,15 +696,15 @@ class ZenTargets {
       print "   WARNING!! $f was not updated, you may need to manually update this file\n";
     }
 
-    // update the last_config_update counter
-    touch( $this->_ini['directories']['dir_cache']."/last_config_update" );
-    chmod( $this->_ini['directories']['dir_cache']."/last_config_update", 0766 );
-
     // clean out all cache data
     if( !$this->_clean_cache_data ) {
       print "   The changed_config target has completed successfully; however, cache data could not be cleared.\n";
       print "   Please login as an administrator and run install.php [modifiers] -clean_cache_data\n";
     }
+
+    // update the last_config_update counter
+    touch( $this->_ini['directories']['dir_cache']."/last_config_update" );
+    chmod( $this->_ini['directories']['dir_cache']."/last_config_update", 0766 );
 
     return true;
   }
@@ -836,6 +866,186 @@ class ZenTargets {
   }
 
   /**
+   * Creates html documentation for the provided schema
+   *
+   * @param string $source is the file containing xml database schema
+   * @param string $dest is the directory where html files will be generated
+   * @return boolean
+   */
+  function _gen_schema_docs( $source, $dest ) {
+    // validate our input parms
+    if( !file_exists($source) ) {
+      $this->_printerr("_gen_schema_docs", "DB Schema not found: $source");
+      return false;
+    }
+    if( !is_dir($dest) ) {
+      $basedir = dirname($dest);
+      if( !is_dir($basedir) || !mkdir($dest, 0755) ) {
+        $this->_printerr("_gen_schema_docs", "Could not create/find output directory: $dest");        
+      }
+    }
+    
+    // parse the xml data
+    $dbo =& $this->getDbConnection();
+    $dbSchema = new ZenDbSchema($source, false, $this->_ini['debug']['develop_mode']);
+
+    // generate the list of tables
+    // and the abstract tables
+    $tables = $dbSchema->listTables();    
+    natsort($tables);
+    $tableData = array();
+    $navList = array('a'=>array(),'t'=>array());
+    foreach($tables as $t) {
+      // get the tables values
+      $table = $dbSchema->getMetaTable($t);
+      $vals = array('is_abstract'=>false);
+      foreach($table->listProperties() as $p) {
+        if( $p == 'inherits' ) {
+          // inherited fields are handled seperately
+          $vals['inherits'] = $table->getProp($p);
+        }
+        else if( $p == 'name' ) {
+          $vals['name'] = $table->getProp($p);
+        }
+        else if( $p == 'fields' ) {
+          continue;
+        }
+        else {
+          $v = $table->getProp($p);
+          if( $p == 'is_abstract' && $v ) { 
+            $vals['is_abstract'] = true; 
+          }
+          if( in_array($p, array('is_abstract','has_custom_fields')) ) {
+            $v = $v? "Yes" : "No";
+          }
+          $p = ucwords(strtolower(str_replace("_", " ",$p)));
+          $vals['properties'][$p] = $v;          
+        }
+      }
+      // get the field values
+      $color = 'rowA';
+      $vals['fields'] = array();
+      // inherited
+      foreach($dbSchema->getInheritedFields($t) as $field) {
+        $f = $field['name'];
+        if( is_array($field['criteria']) ) {
+          $field['criteria'] = "[".$field['criteria'][0]."]".$field['criteria'][1];
+        }
+        $field['style'] = $color;
+        $field['cell'] = 'cellAbstract';
+        $vals['fields'][$f] = $field;
+        $color = $color == 'rowB'? 'rowA' : 'rowB';
+      }
+      // normal fields
+      foreach($table->listFields() as $f) {
+        $mf = $table->getMetaField($f);        
+        $field = $mf->getFieldArray();
+        if( is_array($field['criteria']) ) {
+          $field['criteria'] = "[".$field['criteria'][0]."]".$field['criteria'][1];
+        }
+        $field['style'] = $color;
+        $field['cell'] = 'cellNormal';
+        $vals['fields'][$f] = $field;
+        $color = $color == 'rowB'? 'rowA' : 'rowB';
+      }
+
+      // set up nav tables
+      // separating abstract and regular tables
+      if( $vals['is_abstract'] ) {
+        $vals['children'] = array();
+        $navList['a'][] = $t;
+      }
+      else {
+        $navList['t'][] = $t;
+      }
+
+      $tableData[$t] = $vals;
+    }    
+
+    // generate abstract table children
+    // by looking to see who each table
+    // inherits and setting children in
+    // that table.
+    foreach( $tables as $t ) {
+      $inherits = $tableData[$t]['inherits'];
+      if( is_array($inherits) && count($inherits) ) {
+        foreach($inherits as $i) {
+          $tableData[$i]['children'][] = $t;
+        }
+      }
+    }
+
+    // text describing the db
+    $titleText = $this->_ini['layout']['system_name']." Database Schema";
+    // the date/time text was generated
+    $gentime = date("Y-m-d H:i");
+
+    // generate frame page
+    $template = new ZenTemplate("schema/frameset.template");
+    $template->values( array('title'=>$titleText,'gentime'=>$gentime) );
+    $fp = fopen("$dest/index.html", 'w');
+    if( !$fp ) {
+      $this->_printerr("_gen_schema_docs", "Unable to create index.html in $dest");
+      return false;
+    }
+    fputs($fp, $template->process());
+    fclose($fp);
+    print "   C index.html\n";
+
+    // generate navigation bar
+    $template = new ZenTemplate("schema/nav.template");
+    $template->values( array('abstract' => $navList['a'],
+                             'tables'   => $navList['t'],
+                             'gentime'  => $gentime,
+                             'source'   => $source));
+    $fp = fopen("$dest/nav.html", 'w');
+    if( !$fp ) {
+      $this->_printerr("_gen_schema_docs", "Unable to create nav.html in $dest");
+      return false;
+    }
+    fputs($fp, $template->process());
+    fclose($fp);
+    print "   C nav.html\n";
+
+    // generate menu page
+    $vals = array('title'  => $titleText,
+                  'source' => $source,
+                  'count'   => count($tables),
+                  'gentime' => $gentime);
+    $template = new ZenTemplate("schema/menu.template");
+    $template->values($vals);
+    $fp = fopen("$dest/menu.html", 'w');
+    if( !$fp ) {
+      $this->_printerr("_gen_schema_docs", "Unable to create main.html in $dest");
+      return false;
+    }
+    fputs($fp, $template->process());
+    fclose($fp);
+    print "   C menu.html\n";
+    
+    // generate tables
+    foreach($tables as $t) {
+      $vals = $tableData[$t];
+      $vals['source'] = $source;
+      $vals['gentime'] = $gentime;
+      // create the template
+      $tmp = $vals['is_abstract']? "abstract" : "table";
+      $template = new ZenTemplate("schema/$tmp.template");
+      $template->values( $vals );
+      // write to file
+      $fp = fopen("$dest/$t.html", 'w');
+      if( !$fp ) {
+        $this->_printerr("_gen_schema_docs", "Unable to create $t.html in $dest");
+        return false;
+      }
+      fputs($fp, $template->process());
+      fclose($fp);
+      print "   C $t.html\n";
+    }
+    return true;
+  }
+
+  /**
    * Merges config files with existing settings.. copies config files for all regular files
    * all template files will be parsed and the existing values substituted where possible
    *
@@ -946,7 +1156,7 @@ class ZenTargets {
     // run through these files
     foreach( $this->_configFiles as $c) {
       // split up the array
-      list($sect,$var,$file,$is_tmplt,$permissions,$default,$source) = $c;
+      list($sect,$var,$file,$is_tmplt,$permissions,$source,$default) = $c;
 
       // set up destination directory
       $dest = $this->_ini[$sect][$var];
@@ -961,7 +1171,7 @@ class ZenTargets {
 
       // check directory structure
       if( !@is_dir($source) ) {
-        $this->_printerr('_copy_config_files', "$source directory does not exist, cannot create config file");
+        $this->_printerr('_copy_config_files', "$source directory does not exist, cannot process $file");
         return false;
       }
       if( !@is_dir($dest) ) {
@@ -973,6 +1183,11 @@ class ZenTargets {
       // generate full pathnames
       $sourcefile = ($is_tmplt)? $source."/$file.template" : $source."/$file";
       $destfile = $dest."/$file";
+
+      if( $sect == 'directories' && $var == 'dir_user' && file_exists($dest) ) {
+        print "   S $file (files in user directory are not overwritten)\n";
+        continue;
+      }
 
       // we will deal with directories seperately, since they require
       // some special procedures
@@ -1023,9 +1238,9 @@ class ZenTargets {
         // if the file exists, we back it up
         if( file_exists($destfile) ) {
           // figure out where to put the backup
-          $to = preg_replace( $this->_pathExps, "", $source );
+          $to = preg_replace( $this->_pathExps, "", $dest );
           // perform backup
-          $this->_backup_file( $file, $source, $to );
+          $this->_backup_file( $file, $dest, $to );
         }
         if( !$is_tmplt ) {
           // get new config file
@@ -1033,7 +1248,7 @@ class ZenTargets {
           // this is a replace or a create
           // there is no option to merge
           if( !@copy( $sourcefile, $destfile ) ) {
-            $this->_printerr("_copy_config_files", "Failed to $ctext config: $dest with $source");
+            $this->_printerr("_copy_config_files", "Failed to $ctext config: $destfile with $sourcefile");
             $success = false;
           }
         }
@@ -1841,7 +2056,7 @@ class ZenTargets {
                  "drop_database" => "Delete a database (use with caution!!)",
                  "extra_secure_mode" => "Tighten directory permissions(for unix, experimental)",
                  "full_install" => "Install a new zentrack version",
-                 "merge_ini_file" => "Merge ini params with template(development tool)",
+                 "merge_template_file" => "Merge existing config file into template(development tool)",
                  "prepare_install_files" => "Prepare install file(development tool)",
                  "try_db_connection" => "Test db connectivity by manually specifying connection info",
                  "update_db_schema" => "Upgrade a database schema by comparing current to a new xml schema(use with caution!!)",

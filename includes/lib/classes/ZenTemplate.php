@@ -30,10 +30,9 @@
    * {varname="default"} // inserts val of varname, or default if not found
    * {varname[key]} // inserts value of array varname indexed by key ($varname[key]),
    *                // varname must be an associative array or null will be returned
-   * {varname[key1][key2]} // inserts value of complex array indexed by key1 and key2 ($varname[key][key2]),
-   *                       // varname must be an associative array containing an array at key1 or null is returned
    * {varname[key]="string"} // as above, but default returned instead of null if key not found
    * {var:"var1":"var2"} // evaluates var1 and var2(optional) and returns value of variable named var1 (or var1[var2] if included) (see {@link _getVar2()})
+   * {iterate:"var"} // evaluates var(assumed to evaluate to the name of an array) and returns the next value (see {@link _getVar()}) 
    * {zen:"category":"varname"} // inserts value from database settings using {@link Zen::getSetting()}
    * {ini:"category":"varname"} // inserts value from ini settings using {@link Zen::getIniVal()}
    * {foreach:varname:"text"+index+"more text"+value} // loops through key/value pairs, pritns string, vars index/value represent current iteration
@@ -66,7 +65,11 @@
    * Note that using %"string"% will insert parsed template (includes/lib/templates/..set../), the name is a string.
    * There cannot be any other text with the template (the string param must begin and end with %(template) symbols.
    *
-   * Sub-templates recieve the special varaibles pkey and pval.  If this is a 
+   * Note also that including an array in a string, such as "some text"+arrayName+" more text" will result
+   * in an iteration just as if {iterate:arrayName} were called (since this is probably more intuitive than
+   * printing "Array" out, which is what happens if an array is literally included in a string).
+   *
+   * Sub-templates recieve the special variables pkey and pval.
    * 
    *<code>
    * 
@@ -160,14 +163,12 @@ class ZenTemplate {
       $this->_template = $this->_templateDir."/".$this->_template;
     }
     if( file_exists($this->_template) ) {
-      $text = join("",file($this->_template));
-      $text = preg_replace("/<!--.*-->/", "", $text);
-      $this->_text = explode("\n",$text);
+      $this->_text = join("",file($this->_template));
     }
     else {
       ZenUtils::safeDebug($this, "_get", 
                           "Could not load template '{$this->_template}'", 21, LVL_ERROR);
-      $this->_text = array("Template file {$this->_template} could not be found.");
+      $this->_text = "Template file {$this->_template} could not be found.";
     }
   }
 
@@ -178,11 +179,12 @@ class ZenTemplate {
    * @return string parsed contents
    */
   function _parse() {
-    $txt = $this->_text;
-    for($i=0; $i<count($txt); $i++) {
-      $txt[$i] = preg_replace("@[{]([^}]+)[}]@e", "''.\$this->_insert(\"\\1\").''",$txt[$i]);
+    $txt = preg_replace("/<!--.*-->/", "", $this->_text);
+    $txtArray = explode("\n",$txt);
+    for($i=0; $i<count($txtArray); $i++) {
+      $txtArray[$i] = preg_replace("@[{]([^}]+)[}]@e", "''.\$this->_insert(\"\\1\").''",$txtArray[$i]);
     }
-    $text = stripslashes(join("",$txt)); 
+    $text = stripslashes(join("\n",$txtArray)); 
     $this->_runMods($text);
     return $text;
   }
@@ -230,7 +232,16 @@ class ZenTemplate {
       return $this->_getVar($index);
     }    
     else {
+      $it = false;
       switch($index) {
+      case "iterate":
+      {
+        // {iterate:var}
+        ZenUtils::safeDebug($this, "_insert", 
+                            "using {iterate:var} for '$text'", 0, LVL_DEBUG);
+        return $this->_getVar($parts[1], true);
+      }
+      case "var":
       {
         // {var:array:key}
         ZenUtils::safeDebug($this, "_insert", 
@@ -371,19 +382,20 @@ class ZenTemplate {
    */
   function _parseForeach($parts)
   {
-    $vars = $this->_vars[ trim($parts[1]) ];
+    $vars = $this->_getVar($parts[1]);
     if( is_array($vars) ) {
       $txt = "";
       // loop the list and make output text
       foreach($vars as $k=>$v) {
         // make the string to show
-        $str = $this->_parseString($parts[2], $v, $k);
+        $txt .= $this->_parseString($parts[2], $v, $k);
       }
       return $txt;
     }
     else {
       ZenUtils::safeDebug($this, "_parseForeach", 
-                          "The variable requested [{$parts[1]}] was not a valid array", 0, 2);
+                          "The variable requested [{$parts[1]}] was not a valid array", 
+                          105, LVL_WARN);
       return "";
     }
   }
@@ -401,11 +413,14 @@ class ZenTemplate {
       // create the output text
       foreach($vars as $v) {
         // parse the string
-        $str = $this->_parseString($parts[2], $v);
+        $txt .= $this->_parseString($parts[2], $v);
       }
       return $txt;
     }
     else {
+      ZenUtils::safeDebug($this, "_parseList",
+                          "The requested list ({$parts[1]}) was not a valid array",
+                          105, LVL_WARN);
       return "";
     }
   }
@@ -416,7 +431,7 @@ class ZenTemplate {
    * @param array $parts the parts of the if call to be parsed
    * @return string
    */
-  function _parseIf() {
+  function _parseIf( $parts ) {
     $p = trim($parts[1]);
     // determine if the if condition is true
     if( strpos($p,"=") > 0 ) {
@@ -551,8 +566,18 @@ class ZenTemplate {
 	$str .= $value;
       }
       // this is another variable
-      else {
-	$str .= $this->_getVar($v);
+      else {        
+	$t = $this->_getVar($v);
+        // if we get a variable which is an array
+        // included at this point, we can assume
+        // that the user wants a variable from it
+        // and not the array itself, so we will
+        // use the iteration value (rather than
+        // print Array) to the screen
+        if( is_array($t) ) {
+          $t = $this->_getVar($v,true);
+        }
+        $str .= $t;
       }
     }
     // fix return chars
@@ -578,13 +603,17 @@ class ZenTemplate {
   /**
    * <b>private</b>: returns a value from the value set provided by the user
    *
-   * If the value found is an array, then it will be iterated each time this is called.
-   * The first time it will return element 0, the second time it will return element 1, etc.
+   * If the value found is an array and $iteratue is true(if this was called
+   * by an {iterate:"var"} component, then it will be iterated each time this is called.
+   *
+   * The first time it will return element 0, the second time it will return
+   * element 1, and so on.
    *
    * @param string $name the varname
+   * @param string $iterate 
    * @return string the value of the varname
    */
-  function _getVar($name) {
+  function _getVar($name, $iterate = false) {
     // find out if we have a default value
     if( strpos($name, "=") > 0 ) {
       list($name,$default) = explode('=',$name,2);
@@ -599,7 +628,9 @@ class ZenTemplate {
           && isset($this->_vars["$name"]["$key"]) ) { return $this->_vars["$name"]["$key"]; }
       else { return $default; }
     }
-    else if( is_array($this->_vars) && isset($this->_vars["$name"]) && is_array($this->_vars["$name"]) ) {
+    else if( $iterate && 
+             is_array($this->_vars) && isset($this->_vars["$name"]) 
+             && is_array($this->_vars["$name"]) ) {
       // if it is an array, we iterate each time it is requested (get the next value)
       return $this->_vars["$name"][$this->_getIteratorIndex($name)];
     }

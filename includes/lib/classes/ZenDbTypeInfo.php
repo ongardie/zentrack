@@ -115,7 +115,7 @@ class ZenDbTypeInfo {
       }
       if( strlen($default) ) {
         $deftxt = str_replace("%keyname%", $keyname, $props['default'])." ";
-        $attrtext .= str_replace("%default%", $this->_dbo->quote($default), $deftxt);
+        $attrtext .= str_replace("%default%", $this->_dbo->quote($default,$type), $deftxt);
       }
     }
     if( $type == 'primarykey' ) {
@@ -127,15 +127,11 @@ class ZenDbTypeInfo {
     else if( $required && isset($props['notnull']) ) {
       $attrtext .= str_replace("%keyname%", $keyname, $props['notnull']);
     }
-    //todo
-    //todo
-    //todo figure out what the deal is with null values
-    //todo
-    //else if( $this->_type == 'mssql' && !strlen($default) ) {
-    // for mssql, default is not null, so we must explicity state for
-    // consistency with our design
-    //  $attrtext .= str_replace("%default%", "NULL", $props['default']);
-    //}
+    else if( strpos($this->_type, 'mssql')===0 && !strlen($default) ) {
+      // for mssql, default is not null, so we must explicity state for
+      // consistency with our design
+      $attrtext .= ' NULL ';
+    }
     $vals = array(
                   'name'     => $name,
                   'datatype' => $this->makeTypeDef($type,$length),
@@ -257,7 +253,7 @@ class ZenDbTypeInfo {
    */
   function makeTypeDef( $type, $length = 0 ) {
     if( !isset($this->_dataTypes[$type]) ) {
-      Zen::debug($this, "makeTypeDef", "Data type $type is invalid", 102, LVL_WARN);
+      ZenUtils::safeDebug($this, "makeTypeDef", "Data type $type is invalid", 102, LVL_WARN);
       return 'NOTYPE';
     }
 
@@ -272,11 +268,11 @@ class ZenDbTypeInfo {
     if( $props['fixed'] == 'false' ) {
       // check the size attribute
       if( !$props['size'] && !$length ) {
-        Zen::debug($this, "makeTypeDef", "Data type $type requires a length", 101, LVL_WARN);
+        ZenUtils::safeDebug($this, "makeTypeDef", "Data type $type requires a length", 101, LVL_WARN);
         return 'NOSIZE';
       }
       if( $length > $props['max'] ) {
-        Zen::debug($this, "makeTypeDef", "Maximum length exceeded for data type $type ($length)"
+        ZenUtils::safeDebug($this, "makeTypeDef", "Maximum length exceeded for data type $type ($length)"
                    ."using max instead({$props['max']})", 123, LVL_WARN);
       }
       // format and return the element
@@ -307,14 +303,14 @@ class ZenDbTypeInfo {
     $success = true;
 
     // locate config file
-    $file = $this->_dir."/".$this->_type.".xml";
+    $file = $this->_dir."/db/".$this->_type.".xml";
     if( !file_exists($file) ) {
-      Zen::debug($this, "_load", "Config file $file not found", 21, LVL_ERROR);
+      ZenUtils::safeDebug($this, "_load", "Config file $file not found", 21, LVL_ERROR);
       return false;
     }
 
     // parse xml data
-    $data = join("",file($this->_dir."/".$this->_type.".xml"));
+    $data = join("",file($file));
     $xp = new ZenXMLParser();
     $root =& $xp->parse($data);
 
@@ -386,12 +382,25 @@ class ZenDbTypeInfo {
   /**
    * STATIC: Generate a key name from table/column/type values
    *
+   * @static
    * @param string $table name of table
    * @param string $column name of column
    * @param string $type type of column
    */
   function genKeyName($table, $column, $type) {
     return ($type=='primarykey'? "pk_" : "idx_").substr($table,0,3)."_".substr($column,0,3);
+  }
+
+  /**
+   * STATIC: maps adodb types to human readable names
+   *
+   * @static
+   * @param string $type any adodb type or zen dbtype
+   * @return string a human readable string or 'Unknown' if not found
+   */
+  function getNameFromType( $type ) {
+    $t = isset($this->_type_aliases[$type])? $this->_type_aliases[$type] : $type;
+    return isset($this->_typesToNames[$t])? $this->_typesToNames[$t] : "Unknown";
   }
 
   /*************************************
@@ -445,6 +454,14 @@ class ZenDbTypeInfo {
                             "mssqlpo"   => "mssql",
                             "postgres7" => "postgres",
                             "mysqlt"    => "mysql");
+
+  /** @var array maps types to human readable names */
+  var $_typesToNames = array(
+                            "oracle"   => "Oracle 8i/9i",
+                            "mssql"    => "Microsoft SQL Server",
+                            "postgres" => "PostgreSQL",
+                            "mysql"    => "MySql"
+                            );
 
   /** @var string the type of db we are using (aliased) */
   var $_type;

@@ -1,0 +1,7 @@
+<!--
+   The option is a subtemplate for the select.template.  It simply
+   recieves the iteration over choices and prints out the option tag
+   with any possible formatting or selected attributes
+
+-->
+   <option value='{pval[value]}' {if:pval[selected]:"selected"} {pval[style]}>{tr:pval[label]}</option>

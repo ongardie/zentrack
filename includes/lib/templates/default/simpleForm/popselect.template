@@ -1,0 +1,11 @@
+
+  <input type="textarea"
+    name="{pval[name]}"
+    size="{pval[len]="20"}" 
+    maxlength="{pval[size]="200"}" 
+    value="{pval[default]=""}">
+
+  <input type="button" 
+    name="{pval[name]}Button"
+    value="..."
+    {include:"simpleForm/fieldEvents.template"}>

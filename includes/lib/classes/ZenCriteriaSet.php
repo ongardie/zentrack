@@ -246,8 +246,9 @@ class ZenCriteriaSet {
    */
   function addCriteria( $args ) {
     if( !$this->_id ) { 
-      ZenUtils::safeDebug($this, "addCriteria", "Tried to create criteria on a set which has not been saved!", 
-                          161, LVL_ERROR);
+      ZenUtils::safeDebug($this, "addCriteria", 
+              "Tried to create criteria on a set which has not been saved!", 
+              161, LVL_ERROR);
       return false; 
     }
     $args['criteria_set_id'] = $this->_id;
@@ -260,7 +261,7 @@ class ZenCriteriaSet {
    * @param integer $criteria_id
    * @return boolean
    */
-  fuction deleteCriteria( $criteria_id ) {
+  function deleteCriteria( $criteria_id ) {
     if( !$this->_id || !isset($this->_list["$criteria_id"]) ) {
       ZenUtils::safeDebug($this, "deleteCriteria", "Criteria doesn't exist", 
                           105, LVL_ERROR);

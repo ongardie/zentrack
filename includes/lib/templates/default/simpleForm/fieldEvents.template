@@ -2,6 +2,7 @@
   Special event handlers for form fields
 -->
 {special:stripAllReturns} <!-- strip all carriage returns from output -->
+{pval[other]}
 {if:pval[onBlur]:" onBlur=&quot;"+pval[onBlur]+"&quot;"}
 {if:pval[onChange]:" onChange=&quot;"+pval[onChange]+"&quot;"}
 {if:pval[onClick]:" onClick=&quot;"+pval[onClick]+"&quot;"}

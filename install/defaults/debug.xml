@@ -1,9 +1,9 @@
 <debug_settings>
 
-  <!-- show errors for all classes -->
+  <!-- show all errors for all classes -->
   <root level="4" />
 
-  <!-- show warnings and errors -->
+  <!-- show warnings and errors only for ZenDatabase  -->
 <!--  <class name="ZenDatabase" level="2" />  -->
 
   <!-- show differing levels for certain methods -->

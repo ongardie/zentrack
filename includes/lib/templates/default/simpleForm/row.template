@@ -6,7 +6,7 @@
   based on the field type.
 -->
 <tr>
-  <td class='simpleFormLabel'>{pval[label]}</td>
+  <td class='simpleFormLabel'>{tr:pval[label]}</td>
   <td class='simpleFormCell'>
     {include:"simpleForm/"+pval[type]+".template"}
     {if:showDescription:"<div class='details'>"+pval[description]+"</div>"}

@@ -15,16 +15,13 @@
   // check and set $GLOBALS['thisfile'] appropriately
   //todo
 
-  // set the path variables
-  extract( getini('paths') );
-  extract( getini('directories') );
-  $templateDir = getini('directories','dir_templates')."/".getini('layout','template_set');
-  
   /**
    * @var string $GLOBALS['templateDir'] is the directory location of the template directory to use for this build
    */
-  $GLOBALS['templateDir'] = $templateDir;
-
+  $GLOBALS['rootUrl'] = getini('paths','url_www');
+  $GLOBALS['templateDir'] = getini('directories','dir_templates')."/".getini('layout','template_set');
+  $GLOBALS['styleSheet'] = getGlobal('rootUrl')."/styles/".getini('layout','template_set').".css";
+  
   /**
    * @var array $GLOBALS['tcache'] temporary cache to store ZenDataTypes for life of page
    */
@@ -38,8 +35,7 @@
                              );
 
   /** @var array contains a list of (string)names representing data types which should be stored in the session */
-  $global_data_types = array(
-                             'bin',
+  $common_data_types = array('bin',
                              'priority',
                              'stage',
                              'system',
@@ -52,7 +48,7 @@
   if( getGlobal('cache','data_types') == null ) {
     /** @var array $_SESSION['cache']['data_types'] data types which should not be loaded on each page */
     $_SESSION['cache']['data_types'] = array();
-    foreach($global_data_types as $t) {
+    foreach($common_data_types as $t) {
       $_SESSION['cache']['data_types'][$t] = Zen::loadDataTypeArray($t);
     }
   }
