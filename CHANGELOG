@@ -597,6 +597,10 @@ The update comments should appear just after this.
 
 A list of files changed, and the new version should be included with dashes under the comments. This can be used by other developers to quick-reference what has changed, and the versions to diff in CVS to find the changes.. for testing and bug tracking. 
 
+To obtain a quick list of files you changed, use this command: cvs history -D 03/12/2003 -c 
+
+There is also a perl script which you can obtain from one of the developers which will parse the output of that command into nicely formatted rows to cut and paste here.
+
 Example 
 
 ----- Vx.x.y ------
