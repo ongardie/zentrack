@@ -82,6 +82,30 @@ foreach($visible_fields as $f) {
   <?=tr("Click button to")?> <?=($td)? tr("save your changes"):tr("create your ticket")?>.
   </td>
 </tr>
+<?
+  if ($td && $zen->settings['edit_reason_required']=='on' && $zen->settings['log_edit']=='on') {
+    $er_vals=array('field_cols'   => '60',
+                   'field_rows'   => '5',
+                   'field_name'   => 'edit_reason',
+                   'field_events' => '',
+                   'field_value'  => '');
+    $er_template=new zenTemplate("$templateDir/fields/textarea.template");
+    $er_template->values($er_vals);
+?>
+<tr>
+  <td class="bars">
+    <?=tr("Edit Reason")?><br>
+    (<?=tr("Mandatory")?>)
+  </td>
+  <td class="bars">
+<?
+    print $er_template->process();
+?>
+  </td>
+</tr>
+<?
+  }
+?>
 <tr>
   <td colspan="2" class="bars">
    <input type="submit" value=" <?=tr(($td)?"Save":"Create")?> " class="submit">
@@ -126,6 +150,10 @@ foreach($fields as $f) {
     $tr = $zen->fixJSVal(tr("? is required",array(tr($label))));
     print "\tif( !validateField(document.ticketForm.$f) ) { errs[errs.length] = $tr; }\n";
   }
+}
+if ($td && $zen->settings['edit_reason_required']=='on' && $zen->settings['log_edit']=='on') {
+    $tr = $zen->fixJSVal(tr("? is required",array(tr("Edit Reason"))));
+    print "\tif( !validateField(document.ticketForm.edit_reason) ) { errs[errs.length] = $tr; }\n";
 }
 ?>
    if( errs.length > 0 ) {
