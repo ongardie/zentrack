@@ -141,12 +141,12 @@
        <option value="">----</option>
 <?
    if( is_array($userBins) ) {
-      $allbins = $zen->getBins();
-      
-    	foreach($allbins as $k=>$v) {
+    	foreach($zen->getBins(1) as $v) {
+         $k = $v["bid"];
+         
          if (in_array($k, $userBins)) {
              $check = ( $v == $search_params["bin_id"] )? "selected" : "";
-             print "<option $check value='$k'>$v</option>";
+             print "<option $check value='$k'>$v[name]</option>";
          }
       }
    } else {
