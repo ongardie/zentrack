@@ -122,7 +122,7 @@
   /*
   **  LEAVE THIS PART ALONE
   */
-  
+  $rootWWW = dirname(__FILE__);  
   include_once("$libDir/headerInc.php");
   
 }?>
