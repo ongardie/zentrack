@@ -44,16 +44,16 @@ if( is_array($tickets) && count($tickets) ) {
       }
       
       if( $t["status"] == 'CLOSED' ) {
-        $classxText = "class='bars' onclick='ticketClk(\"{$link}?id={$t['id']}\")' $rollover_greytext";
+        $classxText = "class='bars' onclick='ticketClk(\"{$link}?id={$t['id']}\"); return false;' $rollover_greytext";
       }
       else if( $zen->settings["priority_medium"] ) {
         $classxText = "class='priority{$t['priority']}' "
-         ."onclick='ticketClk(\"{$link}?id={$t['id']}\")' "
+         ."onclick='ticketClk(\"{$link}?id={$t['id']}\"); return false;' "
          ."onMouseOver='mClassX(this, \"priority{$t['priority']}Over\", true)' "
          ."onMouseOut='mClassX(this, \"priority{$t['priority']}\", false)'";
       }
       else {
-        $classxText = "class='cell' onclick='ticketClk(\"{$link}?id={$t['id']}\")' $rollover_text";
+        $classxText = "class='cell' onclick='ticketClk(\"{$link}?id={$t['id']}\"); return false;' $rollover_text";
       }
 
       ?>
