@@ -1,4 +1,9 @@
 <?
+ /**
+  * Print out all incoming session data
+  *
+  * @package Devtools
+  */
 print "<pre>\n";
 
 print "\$_POST: \n";

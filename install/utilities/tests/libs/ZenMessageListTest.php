@@ -5,21 +5,19 @@
    *
    * Requirements: Relies on config.php in the install/utilities/tests/ folder
    *
-   * @package PHPUnitTests
+   * @package PHPUnit
    */
 
   /** Try to include the config file for testing */
   include_once( realpath(dirname(__FILE__)."/../")."/phpunit_config.php");
 
-  /** Find the class files we need to run this */
-  include_once($_SESSION['zen']['directories']['dir_classes']."/Zen.php");
-  include_once($_SESSION['zen']['directories']['dir_classes']."/ZenMessage.php");
-  include_once($_SESSION['zen']['directories']['dir_classes']."/ZenMessageList.php");
-
   /**
    * Test the ZenMessageList class methods
    *
-   * @package PHPUnitTests
+   * This test requires the Zen.php, ZenMessage.php and ZenMessageList.php libraries.
+   * This test also relies on the ZenMessageListTest.xml file for test data
+   *
+   * @package PHPUnit
    */
   class ZenMessageListTest extends Test {
 

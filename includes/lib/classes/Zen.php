@@ -129,7 +129,8 @@ class Zen {
       }
       else {
         $db = $GLOBALS['zen']['db'];
-        $dir_cache = $GLOBALS['zen']['directories']['dir_dbcache'];
+        $dir_cache = isset($GLOBALS['zen']['directories']['dir_dbcache'])? 
+          $GLOBALS['zen']['directories']['dir_dbcache'] : null;
         $prefix = $GLOBALS['zen']['db']['table_prefix'];
       }
       $GLOBALS['dbConnection'] = new ZenDatabase($db['db_type'], 
@@ -138,8 +139,7 @@ class Zen {
                                                   $db['db_pass'],
                                                   $db['db_instance'],
                                                   $db['db_persistent']);
-      
-      $GLOBALS['dbConnection']->setCacheDirectory( $dir_cache );
+      if( $dir_cache ) { $GLOBALS['dbConnection']->setCacheDirectory( $dir_cache ); }
       $GLOBALS['dbConnection']->setPrefix( $prefix );
     }
     return $GLOBALS['dbConnection'];
@@ -187,7 +187,9 @@ class Zen {
   }
 
   /**
-   * stores a message in the ZenMessageList
+   * Stores a message in the ZenMessageList
+   *
+   * If the ZenMessageList doesn't exist, this function simply returns false
    *
    * @param mixed $class the class object ($this) or a string representing the class/script name
    * @param string $method the method/section producing message
@@ -199,6 +201,9 @@ class Zen {
   function debug( $class, $method, $message, $errnum = 0, $level = 3 ) { 
     if( is_object($class) ) {
       $class = get_class($class);
+    }
+    if( !class_exists("ZenMessageList") ) {
+      return false;
     }
     $ml = &Zen::getMessageList();
     return $ml->add($class,$method,$message,$errnum,$level);

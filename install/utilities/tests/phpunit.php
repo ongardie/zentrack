@@ -1,4 +1,10 @@
 <?php
+
+/**
+ * Drop this file in the web directory to run PHPUnit tests
+ * @package PHPUnit
+ */
+
 if (!defined('PHP_UNIT_INCLUDED')) 
 {
 
@@ -38,7 +44,11 @@ function errorHandler($errno, $errstr, $errfile, $errline)
       break;
     }
 }
- 
+
+/**
+ * Used to handle errors during phpUnit testing
+ * @package PHPUnit
+ */
 class Assert {
   function assert($bool, $message = '') {
     if (!$bool) {
@@ -67,6 +77,10 @@ class Assert {
   }
 }
 
+/**
+ * All PHPUnit tests should extend this class
+ * @package PHPUnit
+ */
 class Test {
   /**
    * Call all methods starting with 'test'. $class is the name of the class.

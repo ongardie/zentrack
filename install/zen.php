@@ -2,9 +2,9 @@
 <?{
 
   /**
-   * @package Setup
-   *
    *  This initializes and runs ZenTargets, providing proper class inclusion and environemnt checks.
+   *
+   * @package Setup
    */
 
   // get time for performance
@@ -70,7 +70,7 @@
   // call this install prog there may not be any class file, so we will have to
   // copy them.  This should only ever happen during development.
   $thisdir = dirname(__FILE__);
-  $class_files = array('Zen.php', 'ZenDatabase.php', 'ZenTemplate.php', 'ZenTargets.php', 'ZenUtils.php');
+  $class_files = array('ZenTargets.php', 'ZenUtils.php');
   foreach($class_files as $c) {
     if( !@file_exists("$thisdir/setup/$c") ) {
       if( $argv[0] != '-copy_class_files' &&
@@ -83,8 +83,12 @@
     }
   }
 
+  $ini_set = ZenUtils::read_ini($ini_file);
+  $dir_classes = $ini_set['directories']['dir_classes'];
+  include_once($ini_set['directories']['dir_lib']."/inc/classes.php");
+
   // run the targets
-  $z = new ZenTargets();
+  $z = new ZenTargets($ini_set);
   $z->args( $argv );
   if( $z->run() ) {
     print "\nSUCCESS: All targets completed successfully\n";

@@ -1,8 +1,6 @@
 <? /* -*- Mode: C; c-basic-indent: 3; indent-tabs-mode: nil -*- ex: set tabstop=3 expandtab: */ 
 
 /** 
- * @package Zen 
- *
  * The ZenTrigger class is a base class for triggers
  * 
  * There should be several properties associated with triggers:
@@ -35,6 +33,8 @@
  *    <li>ZenActionTrigger
  *    <li>ZenFieldTrigger
  * </ul>
+ *
+ * @package Zen 
  */
 class ZenTrigger extends ZenDataType {
 

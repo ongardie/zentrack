@@ -459,6 +459,12 @@ class ZenQuery extends Zen {
       $this->debug($this, '_execute', '_buildQuery() failed', 1);
       return false;
     }
+    //todo
+    //todo implement and make this run a different query for inserts
+    //todo we want to be able to get back the generated id whenever
+    //todo we run an insert, which will require a different setup here
+    //todo
+    //todo
     return $this->_dbobject->execute($query, $cacheTime, $this->_limit, $this->_offset);
   }
   
