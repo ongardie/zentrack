@@ -44,6 +44,7 @@
    * {script:"file_name"} // runs script (includes/users/code) and insert return value
    * {form:"table":"template":field1="ftype",field2="ftype",...} // create form from database, types changed by final param(optional)
    * {modifier:"command"} // special condition for template parser, see below.
+   * {tr:"string":vars} // translate a string of text to the selected language, vars is an optional variable or list of vars to pass to the string
    *</code>
    *
    * Note that all the properties listed above in "quotes" are strings. Usage of strings is
@@ -299,10 +300,19 @@ class ZenTemplate {
         return $this->_parseScript($parts);     
       }
       case "form":
+      {
         // {form:table_name:fields}
         ZenUtils::safeDebug($this, "_insert", "using {form:table_name:fields} for '$text'", 0, LVL_DEBUG);
         return $this->_parseForm($parts);
       }
+      case "tr":
+      {
+        // {tr:"string"}
+        ZenUtils::safeDebug($this, "_insert", "using {tr:string} for '$text'", 0, LVL_DEBUG);
+        return $this->_tr($parts);        
+      }
+      }
+      
     }
     // return something generic if we fall through
     ZenUtils::safeDebug($this, "_insert", "invalid tag: '$text'", 103, LVL_WARN);
@@ -613,6 +623,13 @@ class ZenTemplate {
     }
     // return the current iterator
     return $this->_arrayIteratorIndex["$key"];
+  }
+
+  /**
+   * Translate an entry
+   */
+  function _tr( $parts ) {
+    return ZenUtils::translate($parts[1], ($parts[2]? $parts[2]:null) );
   }
 
   /**

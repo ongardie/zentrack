@@ -641,6 +641,31 @@ class ZenUtils {
     }
   }
 
+  /**
+   * Returns a translation, if the translation engine is available, otherwise
+   * parses any variables and returns string 'as-is'
+   *
+   * @param string $text text to translate
+   * @param array $vals key/value set containing any values to substitute for ? chars
+   */
+  function translate( $text, $vals = null ) {
+    //todo
+    //todo make this initialize the
+    //todo tr() method if possible
+    //todo
+    //todo move the tr() method here?
+    //todo
+    if( function_exists("tr") ) {
+      return tr($text, $vals);
+    }
+    else if( $vals ) {
+      foreach($vals as $v) {
+        $text = preg_replace("/\?/", $v, $text, 1);
+      }      
+    }
+    return $text;
+  }
+
 }
 
 ?>
