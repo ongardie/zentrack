@@ -140,17 +140,18 @@
     <select name="search_params[bin_id]">
        <option value="">----</option>
 <?
-    if( is_array($userBins) ) {
-    	foreach($userBins as $k=>$v) {
-	  if( $v ) {
-	    $check = ( $v == $search_params["bin_id"] )? "selected" : "";
-	    $n = $zen->bins["$v"];
-	    print "<option $check value='$v'>$n</option>\n";
-	  }
-	}
-    } else {
+   if( is_array($userBins) ) {
+      $allbins = $zen->getBins();
+      
+    	foreach($allbins as $k=>$v) {
+         if (in_array($k, $userBins)) {
+             $check = ( $v == $search_params["bin_id"] )? "selected" : "";
+             print "<option $check value='$k'>$v</option>";
+         }
+      }
+   } else {
       print "<option value=''>--no bins--</option>\n";
-    }
+   }
 ?>
     </select>
   </td>

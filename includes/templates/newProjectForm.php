@@ -138,15 +138,18 @@ value="<?=strip_tags($title)?>">
   <td class="bars">
     <select name="bin_id">
 <?
-    if( is_array($userBins) ) {
-    	foreach($userBins as $k) {
-	   $check = ( $k == $bin_id || (!$bin_id && !$td && $k == $login_bin) )? 
-		"selected" : "";
-	   print "<option $check value='$k'>".$zen->bins["$k"]."</option>\n";
-	}
-    } else {
+   if( is_array($userBins) ) {
+      $allbins = $zen->getBins();
+      
+      foreach($allbins as $k=>$v) {
+         if(in_array($k, $userBins)) {
+      	   $check = ( $k == $bin_id || (!$bin_id && !$td && $k == $login_bin) )? "selected" : "";
+            print "<option $check value='$k'>$v</option>";
+         }
+      }
+   } else {
       print "<option value=''>--".tr("none")."--</option>\n";
-    }
+   }
 ?>
     </select>
   </td>

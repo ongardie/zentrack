@@ -7,6 +7,12 @@
 
 ----- V2.4 (development, see CVS) ----
 
+2003-04-18, Rob Hillis
+  Fix un-ordered display of bins when creating new ticket or project and when searching.
+    - zentrack/includes/templates/newTicketForm.php 1.23
+    - zentrack/includes/templates/newProjectForm.php 1.19
+    - zentrack/includes/templates/searchForm.php 1.5
+
 2003-04-17, Rob Hillis
   Tweak fix for UNC path display
     - zentrack/includes/templates/ticket_logBox.php 1.14
@@ -18,7 +24,7 @@
   Modified regexp when displaying logs to properly link entire URL, including punctuation
     - zentrack/includes/templates/ticket_logBox.php 1.11/1.12
   Fix bug where UNC paths are not displayed properly in logs
-	- zentrack/includes/templates/ticket_logBox.php 1.13
+    - zentrack/includes/templates/ticket_logBox.php 1.13
   Footer not included on Support page
     - zentrack/zentrack/www/help/support.php 1.4
 	
