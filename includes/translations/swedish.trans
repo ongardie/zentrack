@@ -1,0 +1,1533 @@
+# This is the translation template file. It is automatically generated from developers/tr-parser.php
+# If you have any questions on how to create a translation file please direct them to zentrack support
+
+#file "D:\zentrack\zentrack/www/actions/assign.php"
+#args "array($r)"
+msgid " ? is required"
+msgstr " ? är obligatoriskt"
+
+
+#file "D:\zentrack\zentrack/www/actions/upload.php"
+#args "array($file_type)"
+msgid "'?' is not an allowed file extension - See your systems administrator for more information"
+msgstr "'?' är inte en tillåten filändelse - Kontakta din systemadministratör för mer information"
+
+
+#file "D:\zentrack\zentrack/includes/templates/searchList.php"
+#args ""
+msgid "1 Match"
+msgstr "1 Träff"
+
+
+#file "D:\zentrack\zentrack/www/actions/close.php"
+#args "array($zen->types[$c['type_id']], $c['id'])"
+msgid "? ? is not completed."
+msgstr "? ? är inte slutförd."
+
+
+#file "D:\zentrack\zentrack/includes/templates/searchList.php"
+#args "array($c)"
+msgid "? Matches"
+msgstr "? Träffar"
+
+
+#file "D:\zentrack\zentrack/www/admin/config.php"
+#args "array($zen->settings["system_name"])"
+msgid "? Settings"
+msgstr "? Inställningar"
+
+
+#file "D:\zentrack\zentrack/www/admin/bins.php"
+#args "array($j)"
+msgid "? bins were saved to the database. Updates complete"
+msgstr "? inkorgar är sparade i databasen. Uppdatering slutförd"
+
+
+#file "D:\zentrack\zentrack/www/actions/editSubmit.php"
+#args "array(ucfirst($r))"
+msgid "? is a required field"
+msgstr "? är ett obligatoriskt fält"
+
+
+#file "D:\zentrack\zentrack/www/actions/email.php"
+#args "array($r)"
+msgid "? is required"
+msgstr "? är obligatoriskt"
+
+
+#file "D:\zentrack\zentrack/www/admin/config.php"
+#args "array($k)"
+msgid "? must be set to 'on' or 'off'"
+msgstr "? måste vara inställt till 'på' eller 'av'"
+
+
+#file "D:\zentrack\zentrack/www/admin/config.php"
+#args "array($k)"
+msgid "? must have a value, use zero instead of a blank"
+msgstr "? måste ha ett värde, använd noll istället för tomt"
+
+
+#file "D:\zentrack\zentrack/www/admin/config.php"
+#args "array($j, count($newparams))"
+msgid "? of ? settings changed were successfully updated"
+msgstr "? av ? inställningar har ändrats och uppdaterats"
+
+
+#file "D:\zentrack\zentrack/includes/leftMain.php"
+#args "array($num,count($zen->bins))"
+msgid "? open tickets in ? bins"
+msgstr "? öppna ärenden i ? inkorgar"
+
+
+#file "D:\zentrack\zentrack/www/admin/priorities.php"
+#args "array($j)"
+msgid "? priorities were saved to the database. Updates complete"
+msgstr "? prioriteringar har sparats i databasen. Uppdatering slutförd"
+
+
+#file "D:\zentrack\zentrack/www/admin/systems.php"
+#args "array($j)"
+msgid "? systems were saved to the database. Updates complete"
+msgstr "? system är sparade i databasen. Uppdatering slutförd"
+
+
+#file "D:\zentrack\zentrack/www/admin/tasks.php"
+#args "array($j)"
+msgid "? tasks were saved to the database. Updates complete"
+msgstr "? uppgifter är sparade i databasen. Uppdatering slutförd"
+
+
+#file "D:\zentrack\zentrack/www/admin/types.php"
+#args "array($j)"
+msgid "? types were saved to the database. Updates complete"
+msgstr "? typer är sparade i databasen. Uppdatering slutförd"
+
+
+#file "D:\zentrack\zentrack/www/actions/addToNotify.php"
+#args "array($u)"
+msgid "? was not a valid user id"
+msgstr "? var inte ett giltigt id"
+
+
+#file "D:\zentrack\zentrack/www/actions/print.php"
+#args ""
+msgid "ATC"
+msgstr "ATC"
+
+
+#file "D:\zentrack\zentrack/www/help/install.php"
+#args "array($zen->settings["system_name"])"
+msgid "About ?"
+msgstr "Angående ?"
+
+
+#file "D:\zentrack\zentrack/www/addSubmit.php"
+#args ""
+msgid "Access Error"
+msgstr "Access Fel"
+
+
+#file "D:\zentrack\zentrack/includes/templates/ticket_tasksBox.php"
+#args ""
+msgid "Add ticket to project"
+msgstr "Lägg till ärende till projekt"
+
+
+#file "D:\zentrack\zentrack/www/admin/access.php"
+#args ""
+msgid "Admin Section"
+msgstr "Admin Sektion"
+
+
+#file "D:\zentrack\zentrack/www/admin/admin_header.php"
+#args ""
+msgid "Administration"
+msgstr "Administration"
+
+
+#file "D:\zentrack\zentrack/www/admin/access.php"
+#args "array($user_id)"
+msgid "All bins were removed from access for user ?"
+msgstr "Alla inkorgar har tagits bort för användare ?"
+
+
+#file "D:\zentrack\zentrack/www/misc/homebin.php"
+#args ""
+msgid "All"
+msgstr "Alla"
+
+
+#file "D:\zentrack\zentrack/www/actions/print.php"
+#args ""
+msgid "Approval"
+msgstr "Godkännande"
+
+
+#file "D:\zentrack\zentrack/includes/zenTrack.class"
+#args ""
+msgid "Attachments"
+msgstr "Bifogade filer"
+
+
+#file "D:\zentrack\zentrack/includes/zenTrack.class"
+#args ""
+msgid "Bin"
+msgstr "Inkorg"
+
+
+#file "D:\zentrack\zentrack/www/reports/save.php"
+#args ""
+msgid "Bin(s)"
+msgstr "Inkorg(ar)"
+
+
+#file "D:\zentrack\zentrack/www/misc/homebin.php"
+#args ""
+msgid "Change Default Bin"
+msgstr "Ändra Standard Inkorg"
+
+
+#file "D:\zentrack\zentrack/www/misc/pwc.php"
+#args ""
+msgid "Change Password"
+msgstr "Ändra Lösenord"
+
+
+#file "D:\zentrack\zentrack/www/reports/saveSubmit.php"
+#args ""
+msgid "Chart could not be saved."
+msgstr "Tabell/diagram kunde inte sparas"
+
+
+#file "D:\zentrack\zentrack/www/admin/editUser.php"
+#args ""
+msgid "Click Here to search for users"
+msgstr "Klicka Här för att söka efter användare"
+
+
+#file "D:\zentrack\zentrack/includes/editTicketSubmit.php"
+#args ""
+msgid "Commit Edited Ticket"
+msgstr "Slutför Redigerat Ärende"
+
+
+#file "D:\zentrack\zentrack/www/addProjectSubmit.php"
+#args ""
+msgid "Commit New Project"
+msgstr "Slutför Nytt Projekt"
+
+
+#file "D:\zentrack\zentrack/www/addSubmit.php"
+#args ""
+msgid "Commit New Ticket"
+msgstr "Slutför Nytt Ärende"
+
+
+#file "D:\zentrack\zentrack/www/actions/print.php"
+#args ""
+msgid "Completed"
+msgstr "Avslutat"
+
+
+#file "D:\zentrack\zentrack/www/admin/config.php"
+#args ""
+msgid "Configuration Settings"
+msgstr "Konfigurering Inställningar"
+
+
+#file "D:\zentrack\zentrack/www/addProjectSubmit.php"
+#args ""
+msgid "Could not create ticket."
+msgstr "Kunde inte skapa ärende."
+
+
+#file "D:\zentrack\zentrack/www/newProject.php"
+#args ""
+msgid "Create a New Project"
+msgstr "Skapa ett Nytt Projekt"
+
+
+#file "D:\zentrack\zentrack/www/newTicket.php"
+#args ""
+msgid "Create a New Ticket"
+msgstr "Skapa ett Nytt Ärende"
+
+
+#file "D:\zentrack\zentrack/www/admin/access.php"
+#args "array($user_id)"
+msgid "Custom Access priviledges updated for user ?"
+msgstr "Anpassa Accessrättigheter för användare ?"
+
+
+#file "D:\zentrack\zentrack/www/actions/print.php"
+#args ""
+msgid "DESCRIPTION"
+msgstr "BESKRIVNING"
+
+
+#file "D:\zentrack\zentrack/includes/zenTrack.class"
+#args ""
+msgid "Deadline"
+msgstr "Måldatum"
+
+
+#file "D:\zentrack\zentrack/www/admin/deleteUser.php"
+#args ""
+msgid "Delete User"
+msgstr "Ta bort Användare"
+
+
+#file "D:\zentrack\zentrack/www/helpers/projectSearchbox.php"
+#args ""
+msgid "Description"
+msgstr "Beskrivning"
+
+
+#file "D:\zentrack\zentrack/www/reports/drop.php"
+#args ""
+msgid "Drop Template"
+msgstr "Ta bort Mall"
+
+
+#file "D:\zentrack\zentrack/www/actions/print.php"
+#args ""
+msgid "ETC"
+msgstr "ETC"
+
+
+#file "D:\zentrack\zentrack/www/actions/edit.php"
+#args ""
+msgid "Edit Ticket"
+msgstr "Redigera Ärende"
+
+
+#file "D:\zentrack\zentrack/www/admin/editUserSubmit.php"
+#args ""
+msgid "Edit User Submit"
+msgstr "Redigera Användar Skickat"
+
+
+#file "D:\zentrack\zentrack/www/helpers/userSearchbox.php"
+#args ""
+msgid "First Name"
+msgstr "Förnamn"
+
+
+#file "D:\zentrack\zentrack/www/helpers/userSearchbox.php"
+#args ""
+msgid "Home Bin"
+msgstr "Hem Inkorg"
+
+
+#file "D:\zentrack\zentrack/www/actions/log.php"
+#args ""
+msgid "Hours must be entered if the activity is 'LABOR'"
+msgstr "Timmar måste registreras om aktiviten är 'ARBETE'"
+
+
+#file "D:\zentrack\zentrack/includes/zenTrack.class"
+#args ""
+msgid "ID"
+msgstr "ID"
+
+
+#file "D:\zentrack\zentrack/www/actions/print.php"
+#args ""
+msgid "LOG"
+msgstr "LOGG"
+
+
+#file "D:\zentrack\zentrack/www/helpers/userSearchbox.php"
+#args ""
+msgid "Last Name"
+msgstr "Efternamn"
+
+
+#file "D:\zentrack\zentrack/includes/zenTrack.class"
+#args ""
+msgid "Log History")
+msgstr "Historik Logg"
+
+
+#file "D:\zentrack\zentrack/www/reports/save.php"
+#args ""
+msgid "Make Visible To"
+msgstr "Gör Synlig För"
+
+
+#file "D:\zentrack\zentrack/www/reports/projectSearchbox.php"
+#args ""
+msgid "Make search of projects that returns comma delimited list"
+msgstr "Utför sökning av projekt som returnerar komma separerad lista"
+
+
+#file "D:\zentrack\zentrack/www/reports/ticketSearchbox.php"
+#args ""
+msgid "Make ticket search that returns comma delimited list"
+msgstr "Utför ärendesökning som returnerar komma separerad lista"
+
+
+#file "D:\zentrack\zentrack/www/reports/save.php"
+#args ""
+msgid "Modify Existing"
+msgstr "Ändra Existerande"
+
+
+#file "D:\zentrack\zentrack/www/reports/view.php"
+#args ""
+msgid "Modify Report"
+msgstr "Ändra Rapport"
+
+
+#file "D:\zentrack\zentrack/www/helpers/projectSearchbox.php"
+#args ""
+msgid "Modify Search"
+msgstr "Ändra Sökning"
+
+
+#file "D:\zentrack\zentrack/www/helpers/userSearchbox.php"
+#args ""
+msgid "Name"
+msgstr "Namn"
+
+
+#file "D:\zentrack\zentrack/www/reports/view.php"
+#args ""
+msgid "New Report"
+msgstr "Ny Rapport"
+
+
+#file "D:\zentrack\zentrack/www/reports/save.php"
+#args ""
+msgid "New Template"
+msgstr "Ny Mall"
+
+
+#file "D:\zentrack\zentrack/www/admin/addUser.php"
+#args ""
+msgid "New User"
+msgstr "Ny Användare"
+
+
+#file "D:\zentrack\zentrack/www/actions/print.php"
+#args ""
+msgid "No Log Entries"
+msgstr "Inga Loggposter"
+
+
+#file "D:\zentrack\zentrack/www/actions/print.php"
+#args ""
+msgid "No Related Tickets"
+msgstr "Inga Relaterade Ärenden"
+
+
+#file "D:\zentrack\zentrack/www/actions/print.php"
+#args ""
+msgid "No Tasks Assigned to this Project"
+msgstr "Inga Uppgifter tilldelade detta Projekt"
+
+
+#file "D:\zentrack\zentrack/includes/templates/ticket_attachmentsBox.php"
+#args ""
+msgid "No attachments exist for this $page_type"
+msgstr "Inga bifogade filer för denna $page_type"
+
+
+#file "D:\zentrack\zentrack/www/actions/log.php"
+#args ""
+msgid "No comments were entered."
+msgstr "Inga förklaringar/kommentarer var registrerade"
+
+
+#file "D:\zentrack\zentrack/www/actions/upload.php"
+#args ""
+msgid "No file was uploaded."
+msgstr "Ingen fil var bifogad"
+
+
+#file "D:\zentrack\zentrack/includes/zenTrack.class"
+#args ""
+msgid "No logs found"
+msgstr "Inga loggar hittades"
+
+
+#file "D:\zentrack\zentrack/www/actions/dropFromNotify.php"
+#args ""
+msgid "No recipients were selected to drop"
+msgstr "Inga mottagare var valda att tas bort"
+
+
+#file "D:\zentrack\zentrack/www/admin/config.php"
+#args ""
+msgid "No settings were recieved"
+msgstr "Inga inställningar var mottagna"
+
+
+#file "D:\zentrack\zentrack/includes/templates/ticket_tasksBox.php"
+#args ""
+msgid "No tickets have been added to this Project."
+msgstr "Inga ärenden har adderats till detta Projekt"
+
+
+#file "D:\zentrack\zentrack/includes/templates/ticket_relatedBox.php"
+#args ""
+msgid "No tickets have been associated with this ticket."
+msgstr "Inga ärenden har associerats till detta ärende"
+
+
+#file "D:\zentrack\zentrack/www/admin/resetPassword.php"
+#args ""
+msgid "No user id was recieved"
+msgstr "Inget användar id var mottaget"
+
+
+#file "D:\zentrack\zentrack/includes/templates/searchLogResults.php"
+#args ""
+msgid "No valid fields were provided to conduct a search"
+msgstr "Inga giltiga fält var ifyllda för att utföra en sökning"
+
+
+#file "D:\zentrack\zentrack/www/actions/print.php"
+#args ""
+msgid "Not Required"
+msgstr "Ej Obligatorisk"
+
+
+#file "D:\zentrack\zentrack/includes/templates/configSettingsForm.php"
+#args ""
+msgid "Off"
+msgstr "Av"
+
+
+#file "D:\zentrack\zentrack/includes/templates/configSettingsForm.php"
+#args ""
+msgid "On"
+msgstr "På"
+
+
+#file "D:\zentrack\zentrack/www/admin/resetPassword.php"
+#args ""
+msgid "Only the root administrator can change the root administrator's passphrase"
+msgstr "Endast root administratören kan ändra root administratörens lösenuttryck"
+
+
+#file "D:\zentrack\zentrack/www/reports/save.php"
+#args ""
+msgid "Optional.  Use control or shift to select multiples"
+msgstr "Valfri. Använd controll eller shift för att välja flera"
+
+
+#file "D:\zentrack\zentrack/www/reports/save.php"
+#args ""
+msgid "Optional. You do not need to select yourself"
+msgstr "Valfri. Du behöver inte välja själv"
+
+
+#file "D:\zentrack\zentrack/includes/zenTrack.class"
+#args ""
+msgid "Owner"
+msgstr "Ägare"
+
+
+#file "D:\zentrack\zentrack/www/admin/resetPassword.php"
+#args "array($user_id)"
+msgid "Password reset to the default [user's last name] for user ?"
+msgstr "Lösenord återställt till standard [användares efternamn] för användare ?"
+
+
+#file "D:\zentrack\zentrack/www/misc/pwc.php"
+#args ""
+msgid "Password successfully changed"
+msgstr "Lösenord ändrat"
+
+
+#file "D:\zentrack\zentrack/www/misc/pwc.php"
+#args ""
+msgid "Please fill in both of the fields"
+msgstr "Vänligen fyll i båda fälten"
+
+
+#file "D:\zentrack\zentrack/includes/zenTrack.class"
+#args ""
+msgid "Please log in to view the entire ticket."
+msgstr "Vänligen logga in för att se hela ärendet."
+
+
+#file "D:\zentrack\zentrack/www/helpers/projectSearchbox.php"
+#args ""
+msgid "Priority"
+msgstr "Prioritet"
+
+
+#file "D:\zentrack\zentrack/www/admin/addUserSubmit.php"
+#args ""
+msgid "Process completed successfully.  Account not added, because this is a demo site"
+msgstr "Process avslutad.  Konto ej adderat då detta är en demo sajt"
+
+
+#file "D:\zentrack\zentrack/www/admin/bins.php"
+#args ""
+msgid "Process completed successfully.  Bins were not updated since this is a demo site."
+msgstr "Process avslutad.  Inkorgar har inte uppdaterats då detta är en demo sajt."
+
+
+#file "D:\zentrack\zentrack/www/admin/resetPassword.php"
+#args ""
+msgid "Process completed successfully.  No changes were made because this is a demo site"
+msgstr "Process avslutad.  Inga ändringar har sparats då detta är en demo sajt."
+
+
+#file "D:\zentrack\zentrack/www/admin/config.php"
+#args ""
+msgid "Process completed successfully.  No changes were made, because this is a demo site."
+msgstr "Process avslutad.  Inga ändringar har gjorts, då detta är en demo sajt."
+
+
+#file "D:\zentrack\zentrack/www/admin/priorities.php"
+#args ""
+msgid "Process completed successfully.  Priorities were not updated since this is a demo site."
+msgstr "Process avslutad.  Prioriteringar har inte uppdaterats då detta är en demo sajt."
+
+
+#file "D:\zentrack\zentrack/www/admin/systems.php"
+#args ""
+msgid "Process completed successfully.  Systems were not updated since this is a demo site."
+msgstr "Process avslutad.  System har inte uppdaterats då detta är en demo sajt."
+
+
+#file "D:\zentrack\zentrack/www/admin/tasks.php"
+#args ""
+msgid "Process completed successfully.  Tasks were not updated since this is a demo site."
+msgstr "Process avslutad.  Uppgifter har inte uppdaterats då detta är en demo sajt."
+
+
+#file "D:\zentrack\zentrack/www/admin/types.php"
+#args ""
+msgid "Process completed successfully.  Types were not updated since this is a demo site."
+msgstr "Process avslutad. Typer har inte uppdaterats då detta är en demo sajt."
+
+
+#file "D:\zentrack\zentrack/www/admin/access.php"
+#args ""
+msgid "Process completed successfully. No privileges were changed, because this is a demo site."
+msgstr "Process avslutad.  Inga privilegier har ändrats då detta är en demo sajt."
+
+
+#file "D:\zentrack\zentrack/www/admin/editUserSubmit.php"
+#args ""
+msgid "Process successful.  User was not updated, because this is a demo site."
+msgstr "Process avslutad.  Användare har inte uppdaterats då detta är en demo sajt."
+
+
+#file "D:\zentrack\zentrack/www/reports/show.php"
+#args ""
+msgid "Processing Error: Report ID Missing"
+msgstr "Process Fel: Rapport ID Saknas"
+
+
+#file "D:\zentrack\zentrack/www/reports/saveSubmit.php"
+#args ""
+msgid "Processing error: tempid not found\n"
+msgstr "Process fel: tempid ej hittat\n"
+
+
+#file "D:\zentrack\zentrack/www/reports/save.php"
+#args ""
+msgid "Processing error: template not found."
+msgstr "Process fel: mall ej hittad."
+
+
+#file "D:\zentrack\zentrack/www/helpers/projectSearchbox.php"
+#args ""
+msgid "Project ID"
+msgstr "Projekt ID"
+
+
+#file "D:\zentrack\zentrack/www/actions/print.php"
+#args ""
+msgid "Project"
+msgstr "Projekt"
+
+
+#file "D:\zentrack\zentrack/www/assignedProjects.php"
+#args ""
+msgid "Projects"
+msgstr "Projekt"
+
+
+#file "D:\zentrack\zentrack/www/actions/print.php"
+#args ""
+msgid "RELATED TICKETS"
+msgstr "RELATERADE ÄRENDEN"
+
+
+#file "D:\zentrack\zentrack/www/reports/drop.php"
+#args ""
+msgid "Report Deleted"
+msgstr "Rapport Borttagen"
+
+
+#file "D:\zentrack\zentrack/www/reports/custom.php"
+#args ""
+msgid "Report ID not found"
+msgstr "Rapport ID ej hittat"
+
+
+#file "D:\zentrack\zentrack/www/reports/saveSubmit.php"
+#args ""
+msgid "Report Name is required"
+msgstr "Rapport Namn är obligatoriskt"
+
+
+#file "D:\zentrack\zentrack/www/addSubmit.php"
+#args ""
+msgid "Required field missing:"
+msgstr "Obligatoriskt fält saknas:"
+
+
+#file "D:\zentrack\zentrack/www/actions/print.php"
+#args ""
+msgid "Required"
+msgstr "Obligatorisk"
+
+
+#file "D:\zentrack\zentrack/www/admin/resetPassword.php"
+#args ""
+msgid "Reset Password"
+msgstr "Återställ Lösenord"
+
+
+#file "D:\zentrack\zentrack/includes/templates/userSearchList.php"
+#args "array($u["user_id"])"
+msgid "Reset the password for user ??"
+msgstr "Återställ lösenordet för användare ??"
+
+
+#file "D:\zentrack\zentrack/www/reports/save.php"
+#args ""
+msgid "Save Report"
+msgstr "Spara Rapport"
+
+
+#file "D:\zentrack\zentrack/www/reports/saveSubmit.php"
+#args ""
+msgid "Save Submit"
+msgstr "Spara Skickat"
+
+
+#file "D:\zentrack\zentrack/www/reports/save.php"
+#args ""
+msgid "Save Template"
+msgstr "Spara Mall"
+
+
+#file "D:\zentrack\zentrack/www/reports/save.php"
+#args ""
+msgid "Save"
+msgstr "Spara"
+
+
+#file "D:\zentrack\zentrack/www/searchLogs.php"
+#args ""
+msgid "Search Logs"
+msgstr "Sök Loggar"
+
+
+#file "D:\zentrack\zentrack/www/helpers/projectSearchbox.php"
+#args ""
+msgid "Search Projects"
+msgstr "Sök Projekt"
+
+
+#file "D:\zentrack\zentrack/www/helpers/projectSearchbox.php"
+#args ""
+msgid "Search Tickets"
+msgstr "Sök Ärenden"
+
+
+#file "D:\zentrack\zentrack/www/helpers/userSearchbox.php"
+#args ""
+msgid "Search Users"
+msgstr "Sök Användare"
+
+
+#file "D:\zentrack\zentrack/www/admin/listUsers.php"
+#args ""
+msgid "Search for Users"
+msgstr "Sök efter Användare"
+
+
+#file "D:\zentrack\zentrack/www/helpers/projectSearchbox.php"
+#args ""
+msgid "Search"
+msgstr "Sök"
+
+
+#file "D:\zentrack\zentrack/www/helpers/projectSearchbox.php"
+#args ""
+msgid "Select Projects"
+msgstr "Välj Projekt"
+
+
+#file "D:\zentrack\zentrack/www/helpers/ticketSearchbox.php"
+#args ""
+msgid "Select Tickets"
+msgstr "Välj Ärenden"
+
+
+#file "D:\zentrack\zentrack/www/helpers/projectSearchbox.php"
+#args ""
+msgid "Select more than one by using control or shift"
+msgstr "Välj fler än en genom att använda control eller shift"
+
+
+#file "D:\zentrack\zentrack/www/helpers/projectSearchbox.php"
+#args ""
+msgid "Select"
+msgstr "Välj"
+
+
+#file "D:\zentrack\zentrack/www/reports/show.php"
+#args ""
+msgid "Show Report"
+msgstr "Visa Rapport"
+
+
+#file "D:\zentrack\zentrack/includes/zenTrack.class"
+#args ""
+msgid "Status"
+msgstr "Status"
+
+
+#file "D:\zentrack\zentrack/includes/editTicketSubmit.php"
+#args ""
+msgid "System Error"
+msgstr "System Fel"
+
+
+#file "D:\zentrack\zentrack/www/admin/addUserSubmit.php"
+#args "array($lname, $fname)"
+msgid "System Error: Could not add ?, ? to the system"
+msgstr "System Fel: Kunde ej lägga till ?, ? till systemet"
+
+
+#file "D:\zentrack\zentrack/www/admin/editUserSubmit.php"
+#args "array($lname, $fname)"
+msgid "System Error: Could not update ?, ?"
+msgstr "System Fel: Kunde ej uppdatera ?, ?"
+
+
+#file "D:\zentrack\zentrack/www/misc/pwc.php"
+#args ""
+msgid "System Error: Unable to change user passphrase."
+msgstr "System Fel: Kunde ej ändra användares lösenuttryck"
+
+
+#file "D:\zentrack\zentrack/www/misc/homebin.php"
+#args ""
+msgid "System Error: Unable to update bin."
+msgstr "System Fel: Kunde ej uppdatera inkorg"
+
+
+#file "D:\zentrack\zentrack/www/admin/access.php"
+#args ""
+msgid "System Error: could not update access &#151; this is most likely because no bins were set, and no bins previously existed (i.e. nothing happened)"
+msgstr "System Fel: kunde ej uppdatera access &#151; detta beror troligen på att inga inkorgar var registrerade, och att inga tidigare existerade (m.a.o. inget hände)"
+
+
+#file "D:\zentrack\zentrack/www/admin/access.php"
+#args "array($user_id)"
+msgid "System Error: could not update access for user ?"
+msgstr "System Fel: kunde ej uppdatera access för användare ?"
+
+
+#file "D:\zentrack\zentrack/www/actions/log.php"
+#args ""
+msgid "System error: Activity could not be logged."
+msgstr "System Fel: Aktivitet kunde ej loggas."
+
+
+#file "D:\zentrack\zentrack/www/actions/upload.php"
+#args "array($userfile_name, $id)"
+msgid "System error: Attachment ? could not be uploaded for ticket ?. "
+msgstr "System fel: Fil ? kunde ej bifogas för ärende ?."
+
+
+#file "D:\zentrack\zentrack/www/actions/addToNotify.php"
+#args ""
+msgid "System error: Notify list could not be updated "
+msgstr "System fel: Notifieringslista kunde ej uppdateras "
+
+
+#file "D:\zentrack\zentrack/www/actions/accept.php"
+#args "array($id)"
+msgid "System error: Ticket ? could not be accepted"
+msgstr "System fel: Ärende ? kunde ej mottagas"
+
+
+#file "D:\zentrack\zentrack/www/actions/approve.php"
+#args "array($id)"
+msgid "System error: Ticket ? could not be approved"
+msgstr "System fel: Ärende ? kunde ej godkännas"
+
+
+#file "D:\zentrack\zentrack/www/actions/assign.php"
+#args "array($id)"
+msgid "System error: Ticket ? could not be assigned"
+msgstr "System fel: Ärende ? kunde ej tilldelas"
+
+
+#file "D:\zentrack\zentrack/www/actions/close.php"
+#args "array($id)"
+msgid "System error: Ticket ? could not be closed"
+msgstr "System fel: Ärende ? kunde ej stängas"
+
+
+#file "D:\zentrack\zentrack/www/actions/email.php"
+#args ""
+msgid "System error: Ticket ? could not be emailed", array($id
+msgstr "System fel: Ärende ? kunde ej e-postas", array($id
+
+
+#file "D:\zentrack\zentrack/www/actions/move.php"
+#args "array($id)"
+msgid "System error: Ticket ? could not be moved. "
+msgstr "System fel: Ärende ? kunde ej flyttas. "
+
+
+#file "D:\zentrack\zentrack/www/actions/reject.php"
+#args "array($id)"
+msgid "System error: Ticket ? could not be rejected"
+msgstr "System fel: Ärende ? kunde ej tillbakavisas"
+
+
+#file "D:\zentrack\zentrack/www/actions/relate.php"
+#args "array($id)"
+msgid "System error: Ticket ? could not be related, or the entries were the same."
+msgstr "System fel: Ärende ? kunde ej bli relaterat, eller ärenden var de samma."
+
+
+#file "D:\zentrack\zentrack/www/actions/reopen.php"
+#args "array($id)"
+msgid "System error: Ticket ? could not be reopened."
+msgstr "System fel: Ärende ? kunde ej öppnas igen."
+
+
+#file "D:\zentrack\zentrack/www/actions/test.php"
+#args "array($id)"
+msgid "System error: Ticket ? could not be tested"
+msgstr "System fel: Ärende ? kunde ej bli testat"
+
+
+#file "D:\zentrack\zentrack/www/actions/yank.php"
+#args "array($id)"
+msgid "System error: Ticket ? could not be yanked."
+msgstr "System fel: Ärende ? kunde ej bli återtaget."
+
+
+#file "D:\zentrack\zentrack/www/helpers/projectSearchbox.php"
+#args ""
+msgid "System"
+msgstr "System"
+
+
+#file "D:\zentrack\zentrack/www/actions/print.php"
+#args ""
+msgid "TASKS FOR COMPLETION"
+msgstr "UPPGIFTER ATT AVSLUTA"
+
+
+#file "D:\zentrack\zentrack/www/actions/print.php"
+#args ""
+msgid "Testing"
+msgstr "Test"
+
+
+#file "D:\zentrack\zentrack/www/misc/homebin.php"
+#args ""
+msgid "That bin doesn't exist"
+msgstr "Denna inkorg existerar ej"
+
+
+#file "D:\zentrack\zentrack/www/actions/upload.php"
+#args ""
+msgid "That is not a recognized file type, by your browsers determinations"
+msgstr "Detta är ej en igenkänd filtyp av din webbläsare"
+
+
+#file "D:\zentrack\zentrack/www/admin/addUserSubmit.php"
+#args ""
+msgid "That login name already exists.  Please choose another."
+msgstr "Detta påloggninsnamn finns redan. Vänligen välj annat."
+
+
+#file "D:\zentrack\zentrack/www/admin/editUserSubmit.php"
+#args ""
+msgid "That login name is in use by another account"
+msgstr "Detta påloggningsnamn är redan i bruk av ett annat konto"
+
+
+#file "D:\zentrack\zentrack/www/reports/custom.php"
+#args ""
+msgid "That temporary report doesn't exist"
+msgstr "Denna temporära rapport existerar ej"
+
+
+#file "D:\zentrack\zentrack/www/ticket.php"
+#args ""
+msgid "That ticket doesn't exist"
+msgstr "Detta ärende existerar ej"
+
+
+#file "D:\zentrack\zentrack/www/admin/editUser.php"
+#args ""
+msgid "That user could not be found"
+msgstr "Denna användare kan ej hittas"
+
+
+#file "D:\zentrack\zentrack/www/misc/pwc.php"
+#args ""
+msgid "The Guest Password cannot be changed!"
+msgstr "Gäst Lösenordet kan inte ändras!"
+
+
+#file "D:\zentrack\zentrack/www/admin/editUser.php"
+#args ""
+msgid "The Root Admin Account can only be modified by the Root Administrator"
+msgstr "Root Admin Kontot kan endast ändras av Root Administratören"
+
+
+#file "D:\zentrack\zentrack/www/admin/deleteUser.php"
+#args "array($user_id)"
+msgid "The account (?) could not be found/deleted successfully"
+msgstr "Kontot (?) kunde inte hittas/tas bort"
+
+
+#file "D:\zentrack\zentrack/www/admin/deleteUser.php"
+#args "array($user_id)"
+msgid "The account(?) was successfully removed"
+msgstr "Kontot(?) har tagits bort"
+
+
+#file "D:\zentrack\zentrack/www/admin/deleteUser.php"
+#args ""
+msgid "The action completed successfully.  The account was not actually deleted, because this is a demo site"
+msgstr "Aktiviteten har avslutats.  Kontot har inte tagits bort då detta är en demo sajt"
+
+
+#file "D:\zentrack\zentrack/www/actions/upload.php"
+#args ""
+msgid "The file could not be uploaded "
+msgstr "Filen kunde inte bifogas "
+
+
+#file "D:\zentrack\zentrack/www/actions/upload.php"
+#args "array(number_format($userfile_size), number_format($max_size))"
+msgid "The file size (?) exceeded the maximum allowed (?)"
+msgstr "Filstorleken (?) överskrider den maximalt godkända (?)"
+
+
+#file "D:\zentrack\zentrack/www/actions/upload.php"
+#args "array(substr($max_size,0,strlen($max_size)-3))"
+msgid "The file was not recieved. Check to insure it's size does not exceed ?KB"
+msgstr "Filen har inte mottagits. Kontrollera att dess storlek inte överskrider ?KB"
+
+
+#file "D:\zentrack\zentrack/www/admin/editUserSubmit.php"
+#args ""
+msgid "The root admin access cannot be less than the level_settings parameter"
+msgstr "Root admin access kan inte vara lägre än level_settings parameter"
+
+
+#file "D:\zentrack\zentrack/www/admin/editUserSubmit.php"
+#args ""
+msgid "The root admin account cannot be deactivated"
+msgstr "Root admin kontot kan inte deaktiveras"
+
+
+#file "D:\zentrack\zentrack/www/admin/editUserSubmit.php"
+#args ""
+msgid "The root admin account must have access of 5 or greater"
+msgstr "Root admin kontot måste ha access 5 eller högre"
+
+
+#file "D:\zentrack\zentrack/www/admin/deleteUser.php"
+#args ""
+msgid "The root administrator account cannot be deleted"
+msgstr "Root administratör kontot kan ej tas bort"
+
+
+#file "D:\zentrack\zentrack/www/actions/upload.php"
+#args ""
+msgid "The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the html form."
+msgstr "Den bifogade filen överskrider MAX_FILE_SIZE inställningen som specificerats i detta html formulär."
+
+
+#file "D:\zentrack\zentrack/www/actions/upload.php"
+#args ""
+msgid "The uploaded file exceeds the upload_max_filesize directive in php.ini."
+msgstr "Den bifogade filen överskrider upload_max_filesize inställningen i php.ini."
+
+
+#file "D:\zentrack\zentrack/www/actions/upload.php"
+#args ""
+msgid "The uploaded file was only partially uploaded."
+msgstr "Den bifogade filen har bara delvis sparats."
+
+
+#file "D:\zentrack\zentrack/www/admin/resetPassword.php"
+#args ""
+msgid "The user passphrase could not be found/edited"
+msgstr "Användaruttrycket kunde inte hittas/redigeras"
+
+
+#file "D:\zentrack\zentrack/includes/zenTrack.class"
+#args ""
+msgid "There are more log entries."
+msgstr "Det finns fler logg poster."
+
+
+#file "D:\zentrack\zentrack/www/admin/bins.php"
+#args ""
+msgid "There was nothing provided to update"
+msgstr "Det finns inget tillhandhållet att uppdatera"
+
+
+#file "D:\zentrack\zentrack/www/admin/config.php"
+#args ""
+msgid "There were no changes made to the settings.  Procedure skipped."
+msgstr "Det finns inga ändringar gjorda i inställningarna.  Procedur avbruten."
+
+
+#file "D:\zentrack\zentrack/www/searchLogs.php"
+#args ""
+msgid "There were no logs matching your search."
+msgstr "Det finns inga loggar som matchar din sökning."
+
+
+#file "D:\zentrack\zentrack/www/actions/email.php"
+#args ""
+msgid "There were no recipients"
+msgstr "Det finns inga mottagare"
+
+
+#file "D:\zentrack\zentrack/www/admin/listUsers.php"
+#args ""
+msgid "There were no results for your search"
+msgstr "Det fanns inget resultat för din sökning"
+
+
+#file "D:\zentrack\zentrack/www/search.php"
+#args ""
+msgid "There were no results for your search."
+msgstr "Det fanns inget resultat för din sökning"
+
+
+#file "D:\zentrack\zentrack/includes/templates/reportsOptionsMenu.php"
+#args ""
+msgid "These options aren't useful when only graphing one element."
+msgstr "Dessa val är inte användbara vid endast visning av ett element."
+
+
+#file "D:\zentrack\zentrack/includes/editTicketSubmit.php"
+#args "array($id)"
+msgid "Ticket #? cannot be edited in its current status"
+msgstr "Ärende #? kan ej redigeras in dess nuvarande status"
+
+
+#file "D:\zentrack\zentrack/includes/templates/editTicketForm.php"
+#args "array($id)"
+msgid "Ticket #? could not be found"
+msgstr "Ärende #? kunde ej hittas"
+
+
+#file "D:\zentrack\zentrack/www/actions/action_header.php"
+#args "array($id)"
+msgid "Ticket #?"
+msgstr "Ärende #?"
+
+
+#file "D:\zentrack\zentrack/includes/zenTrack.class"
+#args "array($id,$this->formatName($user_id,2))"
+msgid "Ticket #?: Log added by ?"
+msgstr "Ärende #?: Logg adderad av ?"
+
+
+#file "D:\zentrack\zentrack/includes/zenTrack.class"
+#args "array($id,$name)"
+msgid "Ticket #?: assigned to ?"
+msgstr "Ärende #?: tilldelad ?"
+
+
+#file "D:\zentrack\zentrack/includes/zenTrack.class"
+#args "array($id)"
+msgid "Ticket #?: closed"
+msgstr "Ärende #?: stängt"
+
+
+#file "D:\zentrack\zentrack/includes/zenTrack.class"
+#args "array($id)"
+msgid "Ticket #?: created"
+msgstr "Ärende #?: skapat"
+
+
+#file "D:\zentrack\zentrack/includes/zenTrack.class"
+#args "array($id,$this->getBinName($newBin))"
+msgid "Ticket #?: moved to ?"
+msgstr "Ärende #?: flyttat till ?"
+
+
+#file "D:\zentrack\zentrack/includes/zenTrack.class"
+#args "array($id)"
+msgid "Ticket #?: rejected"
+msgstr "Ärende #?: tillbakavisat"
+
+
+#file "D:\zentrack\zentrack/includes/zenTrack.class"
+#args "array($id)"
+msgid "Ticket #?: reopened"
+msgstr "Ärende #?: öppnat igen"
+
+
+#file "D:\zentrack\zentrack/includes/zenTrack.class"
+#args "array($id,$name)"
+msgid "Ticket #?: yanked by ?"
+msgstr "Ärende #?: återtaget av ?"
+
+
+#file "D:\zentrack\zentrack/www/actions/editSubmit.php"
+#args "array($id)"
+msgid "Ticket ? could not edit ticket. "
+msgstr "Ärende ? kunde ej redigera ärende. "
+
+
+#file "D:\zentrack\zentrack/www/helpers/ticketSearchbox.php"
+#args ""
+msgid "Ticket ID"
+msgstr "Ärende ID"
+
+
+#file "D:\zentrack\zentrack/includes/zenTrack.class"
+#args ""
+msgid "Ticket Summary")
+msgstr "Ärende Sammanfattning"
+
+
+#file "D:\zentrack\zentrack/includes/zenTrack.class"
+#args ""
+msgid "Ticket has been reopened."
+msgstr "Ärendet har öppnats igen."
+
+
+#file "D:\zentrack\zentrack/www/ticket.php"
+#args ""
+msgid "Ticket"
+msgstr "Ärende"
+
+
+#file "D:\zentrack\zentrack/www/assignedTickets.php"
+#args ""
+msgid "Tickets assigned:"
+msgstr "Ärenden tilldelade:"
+
+
+#file "D:\zentrack\zentrack/www/actions/print.php"
+#args ""
+msgid "Title"
+msgstr "Titel"
+
+
+#file "D:\zentrack\zentrack/www/actions/print.php"
+#args ""
+msgid "Totals"
+msgstr "Totaler"
+
+
+#file "D:\zentrack\zentrack/www/admin/access.php"
+#args ""
+msgid "Two or more bins were submitted with the same name"
+msgstr "Två eller fler inkorgar har skickats med samma namn"
+
+
+#file "D:\zentrack\zentrack/www/reports/save.php"
+#args ""
+msgid "Type ids separated by commas, or click on the button."
+msgstr "Registera ids separerade av komman, eller klicka på knappen."
+
+
+#file "D:\zentrack\zentrack/www/helpers/ticketSearchbox.php"
+#args ""
+msgid "Type"
+msgstr "Typ"
+
+
+#file "D:\zentrack\zentrack/includes/zenTrack.class"
+#args ""
+msgid "URL"
+msgstr "URL"
+
+
+#file "D:\zentrack\zentrack/www/admin/bins.php"
+#args ""
+msgid "Update Bins"
+msgstr "Uppdatera Inkorgar"
+
+
+#file "D:\zentrack\zentrack/www/admin/priorities.php"
+#args ""
+msgid "Update Priorities"
+msgstr "Uppdatera Prioriteringar"
+
+
+#file "D:\zentrack\zentrack/www/admin/systems.php"
+#args ""
+msgid "Update Systems"
+msgstr "Uppdatera System"
+
+
+#file "D:\zentrack\zentrack/www/admin/tasks.php"
+#args ""
+msgid "Update Tasks"
+msgstr "Uppdatera Uppgifter"
+
+
+#file "D:\zentrack\zentrack/www/admin/types.php"
+#args ""
+msgid "Update Types"
+msgstr "Uppdatera Typ"
+
+
+#file "D:\zentrack\zentrack/www/actions/upload.php"
+#args ""
+msgid "Uploaded file size 0 bytes"
+msgstr "Bifogad fil storlek 0 bytes"
+
+
+#file "D:\zentrack\zentrack/www/reports/index.php"
+#args ""
+msgid "Usage Reports"
+msgstr "Användning Rapporter"
+
+
+#file "D:\zentrack\zentrack/www/admin/addUserSubmit.php"
+#args "array($user_id, "<br><a href='$rootUrl/admin/access.php?user_id=$user_id'>" . tr("Click Here") . "</a>", $user_id)"
+msgid "User ? was added successfully. The password is the last name of the user. ? to customize user ?'s access permissions."
+msgstr "Användare ? har skapats. Lösenordet är användarens efternamn. ? för att anpassa användarens access rättigheter."
+
+
+#file "D:\zentrack\zentrack/www/admin/editUserSubmit.php"
+#args "array($user_id, "<br><a href='$rootUrl/admin/access.php?user_id=$user_id'>" . tr("Click Here") . "</a>", $user_id)"
+msgid "User ? was updated successfully. ? to customize user ?'s access permissions."
+msgstr "Användare ? har uppdaterats. ? för att anpassa användare ?'s access rättigheter."
+
+
+#file "D:\zentrack\zentrack/www/helpers/userSearchbox.php"
+#args ""
+msgid "User ID"
+msgstr "Användar ID"
+
+
+#file "D:\zentrack\zentrack/www/options.php"
+#args ""
+msgid "User Options"
+msgstr "Användarval"
+
+
+#file "D:\zentrack\zentrack/www/reports/save.php"
+#args ""
+msgid "User(s)"
+msgstr "Användare"
+
+
+#file "D:\zentrack\zentrack/www/index.php"
+#args ""
+msgid "Welcome to zenTrack"
+msgstr "Välkommen till zenTrack"
+
+
+#file "D:\zentrack\zentrack/www/ticket.php"
+#args ""
+msgid "You are not allowed to view the following in this bin"
+msgstr "Du har inte tillåtelse att se följande i denna inkorg"
+
+
+#file "D:\zentrack\zentrack/includes/editTicketSubmit.php"
+#args ""
+msgid "You cannot edit a ticket in this bin "
+msgstr "Du kan ej redigera ett ärende i denna inkorg "
+
+
+#file "D:\zentrack\zentrack/includes/templates/editTicketForm.php"
+#args ""
+msgid "You cannot edit a ticket in this bin"
+msgstr "Du kan ej redigera ett ärende i denna inkorg"
+
+
+#file "D:\zentrack\zentrack/www/admin/admin_header.php"
+#args ""
+msgid "You do not have access to administrate zenTrack."
+msgstr "Du har inte rättighet att administrera zenTrack."
+
+
+#file "D:\zentrack\zentrack/includes/templates/searchResults.php"
+#args ""
+msgid "You do not have access to any bins."
+msgstr "Du har inte access till några inkorgar."
+
+
+#file "D:\zentrack\zentrack/www/index.php"
+#args ""
+msgid "You do not have access to any existing bins"
+msgstr "Du har inte rättighet till några av de existerande inkorgarna"
+
+
+#file "D:\zentrack\zentrack/includes/templates/newProjectForm.php"
+#args ""
+msgid "You do not have permission to create projects."
+msgstr "Du har inte rättighet att skapa projekt."
+
+
+#file "D:\zentrack\zentrack/www/addProjectSubmit.php"
+#args ""
+msgid "You do not have permission to create tickets in this bin."
+msgstr "Du har inte rättighet att skapa ärenden i denna inkorg."
+
+
+#file "D:\zentrack\zentrack/www/reports/reports_header.php"
+#args ""
+msgid "You do not have permission to view the reports."
+msgstr "Du har inte rättighet att se rapporterna."
+
+
+#file "D:\zentrack\zentrack/www/helpers/userSearchbox.php"
+#args ""
+msgid "You may use * for a wildcard in any field but the id.. i.e. J* would match anything starting with J"
+msgstr "Du kan använda * som jokertecken i alla fält utom id.. m.a.o. J* skulle matcha allt som startar med J"
+
+
+#file "D:\zentrack\zentrack/www/helpers/ticketSearchbox.php"
+#args ""
+msgid "You may use * for a wildcard in the title or           description.. i.e. J* would match anything starting with J"
+msgstr "Du kan använda * som jokertecken i titel eller           beskrivning.. m.a.o. J* skulle matcha allt som startar med J"
+
+
+#file "D:\zentrack\zentrack/www/helpers/projectSearchbox.php"
+#args ""
+msgid "You may use * for a wildcard in the title or description.. i.e. J* would match anything starting with J"
+msgstr "Du kan använda * som jokertecken i titel eller beskrivning.. m.a.o. J* skulle matcha allt som startar med J"
+
+
+#file "D:\zentrack\zentrack/www/actions/addToNotify.php"
+#args ""
+msgid "You must provide at least one registered user, or a valid name and email address"
+msgstr "Du måste tillhandahålla åtminstone en registrerad användare, eller ett giltigt namn och e-post adress"
+
+
+#file "D:\zentrack\zentrack/www/misc/homebin.php"
+#args ""
+msgid "Your bin has been changed to"
+msgstr "Din inkorg har ändrats till"
+
+
+#file "D:\zentrack\zentrack/www/reports/saveSubmit.php"
+#args ""
+msgid "Your chart has been saved successfully saved with title: $report_name"
+msgstr "Din tabell har sparats med titel: $report_name"
+
+
+#file "D:\zentrack\zentrack/www/misc/pwc.php"
+#args ""
+msgid "Your new passphrase must contain at least 1 non-letter character"
+msgstr "Ditt nya lösenuttryck måste innehålla minst 1 icke-bokstav tecken"
+
+
+#file "D:\zentrack\zentrack/www/misc/pwc.php"
+#args ""
+msgid "Your passphrase must be at least 6 digits long"
+msgstr "Ditt lösenuttryck måste vara minst 6 tecken långt"
+
+
+#file "D:\zentrack\zentrack/www/misc/pwc.php"
+#args ""
+msgid "Your passwords did not match"
+msgstr "Dina lösenord stämmer inte överens"
+
+
+#file "D:\zentrack\zentrack/www/misc/pwc.php"
+#args ""
+msgid "Your request was successful, but this is a demo site, so the passphrase was not altered"
+msgstr "Din förfrågan har lyckats, men detta är en demo sajt så lösenuttrycket har ej ändrats"
+
+
+#file "D:\zentrack\zentrack/includes/templates/ticket_detailsBox.php"
+#args ""
+msgid "completed"
+msgstr "slutförd"
+
+
+#file "D:\zentrack\zentrack/includes/templates/listTickets_workFormat.php"
+#args ""
+msgid "n/a"
+msgstr "n/a"
+
+
+#file "D:\zentrack\zentrack/www/helpers/projectSearchbox.php"
+#args ""
+msgid "no bins"
+msgstr "inga inkorgar"
+
+
+#file "D:\zentrack\zentrack/www/helpers/projectSearchbox.php"
+#args ""
+msgid "no priorities"
+msgstr "inga prioriteringar"
+
+
+#file "D:\zentrack\zentrack/www/helpers/projectSearchbox.php"
+#args ""
+msgid "no systems"
+msgstr "inga system"
+
+
+#file "D:\zentrack\zentrack/www/helpers/ticketSearchbox.php"
+#args ""
+msgid "no types"
+msgstr "inga typer"
+
+
+#file "D:\zentrack\zentrack/includes/templates/userSearchList.php"
+#args ""
+msgid "no"
+msgstr "nej"
+
+
+#file "D:\zentrack\zentrack/www/addProjectSubmit.php"
+#args ""
+msgid "required field missing:"
+msgstr "obligatoriskt fält saknas: "
+
+
+#file "D:\zentrack\zentrack/www/reports/view.php"
+#args ""
+msgid "required... processing error"
+msgstr "obligatoriskt... process fel"
+
+
+#file "D:\zentrack\zentrack/includes/templates/newTicketForm.php"
+#args ""
+msgid "save your changes"
+msgstr "spara dina ändringar"
+
+
+#file "D:\zentrack\zentrack/includes/zenTrack.class"
+#args "array($id,$name)"
+msgid "ticket #?: accepted by ?"
+msgstr "ärende #?: mottaget av ?"
+
+
+#file "D:\zentrack\zentrack/includes/templates/userSearchList.php"
+#args ""
+msgid "yes"
+msgstr "ja"
+
+
