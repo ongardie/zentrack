@@ -8,6 +8,8 @@
 ----- V2.5 (in development) ----
 
 2004-08-09, cfalonso
+  Default group for menu-type custom fields was not shown correctly. Fixed.
+    - zentrack_2/includes/templates/editCustomsForm.php 1.4
   Fixed a problem that happened when pressing MORE in behaviorDetailForm.php
     - zentrack_2/includes/templates/behaviorDetailForm.php 1.3
 
