@@ -13,6 +13,18 @@ abstraction, and endless possibilities for project expansion.
 
 ----- VERSION 2.5.0.2(development -----
 
+2004-10-22, cfalonso
+  Add admin settings to keep owners when moving a ticket, closing it and setting it to pending
+    - zentrack_2/includes/zenTrack.class 1.157
+    - zentrack_2/install/UPGRADE_mssqlserver.sql 1.22
+    - zentrack_2/install/UPGRADE_mysql.sql 1.30
+    - zentrack_2/install/UPGRADE_oracle.sql 1.29
+    - zentrack_2/install/UPGRADE_postgres.sql 1.21
+    - zentrack_2/install/seed_mssqlserver.sql 1.26
+    - zentrack_2/install/seed_mysql.sql 1.37
+    - zentrack_2/install/seed_oracle.sql 1.32
+    - zentrack_2/install/seed_postgres.sql 1.28
+
 2004-10-19, cfalonso
   Added an option to delete data groups
     - zentrack_2/includes/zenTrack.class 1.156
