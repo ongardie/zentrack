@@ -5,6 +5,11 @@
  100 percent object oriented and database abstracted. 
 
 ----- V2.2.3 (development, see CVS) ----
+2003-02-17, Darktroll, Kato
+  Fixed total hours issues
+    - includes/zenTrack.class v1.53
+    - includes/templates/listTickets_workFormat.php v1.9
+
 2003-02-17, Darktroll
   Fixed sorting of systems by replacing $zen->systems with $zen->getSystems(1)
   Thanks to efeldhaus ( Erwin Feldhaus ) for reporting this anomaly, and suggestions on the improvement
