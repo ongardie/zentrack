@@ -243,7 +243,7 @@
     <test20>
       <param name='value'>T</param>
       <param name='default' eval="true">false</param>
-      <param name='expected' eval="true">false</param>
+      <param name='expected' eval="true">true</param>
     </test20>
   </testparseboolean>
 
