@@ -34,6 +34,7 @@
    $this->table_access           = 'ZENTRACK_ACCESS';           //access table
    $this->table_attachments      = 'ZENTRACK_ATTACHMENTS';      //attachments index
    $this->table_bins             = 'ZENTRACK_BINS';             //ticket bins
+   $this->table_field_map        = 'ZENTRACK_FIELD_MAP';        //map of screen->field->properties
    $this->table_logs             = 'ZENTRACK_LOGS';             //log table
    $this->table_logs_archived    = 'ZENTRACK_LOGS_ARCHIVED';    //archived log table
    $this->table_preferences      = 'ZENTRACK_PREFERENCES';      //preferences for users
