@@ -43,5 +43,4 @@ foreach($session_vars as $s) {
 // need to be set in $_SERVER before we close up the page
 extract($_SESSION);
 
-
 ?>

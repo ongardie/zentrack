@@ -23,7 +23,7 @@
 </tr>
 <tr>
   <td class="titleCell">
-     Comments or Instructions <span class="small">(optional)</span>
+     Comments or Instructions <span class="small">(required)</span>
   </td>
 </tr>
 <tr>
