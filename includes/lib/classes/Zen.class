@@ -44,7 +44,10 @@ class Zen {
    * @param string $name of the setting
    * @return string value of the setting or null if it isn't found
    */
-  function getSetting($cat, $name) { }
+  function getSetting($cat, $name) { 
+    
+
+  }
 
   /**
    * loads system settings into memory
@@ -52,9 +55,9 @@ class Zen {
    * This method should employ a static list from the GLOBAL settings to avoid
    * redundant calls to this
    *
-   * @param string $cat is the category (common should be loaded on construction)
+   * @param string $cat is the category
    */
-  function _loadSettings() { }
+  function _loadSettings( $cat ) { }
 
   /**
    * returns a db connection / database object
@@ -107,7 +110,12 @@ class Zen {
    * @param integer $level the level of the message
    * @param intege $errnum the error number associated with message
    */
-  function debug( $class, $method, $message, $level = 3, $errnum = null ) { }
+  function debug( $class, $method, $message, $level = 3, $errnum = 0 ) { 
+    if( !isset($this->_debug) ) {
+      $this->_debug &= ZenMessageList::getInstance();
+    }
+    $this->_debug->add( $class, $method, $message, $errnum, $level );
+  }
 
   /**
    * retrieves a ticket object, these are cached for life of the page
@@ -267,13 +275,30 @@ class Zen {
    */
   function dateFallsOn( $utime, $step, $period, $base ) { }
 
-   
+
+  /********************************
+   * SYSTEM UTILS
+   *******************************/
+ 
+  /**
+   * Loads a data type set into an array
+   *
+   * Note that this is only applicable for standard types: bin, priority, stage, system, task, type
+   *
+   * @return array contains the data type list indexed by id and sorted by priority and name
+   */
+  function loadDataTypeArray( $type ) {}
+
+
   /********************************
    * VARIABLES 
    *******************************/
- 
+
   /** @var array $_settings the system settings */
   var $_settings;
+
+  /** @var ZenMessageList $_debug is a static ZenMessageList instance */
+  var $_debug;
 
   /** @var array $_errorIndexByMethod contains an index of error objects by method */
   var $_errorIndexByMethod;

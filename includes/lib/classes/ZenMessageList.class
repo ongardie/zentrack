@@ -1,8 +1,28 @@
 <? /* -*- Mode: C; c-basic-indent: 3; indent-tabs-mode: nil -*- ex: set tabstop=3 expandtab: */ 
 
-/** @package zen */
+/**
+ * The ZenMessageList is a utility for error reporting and logging
+ *
+ * The message list should not be called by its constructor... it should only
+ * be called by using getInstance()
+ *
+ * @package zen 
+ */
 
 class ZenMessageList extends Zen {
+
+  /**
+   * Returns the static/global instance of this class, or creates a new one if needed
+   *
+   * @param String $config is the xml config file to use for creation (if needed)
+   * @return ZenMessageList the static instance of the message list class
+   */
+  function getInstance() {
+    if( !$_GLOBALS['messageList'] ) {
+      $_GLOBALS['messageList'] = new ZenMessageList( $_GLOBALS['zen']['debug']['debug_configfile'] );
+    }
+    return $_GLOBALS['messageList'];
+  }
 
   /**
    * CONSTRUCTOR
@@ -11,25 +31,55 @@ class ZenMessageList extends Zen {
    * the primary use for this class is to be called through a global scope to
    * maintain a single list of all errors
    *
-   * the messages will be filtered according to the debug settings in zen.ini
+   * the messages will be filtered according to the debug settings in the appropriate xml file
+   *
+   * The output of the list may be further streamlined using the filter() method
    *
    * @param string $config is the xml file which holds the debug config info
    */
-  function ZenMessageList( $config ) { } // should set $_* arrays to array()
+  function ZenMessageList( $config ) {
+    $this->_messages = array();    
+
+    $this->_counts = array();
+    $this->_counts["default"] = 0;
+    $this->_counts["errors"] = array();
+    $this->_counts["classes"] = array();
+
+    $this->_levels = array();
+    $this->_levels["default"] = array( "default" => 0 );
+
+    $this->_loadConfig($config);
+  }
 
   /**
-   * adds a message to the list (if it meets the level requirement)
+   * adds a message to the list (if it meets the debug xml file requirements)
    *
    * @param string $class is the page or class adding the message
    * @param string $method is the method or section adding the message
    * @param string $message is the message to add
    * @param integer $errnum is the error number associated with message
    * @param integer $level is the level of importance
+   * @return boolean whether message was added or not
    */
-  function add( $class, $method, $message, $errnum, $level = 3 ) { }
+  function add( $class, $method, $message, $errnum, $level = 3 ) { 
+    if( !$class ) {
+      $class = "default";
+      $method = "default";
+    }
+    else if( !$method ) {
+      $method = "default";
+    }
+    if( !$message ) {
+      $message = "";
+    }
+    if( !$errnum ) {
+      $errnum = 0;
+    }    
+      
+  }
 
   /**
-   * returns the complete list of erros in standard output format
+   * returns the complete list of errors in standard output format
    *
    * @param boolean $html whether to include html formatting (or just text formatting)
    * @return string containing formatted text for all errors
@@ -51,48 +101,71 @@ class ZenMessageList extends Zen {
   /**
    * filters the current message objects by the given parameters
    *
-   * @param $class the class to limit results to
-   * @param $method the method to limit results to
-   * @return count matching filter criteria
+   * @param integer $level is the error level to meet
+   * @param mixed $class the class(es) to limit results to
+   * @param mixed $method the method(s) to limit results to
+   * @param mixed $errornum specifies a certain error type(s) to match
    */
-  function filter($class, $method = '') { }
+  function filter($level = null, $class = null, $method = null, $errornum = null) { 
+    $this->_filters = array();    
+    $this->_filters["level"] = $level;
+    $this->_filters["class"] = $class;
+    $this->_filters["method"] = $method;
+    $this->_filters["number"] = $errornum;
+  }
 
   /**
    * resets all filter criteria
    */
-  function clearFilters() { }
+  function clearFilters() { $this->_filters = null; }
+
+  /**
+   * Tells if a message should be logged or ignored
+   *
+   * @return boolean validated against debug config
+   */
+  function _isValid( $level, $class, $method, $errnum ) {
+    if( !isset($this->_levels[$class]) ) {
+      $class = "default";
+    }
+    if( !isset($this->_levels[$class][$method]) ) {
+      $method = "default";
+    }
+    return( $level <= $this->_levels[$class][$method] );
+  }
 
   /**
    * returns a count of ZenMessage objects matching the current filter criteria
    *
    * @return integer the count
    */
-  function count() { }
+  function count( $class, $method, $errnum ) {
+  
+  }
 
   /**
    * Loads the xml debugging config file and parses into memory
    *
    * The values are stored in $this->_levels, indexed by error level, class and name
+   *
+   * @param String $xmlfile the complete path to the xml file to load config from
    */
-  function _loadConfig() { }
+  function _loadConfig( $xmlfile ) { }
 
 
   /* VARIABLES */
 
+  /** @var array $_filters list only items in this array */
+  var $_filters;
+
   /** @var integer $_counter the current position in the ZenMessageList */
-  var $_counter;
-
-  /** @var string $_class the class filter in place */
-  var $_class;
-
-  /** @var string $_method the method filter in place */
-  var $_method;
+  var $_counter = 0;
 
   /** @var array $_counts the count of messages, for use in count() function:
    *  <ul>
    *    <li>"total" => total_count
    *    <li>"class" => array("total"=>total_count, "method1"=>count, "method2"...)
-   *    <li>....
+   *    <li>"errors" => array( number => count, ... )
    *  </ul>
    */
   var $_counts;
@@ -102,6 +175,15 @@ class ZenMessageList extends Zen {
 
   /** @var array $_messages the list of message objects */
   var $_messages;
+
+  /** @var array $_blockformat how to format the output blocks @see show() */
+  var $_blockformat = array( "<ul>\n", "</ul>\n" ); 
+
+  /** @var array $_msgformat how to format output messages @see show() */
+  var $_msgformat = array( 1 => array("<li class='error'>","</li>\n"),
+                           2 => array("<li class='warn'>","</li>\n"),
+                           3 => array("<li class='msg'>","</li>\n") );
+
 
 }
 

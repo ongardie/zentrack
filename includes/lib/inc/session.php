@@ -1,18 +1,22 @@
 <?{ /* -*- Mode: C; c-basic-indent: 3; indent-tabs-mode: nil -*- ex: set tabstop=3 expandtab: */ 
 
   // initialize all session data
-
   session_start();
 
+  // set the zen variable
+  if( !isset($_SESSION['zen']) ) { $_SESSION['zen'] = null; }
+
   // set up the static data
-  if( !isset($_SESSION['loadstat']) ) {
-    $_SESSION['loadstat'] = array("settings"=>array(),
-                                  "types"=>array(),
-                                  "bins"=>array(),
-                                  "users"=>array(),
-                                  "priorities"=>array(),
-                                  "systems"=>array(),
-                                  );
+  if( !isset($_SESSION['data_types']) ) {
+    foreach($global_data_types as $t) {
+      $_SESSION['data_types'][$t] = array();
+    }
+  }
+    
+  // store the common system settings that will be used
+  // by most every page
+  if( !isset($_SESSION['common_settings']) ) {
+    $_SESSION['common_settings'] = null;
   }
 
   // set up the login data

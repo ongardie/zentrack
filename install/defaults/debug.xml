@@ -12,4 +12,40 @@
     <method name="getSetting" level="2" />
   </class>
 
+  <format>
+    <label>
+      <![CDATA[<br><span class='error'>Errors Encountered</span>]]>
+    </label>
+    <openblock>
+      <![CDATA[<ul>]]>
+    </openblock>
+    <closeblock>
+      <![CDATA[</ul>]]>
+    </closeblock>
+    <level1>
+      <open>
+        <![CDATA[<li class='error'>]]>
+      </open>
+      <close>
+        <![CDATA[</li>]]>
+      </close>
+    </level1>
+    <level2>
+      <open>
+        <![CDATA[<li class='warn'>]]>
+      </open>
+      <close>
+        <![CDATA[</li>]]>
+      </close>
+    </level2>
+    <level3>
+      <open>
+        <![CDATA[<li class='msg'>]]>
+      </open>
+      <close>
+        <![CDATA[</li>]]>
+      </close>
+    </level3>
+  </format>
+
 </debug_settings>

@@ -24,8 +24,6 @@ class ZenAction extends ZenDataType {
   function activate( $params ) { }
 
 
-  /* VARIABLES */
-
 }
 
 ?>

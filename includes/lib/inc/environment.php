@@ -4,13 +4,13 @@
 
   // check magic_quotes runtime and magic_quotes_gpc
 
-  // check and set $SCRIPT_NAME appropriately
-
-  // check that $zen was initialized correctly
-
   // setup develop mode params
   if( $zen['debug']['develop_mode'] == "true" ) {
     
+    // turn on most restrictive error_reporting (E_ALL)
+
+    // figure out what to do with magic quotes
+
   }
 
 }?>

@@ -17,15 +17,51 @@ class ZenMessage extends Zen {
   function ZenMessage( $class, $method, $message, $errnum = 0, $level = 3 ) { }
 
   /**
-   * returns the message, formatted for printing (with proper bolding for it's level)
+   * returns the message string, without formatting
+   *
+   * @return string unformatted message
    */
-  function show() { }
+  function get() { }
 
   /**
-   * returns the message string, without formatting
+   * Returns the error number
+   *
+   * @return int zenError number
    */
-  function getPlain() { }
+  function getNumber() { }
 
+  /**
+   * Returns the error level
+   *
+   * @return int level of error
+   */
+  function getLevel() { }
+
+  /**
+   * Returns the class name or script name which produced error
+   *
+   * @return String class name which produced error
+   */
+  function getClass() { }
+
+  /**
+   * Returns the method or section which produced error
+   *
+   * @return String method name which produced error
+   */
+  function getMethod() { }
+
+  /**
+   * Returns true or false based on whether this error is relative to provided params
+   *
+   * @param int $level is a level to validate against
+   * @param String $class is a class to validate against
+   * @param String $method is a method to validate against
+   * @param int $number is an error number to validate against
+   * @return boolean true-is relative, or false-not relative
+   */
+  function meets( $level = null, $class = null, $method = null, $number = null ) { }
+  
 
   /* VARIABLES */
 
@@ -43,11 +79,6 @@ class ZenMessage extends Zen {
 
   /** @var string $_message */
   var $_message;
-
-  /** @var array $_formatting how to format output messages @see show() */
-  var $_formatting = array( 1 => array("<li class='error'>","</li>\n"),
-                            2 => array("<li class='warn'>","</li>\n"),
-                            3 => array("<li class='msg'>","</li>\n") );
 
 }
 

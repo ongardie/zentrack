@@ -1,5 +1,18 @@
 <?{ /* -*- Mode: C; c-basic-indent: 3; indent-tabs-mode: nil -*- ex: set tabstop=3 expandtab: */ 
 
+  // check and set $_GLOBALS['thisurl'] appropriately
+
+  // check and set $_GLOBALS['thisfile'] appropriately
+
+  // set up the $zen properties
+  $_GLOBALS['zen'] &= $_SESSION['zen'];
+  $zen &= $_GLOBALS['zen']; //for convenience
+
+  // see if $zen was found in the session, otherwise initialize
+  if( $zen == null ) {
+    $zen = parse_ini_file( $ini_file );
+  }
+
   // set the path variables
   $libDir = $zen['directories']['lib'];
   $includesDir = $zen['paths']['path_includes'];
@@ -10,33 +23,43 @@
   $webUrl = $zen['paths']['url_www'];
 
   /**
-   * @var array $_GLOBALS['zen'] is an array parsed from the php.ini file settings
+   * @var array $zen is an array parsed from the php.ini file settings
    */
-  $_GLOBALS['zen'] = $zen;
   $_GLOBALS['libDir'] = $libDir;
   $_GLOBALS['includesDir'] = $includesDir;
   $_GLOBALS['cacheDir'] = $cacheDir;
   $_GLOBALS['templateDir'] = $templateDir;
   $_GLOBALS['dbConnection'] = null;
+  $_GLOBALS['messageList'] = null;
+  $_GLOBALS['webDir'] = $webDir;
+  $_GLOBALS['webUrl'] = $webUrl;
+
+  // set the system params
+  $_GLOBALS['data_types'] &= $_SESSION['data_types'];
+  $_GLOBALS['settings'] = array();
+  $_GLOBALS['settings']['common'] &= $_SESSION['common_settings'];
+
+  $_GLOBALS['login'] &= $_SESSION['login'];
+  foreach($global_data_types as $t) {
+    if( !count($_GLOBALS['data_types'][$t]) ) {
+      $_GLOBALS['data_types'][$t] = Zen::loadDataTypeArray($t);
+    }
+  }    
 
   /**
-   * @var array $_GLOBALS['loadstat'] is an array of all the static objects which have been loaded
-   *
-   * It consists of two parts:
-   *   perm - objects stored between pages (serialized)
-   *   temp - objects not kept between pages
+   * @var array $_GLOBALS['cache'] is an array containing various data types which have been loaded for use with static methods
    */
-  $_GLOBALS['loadstat']['perm'] =& $_SESSION['loadstat'];
-  $_GLOBALS['loadstat']['temp'] = array("tickets"  => array(),
-                                        "users"    => array(),
-                                        "triggers" => array(),
-                                        "actions"  => array()
-                                        );
+  $_GLOBALS['cache'] = array(
+                             "access"  => array(),
+                             "action"  => array(),                           
+                             "ticket"  => array(),
+                             "trigger" => array(),
+                             "user"    => array()
+                             );
 
   // clean up page variables
-  $page_title = $zen['layout']['default_title'];
-  $page_prefix = $zen['layout']['default
-  $id = isset($id)? preg_replace("/[^0-9]/", "", $id) : null;
+  $page_title = $zen['layout']['page_title'];
+  $page_prefix = $zen['layout']['page_prefix'];
   $errs = array();
   $msg = array();
   

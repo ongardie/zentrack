@@ -1,13 +1,23 @@
 <?{ /* -*- Mode: C; c-basic-indent: 3; indent-tabs-mode: nil -*- ex: set tabstop=3 expandtab: */ 
 
-  // check the php environment settings
-  require_once("$libDir/inc/environment.php");
+  $global_data_types = array(
+                             "bin",
+                             "priority",
+                             "stage",                                  
+                             "system",
+                             "task",
+                             "type",
+                             "user"
+                             );
 
   // start the session information
   require_once("$libDir/inc/session.php");
 
   // include all the object classes
   require_once("$libDir/inc/classes.php");
+
+  // check the php environment settings
+  require_once("$libDir/inc/environment.php");
 
   // include all global variables
   require_once("$libDir/inc/variables.php");
