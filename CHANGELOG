@@ -5,6 +5,15 @@
  100 percent object oriented and database abstracted. 
 
 ----- V2.2.3 (development, see CVS) ----
+2003-02-24, Kato
+  Added some default settings for start_date and deadlines.
+    - installs/seed_*.sql
+    - installs/UPGRADE_*.sql
+    - includes/templates/newTicketForm.php v1.15
+  Fixed some email problems with reopen and reject
+  Thanks to Claudio for his notes
+    - includes/zenTrack.class v1.58
+
 2003-02-23, Altman
   Fixed bins issues in various SELECT boxes as reported in Bug #682075.  
   Thanks to whoever this was (anonymous)!

@@ -2,8 +2,10 @@
 The following options are available for ticket <?=id?>, at present:
 
 <?
- foreach($valid_actions as $a) {
-    print ucwords($a)."\n";
+ foreach($valid_actions as $k=>$v) {
+    if( $v["egate"] > 0 ) {
+      print ucwords($k)."\n";
+    }
  }
 ?>
 

@@ -2265,6 +2265,7 @@ class zenTrack extends zen {
          "access"   => 1, 
          "status"   => array('OPEN'),
          "override" => 0,
+	 "egate"    => 1,
          "level"    => $this->settings["level_accept"]
          );
       $actions["approve"] = array( 
@@ -2272,6 +2273,7 @@ class zenTrack extends zen {
           "access"   => 1, 
           "status"   => array('PENDING'),
           "override" => 0,
+	  "egate"    => 1,
           "level"    => $this->settings["level_approve"]
           );
       $actions["assign"] = array(
@@ -2279,6 +2281,7 @@ class zenTrack extends zen {
          "access"   => 1,
          "status"   => array('OPEN'),
          "override" => 0,
+	 "egate"    => 1,
          "level"    => $this->settings["level_assign"]
          );
       $actions["close"] = array(
@@ -2286,6 +2289,7 @@ class zenTrack extends zen {
         "access"   => 1,
         "status"   => array('OPEN','PENDING'),
         "override" => 0,
+	"egate"    => 1,
         "level"    => $this->settings["level_user"]
         );
       $actions["create"] = array(
@@ -2293,6 +2297,7 @@ class zenTrack extends zen {
          "access"   => 1,
          "status"   => null,
          "override" => 0,
+	 "egate"    => 0,
          "level"    => $this->settings["level_create"]
          );
       $actions["edit"] = array(
@@ -2300,6 +2305,7 @@ class zenTrack extends zen {
              "access"   => 1,
              "status"   => array('OPEN','PENDING'),
              "override" => 0,
+	     "egate"    => 1,
              "level"    => $this->settings["level_edit"]
              );
       $actions["email"] = array(
@@ -2307,6 +2313,7 @@ class zenTrack extends zen {
         "access"   => 1,
         "status"   => null,
         "override" => 0,
+	"egate"    => 1,
         "level"    => $this->settings["level_view"]
         );
       $actions["estimate"] = array(
@@ -2314,6 +2321,7 @@ class zenTrack extends zen {
            "access"   => 1,
            "status"   => array('OPEN'),
            "override" => 1,
+	   "egate"    => 1,
            "level"    => $this->settings["level_user"]
            );
       $actions["log"] = array(
@@ -2321,6 +2329,7 @@ class zenTrack extends zen {
             "access"   => 1,
             "status"   => array('OPEN','PENDING'),
             "override" => 1,
+	    "egate"    => 1,
             "level"    => $this->settings["level_user"]
             );
       $actions["move"] = array(
@@ -2328,6 +2337,7 @@ class zenTrack extends zen {
              "access"   => 1,
              "status"   => array('OPEN','PENDING'),
              "override" => 1,
+	     "egate"    => 1,
              "level"    => $this->settings["level_move"]
              );
       // add an entry to notify list
@@ -2338,6 +2348,7 @@ class zenTrack extends zen {
              "access"   => 1,
              "status"   => array('OPEN','PENDING'),
              "override" => 0,
+	     "egate"    => 1,
              "level"    => $this->settings["level_view"]
              );
       // drop an entry from the notify list
@@ -2348,6 +2359,7 @@ class zenTrack extends zen {
               "access"   => 1,
               "status"   => array('OPEN','PENDING'),
               "override" => 0,
+	      "egate"    => 1,
               "level"    => $this->settings["level_view"]
               );
       // used to modify the list of recipients in
@@ -2357,6 +2369,7 @@ class zenTrack extends zen {
              "access"   => 1,
              "status"   => array('OPEN','PENDING'),
              "override" => 1,
+	     "egate"    => 0,
              "level"    => $this->settings["level_user"]
              );
       $actions["print"] = array(
@@ -2364,6 +2377,7 @@ class zenTrack extends zen {
         "access"   => 1,
         "status"   => null,
         "override" => 0,
+	"egate"    => 0,
         "level"    => $this->settings["level_view"]
         );
       $actions["reject"] = array(
@@ -2371,6 +2385,7 @@ class zenTrack extends zen {
          "access"   => 1,
          "status"   => array('OPEN','PENDING'),
          "override" => 0,
+	 "egate"    => 1,
          "level"    => $this->settings["level_user"]
          );
       $actions["test"] = array(
@@ -2378,6 +2393,7 @@ class zenTrack extends zen {
              "access"   => 1,
              "status"   => array('PENDING'),
              "override" => 0,
+	     "egate"    => 1,
              "level"    => $this->settings["level_test"]
              );
       $actions["relate"] = array(
@@ -2385,6 +2401,7 @@ class zenTrack extends zen {
          "access"   => 1,
          "status"   => null,
          "override" => 0,
+	 "egate"    => 0,
          "level"    => $this->settings["level_user"]
          );
       $actions["reopen"] = array(
@@ -2392,6 +2409,7 @@ class zenTrack extends zen {
          "access"   => 1,
          "status"   => array('PENDING','CLOSED'),
          "override" => 0,
+	 "egate"    => 0,
          "level"    => $this->settings["level_user"]
          );
       $actions["upload"] = array(
@@ -2399,6 +2417,7 @@ class zenTrack extends zen {
          "access"   => 1,
          "status"   => null,
          "override" => 1,
+	 "egate"    => 0,
          "level"    => $this->settings["level_user"]
          );
       $actions["view"] = array(
@@ -2406,6 +2425,7 @@ class zenTrack extends zen {
              "access"   => 1,
              "status"   => null,
              "override" => 0,
+	     "egate"    => 0,
              "level"    => $this->settings["level_view"]
              );
       $actions["yank"] = array(
@@ -2413,6 +2433,7 @@ class zenTrack extends zen {
              "access"   => 1,
              "status"   => null,
              "override" => 0,
+	     "egate"    => 0,
              "level"    => $this->settings["level_yank"]
              );
       $this->actions = $actions;

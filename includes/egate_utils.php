@@ -29,7 +29,7 @@
       $log .= $text."\n";
     }
   }
-    
+  
   // writes logs to file
   function egate_log_write() {
     global $log;
@@ -40,7 +40,7 @@
       $log = "";
     }
   }
-
+  
   // check for proper setup
   if( !file_exists($header_file_location) ) {
     egate_log("ERROR: \$header_file_location not set correctly... exiting");
@@ -70,32 +70,32 @@
   
   // determine the egate user's settings and access rights
   $egate_user = $zen->get_user_by_login("egate");
-
+  
   // produce an error if the egate user is not in database
   if( !is_array($egate_user) || !count($egate_user) ) {
     egate_log("ERROR: egate user account is missing");
     egate_log_write();
     exit;    
   }
-
+  
   // get the egate access priviledges
   $egate_user["access"] = $zen->get_access($egate_user["user_id"]);
-
+  
   function parse_message_body( $body ) {
     // parses out the body of the email, looking for template properties
     // removing comments and reply portions of the message
     // returns an indexed array containing ["details"], and any other
     // parameters found in the message
-
+    
     // get the zen object
     global $zen;
-
+    
     // initialize the return array
     $params = array("details"=>"");
-
+    
     // remove comments
     $body = preg_replace("@\{\*.*?\*\}@s", "", $body);
-
+    
     // parse the contents
     $lines = explode("\n",$body);
     $in = false;
@@ -142,7 +142,7 @@
 	      // this line is blank, so skip it
 	      continue;
 	    }
-	    else if( preg_match("@>*\[ *\]", $l) ) {	      
+	    else if( preg_match("@>*\[ *\]", $l) ) {        
 	      // if this line starts with [ ]...
 	      // it's unchecked, so keep looking
 	      continue;
@@ -177,7 +177,7 @@
     }
     return( $params );
   }
-
+  
   function process_message($input) {
     // process the input data for an email and return results
     $errors = false;     
@@ -200,15 +200,15 @@
     egate_log( $zen->showDateTime() ."||"
 	       .$params->headers["from"] ."||"
 	       .$params->headers["subject"] );
-
+    
     // validate the file parameters
     if( $params->headers["subject"] == "" ) {
       $errors = true;
       egate_log("ERROR: Subject was blank");
     }
     if( $params->headers["from"] == "" ) {
-         $errors = true;
-         egate_log("ERROR: Subject was blank");
+      $errors = true;
+      egate_log("ERROR: Subject was blank");
     }
     
     // find out what action we are taking
@@ -234,18 +234,22 @@
       $errors = true;
       egate_log("ERROR - no valid action was found for header:".$params->headers["subject"]);
     }
-
+    
     // customize the notify actions
     if( $action == "add" || $action == "drop" ) {
       $action = "notify_$action";
     }
-
+    
     // determine which actions might be in the subject
     $valid_actions = array_keys($zen->listValidActions($id,$egate_user["user_id"]));
-
+    
     if( !isset($valid_actions["$action"]) ) {
       $errors = true;
       egate_log("The action $action was not valid.");
+    }
+    else if( $valid_actions["$action"]["egate"] <= 0 ) {
+      $errors = true;
+      egate_log("The action $action is not allowed via the email interface.");
     }
     
     // quit if we have any errors, before we try to peform
@@ -254,12 +258,6 @@
       egate_log_write();
       return false;
     }
-
-    //todo: make a setting for deadline and start date in config settings
-    //todo: employ these in template pages
-    
-    //todo: figure out how to restrict actions we don't want
-    //todo: the email interface to use
 
     //todo: change create_ticket to add bin_manager, bin_tester, and creator to notify list
     //todo: maybe create some entries for these in the settings

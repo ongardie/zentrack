@@ -97,24 +97,24 @@ class DB {
       // so it is easieast to run the query, then return
       // the mysql function mysql_insert_id()
       if( $this->database_type != 'mysql' ) {
-    if( !$sequence ) {
-       $sequence = ereg_replace("ZENTRACK_", "", $table);
-       $sequence .= "_id_seq";
-    }
-    $id = $this->db_insertID($sequence);
-    $fields = $this->db_get_fields($table);
-    $id_field = $fields[0];
-    $params["$id_field"] = $id;
+        if( !$sequence ) {
+         $sequence = ereg_replace("ZENTRACK_", "", $table);
+         $sequence .= "_id_seq";
+        }
+        $id = $this->db_insertID($sequence);
+        $fields = $this->db_get_fields($table);
+        $id_field = $fields[0];
+        $params["$id_field"] = $id;
       }      
       list($cols,$vals) = $this->makeInsertVals($params);
       $query = "INSERT INTO $table ($cols) VALUES($vals)";
       $this->addDebug("db_insert",$query,2);//debug
       $res = $this->db_link->Execute($query);
       if( $res && $this->database_type == "mysql" ) {
-    $id = $this->db_insertID();
+        $id = $this->db_insertID();
       }      
       if( $res ) {
-    return( $id );
+        return( $id );
       }
    }
 
@@ -204,21 +204,21 @@ class DB {
  
      if( !$set ) {
        foreach($params as $k=>$v) {
-	 $cols .= ($cols)? ", $k" : "$k";
-	 if( ereg("^(NULL|FALSE|TRUE|[0-9]+)$", $v) ) {
-	   $vals .= ($vals)? ", $v" : "$v"; 
-	 } else {
-	   $vals .= ($vals)? ", ".$this->checkSlashes($v) : $this->checkSlashes($v);
-	 }
+   $cols .= ($cols)? ", $k" : "$k";
+   if( ereg("^(NULL|FALSE|TRUE|[0-9]+)$", $v) ) {
+     $vals .= ($vals)? ", $v" : "$v"; 
+   } else {
+     $vals .= ($vals)? ", ".$this->checkSlashes($v) : $this->checkSlashes($v);
+   }
        }
        return(array($cols,$vals));
      } else {
        foreach($params as $k=>$v) {
-	 if( ereg("^(NULL|FALSE|TRUE|[0-9]+)$", $v) ) {
-	   $vals .= ($vals)? ", $k = $v" : "$k = $v"; 
-	 } else {
-	   $vals .= ($vals)? ", $k = ".$this->checkSlashes($v) : "$k = ".$this->checkSlashes($v);
-	 }
+   if( ereg("^(NULL|FALSE|TRUE|[0-9]+)$", $v) ) {
+     $vals .= ($vals)? ", $k = $v" : "$k = $v"; 
+   } else {
+     $vals .= ($vals)? ", $k = ".$this->checkSlashes($v) : "$k = ".$this->checkSlashes($v);
+   }
        }
        return( $vals );
      }

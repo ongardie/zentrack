@@ -1,4 +1,4 @@
-<?	
+<?  
   unset($users);
   $userBins = $zen->getUsersBins($login_id,"level_create");
   if( is_array($userBins) ) {
@@ -9,8 +9,11 @@
     exit;
   }
   $td = ($TODO == 'EDIT');
-  if( !$deadline && !$td )
-     $deadline = $zen->dateAdjust(1,"month",time());
+  if( !$deadline && !$td && $zen->settings["default_deadline"] != "" )
+     $deadline = strtotime($zen->settings["default_deadline"]);
+  if( !$start_date && !$td && $zen->settings["default_start_date"] != "" )
+     $start_date = strtotime($zen->settings["default_start_date"]);
+  print "they are: ".$zen->settings["default_start_date"]."/".$zen->settings["default_deadline"]."<br>\n";//debug
 ?>     
 
 <form method="post" name="ticketForm" action="<?=($td)? "editTicketSubmit.php" : "$rootUrl/addSubmit.php"?>">
@@ -40,15 +43,15 @@
     <?
       $bins = $zen->getUsersBins($login_id);
       if( is_array($bins) ) {
-	 $params["bin_id"] = $bins;
-	 $params["status"] = "OPEN";
-	 $projects = $zen->get_projects($params,title);
+   $params["bin_id"] = $bins;
+   $params["status"] = "OPEN";
+   $projects = $zen->get_projects($params,title);
       } 
       if( is_array($projects) ) {
-	 foreach($projects as $p) {
-	    $sel = ($p["id"] == $project_id)? " selected" : "";
-	    print "<option value='$p[id]'$sel>".stripslashes($p["title"])."</option>\n";
-	 }
+   foreach($projects as $p) {
+      $sel = ($p["id"] == $project_id)? " selected" : "";
+      print "<option value='$p[id]'$sel>".stripslashes($p["title"])."</option>\n";
+   }
       }
     ?>
     </select>
@@ -62,7 +65,7 @@
     <input type="text" name="title" size="30" maxlength="255"
 value="<?=strip_tags($title)?>">
   </td>
-</tr>				     
+</tr>            
   
 <tr>
   <td class="bars">
@@ -72,16 +75,16 @@ value="<?=strip_tags($title)?>">
     <select name="type_id">
 <?
     if( is_array($zen->types) ) {
-    	foreach($zen->getTypes(1) as $v) {
-	   $k = $v["type_id"];
-	   if( $k != $zen->projectTypeID() ) {
-	      // does not allow projects to be created here
-	      // user must use the "new project" link for this
-	      // task
-	      $check = ( $k == $type_id )? "selected" : "";
-	      print "<option $check value='$k'>$v[name]</option>\n";
-	   }
-	}
+      foreach($zen->getTypes(1) as $v) {
+     $k = $v["type_id"];
+     if( $k != $zen->projectTypeID() ) {
+        // does not allow projects to be created here
+        // user must use the "new project" link for this
+        // task
+        $check = ( $k == $type_id )? "selected" : "";
+        print "<option $check value='$k'>$v[name]</option>\n";
+     }
+  }
     } else {
       print "<option value=''>--no types--</option>\n";
     }
@@ -98,12 +101,12 @@ value="<?=strip_tags($title)?>">
 <?
     $systems = $zen->getSystems(1);
     if( is_array($systems) ) {
-    	foreach($systems as $v) {
-	  $k = $v["sid"];
-	  $v = $v["name"];
-	  $sel = ( $k == $system_id )? " selected" : "";	   
-	  print "<option value='$k'$sel>$v</option>\n";
-	}
+      foreach($systems as $v) {
+    $k = $v["sid"];
+    $v = $v["name"];
+    $sel = ( $k == $system_id )? " selected" : "";     
+    print "<option value='$k'$sel>$v</option>\n";
+  }
     } else {
       print "<option value=''>--no systems--</option>\n";
     }
@@ -125,13 +128,13 @@ value="<?=strip_tags($title)?>">
      foreach($users as $v) {
        $check = ( $v["user_id"] == $user_id )? "selected" : "";
        print "<option $check value='$v[user_id]'>".$zen->formatName($v,1)
-	."</option>\n";
+  ."</option>\n";
      }
    }
 ?>
     </select>&nbsp;(optional)
   </td>
-</tr>				   
+</tr>          
 <tr>
   <td class="bars">
     Bin
@@ -140,20 +143,20 @@ value="<?=strip_tags($title)?>">
     <select name="bin_id">
 <?
     if( is_array($userBins) ) {
-    	foreach($userBins as $k) {
-	  if( $k ) {
-	    $check = ( $k == $bin_id || (!$bin_id && !$td && $k == $login_bin) )? "selected" : "";
-	    $n = $zen->bins["$k"];
-	    print "<option $check value='$k'>$n</option>\n";
-	  }
-	}
+      foreach($userBins as $k) {
+    if( $k ) {
+      $check = ( $k == $bin_id || (!$bin_id && !$td && $k == $login_bin) )? "selected" : "";
+      $n = $zen->bins["$k"];
+      print "<option $check value='$k'>$n</option>\n";
+    }
+  }
     } else {
-	print "<option value=''>--no bins--</option>\n";
+  print "<option value=''>--no bins--</option>\n";
     }
 ?>
     </select>
   </td>
-</tr>				   
+</tr>          
 <tr>
   <td class="bars">
     Related Tickets
@@ -163,7 +166,7 @@ value="<?=strip_tags($title)?>">
 value="<?=strip_tags($relations)?>">
   <br>(enter multiple ids with a comma between)
   </td>
-</tr>				   
+</tr>          
 
 <tr>
   <td colspan="2" class="subtitle">
@@ -178,12 +181,12 @@ value="<?=strip_tags($relations)?>">
     <select name="priority">
 <?
     if( is_array($zen->priorities) ) {
-    	foreach($zen->getPriorities(1) as $v) {
-	   $k = $v["pid"];
-	   $v = $v["name"];
-	   $check = ( $k == $priority )? "selected" : "";
-	   print "<option $check value='$k'>$v</option>\n";
-	}
+      foreach($zen->getPriorities(1) as $v) {
+     $k = $v["pid"];
+     $v = $v["name"];
+     $check = ( $k == $priority )? "selected" : "";
+     print "<option $check value='$k'>$v</option>\n";
+  }
     } else {
       print "<option value=''>--no priorities--</option>\n";
     }
@@ -199,8 +202,8 @@ value="<?=strip_tags($relations)?>">
     <input type="text" name="start_date" size="12" maxlength="10"
 value="<?=($start_date)?$zen->showDate(strip_tags($start_date)):""?>">
     <img name="date_button" src='<?=$rootUrl?>/images/cal.gif' 
-	onClick="popUpCalendar(this,document.ticketForm.start_date, 'mm/dd/yyyy')"
-	alt="Select a Date">
+  onClick="popUpCalendar(this,document.ticketForm.start_date, 'mm/dd/yyyy')"
+  alt="Select a Date">
     &nbsp;(optional)
   </td>
 </tr>
@@ -221,11 +224,11 @@ value="<?=strip_tags($est_hours)?>">&nbsp;(up to two decimal places, optional)
     <input type="text" name="deadline" size="12" maxlength="10"
 value="<?=($deadline)?$zen->showDate(strip_tags($deadline)):""?>">
     <img name="date_button" src='<?=$rootUrl?>/images/cal.gif' 
-	onClick="popUpCalendar(this, document.ticketForm.deadline, 'mm/dd/yyyy')"
-	alt="Select a Date">
+  onClick="popUpCalendar(this, document.ticketForm.deadline, 'mm/dd/yyyy')"
+  alt="Select a Date">
     &nbsp;(optional)
   </td>
-</tr>				   
+</tr>          
 <tr>
   <td class="bars">
     Testing Required
@@ -238,7 +241,7 @@ value="<?=($deadline)?$zen->showDate(strip_tags($deadline)):""?>">
     }
   ?>>
   </td>
-</tr>				   
+</tr>          
 <tr>
   <td class="bars">
     Approval Required
@@ -262,7 +265,7 @@ value="<?=($deadline)?$zen->showDate(strip_tags($deadline)):""?>">
 <tr>
   <td colspan="2">
     <textarea cols="60" rows="10" name="description"><?= 
-	 ereg_replace("&","&amp;",stripslashes($description)); 
+   ereg_replace("&","&amp;",stripslashes($description)); 
     ?></textarea>
   </td>
 </tr>
