@@ -200,7 +200,7 @@
         if (get_magic_quotes_runtime()) {
            $d = stripslashes($d);
         }
-        $d = nl2br(htmlspecialchars($d));
+        $d = nl2br($zen->ffv($d));
         
         echo $d;
       ?>
@@ -276,7 +276,7 @@
    if (get_magic_quotes_runtime()) {
        $e = stripslashes($e);
    }
-   $e = nl2br(htmlentities($e));
+   $e = nl2br($zen->ffv($e));
    print ($l["entry"])? 
 	  $zen->showDateTime($l["created"])."  "
 	  .$l["action"]."-"

@@ -1676,7 +1676,7 @@ class zenTrack extends zen {
       }
       $logParams["bin_id"] = $bin_id;
       if( $comments )
-        $logParams["entry"] = htmlentities($comments);   
+        $logParams["entry"] = $this->ffv($comments);   
       $res = $this->add_log($id, $logParams);
     }
     if( $res && $this->settings["email_accept"] == "on" ) {
@@ -1685,7 +1685,7 @@ class zenTrack extends zen {
         $subject = $this->ptrans("ticket #?: accepted by ?",array($id,$name));
         $emailParams["Assigned by"] = $this->formatName($user_id);
         if( $comments )
-          $emailParams["body"] = htmlentities($comments);
+          $emailParams["body"] = $this->ffv($comments);
         $emailParams["tid"] = (is_array($ticket))? $ticket : $id;
         $message = $this->formatEmailMessage($emailParams);
         $this->sendEmail($recipients,$subject,$message,$user_id);
@@ -1719,7 +1719,7 @@ class zenTrack extends zen {
                          );
       $logParams["bin_id"] = $t["bin_id"];
       if( $comments )
-        $logParams["entry"] = htmlentities($comments);
+        $logParams["entry"] = $this->ffv($comments);
       $this->add_log($id, $logParams);    
     }     
     if( $t["tested"] != 1 ) {
@@ -1736,7 +1736,7 @@ class zenTrack extends zen {
         $subject = $this->ptrans("Ticket #?: closed",array($id));
         $emailParams["Close Time"] = $this->showDateTime($this->currTime);
         if( $comments )
-          $emailParams["body"] = htmlentities($comments);
+          $emailParams["body"] = $this->ffv($comments);
         $emailParams["tid"] = $t;
         $message = $this->formatEmailMessage($emailParams);
         $this->sendEmail($recipients,$subject,$message,$user_id);
@@ -1801,7 +1801,7 @@ class zenTrack extends zen {
         $emailParams["Assigned by"] = $this->formatName($user_id);
         $emailParams["Assigned to"] = $name;
         if( $comments )
-          $emailParams["body"] = htmlentities($comments);
+          $emailParams["body"] = $this->ffv($comments);
         $emailParams["tid"] = $id;
         $message = $this->formatEmailMessage($emailParams);
         $this->sendEmail($recipients,$subject,$message,$user_id);
@@ -1946,7 +1946,7 @@ class zenTrack extends zen {
 	  $subject = $this->ptrans("Ticket #?: closed",array($id));
 	  $emailParams["Close Time"] = $this->showDateTime($this->currTime);
 	  if( $comments )
-	    $emailParams["body"] = htmlentities($comments);
+	    $emailParams["body"] = $this->ffv($comments);
 	  $emailParams["tid"] = $id;
 	  $message = $this->formatEmailMessage($emailParams);
 	  $this->sendEmail($recipients,$subject,$message,$user_id);
@@ -2070,7 +2070,7 @@ class zenTrack extends zen {
           $subject = $this->ptrans("Ticket #?: closed",array($id));
           $emailParams["Close Time"] = $this->showDateTime($this->currTime);
           if( $comments )
-            $emailParams["body"] = htmlentities($comments);
+            $emailParams["body"] = $this->ffv($comments);
           $emailParams["tid"] = $id;
           $message = $this->formatEmailMessage($emailParams);
           $this->sendEmail($recipients,$subject,$message,$user_id);
@@ -2376,7 +2376,7 @@ class zenTrack extends zen {
         $subject = $this->ptrans("Ticket #?: closed",array($id));
         $emailParams["Close Time"] = $this->showDateTime($this->currTime);
         if( $comments )
-          $emailParams["body"] = htmlentities($comments);
+          $emailParams["body"] = $this->ffv($comments);
         $emailParams["tid"] = $id;
         $message = $this->formatEmailMessage($emailParams);
         $this->sendEmail($recipients,$subject,$message,$user_id);
@@ -2515,7 +2515,7 @@ class zenTrack extends zen {
           $subject = $this->ptrans("Ticket #?: created",array($id));
           $emailParams["Open Time"] = $this->showDateTime($this->currTime);
           if( $comments )
-            $emailParams["body"] = htmlentities($comments);
+            $emailParams["body"] = $this->ffv($comments);
           $emailParams["tid"] = $id;
           $message = $this->formatEmailMessage($emailParams);
           $this->sendEmail($recipients,$subject,

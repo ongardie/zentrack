@@ -45,7 +45,7 @@
       } else {
 	print "<input type='text' style='font-size:"
 	   .$zen->settings["font_size_small"]."px' name='newSettings[$k]' "
-	   ." size='20' maxlength='100' value='".htmlentities($s["value"])."'>";
+           ." size='20' maxlength='100' value='".$zen->ffv($s["value"])."'>";
       }
       print "</td>";
       print "<td class='$class'>$s[description]</td>\n";

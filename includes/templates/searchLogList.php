@@ -90,7 +90,7 @@ if( is_array($logs) && count($logs) ) {
       <td height="25" colspan="8" <?=$td_ttl?> <?=$txt?>>
       <a class="rowLink" href='<?=$link?>?id=<?=$t["ticket_id"]?>&setmode=log'>
       <?
-      $t["entry"] = htmlentities($t["entry"]);
+      $t["entry"] = $zen->ffv($t["entry"]);
       $parts = explode("\n",$t["entry"]);
       if( $search_text ) {
         unset($pt);

@@ -82,7 +82,7 @@ class zen extends zenDate {
      // converts special characters to ascii codes
      // to be used in <input> fields
      if( strlen($val) ) {
-       $val = htmlspecialchars(stripslashes($val),ENT_QUOTES);
+       $val = htmlspecialchars(stripslashes($val),ENT_QUOTES,$this->settings["character_set"]);
        $val = str_replace('&amp;', '&', $val);
      }
      return $val;
@@ -312,7 +312,7 @@ class zen extends zenDate {
              $vals["$k"] = $this->checkAlphaNum($v,"_.-");
              break;
            case "text":
-             $vals["$k"] = htmlspecialchars("$v");
+             $vals["$k"] = $this->ffv("$v");
              break;
            default:
              $vals["$k"] = strip_tags("$v", $this->html_allowed);
@@ -357,7 +357,7 @@ class zen extends zenDate {
            $$k = $this->checkAlphaNum($$k, "_.-");
            break;
          case "text":
-           $$k = htmlspecialchars($$k);
+           $$k = $this->ffv("$$k");
            break;
          default:
            $$k = strip_tags($$k, $this->html_allowed);
@@ -540,7 +540,7 @@ class zen extends zenDate {
      if( $lvl <= $this->debug )
        $this->debugMessages[] = (is_array($msg))?
      array($title,$msg,$lvl) :
-     array($title,htmlentities($msg),$lvl);
+     array($title,$this->ffv($msg),$lvl);
    }
 
    /**

@@ -12,7 +12,7 @@
   //add item button action
   if ($test=="test") {
 	
-	$description1 = nl2br(htmlspecialchars($description1));
+	$description1 = nl2br($zen->ffv($description1));
 	$agree_id = "0";
 	$create_time = time();
 

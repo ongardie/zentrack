@@ -236,6 +236,7 @@ INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (102
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (103,'retain_owner_pending','on','Keep owner data on tickets after
  a ticket is set to PENDING');
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (104,'retain_owner_closed','on','Keep owner data on tickets after a ticket is set to CLOSED');
+INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (105,'character_set','ISO-8859-15','Character set to be used');
 
 
 -- CREATE AN ENTRY FOR EACH EXISTING TICKET IN THE VARFIELDS TABLE

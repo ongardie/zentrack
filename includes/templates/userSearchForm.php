@@ -35,7 +35,7 @@
   </td>
   <td class="bars">
    <input type="text" name="search_text" 
-      value="<?=htmlspecialchars($search_text)?>" size="25" maxlength="50">
+      value="<?=$zen->ffv($search_text)?>" size="25" maxlength="50">
   </td>
 </tr>
 <tr>

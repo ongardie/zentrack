@@ -29,7 +29,7 @@
   </td>
   <td class="bars">
    <input type="text" name="search_text" 
-      value="<?=htmlentities($search_text)?>" size="25" maxlength="50">
+      value="<?=$zen->ffv($search_text)?>" size="25" maxlength="50">
   </td>
 </tr>
 

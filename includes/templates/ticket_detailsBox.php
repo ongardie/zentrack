@@ -124,7 +124,7 @@
         $cfv = $varfields["$k"]? $zen->showDateTime($varfields["$k"]) : "n/a";
         break;
       default:
-        $cfv = $varfields["$k"]? htmlspecialchars($varfields["$k"]) : 'n/a';
+        $cfv = $varfields["$k"]? $zen->ffv($varfields["$k"]) : 'n/a';
         break;
     }
 ?>
@@ -136,7 +136,7 @@
       <td colspan="3"<?= $varfield_type == 'custom_text'? " class='outlined'" : '' ?>>
       <?= 
 	 $varfield_type == 'custom_text'?
-           (get_magic_quotes_runtime()? nl2br(stripslashes($cfv)) : nl2br($cfv)) : htmlspecialchars($cfv);
+           (get_magic_quotes_runtime()? nl2br(stripslashes($cfv)) : nl2br($cfv)) : $zen->ffv($cfv);
       ?>
     </td>
     <td colspan='2'>&nbsp;</td>

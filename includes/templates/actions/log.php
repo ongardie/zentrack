@@ -48,7 +48,7 @@
 <tr>
   <td>
     <textarea cols="50" rows="4" name="comments"><?=
-      htmlentities(stripslashes($comments))?></textarea>
+      $zen->ffv(stripslashes($comments))?></textarea>
   </td>
 </tr>
 <tr>
