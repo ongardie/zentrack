@@ -13,6 +13,10 @@ abstraction, and endless possibilities for project expansion.
 
 ----- VERSION 2.5.0.3 (development) -----
 
+2005-03-22, cfalonso
+  Modified spanich translation
+    - zentrack_2/includes/translations/spanish.trans 1.8
+
 2005-03-21, cfalonso
   For ticket's mails, included user's email in log
     - zentrack_2/www/actions/email.php 1.15
