@@ -3,8 +3,8 @@
 $title_length = 25;
 
 // retrieve the params of the report
-if( isset($tempid) ) { $params = $zen->getTempReport($tempid); }
-else if( isset($repid) ) { $params = $zen->getReportParams($repid); }
+if( isset($tempid) && $tempid ) { $params = $zen->getTempReport($tempid); }
+else if( isset($repid) && $repid ) { $params = $zen->getReportParams($repid); }
 
 if( is_array($params) ) {
   $report_type = $params["report_type"];
