@@ -7,6 +7,26 @@
 
 ----- V2.3 (development, see CVS) ----
 
+2003-03-11, Kato
+  Fixed problem with user lists not having correct permissions
+    - includes/zenTrack.class 1.75
+  Email Gateway testing
+    - includes/egate_check 1.7
+    - includes/zenTrack.class 1.74
+    - includes/egate_utils 1.15
+    - includes/templates/email/footer.template 1.3
+    - includes/templates/email/form_help.template 1.2
+    - includes/templates/email/heading.template 1.3
+    - includes/templates/email/form_create.template 1.3
+    - includes/templates/email/form_help.template 1.1
+  Editing tickets now controlled on a "per bin" access level
+  based on the level_edit setting (instead of straight default access)
+    - includes/templates/newProjectForm.php 1.16
+    - includes/templates/newTicketForm.php 1.20
+    - includes/templates/editTicketForm.php 1.3
+    - www/actions/assign 1.5
+    - www/admin/admin_header 1.8
+    
 2003-03-09, Kato
   Created new templating system for use with
   zenTrack
