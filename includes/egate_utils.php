@@ -1311,7 +1311,7 @@
       $i=0;
       $from = $egate_user["email"];
       foreach($recipients as $r) {
-	$to = ($r["name"])? "{$r['name']} <{$r['email']}>" : $r['email'];
+	$to = ($r["name"])? "\"{$r['name']}\" <{$r['email']}>" : $r['email'];
 	$res = mail($to,$subject,$txt,"From:$from\r\nReply-to:$from\r\n");
 	if( $res )
 	  $i++;

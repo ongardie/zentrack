@@ -23,6 +23,10 @@
   Cleaned up the about page.
 	- zentrack/www/help/about.php
 
+2003-04-14, Kato
+  Fixed problem with emails sent to egate with ``,'' in reply address
+    - zentrack/includes/egate_utils.php 1.22
+
 2003-04-10, Kato
   Removed extra shebang (causing stdout message) from included file
     - zentrack/install/egate_config.php.default 1.9

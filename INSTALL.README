@@ -27,7 +27,7 @@
     - Make sure you turn off notices in your php.ini file: 
         error_reporting = E_ALL & ~E_NOTICE
     - Insure that you have set session.save_path to a valid directory
-    - Ensure that short_open_tags = On
+    - Ensure that short_open_tag = On
 
   QUICK AND DIRTY INSTALL INSTRUCTIONS:
      -if installing from cvs, run setup_from_cvs from the install directory
