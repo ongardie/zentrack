@@ -13,6 +13,32 @@ abstraction, and endless possibilities for project expansion.
 
 ----- VERSION 2.5.0.2(development -----
 
+2004-11-01, cfalonso
+  Added character_set to ZENTRACK_SETTINGS. Used in function ffv. Modified files replacing htmlspecialchars and htmlentities with ffv.
+    - zentrack_2/includes/zen.class 1.31
+    - zentrack_2/includes/zenTrack.class 1.160
+    - zentrack_2/includes/templates/configSettingsForm.php 1.10
+    - zentrack_2/includes/templates/searchContactForm.php 1.2
+    - zentrack_2/includes/templates/searchForm.php 1.12
+    - zentrack_2/includes/templates/searchLogForm.php1.9
+    - zentrack_2/includes/templates/searchLogList.php 1.11
+    - zentrack_2/includes/templates/ticket_detailsBox.php 1.12
+    - zentrack_2/includes/templates/ticket_logBox.php 1.15
+    - zentrack_2/includes/templates/userSearchForm.php 1.9
+    - zentrack_2/includes/templates/actions/log.php 1.6
+    - zentrack_2/install/UPGRADE_mssqlserver.sql 1.23
+    - zentrack_2/install/UPGRADE_mysql.sql 1.31
+    - zentrack_2/install/UPGRADE_oracle.sql 1.30
+    - zentrack_2/install/UPGRADE_postgres.sql 1.22
+    - zentrack_2/install/seed_mssqlserver.sql 1.27
+    - zentrack_2/install/seed_mysql.sql 1.38
+    - zentrack_2/install/seed_oracle.sql 1.33
+    - zentrack_2/install/seed_postgres.sql 1.29
+    - zentrack_2/www/addProjectSubmit.php 1.14
+    - zentrack_2/www/addSubmit.php 1.20
+    - zentrack_2/www/actions/agreement_edit.php 1.2
+    - zentrack_2/www/actions/print.php 1.12
+
 2004-10-27, cfalonso
   Email not right when creating contacts - Fixed
     - zentrack_2/includes/templates/newContactForm.php 1.3
