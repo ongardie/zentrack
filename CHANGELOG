@@ -11,6 +11,11 @@
   Improved logoff functions
   Thanks to roland spahn (rosp) for feedback
     - includes/login.php 1.19
+  Enabled editing of projects for users without
+  default_level >= 5 (if they have >= 5 for bin)
+    - includes/templates/newProjectForm.php 1.14
+    - www/actions/editProjectSubmit.php 1.1
+    - www/admin/editProjectSubmit.php 1.2
 
 2003-03-06, Kato
   Session enhancments: support for older versions of php, and hopefully
