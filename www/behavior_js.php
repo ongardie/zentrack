@@ -395,8 +395,10 @@ function setFormValsUsingGroup( fieldObj, group, setid ) {
     // so we unencode it here and then replace occurences
     // of {form} with the form name
     var f = 'window.document.'+fieldObj.form.getAttribute('name');
+    var fn = f+'.'+fieldObj.name
     var s = unescape(group.evalText);
-    var vals = evalJsString( unescape(group.evalText).replace( /{form}/ig, f) );
+    s = s.replace( /{form}/ig, f);
+    var vals = evalJsString( s.replace( /{field}/ig, fn ) );
 
     // clear any existing values from fields array
     group.fields = new Array();

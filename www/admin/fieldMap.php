@@ -10,7 +10,6 @@
   include("admin_header.php");
   $page_title = tr("Edit Field Map");
   include("$libDir/nav.php");
-  
   function fmGetSet( $name, $key, $type = '' ) {
     // don't make updates on rows that don't exist (we may skip some fields occasionally
     if( !array_key_exists($name, $_POST) ) {
@@ -171,7 +170,7 @@
     $fields = $map->getFieldMap($view);
   }
   
-  //Zen::printArray($fields);
+  //Zen::printArray($fields,'FIELDS');
   
   $zen->printErrors($errs);
 
