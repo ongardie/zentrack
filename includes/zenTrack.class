@@ -2318,8 +2318,8 @@ class zenTrack extends zen {
       $params["user_id"] = NULL;
     } else {
       $currentOwner=$this->checkNum($t['user_id']);
-      $ownerAccess = $this->get_access($currentOwner,1);
-      if( strlen($ownerAccess["$newBin"]) < 1 ) {
+      $ownerAccess = $this->get_access($currentOwner,0);
+      if( ! (strlen($ownerAccess["$newBin"]) > 0) ) {
         $params["user_id"] = NULL;
       } else {
         if( $ownerAccess["$newBin"] < $this->settings["level_user"] ) {
