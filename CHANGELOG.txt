@@ -1,6 +1,15 @@
 
 --- V3.0 RC1 (beta, in CVS) ---	
 
+2004-04-02, Kato
+  Corrected several bugs with the PHPUnit tests
+  This is going to break some libraries until the
+  ZenList references are updated to use listIds()
+  instead of list()
+    - zentrack/includes/lib/classes/ZenList.php 1.17
+    - zentrack/includes/lib/inc/classes.php 1.20
+    - zentrack/install/utilities/tests/DB/ZenDBXML.php 1.2
+
 2004-03-27, Kato
   Implemented ZenUser, ZenRole, ZenAccessList libs
     - zentrack/includes/lib/classes/ZenAccess.php 1.5 (deleted)
