@@ -103,8 +103,7 @@ CREATE TABLE ZENTRACK_SETTINGS (
   name varchar(25) default NULL,
   value varchar(100) default NULL,
   description varchar(200) default NULL,
-  PRIMARY KEY (setting_id),
-  KEY name(name)
+  PRIMARY KEY (setting_id)
 ) TYPE=MyISAM;
 
 #
@@ -184,7 +183,7 @@ CREATE TABLE ZENTRACK_TICKETS_ARCHIVED (
 
 CREATE TABLE ZENTRACK_TRANSLATION_STRINGS (
   trans_id int(12) NOT NULL auto_increment,
-  language varchar(25) default NULL,
+  language varchar(25) NOT NULL default '',
   identifier varchar(25) default NULL,
   string varchar(255) default NULL,
   PRIMARY KEY (trans_id),
@@ -197,7 +196,7 @@ CREATE TABLE ZENTRACK_TRANSLATION_STRINGS (
 
 CREATE TABLE ZENTRACK_TRANSLATION_WORDS (
   word_id int(12) NOT NULL auto_increment,
-  language varchar(25) default NULL,
+  language varchar(25) NOT NULL default '',
   identifier varchar(50) default NULL,
   translation varchar(50) default NULL,
   PRIMARY KEY (word_id),
