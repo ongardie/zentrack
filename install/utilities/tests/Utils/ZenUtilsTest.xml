@@ -420,4 +420,86 @@
   </testsafeequals>
 
 
+  <testcleanpath>
+    <test1>
+      <param name='dir'>/tmp</param>
+      <param name='expected'>/tmp</param>
+    </test1>
+    <test2>
+      <param name='dir'>\tmp</param>
+      <param name='expected'>/tmp</param>
+    </test2>
+    <test3>
+      <param name='dir'>/usr</param>
+      <param name='expected'>/usr</param>
+    </test3>
+    <test4>
+      <param name='dir'>/usr/local</param>
+      <param name='expected'>/usr/local</param>
+    </test4>
+    <test5>
+      <param name='dir'>\usr\local</param>
+      <param name='expected'>/usr/local</param>
+    </test5>
+    <test6>
+      <param name='dir'>/usr/notexists</param>
+      <param name='expected'>/usr/notexists</param>
+    </test6>
+    <test7>
+      <param name='dir'>/notexists</param>
+      <param name='expected'>/notextists</param>
+    </test7>
+  </testcleanpath>
+
+  <testdatefallson>
+    <test1>
+      <param name='utime' eval='true'>100</param>
+      <param name='step' eval='true'>2</param>
+      <param name='period'>seconds</param>
+      <param name='base' eval='true'>210</param>
+      <param name='expected' eval='true'>false</param>
+    </test1>
+    <test2>
+      <param name='utime' eval='true'>100</param>
+      <param name='step' eval='true'>2</param>
+      <param name='period'>seconds</param>
+      <param name='base' eval='true'>211</param>
+      <param name='expected' eval='true'>false</param>
+    </test2>
+    <test3>
+      <param name='utime' eval='true'>736992000</param>
+      <param name='step' eval='true'>2</param>
+      <param name='period'>month</param>
+      <param name='base' eval='true'>737010400</param>
+      <param name='expected' eval='true'>true</param>
+    </test3>
+    <test4>
+      <param name='utime' eval='true'>736992000</param>
+      <param name='step' eval='true'>2</param>
+      <param name='period'>month</param>
+      <param name='base' eval='true'>739585000</param>
+      <param name='expected' eval='true'>true</param>
+    </test4>
+  </testdatefallson>
+
+  <testprintarray>
+    <testArray>
+      <param name='items' eval='true'>2</param>
+      <param name='elem'>X</param>
+      <param name='title' eval='true'>null</param>
+      <param name='expected' eval='true'>true</param>
+    </testArray>
+    <testString>
+      <param name='items' eval='true'>0</param>
+      <param name='elem'>My string</param>
+      <param name='title' eval='true'>null</param>
+      <param name='expected' eval='true'>false</param>
+    </testString>
+    <testNull>
+      <param name='items' eval='true'>-1</param>
+      <param name='title' eval='true'>null</param>
+      <param name='expected' eval='true'>false</param>
+    </testNull>
+  </testprintarray>
+
 </TestUnit>

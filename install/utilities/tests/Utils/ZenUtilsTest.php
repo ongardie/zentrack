@@ -110,6 +110,74 @@
       Assert::equals( $result, $vals['expected'], "Expected {$es}, found {$rs}" );
     }
 
+    function testCleanPath( $vals ) {
+      $result = ZenUtils::cleanPath( $vals['dir'] );
+      $expected = $vals['expected'];
+      Assert::equals( $result, $vals['expected'], "Expected {$expected}, found {$result}" );
+    }
+
+    function testDateFallsOn( $vals ) {
+      $result = ZenUtils::dateFallsOn( $vals['utime'], $vals['step'], $vals['period'], $vals['base'] );
+      if ( is_bool($vals['expected']) ) {
+        $es = ZenUtils::boolString($vals['expected']);
+      }
+      else {
+        $es = $vals['expected'];
+      }
+      if ( is_bool($result) ) {
+        $rs = ZenUtils::boolString($result);
+      }
+      else {
+        $rs = $result;
+      }
+      Assert::equals( $result, $vals['expected'], "Expected {$es}, found {$rs}" );
+    }
+
+    function testFfv() {
+      $text = "abc&aacute;xyz";
+      $expe = "abc&amp;aacute;xyz";
+      $result = ZenUtils::ffv( $text );
+      Assert::equals( $result, $expe, "Expected {$expe}, found {$result}" );
+      $text = "<body>";
+      $expe = "&lt;body&gt;";
+      $result = ZenUtils::ffv( $text );
+      Assert::equals( $result, $expe, "Expected {$expe}, found {$result}" );
+      $text = "\"";
+      $expe = "&quot;";
+      $result = ZenUtils::ffv( $text );
+      Assert::equals( $result, $expe, "Expected {$expe}, found {$result}" );
+    }
+
+    function testPrintArray ( $vals ) {
+      if ( $vals['items'] == 0 ) {
+        $val=$vals['elem'];
+      }
+      else if ( $vals['items'] > 0 ) {
+        for ($i=0; $i<$vals['items']; $i++) {
+          $val[$i]=$vals['elem'];
+        }
+      }
+      else {
+        $val=null;
+      }
+      $result = ZenUtils::printArray( $val, $vals['title'] );
+      if ( is_bool($vals['expected']) ) {
+        $es = ZenUtils::boolString($vals['expected']);
+      }
+      else {
+        $es = $vals['expected'];
+      }
+      if ( is_bool($result) ) {
+        $rs = ZenUtils::boolString($result);
+      }
+      else {
+        $rs = $result;
+      }
+      Assert::equals( $result, $vals['expected'], "Expected {$es}, found {$rs}" );
+    }
+
+
+
     function notReadyYet() { Assert::equalsTrue( false, "Not done yet" ); }
 
   }
