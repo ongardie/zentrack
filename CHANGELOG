@@ -8,13 +8,26 @@
 ----- V2.5.0(2004-10-12) -----
 
 2004-10-12, Kato
+  Cleaned up add contact pages
+    - zentrack_2/includes/templates/actions/contacts.php 1.4
+    - zentrack_2/includes/templates/actions/contacts.php 1.4  
   Updated version number in sql files
-    - install/*.sql
+    - zentrack_2/install/UPGRADE_mssqlserver.sql 1.21
+    - zentrack_2/install/UPGRADE_mysql.sql 1.29
+    - zentrack_2/install/UPGRADE_oracle.sql 1.28
+    - zentrack_2/install/UPGRADE_postgres.sql 1.20
+    - zentrack_2/install/seed_mssqlserver.sql 1.25
+    - zentrack_2/install/seed_mysql.sql 1.36
+    - zentrack_2/install/seed_oracle.sql 1.31
+    - zentrack_2/install/seed_postgres.sql 1.27
   Fixed js bug with Javascript based behaviors
-    - behavior_js
+    - zentrack_2/includes/templates/groupForm.php 1.11
+    - zentrack_2/includes/headerInc.php 1.49
+    - zentrack_2/www/behavior_js.php 1.13
   Corrected syntax error in egate file
-  
+    - zentrack_2/includes/egate_utils.php 1.36
   Fixed problem with invalid ticket ids
+    - zentrack_2/www/ticket.php 1.22
     
 2004-10-11, Kato
   Cleaned up email templates and doc files
