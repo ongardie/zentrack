@@ -35,6 +35,8 @@
   <ul>
       <b><a href='<?=$rootUrl?>/admin/groups.php'><?=tr("Edit Data Groups")?></a></b>
       <br><span class="small">(<?=tr("Data groups are a list created from a data type")?>)</span>
+      <br><b><a href='<?=$rootUrl?>/admin/behaviors.php'><?=tr("Edit Behaviors")?></a></b>
+      <br><span class="small">(<?=tr("Behaviors let you specify how a field modification would affect other field of the current ticket.")?>)</span>
       <br><b><a href='<?=$rootUrl?>/admin/config.php'><?=tr("Configuration Settings")?></a></b>
       <br><span class="small">(<?=tr("Edit the zenTrack settings.  Consult the documentation before using this feature.")?>)</span>
   </ul>

@@ -633,26 +633,30 @@ class zenTrack extends zen {
 
     // create a map of behaviors indexed by the behavior_id
     $map = array();
-    foreach( $vals as $v ) {
-      $k = $v['behavior_id'];
-      $v['fields'] = array();
-      $map[$k] = $v;
-    }
 
-    // collect the fields for our list of behaviors
-    // we will always use the ids from our map for
-    // data integrity
-    $genIds = array_keys($map);
-    $query = "SELECT * FROM ".$this->table_behavior_detail;
-    $query .= " WHERE behavior_id IN(".join(',', $genIds).")";
-    $query .= " ORDER BY sort_order, field_name";
-    $fieldVals = $this->dbQueryIndexed($query);
-    foreach($fieldVals as $f) {
-      $b = $f['behavior_id'];
-      $k = $f['field_name'];
-      $map[$b]['fields'][$k] = $f;
-    }
+    if ( is_array($vals) ) {
+      foreach( $vals as $v ) {
+        $k = $v['behavior_id'];
+        $v['fields'] = array();
+        $map[$k] = $v;
+      }
 
+      // collect the fields for our list of behaviors
+      // we will always use the ids from our map for
+      // data integrity
+      $genIds = array_keys($map);
+      $query = "SELECT * FROM ".$this->table_behavior_detail;
+      $query .= " WHERE behavior_id IN(".join(',', $genIds).")";
+      $query .= " ORDER BY sort_order, field_name";
+      $fieldVals = $this->db_queryIndexed($query);
+      if ( is_array($fieldVals) ) {
+        foreach($fieldVals as $f) {
+          $b = $f['behavior_id'];
+          $k = $f['field_name'];
+          $map[$b]['fields'][$k] = $f;
+        }
+      }
+    }
     $this->addDebug("getBehaviorList",count($map)." behaviors mapped", 3);
     return $map;
   }
@@ -667,7 +671,8 @@ class zenTrack extends zen {
   function addBehavior( $props, $details ) { 
     $id = $this->db_insert( $this->table_behavior, $props );
     if( $id ) {
-      $this->updateBehaviorDetails( $id, $details );
+//Commented only for developement stage
+//      $this->updateBehaviorDetails( $id, $details );
       $this->addDebug("addBehavior", "Added new behavior with id '".$id."'", 2);
     }
     else {
@@ -711,6 +716,35 @@ class zenTrack extends zen {
       list($ck,$cv) = $this->makeInsertVals($v);
       $this->db_result("INSERT INTO ".$this->table_behavior_detail." ($ck) VALUES($cv)");
     }
+  }
+
+
+
+  function getBehaviorDestinationFieldsArray() {
+    $field_list=array(
+               tr("Title") => "title",
+               tr("Priority") => "priority",
+               tr("Status") => "status",
+               tr("Description") => "description",
+               tr("Open Time") => "otime",
+               tr("Close Time") => "ctime",
+               tr("Bin") => "bin_id",
+               tr("Type") => "type_id",
+               tr("Owner") => "user_id",
+               tr("System") => "system_id",
+               tr("Created by") => "creator_id",
+               tr("Tested") => "tested",
+               tr("Approved") => "approved",
+               tr("Project") => "project_id",
+               tr("Estimated Hours") => "est_hours",
+               tr("Deadline") => "deadline",
+               tr("Start Date") => "start_date");
+    $custom=$this->getCustomFields(1);
+    foreach($custom as $k => $v) {
+      $field_list[$v]=$k;
+    }
+    ksort($field_list);
+    return($field_list);
   }
 
 

@@ -41,6 +41,11 @@
   </tr>  
   <tr>
   <td <?=$nav_rollover_text?>>
+    <a class="subMenuLink" href="<?=$rootUrl?>/admin/behaviors.php"><?=tr("Edit Behaviors")?></a>
+  </td>
+  </tr>  
+  <tr>
+  <td <?=$nav_rollover_text?>>
     <a class="subMenuLink" href="<?=$rootUrl?>/admin/config.php"><?=tr("Settings")?></a>
   </td>
   </tr>  
