@@ -6,7 +6,7 @@
    **  Essentially, the template engine works as follows
    **
    **  // get the template to process
-   **  $tmp = new Template("/web/site/templates/template_name");
+   **  $tmp = new zenTemplate("/web/site/templates/template_name");
    **  // insert indexed array of values to be substituted
    **  $tmp->values($array_of_values);
    **  // get the results
