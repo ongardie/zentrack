@@ -1,13 +1,13 @@
 
 To create a new ticket, simply reply to this email, and fill in the following information:
 
-Parent: 
+@Parent:
 {*optional: provide another ticket id here to make this a sub-task of that ticket*}
 
-Title:
+@Title:
 {*your title may include anything except a colon (:) and brackets*}
 
-Type:
+@Type:
 {*place an x in the appropriate box*}
 <?
   foreach($zen->getTypes() as $k=>$v) {
@@ -15,7 +15,7 @@ Type:
   }
 ?>
 
-System:
+@System:
 {*place an x in the appropriate box*}
 <?
   foreach($zen->getTypes() as $k=>$v) {
@@ -23,10 +23,10 @@ System:
   }
 ?>
 
-Owner:
+@Owner:
 {*optional: you may place a user's full name here, or you may put myself*}
 
-Bin:
+@Bin:
 {*place an x in the appropriate box*}
 <?
   foreach($zen->getTypes() as $k=>$v) {
@@ -34,7 +34,7 @@ Bin:
   }
 ?>
 
-Priority:
+@Priority:
 {*place an x in the appropriate box*}
 <?
   foreach($zen->getTypes() as $k=>$v) {
@@ -42,18 +42,20 @@ Priority:
   }
 ?>
 
-Start Date:
+@Start Date:
 {*optional: the date can be any standard format, you may also use +1 week, +2 months, etc*}
 
-Deadline:
+@Deadline:
 {*optional: the date can be any standard format, you may also use +1 week, +2 months, etc*}
 
-Testing Required: [<?=($zen->settings["default_test_checked"]=="on")?"x":" "?>]
+@Testing Required: [<?=($zen->settings["default_test_checked"]=="on")?"x":" "?>]
 {*place an x in the box if testing will be needed before closing*}
 
-Approval Required: [<?=($zen->settings["default_aprv_checked"]=="on")?"x":" "?>]
+@Approval Required: [<?=($zen->settings["default_aprv_checked"]=="on")?"x":" "?>]
 {*place an x in the box if approval will be required before closing*}
 
-Details:
+@Details:
 {*enter details about the ticket here, any text formatting will be accepted*}
 
+
+@end comments

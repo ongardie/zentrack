@@ -194,6 +194,13 @@ class zenTrack extends zen {
     return( $this->db_quickIndexed($query) );
   }
 
+  function get_user_by_login( $login ) {
+    // returns a user's information by 
+    // the login account
+    $query = "SELECT * FROM ".$this->table_users." WHERE login = '$login'";
+    return( $this->db_quickIndexed($query) );
+  }
+
   function get_users( $bins = '', $level = 'level_view', $active = 1, $sort = 'lname, fname' ) {
     // creates a list of users
     // $bins is an optional array/string of binIDs
@@ -1250,8 +1257,14 @@ class zenTrack extends zen {
     // do not encrypt the passphrase, this is done
     // automatically
       
-    if( $params["passphrase"] )
+    if( $user["login"] == "egate" ) {
+      // don't allow password entry for the egate account
+      $params["passphrase"] = 'NULL';
+    }
+    else if( $params["passphrase"] ) {
+      // encrypt the password
       $params["passphrase"] = $this->encval($params["passphrase"]);
+    }
     $set = $this->makeInsertVals($params,1);
     $query = "UPDATE ".$this->table_users." SET $set WHERE user_id = $user_id";
     $this->addDebug("update_user()Query",$query,2);
@@ -1331,7 +1344,9 @@ class zenTrack extends zen {
   function reset_password( $user_id ) {
     // resets the users passphrase to the default value
     // for a user.  This will probably be the users last name
-
+    // note that the password cannot be changed
+    // for the egate account (to prevent users logging in as
+    // egate
     $user = $this->get_user($user_id);
     $params["passphrase"] = $user["lname"];
     return $this->update_user($user_id, $params);
@@ -2206,6 +2221,20 @@ class zenTrack extends zen {
     // all checks passed, return true
     return true;
   }
+
+  function listValidActions( $ticket_id, $user_id ) {
+    // returns a complete list of actions which are valid for the given ticket    
+    // the entire ticket can be passed as an array in $ticket_id
+    // to save an extra database lookup
+    $actions = $this->getActions();
+    $valid = array();
+    foreach($actions as $k=>$v) {
+      if( $this->action_applicable($ticket_id,$k,$user_id) ) {
+	$valid["$k"] = $v;
+      }
+    }
+    return $valid;
+  }
    
   function getActions() {
     // actions array contains the following params
@@ -2219,6 +2248,7 @@ class zenTrack extends zen {
     //   "access"   - must meet checkAccess
     //   "status"   - ticket status
     //   "override" - supervisor override?     
+    // this array is sorted by key
     if( !$this->actions ) {
       $actions = array();
       $actions["accept"] = array( 
@@ -2291,6 +2321,35 @@ class zenTrack extends zen {
 			       "override" => 1,
 			       "level"    => $this->settings["level_move"]
 			       );
+      // add an entry to notify list
+      // used exclusively by egate system
+      // use notify_set for all ticket actions
+      $actions["notify_add"] = array(
+			      "owner"    => 0,
+			      "access"   => 1,
+			      "status"   => array('OPEN','PENDING'),
+			      "override" => 0,
+			      "level"    => $this->settings["level_view"]
+			      );
+      // drop an entry from the notify list
+      // used exclusively by the egate system
+      // use notify_set for all ticket actions
+      $actions["notify_drop"] = array(
+				      "owner"    => 0,
+				      "access"   => 1,
+				      "status"   => array('OPEN','PENDING'),
+				      "override" => 0,
+				      "level"    => $this->settings["level_view"]
+				      );
+      // used to modify the list of recipients in
+      // ticket's notify list
+      $actions["notify_set"] = array(
+				     "owner"    => 1,
+				     "access"   => 1,
+				     "status"   => array('OPEN','PENDING'),
+				     "override" => 1,
+				     "level"    => $this->settings["level_user"]
+				     );
       $actions["print"] = array(
 				"owner"    => 0,
 				"access"   => 1,

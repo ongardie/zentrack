@@ -2,7 +2,7 @@
 The following options are available for ticket <?=id?>, at present:
 
 <?
- foreach($actions as $a) {
+ foreach($valid_actions as $a) {
     print ucwords($a)."\n";
  }
 ?>
