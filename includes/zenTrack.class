@@ -767,7 +767,7 @@ class zenTrack extends zen {
       return( $res );
    }
    
-   function reopen_ticket( $id, $user_id = 'NULL', $tested = 0, $approved = 0, $comments = '' ) {
+   function reopen_ticket( $id, $user_id = 'NULL', $comments = '' ) {
      // opens a ticket that has been closed
      // this can be used to reopen tickets
      // closed in error, or to make modifications
@@ -779,8 +779,8 @@ class zenTrack extends zen {
 		     "user_id"   =>   $user_id,
 		     "status"   =>   'OPEN',
 		     "bin_id"    =>   $t["bin_id"],
-		     "tested"   =>   $tested,
-		     "approved" =>   $approved
+		     "tested"   =>   ($t["tested"]>0)? 1 : 0,
+		     "approved" =>   ($t["approved"]>0)? 1 : 0
 		     );
      $res = $this->update_ticket($id, $params);
      if( $res ) {
@@ -2055,7 +2055,7 @@ class zenTrack extends zen {
              "reject"  => array( 1, 1, array('OPEN','PENDING'), 0 ),
              "close"   => array( 1, 1, array('OPEN'),           0 ),
              "relate"  => array( 1, 1, 0,                       0 ),
-             "reopen"  => array( 0, 1, array('CLOSED'),         0 ),
+             "reopen"  => array( 0, 1, array('PENDING','CLOSED'), 0 ),
              "edit"    => array( 0, 1, array('OPEN','PENDING'), 0 ),
              "upload"  => array( 1, 1, 0,                       1 ),
              "print"   => array( 0, 1, 0,                       0 ),

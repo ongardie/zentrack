@@ -73,9 +73,9 @@ if( !$zen->checkAccess($login_id,$ticket["bin_id"],"edit") ) {
      //header("Location:$rootUrl/ticket.php?id=$id&setmode=Details");
      $setmode = "Details";
      if( $zen->inProjectTypeIDs($bin_id) ) {
-       include("./project.php");
+       include("../project.php");
      } else {
-       include("./ticket.php");
+       include("../ticket.php");
      }
      exit;
   } else {

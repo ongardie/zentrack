@@ -19,12 +19,10 @@
      }
      $input = array(
 		    "id"       => "int",
-		    "tested"   => "int",
-		    "approved" => "int",
 		    "comments" => "html"
 		    );
      $zen->cleanInput($input);
-     $required = array("id","comments","tested","approved");
+     $required = array("id","comments");
      foreach($required as $r) {
 	if( !strlen($$r) ) {
 	   $errs[] = " $r is required";
@@ -32,7 +30,7 @@
      }
      
      if( !$errs ) {
-	$res = $zen->reopen_ticket($id, $login_id, $tested, $approved, $comments);
+	$res = $zen->reopen_ticket($id, $login_id, $comments);
 	if( $res ) {
 	   add_system_messages("Ticket $id was repoened.");
 	   $setmode = "details";

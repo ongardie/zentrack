@@ -19,6 +19,8 @@
     - includes/zenTrack.class v1.39 & v1.40
     - www/actions/close.php v1.8
   Fixed some postgres sql bugs
+  Thanks to Marc Dyksterhouse (usimarit) for
+  Tons of work on this one
     - install/build_postgres.sql v1.3
     - includes/db.class v1.16
   Enhanced popup calendar
