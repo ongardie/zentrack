@@ -1,25 +1,13 @@
 <?	
   unset($userBins);
   unset($users);
-  foreach($zen->bins as $k=>$v) {
-     $zen->getAccess($login_id);
-     if( (isset($zen->access["$k"]) && $zen->access["$k"] >= $zen->settings["level_view"])
-	||
-	(!isset($zen->access["$k"]) && $login_level >= $zen->settings["level_view"])
-	) {
-	$userBins["$k"] = $v;
-    }
-  }
+  $userBins = $zen->getUsersBins($login_id,"level_create");
   if( is_array($userBins) ) {
-     foreach($userBins as $k=>$b) {
-	$vars = $zen->get_users($k);
-	for( $i=0;$i<count($vars);$i++ ) {
-	   $n = $vars[$i]["user_id"];
-	   $users["$n"] = $vars[$i];
-	}
-     }  
-     asort($userBins);
-     asort($users);
+    $users = $zen->get_users( $userBins, "level_user" );
+  } else {
+    print "<span class='error'>You do not have permission to create projects.</span>\n";
+    include("$libDir/footer.php");
+    exit;
   }
 ?>     
 
@@ -122,9 +110,10 @@ value="<?=strip_tags($title)?>">
     <select name="bin_id">
 <?
     if( is_array($userBins) ) {
-    	foreach($userBins as $k=>$v) {
-	   $check = ( $k == $bin_id )? "selected" : "";
-	   print "<option $check value='$k'>$v</option>\n";
+    	foreach($userBins as $k) {
+	   $check = ( $k == $bin_id || (!$bin_id && !$td && $k == $login_bin) )? 
+		"selected" : "";
+	   print "<option $check value='$k'>".$zen->bins["$k"]."</option>\n";
 	}
     } else {
       print "<option value=''>--no bins--</option>\n";

@@ -1,8 +1,12 @@
 <?	
   unset($users);
-  $userBins = $zen->getUsersBins($login_id);
+  $userBins = $zen->getUsersBins($login_id,"level_create");
   if( is_array($userBins) ) {
     $users = $zen->get_users( $userBins, "level_user" );
+  } else {
+    print "<span class='error'>You do not have permission to create tickets.</span>\n";
+    include("$libDir/footer.php");
+    exit;
   }
   $td = ($TODO == 'EDIT');
   if( !$deadline && !$td )
