@@ -13,8 +13,15 @@ abstraction, and endless possibilities for project expansion.
 
 ----- VERSION 2.5.0.3 (development) -----
 
+2005-02-24, cfalonso
+  When creating a new ticket, the cal.gif image didn't appear if your
+  images directory was not directly under website root (Fixed).
+    - zentrack_2/includes/ZenFieldMap.class 1.5
+    - zentrack_2/includes/templates/fields/date.template 1.3
+
 2005-02-23, cfalonso
-  Added a setting option to manage if a mandatory edit field to explain why the ticket is being edited should be shown in edit page
+  Added a setting option to manage if a mandatory edit field to explain
+  why the ticket is being edited should be shown in edit page
     - zentrack_2/www/help/english/admin/settings.php 1.2
     - zentrack_2/includes/editTicketSubmit.php 1.12
     - zentrack_2/includes/zenTrack.class 1.172
@@ -30,7 +37,8 @@ abstraction, and endless possibilities for project expansion.
     - zentrack_2/install/seed_postgres.sql 1.33
 
 2005-02-21, cfalonso
-  Now, when disabling/enabling a date field, also de associated calendar icon is disabled/enabled
+  Now, when disabling/enabling a date field, also de associated
+  calendar icon is disabled/enabled
     - zentrack_2/includes/headerInc.php 1.55
     - zentrack_2/includes/templates/fields/date.template 1.2
     - zentrack_2/www/behavior_js.php 1.20
@@ -38,13 +46,15 @@ abstraction, and endless possibilities for project expansion.
     - zentrack_2/www/images/disabled-cal.gif 1.1
 
 2005-02-10, cfalonso
-  Fixed a bug on behaviors when using file groups evaluating on a standard key-value field
+  Fixed a bug on behaviors when using file groups evaluating on a
+  standard key-value field
     - includes/zenTrack.class 1.169
   Re-executed behaviors didn't run. Fixed
     - www/behavior_js.php 1.18
 
 2005-02-09, cfalonso
-  Default groups in field_map page didn't show the selected field in the pulldown, just added the $sel variable
+  Default groups in field_map page didn't show the selected field in the
+  pulldown, just added the $sel variable
     - includes/templates/fieldMapForm.php (not sure about the version)
   Fixed syntax error in table create script:
     - zentrack_2/install/UPGRADE_mysql.sql 1.39
