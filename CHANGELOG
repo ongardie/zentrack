@@ -7,6 +7,19 @@
 
 ----- V2.5 (in development) ----
 
+2004-07-27, Kato
+  Added fields to GROUP table
+    - zentrack_2/install/UPGRADE_mssqlserver.sql 1.5
+    - zentrack_2/install/UPGRADE_mysql.sql 1.11
+    - zentrack_2/install/UPGRADE_oracle.sql 1.12	
+  Fixed documentation error (in notes at top) for admin pages
+    - zentrack_2/includes/templates/binForm.php 1.7
+    - zentrack_2/includes/templates/configForm.php 1.6
+
+2004-07-24, Kato
+  Added new methods for groups and behaviors
+    - zentrack_2/includes/zenTrack.class 1.125	
+	
 2004-07-18, Kato
   Added new methods for groups, variable fields, and behaviors
     - zentrack_2/includes/db.class 1.25
