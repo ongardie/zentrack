@@ -9,12 +9,26 @@
 
 2004-08-12, Kato
   Improved logging (egate and editing fxns)
-
   Added eval methods to upgrade scripts and build scripts
   Now possible to add js_validation to variable fields
   field_enabled added/implemented for behaviors (to disable/enable fields)
   eval_type & eval_text added to groups to support php/javascript formulas
-
+    - zentrack_2/includes/egate_utils.php 1.34
+    - zentrack_2/includes/editTicketSubmit.php 1.7
+    - zentrack_2/includes/headerInc.php 1.39
+    - zentrack_2/includes/parseVarfields.php 1.2
+    - zentrack_2/includes/zenTrack.class 1.137
+    - zentrack_2/includes/templates/newTicketForm.php 1.32
+    - zentrack_2/includes/templates/ticket_customBox.php 1.5
+    - zentrack_2/install/UPGRADE_mssqlserver.sql 1.10
+    - zentrack_2/install/UPGRADE_mysql.sql 1.16
+    - zentrack_2/install/UPGRADE_oracle.sql 1.17
+    - zentrack_2/install/build_mssqlserver.sql 1.6
+    - zentrack_2/install/build_mysql.sql 1.9
+    - zentrack_2/install/build_oracle.sql 1.10
+    - zentrack_2/www/behavior_js.php 1.5
+    - zentrack_2/www/actions/editSubmit.php 1.8
+    - zentrack_2/www/admin/editCustom.php 1.5
 
 2004-08-11, cfalonso
   Stored value wasn't correctly selected in custom_menu fields. Fixed.
