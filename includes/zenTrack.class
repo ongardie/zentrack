@@ -36,18 +36,18 @@ class zenTrack extends zen {
       //  ( ["bin_id"] = $bin_level )
       
       $query = "SELECT * FROM ".$this->table_access." WHERE user_id = $user_id "
-	." AND lvl is not null";
+   ." AND lvl is not null";
       $this->addDebug("get_access()Query",$query,3);
       $vars = $this->db_queryIndexed($query);
       if( $flag ) {
-	return $vars;	
-      } else {	
-	if( is_array($vars) ) {
-	  foreach($vars as $v) {
-	    $vals["$v[bin_id]"] = $v["lvl"];
-	  }
-	}
-	return( $vals );
+   return $vars;  
+      } else { 
+   if( is_array($vars) ) {
+     foreach($vars as $v) {
+       $vals["$v[bin_id]"] = $v["lvl"];
+     }
+   }
+   return( $vals );
       }
    }   
    
@@ -234,23 +234,20 @@ class zenTrack extends zen {
       // Will need two queries here as some versions of mysql
       // doesn't support JOINS and/or UNIONS as needed for this.
 
+      // query for registered users
       $query  = "SELECT u.email FROM ".$this->table_users." AS u, ";
       $query .= $this->table_notify_list." AS nl WHERE ";
       $query .= "u.user_id = nl.user_id AND nl.ticket_id = '";
       $query .= $ticket_id."' ";
 
-      $rs = $this->db_query($query);  
-      if ( count($rs) > 0 ) {
-         foreach( $rs as $record ) { $list[] = $record[0]; }
-      }
+      // query for non-registered users
+      $query2  = "SELECT email FROM ".$this->table_notify_list." WHERE ";
+      $query2 .= "user_id IS NULL AND ticket_id = '".$ticket_id."' ";
 
-      $query  = "SELECT email FROM ".$this->table_notify_list." WHERE ";
-      $query .= "user_id IS NULL AND ticket_id = '".$ticket_id."' ";
-
-      $rs = $this->db_query($query);
-      if ( count($rs) ) {
-         foreach( $rs as $record ) { $list[] = $record[0]; }
-      }
+      // get the lists of recipients and merge them
+      $list = array_merge($this->db_list($query),$this->db_list($query2));
+      // print a debug message
+      $this->addDebug("get_notify_recipients","Found ".count($list)." recipients for ticket $ticket_id",3);
 
       return $list;
    }
@@ -259,31 +256,39 @@ class zenTrack extends zen {
       $query  = "SELECT * FROM ".$this->table_notify_list." WHERE ";
       $query .= "ticket_id = '".$ticket_id."' ";
 
-      return $this->db_query($query);
+      return $this->db_queryIndexed($query);
    }
 
    function set_notify_list( $ticket_id, $list ) {
       // Do a $this->drop_notify_list($ticket_id)
       // first and then loop through the $list doing INSERTS.
+      // note that this list must contain indexed arrays representing
+      // each entry to be added
       $this->drop_notify_list($ticket_id); 
 
-      // Determine if $list[i] is an array or element.
-      // If it is an element then $list[i] is a user_id, if an array
-      // then $list[i][0] is the name and $list[i][1] is the email.
-      foreach ( $list as $item ) {
-         if ( count($item) > 1 ) {
-           // Array
-           $where  = "(ticket_id, name, email) VALUES ('".$ticket_id."', '";
-           $where .= $item[0]."', '".$item[1]."') ";
-         } else {
-           // User ID
-           $where  = "(ticket_id, user_id) VALUES ('".$ticket_id."', '";
-           $where .= $item."' )";
-         }
-         $q  = "INSERT INTO ".$this->table_notify_list." ".$where;
-         $this->db_result($q);
+      // perform database inserts, and return ids
+      $insert_ids = array();
+      foreach($list as $l) {
+         $l["ticket_id"] = $ticket_id;
+         $new_id = $this->db_insert($this->table_notify_list,$l);
+         if( $new_id )
+            $insert_ids[] = $new_id;
       }
+      return $insert_ids;
    }
+   
+   function add_to_notify_list( $ticket_id, $params ) {
+      // appends a new entry to the existing notify list
+      $params["ticket_id"] = $ticket_id;
+      return( $this->db_insert($this->table_notify_list,$params);
+   }
+   
+   function delete_from_notify_list( $notify_id ) {
+      // removes a single entry from the notify list table
+      $query = "DELETE FROM ".$this->table_notify_list." WHERE notify_id = $notify_id";
+      return $this->db_insert($query);
+   }
+      
 
    function drop_notify_list( $ticket_id ) {
       // Do a DELETE FROM ZENTRACK_NOTIFY_LIST WHERE ticket_id = $ticket_id
@@ -441,7 +446,7 @@ class zenTrack extends zen {
      if( $override || $this->check_status($pid, 'READY') ) {
        $children = $this->getProjectChildren($pid, array('id'));
        for( $i=0; $i<count($children); $i++ ) {
-	 $this->close_ticket($children[$i]);    
+    $this->close_ticket($children[$i]);    
        }
        return( $this->change_status($pid, 'CLOSED', $params) );    
      }
@@ -462,17 +467,17 @@ class zenTrack extends zen {
      $res = $this->update_ticket($id,$params);
      if( $res && $this->settings["log_accept"] == "on" ) {
        $logParams = array(
-			  "action"   =>  'ACCEPTED',
-			  "user_id"   =>  $user_id,
-			  "ticket_id" =>  $id
-			  );
+           "action"   =>  'ACCEPTED',
+           "user_id"   =>  $user_id,
+           "ticket_id" =>  $id
+           );
        if( !$bin_id ) {
-	 $t = $this->get_ticket($id);
-	 $bin_id = $t["bin_id"];
+    $t = $this->get_ticket($id);
+    $bin_id = $t["bin_id"];
        }
        $logParams["bin_id"] = $bin_id;
        if( $comments )
-	 $logParams["entry"] = htmlentities($comments);   
+    $logParams["entry"] = htmlentities($comments);   
        $res = $this->add_log($id, $logParams);
      }
      return( $res );
@@ -488,13 +493,13 @@ class zenTrack extends zen {
      $res = $this->update_ticket($id,$params);
      if( $res && $this->settings["log_approve"] ) {
        $logParams = array(
-			  "action"   =>  'APPROVED',
-			  "user_id"   =>  $user_id,
-			  "ticket_id" =>  $id
-			  );
+           "action"   =>  'APPROVED',
+           "user_id"   =>  $user_id,
+           "ticket_id" =>  $id
+           );
        $logParams["bin_id"] = $t["bin_id"];
        if( $comments )
-	 $logParams["entry"] = htmlentities($comments);
+    $logParams["entry"] = htmlentities($comments);
        $this->add_log($id, $logParams);    
      }     
      if( $t["tested"] != 1 ) {
@@ -504,18 +509,18 @@ class zenTrack extends zen {
        $bin = $t["bin_id"];
        $vars = $this->fetch_bin_roles($bin,'manager');
        if( is_array($vars) ) {
-	 foreach($vars as $v) {
-	   $recipient[] = $v["user_id"];
-	 }
+    foreach($vars as $v) {
+      $recipient[] = $v["user_id"];
+    }
        }
        if( is_array($recipient) ) {
-	 $subject = "[".$this->settings["system_name"]."] ticket #$id closed";
-	 $emailParams["Close Time"] = $this->showDateTime($this->currTime);
-	 if( $comments )
-	   $emailParams["body"] = htmlentities($comments);
-	 $emailParams["tid"] = $id;
-	 $message = $this->formatEmailMessage($emailParams);
-	 $this->sendEmail($recipient,$subject,$message,$user_id);
+    $subject = "[".$this->settings["system_name"]."] ticket #$id closed";
+    $emailParams["Close Time"] = $this->showDateTime($this->currTime);
+    if( $comments )
+      $emailParams["body"] = htmlentities($comments);
+    $emailParams["tid"] = $id;
+    $message = $this->formatEmailMessage($emailParams);
+    $this->sendEmail($recipient,$subject,$message,$user_id);
        }       
      }
      return( $res );
@@ -606,92 +611,92 @@ class zenTrack extends zen {
      if( $this->check_status($t,"READY") ) {
        // if ticket is ready to close, then close it
        $params = array(
-		       "status"  =>  'CLOSED',
-		       "user_id"  =>  'NULL',
-		       "ctime"   =>  $this->currTime
-		       );
+             "status"  =>  'CLOSED',
+             "user_id"  =>  'NULL',
+             "ctime"   =>  $this->currTime
+             );
        $res = $this->update_ticket($id, $params);
        if( $this->settings["log_close"] == "on" ) {
-	 // create a log entry
-	 $logParams = array(
-			    "action"   =>  'CLOSED',
-			    "ticket_id" =>  $id,
-			    "entry"    =>  $entry
-			    );
-	 // get the params
-	 if( $user_id ) {
-	   $logParams["user_id"] = $user_id;
-	 }
-	 $logParams["bin_id"] = $t["bin_id"];
-	 if( $hours )
-	   $logParams["hours"] = $hours;
-	 if( $comments )
-	   $logParams["entry"] = $comments;
-	 // send the log
-	 $this->add_log($id, $logParams);    
+    // create a log entry
+    $logParams = array(
+             "action"   =>  'CLOSED',
+             "ticket_id" =>  $id,
+             "entry"    =>  $entry
+             );
+    // get the params
+    if( $user_id ) {
+      $logParams["user_id"] = $user_id;
+    }
+    $logParams["bin_id"] = $t["bin_id"];
+    if( $hours )
+      $logParams["hours"] = $hours;
+    if( $comments )
+      $logParams["entry"] = $comments;
+    // send the log
+    $this->add_log($id, $logParams);    
        }
        if( $this->settings["email_closed"] == "on" ) {
-	 // send email
-	 $bin = $t["bin_id"];
-	 $recipient = $t["creator_id"];
-	 $subject = "[".$this->settings["system_name"]."] ticket #$id closed";
-	 $emailParams["Close Time"] = $this->showDateTime($this->currTime);
-	 if( $comments )
-	   $emailParams["body"] = htmlentities($comments);
-	 $emailParams["tid"] = $id;
-	 $message = $this->formatEmailMessage($emailParams);
-	 $this->sendEmail($recipient,$subject,$message,$user_id);       
+    // send email
+    $bin = $t["bin_id"];
+    $recipient = $t["creator_id"];
+    $subject = "[".$this->settings["system_name"]."] ticket #$id closed";
+    $emailParams["Close Time"] = $this->showDateTime($this->currTime);
+    if( $comments )
+      $emailParams["body"] = htmlentities($comments);
+    $emailParams["tid"] = $id;
+    $message = $this->formatEmailMessage($emailParams);
+    $this->sendEmail($recipient,$subject,$message,$user_id);       
        } 
      } else if( ($t["tested"] == 1 || $t["approved"] == 1) 
-		&& $t["status"] == "OPEN" ) {
+      && $t["status"] == "OPEN" ) {
        // update status to pending
        $params = array(
-		       "status"  =>  'PENDING',
-		       "user_id"  =>  'NULL'
-		       );
+             "status"  =>  'PENDING',
+             "user_id"  =>  'NULL'
+             );
        $res = $this->update_ticket($id, $params);
        if( $this->settings["log_pending"] == "on" ) {
-	 // make a log entry
-	 $logParams = array(
-			    "action"   =>  'PENDING',
-			    "ticket_id" =>  $id,
-			    "entry"    =>  $entry
-			    );
-	 if( $user_id ) {
-	   $logParams["user_id"] = $user_id;
-	 }
-	 $logParams["bin_id"] = $t["bin_id"];      
-	 if( $hours )
-	   $logParams["hours"] = $hours;
-	 if( $comments )
-	   $logParams["entry"] = $comments;
-	 $this->add_log($id, $logParams);    
+    // make a log entry
+    $logParams = array(
+             "action"   =>  'PENDING',
+             "ticket_id" =>  $id,
+             "entry"    =>  $entry
+             );
+    if( $user_id ) {
+      $logParams["user_id"] = $user_id;
+    }
+    $logParams["bin_id"] = $t["bin_id"];      
+    if( $hours )
+      $logParams["hours"] = $hours;
+    if( $comments )
+      $logParams["entry"] = $comments;
+    $this->add_log($id, $logParams);    
        }  
        if( $this->settings["email_pending"] == "on" ) {
-	 // send an email
-	 $bin = $t["bin_id"];
-	 // get people to send email to
-	 if( $t["tested"] == 1 ) {
-	   $vars = $this->fetch_bin_roles($bin,'tester');
-	 } else {
-	   $vars = $this->fetch_bin_roles($bin,'manager');
-	 }
-	 // determine if we found anyone
-	 if( is_array($vars) ) {
-	   foreach($vars as $v) {
-	     $recipient[] = $v["user_id"];
-	   }
-	 }
-	 if( is_array($recipient) ) {
-	   // send the email
-	   $subject = "[".$this->settings["system_name"]."] ticket #$id closed";
-	   $emailParams["Close Time"] = $this->showDateTime($this->currTime);
-	   if( $comments )
-	     $emailParams["body"] = htmlentities($comments);
-	   $emailParams["tid"] = $id;
-	   $message = $this->formatEmailMessage($emailParams);
-	   $this->sendEmail($recipient,$subject,$message,$user_id);
-	 } 
+    // send an email
+    $bin = $t["bin_id"];
+    // get people to send email to
+    if( $t["tested"] == 1 ) {
+      $vars = $this->fetch_bin_roles($bin,'tester');
+    } else {
+      $vars = $this->fetch_bin_roles($bin,'manager');
+    }
+    // determine if we found anyone
+    if( is_array($vars) ) {
+      foreach($vars as $v) {
+        $recipient[] = $v["user_id"];
+      }
+    }
+    if( is_array($recipient) ) {
+      // send the email
+      $subject = "[".$this->settings["system_name"]."] ticket #$id closed";
+      $emailParams["Close Time"] = $this->showDateTime($this->currTime);
+      if( $comments )
+        $emailParams["body"] = htmlentities($comments);
+      $emailParams["tid"] = $id;
+      $message = $this->formatEmailMessage($emailParams);
+      $this->sendEmail($recipient,$subject,$message,$user_id);
+    } 
        } 
      }
      return($res);
@@ -719,9 +724,9 @@ class zenTrack extends zen {
      
      $t = $this->get_ticket($id);      
      $params = array(
-		     "bin_id"  => $newBin,
-		     "user_id" => 'NULL'
-		     );
+           "bin_id"  => $newBin,
+           "user_id" => 'NULL'
+           );
      $res = $this->update_ticket($id, $params);
      if( $res && $this->settings["log_move"] == "on" ) {
        $logParams["action"] = "MOVED";
@@ -729,27 +734,27 @@ class zenTrack extends zen {
        $logParams["entry"] = "MOVED TO ".$this->bins["$newBin"];
        $logParams["ticket_id"] = $id;
        if( $user_id )
-	 $logParams["user_id"] = $user_id;
+    $logParams["user_id"] = $user_id;
        if( $comments )
-	 $logParams["entry"] .= "\n\n".$comments;
+    $logParams["entry"] .= "\n\n".$comments;
        $this->add_log($id,$logParams);
      }
      if( $res && $this->settings["email_arrival"] == "on" ) {
        $recipient = $this->fetch_bin_roles($t["bin_id"]);
        if( is_array($recipient) ) {
-	 foreach($recipient as $r) {
-	   $to[] = $r["user_id"];
-	 }
-	 $eParams = array(
-			  "From" => $this->bins["$t[bin_id]"], 
-			  "Sent" => $this->showDateTime(),
-			  "By"   => $this->formatName($user_id)
-			  );
-	 if( $comments )
-	   $eParams["body"] = $comments;
-	 $eParams["tid"] = $id;
-	 $message = $this->formatEmailMessage($eParams);
-	 $this->sendEmail($to,$subject,$message,$user_id);
+    foreach($recipient as $r) {
+      $to[] = $r["user_id"];
+    }
+    $eParams = array(
+           "From" => $this->bins["$t[bin_id]"], 
+           "Sent" => $this->showDateTime(),
+           "By"   => $this->formatName($user_id)
+           );
+    if( $comments )
+      $eParams["body"] = $comments;
+    $eParams["tid"] = $id;
+    $message = $this->formatEmailMessage($eParams);
+    $this->sendEmail($to,$subject,$message,$user_id);
        }
      }
      return($res);
@@ -768,17 +773,17 @@ class zenTrack extends zen {
        $logParams["user_id"] = $user_id;
        $logParams["ticket_id"] = $t["id"];
        if( $comments )
-	 $logParams["entry"] = $comments;
+    $logParams["entry"] = $comments;
        $this->add_log($id,$logParams);
      }
      if( $res && $this->settings["email_reject"] == "on" && $senderID ) {
        $eParams = array(
-			"From" => $this->bins["$t[bin_id]"], 
-			"Time" => $this->showDateTime(),
-			"By"   => $this->formatName($user_id)           
-			);
+         "From" => $this->bins["$t[bin_id]"], 
+         "Time" => $this->showDateTime(),
+         "By"   => $this->formatName($user_id)           
+         );
        if( $comments )
-	 $eParams["body"] = $comments;
+    $eParams["body"] = $comments;
        $eParams["tid"] = $id;
        $message = $this->formatEmailMessage($eParams);
        //todo: update this to use $this->get_bin_roles(); and create
@@ -833,7 +838,7 @@ class zenTrack extends zen {
        $logParams["ticket_id"] = $t["ticket_id"];
        $logParams["entry"] = join(",",$relations);
        if( $comments )
-	 $logParams["entry"] .= "\n\n".$comments;
+    $logParams["entry"] .= "\n\n".$comments;
        $this->add_log($id,$logParams);
      }
      return( $res );
@@ -847,13 +852,13 @@ class zenTrack extends zen {
      
      $t = $this->get_ticket($id);      
      $params = array(
-		     "ctime"    =>   'NULL',
-		     "user_id"   =>   $user_id,
-		     "status"   =>   'OPEN',
-		     "bin_id"    =>   $t["bin_id"],
-		     "tested"   =>   ($t["tested"]>0)? 1 : 0,
-		     "approved" =>   ($t["approved"]>0)? 1 : 0
-		     );
+           "ctime"    =>   'NULL',
+           "user_id"   =>   $user_id,
+           "status"   =>   'OPEN',
+           "bin_id"    =>   $t["bin_id"],
+           "tested"   =>   ($t["tested"]>0)? 1 : 0,
+           "approved" =>   ($t["approved"]>0)? 1 : 0
+           );
      $res = $this->update_ticket($id, $params);
      if( $res ) {
        $logParams["action"] = "REOPENED";
@@ -862,26 +867,26 @@ class zenTrack extends zen {
        $logParams["ticket_id"] = $t["ticket_id"];   
        $logParams["entry"] = "Ticket $id opened in ".$this->bins["$bin_id"];
        if( $comments )
-	 $logParams["entry"] .= "\n\n".$comments;
+    $logParams["entry"] .= "\n\n".$comments;
        $this->add_log($id,$logParams);
      }
      if( $res && $this->settings["email_arrival"] == "on" ) {
        $recipient = $this->fetch_bin_roles($t["bin_id"],'manager');
        if( $recipient ) {
-	 foreach($recipient as $r) {
-	   $to[] = $r["user_id"];
-	 }
-	 $eParams = array(
-			  "message" => "This ticket has been reopened.",
-			  "From"    => $this->bins["$t[bin_id]"], 
-			  "Time"    => $this->showDateTime(),
-			  "By"      => $this->formatName($user_id)        
-			  );
-	 if( $comments )
+    foreach($recipient as $r) {
+      $to[] = $r["user_id"];
+    }
+    $eParams = array(
+           "message" => "This ticket has been reopened.",
+           "From"    => $this->bins["$t[bin_id]"], 
+           "Time"    => $this->showDateTime(),
+           "By"      => $this->formatName($user_id)        
+           );
+    if( $comments )
          $eParams["body"] = $comments;
-	 $eParams["tid"] = $id;
-	 $message = $this->formatEmailMessage($eParams);
-	 $this->sendEmail($to,$subject,$message,$user_id);
+    $eParams["tid"] = $id;
+    $message = $this->formatEmailMessage($eParams);
+    $this->sendEmail($to,$subject,$message,$user_id);
        }
      }
      return( $res );
@@ -899,7 +904,7 @@ class zenTrack extends zen {
        $logParams["user_id"] = $user_id;
        $logParams["ticket_id"] = $t["ticket_id"];   
        if( $comments )
-	 $logParams["entry"] = $comments;
+    $logParams["entry"] = $comments;
        $this->add_log($id,$logParams);  
      }
      if( $t["approved"] != 1 ) {
@@ -912,18 +917,18 @@ class zenTrack extends zen {
        $bin = $t["bin_id"];
        $vars = $this->fetch_bin_roles($bin,'manager');
        if( is_array($vars) ) {
-	 foreach($vars as $v) {
-	   $recipient[] = $v["user_id"];
-	 }
+    foreach($vars as $v) {
+      $recipient[] = $v["user_id"];
+    }
        }
        if( is_array($recipient) ) {
-	 $subject = "[".$this->settings["system_name"]."] ticket #$id closed";
-	 $emailParams["Close Time"] = $this->showDateTime($this->currTime);
-	 if( $comments )
-	   $emailParams["body"] = htmlentities($comments);
-	 $emailParams["tid"] = $id;
-	 $message = $this->formatEmailMessage($emailParams);
-	 $this->sendEmail($recipient,$subject,$message,$user_id);
+    $subject = "[".$this->settings["system_name"]."] ticket #$id closed";
+    $emailParams["Close Time"] = $this->showDateTime($this->currTime);
+    if( $comments )
+      $emailParams["body"] = htmlentities($comments);
+    $emailParams["tid"] = $id;
+    $message = $this->formatEmailMessage($emailParams);
+    $this->sendEmail($recipient,$subject,$message,$user_id);
        }       
      }
      return( $res );
@@ -938,19 +943,19 @@ class zenTrack extends zen {
      $bin_id = $t["bin_id"];
      if( is_array($t) ) {
        if( $this->settings["log_yank"] == "on" ) {
-	 $lParams = array(
-			  "action"   =>   "YANKED",
-			  "user_id"   =>   $user_id,
-			  "bin_id"    =>   $bin_id
-			  );
-	 if( $comments )
-	   $lParams["entry"] = $comments;
-	 $this->add_log($id,$lParams);
+    $lParams = array(
+           "action"   =>   "YANKED",
+           "user_id"   =>   $user_id,
+           "bin_id"    =>   $bin_id
+           );
+    if( $comments )
+      $lParams["entry"] = $comments;
+    $this->add_log($id,$lParams);
        }
        if( $t["status"] == 'CLOSED' ) {
-	 $tested = ($t["tested"] == 2)? 1:0;
-	 $approved = ($t["approved"] == 2)? 1:0;
-	 $this->reopen_ticket($id, $user_id, $tested, $approved, $comments);
+    $tested = ($t["tested"] == 2)? 1:0;
+    $approved = ($t["approved"] == 2)? 1:0;
+    $this->reopen_ticket($id, $user_id, $tested, $approved, $comments);
        }
        $this->assign_ticket($id,$user_id);
        return( 1 );
@@ -970,32 +975,32 @@ class zenTrack extends zen {
      $id = $this->db_insert($this->table_tickets,$params);
      if( $id ) {
        $lParams = array(
-			"action"   =>   "CREATED",
-			"user_id"   =>   $params["creator_id"],
-			"bin_id"    =>   $params["bin_id"]
-			);
+         "action"   =>   "CREATED",
+         "user_id"   =>   $params["creator_id"],
+         "bin_id"    =>   $params["bin_id"]
+         );
        $this->add_log($id,$lParams);
        if( $this->settings["email_created"] == "on" ) {
-	 // send email
-	 $bin = $t["bin_id"];
-	 if( $params["user_id"] )
-	   $recipient[] = $params["user_id"];
-	 $vals = $this->fetch_bin_roles($params["bin_id"],"manager");
-	 if( is_array($vals) ) {
-	   foreach($vals as $v) {
-	     $recipient[] = $v["user_id"];
-	   }
-	 }
-	 if( is_array($recipient) ) {
-	   $recipient = array_unique($recipient);
-	   $subject = "[".$this->settings["system_name"]."] ticket #$id created";
-	   $emailParams["Open Time"] = $this->showDateTime($this->currTime);
-	   if( $comments )
-	     $emailParams["body"] = htmlentities($comments);
-	   $emailParams["tid"] = $id;
-	   $message = $this->formatEmailMessage($emailParams);
-	   $this->sendEmail($recipient,$subject,$message,$params["creator_id"]);
-	 }
+    // send email
+    $bin = $t["bin_id"];
+    if( $params["user_id"] )
+      $recipient[] = $params["user_id"];
+    $vals = $this->fetch_bin_roles($params["bin_id"],"manager");
+    if( is_array($vals) ) {
+      foreach($vals as $v) {
+        $recipient[] = $v["user_id"];
+      }
+    }
+    if( is_array($recipient) ) {
+      $recipient = array_unique($recipient);
+      $subject = "[".$this->settings["system_name"]."] ticket #$id created";
+      $emailParams["Open Time"] = $this->showDateTime($this->currTime);
+      if( $comments )
+        $emailParams["body"] = htmlentities($comments);
+      $emailParams["tid"] = $id;
+      $message = $this->formatEmailMessage($emailParams);
+      $this->sendEmail($recipient,$subject,$message,$params["creator_id"]);
+    }
        } 
      }
      return $id;
@@ -1072,10 +1077,10 @@ class zenTrack extends zen {
      // add hours to the ticket's total
      if( $params["hours"] ) {
        if( !$ticket )
-	 $ticket = $this->get_ticket($id);
+    $ticket = $this->get_ticket($id);
        $wkd = $params["hours"] + $ticket["wkd_hours"];
        $query = "UPDATE ".$this->table_tickets
-	 ." set wkd_hours = $wkd WHERE id = $id";
+    ." set wkd_hours = $wkd WHERE id = $id";
        $this->db_result($query);
      }
      return( $this->db_insert($table, $params) );      
@@ -1099,10 +1104,10 @@ class zenTrack extends zen {
      if( !$archive_flag ) {
        $attachments = $this->get_attachments($id, $flag);
        if( is_array($attachments) ) {
-	 foreach($attachments as $a) {
-	$att[] = $a["attachment_id"];
-	 }
-	 $this->delete_attachment($att);
+    foreach($attachments as $a) {
+   $att[] = $a["attachment_id"];
+    }
+    $this->delete_attachment($att);
        }  
      }
      $query = "DELETE FROM $table WHERE $where";
@@ -1126,7 +1131,7 @@ class zenTrack extends zen {
      $attachments = $this->get_attachments($id, $flag);
      if( is_array($attachments) ) {
        foreach($attachments as $a) {
-	 $att[] = $a["attachment_id"];
+    $att[] = $a["attachment_id"];
        }
        $this->delete_attachment($att);
      }   
@@ -1145,12 +1150,12 @@ class zenTrack extends zen {
        $ticket_id = $log["ticket_id"];
      }
      $params = array(
-		     "log_id"       => $log_id,
-		     "ticket_id"    => $ticket_id,
-		     "name"        => $name,
-		     "filename"    => $filename,
-		     "filetype"    => $filetype
-		     );
+           "log_id"       => $log_id,
+           "ticket_id"    => $ticket_id,
+           "name"        => $name,
+           "filename"    => $filename,
+           "filetype"    => $filetype
+           );
      if( $description )
        $params["description"] = $description;
      $table = $this->table_attachments;
@@ -1182,7 +1187,7 @@ class zenTrack extends zen {
      foreach($id as $i) {
        $att = $this->get_attachments($i, $flag);
        for( $i=0; $i<count($att); $i++ ) {
-	 $access_id[] = $att["attachment_id"];
+    $access_id[] = $att["attachment_id"];
        }
      }
      return( $this->deleteAttachment($access_id) );
@@ -1221,7 +1226,7 @@ class zenTrack extends zen {
      $id = $this->db_insert($table, $params);
      if( $id ) {
        if( is_array($access_level) )
-	 $this->add_access($id, $access_level);
+    $this->add_access($id, $access_level);
        return($id);
      }
    }
@@ -1245,7 +1250,7 @@ class zenTrack extends zen {
      // automatically
       
       if( $params["passphrase"] )
-	$params["passphrase"] = $this->encval($params["passphrase"]);
+   $params["passphrase"] = $this->encval($params["passphrase"]);
       $set = $this->makeInsertVals($params,1);
       $query = "UPDATE ".$this->table_users." SET $set WHERE user_id = $user_id";
       $this->addDebug("update_user()Query",$query,2);
@@ -1261,16 +1266,16 @@ class zenTrack extends zen {
      
      foreach($params as $k=>$v) {
        if( !strlen($v[0]) )
-	 $v[0] = 'NULL';
+    $v[0] = 'NULL';
        if( !strlen($v[1]) )
-	 $v[1] = 'NULL';
+    $v[1] = 'NULL';
        else
-	 $v[1] = "'$v[1]'";
+    $v[1] = "'$v[1]'";
        $query = "INSERT INTO ".$this->table_access
-	 ." (user_id,bin_id,lvl,notes) VALUES($user_id,$k,$v[0],$v[1])";
+    ." (user_id,bin_id,lvl,notes) VALUES($user_id,$k,$v[0],$v[1])";
        $res = $this->db_result($query);
        if( $res )
-	 $i++;
+    $i++;
      }
      return($i);
    }
@@ -1472,26 +1477,26 @@ class zenTrack extends zen {
       // returns 1 if $code can be met
       $c = strtoupper(substr($code,0,2));
       if( is_array($id) ) {
-	$ticket = $id;
+   $ticket = $id;
       } else {
-	$ticket = $this->get_ticket($id);
+   $ticket = $this->get_ticket($id);
       }
       if( $c == 'OP' ) {
-	return( $ticket["status"] == 'OPEN' );
+   return( $ticket["status"] == 'OPEN' );
       } else if( $c == 'PE' ) {
-	return( $ticket["status"] == 'PENDING' );
+   return( $ticket["status"] == 'PENDING' );
       } else if( $c == 'TE' ) {
-	return( $ticket["status"] == 'PENDING' && ($ticket["tested"] == 1) );
+   return( $ticket["status"] == 'PENDING' && ($ticket["tested"] == 1) );
       } else if( $c == 'AP' ) {
-	return( $ticket["status"] == 'PENDING' && $ticket["tested"] != 1 );
+   return( $ticket["status"] == 'PENDING' && $ticket["tested"] != 1 );
       } else if( $c == 'RE' ) {
-	return( ($ticket["status"] == 'PENDING' && $ticket["tested"] != 1 
-		 && $ticket["approved"] != 1)
-		||
-		($ticket["status"] == 'OPEN' && $ticket["tested"] == 0 
-		 && $ticket["approved"] == 0));
+   return( ($ticket["status"] == 'PENDING' && $ticket["tested"] != 1 
+       && $ticket["approved"] != 1)
+      ||
+      ($ticket["status"] == 'OPEN' && $ticket["tested"] == 0 
+       && $ticket["approved"] == 0));
       } else if( $c == 'CL' ) {
-	return( $ticket["status"] == 'CLOSED' );
+   return( $ticket["status"] == 'CLOSED' );
       }
    }   
    
@@ -1606,81 +1611,81 @@ class zenTrack extends zen {
      // loop through the parameters and print them
      foreach( $params as $k=>$v ) {
        if( $k == 'body' ) {
-	 // include the body of the message
-	 $message .= "\n\n$v\n\n";
+    // include the body of the message
+    $message .= "\n\n$v\n\n";
        } else if( $k == 'link' ) {
-	 $message .= $this->settings["url_view_ticket"]."?id=$v";       
+    $message .= $this->settings["url_view_ticket"]."?id=$v";       
        } else if( $k == 'tid' ) {
-	 // print a summary of the ticket
-	 $message .= "\n\n--- TICKET SUMMARY ---\n\n";
-	 $t = $this->get_ticket($v);
-	 $url = $this->settings["url_view_ticket"]."?id=$v";
-	 $n = $t["bin_id"];
-	 $u = $t["user_id"];
-	 $s = $t["system_id"];
-	 if( $t["user_id"] ) {
-	   $name = $this->formatName($t["user_id"]);
-	 } else {
-	   $name = "n/a";
-	 }
-	 $message .= "$t[title]\n\n";     
-	 $message .= "ID:\t$t[id]\n";
-	 $message .= "Status:\t$t[status]\n";
-	 $message .= "Deadline:\t".$this->showDate($t["deadline"])."\n";
-	 $message .= "Bin:\t".$this->bins[$n]."\n";
-	 $message .= "Owner:\t$name\n";
-	 $message .= "URL:\t$url\n";
-	 $des = preg_replace("#&quot;#",'"',preg_replace("#&amp;#","&",$t["description"]));
-	 $des = preg_replace("@<br( /)?>@", "", $des);
-	 $message .= "\n\n$des\n\n------------------\n\n";
+    // print a summary of the ticket
+    $message .= "\n\n--- TICKET SUMMARY ---\n\n";
+    $t = $this->get_ticket($v);
+    $url = $this->settings["url_view_ticket"]."?id=$v";
+    $n = $t["bin_id"];
+    $u = $t["user_id"];
+    $s = $t["system_id"];
+    if( $t["user_id"] ) {
+      $name = $this->formatName($t["user_id"]);
+    } else {
+      $name = "n/a";
+    }
+    $message .= "$t[title]\n\n";     
+    $message .= "ID:\t$t[id]\n";
+    $message .= "Status:\t$t[status]\n";
+    $message .= "Deadline:\t".$this->showDate($t["deadline"])."\n";
+    $message .= "Bin:\t".$this->bins[$n]."\n";
+    $message .= "Owner:\t$name\n";
+    $message .= "URL:\t$url\n";
+    $des = preg_replace("#&quot;#",'"',preg_replace("#&amp;#","&",$t["description"]));
+    $des = preg_replace("@<br( /)?>@", "", $des);
+    $message .= "\n\n$des\n\n------------------\n\n";
        } else if( $k == "log" ) {
-	 // print the log for the ticket
-	 if( $this->settings["email_max_logs"] )
-	   $lim = $this->settings["email_max_logs"];
-	 $logs = $this->get_logs($v, 'created DESC', $lim);
-	 $message .= "\n\n";
-	 if( is_array($logs) ) {
-	   $att = $this->get_attachments($v,null,1);          
-	   $message .= "LOG ENTRIES\n\n";
-	   $sep = "--";
-	   foreach( $logs as $l ) {
-	     $message .= $this->showDateTime($l["created"],'M');
-	     $message .= $sep.str_pad($l["action"],8,"-",STR_PAD_LEFT);
-	     $message .= $sep.str_pad($this->formatName($l["user_id"],2),6,"-",STR_PAD_LEFT);
-	     $message .= (strlen($l["hours"]))? $sep.str_pad($l["hours"],4,"-",STR_PAD_LEFT)." hrs":"";
-	     //
-	     // the log and attachments
-	     if( $l["entry"] ) {
-	       $log["entry"] = "\n".stripslashes($l["entry"])."\n";
-	       $log["entry"] = preg_replace("#&amp;#", "&", $log["entry"]);
-	       $log["entry"] = preg_replace("#&quot;#", '"', $log["entry"]);
-	       $l["entry"] = preg_replace("@<br( /)?>@", "", $log["entry"]);
-	       $message .= "\n".$l["entry"]."\n";
-	     }
-	     if( $att["$id"]["$lid"] ) {
-	       $message .= "\nATTACHMENT(s):\n";
-	       foreach( $att["$id"]["$lid"] as $a ) {
-		 $message .= "$a[name] ($a[description])\n";
-		 $message .= "\t".$this->attachmentUrl."?file=$a[filename]\n";
-	       }
-	     }        
-	     $message .= "------------------\n\n";
-	   }
-	   if( $v > 0 && count($logs) == $v ) {
-	     $message .= "\nMore log entries.  View them by logging in and viewing this ticket.\n";
-	     if( !$params["tid"] && !$params["link"] ) {
-	       $message .= $this->settings["url_view_ticket"]."?id=$v";
-	     }
-	   }
-	 } else {
-	   $message .= "No log entries\n";
-	 }
-	 $message .= "\n";          
+    // print the log for the ticket
+    if( $this->settings["email_max_logs"] )
+      $lim = $this->settings["email_max_logs"];
+    $logs = $this->get_logs($v, 'created DESC', $lim);
+    $message .= "\n\n";
+    if( is_array($logs) ) {
+      $att = $this->get_attachments($v,null,1);          
+      $message .= "LOG ENTRIES\n\n";
+      $sep = "--";
+      foreach( $logs as $l ) {
+        $message .= $this->showDateTime($l["created"],'M');
+        $message .= $sep.str_pad($l["action"],8,"-",STR_PAD_LEFT);
+        $message .= $sep.str_pad($this->formatName($l["user_id"],2),6,"-",STR_PAD_LEFT);
+        $message .= (strlen($l["hours"]))? $sep.str_pad($l["hours"],4,"-",STR_PAD_LEFT)." hrs":"";
+        //
+        // the log and attachments
+        if( $l["entry"] ) {
+          $log["entry"] = "\n".stripslashes($l["entry"])."\n";
+          $log["entry"] = preg_replace("#&amp;#", "&", $log["entry"]);
+          $log["entry"] = preg_replace("#&quot;#", '"', $log["entry"]);
+          $l["entry"] = preg_replace("@<br( /)?>@", "", $log["entry"]);
+          $message .= "\n".$l["entry"]."\n";
+        }
+        if( $att["$id"]["$lid"] ) {
+          $message .= "\nATTACHMENT(s):\n";
+          foreach( $att["$id"]["$lid"] as $a ) {
+       $message .= "$a[name] ($a[description])\n";
+       $message .= "\t".$this->attachmentUrl."?file=$a[filename]\n";
+          }
+        }        
+        $message .= "------------------\n\n";
+      }
+      if( $v > 0 && count($logs) == $v ) {
+        $message .= "\nMore log entries.  View them by logging in and viewing this ticket.\n";
+        if( !$params["tid"] && !$params["link"] ) {
+          $message .= $this->settings["url_view_ticket"]."?id=$v";
+        }
+      }
+    } else {
+      $message .= "No log entries\n";
+    }
+    $message .= "\n";          
        } else {
-	 // just print whatever is indexed, since it didn't
-	 // match any special settings
-	 $v = strip_tags($v);
-	 $message .= "$k:\t$v\n";
+    // just print whatever is indexed, since it didn't
+    // match any special settings
+    $v = strip_tags($v);
+    $message .= "$k:\t$v\n";
        }
      }
      return($message);
@@ -1696,17 +1701,17 @@ class zenTrack extends zen {
      // figure out who sent it
      $message = (get_magic_quotes_gpc())? stripslashes($message) : $message;
      $message = preg_replace(
-			     array("#&lt;#", "#&gt;#", "#&quot;#", "#&amp;#"),
-			     array("<",">",'"',"&"),
-			     $message);
+              array("#&lt;#", "#&gt;#", "#&quot;#", "#&amp;#"),
+              array("<",">",'"',"&"),
+              $message);
      if( !$sender ) {
        $sender_address = $this->settings["admin_email"];
      } else {
        if( eregi("^[0-9]+$", $sender) ) {
-	 $s = $this->get_user($sender);
-	 $sender_address = $s["email"];
+    $s = $this->get_user($sender);
+    $sender_address = $s["email"];
        } else {
-	 $sender_address = $sender;
+    $sender_address = $sender;
        }
      }
      
@@ -1715,14 +1720,14 @@ class zenTrack extends zen {
        $recipients = array($recipients);
      foreach($recipients as $r) {
        if( $recipient_address )
-	 $recipient_address .= ", ";
+    $recipient_address .= ", ";
        if( eregi("^[0-9]+$", $r) ) {
-	 $s = $this->get_user($r);
-	 if( $s["email"] ) {
-	   $recipient_address .= $s["email"];
-	 }
+    $s = $this->get_user($r);
+    if( $s["email"] ) {
+      $recipient_address .= $s["email"];
+    }
        } else {
-	 $recipient_address .= $r;
+    $recipient_address .= $r;
        }  
      }
      
@@ -1730,19 +1735,19 @@ class zenTrack extends zen {
        // create headers and CC fields
        $headers .= "From: $sender_address\n";
        if( $cc ) {
-	 if( !is_array($cc) )
-	   $cc = array($cc);
-	 foreach($cc as $c) {
-	   if( $cc_address )
-	     $cc_address .= ", ";
-	   if( eregi("^[0-9]+$", $c) ) {
-	     $s = $this->get_user($c);
-	     $cc_address .= $s["email"];
-	   } else {
-	     $cc_address .= $c;
-	   }
-	 }
-	 $headers .= "cc: $cc_address\n";
+    if( !is_array($cc) )
+      $cc = array($cc);
+    foreach($cc as $c) {
+      if( $cc_address )
+        $cc_address .= ", ";
+      if( eregi("^[0-9]+$", $c) ) {
+        $s = $this->get_user($c);
+        $cc_address .= $s["email"];
+      } else {
+        $cc_address .= $c;
+      }
+    }
+    $headers .= "cc: $cc_address\n";
        }
        
        // finalize and send the message
@@ -1752,8 +1757,8 @@ class zenTrack extends zen {
        return( @mail( $recipient_address, $subject, $message, $headers ) );      
      } else {
        $this->addDebug("sendEmail","recipient_address was blank... "
-		       ."this could be that the email was sent to a user "
-		       ."who doesn't have an email address",2);
+             ."this could be that the email was sent to a user "
+             ."who doesn't have an email address",2);
      }
    }
    
@@ -1817,8 +1822,8 @@ class zenTrack extends zen {
      $abr = "";
      if( $units > 0 ) {
        $abr = " "
-	 .substr(preg_replace("@[aeiou]@", "", $this->elapsed_unit),0,2)
-	 ."s.";
+    .substr(preg_replace("@[aeiou]@", "", $this->elapsed_unit),0,2)
+    ."s.";
      } else if( strlen($units) ) {
        $abr = " ".$this->elapsed_unit;
      }
@@ -1921,13 +1926,13 @@ class zenTrack extends zen {
       
      if( !$this->strings or $flag ) {
        if( !$language )
-	 $language = $this->language;
+    $language = $this->language;
        $query = "SELECT identifier, string FROM "
-	 .$this->table_translation_strings." WHERE language = '$language'";
+    .$this->table_translation_strings." WHERE language = '$language'";
        $vars = $this->db_query($query);
        if( is_array($vars) )
-	 foreach($vars as $v)
-	   $vals["$v[0]"] = $v[1];
+    foreach($vars as $v)
+      $vals["$v[0]"] = $v[1];
        $this->strings = $vals;
      }
    }
@@ -1949,7 +1954,7 @@ class zenTrack extends zen {
      $vals = $this->db_query($query);
      if(is_array($vals)) {
        foreach($vals as $v) {
-	 $this->words["$v[0]"] = $v[1];
+    $this->words["$v[0]"] = $v[1];
        }
      }
    }
@@ -1983,14 +1988,14 @@ class zenTrack extends zen {
      $n = preg_replace("@s$@", "", $n);
      $n = preg_replace("@^zentrack@", "", $n);
      $names = array( "project"    => "id",
-		     "ticket"     => "id",
-		     "system"     => "sid",
-		     "type"       => "type_id",
-		     "user"       => "user_id",
-		     "bin"        => "bid",
-		     "setting"    => "setting_id",
-		     "log"        => "lid",
-		     "attachment" => "attachment_id");
+           "ticket"     => "id",
+           "system"     => "sid",
+           "type"       => "type_id",
+           "user"       => "user_id",
+           "bin"        => "bid",
+           "setting"    => "setting_id",
+           "log"        => "lid",
+           "attachment" => "attachment_id");
      return $names["$n"];
    }
    
@@ -2037,19 +2042,19 @@ class zenTrack extends zen {
        $access = $this->getAccess($user_id);
        $user   = $this->getUser($user_id);
        if( is_array($this->bins) ) {
-	 foreach($this->bins as $k=>$v) {
-	   if( $k ) {
-	     if( strlen($access["$k"]) ) {
-	       if( $access["$k"] >= $this->settings["$level"] ) {
-		 $vars[] = $k;
-	       }
-	     } else {
-	       if( $user["access_level"] >= $this->settings["$level"] ) {
-		 $vars[] = $k;
-	       }
-	     }
-	   }
-	 }
+    foreach($this->bins as $k=>$v) {
+      if( $k ) {
+        if( strlen($access["$k"]) ) {
+          if( $access["$k"] >= $this->settings["$level"] ) {
+       $vars[] = $k;
+          }
+        } else {
+          if( $user["access_level"] >= $this->settings["$level"] ) {
+       $vars[] = $k;
+          }
+        }
+      }
+    }
        }
        $this->lastUsersBins = $vars;
      }
@@ -2082,7 +2087,7 @@ class zenTrack extends zen {
      else {
        // return the default level
        $level = (preg_match("@^level_@", $action) && $this->settings["$action"])? 
-	 $this->settings["$action"] : $this->settings["level_view"];
+    $this->settings["$action"] : $this->settings["level_view"];
      }
      // find out what access our user has
      $access = $this->getAccess($user_id);
@@ -2148,49 +2153,49 @@ class zenTrack extends zen {
      if( $c["owner"] == 2 ) {
        // here we must not be the owner
        if( $ticket["user_id"] == $user_id )
-	 return false;
+    return false;
      } else if( $c["owner"] == 3 ) {
        // here there must be no owner
        if( $ticket["user_id"] )
-	 return false;
+    return false;
      } else if( $c["owner"] == 4 ) {
        // here it must be owned and we must not be
        // the owner
        if( !$ticket["user_id"] || $ticket["user_id"] == $user_id )
-	 return false;
+    return false;
      } else if( $c["owner"] > 0 ) {
        // here we must be the owner (or there is an override)
        // see if we can override this
        // if so, we need to find out if we are a super
        if( $c["override"] ) {
-	 $user = $this->get_user($user_id);
-	 $access = $this->getAccess($user_id);
+    $user = $this->get_user($user_id);
+    $access = $this->getAccess($user_id);
        }
        // if we aren't the owner, check special conditions
        // then return false if not met
        if( $ticket["user_id"] != $user_id ) {
-	 if( !$c["override"] 
-	     || ( strlen($access["$bin_id"]) 
-		  && $access["bin_id"] < $this->settings["level_super"] )
-	     || ( !strlen($access["$bin_id"]) 
-		  && $user["access_level"] < $this->settings["level_super"])
-	     )
-	   return false;
+    if( !$c["override"] 
+        || ( strlen($access["$bin_id"]) 
+        && $access["bin_id"] < $this->settings["level_super"] )
+        || ( !strlen($access["$bin_id"]) 
+        && $user["access_level"] < $this->settings["level_super"])
+        )
+      return false;
        }
      }
      // check to see if there is an access requirement
      if( $c["access"] > 0 ) {
        if( !$this->checkAccess($user_id, $bin_id, $action) ) 
-	 return false;
+    return false;
      }
      // check to see if there is a status requirement
      if( is_array($c["status"]) ) {
        if( !in_array($ticket["status"],$c["status"]) )
-	 return false;
+    return false;
      }
      // special conditions if it's an approval
      if( $action == "approve" 
-	 && ($ticket["tested"] == 1 || $ticket["approved"] != 1) )
+    && ($ticket["tested"] == 1 || $ticket["approved"] != 1) )
        return false;  // it needs testing first
      else if( $action == "reject" && !$this->getTicketSender($id) ) 
        return false;  // there's no one to reject to
@@ -2216,124 +2221,124 @@ class zenTrack extends zen {
      if( !$this->actions ) {
        $actions = array();
        $actions["accept"] = array( 
-				    "owner"    => 3, 
-				    "access"   => 1, 
-				    "status"   => array('OPEN'),
-				    "override" => 0,
-				    "level"    => $this->settings["level_accept"]
-				    );
+                "owner"    => 3, 
+                "access"   => 1, 
+                "status"   => array('OPEN'),
+                "override" => 0,
+                "level"    => $this->settings["level_accept"]
+                );
        $actions["approve"] = array( 
-				     "owner"    => 0, 
-				     "access"   => 1, 
-				     "status"   => array('PENDING'),
-				     "override" => 0,
-				     "level"    => $this->settings["level_approve"]
-				     );
+                 "owner"    => 0, 
+                 "access"   => 1, 
+                 "status"   => array('PENDING'),
+                 "override" => 0,
+                 "level"    => $this->settings["level_approve"]
+                 );
        $actions["assign"] = array(
-				    "owner"    => 3,
-				    "access"   => 1,
-				    "status"   => array('OPEN'),
-				    "override" => 0,
-				    "level"    => $this->settings["level_assign"]
-				    );
+                "owner"    => 3,
+                "access"   => 1,
+                "status"   => array('OPEN'),
+                "override" => 0,
+                "level"    => $this->settings["level_assign"]
+                );
        $actions["close"] = array(
-				   "owner"    => 1,
-				   "access"   => 1,
-				   "status"   => array('OPEN','PENDING'),
-				  "override" => 0,
-				   "level"    => $this->settings["level_user"]
-				   );
+               "owner"    => 1,
+               "access"   => 1,
+               "status"   => array('OPEN','PENDING'),
+              "override" => 0,
+               "level"    => $this->settings["level_user"]
+               );
        $actions["create"] = array(
-				    "owner"    => 0,
-				    "access"   => 1,
-				    "status"   => null,
-				    "override" => 0,
-				    "level"    => $this->settings["level_create"]
-				    );
+                "owner"    => 0,
+                "access"   => 1,
+                "status"   => null,
+                "override" => 0,
+                "level"    => $this->settings["level_create"]
+                );
        $actions["edit"] = array(
-				  "owner"    => 0,
-				  "access"   => 1,
-				  "status"   => array('OPEN','PENDING'),
-				  "override" => 0,
-				  "level"    => $this->settings["level_edit"]
-				  );
+              "owner"    => 0,
+              "access"   => 1,
+              "status"   => array('OPEN','PENDING'),
+              "override" => 0,
+              "level"    => $this->settings["level_edit"]
+              );
        $actions["email"] = array(
-				   "owner"    => 0,
-				   "access"   => 1,
-				   "status"   => null,
-				   "override" => 0,
-				   "level"    => $this->settings["level_view"]
-				   );
+               "owner"    => 0,
+               "access"   => 1,
+               "status"   => null,
+               "override" => 0,
+               "level"    => $this->settings["level_view"]
+               );
        $actions["log"] = array(
-				 "owner"    => 0,
-				 "access"   => 1,
-				 "status"   => array('OPEN','PENDING'),
-				 "override" => 1,
-				 "level"    => $this->settings["level_user"]
-				 );
+             "owner"    => 0,
+             "access"   => 1,
+             "status"   => array('OPEN','PENDING'),
+             "override" => 1,
+             "level"    => $this->settings["level_user"]
+             );
        $actions["move"] = array(
-				  "owner"    => 1,
-				  "access"   => 1,
-				  "status"   => array('OPEN','PENDING'),
-				  "override" => 1,
-				  "level"    => $this->settings["level_move"]
-				);
+              "owner"    => 1,
+              "access"   => 1,
+              "status"   => array('OPEN','PENDING'),
+              "override" => 1,
+              "level"    => $this->settings["level_move"]
+            );
        $actions["print"] = array(
-				   "owner"    => 0,
-				   "access"   => 1,
-				   "status"   => null,
-				   "override" => 0,
-				   "level"    => $this->settings["level_view"]
-				   );
+               "owner"    => 0,
+               "access"   => 1,
+               "status"   => null,
+               "override" => 0,
+               "level"    => $this->settings["level_view"]
+               );
        $actions["reject"] = array(
-				    "owner"    => 1,
-				    "access"   => 1,
-				    "status"   => array('OPEN','PENDING'),
-				    "override" => 0,
-				    "level"    => $this->settings["level_user"]
-				    );
+                "owner"    => 1,
+                "access"   => 1,
+                "status"   => array('OPEN','PENDING'),
+                "override" => 0,
+                "level"    => $this->settings["level_user"]
+                );
        $actions["test"] = array(
-				  "owner"    => 0,
-				  "access"   => 1,
-				  "status"   => array('PENDING'),
-				  "override" => 0,
-				  "level"    => $this->settings["level_test"]
-				  );
+              "owner"    => 0,
+              "access"   => 1,
+              "status"   => array('PENDING'),
+              "override" => 0,
+              "level"    => $this->settings["level_test"]
+              );
        $actions["relate"] = array(
-				    "owner"    => 0,
-				    "access"   => 1,
-				    "status"   => null,
-				    "override" => 0,
-				    "level"    => $this->settings["level_user"]
-				    );
+                "owner"    => 0,
+                "access"   => 1,
+                "status"   => null,
+                "override" => 0,
+                "level"    => $this->settings["level_user"]
+                );
        $actions["reopen"] = array(
-				    "owner"    => 0,
-				    "access"   => 1,
-				    "status"   => array('PENDING','CLOSED'),
-				    "override" => 0,
-				    "level"    => $this->settings["level_user"]
-				    );
+                "owner"    => 0,
+                "access"   => 1,
+                "status"   => array('PENDING','CLOSED'),
+                "override" => 0,
+                "level"    => $this->settings["level_user"]
+                );
        $actions["upload"] = array(
-				    "owner"    => 1,
-				    "access"   => 1,
-				    "status"   => null,
-				    "override" => 1,
-				    "level"    => $this->settings["level_user"]
-				    );
+                "owner"    => 1,
+                "access"   => 1,
+                "status"   => null,
+                "override" => 1,
+                "level"    => $this->settings["level_user"]
+                );
        $actions["view"] = array(
-				"owner"    => 0,
-				"access"   => 1,
-				"status"   => null,
-				"override" => 0,
-				"level"    => $this->settings["level_view"]
-				);
+            "owner"    => 0,
+            "access"   => 1,
+            "status"   => null,
+            "override" => 0,
+            "level"    => $this->settings["level_view"]
+            );
        $actions["yank"] = array(
-				  "owner"    => 4,
-				  "access"   => 1,
-				  "status"   => null,
-				  "override" => 0,
-				  "level"    => $this->settings["level_yank"]
-				  );
+              "owner"    => 4,
+              "access"   => 1,
+              "status"   => null,
+              "override" => 0,
+              "level"    => $this->settings["level_yank"]
+              );
        $this->actions = $actions;
      }
      return $this->actions;
@@ -2357,16 +2362,16 @@ class zenTrack extends zen {
      if( !$flag ) {
        $query = "SELECT bid, name FROM ".$this->table_bins;
        if( $active )
-	 $query .= " WHERE active = $active";       
+    $query .= " WHERE active = $active";       
        $vars = $this->db_query($query);
        foreach($vars as $v) {
-	 $vals["$v[0]"] = $v[1];
+    $vals["$v[0]"] = $v[1];
        }
        return($vals);
      } else {
        $query = "SELECT * FROM ".$this->table_bins;
        if( $active )
-	 $query .= " WHERE active = $active";
+    $query .= " WHERE active = $active";
        $query .= " ORDER BY priority DESC, name";
        return( $this->db_queryIndexed($query) );
      }
@@ -2385,9 +2390,9 @@ class zenTrack extends zen {
      }
      foreach($relations as $r) {
        if( !$id || ($id && $r != $id) ) {
-	 if( $this->get_ticket($r) ) {
-	   $vals[] = $r;
-	 }
+    if( $this->get_ticket($r) ) {
+      $vals[] = $r;
+    }
        }
      }
      if( $join ) {
@@ -2410,7 +2415,7 @@ class zenTrack extends zen {
      $roles = $this->getRoles();
      foreach($roles as $k=>$v) {
        if( strtolower($v["name"]) == strtolower($name) )
-	 return $k;
+    return $k;
      }
      $this->addDebug("getRoleID","role '$name' wasn't found!", 1);
    }
@@ -2422,9 +2427,9 @@ class zenTrack extends zen {
      // to make them customizeable and
      // available for triggers and flowpaths
      return array(
-		  "1"=>array("role_id"=>1,"name"=>"Manager"),
-		  "2"=>array("role_id"=>2,"name"=>"Tester")
-		  );
+        "1"=>array("role_id"=>1,"name"=>"Manager"),
+        "2"=>array("role_id"=>2,"name"=>"Tester")
+        );
    }
    
    function getTasks($flag = 0,$active = 1) {
@@ -2436,12 +2441,12 @@ class zenTrack extends zen {
      if( !$flag ) {
        $query = "SELECT task_id, name, priority FROM ".$this->table_tasks;
        if( $active )
-	 $query .= " WHERE active = $active";
+    $query .= " WHERE active = $active";
        $vars = $this->db_query($query);
        if( is_array($vars) ) {
-	 foreach($vars as $v) {
-	   $vals["$v[0]"] = $v[1];
-	 }
+    foreach($vars as $v) {
+      $vals["$v[0]"] = $v[1];
+    }
        }
        return $vals;
      } else {
@@ -2460,12 +2465,12 @@ class zenTrack extends zen {
      if( !$flag ) {
        $query = "SELECT sid, name FROM ".$this->table_systems;
        if( $active )
-	 $query .= " WHERE active = $active";
+    $query .= " WHERE active = $active";
        $vars = $this->db_query($query);
        if( is_array($vars) ) {
-	 foreach($vars as $v) {
-	   $vals["$v[0]"] = $v[1];
-	 }
+    foreach($vars as $v) {
+      $vals["$v[0]"] = $v[1];
+    }
        }
        return($vals);
      } else {
@@ -2484,11 +2489,11 @@ class zenTrack extends zen {
      if( !$flag ) {
        $query = "SELECT pid,priority,name FROM ".$this->table_priorities;
        if( $active )
-	 $query .= " WHERE active = $active";
+    $query .= " WHERE active = $active";
        $vars = $this->db_query($query);
        for($i=0; $i<count($vars); $i++) {
-	 $p = $vars[$i][0];
-	 $vals[$p] = $vars[$i][2];
+    $p = $vars[$i][0];
+    $vals[$p] = $vars[$i][2];
        }
        return($vals);
      } else {
@@ -2529,17 +2534,17 @@ class zenTrack extends zen {
      $vars = $this->db_queryIndexed($query);
      if( isset($rootUrl) && $rootUrl != "" ) {
        foreach($vars as $v) {
-	 if( preg_match("@^url_@",$v["name"]) ) {
-	   if(preg_match("@/$@", $rootUrl) && preg_match("@^/@", $v["value"]) ) {
-	     preg_replace("@/$@", $rootUrl) . $v["value"];
-	   } else if( !preg_match("@/$@", $rootUrl) 
-		      && !preg_match("@^/@", $v["value"]) ) {
-	     $v["value"] = $rootUrl ."/".$v["value"];    
-	   } else {
-	     $v["value"] = $rootUrl . $v["value"];
-	   }
-	 }
-	 $vals["{$v['name']}"] = ($flag)? $v : $v["value"];
+    if( preg_match("@^url_@",$v["name"]) ) {
+      if(preg_match("@/$@", $rootUrl) && preg_match("@^/@", $v["value"]) ) {
+        preg_replace("@/$@", $rootUrl) . $v["value"];
+      } else if( !preg_match("@/$@", $rootUrl) 
+            && !preg_match("@^/@", $v["value"]) ) {
+        $v["value"] = $rootUrl ."/".$v["value"];    
+      } else {
+        $v["value"] = $rootUrl . $v["value"];
+      }
+    }
+    $vals["{$v['name']}"] = ($flag)? $v : $v["value"];
        }
        return($vals);
      }
@@ -2561,12 +2566,12 @@ class zenTrack extends zen {
      if( !$flag ) {
        $query = "SELECT type_id,name FROM ".$this->table_types;
        if( $active )
-	 $query .= " WHERE active = $active";
+    $query .= " WHERE active = $active";
        $vars = $this->db_query($query);
        if( is_array($vars) ) {
-	 foreach($vars as $v) {
-	   $vals["$v[0]"] = $v[1];
-	 }
+    foreach($vars as $v) {
+      $vals["$v[0]"] = $v[1];
+    }
        }
        return($vals);
      } else {
@@ -2630,10 +2635,10 @@ class zenTrack extends zen {
      if( !strlen($this->projectTypeID) ) {
        $this->projectTypeID = -1;
        foreach( $this->types as $k=>$b ) {
-	 if( preg_match("@project@i",$b) ) {
-	   $this->projectTypeID = $k;
-	   break;
-	 }
+    if( preg_match("@project@i",$b) ) {
+      $this->projectTypeID = $k;
+      break;
+    }
        }
      }
      return $this->projectTypeID;
@@ -2648,9 +2653,9 @@ class zenTrack extends zen {
      if( !is_array($this->projectTypeIDs) ) {
        $this->projectTypeIDs = array();
        foreach( $this->types as $k=>$b ) {
-	 if( preg_match("@project@i",$b) ) {
-	   $this->projectTypeIDs[] = $k;
-	 }
+    if( preg_match("@project@i",$b) ) {
+      $this->projectTypeIDs[] = $k;
+    }
        }
      }
      return $this->projectTypeIDs;
@@ -2668,10 +2673,10 @@ class zenTrack extends zen {
      // types for use with the auto-close function
      if( !strlen($this->noteTypeID) ) {
        foreach( $this->types as $k=>$b ) {
-	 if( preg_match("@note@i",$b) ) {
-	   $this->noteTypeID = $k;
-	   break;
-	 }
+    if( preg_match("@note@i",$b) ) {
+      $this->noteTypeID = $k;
+      break;
+    }
        }
      }
      return $this->noteTypeID;

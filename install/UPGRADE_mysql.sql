@@ -9,7 +9,7 @@ CREATE TABLE ZENTRACK_NOTIFY_LIST (
    name varchar(100) default NULL,
    email varchar(150) default NULL,
    priority int(12) default NULL,
-   notes text default NULL,
+   notes varchar(255) default NULL,
    PRIMARY KEY (notify_id)
 );
 
