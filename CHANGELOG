@@ -7,6 +7,24 @@
 
 ----- V2.5 (in development) ----
 
+2004-08-04, Kato
+  Completed behaviors, which now work on edit and new ticket/project screens
+  Added the custom_menu variable field type (including default values)
+  Added show_in_new to varfield_idx to control which fields appear on new ticket/project screens
+  Still needed: add custom fields to new ticket/project screens
+    - zentrack_2/includes/headerInc.php 1.35
+    - zentrack_2/includes/templates/configForm.php 1.7
+    - zentrack_2/includes/templates/editCustomsForm.php 1.4
+    - zentrack_2/includes/templates/newTicketForm.php 1.29
+    - zentrack_2/includes/templates/ticket_customBox.php 1.3
+    - zentrack_2/includes/templates/actions/log.php 1.5
+    - zentrack_2/install/UPGRADE_mssqlserver.sql 1.7
+    - zentrack_2/install/UPGRADE_mysql.sql 1.13
+    - zentrack_2/install/UPGRADE_oracle.sql 1.14
+    - zentrack_2/www/behavior_js.php 1.2
+    - zentrack_2/includes/templates/newTicketForm.php 1.30
+    - zentrack_2/www/newProject.php 1.6  
+
 2004-08-03, Kato
   Implemented new behaviors (one method left to complete, but it's functional)
   Updates to many files to fix bugs and prepare for behavior testing.
