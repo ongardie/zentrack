@@ -85,7 +85,7 @@
               if( is_array($v) ) {
                 $v = array_reduce($v, "searchResultsMaxPri");
               }
-              $params[] = array($zen->table_tickets.".$k",'<=',$vh,1);
+              $params[] = array($zen->table_tickets.".$k",'<=',$v,1);
             }
             else {
               $params[] = array($zen->table_tickets.".$k",$op,$v,1);

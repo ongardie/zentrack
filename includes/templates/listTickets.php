@@ -135,7 +135,7 @@ function resortListPage( sortName ) {
           print $zen->showTimeElapsed($t["otime"],$t["ctime"],1,1);
         }
         else {
-          $value = strpos($f, 'custom_')===0? $custom_fields[$f] : $t[$f];
+          $value = strpos($f, 'custom_')===0? $custom_fields[$t["id"]][$f] : $t[$f];
           print $map->getTextValue($view, $f, $value);
         }
         print "</a></td>\n";
