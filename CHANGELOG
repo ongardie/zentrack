@@ -13,6 +13,11 @@ abstraction, and endless possibilities for project expansion.
 
 ----- VERSION 2.5.0.3 (development) -----
 
+2005-03-03, cfalonso
+  Modified the format of the users' names in data groups 
+  to lname,fname (to agree with the sort order)
+    - zentrack_2/includes/zenTrack.class 1.175
+
 2005-03-02, cfalonso
   Fixed mistake in session cache usage:
     - zentrack_2/includes/zenTrack.class 1.174
