@@ -43,7 +43,7 @@
    //      database_login: scott
    //      database_pass:  tiger
    //      database_intance: TNSName (try the TNSname here, then try the whole connection string!)      
-   $this->database_type      = 'mysql';          //mysql,oracle,postgres,sqlserver
+   $this->database_type      = 'mysql';          //mysql,oracle (Oracle <=7),oci8 (Oracle >= 8),postgres,sqlserver
    $this->database_instance  = 'zentrack';	 //database name
    $this->database_login     = 'test';           //database login
    $this->database_password  = 'test';           //database password
