@@ -1265,13 +1265,16 @@ class zenTrack extends zen {
        if( $this->settings["default_notify_creator"] == "on" ) {
 	 // make sure we don't add the egate user
 	 $usr = $this->get_user($params["creator_id"]);
-	 if( !$usr["login"] == "egate" && !$usr["initials"] == "egate" )
+	 if( $usr["login"] != "egate" && $usr["initials"] != "egate" )
 	   $notify_list[]["user_id"] = $params["creator_id"];
        }
        // the ticket owner
        if( $this->settings["default_notify_owner"] == "on"
 	   && $params["user_id"] ) {
-	 $notify_list[]["user_id"] = $params["user_id"];
+	 // make sure we don't add the egate user
+	 $usr = $this->get_user($params["creator_id"]);	
+	 if( $usr["login"] != "egate" && $usr["initials"] != "egate" )
+	   $notify_list[]["user_id"] = $params["user_id"];	
        }
        // create the list
        $this->set_notify_list($id,$notify_list);
@@ -1294,8 +1297,7 @@ class zenTrack extends zen {
 	 $recipients = $this->get_notify_recipients($id);
 	 if( is_array($recipient) && count($recipients) ) {
 	   $recipient = array_unique($recipient);
-	   $subject = "[".$this->settings["system_name"]
-	     ."] ticket #$id created";
+	   $subject = "[".$this->settings["system_name"]."] ticket #$id created";
 	   $emailParams["Open Time"] = $this->showDateTime($this->currTime);
 	   if( $comments )
 	     $emailParams["body"] = htmlentities($comments);
@@ -1492,7 +1494,7 @@ class zenTrack extends zen {
     // to the users last name until that user
     // logs into the system and changes it
 
-    if( $params["access"] ) {
+    if( isset($params["access"]) ) {
       $access = $params["access"];
       unset($params["access"]);
     }
@@ -2048,7 +2050,6 @@ class zenTrack extends zen {
       // finalize and send the message
       $message = (get_magic_quotes_gpc())? $message : addslashes($message);
       $subject = (get_magic_quotes_gpc())? $subject : addslashes($subject);
-      $message = str_replace("\n", "\r\n", $message);
       $headers = str_replace("\n", "\r\n", $headers);
       $this->addDebug("sendEmail","$recipient_address,$subject,$headers",3);
       return( @mail( $recipient_address, $subject, $message, $headers ) );

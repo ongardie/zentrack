@@ -4,7 +4,7 @@
  ** EGATE CHECK - checks a pop3 account for emails, and 
  ** injects them via the egate utils
  */
-   
+  
   $start_time = time();
 
   // include utils and config
@@ -13,6 +13,7 @@
   // check for imap install
   if( !function_exists("imap_open") ) {
     egate_log("Imap functions haven't been installed.  See installation section on email gateway for details",1);
+    egate_log_write();
     exit;
   }
 

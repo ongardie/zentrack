@@ -2,10 +2,10 @@
 To create a new ticket, simply reply to this email, and fill in the following information:
 
 @Parent:
-(*optional: provide a parent ticket's id or title here, partial titles will work as long as they are unique.*)
+(*optional: provide a parent ticket's id or title on the line above, partial titles will work as long as they are unique.*)
 
 @Title:
-(*your title may include anything except a colon (:) and brackets*)
+(*your title may include anything except a colon (:) and brackets, enter it on the line above*)
 
 @Type:
 (*place an x in the appropriate box*)
@@ -16,7 +16,7 @@ To create a new ticket, simply reply to this email, and fill in the following in
 {foreach:systems:"[] "+value+"\n"}
 
 @Owner:
-(*optional: you may place a user id, full name, or me(meaning yourself)*)
+(*optional: you may place a user id, full name, or me(meaning yourself) on the line above*)
 
 @Bin:
 (*place an x in the appropriate box*)
@@ -39,7 +39,7 @@ To create a new ticket, simply reply to this email, and fill in the following in
 (*place an x in the box if approval will be required before closing*)
 
 @Details:
-(*enter details about the ticket here*)
+(*enter a description of the ticket here*)
 
 
 

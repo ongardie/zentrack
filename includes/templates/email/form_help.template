@@ -61,7 +61,7 @@ The nnnn listed in the actions below represents the ticket id number.
 #nnnn: log - This will enter a message in the log file.  The following optional parameters can be provided in the body of the message:
   @hours: nnnn
      (where nnn is the number of hours worked)
-  @action: xxxx
+  @activity: xxxx
      (where xxxx can be any valid 
      activity type: action, labor, note, question, solution)
 
@@ -89,6 +89,12 @@ Templates
 
 Templates are forms which are emailed to you, that you may fill out and return to complete actions.  These allow for more complex actions to take place via email.
 
-template create - Returns a form to create a new ticket, assuming this is allowed by your system settings.  Note that you do not need the #nnnn (ticket id).  Simply send an email with this subject, and the form will be returned.
+A template is returned by placing "template xxxx" in the subject, where xxxx is the name of the template.  Alternately, you may place "template" in the subject, and "@template: xxxx" in the body, if this is more convenient.
 
-Other templates may be added later.
+template create - Returns a form to create a new ticket, assuming this is allowed by your system settings.
+
+template help - Returns the help selection.  This may be done by just typing help in the subject as well.
+
+template log - Returns a form to enter a log entry.  This will include all of the possible properties that can be returned.
+
+template move - Returns a form to move a ticket to a new bin, and a list of possible bins.

@@ -10,7 +10,7 @@
     exit;
   }
   $td = ($TODO == 'EDIT');
-  if( !$deadline && !$td && )
+  if( !$deadline && !$td )
      $deadline = $zen->getDefaultValue("default_deadline");
   if( !$start_date && !$td )
      $start_date = $zen->getDefaultValue("default_start_date");

@@ -9,6 +9,9 @@
   // get configuration
   include_once("egate_config.php");
 
+  // just a list of valid template forms I have created
+  $form_template_list = array("create","help");
+
   // initialize log
   $egate_log = array();
   // initialize the templates
@@ -65,7 +68,43 @@
    */
   function egate_store_template( $template ) {
     global $email_templates;
+    // create a subject if appropriate
+    $sub = egate_get_subject();
+    if( !strlen($sub) ) {
+      global $form_template_list;
+      $tmp = str_replace(".template","",$template);
+      $tmp = str_replace("form_","",$template);
+      print "checking template $tmp\n";//debug
+      // we only want it if it's a real template value
+      if( in_array($tmp,$form_template_list) ) {
+	egate_store_subject(ucwords(str_replace("_"," ",$tmp)));
+      }
+    }
+    // store our template
     $email_templates[] = $template;
+  }
+
+  /**
+   * stores the subject of template[somthing] emails to be retrieved by mail fxn
+   *
+   * @param string $subject of the email
+   */
+  $template_subject = "";
+  function egate_store_subject( $subject ) {
+    print "storing $subject\n";//debug
+    global $template_subject;
+    $template_subject = $subject;
+  }
+
+  /**
+   * retrieves the subject for template emails
+   *
+   * @return string subject of email
+   */
+  function egate_get_subject() {
+    global $template_subject;
+    print "fetching subject $template_subject\n";//debug
+    return $template_subject;
   }
 
   /**
@@ -166,33 +205,34 @@
     $params = array("details"=>"");
     
     // remove comments
-    $body = preg_replace("@\(\*.*?\*\)@s", "", $body);
+    $body = preg_replace("/\(\*[^)]*\*\)/s", "", $body);
     
     // parse the contents
     $lines = explode("\n",$body);
     $in = false;
     for($i=0; $i<count($lines); $i++) {
       $l = trim($lines[$i]);
-      if( preg_match("/^>*@([a-zA-Z0-9_ -]+):(.*)/", $l, $matches) ) {
+      if( preg_match("/^[> ]*@([a-zA-Z0-9_ -]+):(.*)/", $l, $matches) ) {
 	// determine the index
 	$n = strtolower(trim($matches[1]));
 	$t = trim($matches[2]);
 	// if we didn't get a proper index, then skip it
 	if( !$n ) { continue; }
-	if( preg_match("@^\[ *[xX] *\]@", $t) ) {
+	if( strlen($t) && preg_match("/^\[ *[xX] *\]/", $t) ) {
 	  // it's a checkbox on this line, so return a 1
 	  $params["$n"] = 1;
 	  continue;
-	} else if( preg_match("@^\[ *\]@", $t) ) {
+	} else if( strlen($t) && preg_match("/^\[ *\]/", $t) ) {
 	  // it's an empty checkbox, so return 0
 	  $params["$n"] = 0;
 	  continue;
-	} 
+	}
+	else if( strlen($t) ) {
+	  // it's something, so it's a single line of text
+	  $params["$n"] = $t;
+	}
 	else {
-	  // if we have some text on this line, add it in
-	  if( $t ) { $params["$n"] = $t; } 
-	  // otherwise start with an empty value
-	  else { $params["$n"] = ""; }
+	  $params["$n"] = "";
 	  
 	  // we didn't find a checkbox on the @...: line, so look further
 	  while(true) {
@@ -205,31 +245,31 @@
 	    
 	    // parse the line
 	    // this line is blank, so skip it
-	    if( preg_match("@>*@", $l) ) { continue; }
+	    if( preg_match("/^[> ]*$/", $l) ) { continue; }
 	    // if this line starts with [ ]...
 	    // it's unchecked, so keep looking
-	    else if( preg_match("@>*\[ *\]", $l) ) { continue; }
-	    else if( preg_match("@>*[ *[xX] *] *([0-9]+)-@", $l, $matches) ) {
-	      // this line starts with [x] nn-wordswords, 
-	      // then nn is our value
+	    else if( preg_match("/[> ]*\[ *\]/", $l) ) { continue; }
+	    else if( preg_match("/[> ]*[ *[xX] *] *(.+)/", $l, $matches) ) {
+	      // this line starts with [x] wordswords, 
+	      // then wordswords is our value
 	      $params["$n"] = trim($matches[1]);
 	      break;
 	    }
-	    else if( preg_match("/>*(@end|@[a-zA-Z0-9_ -]+:)/", $l) ) {
+	    else if( preg_match("/[> ]*(@end|@[a-zA-Z0-9_ -]+:)/", $l) ) {
 	      // if we come to the next parameter, or an @end, we are done
 	      $i--;
 	      break;
 	    } else {
 	      // we don't have a [ ] or a [x], so this must be
 	      // a text entry, concat it together and return it
-	      $params["$n"] .= preg_replace("@>*@", "", $l)."\n";
+	      $params["$n"] .= preg_replace("/[> ]*/", "", $l)."\n";
 	    }
 	  }
 	}
       }
       // this is some junk text returned by the user hitting the reply
       // button, or an @end comment so skip it
-      else if( preg_match("/^(>|@end)/", $l) ) { continue; }
+      else if( preg_match("/^( *>| *@end)/", $l) ) { continue; }
       // all other text becomes part of the details
       else { $params["details"] .= $l."\n"; }      
     }
@@ -302,12 +342,12 @@
   }
 
   /**
-   * returns the entries needed to complete the form_create.template form
+   * returns the entries needed to complete the template forms
    *
    * @param array $vals the template vals so far
    * @return array the $vals from input plus the new.template vals
    */
-  function fetch_create_vals( $vals ) {
+  function fetch_template_vals( $vals ) {
     global $zen;
     global $egate_user;
     $vals["types"] = $zen->getTypes();
@@ -320,6 +360,7 @@
       }
     }
     $vals["priorities"] = $zen->getPriorities();
+    $vals["activities"] = $zen->getActivities();
     $vals["default_start_date"] = $zen->getDefaultValue("default_start_date");
     if( strlen($vals["default_start_date"]) )
       $vals["default_start_date"] = $zen->showDate($vals["default_start_date"]);
@@ -329,7 +370,7 @@
     $vals["default_test"] = 
       ($zen->getDefaultValue("default_tested_checked")==" checked ")? "x" : "";
     $vals["default_approve"] = 
-      ($zen->getDefaultValue("default_aprv_checked")==" checked ")? "x" : "";
+      ($zen->getDefaultValue("default_aprv_checked")==" checked ")? "x" : "";    
     return $vals;
   }
 
@@ -342,7 +383,7 @@
    * @param object email object obtained from decode_contents()
    * @return array containing action and ticket array
    */
-  function parse_subject( $params ) {
+  function parse_subject( &$params ) {
     global $zen;
     $errors = false;
     $ticket = null;
@@ -355,7 +396,7 @@
     // check for create action
     if( (count($matches) < 3 || $matches[1] <= 0) 
 	&& preg_match("@(help|create|template)@i",$params->headers["subject"],$specs) ) {
-      $action = $specs[1];
+      $action = strtolower(trim($specs[1]));
     }
     else if( count($matches) > 1 && $matches[1] > 0 ) {
       // set the action and id
@@ -382,6 +423,10 @@
     }
     if( $action == "status" ) {
       $action = "view";
+    }
+    if( $action == "help" ) {
+      $action = "template";
+      $params->headers["subject"] = "template help";
     }
 
     // get a list of valid actions
@@ -411,6 +456,8 @@
    * @return integer ticket id or 0 if failed
    */
   function create_new_ticket($user_id, $name, $email, $body, $params) {
+    global $zen;
+    global $egate_user;
     $vals = array("creator_id"=>$user_id);
     $fullname = ($name)? "$name <$email>" : $email;
     // here we run through all the body elements
@@ -419,7 +466,8 @@
       $v = trim($v);
       switch(strtolower($k)) {
       case "parent":
-	$vals["project_id"] = get_ticket_id($v);
+	if( strlen($v) ) 
+	  $vals["project_id"] = get_ticket_id($v);
 	break;
       case "title":
 	$vals["title"] = $zen->stripPHP($v);
@@ -448,7 +496,7 @@
 	$vals["bin_id"] = get_type_id("bins",$v);
 	break;
       case "priority":
-	$vals["priority"] = get_type_id("prioities",$v);
+	$vals["priority"] = get_type_id("priorities",$v);
 	break;
       case "start date":
 	if( strlen($v) ) {
@@ -476,6 +524,10 @@
 	$vals["description"] = $zen->stripPHP($v);
       }      
     }
+    // include the proper template
+    egate_store_subject("Create New Ticket");
+    egate_store_template("create.template");
+
     // check required fields
     $success = true;
     $required = array(
@@ -670,21 +722,32 @@
    * @param array $ticket properties of the ticket
    * @param array $body the parsed body properties (from parse_body())
    * @param array $params the mail params from parse_contents()
-   * @return integer action result
+   * @return boolean succeeded
    */
   function perform_ticket_action($name,$email,$action,$ticket,$body,$params) {
     global $zen;
     global $egate_user;
     $success = true;
 
-    // extract the ticket id for convenience
-    if( is_array($ticket) ) {
-      $id = $ticket["id"];
-    }
-
     // see if we have a valid system user
     // which we can apply here
     $user_id = find_user_id($name,$email);
+
+    // extract the ticket id for convenience
+    if( is_array($ticket) ) {
+      $id = $ticket["id"];      
+    }
+
+    // check and see if this user is on the
+    // notify list, otherwise they can't edit
+    // anything about this ticket
+    if( is_array($ticket) ) {
+      $list = $zen->get_notify_recipients($id);
+      if( !in_array($email,$list) ) {
+	egate_log("Sorry, you aren't on the notification list for this ticket.",2);
+	return false;
+      }
+    }
 
     // make sure we have a valid string
     if( !isset($body["details"]) )
@@ -744,11 +807,15 @@
     case "create":
       {
 	// create a new ticket
-	create_new_ticket($user_id,$name,$email,$body,$params);
+	$res = create_new_ticket($user_id,$name,$email,$body,$params);
+	if( !$res )
+	  $success = false;
 	break;
       }
     case "view":
       {
+	// set the recipients then fall through to the
+	// next case
 	$body["recipients"] = $email;
       }
     case "email":
@@ -805,12 +872,6 @@
 	}
 	break;
       }
-    case "help":
-      {
-	egate_store_template("help.template");
-	egate_log("Returning help template",3);
-	break;
-      }
     case "log":
       {
 	if( $body["details"] ) {
@@ -820,8 +881,8 @@
 			     "user_id"   => $user_id,
 			     "ticket_id" => $id
 			     );
-	  if( isset($body["action"]) && in_array(strtoupper($body["action"]),$zen->getActivities()) ) {
-	    $logParams["action"] = strtoupper($body["action"]);
+	  if( isset($body["activity"]) && in_array(strtoupper($body["activity"]),$zen->getActivities()) ) {
+	    $logParams["action"] = strtoupper($body["activity"]);
 	  } else {
 	    $logParams["action"] = "NOTE";
 	  }
@@ -967,10 +1028,11 @@
       }
     case "template":
       {
+	global $form_template_list;
 	$str = strtolower(get_subject_param($params,"template",$body));
-	if( $str == "create" || $str == "help" ) {
+	if( in_array($str,$form_template_list) ) {
 	  egate_store_template("form_$str.template");
-	  egate_log("returning $str template",3);
+	  egate_log("returning $str form",3);
 	}
 	else {
 	  egate_log("$str is an invalid template",2);
@@ -1062,7 +1124,7 @@
       egate_log("No return email address",2);
       $success = false;
     }
-
+    
     if( $success ) {
       // peform the action
       $success = perform_ticket_action($name,$email,$action,$ticket,$body,$params);
@@ -1143,7 +1205,7 @@
       $temp->values($vals);
       $txt .= $temp->process();
 
-      if( $id > 0 && "$action" != "help" && "$action" != "template" ) {
+      if( $id > 0 && !in_array($action,array("help","template","create")) ) {
 	// create reply
 	$temp = new zenTemplate("$libDir/templates/email/reply.template");
 	$temp->values($vals);
@@ -1152,23 +1214,17 @@
 	$subject .= ($success)? " (successful)" : " (failed)";
       }
       else if( $action == "template" ) {
-	if( is_array($templates) && in_array("form_create.template",$templates) ) {
-	  $subject = "[".$zen->settings["bot_name"]."] Create New Ticket";
-	}
-	else {
-	  $subject = "[".$zen->settings["bot_name"]."] Re: template";
-	}
+	$subject = "[".$zen->settings["bot_name"]."] ".egate_get_subject();
+	// get ticket fields we may need
+	$vals = fetch_template_vals($vals);
       }
       else if( $action ) {
-	$subject = "[".$zen->settings["bot_name"]."]Re: $action";
+	$subject = "[".$zen->settings["bot_name"]."]Re: $action ";
+	$subject .= ($success)? " (successful)" : " (failed)";
       }
       
       // include extra footer templates
       if( is_array($templates) ) {
-	// get ticket create fields if needed
-	if( in_array("form_create.template",$templates) ) {
-	  $vals = fetch_create_vals($vals);
-	}
 	// run through templates
 	foreach( $templates as $t ) {
 	  $temp = new zenTemplate("$libDir/templates/email/$t");
@@ -1177,22 +1233,20 @@
 	}
       }
       
-      if( $id && $action != "help" && $action != "template" ) {
+      if( $action != "help" && $action != "template" ) {
 	// create footer	
 	$temp = new zenTemplate("$libDir/templates/email/footer.template");
 	$temp->values($vals);	
 	$txt .= $temp->process();
       }
 
-      print "sending email\n";//debug
-      
       // send messages
       $i=0;
       $from = $egate_user["email"];
+      //$txt = str_replace("\n", "\r\n", $txt);
       foreach($recipients as $r) {
-	$txt = preg_replace("/\n/", "\r\n", $txt);
-	$res = mail($email,$subject,$txt,"From:$from\r\nReply-to:$from");
-	//$res = 1;//debug
+	$to = ($r["name"])? "{$r['name']} <{$r['email']}>" : $r['email'];
+	$res = mail($to,$subject,$txt,"From:$from\r\nReply-to:$from\r\n");
 	if( $res )
 	  $i++;
       }
