@@ -20,7 +20,7 @@
   $homebin= $user["homebin"];
   $check = ($homebin == -1)?"selected":"";
   
-  //print "<option $check value='all'>-All-</option>\n";
+  print "<option $check value='all'>-All-</option>\n";
   if( is_array($userBins) ) {
     foreach($zen->getBins(1) as $v) {
       $k = $v["bid"];

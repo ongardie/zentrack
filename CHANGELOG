@@ -11,6 +11,8 @@
     - zentrack/includes/templates/homebinForm.php 1.8
     - zentrack/includes/templates/userAdd.php 1.8
     - zentrack/includes/templates/userSearch.php 1.5
+  Reactivate "users can select -All- as their default bin" feature after 2.4.0.1 release
+    - zentrack/includes/templates/homebinForm.php 1.9
 
 2003-04-22, Rob Hillis
   Allow users to select "-All-" as their default bin
