@@ -51,7 +51,23 @@
 
   include_once("$libDir/zenTrack.class");
   include_once("$libDir/zenTemplate.class");
+  include_once("$libDir/translator.class");
+
   $zen = new zenTrack( $configFile );
+ 
+   /**
+    * Translator Object Initialization (mlively)
+    */
+   //Create the initialization array for the translator object
+   $translator_init = array(
+      'domain' => 'test',
+      'path' => './',
+      'locale' => $lang
+   );
+   $translator_init['zen'] =& $zen;
+   tr('', $translator_init);
+   //save a bit on memory
+   unset($translator_init);
 
   /*
   **  SOME FUNCTIONS FOR USE IN
