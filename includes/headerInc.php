@@ -88,7 +88,19 @@
   unset($translator_init);
   
   function uptr($string, $vals = '') {
-    return strtoupper(tr($string,$vals));
+    $specials = array(
+    '&AACUTE;' => '&Aacute;',
+    '&EACUTE;' => '&Eacute;',
+    '&IACUTE;' => '&Iacute;',
+    '&OACUTE;' => '&Oacute;',
+    '&OACUTE;' => '&Uacute;',
+    '&NTILDE;' => '&Ntilde;'
+    );
+    $trad=strtoupper(tr($string,$vals));
+    foreach ($specials as $k => $v) {
+      $trad=str_replace($k,$v,$trad);
+    }
+    return $trad;
   }
   
   /*
