@@ -14,6 +14,8 @@ abstraction, and endless possibilities for project expansion.
 ----- VERSION 2.5.0.3 (development) -----
 
 2005-03-18, cfalonso
+  Related tickets weren't shown  -Fixed
+    - zentrack_2/includes/templates/ticket_relatedBox.php 1.6
   Allow deadline to be a menu dropdown
     - zentrack_2/includes/ZenFieldMap.class 1.12
   Translation minor changes
