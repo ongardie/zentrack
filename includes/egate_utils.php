@@ -176,7 +176,7 @@
       $l = trim($lines[$i]);
       if( preg_match("/^>*@([a-zA-Z0-9_ -]+):(.*)/", $l, $matches) ) {
 	// determine the index
-	$n = trim($matches[1]);
+	$n = strtolower(trim($matches[1]));
 	$t = trim($matches[2]);
 	// if we didn't get a proper index, then skip it
 	if( !$n ) { continue; }
@@ -291,22 +291,19 @@
   function fetch_valid_actions( $ticket_id ) {
     global $egate_user;
     global $zen;
-    $vars = array("remove","help");    
+    $vars = array("remove","help","template");
     $vals = $zen->listValidActions($ticket_id,$egate_user["user_id"]);
     foreach($vals as $k=>$v) {
       if( $v["egate"] > 0 ) {
 	$vars[] = $k;
       }
     }
-    if( in_array("create",$vars) ) {
-      $vars[] = "new";
-    }
     natsort($vars);
     return $vars;
   }
 
   /**
-   * returns the entries needed to complete the new.template form
+   * returns the entries needed to complete the form_create.template form
    *
    * @param array $vals the template vals so far
    * @return array the $vals from input plus the new.template vals
@@ -340,17 +337,14 @@
     $errors = false;
     $ticket = null;
     // parse the subject
-    preg_match("@#([0-9]+): ([a-zA-Z0-9_-]+)@", 
+    preg_match("@#([0-9]+): *([a-zA-Z0-9_-]+)@", 
 	       $params->headers["subject"], $matches);
     $matches[1] = (count($matches)>2)? 
       preg_replace("@[^0-9]@", "", $matches[1]) : 0;
 
-
-    print "matches: \n";//debug
-    print_r($matches);//debug
     // check for create action
     if( (count($matches) < 3 || $matches[1] <= 0) 
-	&& preg_match("@(help|create|new)@i",$params->headers["subject"],$specs) ) {
+	&& preg_match("@(help|create|template)@i",$params->headers["subject"],$specs) ) {
       $action = $specs[1];
     }
     else if( count($matches) > 1 && $matches[1] > 0 ) {
@@ -406,6 +400,106 @@
 
     //todo: this
 
+
+  }
+
+  /**
+   * try to find a user in the system based on their name and email
+   *
+   * @param string $name is the users name
+   * @param string $email is the users email
+   * @return integer user_id to use, returns egate_user id if no id found
+   */
+  function find_user_id($name,$email) {
+    global $zen;
+    global $egate_user;
+    // find out what user_id to apply
+    // by trying to find this user in
+    // the system    
+    $users_by_email = $zen->get_users_by_email($email);
+    if( is_array($users_by_email) ) {
+      // if we got more than one user for this email address
+      // then try looking at the name
+      if( count($users_by_email) > 1 ) {
+	$vals = array();
+	$users_by_name = $zen->get_users_by_name($name);
+	if( is_array($users_by_name) ) {
+	  // foreach name found, see if this user_id also
+	  // has the correct email, if so, it's a possible match
+	  foreach($users_by_name as $u) {
+	    if( in_array($u,$users_by_email) ) {
+	      $vals[] = $u;
+	    }
+	  }
+	}
+	// if there are more than one, we can't be sure, so skip
+	if( count($vals) == 1 ) {
+	  $user_id = $vals[0];
+	}
+      }
+      else {
+	// we only found one, so that must be it
+	$user_id = $users_by_mail[0];
+      }      
+    }
+    if( !$user_id )
+      $user_id = $egate_user["user_id"];
+    return $user_id;
+  }
+
+  /**
+   * returns a third param from a ticket subject (or body if found)
+   *
+   * @param object $params the params from parse_subject()
+   * @param string $body_tag (optional) will search body for this tag and use if found
+   * @param array $body (optional) the body tags from parse_message_body()
+   * @return string value of param or body tag if found
+   */
+  function get_subject_param( $params, $body_tag = '', $body = '' ) {
+    // search body element for tag
+    if( is_array($body) && $body_tag ) {
+      if( isset($body[$body_tag]) ) {
+	return $body[$body_tag];
+      }
+    }
+    // return tag from subject
+    preg_match("/#[0-9]+: *$action(.*)/",$params->headers["subject"],$matches);
+    if( $matches[1] ) {
+      return trim($matches[1]);
+    }
+    else if( $body_tag == "template" ) {
+      preg_match("/template ([a-zA-Z0-9_-]+)/", $params->headers["subject"],$matches);
+      return trim($matches[1]);
+    }
+    else {
+      return "";
+    }
+  }
+
+  /**
+   * evaluates the users input and determines what id it stands for
+   *
+   * @param string $type the data type(plural): systems, types, bins, priorities, etc
+   * @param string $input the users input
+   * @return integer the id to use. returns null on failure
+   */
+  function get_type_id( $type, $input ) {
+    global $zen;
+    $id = null;
+    $n = "get".ucfirst($type);
+    $vals = $zen->$n();
+    $input = trim($input);
+    if( is_integer($input) && isset($vals["$input"]) ) {
+      return $input;
+    }
+    else if( !is_integer($input) ) {
+      foreach($vals as $k=>$v) {
+	if( strtolower($v) == strtolower($input) )
+	  return $k;
+      }
+    }
+    egate_log("$input was not a valid $type type",2);    
+    return $id;
   }
 
   /**
@@ -421,28 +515,72 @@
    */
   function perform_ticket_action($name,$email,$action,$ticket,$body,$params) {
     global $zen;
+    global $egate_user;
     $success = true;
 
     // extract the ticket id for convenience
     if( is_array($ticket) ) {
       $id = $ticket["id"];
     }
-		
+
+    // see if we have a valid system user
+    // which we can apply here
+    $user_id = find_user_id($name,$email);
+
+    // make sure we have a valid string
+    if( !isset($body["details"]) )
+      $body["details"] = "";
+    
+
+    // format a name entry for logging
+    $fullname = ($name)? "$name <$email>" : $email;
+
     // take an appropriate ticket action
     switch( $action ) {
     case "approve":
       {
-	// todo:
+	if( $user_id == $egate_user["user_id"] ) {
+	  $body["details"] = "Approved by $fullname\n\n".$body["details"];
+	}
+	$res = $zen->approve_ticket($id,$user_id,$body["details"]);
+	if( $res ) {
+	  egate_log("Ticket was closed successfully",3);
+	}
+	else {
+	  egate_log("Ticket could not be closed.",2);
+	  $success = false;
+	}
 	break;
       }
     case "accept":
       {
-	// todo:
+	if( $user_id == $egate_user["user_id"] ) {
+	  egate_log("Ticket could not be accepted, user $fullname not found.",2);
+	  $success = false;
+	}
+	$res = $zen->accept_ticket($id,$user_id,$body["details"],$ticket["bin_id"]);
+	if( $res ) {
+	  egate_log("Ticket was accepted",3);
+	}
+	else {
+	  egate_log("Ticket could not be accepted.",2);
+	  $success = false;
+	}
 	break;
       }
     case "close":
       {
-	// todo:
+	if( $user_id == $egate_user["user_id"] ) {
+	  $body["details"] = "Closed by $fullname\n\n".$body["details"];
+	}
+	$hours = (isset($body["hours"]))? $body["hours"] : null;
+	$res = $zen->close_ticket($id,$user_id,$hours,$body["details"]);
+	if( $res ) {
+	  egate_log("Ticket was closed successfully",3);
+	}
+	else {
+	  egate_log("Ticket could not be closed",2);
+	}
 	break;
       }
     case "create":
@@ -453,12 +591,56 @@
       }
     case "email":
       {
-	// todo:
+	// set up email params
+	$mp["message"] = $body["details"];
+	$mp["link"] = $id;
+	$mp["tid"] = $id;
+	$mp["log"] = $id;	
+	// get a formatted message
+	$message = $zen->formatEmailMessage($mp);
+	// create a subject
+	$subject = "Ticket #$id summary";
+	// find out who recipients are
+	$str = get_subject_param($params,"recipients",$body);
+	if( strlen($str) ) {
+	  $recipients = split("[ ,]+", $str);
+	}
+	if( is_array($recipients) ) {
+	  // do the message
+	  $res = $zen->sendEmail($recipients,$subject,$message,$user_id);
+	  if( $res ) {
+	    egate_log("Ticket summary delivered: ".join(",",$recipients),3);
+	  }
+	  else {
+	    egate_log("Failed to deliver ticket summary for #$id to ".join(",",$recipients),2);
+	    $success = false;
+	  }
+	}
+	else {
+	  // no one to send to
+	  egate_log("No recipients specified",2);
+	  $success = false;
+	}
 	break;
       }
     case "estimate":
       {
-	// todo:
+	$hours = get_subject_param($params,"hours",$body);
+	if( strlen($hours) ) {
+	  $params = array("est_hours"=>$hours);
+	  $res = $zen->update_ticket($id, $params);
+	  if( $res ) {
+	    egate_log("Estimated hours updated",3);
+	  }
+	  else {
+	    egate_log("Estimate hours failed",2);
+	    $success = false;
+	  }
+	}
+	else {
+	  egate_log("No hours were submitted",2);
+	  $success = false;
+	}
 	break;
       }
     case "help":
@@ -468,29 +650,57 @@
       }
     case "log":
       {
-	// todo:
+	if( $body["details"] ) {
+	  $logParams = array(
+			     "bin_id"    => $ticket["bin_id"],
+			     "entry"     => $body["details"],
+			     "user_id"   => $user_id,
+			     "ticket_id" => $id
+			     );
+	  if( isset($body["action"]) && in_array(strtoupper($body["action"]),$zen->getActivities()) ) {
+	    $logParams["action"] = strtoupper($body["action"]);
+	  } else {
+	    $logParams["action"] = "NOTE";
+	  }
+	  $res = $zen->add_log($id,$logParams);
+	  if( $res ) {
+	    egate_log("Log entry added",3);
+	  }
+	  else {
+	    egate_log("Log entry failed",2);
+	    $success = false;
+	  }
+	}
+	else {
+	  egate_log("There was no text to submit to the log",2);
+	  $success = false;
+	}
 	break;
       }
     case "move":
       {
-	// todo:
-	break;
-      }
-    case "new":
-      {
-	egate_store_templates("new.template");
+	$binput = get_subject_param($params,"bin",$body);
+	$bin_id = get_type_id("bins",$bin_id);
+	if( $bin_id ) {
+	  $res = $zen->move_ticket($id,$bin_id,$user_id,$body["details"]);
+	  if( $res ) {
+	    egate_log("moved to bin ".$zen->getBinName($bin_id),3);
+	  }
+	  else {
+	    egate_log("couldn't move ticket to new bin.",2);
+	    $success = false;
+	  }
+	}
+	else {
+	  $success = false;
+	}
 	break;
       }
     case "notify_add":
       {
 	// add user to notify list
-	// todo: fix this to allow to add other users
-	// todo: make it email the person added
-	if( preg_match("/#[0-9]+: *add \[?([a-zA-Z0-9_.@-]+)\]?/", 
-		       $params->headers["subject"]) ) {
-	  // todo: make this work for user_id, name or email
-	}
-	else {
+	$list = get_subject_param($params,"user",$body);
+	if( !strlen($list) ) {
 	  $em = $zen->checkEmail($email);
 	  $en = preg_replace("/['\"<>]/", "", $name);
 	}
@@ -557,7 +767,20 @@
       }
     case "reject":
       {
-	// todo:
+	if( $body["details"] ) {
+	  $res = $zen->reject_ticket($id,$user_id,$body["details"]);
+	  if( $res ) {
+	    egate_log("Rejected to sender",3);	    
+	  }
+	  else {
+	    egate_log("Could not reject ticket",2);
+	    $success = false;
+	  }
+	}
+	else {
+	  egate_log("You must provide a reason when rejecting a ticket",2);
+	  $success = false;	  
+	}
 	break;
       }
     case "remove":
@@ -573,9 +796,29 @@
 	}
 	break;
       }
+    case "template":
+      {
+	$str = strtolower(get_subject_param($params,"template",$body));
+	if( $str == "create" ) {
+	  egate_store_templates("form_$str.template");
+	}
+	else {
+	  egate_log("$str is an invalid template",2);
+	  $success = false;
+	}
+	break;
+      }
     case "test":
       {
-	// todo:
+	$hours = strlen($body["hours"])? $body["hours"] : null;
+	$res = $zen->test_ticket($id,$user_id,$hours,$body["details"]);
+	if( $res ) {
+	  egate_log("ticket tested",3);
+	}
+	else {
+	  egate_log("could not test ticket",2);
+	  $success = false;
+	}
 	break;
       }
     default:
@@ -693,6 +936,9 @@
     //
     // todo: update egate and egate_check
     //
+    // todo: make options for @login: & @password: in the body of docs
+    // todo: probably need an option in config settings to disable/enable this
+    //
     // todo: testing
     //
 
@@ -767,6 +1013,7 @@
       $i=0;
       $from = $egate_user["email"];
       $subject = "[".$zen->settings["bot_name"]."] Ticket #$id: results";
+      $subject .= ($success)? " (successful)" : " (failed)";
       foreach($recipients as $r) {
 	$to = ($r["name"])? "{$r['name']}<{$r['email']}>" : $r['email'];
 	$res = mail($to,$subject,$txt,"From:$from\nReply-to:$from\n");

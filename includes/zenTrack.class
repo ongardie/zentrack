@@ -241,8 +241,47 @@ class zenTrack extends zen {
   function get_user_by_login( $login ) {
     // returns a user's information by 
     // the login account
-    $query = "SELECT * FROM ".$this->table_users." WHERE login = '$login'";
+    $login = $this->checkSlashes($login);
+    $query = "SELECT * FROM ".$this->table_users." WHERE login = $login";
     return( $this->db_quickIndexed($query) );
+  }
+
+  /**
+   * returns a list of users matching the given name
+   *
+   * @param string $first first name
+   * @param string $last last name
+   * @param string $initials users initials
+   * @return array of user_ids matching
+   */
+  function get_users_by_name( $first = '', $last = '', $initials = '' ) {
+    $query = "SELECT user_id FROM ".$this->table_users." WHERE user_id > 0";
+    if( $first ) {
+      $first = $this->checkSlashes($first);
+      $query .= " AND fname = $first";
+    }
+    if( $last ) {
+      $last = $this->checkSlashes($last);
+      $query .= " AND lname = $last";
+    }
+    if( $initials ) {
+      $initials = $this->checkSlashes($last);
+      $query .= " AND initials = $initials";
+    }
+    return( $this->db_list($query) );
+  }
+
+  /**
+   * returns a list of users matching the given email address
+   *
+   * @param string $email the address of users to match
+   * @return array of user_ids matching
+   */
+  function get_users_by_email( $email ) {
+    // this is a $this->db_method, even though it doesn't look like one
+    $email = $this->checkSlashes($email);    
+    $query = "SELECT user_id FROM ".$this->table_users." WHERE email = $email";
+    return( $this->db_list($query) );
   }
 
   function get_users( $bins = '', $level = 'level_view', $active = 1, $sort = 'lname, fname' ) {
@@ -349,13 +388,13 @@ class zenTrack extends zen {
       foreach($list as $l) {
 	if( $params["user_id"] && $params["user_id"] == $l["user_id"] ) {
 	  $this->addDebug("add_to_notify_list",
-			  "Skipping {$paramsz['user_id']}/{$params['email']}, duplicate",2);
+			  "Skipping {$params['user_id']}/{$params['email']}, duplicate",2);
 	  return "duplicate";
 	}
 	else if( !$params["user_id"] && $l["email"] 
 		 && $l["email"] == $params["email"] ) {
 	  $this->addDebug("add_to_notify_list",
-			  "Skipping {$paramsz['user_id']}/{$params['email']}, duplicate",2);
+			  "Skipping {$params['user_id']}/{$params['email']}, duplicate",2);
 	  return "duplicate";
 	}
       }
@@ -655,6 +694,8 @@ class zenTrack extends zen {
     // changes the tickets user_id to reflect
     // a new owner for the ticket
     // logs this in the db if settings["log_accept"] = "On";
+    // the bin_id is used for logging, if it is available, this just
+    // saves a db query
 
     $params = array( "user_id" => $user_id );
     $res = $this->update_ticket($id,$params);
@@ -2451,6 +2492,21 @@ class zenTrack extends zen {
     return $valid;
   }
 
+  /**
+   ** returns a list of valid activities for logs
+   **
+   ** @return array of activities (strings)
+   */
+  function getActivities() {
+    return array(
+		 "ACTION",
+		 "LABOR",
+		 "NOTE",
+		 "QUESTION",
+		 "SOLUTION"
+		 );
+  }
+
   function getActions() {
     // actions array contains the following params
     //   "level"   - required access level to perform action 
@@ -2594,14 +2650,6 @@ class zenTrack extends zen {
 				 "egate"    => 1,
 				 "level"    => $this->settings["level_user"]
 				 );
-      $actions["test"] = array(
-			       "owner"    => 0,
-			       "access"   => 1,
-			       "status"   => array('PENDING'),
-			       "override" => 0,
-			       "egate"    => 1,
-			       "level"    => $this->settings["level_test"]
-			       );
       $actions["relate"] = array(
 				 "owner"    => 0,
 				 "access"   => 1,
@@ -2618,6 +2666,14 @@ class zenTrack extends zen {
 				 "egate"    => 0,
 				 "level"    => $this->settings["level_user"]
 				 );
+      $actions["test"] = array(
+			       "owner"    => 0,
+			       "access"   => 1,
+			       "status"   => array('PENDING'),
+			       "override" => 0,
+			       "egate"    => 1,
+			       "level"    => $this->settings["level_test"]
+			       );
       $actions["upload"] = array(
 				 "owner"    => 1,
 				 "access"   => 1,
@@ -2815,7 +2871,7 @@ class zenTrack extends zen {
       $vars = $this->db_query($query);
       for($i=0; $i<count($vars); $i++) {
 	$p = $vars[$i][0];
-	$vals[$p] = $vars[$i][2];
+	$vals["$p"] = $vars[$i][2];
       }
       return($vals);
     } else {

@@ -209,13 +209,7 @@
   **  LISTS THAT SHOULD PROBABLY BE DYNAMIC, BUT AREN'T
   */
 
-  $log_actions = array(
-             "ACTION",
-             "LABOR",
-             "NOTE",
-             "QUESTION",
-             "SOLUTION"
-           );
+  $log_actions = $zen->getActivities();
 
 // you can't have any spaces after this closing tag!
 ?>
