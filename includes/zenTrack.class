@@ -280,7 +280,7 @@ class zenTrack extends zen {
    function add_to_notify_list( $ticket_id, $params ) {
       // appends a new entry to the existing notify list
       $params["ticket_id"] = $ticket_id;
-      return( $this->db_insert($this->table_notify_list,$params);
+      return( $this->db_insert($this->table_notify_list,$params) );
    }
    
    function delete_from_notify_list( $notify_id ) {
@@ -297,11 +297,6 @@ class zenTrack extends zen {
       $this->db_result($q);
    }
 
-   function delete_ticket( $ticket_id ) {
-
-   }   
-   
-   
    /*
     *  SEARCH FUNCTIONS 
    */
