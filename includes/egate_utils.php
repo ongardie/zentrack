@@ -393,7 +393,7 @@
     // check for create action
     if( (count($matches) < 3 || $matches[1] <= 0) 
 	&& preg_match("@(help|create|template)@i",$params->headers["subject"],$specs) ) {
-      $action = strtolower(trim($specs[1]));
+      $action = strtolower(trim($specs[1]));      
     }
     else if( count($matches) > 1 && $matches[1] > 0 ) {
       // set the action and id
@@ -1154,7 +1154,7 @@
     // retrieve the contents from the body
     // of the email
     $body = parse_message_body($params->body);
-    
+
     // set up the return email address
     // and the user's name, if it can be found
     $email = $params->headers["reply-to"]? 

@@ -27,7 +27,7 @@
   <td>
     <select name='newBin'>
      <?
-	$userBins = $zen->getUsersBins($login_id);
+	$userBins = $zen->getUsersBins($login_id,"level_move");
 	if( is_array($userBins) ) {
 	  foreach($userBins as $v) {
 	    $n = $zen->bins["$v"];
