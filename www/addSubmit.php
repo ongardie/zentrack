@@ -7,7 +7,7 @@
   */
   
   
-  include("header.php");
+  include_once("./header.php");
 
   if( !$zen->checkAccess($login_id,$bin_id,"create") ) {
      $page_tile = "Access Error";
@@ -80,11 +80,13 @@
   }
 
   if( !$errs ) {
-     header("Location:$rootUrl/ticket.php?id=$id");
+    include("./ticket.php");
+    exit;
+    //header("Location:$rootUrl/ticket.php?id=$id");
   } else {
-     include("$libDir/nav.php");
-     $zen->print_errors($errs);
-     include("$templateDir/newTicketForm.php");
-     include("$libDir/footer.php");
+    include("$libDir/nav.php");
+    $zen->print_errors($errs);
+    include("$templateDir/newTicketForm.php");
+    include("$libDir/footer.php");
   }
 ?>

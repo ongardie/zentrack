@@ -11,9 +11,13 @@
 
   if( $page != "project" )
       $page = "ticket";
+
   // redirect to somewhere user can pick a ticket if no id was recieved
-  if( !$id )
-    header("Location: $rootUrl/index.php\n");
+  if( !$id ) {
+    include("./index.php");
+    exit;
+    //header("Location: $rootUrl/index.php\n");
+  }
 
   /*
   **  GET TICKET INFORMATION
@@ -49,7 +53,7 @@
   /*
   ** PRINT OUT THE PAGE
   */ 
-  include("$libDir/nav.php");
+  include_once("$libDir/nav.php");
 
   if( !$is_creator && !$zen->checkAccess($login_id,$ticket["bin_id"]) ) {
      print "<p class='hot'>You are not allowed to view {$page_type}s in this bin</p>\n";

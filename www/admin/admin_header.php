@@ -1,6 +1,6 @@
 <?
 
-  include("../header.php");
+  include_once("../header.php");
   
   $expand_admin = 1;
   $section = "Admin";

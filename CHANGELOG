@@ -6,6 +6,9 @@
 
 ----- V2.2.2 (not released) -----
 2003-02-09, Kato
+  Email corrections
+    - includes/zenTrack.class v1.39
+    - www/actions/close.php v1.8
   Fixed some postgres sql bugs
     - install/build_postgres.sql v1.3
   Enhanced popup calendar
@@ -13,7 +16,7 @@
     - includes/templates/newTicketForm.php v1.13
   Fixed SCRIPT_NAME issues with php binary installs as CGI executable
     - includes/session_start.php v1.5
-  Enhanced / Corrected the access/roles functions
+  Enhanced the access/roles functions
   Thanks to David Reite(Darktroll) for pointing out my laziness here
     - includes/templates/userAdd.php v1.5
     - includes/zenTrack.class v1.38

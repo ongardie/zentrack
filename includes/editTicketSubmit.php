@@ -70,9 +70,16 @@ if( !$zen->checkAccess($login_id,$ticket["bin_id"],"edit") ) {
 
   if( !$errs ) {
      add_system_messages("Edited ticket $id.");
-     header("Location:$rootUrl/ticket.php?id=$id&setmode=Details");
+     //header("Location:$rootUrl/ticket.php?id=$id&setmode=Details");
+     $setmode = "Details";
+     if( $zen->inProjectTypeIDs($bin_id) ) {
+       include("./project.php");
+     } else {
+       include("./ticket.php");
+     }
+     exit;
   } else {
-     include("$libDir/nav.php");
+     include_once("$libDir/nav.php");
      $zen->print_errors($errs);
      $TODO = 'EDIT';
      if( $zen->inProjectTypeIDs($bin_id) )

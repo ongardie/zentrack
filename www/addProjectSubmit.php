@@ -5,8 +5,7 @@
   **  Commit new project to database
   **
   */
-  
-  
+    
   include("header.php");
 
   if( !$zen->checkAccess($login_id,$bin_id,"create") ) {
@@ -81,7 +80,9 @@
   }
 
   if( !$errs ) {
-     header("Location:$rootUrl/project.php?id=$id");
+     include("./project.php");
+     exit;
+     //header("Location:$rootUrl/project.php?id=$id");
   } else {
      include("$libDir/nav.php");
      $zen->print_errors($errs);
