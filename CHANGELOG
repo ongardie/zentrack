@@ -7,6 +7,10 @@
 
 ----- V2.4 (development, see CVS) ----
 
+2003-04-17, Rob Hillis
+  Tweak fix for UNC path display
+    - zentrack/includes/templates/ticket_logBox.php 1.14
+
 2003-04-16, Rob Hillis
   Modified regexp when displaying logs to properly link entire URL, including punctuation
     - zentrack/includes/templates/ticket_logBox.php 1.11/1.12
