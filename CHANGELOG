@@ -7,6 +7,10 @@
 
 ----- V2.4.3 (Development, See CVS) ----
 
+2003-07-19, Rob Hillis
+  Fixed bug in email logging code - now logs user correctly
+    - zentrack/www/actions/email.php 1.12
+
 2003-06-11, Kato
   Audited and updated security fix, added some additional items to the secure list
     - zentrack/includes/session_start.php 1.17

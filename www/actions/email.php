@@ -1,4 +1,4 @@
-<?{
+<? {
    
   /*
   **  EMAIL TICKET
@@ -66,9 +66,9 @@
        $name = $zen->formatName($user,1);
        $logParams = array(
          "action"   =>  'EMAIL',
-         "user_id"   =>  $user_id
+         "user_id"   =>  $login_id,
+         "bin_id" => $ticket["bin_id"]
          );
-       $logParams["bin_id"] = $ticket["bin_id"];
        
        // Generate log entry with list of email addresses
        $entry = "Ticket emailed to ";
@@ -80,6 +80,7 @@
        if( $message )
        $logParams["entry"] .= "";
        $zen->add_log($id, $logParams);
+       $zen->addDebug("www/actions/email.php", "Ticket emailled by $login_id", 3);
      }
 	   add_system_messages(tr("Ticket ? emailed to selected recipients", array($id)));
 	   $setmode = "system";
