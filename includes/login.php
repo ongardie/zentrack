@@ -2,6 +2,7 @@
   
   // log user out of zentrack if $logoff
   if( isset($logoff) && $logoff > 0 ) {
+     session_unset();
      unset($_SESSION);
      unset($login_id);
      unset($login_name);
