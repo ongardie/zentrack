@@ -6,6 +6,8 @@
 
 ----- V2.2.2 (not released) -----
 2003-02-05, Kato
+  Fixed reset password bug
+    - includes/zenTrack.class v1.37
   Fixed upload issues due to yet another PHP major function change
     - www/actions/upload.php v1.5
   Fixed old redirect, username cookie, and some session issues
