@@ -34,17 +34,17 @@ class ZenMetaTable extends Zen {
    *
    * The list is cached the first time it is requested
    *
-   * @return array of columns and their field values
+   * @return ZenMetaFieldList
    */
-  function getAllColumns() { }
+  function getAllFields() { }
 
   /**
    * Returns the properties for a specific column
    *
-   * @param string $column name of the column
-   * @return array containing column properties
+   * @param string $field name of the column
+   * @return ZenMetaField
    */
-  function getColumn( $column ) { }
+  function getField( $field ) { }
 
   /**
    * Returns a complete list of all columns and their related form generating information
@@ -67,7 +67,7 @@ class ZenMetaTable extends Zen {
    * @param string $type abstract table name
    * @return boolean yes or no
    */
-  function inhertits( $type ) { }
+  function inherits( $type ) { }
 
 
   /*********************

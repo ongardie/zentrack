@@ -212,7 +212,6 @@
       <columns>
 	<column name="col_unique" type="byte" ftype="hidden"/>
 	<column name="col_ftype" type="value" ftype="hidden"/>
-	<column name="col_unique" type="byte" ftype="hidden"/>
 	<column name="col_notnull" type="byte" ftype="hidden"/>
 	<column name="col_default" type="string" ftype="immutable"/>
 	<column name="col_reference" type="string" ftype="hidden">
@@ -613,7 +612,7 @@
       </indexList>
     </table>
 
-    <table name="TYPE_FLOW">
+    <table name="TYPE_STAGES">
       <description>The staging order for this ticket type</description>
       <columns>
         <column name="type_id" type="integer">

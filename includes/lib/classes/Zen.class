@@ -183,6 +183,29 @@ class Zen {
    ********************************/
 
   /**
+   * Formats a value for display in forms
+   *
+   * @param String $text
+   * @return String containing formatted text for use in <input..> and <textarea> fields
+   */
+  function ffv( $text ) { }
+
+  /**
+   * Cleans a block of pre-formatted text entered by user
+   *
+   * Specifically for use with the ticket details and logs
+   * This will create links out of proper url entries, and
+   * preserve spacing, etc.  All html tags will be printed
+   * as source.
+   * 
+   * May also be useful for emails
+   *
+   * @param String $text is the text to display
+   * @return String containing formatted text for display in <pre> tags or emails
+   */
+  function fixPreformattedBlock( $text ) { }
+
+  /**
    * Creates a string in title case
    *
    * This will not capitalize articles or prepositions, and will retain acronyms and proper nouns

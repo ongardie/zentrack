@@ -7,28 +7,29 @@
 
 
   <dataTypes>
-    <dataType name="value"      type="VARCHAR" size="25"  max="25"  />
-    <dataType name="string"     type="VARCHAR" size=""    max="200" />
-    <dataType name="text"       type="TEXT"    size=""    max=""    />
-    <dataType name="byte"       type="BYTE"    size="1"   max="1"   />
-    <dataType name="shortint"   type="INT"     size="3"   max="3"   />
-    <dataType name="integer"    type="INT"     size=""    max="12"  />
-    <dataType name="decimal"    type="DECIMAL" size="4,2" max="12,4"/>
-    <dataType name="long"       type="INT"     size="20"  max="20"  />
-    <dataType name="primarykey" type="INT"     size="12"  max="12"  />
-    <dataType name="email"      type="VARCHAR" size="255" max="255" />
-    <dataType name="date"       type="INT"     size="20"  max="20"  />
+    <dataType name="value"      type="VARCHAR" size="25"  max="25"   fixed="true" />
+    <dataType name="string"     type="VARCHAR" size="200" max="200"  fixed="false"/>
+    <dataType name="maxstring"  type="TEXT"    size=""    max=""     fixed="true" />
+    <dataType name="text"       type="TEXT"    size=""    max=""     fixed="true" />
+    <dataType name="byte"       type="INT"     size="1"   max="1"    fixed="true" />
+    <dataType name="shortint"   type="INT"     size="3"   max="3"    fixed="true" />
+    <dataType name="integer"    type="INT"     size="9"   max="9"    fixed="true" />
+    <dataType name="decimal"    type="DECIMAL" size="6,2" max="16,4" fixed="false"/>
+    <dataType name="long"       type="BIGINT"  size=""    max="18"   fixed="true" />
+    <dataType name="primarykey" type="INT"     size="12"  max="12"   fixed="true" />
+    <dataType name="email"      type="VARCHAR" size="255" max="255"  fixed="true" />
+    <dataType name="date"       type="INT"     size="12"  max="12"   fixed="true" />
   </dataTypes>
 
 
   <sqlInfo>
     <endline>;</endline>
     <escapeCharacter>\</escapeCharacter>
-    <createSyntax>CREATE {table} {%columns%}</createSyntax>
+    <createSyntax>CREATE %table% {%columns%}</createSyntax>
     <dropTableSyntax>DROP TABLE %table%</dropTableSyntax>
-    <primaryKey location="aftercolumns">PRIMARY KEY (%column%)</primaryKey>
-    <indexSyntax location="independant" uniquelabel="UNIQUE">
-      CREATE INDEX %unique% %name% ON %table%(%columns%)
+    <primaryKey location="inline">NOT NULL PRIMARY KEY</primaryKey>
+    <indexSyntax location="external" uniquelabel="UNIQUE">
+      CREATE %unique% INDEX %name% ON %table%(%columns%)
     </indexSyntax>
     <dropIndexSyntax></dropIndexSyntax>
     <addColumnSyntax>ALTER TABLE %table% ADD COLUMN %name% (%properties%) %after%</addColumnSyntax>
@@ -39,3 +40,13 @@
   </sqlInfo>
 
 </dbTypeInfo>
+
+
+
+
+
+
+
+
+
+
