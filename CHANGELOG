@@ -5,20 +5,46 @@
  object oriented and database abstracted design lend to 
  endless possibilities for project expansion.
 
------ V2.4.3 (Development, See CVS) ----
+----- V2.4.3 (RC1 Released: 2003-08-26) ----
 
-2003-09-26, Kato
+2003-08-26, Kato
+  RC1 Preparations
+    - zentrack_2/install/seed_mssqlserver.sql 1.15
+    - zentrack_2/install/seed_mysql.sql 1.26
+    - zentrack_2/install/seed_oracle.sql 1.22
+    - zentrack_2/install/seed_postgres.sql 1.21
+    - zentrack_2/install/upgrade_mssqlserver.sql 1.2
+    - zentrack_2/install/upgrade_mysql.sql 1.2
+    - zentrack_2/install/upgrade_oracle.sql 1.2
+    - zentrack_2/install/upgrade_postgres.sql 1.2
+    - zentrack_2/includes/translations/portuguese.trans 1.3
+    - zentrack_2/includes/translations/swedish.trans 1.4
+    - zentrack_2/UPGRADE.readme 1.14
   European date support(new admin setting)
-
+    - zentrack_2/includes/headerInc.php 1.31
+    - zentrack_2/includes/zen.class 1.19
+    - zentrack_2/includes/zenDate.class 1.10
+    - zentrack_2/includes/zenTrack.class 1.112
+    - zentrack_2/includes/templates/newProjectForm.php 1.24
+    - zentrack_2/includes/templates/newTicketForm.php 1.26
+    - zentrack_2/install/seed_mssqlserver.sql 1.15
+    - zentrack_2/install/seed_mysql.sql 1.26
+    - zentrack_2/install/seed_oracle.sql 1.22
+    - zentrack_2/install/seed_postgres.sql 1.21
+    - zentrack_2/install/upgrade_mssqlserver.sql 1.2
+    - zentrack_2/install/upgrade_mysql.sql 1.2
+    - zentrack_2/install/upgrade_oracle.sql 1.2
+    - zentrack_2/install/upgrade_postgres.sql 1.2
   Login form update
-
+    - zentrack_2/includes/templates/loginForm 1.11
   Corrected search bug with open date
   Thanks to B. Wilson for note
-
+    - zentrack_2/includes/zenTrack.class 1.112
   Fixed bin display bug in report save screen
   Fixed comparison bug in report saveSubmit
   Thanks to K. Evans for fixes
-
+    - zentrack_2/www/reports/save.php 1.11
+    - zentrack_2/www/reports/saveSubmit.php 1.7
 
 2003-07-28, Kato
   Created a seperate access level for creating projects,
