@@ -1,4 +1,4 @@
-  <div class="alttext" align="center"><b><?=strftime("%b %d, %Y ")?></b></div>
+<div class="alttext" align="center"><b><?=$zen->showLongDate()?></b></div>
   
 <?
   $num = 0;
