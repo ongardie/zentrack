@@ -36,12 +36,26 @@
    //default checked
    $sfd = ((is_array($search_fields) && in_array("description",$search_fields))
 	    || !is_array($search_fields)); 
+   $cf = $zen->getCustomFields(1,"","S");
+   foreach($cf as $k=>$v) {
+     $sfCustom["$k"] = ((is_array($search_fields) && in_array("$k",$search_fields))
+            || !is_array($search_fields));
+   }
   ?>
   <input type="checkbox" name="search_fields[title]" value="title"<?=($sft)?" checked":""?>>
    &nbsp;<?=tr("Title")?>
   <br>
   <input type="checkbox" name="search_fields[description]" value="description"<?=($sfd)?" checked":""?>>
    &nbsp;<?=tr("Description")?>
+  <?
+   foreach($cf as $k=>$v) {
+  ?>
+     <br>
+     <input type="checkbox" name="search_fields[<?=$k?>]" value="<?=$k?>"<?=($sfCustom["$k"])?" checked":""?>>
+      &nbsp;<?=tr("$v")?>
+  <?
+   }
+  ?>
   </td>
 </tr>
 

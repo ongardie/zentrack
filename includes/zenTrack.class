@@ -675,6 +675,8 @@ class zenTrack extends zen {
 
     $tf_pri = preg_match("/priority/", $order_by);
     $tbl = $this->table_tickets;
+    $leftjoin = " LEFT JOIN $this->table_custom_fields ON "
+              . "$this->table_tickets.id=$this->table_custom_fields.ticket_id";
 
     if( $tf_pri ) {
       $tblpri = $this->table_priorities;
@@ -685,7 +687,9 @@ class zenTrack extends zen {
     }
 
     $query = "SELECT $tbl.* "
-      ." FROM $tables WHERE $where"
+      ." FROM $tables "
+      ." $leftjoin "
+      ." WHERE $where"
       ." ORDER BY $order_by";
     $this->addDebug("search_ticketsQuery:",$query,2);
     return(  $this->db_queryIndexed($query) );      
@@ -2981,7 +2985,7 @@ class zenTrack extends zen {
    * @param string $filterShow
    * @return array of custom fields
    */
-  function getCustomFields($indexedMode=0, $filterUse = "",$filterShow = "") {
+  function getCustomFields($indexedMode = 0, $filterUse = "", $filterShow = "") {
     if ( ! $indexedMode ) {
       $query = "SELECT * FROM ".$this->table_custom_fields_idx;
     }
@@ -2989,7 +2993,7 @@ class zenTrack extends zen {
       $query = "SELECT field_name, field_label FROM ".$this->table_custom_fields_idx;
     }
     $connector = " WHERE ";
-    switch ( $filterUse ) {
+    switch ( strtoupper(substr($filterUse,0,1)) ) {
       case "P":
         $query .= $connector . "use_for_project=1";
         $connector = " AND ";
@@ -2999,7 +3003,7 @@ class zenTrack extends zen {
         $connector = " AND ";
         break;
     }
-    switch ( $filterShow ) {
+    switch ( strtoupper(substr($filterShow,0,1)) ) {
       case "S":
         $query .= $connector . "show_in_search=1";
         $connector = " AND ";
@@ -3023,6 +3027,7 @@ class zenTrack extends zen {
       foreach ($vars as $v) {
         $VALS["$v[0]"] = $v[1];
       }
+      return( $VALS );
     } 
     else {
       return( $this->db_queryIndexed($query) );
