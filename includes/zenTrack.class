@@ -981,8 +981,7 @@ class zenTrack extends zen {
 	// create a log entry
 	$logParams = array(
 			   "action"   =>  'CLOSED',
-			   "ticket_id" =>  $id,
-			   "entry"    =>  $entry
+			   "ticket_id" =>  $id 
 			   );
 	// get the params
 	if( $user_id ) {
@@ -1008,7 +1007,7 @@ class zenTrack extends zen {
 	  $subject = $this->ptrans("Ticket #?: closed",array($id));
 	  $emailParams["Close Time"] = $this->showDateTime($this->currTime);
 	  if( $comments )
-	    $emailParams["body"] = htmlentities($comments);
+	    $emailParams["body"] = $comments;
 	  $emailParams["tid"] = $t;
 	  $message = $this->formatEmailMessage($emailParams);
 	  $this->sendEmail($recipients,$subject,$message,$user_id);       
