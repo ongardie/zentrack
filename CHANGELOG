@@ -6,6 +6,12 @@
  endless possibilities for project expansion.
 
 ----- V2.4.1 (Development, See CVS) ----
+2003-04-23, Rob Hillis
+  Fix bin order in "Options->Home Bin", User search form and user edit form
+    - zentrack/includes/templates/homebinForm.php 1.8
+    - zentrack/includes/templates/userAdd.php 1.8
+    - zentrack/includes/templates/userSearch.php 1.5
+
 2003-04-22, Rob Hillis
   Allow users to select "-All-" as their default bin
     - zentrack/www/misc/homebin.php 1.5

@@ -22,11 +22,12 @@
   
   //print "<option $check value='all'>-All-</option>\n";
   if( is_array($userBins) ) {
-    foreach($userBins as $k=>$v) {
-      if( $v ) {
-        $check = ( $v == $homebin )? "selected" : "";
-        $n = $zen->bins["$v"];
-        print "<option $check value='$v'>$n</option>\n";
+    foreach($zen->getBins(1) as $v) {
+      $k = $v["bid"];
+      
+      if(in_array($k, $userBins)) {
+        $check = ( $k == $homebin )? "selected" : "";
+        print "<option $check value='$k'>$v[name]</option>\n";
       }
     }
   }

@@ -90,12 +90,12 @@
 <?
    $userBins = $zen->getUsersBins($login_id);
    if( is_array($userBins) ) {
-     foreach($userBins as $k=>$v) {
-       if( $k ) {
-	 $check = ( $k == $search_params["homebin"] )? "selected" : "";
-	 $n = $zen->bins["$k"];
-	 print "<option $check value='$k'>$n</option>\n";
-	  }
+     foreach($zen->getBins(1) as $v) {
+       $k = $v["bid"];
+       if(in_array($k, $userBins)) {
+         $check = ( $k == $search_params["homebin"] )? "selected" : "";
+         print "<option $check value='$k'>$v[name]</option>\n";
+       }
      }
    } else {
      print "<option value=''>--no bins--</option>\n";
