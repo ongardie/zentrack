@@ -33,7 +33,7 @@
     } else {
       $user_id = $zen->add_user($params);
       if( $user_id ) {
-	$msg = "New user #$user_id was added successfully."
+	$msg = "New user #$user_id was added successfully.  The password is the last name of the user."
 	  ."<br><a href='$rootUrl/admin/access.php?user_id=$user_id'>Click Here</a> "
 	  ." to customize user $user_id's access permissions.";
       } else {
