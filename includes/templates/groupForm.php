@@ -42,6 +42,7 @@
 
              print "<span class='small'>"
                  . "[<a href='".$elnk."?group_id=".$v['group_id']."'>".uptr('edit')."</a>]";
+             print "<br>";
              print "<span class='small'>"
                  . "[<a href='".$llnk."?group_id=".$v['group_id']."'>".uptr('edit details')."</a>]";
 
