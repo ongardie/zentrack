@@ -448,7 +448,7 @@ function setFormValsUsingGroup( fieldObj, group, setid ) {
     oldPos=0;
     behaviorDebug(3, "(setFormValsUsingGroup)Did not recognize field value for "+fieldObj.name+" ("+fieldObj.value+")");
   } else {
-    behaviorDebug(3, "(setFormValsUsingGroup)Recognized field value for "+fieldObj.name+" as ["+fields[i].value+"]"+fields[i].label);
+    behaviorDebug(3, "(setFormValsUsingGroup)Recognized field value for "+fieldObj.name+" as ["+fields[oldPos].value+"]"+fields[oldPos].label);
   }
   switch( fieldObj.type ) {
     case "checkbox":
