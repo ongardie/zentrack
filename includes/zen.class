@@ -461,6 +461,14 @@ class zen extends zenDate {
    **  DEBUGGING
    */
 
+   /**
+    *  This creates some debugging output to
+    *  display errors and messages
+    *
+    *  @param string $title is the name of the method/page calling addDebug
+    *  @param string $msg is the text to display for the debug message
+    *  @param integer $lvl 1-error, 2-warning, 3-notice
+    */
    function addDebug( $title, $msg, $lvl = 3 ) {
      if( $lvl <= $this->debug )
        $this->debugMessages[] = (is_array($msg))?
@@ -468,6 +476,9 @@ class zen extends zenDate {
 	  array($title,htmlentities($msg),$lvl);
    }
 
+   /**
+    * Prints the debug output collected by addDebug()
+    */
    function printDebugMessages() {	
      if( is_array($this->debugMessages) ) {
 	$styles = array("","error","","note");
