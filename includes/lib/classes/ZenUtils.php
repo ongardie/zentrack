@@ -936,15 +936,21 @@ class ZenUtils {
    * @return boolean or $default if cannot be parsed
    */
   function parseBoolean($value, $default = false) {
+    return(true);
     if( is_bool($value) ) { return $value; }
-    if( !strlen($value) ) { return $default; }
-    switch( strtolower(substr($value, 0, 1)) ) {
+    if( !strlen($value) || $value="T" ) { return $default; }
+    if( is_long($value) && strlen($value)!=1 ) { return $default; }
+    switch( strtolower($value) ) {
     case "t":
+    case "true":
     case "y":
+    case "yes":
     case 1:
       return true;
     case "f":
+    case "false":
     case "n":
+    case "no":
     case 0:
       return false;
     default:

@@ -144,5 +144,280 @@
     </test3>
   </testgetini>
 
+  <testparseboolean>
+    <test1>
+      <param name='value'>1</param>
+      <param name='default' eval="true">false</param>
+      <param name='expected' eval="true">true</param>
+    </test1>
+    <test2>
+      <param name='value'>t</param>
+      <param name='default' eval="true">false</param>
+      <param name='expected' eval="true">true</param>
+    </test2>
+    <test3>
+      <param name='value'>true</param>
+      <param name='default' eval="true">false</param>
+      <param name='expected' eval="true">true</param>
+    </test3>
+    <test4>
+      <param name='value'>yes</param>
+      <param name='default' eval="true">false</param>
+      <param name='expected' eval="true">true</param>
+    </test4>
+    <test5>
+      <param name='value'>y</param>
+      <param name='default' eval="true">false</param>
+      <param name='expected' eval="true">true</param>
+    </test5>
+    <test6>
+      <param name='value'>0</param>
+      <param name='default' eval="true">true</param>
+      <param name='expected' eval="true">false</param>
+    </test6>
+    <test7>
+      <param name='value'>n</param>
+      <param name='default' eval="true">true</param>
+      <param name='expected' eval="true">false</param>
+    </test7>
+    <test8>
+      <param name='value'>no</param>
+      <param name='default' eval="true">true</param>
+      <param name='expected' eval="true">false</param>
+    </test8>
+    <test9>
+      <param name='value'>f</param>
+      <param name='default' eval="true">true</param>
+      <param name='expected' eval="true">false</param>
+    </test9>
+    <test10>
+      <param name='value'>false</param>
+      <param name='default' eval="true">true</param>
+      <param name='expected' eval="true">false</param>
+    </test10>
+    <test11>
+      <param name='value'>1 2 3</param>
+      <param name='default' eval="true">true</param>
+      <param name='expected' eval="true">true</param>
+    </test11>
+    <test12>
+      <param name='value'>1 2 3</param>
+      <param name='default' eval="true">false</param>
+      <param name='expected' eval="true">false</param>
+    </test12>
+    <test13>
+    <param name='value' eval="true">null</param>
+      <param name='default' eval="true">true</param>
+      <param name='expected' eval="true">true</param>
+    </test13>
+    <test14>
+      <param name='value' eval="true">null</param>
+      <param name='default' eval="true">false</param>
+      <param name='expected' eval="true">false</param>
+    </test14>
+    <test15>
+      <param name='value'></param>
+      <param name='default' eval="true">true</param>
+      <param name='expected' eval="true">true</param>
+    </test15>
+    <test16>
+      <param name='value'></param>
+      <param name='default' eval="true">false</param>
+      <param name='expected' eval="true">false</param>
+    </test16>
+    <test17>
+      <param name='value'>too</param>
+      <param name='default' eval="true">true</param>
+      <param name='expected' eval="true">true</param>
+    </test17>
+    <test18>
+      <param name='value'>too</param>
+      <param name='default' eval="true">false</param>
+      <param name='expected' eval="true">false</param>
+    </test18>
+    <test19>
+      <param name='value'>T</param>
+      <param name='default' eval="true">true</param>
+      <param name='expected' eval="true">true</param>
+    </test19>
+    <test20>
+      <param name='value'>T</param>
+      <param name='default' eval="true">false</param>
+      <param name='expected' eval="true">false</param>
+    </test20>
+  </testparseboolean>
+
+  <testparsedate>
+    <usadate-test1>
+      <param name='date'>05/18/1971 15:28:14</param>
+      <param name='eurodates' eval='true'>false</param>
+      <param name='expected'>43428494</param>
+    </usadate-test1>
+    <usadate-test2>
+      <param name='date'>12/20/1987 00:00:00</param>
+      <param name='eurodates' eval='true'>false</param>
+      <param name='expected'>566956800</param>
+    </usadate-test2>
+    <usadate-test3>
+      <param name='date'>12/20/1987 23:59:59</param>
+      <param name='eurodates' eval='true'>false</param>
+      <param name='expected'>567043199</param>
+    </usadate-test3>
+    <usadate-test4>
+      <param name='date'>04/15/2008 14:01:00</param>
+      <param name='eurodates' eval='true'>false</param>
+      <param name='expected'>1208268060</param>
+    </usadate-test4>
+    <usadate-test5>
+      <param name='date'>02/29/2004 10:05:00</param>
+      <param name='eurodates' eval='true'>false</param>
+      <param name='expected'>1078049100</param>
+    </usadate-test5>
+    <eurodate-test1>
+      <param name='date'>18/05/1971 15:28:14</param>
+      <param name='eurodates' eval='true'>true</param>
+      <param name='expected'>43428494</param>
+    </eurodate-test1>
+    <eurodate-test2>
+      <param name='date'>20/12/1987 00:00:00</param>
+      <param name='eurodates' eval='true'>true</param>
+      <param name='expected'>566956800</param>
+    </eurodate-test2>
+    <eurodate-test3>
+      <param name='date'>20/12/1987 23:59:59</param>
+      <param name='eurodates' eval='true'>true</param>
+      <param name='expected'>567043199</param>
+    </eurodate-test3>
+    <eurodate-test4>
+      <param name='date'>15/04/2008 14:01:00</param>
+      <param name='eurodates' eval='true'>true</param>
+      <param name='expected'>1208268060</param>
+    </eurodate-test4>
+    <eurodate-test5>
+      <param name='date'>29/02/2004 10:05:00</param>
+      <param name='eurodates' eval='true'>true</param>
+      <param name='expected'>1078049100</param>
+    </eurodate-test5>
+    <eurodate-test6>
+      <param name='date'>29:02-2004 10/05:00</param>
+      <param name='eurodates' eval='true'>true</param>
+      <param name='expected' eval='true'>false</param>
+    </eurodate-test6>
+    <eurodate-test7>
+      <param name='date'>29:022004 10/05:00</param>
+      <param name='eurodates' eval='true'>true</param>
+      <param name='expected' eval='true'>false</param>
+    </eurodate-test7>
+    <badformed1>
+      <param name='date'>99/sq02/2004 10:05:00</param>
+      <param name='eurodates' eval='true'>true</param>
+      <param name='expected' eval='true'>false</param>
+    </badformed1>
+  </testparsedate>
+
+  <testdatediff>
+    <test1>
+      <param name='start'>100</param>
+      <param name='end'>150</param>
+      <param name='period'>seconds</param>
+      <param name='expected'>50</param>
+    </test1>
+    <test2>
+      <param name='start'>100</param>
+      <param name='end'>150</param>
+      <param name='period'>xxx</param>
+      <param name='expected' eval='true'>false</param>
+    </test2>
+    <test3>
+      <param name='start'>1000</param>
+      <param name='end'>1500</param>
+      <param name='period'>sekonds</param>
+      <param name='expected' eval='true'>false</param>
+    </test3>
+    <test4>
+      <param name='start'>1000</param>
+      <param name='end'>1600</param>
+      <param name='period'>minutes</param>
+      <param name='expected'>10</param>
+    </test4>
+    <test5>
+      <param name='start'>1600</param>
+      <param name='end'>1000</param>
+      <param name='period'>minutes</param>
+      <param name='expected'>10</param>
+    </test5>
+    <test6>
+      <param name='start'>736992000</param>
+      <param name='end'>739670400</param>
+      <param name='period'>months</param>
+      <param name='expected'>1</param>
+    </test6>
+    <test7>
+      <param name='start'>736992000</param>
+      <param name='end'>739670399</param>
+      <param name='period'>months</param>
+      <param name='expected'>0</param>
+    </test7>
+    <test8>
+      <param name='start'>736992000</param>
+      <param name='end'>1134172800</param>
+      <param name='period'>months</param>
+      <param name='expected'>151</param>
+    </test8>
+    <test9>
+      <param name='start'>736992000</param>
+      <param name='end'>1134172799</param>
+      <param name='period'>months</param>
+      <param name='expected'>150</param>
+    </test9>
+    <test10>
+      <param name='start'>736992000</param>
+      <param name='end'>800064000</param>
+      <param name='period'>quarters</param>
+      <param name='expected'>8</param>
+    </test10>
+    <test11>
+      <param name='start'>736992000</param>
+      <param name='end'>800064000</param>
+      <param name='period'>years</param>
+      <param name='expected'>2</param>
+    </test11>
+    <test12>
+      <param name='start'>736992000</param>
+      <param name='end'>800063999</param>
+      <param name='period'>quarters</param>
+      <param name='expected'>7</param>
+    </test12>
+    <test13>
+      <param name='start'>736992000</param>
+      <param name='end'>800063999</param>
+      <param name='period'>years</param>
+      <param name='expected'>1</param>
+    </test13>
+  </testdatediff>
+
+  <testsafeequals>
+    <test1>
+      <param name='val1'>1 2 3</param>
+      <param name='val2'>1 234</param>
+      <param name='expected' eval='true'>false</param>
+    </test1>
+    <test2>
+      <param name='val1' eval='true'>1</param>
+      <param name='val2'>1 234</param>
+      <param name='expected' eval='true'>false</param>
+    </test2>
+    <test_int8_string8>
+      <param name='val1' eval='true'>8</param>
+      <param name='val2'>8</param>
+      <param name='expected' eval='true'>true</param>
+    </test_int8_string8>
+    <test_int0_stringA>
+      <param name='val1' eval='true'>0</param>
+      <param name='val2'>A</param>
+      <param name='expected' eval='true'>false</param>
+    </test_int0_stringA>
+  </testsafeequals>
+
 
 </TestUnit>

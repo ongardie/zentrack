@@ -47,6 +47,75 @@
       Assert::equals( $result, $vals['expected'] );
     }
 
+    function testParseBoolean( $vals ) {
+      $result = ZenUtils::parseBoolean( $vals['value'], $vals['default'] );
+      $rs=ZenUtils::boolString($result);
+      $es=ZenUtils::boolString($vals['expected']);
+      Assert::equals( $result, $vals['expected'], "Expected {$es}, found {$rs}" );
+    }
+
+    function testParseDate( $vals ) {
+      $locale = mktime(0, 0, 0, 1, 1, 1970);
+      $result = ZenUtils::parseDate( $vals['date'], $vals['eurodates'] );
+      if ( is_bool($vals['expected']) ) {
+        $es=ZenUtils::boolString($vals['expected']);
+      }
+      else {
+        $es=$vals['expected'];
+      }
+      if ( is_bool($result) ) {
+        $rs=ZenUtils::boolString($result);
+      }
+      else {
+        if ( $result > -1 ) {
+          $result-=$locale;
+        }
+        $rs=$result;
+      }
+      Assert::equals( $result, $vals['expected'], "Expected {$es}, found {$rs}" );
+    }
+
+    function testDateDiff( $vals ) {
+      $result = ZenUtils::dateDiff( $vals['start'], $vals['end'], $vals['period'] );
+      if ( is_bool($vals['expected']) ) {
+        $es=ZenUtils::boolString($vals['expected']);
+      }
+      else {
+        $es=$vals['expected'];
+      }
+      if ( is_bool($result) ) {
+        $rs=ZenUtils::boolString($result);
+      }
+      else {
+        $rs=$result;
+      }
+      Assert::equals( $result, $vals['expected'], "Expected {$es}, found {$rs}" );
+    }
+
+
+    function testSafeEquals( $vals ) {
+      $result = ZenUtils::safeEquals( $vals['val1'], $vals['val2'] );
+      if ( is_bool($vals['expected']) ) {
+        $es=ZenUtils::boolString($vals['expected']);
+      }
+      else {
+        $es=$vals['expected'];
+      }
+      if ( is_bool($result) ) {
+        $rs=ZenUtils::boolString($result);
+      }
+      else {
+        $rs=$result;
+      }
+      Assert::equals( $result, $vals['expected'], "Expected {$es}, found {$rs}" );
+    }
+
+
+
+
+
+
+
     function notReadyYet() { Assert::equalsTrue( false, "Not done yet" ); }
 
   }
