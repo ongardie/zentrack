@@ -64,7 +64,7 @@ if( is_array($tickets) ) {
    <td height="25" valign="middle" <?=$txt?> <?=$td_ttl?>>
     <a class="rowLink" style="color:<?=$text?>" href="<?=$link?>?id=<?=$t["id"]?>"><?=$t["title"]?></a>
    </td>
-   <td height="25" <?=$tx?> valign="middle">
+   <td height="25" class="priority<?=$t[priority]?>" valign="middle">
    <?=$zen->priorities["$t[priority]"]?>
    </td>
    <td height="25" valign="middle">
@@ -98,7 +98,7 @@ if( is_array($tickets) ) {
    print "</table>\n";
    
 } else {
-   if( $login_bin )
+   if( $login_bin && $login_bin != -1 )
      print "<p>&nbsp;</p><ul><b>No open {$page_type}s in ".$zen->bins["$login_bin"]."</b></ul>";
    else
      print "<p>&nbsp;</p><ul><b>No {$page_type}s were found.</b></ul>";

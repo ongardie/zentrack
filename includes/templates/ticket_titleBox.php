@@ -29,10 +29,7 @@
 	   <td class="smallTitleCell"><?=uptr("Owner")?></td>
 	  </tr>
 	  <tr>
-            <td<?=
-	      ($zen->statusHighlight($priority))? 
-                " class='".$zen->statusHighlight($priority)."'":""
-            ?>><?=$zen->priorities["$priority"]?></td>
+            <td class="priority<?=$priority?>"><?=$zen->priorities["$priority"]?></td>
 	   <td class="small"><? 
 	     if($user_id) { 
 	       $user = $zen->get_user($user_id); 

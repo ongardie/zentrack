@@ -7,6 +7,10 @@
 
 ----- V2.4.1 (Development, See CVS) ----
 2003-04-23, Rob Hillis
+  Colour-code priorities for easy identification
+    - zentrack/includes/templates/listTickets.php 1.11
+    - zentrack/includes/templates/ticket_titleBox.php 1.7
+    - zentrack/www/styles.php 1.9
   Allow admins to set a user's home bin to -All-
     - zentrack/includes/templates/userAdd.php 1.9
     - zentrack/includes/templates/userSearchForm.php 1.7

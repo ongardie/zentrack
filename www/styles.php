@@ -97,6 +97,61 @@
   }
 
 
+  /*** PRIORITY PROPERTIES ***/
+<?
+function priority_color($priority, $num) {
+   // This function returns an HTML colour based on the priority
+   // supplied on a sliding colour scale.
+    
+   $p = $priority / $num * 100;
+   
+   if ($p < 0) {
+       $p = 0;
+   }
+   
+   if ($p > 100) {
+      $p = 100;
+   }
+   
+   if ($p < 25) {
+      $colour = '#FFFF' . substr('0'.dechex((25 - $p) * 10.23), -2);
+   } elseif ($p < 100) {
+      $colour = '#FF' . substr('0'.dechex((100 - $p) * 3.4), -2) . "00";
+   } else {
+      $colour = '#FF0000';
+   }
+   
+   return ($colour);
+}
+
+$lowp = 99999;
+$hip = -1;
+
+foreach ($zen->getPriorities(1) as $v) {
+   if ($v["priority"] < $lowp) $lowp = $v["priority"];
+   if ($v["priority"] > $hip) $hip = $v["priority"];
+}
+      
+$num = $hip - $lowp;
+
+foreach ($zen->getPriorities(1) as $v) {
+?>
+  .priority<?=$v["pid"]?> {
+     background:      <?=priority_color($v["priority"] - $lowp, $num)?>;
+<?
+   if ($v["priority"] == $hip) {?>
+
+     font-weight:     Bold;
+<?
+
+   }?>
+  }
+  
+<?
+}
+?>
+
+
   /*** CELL PROPERTIES ***/
 
   .altCell {
