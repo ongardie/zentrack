@@ -1,0 +1,140 @@
+<?
+
+class Zen {
+
+  /**
+   * CONSTRUCTOR: constructs common vars and objects
+   * 
+   * This method should be invoked by all child constructors
+   * This should set up the following vars, pulled from the
+   * config.ini file:
+   * <ul>
+   *    <li>libDir: the includes directory
+   *    <li>templateDir: the templates directory
+   *    <li>logDir: the log directory
+   *    <li>cacheDir: the directory for db cacheing
+   *    <li>Db_Type
+   *    <li>Db_Login
+   *    <li>Db_Pass
+   *    <li>Db_Host
+   *    <li>Db_Instance
+   * </ul>
+   */
+  function Zen() { }
+
+  /**
+   * returns a ZenMessageList of system messages matching criteria
+   *
+   * @param string $class returns only errors from this class
+   * @param string $method return only errors from this method
+   * @return ZenMessageList object containing valid system messages
+   * @see ZenMessageList
+   */
+  function getMessages( $class = '', $method = '' ) { }
+  
+  /**
+   * tells whether this object refers to a valid database entry
+   *
+   * note that new objects return false(invalid) until save() has been called
+   *
+   * @return boolean contain a system ID
+   */
+  function isValid() { return $this->_id > 0 }
+  
+  /**
+   * returns a db connection / database object
+   *
+   * THIS SHOULD BE STATIC, only one db connection is necessary
+   *
+   * @return object databaseObject
+   */
+  function getDbConnection() { }
+
+  /* SETTINGS METHODS */
+
+  /**
+   * returns a system setting
+   *
+   * this method will return a system setting... some sort of static/global setup
+   * would be best to invoke here, to avoid redundant calls
+   *
+   * @param string $name of the setting
+   * @return string value of the setting
+   */
+  function getSetting($name) { }
+
+  /**
+
+  /**
+   * loads system settings into memory
+   */
+  function _loadSettings() { }
+
+  /* UTILITIES */
+
+  /**
+   * Creates a string in title case
+   *
+   * This will not capitalize articles or prepositions
+   *
+   * @param string $string the string to capitalize
+   * @return string the capitalized string
+   */
+  function titleCase( $string ) { }
+
+  /**
+   * Shows a date properly formatted according to the system settings
+   *
+   * @param integer $utime is a unix timestamp of date to show
+   * @return string the formatted date string
+   */
+  function showDate( $utime = '' ) { }
+
+  /**
+   * Shows a long format date properly formatted according to the system settings
+   *
+   * @param integer $utime is a unix timestamp of date to show
+   * @return string the formatted long date string
+   */
+  function showLongDate( $utime = '' ) { }
+
+  /**
+   * Shows a date and time properly formatted according to the system settings
+   *
+   * @param integer $utime is a unix timestamp of date to show
+   * @return string the formatted date and time string
+   */
+  function showDateTime( $utime = '' ) { }
+
+  /**
+   * Shows a time properly formatted according to the system settings
+   *
+   * @param integer $utime is a unix timestamp of date to show
+   * @return string the formatted time string
+   */
+  function showTime( $utime = '' ) { }
+
+   
+  /* VARIABLES */
+ 
+  
+  /* PRIVATE VARIABLES */
+  
+  /** @var array $_settings the system settings */
+  var $_settings;
+
+  /** @var array $_errorIndexByMethod contains an index of error objects by method */
+  var $_errorIndexByMethod;
+  
+  /** @var array $_errorIndexByLevel contains an index of error objects by level */
+  var $_errorIndexByLevel;
+  
+  /** @var array $_errors contains the error objects */
+  var $_errors;
+
+  /** @var integer $_id the id associated with this object (used by isEmtpy() */
+  var $_id;
+
+}
+
+?>

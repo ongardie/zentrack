@@ -1,0 +1,81 @@
+<?
+
+class ZenTicket {
+
+  /**
+   * CONSTRUCTOR
+   *
+   * loads a blank ticket object, or by loads a ticket by id
+   * 
+   * @param integer $ticket_id (optional)id of ticket to load
+   */
+  function zenTicket( $ticket_id = 0 ) { }
+  
+  /**
+   * copies an existing ticket to this one
+   *
+   * @param integer $ticket_id to be copied to this object
+   * @return boolean copy succeeded
+   */
+  function copy( $ticket_id ) { }
+   
+  /**
+   * searches for a ticket by the title
+   * 
+   * loads the ticket into this object if found, if more than one match
+   * was found, then returns false, and stores error which can
+   * be retrieved by $object->getMessages( 2, "find" );
+   * @param string $title title to match (use * for wildcard)
+   * @return boolean matched 1 ticket
+   */
+  function findByTitle( $title ) { }
+  
+  /**
+   * Save the ticket in its current state
+   * to the database
+   *
+   * If this ticket meets isValid() request, then it is updated
+   * Otherwise, a new ticket is inserted into the database
+   *
+   * @return integer ticket's id if successful or false
+   */
+  function save() { }
+  
+   /**
+   * returns the notify object associated with this ticket
+   *
+   * @return NotifyObject the NotifyObject associated with this ticket
+   */
+  function getNotify() { }
+  
+  /**
+   * Perform next action in flowpath
+   * 
+   * Validates the ticket's status based on flowpath
+   * requirements and attempts to execute next action
+   */
+  function next() { }
+  
+  /**
+   * Set a ticket parameter
+   *
+   * The ticket parameter will be validated, and then
+   * stored.  Save() must be called to commit changes to db 
+   *
+   * @param string $field is the field name to update
+   * @param mixed $value is the value to use
+   * @return boolean succeeded
+   */
+  function set( $field, $value ) { }
+
+  /* VARIABLES */
+  
+  /** @var integer $_id the ticket's id */
+  var $_id;
+  
+  /** @var array $_fields the ticket's fields from db */
+  var $_fields;
+  
+}
+
+?>

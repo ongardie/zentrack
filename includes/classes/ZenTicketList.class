@@ -1,0 +1,80 @@
+<?
+
+class ZenTicketList {
+
+  /**
+   * CONSTRUCTOR
+   *
+   * Creates an empty ticket list
+   */
+  function ZenTicketList() { }
+
+  /**
+   * sets search criteria for populating the list
+   *
+   * Must be called before load()
+   * The operator can be any of the following:
+   * <ul>
+   *  <li>Contains: $value is a string to be matched
+   *  <li>Begins: $value is a string to be matched
+   *  <li>Ends: $value is a string to be matched
+   *  <li>Equals: $value is a string to be matched
+   *  <li>In: $value is an array of possible choices
+   * </ul>
+   * Any of the operators may be preceeded by a ! to indicate
+   * not [condition].
+   *
+   * @param string $field the field to filter by
+   * @param mixed $value the value to filter by
+   * @param string $operator the operator to use
+   */
+  function criteria($field, $value, $operator = "equals") { }
+
+  /**
+   * sets the method used to sort the results
+   *
+   * must be called before load()
+   *
+   * @param string $field the field to sort on
+   * @param boolean $desc sort in reverse order?
+   */
+  function sort($field, $desc = false) { }
+
+  /**
+   * performs the match and loads results
+   *
+   * @param integer $limit is the maximum number to load
+   * @param integer $offset is the offset to use (i.e. start with 10 instead of 1)
+   * @return integer the number matched
+   */
+  function load($limit = 0, $offset = 0) { }
+
+  /**
+   * gets the next result in the list
+   *
+   * @return ZenTicket object or false if no more results
+   */
+  function next() { }
+
+  /**
+   * resets the list counter to the first result
+   */
+  function reset() { }
+
+
+  /* VARIABLES */
+
+  /** @var integer $_position the current position in the result list */
+  var $_position;
+
+  /** @var integer $_count the number matched */
+  var $_count;
+
+  /** @var boolean $_loaded whether load() has been called */
+  var $_loaded;
+
+  /** @var array $_list the list of ZenTicket objects matched */
+  var $_list;
+}
+
+?>

@@ -1,0 +1,95 @@
+<?
+
+class ZenMessageList {
+
+  /**
+   * CONSTRUCTOR
+   *
+   * loads an empty MessageList object with the level designation to accept
+   * the primary use for this class is to be called through a global scope to
+   * maintain a single list of all errors
+   *
+   * @param integer $level is the level of message that will be stored (all others discarded)
+   */
+  function ZenMessageList($level = 3) { } // should set $_* arrays to array()
+
+  /**
+   * adds a message to the list (if it meets the level requirement)
+   *
+   * @param string $class is the page or class adding the message
+   * @param string $method is the method or section adding the message
+   * @param string $message is the message to add
+   * @param integer $level is the level of importance
+   */
+  function add( $class, $method, $message, $level = 3 ) { }
+
+  /**
+   * returns the complete list of erros in standard output format
+   *
+   * @param boolean $html whether to include html formatting (or just text formatting)
+   * @return string containing formatted text for all errors
+   */
+  function output( $html = true ) { }
+
+  /**
+   * retrieves the next ZenMessage object in the List
+   *
+   * @return ZenMessage object or false if no more are found
+   */
+  function next() { }
+
+  /**
+   * resets the message counter to the beginning
+   */
+  function reset() { }
+
+  /**
+   * filters the current message objects by the given parameters
+   *
+   * @param $class the class to limit results to
+   * @param $method the method to limit results to
+   * @return count matching filter criteria
+   */
+  function filter($class, $method = '') { }
+
+  /**
+   * resets all filter criteria
+   */
+  function clearFilters() { }
+
+  /**
+   * returns a count of ZenMessage objects matchign the current filter criteria
+   *
+   * @return integer the count
+   */
+  function count() { }
+
+  /* VARIABLES */
+
+  /** @var integer $_counter the current position in the ZenMessageList */
+  var $_counter;
+
+  /** @var string $_class the class filter in place */
+  var $_class;
+
+  /** @var string $_method the method filter in place */
+  var $_method;
+
+  /** @var array $_counts the count of messages, for use in count() function:
+   *  <ul>
+   *    <li>"total" => total_count
+   *    <li>"class" => array("total"=>total_count, "method1"=>count, "method2"...)
+   *    <li>....
+   *  </ul>
+   */
+  var $_counts;
+
+  /** @var integer $_level the level of message stored (1-error, 2-warning, 3-notice) */
+  var $_level;
+
+  /** @var array $_messages the list of message objects */
+  var $_messages;
+
+}
+
+?>

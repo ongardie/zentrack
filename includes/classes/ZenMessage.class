@@ -1,0 +1,42 @@
+<?
+
+class ZenMessage {
+
+  /**
+   * CONSTRUCTOR
+   *
+   * loads the message and prepares for use
+   * @param string $class the class or page responsible
+   * @param string $method the method or section responsible
+   * @param string $message the message to store
+   * @param integer $level the level of the message
+   */
+  function ZenMessage( $class, $method, $message, $level = 3 ) { }
+
+  /**
+   * returns the message, formatted for printing (with proper bolding for it's level)
+   */
+  function show() { }
+
+  /**
+   * returns the message string, without formatting
+   */
+  function getPlain() { }
+
+  /* VARIABLES */
+
+  /** @var integer $level The level of the message */
+  var $level;
+
+  /** @var string $class the class responsible */
+  var $class;
+
+  /** @var string $method the method responsible */
+  var $method;
+
+  /** @var string $_message */
+  var $_message;
+
+}
+
+?>
