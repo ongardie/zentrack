@@ -68,14 +68,18 @@ class Zen {
    */
   function getDbConnection() { 
     if( !isset($GLOBALS['dbConnection']) || $GLOBALS['dbConnection'] == null ) {
-      $db = $GLOBALS['zen']['database'];
-      $GLOBALS['dbConnection'] = new ZenDatabase($db['database_type'], 
-                                                  $db['database_host'],
-                                                  $db['database_user'],
-                                                  $db['database_pass'],
-                                                  $db['database_instance']);
+      $db = $GLOBALS['zen']['db'];
+      $GLOBALS['dbConnection'] = new ZenDatabase($db['db_type'], 
+                                                  $db['db_host'],
+                                                  $db['db_user'],
+                                                  $db['db_pass'],
+                                                  $db['db_instance']);
     }
     return $GLOBALS['dbConnection'];
+  }
+
+  function getMessageList() {
+    return ZenMessageList::getInstance();
   }
 
   /**

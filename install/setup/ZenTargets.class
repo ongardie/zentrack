@@ -592,17 +592,17 @@ class ZenTargets {
       return false;
     }
 
-    // backup data
-    if( !$this->_backup_all() ) { return false; }
-
-    // copy the class files
-    if( !$this->_copy_class_files() ) { $success = false; }
-
     // test directory structures and permissions
     if( !$this->_check_directories( true ) ) { return false; }
     
     // check the permissions
     if( !$this->_check_permissions() ) { return false; }
+
+    // backup data
+    if( !$this->_backup_all() ) { return false; }
+
+    // copy the class files
+    if( !$this->_copy_class_files() ) { $success = false; }
 
     // copy config files if flag set
     if( !$this->_copy_config_files($overwrite) ) { $success = false; }

@@ -20,10 +20,8 @@
    */
 
   $GLOBALS['templateDir'] = $templateDir;
-  $GLOBALS['dbConnection'] = null;
-  $GLOBALS['messageList'] = null;
-  $GLOBALS['webDir'] = $webDir;
-  $GLOBALS['webUrl'] = $webUrl;
+  $GLOBALS['dbConnection'] = Zen::getDbConnection();
+  $GLOBALS['messageList'] = Zen::getMessageList();
   $GLOBALS['configLastUpdated'] =& $_SESSION['configLastUpdated'];
 
   /**

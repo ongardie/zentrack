@@ -210,7 +210,7 @@ class ZenDatabase extends Zen {
    *
    * THIS SHOULD BE STATIC, only one db connection is necessary. The only way
    * this function should be called is as follows:
-   * ZenDatabase::getDbConnection();
+   * Zen::getDbConnection();
    *
    * @access private
    * @since 1.0

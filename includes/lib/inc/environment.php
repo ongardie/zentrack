@@ -44,13 +44,4 @@
     @error_reporting(E_ALL ^ E_NOTICE);
   }
 
-  // prepare all the class objects
-  //todo
-
-  // initialize database
-  //todo
-
-  // initialize translations
-  //todo
-
 }?>
