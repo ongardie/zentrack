@@ -4,6 +4,12 @@
  Clean, simple interface, fully adaptable administration,
  100 percent object oriented and database abstracted. 
 
+----- V2.2.2.1 (2003-02-12) ----
+2003-02-12, Kato
+  Fixed bug with closing tickets caused by new
+  object method implementation
+    - includes/zenTrack.class v1.44
+	
 ----- V2.2.2 (2003-02-10) -----
 2003-02-09, Kato
   Ability to reopen tickets from pending status

@@ -1413,8 +1413,8 @@ class zenTrack extends zen {
       } else if( $c == 'AP' ) {
 	return( $ticket["status"] == 'PENDING' && $ticket["tested"] != 1 );
       } else if( $c == 'RE' ) {
-	return( ($ticket["status"] == 'PENDING' && $ticket["tested"] == 2 
-		 && $ticket["approved"] == 2)
+	return( ($ticket["status"] == 'PENDING' && $ticket["tested"] != 1 
+		 && $ticket["approved"] != 1)
 		||
 		($ticket["status"] == 'OPEN' && $ticket["tested"] == 0 
 		 && $ticket["approved"] == 0));
