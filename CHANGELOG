@@ -6,6 +6,15 @@
 
 ----- V2.2.2 (not released) -----
 2003-02-09, Kato
+  Header Redirects (blank pages)
+    - includes/editTicketSubmit.php v1.3
+    - www/addProjectSubmit.php v1.8
+    - www/addSubmit.php v1.11
+    - www/ticket.php v1.12
+    - www/viewAttachment.php v1.4
+    - www/admin/admin_header.php v1.6
+    - www/admin/editTicketSubmit.php v1.4
+    - www/actions/*.php
   Email corrections
     - includes/zenTrack.class v1.39
     - www/actions/close.php v1.8
@@ -13,6 +22,7 @@
     - install/build_postgres.sql v1.3
   Enhanced popup calendar
     - www/popcalendar.js v1.2
+    - www/images/cal.gif v1.1 [new]
     - includes/templates/newTicketForm.php v1.13
   Fixed SCRIPT_NAME issues with php binary installs as CGI executable
     - includes/session_start.php v1.5
