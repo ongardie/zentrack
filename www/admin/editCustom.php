@@ -42,7 +42,7 @@
       $skip = 1;
     }
   } else {
-    $vars = $zen->getCustomFields();
+    $vars = $zen->getCustomFields(0);
   }
 
   if( $more > 10 ) {

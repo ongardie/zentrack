@@ -915,8 +915,8 @@ class zenTrack extends zen {
 
     $tf_pri = preg_match("/priority/", $order_by);
     $tbl = $this->table_tickets;
-    $leftjoin = " LEFT JOIN $this->table_custom_fields ON "
-              . "$this->table_tickets.id=$this->table_custom_fields.ticket_id";
+    $leftjoin = " LEFT JOIN $this->table_varfield ON "
+              . "$this->table_tickets.id=$this->table_varfield.ticket_id";
 
     if( $tf_pri ) {
       $tblpri = $this->table_priorities;
@@ -2147,7 +2147,7 @@ class zenTrack extends zen {
   function update_custom_field_idx( $field_name, $params ) {
     // update properties for a given custom_field definition (key= field_name)
     $set = $this->makeInsertVals($params,1);
-    $query = "UPDATE ".$this->table_custom_fields_idx." SET $set WHERE field_name = '$field_name'";
+    $query = "UPDATE ".$this->table_varfield_idx." SET $set WHERE field_name = '$field_name'";
     $this->addDebug("update_custom_field_idx()Query",$query,2);
     return( $this->db_result($query) );
   }
@@ -3227,10 +3227,10 @@ class zenTrack extends zen {
   function getCustomFields($indexedMode = 1, $filterUse = "", $filterShow = "") {
     // we create an associative array if $indexedMode, otherwise it is just a list 
     if ( $indexedMode ) {
-      $query = "SELECT field_name, field_label FROM ".$this->table_custom_fields_idx; 
+      $query = "SELECT field_name, field_label FROM ".$this->table_varfield_idx; 
     }
     else { 
-      $query = "SELECT * FROM ".$this->table_custom_fields_idx; 
+      $query = "SELECT * FROM ".$this->table_varfield_idx; 
     }
 
     // initialize connector, which will switch to 
@@ -4069,7 +4069,7 @@ class zenTrack extends zen {
   var $table_translation_strings;
   var $table_translation_words;
   var $table_notify_list;
-  var $table_custom_fields_idx;
+  var $table_varfield_idx;
 
   var $cleanTempReports;
   var $reportImageWidth;
