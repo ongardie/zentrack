@@ -67,7 +67,7 @@
      }    
      print "</table>\n";
   } else {
-     print tr("No attachments exist for this $page_type");
+     print tr("No attachments exist for this ?", array($page_type));
   }
 ?>
     </td>
