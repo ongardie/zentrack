@@ -211,7 +211,7 @@ value="<?=($start_date)?$zen->showDate(strip_tags($start_date)):""?>">&nbsp;(mm/
   <td class="bars">
     <input type="checkbox" name="approved" value="1" 
     <?
-    if( $approved || (!strlen($approved) && $zen->settings["default_approve_checked"] == "on") ) {
+    if( $approved || (!strlen($approved) && $zen->settings["default_aprv_checked"] == "on") ) {
        print "checked";
     }  
   ?>>
