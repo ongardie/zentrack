@@ -81,11 +81,11 @@
   }
 
   if( !$errs ) {
-     header("Location:$rootUrl/ticket.php?id=$id");
+     header("Location:$rootUrl/project.php?id=$id");
   } else {
      include("$libDir/nav.php");
      $zen->print_errors($errs);
-     include("$templateDir/newTicketForm.php");
+     include("$templateDir/newProjectForm.php");
      include("$libDir/footer.php");
   }
 ?>
