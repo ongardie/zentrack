@@ -190,3 +190,4 @@ value="<?=strip_tags($postcode)?>">
   </td>
 </tr>
 </table>
+</form>

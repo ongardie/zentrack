@@ -194,3 +194,4 @@ value="<?=strip_tags($email)?>">
   </td>
 </tr>
 </table>
+</form>
