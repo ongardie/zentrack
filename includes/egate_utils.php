@@ -73,8 +73,7 @@
     if( !strlen($sub) ) {
       global $form_template_list;
       $tmp = str_replace(".template","",$template);
-      $tmp = str_replace("form_","",$template);
-      print "checking template $tmp\n";//debug
+      $tmp = str_replace("form_","",$tmp);
       // we only want it if it's a real template value
       if( in_array($tmp,$form_template_list) ) {
 	egate_store_subject(ucwords(str_replace("_"," ",$tmp)));
@@ -91,7 +90,6 @@
    */
   $template_subject = "";
   function egate_store_subject( $subject ) {
-    print "storing $subject\n";//debug
     global $template_subject;
     $template_subject = $subject;
   }
@@ -103,7 +101,6 @@
    */
   function egate_get_subject() {
     global $template_subject;
-    print "fetching subject $template_subject\n";//debug
     return $template_subject;
   }
 
@@ -435,7 +432,7 @@
     // determine which actions might be in the subject
     if( !in_array($action,$valid_actions) ) {
       $errors = true;
-      egate_log("The action $action was not valid.",2);
+      egate_log("The action $action was not valid.  This could be an access violation, or simply that the ticket status prevents this.",2);
       return;
     }
 
@@ -578,7 +575,7 @@
     if( is_array($users_by_email) ) {
       // if we got more than one user for this email address
       // then try looking at the name
-      if( count($users_by_email) > 1 ) {
+      if( count($users_by_email) > 1 && strlen($name) ) {
 	$vals = array();
 	$users_by_name = $zen->get_users_by_name($name);
 	if( is_array($users_by_name) ) {
@@ -595,13 +592,14 @@
 	  $user_id = $vals[0];
 	}
       }
-      else {
+      else if( count($users_by_email) == 1 ) {
 	// we only found one, so that must be it
-	$user_id = $users_by_mail[0];
-      }      
+	$user_id = $users_by_email[0];
+      }
     }
-    if( !$user_id )
+    if( !$user_id ) {
       $user_id = $egate_user["user_id"];
+    }
     return $user_id;
   }
 
@@ -743,8 +741,10 @@
     // anything about this ticket
     if( is_array($ticket) ) {
       $list = $zen->get_notify_recipients($id);
-      if( !in_array($email,$list) ) {
-	egate_log("Sorry, you aren't on the notification list for this ticket.",2);
+      if( !in_array($email,$list) 
+	  && find_user_id($name,$email)==$egate_user["user_id"] ) {
+	egate_log("Sorry, you aren't on the notify list for this ticket,"
+		  ."and aren't a registered user.",2);
 	return false;
       }
     }
@@ -778,13 +778,47 @@
 	if( $user_id == $egate_user["user_id"] ) {
 	  egate_log("Ticket could not be accepted, user $fullname not registered.",2);
 	  $success = false;
+	} else {
+	  $res = $zen->accept_ticket($id,$user_id,$body["details"],$ticket["bin_id"]);
+	  if( $res ) {
+	    egate_log("Ticket was accepted",3);
+	  }
+	  else {
+	    egate_log("Ticket could not be accepted.",2);
+	    $success = false;
+	  }
 	}
-	$res = $zen->accept_ticket($id,$user_id,$body["details"],$ticket["bin_id"]);
-	if( $res ) {
-	  egate_log("Ticket was accepted",3);
+	break;
+      }
+    case "assign":
+      {
+	// find the users id
+	$txt = get_subject_param($params,"user",$body);
+	if( preg_match("/[^0-9]/", $txt) ) {
+	  $rec = find_user_id('',$txt);
+	  if( $rec != $egate["user_id"] ) {
+	    $uid = $rec;
+	  }
 	}
 	else {
-	  egate_log("Ticket could not be accepted.",2);
+	  $uid = $txt;
+	}
+	if( $uid ) {
+	  // if we have an id, do the assignment
+	  if( $user_id == $egate_user["user_id"] ) {
+	    $notes = "Assigned by $fullname";
+	  }
+	  if( $zen->assign_ticket($id,$uid,$user_id,$notes) ) {
+	    egate_log("Ticket assigned to user $uid",3);
+	  }
+	  else {
+	    egate_log("Ticket could not be assigned",2);
+	    $success = false;
+	  }	    
+	}
+	else {
+	  // otherwise generate error
+	  egate_log("Entry $txt not a valid user id or email address",2);
 	  $success = false;
 	}
 	break;
@@ -923,33 +957,56 @@
     case "notify_add":
       {
 	// add user to notify list
-	$list = isset($body["recipient"])? $body["recipient"] : "";
-	if( !strlen($list) ) {
-	  $em = $zen->checkEmail($email);
+	$str = get_subject_param($params,"recipients",$body);
+	$entries = array();
+	if( !strlen(trim($str)) ) {
+	  // add the sender
+	  $em = array($zen->checkEmail($email));
 	  $en = $name;
 	  $fullname = "$en <$em>";
+	  $vars = array("ticket_id" => $id,
+			"priority"  => 1);
+	  if( strlen($en) ) {
+	    $vars["name"] = $en;
+	  }
+	  if( $user_id != $egate_user["user_id"] ) {
+	    $vars["user_id"] = $user_id;
+	  } else {
+	    $vars["email"] = $em;
+	  }
+	  $entries = array($vars);
 	}
 	else {
-	  $em = $zen->checkEmail($list);
+	  // add the list
+	  $list = split("[ ,]+", trim($str));
+	  foreach($list as $l) {
+	    // look for an id
+	    $uid = find_user_id('',$l);
+	    if( $uid != $egate["user_id"] ) {
+	      $entries[] = array("user_id"=>$uid,"priority"=>1,"ticket_id"=>$id);
+	    }
+	    else {
+	      $em = $zen->checkEmail($l);
+	      $entries[] = array("email"=>$em,"priority"=>1,"ticket_id"=>$id);
+	    }
+	  }
 	  $en = "";
 	  $fullname = $em;
 	}
-	$vars = array("email"     => $em,
-		      "ticket_id" => $id,
-		      "priority"  => 1);
-	if( strlen($en) ) {
-	  $vars["name"] = $en;
+	$i = 0;
+	foreach($entries as $e) {
+	  $n = ($e["user_id"])? "user id {$e['user_id']}":$e['email'];
+	  $res = $zen->add_to_notify_list( $id, $e );
+	  if( $res && $res != "duplicate" ) {
+	    egate_log("added $n to notify for #$id",3);
+	  } else if( $res && $res == "duplicate" ) {
+	    egate_log("Recipient $n already on notify for #$id",3);
+	    $success = false;
+	  } else {
+	    egate_log("Unable to add $n to notify for #$id",2);
+	    $success = false;
+	  } 
 	}
-	$res = $zen->add_to_notify_list( $id, $vars );
-	if( $res && $res != "duplicate" ) {
-	  egate_log("added $fullname to notify for #$id",3);
-	} else if( $res && $res == "duplicate" ) {
-	  egate_log("Recipient $fullname already on notify for #$id",3);
-	  $success = false;
-	} else {
-	  egate_log("Unable to add $fullname to notify for #$id",2);
-	  $success = false;
-	} 
 	break;
       }
     case "notify_drop":
@@ -1243,7 +1300,6 @@
       // send messages
       $i=0;
       $from = $egate_user["email"];
-      //$txt = str_replace("\n", "\r\n", $txt);
       foreach($recipients as $r) {
 	$to = ($r["name"])? "{$r['name']} <{$r['email']}>" : $r['email'];
 	$res = mail($to,$subject,$txt,"From:$from\r\nReply-to:$from\r\n");

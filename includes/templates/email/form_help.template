@@ -34,6 +34,18 @@ To remove yourself from a notify list for a specific ticket, you need only to re
 In the subject, where nnnn is the ticket number.
 
 -----------------
+Permissions
+-----------------
+
+In general, you must either be on the notify list for a ticket, or be a registered user in the system to have any access priviledges (other than this help menu).
+
+Additionally, the email gateway has its own access priviledges set by the systems administrator, and these must be met for any action attempted via the gateway.
+
+Note that there are special requirements for each action you might wish to take.  Some actions will require that you are the owner, others may require that the ticket be unowned.  Several are dependant on the ticket having an open or pending status.
+
+At any time that you are unsure what options are available to you, use the #nnnn: options subject to retrieve a listing of actions you can perform.
+
+-----------------
 Actions
 -----------------
 
@@ -45,7 +57,8 @@ The nnnn listed in the actions below represents the ticket id number.
 
 #nnnn: accept - This will place a ticket under your ownership, assuming you have priviledges to complete this action.
 
-#nnnn: add - This will add the email address that the ticket was recieved from to the notify list.
+#nnnn: add - This will add the email address that the ticket was recieved from to the notify list.  Alternately you may supply a list of addresses to add as follows:
+  @recipients: email@one.com, email@two.com, etc...
 
 #nnnn: approve - This will provide a final ok, indicating that all actions for this ticket have been completed, and it is done.
 

@@ -36,8 +36,9 @@
 	$errs[] = "System error: Ticket $id could not be assigned".$zen->db_error;
       }
     }
-    if( $errs )
-      add_system_messages( $errs, 'Error' );     
+    if( $errs ) {
+      add_system_messages( $errs, 'Error' );
+    }
   }
   
   include("$libDir/nav.php");

@@ -284,41 +284,53 @@ class zenTrack extends zen {
     return( $this->db_list($query) );
   }
 
-  function get_users( $bins = '', $level = 'level_view', $active = 1, $sort = 'lname, fname' ) {
-    // creates a list of users
-    // $bins is an optional array/string of binIDs
-    // to which the users returned will have access
-    // $level is the level of access required ("level_view","level_user",etc)
-    // which defaults to "level_view" if unspecified
-    // if $active is set to 1, then only retrieves 
-    // accounts which are currently activated
+  /**
+   * grabs all users matching the priviledges given for the bins designated
+   *
+   * @param array $bins the bin ids to match
+   * @param string $level the access level to match to each bin
+   * @param integer $active 1-active members, 0-active and inactive members
+   * @return array indexed, containing all fields from each row matched
+   */
+  function get_users( $bins = '', $level = 'level_view', $active = 1 ) {
+    // get our level
+    $lvl = ($level)? $this->settings[$level] : 0;
 
-    if( !is_array($bins) && strlen($bins) ) {
-      if( ereg(",",$bins) ) 
-	$bins = explode(",",$bins);
-      else
-	$bins = array($bins);
-    }
-    $level = ($this->settings["$level"])? $this->settings["$level"] : 0;
+    // get a list from the access table
+    $outs = array();  //ones to skip
+    $ins  = array();   //ones to keep
     if( $bins ) {
-      $query = "SELECT DISTINCT user_id FROM ".$this->table_access
-	." WHERE bin_id IN(".join(",",$bins).") AND lvl >= $level";
-      $ids = $this->db_list($query);
-    } 
-    if( is_array($ids) ) {
-      $where = " (user_id IN(".join(",",$ids).") OR access_level >= $level) ";
-    } else {
-      $where = " access_level >= $level ";
+      $query = "SELECT user_id,bin_id,lvl FROM ".$this->table_access;      
+      $query .= " WHERE bin_id IN(".join(",",$bins).")";
+      $vals = $this->db_query($query);
+      for($i=0; $i<count($vals); $i++) {
+	$v = $vals[$i];
+	if( $v[2] < $lvl )
+	  $outs[] = $v[0];
+	else
+	  $ins[] = $v[0];
+      }
     }
-    if( $active )
-      $where .= " AND active = 1 ";
-    if( $where )
-      $where = "WHERE $where";
-    if( $sort )
-      $sort = "ORDER BY $sort";
-    $query = "SELECT * FROM ".$this->table_users." $where $sort";
-    $this->addDebug("get_users()Query",$query,2);
-    return( $this->db_queryIndexed($query) );
+
+    // set the query for users
+    $query = "SELECT * FROM ".$this->table_users;
+    $query .= " WHERE (access_level >= $lvl";
+    // add the users with bin specific access
+    $query .= count($ins)? " OR user_id IN(".join(',',$ins)."))" : ")";    
+    // remove the users with bin specific overrides
+    if( count($nots) ) {
+      $query .= " AND user_id NOT IN(".join(",",$nots).")";
+    }
+    // group the results for distinct
+    $query .= " GROUP BY user_id";
+    // set the ordering
+    $query .= " ORDER BY lname,fname";
+    // query
+    $vals = $this->db_queryIndexed($query);
+    // debug
+    $this->addDebug("get_user","results: ".count($vals)."/$query",3);
+    // return
+    return $vals;
   }
 
   /*
@@ -399,6 +411,23 @@ class zenTrack extends zen {
 	}
       }
     }
+    // make sure we don't add the egate user
+    if( $params["user_id"] ) {
+      $usr = $this->get_user($params["user_id"]);
+      if( $usr["login"] == "egate" || $usr["initials"] == "egate" ) {
+	$this->addDebug("add_to_notify_list","Ignoring egate account",3);
+	return false;
+      }
+    }
+
+    // make sure we have a valid entry
+    if( (!isset($params["user_id"])||!trim($params["user_id"]))
+	&&
+	(!isset($params["email"])||!trim($params["email"])) ) {
+      $this->addDebug("add_to_nofiy_list","Entry was blank",2);
+      return false;
+    }
+    
     // appends a new entry to the existing notify list
     $params["ticket_id"] = $ticket_id;
     $id = $this->db_insert($this->table_notify_list,$params);
@@ -797,7 +826,7 @@ class zenTrack extends zen {
 			 );
       $t = $this->get_ticket($id);
       $logParams["bin_id"] = $t["bin_id"];
-      $logParams["entry"] = "ASSIGNED TO $name";
+      $logParams["entry"] = "Assigned to $name";
       if( $comments )
 	$logParams["entry"] .= "\n\n".$comments;
       $this->add_log($id, $logParams);                
@@ -809,6 +838,7 @@ class zenTrack extends zen {
 	  $name = $this->formatName($recipient,1);
 	$subject = "ticket #$id assigned to $name";
 	$emailParams["Assigned by"] = $this->formatName($user_id);
+	$emailParams["Assigned to"] = $name;
 	if( $comments )
 	  $emailParams["body"] = htmlentities($comments);
 	$emailParams["tid"] = $id;
@@ -890,7 +920,7 @@ class zenTrack extends zen {
 	$recipients = $this->get_notify_recipients($id);
 	if( is_array($recipients) && count($recipients) ) {
 	  $bin = $t["bin_id"];
-	  $subject = "[".$this->settings["system_name"]."] ticket #$id closed";
+	  $subject = "Ticket #$id closed";
 	  $emailParams["Close Time"] = $this->showDateTime($this->currTime);
 	  if( $comments )
 	    $emailParams["body"] = htmlentities($comments);
@@ -929,7 +959,7 @@ class zenTrack extends zen {
 	$recipients = $this->get_notify_recipients($id);
 	if( is_array($recipients) && count($recipients) ) {
 	  $bin = $t["bin_id"];
-	  $subject = "ticket #$id closed";
+	  $subject = "Ticket #$id closed";
 	  $emailParams["Close Time"] = $this->showDateTime($this->currTime);
 	  if( $comments )
 	    $emailParams["body"] = htmlentities($comments);
@@ -967,6 +997,7 @@ class zenTrack extends zen {
 	  $eParams["body"] = $comments;	
 	$eParams["tid"] = $id;
 	$message = $this->formatEmailMessage($eParams);
+	$subject = "Log entry from ".$zen->formatName($user_id,2);
 	$this->sendEmail($recipients,$subject,$message,$user_id);
       }
     }
@@ -1008,6 +1039,7 @@ class zenTrack extends zen {
 	  $eParams["body"] = $comments;
 	$eParams["tid"] = $id;
 	$message = $this->formatEmailMessage($eParams);
+	$subject = "Ticket $id moved to ".$this->getBinName($newBin);
 	$this->sendEmail($recipients,$subject,$message,$user_id);
       }
     }
@@ -1173,7 +1205,7 @@ class zenTrack extends zen {
       $bin = $t["bin_id"];
       $recipients = $this->get_notify_recipients($id);
       if( is_array($recipients) ) {
-	$subject = "[".$this->settings["system_name"]."] ticket #$id closed";
+	$subject = "Ticket #$id closed";
 	$emailParams["Close Time"] = $this->showDateTime($this->currTime);
 	if( $comments )
 	  $emailParams["body"] = htmlentities($comments);
@@ -1207,8 +1239,7 @@ class zenTrack extends zen {
 	$recipients = $this->get_notify_recipients($id);
 	$name = $this->formatName($user_id);
 	if( is_array($recipients) && count($recipients) ) {
-	  $subject = "[".$this->settings["system_name"]
-	    ."] ticket #$id assigned to $name";
+	  $subject = "Ticket #$id assigned to $name";
 	  $emailParams["Assigned To"] = $name;
 	  $emailParams["body"] = "Ticket #$id was reassigned by $name";
 	  $emailParams["tid"] = $id;
@@ -1264,17 +1295,12 @@ class zenTrack extends zen {
        // the ticket creator
        if( $this->settings["default_notify_creator"] == "on" ) {
 	 // make sure we don't add the egate user
-	 $usr = $this->get_user($params["creator_id"]);
-	 if( $usr["login"] != "egate" && $usr["initials"] != "egate" )
-	   $notify_list[]["user_id"] = $params["creator_id"];
+	 $notify_list[]["user_id"] = $params["creator_id"];
        }
        // the ticket owner
        if( $this->settings["default_notify_owner"] == "on"
 	   && $params["user_id"] ) {
-	 // make sure we don't add the egate user
-	 $usr = $this->get_user($params["creator_id"]);	
-	 if( $usr["login"] != "egate" && $usr["initials"] != "egate" )
-	   $notify_list[]["user_id"] = $params["user_id"];	
+	 $notify_list[]["user_id"] = $params["user_id"];	
        }
        // create the list
        $this->set_notify_list($id,$notify_list);
@@ -1297,7 +1323,7 @@ class zenTrack extends zen {
 	 $recipients = $this->get_notify_recipients($id);
 	 if( is_array($recipient) && count($recipients) ) {
 	   $recipient = array_unique($recipient);
-	   $subject = "[".$this->settings["system_name"]."] ticket #$id created";
+	   $subject = "Ticket #$id created";
 	   $emailParams["Open Time"] = $this->showDateTime($this->currTime);
 	   if( $comments )
 	     $emailParams["body"] = htmlentities($comments);
@@ -1927,7 +1953,6 @@ class zenTrack extends zen {
 	$des = preg_replace("#&quot;#",'"',
 			    preg_replace("#&amp;#","&",$t["description"]));
 	$des = preg_replace("@<br( /)?>@", "", $des);
-	$message .= "\n\n$des\n\n------------------\n\n";
       } else if( $k == "log" ) {
 	// print the log for the ticket
 	if( $this->settings["email_max_logs"] )
@@ -1935,8 +1960,8 @@ class zenTrack extends zen {
 	$logs = $this->get_logs($v, 'created DESC', $lim);
 	$message .= "\n\n";
 	if( is_array($logs) ) {
-	  $att = $this->get_attachments($v,null,1);          
-	  $message .= "LOG ENTRIES\n\n";
+	  $att = $this->get_attachments($v,null,1);
+	  $message .= "\nLOG HISTORY\n------------------\n";
 	  $sep = "--";
 	  foreach( $logs as $l ) {
 	    $message .= $this->showDateTime($l["created"],'M');
@@ -1961,7 +1986,6 @@ class zenTrack extends zen {
 		$message .= "\t".$this->attachmentUrl."?file=$a[filename]\n";
 	      }
 	    }        
-	    $message .= "------------------\n\n";
 	  }
 	  if( $v > 0 && count($logs) == $v ) {
 	    $message .= "\nMore log entries.  View them by "
@@ -2047,8 +2071,20 @@ class zenTrack extends zen {
 	$headers .= "cc: $cc_address\n";
       }
 
+      // load the header and footer
+      $hd_tmp = new zenTemplate($this->templateDir."/email/heading.template");
+      $ft_tmp = new zenTemplate($this->templateDir."/email/footer.template");
+      // try to find the id
+      if( preg_match("/ticket #?([0-9]+)/i",$subject,$mt) ) {
+	$id = $mt[1];
+      }
+      else {
+	$id = "nnnn";
+      }
+      $ft_tmp->values(array("id"=>$id));
       // finalize and send the message
       $message = (get_magic_quotes_gpc())? $message : addslashes($message);
+      $message = $hd_tmp->process().$message.$ft_tmp->process();
       $subject = (get_magic_quotes_gpc())? $subject : addslashes($subject);
       $headers = str_replace("\n", "\r\n", $headers);
       $this->addDebug("sendEmail","$recipient_address,$subject,$headers",3);

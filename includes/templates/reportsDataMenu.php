@@ -60,7 +60,7 @@
      print "</textarea>\n";
      $onclick = "onClick='return popupWindowScrolls(\"$rootUrl/helpers/$searchbox.php?return_form=reportDataForm&return_field=data_set\",\"popupHelper\",375,400)'";
      print "&nbsp;<input type='button' class='searchbox' value=' ... ' $onclick>\n";
-     print "<br><span class='note'>Type ids separated by commas, or press 'search'</span>\n";
+     print "<br><span class='note'>Type ids separated by commas, or press button to search</span>\n";
    } else {
      print "<select name='data_set[]' multiple>\n";
      if( !is_array($type_list) || count($type_list) < 1 ) {
