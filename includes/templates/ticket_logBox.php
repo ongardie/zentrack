@@ -28,10 +28,11 @@
       // the log and attachments
       if( $l["entry"] ) {
 	print "<br>\n";
-	$l["entry"] = nl2br(htmlspecialchars(stripslashes($l["entry"])));
+//	$l["entry"] = nl2br(htmlspecialchars(stripslashes($l["entry"])));
+	$l["entry"] = nl2br(htmlspecialchars($l["entry"]));
 	$l["entry"] = preg_replace("#\&amp;#", "&", $l["entry"]);
 //	$l["entry"] = preg_replace("#(https?://[a-zA-Z0-9_/.-]+[a-zA-Z0-9\-_]+\.[a-z]{2,3}(/[a-zA-Z/\._\?=&0-9-]+))#", "<a href='\\1' target='_blank'>\\1</a>", $l["entry"]);
-	$l["entry"] = preg_replace("|(https?://[a-zA-Z0-9_/.-]+(/[a-zA-Z/._?=&0-9;:#,+$!~*\'()-]+[a-zA-Z_=&0-9#+~-]))|",
+	$l["entry"] = preg_replace("|(https?://[a-zA-Z0-9_/.-]+(/[a-zA-Z0-9/\.,_\?=&;:#+$!~*%'()-]+[a-zA-Z0-9_=&#+~%-]))|",
        "<a href='\\1' target='_blank'>\\1</a>", $l["entry"]);
 	$l["entry"] = preg_replace("#([^/])(www\.)([a-zA-Z_/.-]+[a-zA-Z])#", 
 	    "\\1<a href='http://www.\\3' target='_blank'>www.\\3</a>", $l["entry"]);

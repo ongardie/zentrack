@@ -10,6 +10,8 @@
 2003-04-16, Rob Hillis
   Modified regexp when displaying logs to properly link entire URL, including punctuation
     - zentrack/includes/templates/ticket_logBox.php 1.11/1.12
+  Fix bug where UNC paths are not displayed properly in logs
+	- zentrack/includes/templates/ticket_logBox.php 1.13
 	
 2003-04-15, Kato
   Added two new egate utilities to allow for simpler email ingestion
