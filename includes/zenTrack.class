@@ -811,7 +811,7 @@ class zenTrack extends zen {
     else if( $this->settings["email_pending"] == "on" ) {
       $recipients = $this->get_notify_recipients($id);
       // make sure testers get notification      
-      $vals = $this->get_bin_roles($t['bin_id'], $this->getRoleId("tester"));
+      $vals = $this->get_bin_role_emails($t['bin_id'], $this->getRoleId("tester"));
       $this->checkIncludedRecipients($recipients,$vals);
       // create email
       if( is_array($recipients) && count($recipients) ) {
@@ -857,7 +857,7 @@ class zenTrack extends zen {
       }
     }
     if( $res && $this->settings["log_assign"] == 'on' ) {
-      $name = $this->formatName($recipient,1);
+      $name = $this->formatName($user,1);
       $logParams = array(
                          "action"   =>  'ASSIGNED',
                          "user_id"   =>  $user_id
@@ -869,9 +869,10 @@ class zenTrack extends zen {
       $this->add_log($id, $logParams);                
     }
     if( $res && $this->settings["email_assign"] == "on" ) {
+      $user = $this->get_user($recipient);
       $recipients = $this->get_notify_recipients($id);
       // make sure the assignee gets a notification
-      $this->checkIncludedRecipients($recipients,$recipient);
+      $this->checkIncludedRecipients($recipients,$user["email"]);
       // create email
       if( is_array($recipients) && count($recipients) ) {
         if( !$name )
@@ -965,7 +966,7 @@ class zenTrack extends zen {
 	// send email
 	$recipients = $this->get_notify_recipients($id);
         // make sure the manager gets a notification
-        $vals = $this->get_bin_roles($t['bin_id'],$this->getRoleId('manager'));
+        $vals = $this->fetch_bin_role_emails($t['bin_id'],$this->getRoleId('manager'));
         $this->checkIncludedRecipients($recipients,$vals);
         // create email
 	if( is_array($recipients) && count($recipients) ) {
@@ -1009,10 +1010,10 @@ class zenTrack extends zen {
 	$recipients = $this->get_notify_recipients($id);
         // make sure the testers/managers gets a notification
         if( $t['tested'] == 1 ) {
-          $vals = $this->get_bin_roles($t['bin_id'], $this->getRoleId('tester'));
+          $vals = $this->fetch_bin_role_emails($t['bin_id'], $this->getRoleId('tester'));
         }
         if( $t['tested'] != 1 || !is_array($vals) ) {
-          $vals = $this->get_bin_roles($t['bin_id'], $this->getRoleId('manager'));
+          $vals = $this->fetch_bin_role_emails($t['bin_id'], $this->getRoleId('manager'));
         }        
         $this->checkIncludedRecipients($recipients, $vals);
         // create email
@@ -1089,7 +1090,7 @@ class zenTrack extends zen {
     if( $res && $this->settings["email_arrival"] == "on" ) {
       $recipients = $this->get_notify_recipients($id);
       // make sure the manager gets a notification
-      $vals = $this->get_bin_roles($t['bin_id'], $this->getRoleId('manager'));
+      $vals = $this->fetch_bin_role_emails($t['bin_id'], $this->getRoleId('manager'));
       $this->checkIncludedRecipients($recipients,$vals);
       // create email
       if( is_array($recipients) && count($recipients) ) {
@@ -1128,8 +1129,11 @@ class zenTrack extends zen {
     if( $res && $this->settings["email_reject"] == "on" ) {
       $recipients = $this->get_notify_recipients($id);
       // make sure the sender gets an email
-      $this->checkIncludedRecipients($recipients,$sender['user_id']);
-      if( is_array($recipients) && count($recipients) ) {
+      if( is_array($sender) && isset($sender["user_id"]) ) {
+	$user = $this->get_user($sender["user_id"]);
+	$this->checkIncludedRecipients($recipients,$user['email']);
+      }
+      if( is_array($recipients) && count($recipients) ) { 
         // add the sender if not on notify list
         if( $sender && $sender["user_id"] ) {
           $usr = $this->get_user($sender["user_id"]);
@@ -1240,7 +1244,12 @@ class zenTrack extends zen {
     if( $res && ($this->settings["email_created"] == "on" 
                  || $this->settings["email_arrival"] == "on")  ) {
       $recipients = $this->get_notify_recipients($id);
-      $this->checkIncludedRecipients($recipients,$t['user_id']);
+      if( $t['user_id'] ) {
+	$user = $this->get_user($t["user_id"]);
+	if( is_array($user) && $user["email"] ) {
+	  $this->checkIncludedRecipients($recipients,$user['email']);
+	}
+      }
       if( is_array($recipients) && count($recipients) ) {
         $subject = $this->ptrans("Ticket #?: reopened",array($id));
         $eParams = array(
@@ -1284,7 +1293,7 @@ class zenTrack extends zen {
       $bin = $t["bin_id"];
       $recipients = $this->get_notify_recipients($id);
       // make sure the testers/managers gets a notification
-      $vals = $this->get_bin_roles($t['bin_id'], $this->getRoleId('manager'));
+      $vals = $this->fetch_bin_role_emails($t['bin_id'], $this->getRoleId('manager'));
       $this->checkIncludedRecipients($recipients,$vals);
       // create email
       if( is_array($recipients) ) {
@@ -1320,7 +1329,12 @@ class zenTrack extends zen {
       }
       if( $this->settings["email_assign"] == "on" ) {
         $recipients = $this->get_notify_recipients($id);
-        $this->checkIncludedRecipients($recipients,$t['user_id']);
+	if( $t["user_id"] ) {
+	  $user = $this->get_user($t["user_id"]);
+	  if( $user['email'] ) {
+	    $this->checkIncludedRecipients($recipients,$user['email']);
+	  }
+	}
         $name = $this->formatName($user_id);
         if( is_array($recipients) && count($recipients) ) {
           $subject = $this->ptrans("Ticket #?: yanked by ?",array($id,$name));
@@ -1404,7 +1418,12 @@ class zenTrack extends zen {
         $bin = $t["bin_id"];
         // set the recipient list
         $recipients = $this->get_notify_recipients($id);
-        $this->checkIncludedRecipients($recipients,$params['user_id']);
+	if( $params["user_id"] ) {
+	  $user = $this->get_user($params["user_id"]);	
+	  if( $user["email"] ) {
+	    $this->checkIncludedRecipients($recipients,$params['user_id']);
+	  }
+	}
         if( is_array($recipients) && count($recipients) ) {
           $recipient = array_unique($recipients);
           $subject = $this->ptrans("Ticket #?: created",array($id));
@@ -1936,20 +1955,17 @@ class zenTrack extends zen {
    * insures that members are included in a recipient list
    *
    * @param array $recipients the list to be added to
-   * @param array $vals the list to insert if missing
+   * @param array $vals an array of email addresses, or a single email address to check
    * @return array complete list
    */
   function checkIncludedRecipients( &$recipients, $vals ) {
     if( !is_array($recipients) && $vals ) {
-      if( is_array($vals) && $vals["user_id"] )
-        $recipients = array($vals["user_id"]);
-      else
-        $recipients = is_array($vals)? $vals : array($vals);
+      $recipients = (is_array($vals))? $vals : array($vals);
     }
     else if( is_array($vals) ) {
       foreach($vals as $v) {
         if( !in_array($v,$recipients) ) {
-          $recipients[] = is_array($v)? $v["user_id"] : $v;
+          $recipients[] = $v;
         }
       }
     }
@@ -2003,6 +2019,18 @@ class zenTrack extends zen {
     
     return ($result);
   }
+
+  function fetch_bin_role_emails( $bin_id, $role = '' ) {
+    $vars = array();
+    $vals = $this->fetch_bin_roles($bin_id, $role, 'email');
+    if( is_array($vals) ) {
+      foreach($vals as $v) {
+	$user = $this->get_user($v["user_id"]);
+	$vars[] = $user["email"];
+      }
+    }
+    return $vars;
+  }
   
   function fetch_bin_roles( $bin_id, $role = '' ) {
     // fetches members of bin with a particular
@@ -2025,6 +2053,7 @@ class zenTrack extends zen {
     }
     // set the fields to retrieve
     $fields = ($role)? " user_id " : " user_id, notes ";
+    
     // run the query
     $query = "SELECT $fields FROM ".$this->table_access
       ." WHERE $where";
