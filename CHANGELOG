@@ -12,6 +12,8 @@ abstraction, and endless possibilities for project expansion.
 --------------------
 
 2004-11-16, cfalonso
+  Don't show "click here to edit rules" after editing details of a Javascript or File data group (Bug #140)
+    - zentrack_2/www/admin/addGroupSubmit.php 1.10
   Fix to log properly ticket edit's changes
     - zentrack_2/includes/zenTrack.class 1.163
   Fix to properly display ticket_titleBox information when adding new recipients to notify list (Bug #157).
