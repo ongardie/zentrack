@@ -136,7 +136,8 @@ class Zen {
                                                   $db['db_host'],
                                                   $db['db_user'],
                                                   $db['db_pass'],
-                                                  $db['db_instance']);
+                                                  $db['db_instance'],
+                                                  $db['db_persistent']);
       
       $GLOBALS['dbConnection']->setCacheDirectory( $dir_cache );
       $GLOBALS['dbConnection']->setPrefix( $prefix );

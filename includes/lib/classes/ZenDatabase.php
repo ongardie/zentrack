@@ -23,12 +23,13 @@ class ZenDatabase extends Zen {
    * @param string $dbpass database password
    * @param string $dbinst database instance to connect to
    */
-  function ZenDatabase( $dbtype, $dbhost, $dbuser, $dbpass, $dbinst ) {
+  function ZenDatabase( $dbtype, $dbhost, $dbuser, $dbpass, $dbinst, $persistent = false ) {
     $this->_dbtype = $dbtype;
     $this->_dbhost = $dbhost;
     $this->_dbinst = $dbinst;
     $this->_dbuser = $dbuser;
     $this->_dbpass = $dbpass;
+    $this->_persist = $persistent;
     $this->debug( "ZenDatabase", "ZenDatabase", 
                   "Initializing db: [host]".$dbhost.", [inst]".$dbinst
                   .", [user]".$dbuser.", [pass hidden]", 0, 3);
@@ -239,7 +240,13 @@ class ZenDatabase extends Zen {
    * @return boolean
    */
   function _connect() {
-    if (!$this->_adodb->Connect($this->_dbhost, $this->_dbuser, $this->_dbpass, $this->_dbinst)) {
+    if( $this->_persist ) {
+      $bool = $this->_adodb->PConnect($this->_dbhost, $this->_dbuser, $this->_dbpass, $this->_dbinst);
+    }
+    else {
+      $bool = $this->_adodb->Connect($this->_dbhost, $this->_dbuser, $this->_dbpass, $this->_dbinst);
+    }
+    if ( !$bool ) {
       $this->debug($this, "connect", $this->_adodb->ErrorMsg(), 202, 1);
       $this->_connected = false;
       return false;
@@ -338,6 +345,15 @@ class ZenDatabase extends Zen {
    * @since 1.0
    */
   var $_adodb;
+
+  /**
+   * Whether to use persistent connections or not
+   *
+   * @var boolean
+   * @access private
+   * @since 1.0
+   */
+  var $_persist;
 
   /** 
    * The prefix in front of table names 

@@ -62,6 +62,12 @@ db_user = "{db_user}"
 ; password for logging in, sometimes blank for postgres
 db_pass = "{db_pass}"
 
+; whether we should use persistent connections or not
+; On improves efficiency, if your db experiences problems
+; with too many open connections, or not closing connections
+; when you would like, turn this Off
+db_persistent = "{db_persistent}"
+
 ;the prefix for table names, keep in upper case
 table_prefix = "{table_prefix}"
 
@@ -133,6 +139,3 @@ excluded = "{excluded}"
 ;    included = "help/special.php"
 ; (i.e. help/ directory doesn't require login, except the special.php page)
 included = "{included}"
-
-
-
