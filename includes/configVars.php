@@ -48,9 +48,9 @@
   */
 
    $this->database_type      = 'mysql';          //mysql,oracle,postgres,sqlserver
-   $this->database_instance  = 'devtrack';	 //database name
-   $this->database_login     = 'test';           //database login
-   $this->database_password  = 'test';           //database password
+   $this->database_instance  = 'zentrack';	 //database name
+   $this->database_login     = 'zentrack';           //database login
+   $this->database_password  = 'ap1z[043a]';           //database password
    $this->database_host      = 'localhost';      //host name, if on same machine, 
                                                  //this is localhost
 
