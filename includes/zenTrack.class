@@ -814,7 +814,7 @@ class zenTrack extends zen {
 		      "status"  =>  'CLOSED',
 		      "ctime"   =>  $this->currTime
 		      );
-      if( $user_id ) {
+      if( strlen($user_id) ) {
 	$params["user_id"] = $user_id;
       }
       $res = $this->update_ticket($id, $params);

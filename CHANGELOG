@@ -6,7 +6,7 @@
  endless possibilities for project expansion.
 
 ----- V2.2.3 (development, see CVS) ----
-	
+
 2003-03-06, Kato
   Session enhancments: support for older versions of php, and hopefully
   will clear up problems for users experiencing multiple login requests
@@ -38,6 +38,11 @@
     - www/reports/save.php 1.7
   Cleanup of comments and instructions
     - install/header.php.default 1.6
+	
+2003-02-28, Kato, Darktroll
+  Added counts to ticket tabs
+    - includes/zenTrack.class 1.63
+    - includes/templates/ticket_box.php 1.5 & 1.6
 	
 2003-02-27, Kato
   Notify List Implementations (not complete... more to come)
