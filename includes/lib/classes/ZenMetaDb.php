@@ -15,7 +15,7 @@ class ZenMetaDb extends Zen {
    *
    * The options for using the cache and providing an alternate database.xml file are
    * for upgrade functions, and not normally necessary or useful.  All cache flushing
-   * can be done with {@link ZenMetaDb::clearDbSchemaCache()}, and the database schema
+   * can be done with {@link ZenMetaDb::clearCacheInfo()}, and the database schema
    * will not change often.
    *
    * @param boolean $use_cache attempt to load/store data in session
@@ -245,13 +245,15 @@ class ZenMetaDb extends Zen {
    * @static
    */
   function clearCacheInfo() {
+    $conn =& Zen::getDbConnection(false);
+    if( $conn ) { $conn->flushCache(); }
     $dbSchema = ZenUtils::getIni('directories','dir_cache').'/dbSchemaInfo';
     $metaDb = ZenUtils::getIni('directories','dir_cache').'/metaDbInfo';
     if( file_exists($dbSchema) ) { @unlink($dbSchema); }
     if( file_exists($metaDb) ) { @unlink($metaDb); }
     unset($GLOBALS['tcache']['metaDb']);
     unset($GLOBALS['tcache']['dbSchema']);
-    Zen::debug($this, 'clearDbSchema', "dbSchema cache files unlinked", 00, LVL_DEBUG);
+    Zen::debug($this, 'clearDbSchema', "DB cache emptied", 00, LVL_DEBUG);
   }
 
   /**

@@ -48,7 +48,7 @@ class ZenMessageList extends Zen {
     $this->_counts["level"] = array();
 
     $this->_levels = array();
-    $this->_levels["default"] = array( "default" => 0 );
+    $this->_levels["default"] = array( "default" => 1 );
 
     $res = $this->_loadConfig($config);    
   }
@@ -358,7 +358,8 @@ class ZenMessageList extends Zen {
       // develop mode, otherwise it is 3 (errors,warnings,notes)
       $lvl = ZenUtils::getIni('debug','develop_mode')? 3 : 1;
       $this->_levels = array('default'=>array('default'=>$lvl));
-      Zen::debug($this,'_loadConfig',"The debug xml config ($xmlfile) was not found!",105,LVL_ERROR);
+      $this->add( $this, '_loadConfig', 
+                   "The debug xml config ($xmlfile) was not found!", 21, LVL_ERROR);
     }
   }
 

@@ -356,7 +356,7 @@ class ZenQuery extends Zen {
    * @param int $cacheTime The amount of time to leave the query in the cache.
    * @return mixed
    */
-  function get($cacheTime = 0) {
+  function get($cacheTime = null) {
     if (count($this->_fields) > 1) {
       $this->debug($this, 'get', 'This function may be called only when one value is requested.', 160, LVL_ERROR);
       return false;
@@ -389,7 +389,7 @@ class ZenQuery extends Zen {
    * @param int $cacheTime The amount of time to leave the query in the cache.
    * @return array (empty array if query fails)
    */
-  function selectRow($cacheTime = 0, $indexed = false) {
+  function selectRow($cacheTime = null, $indexed = false) {
     $vals = $this->select( $cacheTime, $indexed );
     if( !count($vals) ) {
       return array();
@@ -408,7 +408,7 @@ class ZenQuery extends Zen {
    * @param int $cacheTime The amount of time to leave the query in the cache.
    * @return array of rows(array mapped (string)field->(mixed)value) (empty array if query fails)
    */
-  function select($cacheTime = 0, $indexed = false) {
+  function select($cacheTime = null, $indexed = false) {
     $this->_dbobject->setFetchMode($indexed);
     $this->_queryType = 'SELECT';
     $result = $this->_execute($cacheTime);
@@ -507,7 +507,7 @@ class ZenQuery extends Zen {
    * @param int $cacheTime The amount of time to leave the query in the cache.
    * @return mixed
    */
-  function _execute($cacheTime = 0) {
+  function _execute($cacheTime = null) {
     // generate query
     $query = $this->_buildQuery();
     $this->_queryString = $query; //store for debugging

@@ -282,7 +282,9 @@
     /** Parse xml file and load vars into $this->_xml */
     function _getAndParseXML() {
       if( !$this->_xml ) {
-        $filename = $GLOBALS['zen']['directories']['dir_classes'].'/db/'.$GLOBALS['zen']['db']['db_type'].'.xml';
+        $typeinfo = $this->_dbo->getDbTypeInfo();
+        $type = $typeinfo->mapFromAdoType($GLOBALS['zen']['db']['db_type']);
+        $filename = $GLOBALS['zen']['directories']['dir_classes']."/db/$type.xml";
         Assert::assert( file_exists($filename), "$filename not found, unable to verify" );
         $parser = new ZenXMLParser();
         $this->_xml =& $parser->parse( join("",file($filename)) );

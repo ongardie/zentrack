@@ -285,7 +285,7 @@ else
 <?
      foreach( getTestList() as $key ) {
        $val = basename($key);
-       $sel = (isset($directory) && $directory == $key)? ' selected' : '';
+       $sel = (basename($directory) == $val)? ' selected' : '';
        print "<option value='$key'$sel>$val</option>\n";
      }
 ?>

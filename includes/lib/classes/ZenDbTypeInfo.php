@@ -19,7 +19,7 @@ class ZenDbTypeInfo {
     $this->_dir = dirname(__FILE__);
     $this->_dbo =& $dbo;
     $t = $this->_dbo->getDbType();
-    $this->_type = isset($this->_type_aliases[$t])? $this->_type_aliases[$t] : $t;
+    $this->_type = ZenDbTypeInfo::mapFromAdoType($t);
     $this->_load();
   }
 
@@ -399,8 +399,32 @@ class ZenDbTypeInfo {
    * @return string a human readable string or 'Unknown' if not found
    */
   function getNameFromType( $type ) {
-    $t = isset($this->_type_aliases[$type])? $this->_type_aliases[$type] : $type;
-    return isset($this->_typesToNames[$t])? $this->_typesToNames[$t] : "Unknown";
+    $typesToNames = array(
+                          "oracle"   => "Oracle 8i/9i",
+                          "mssql"    => "Microsoft SQL Server",
+                          "postgres" => "PostgreSQL",
+                          "mysql"    => "MySql"
+                          );
+    $t = ZenDbTypeInfo::mapFromAdoType( $type );
+    return isset($typesToNames[$t])? $typesToNames[$t] : "Unknown";
+  }
+
+  /**
+   * STATIC: Returns the zen alias used for this database type based
+   * on the adodb alias from the zen.ini file.
+   *
+   * @static
+   * @param string $adodbType
+   * @return string
+   */
+  function mapFromAdoType( $adodbType ) {
+    $type_aliases = array(
+                          "oci8"      => "oracle",
+                          "oci8po"    => "oracle",
+                          "mssqlpo"   => "mssql",
+                          "postgres7" => "postgres",
+                          "mysqlt"    => "mysql");
+    return isset($type_aliases[$adodbType])? $type_aliases[$adodbType] : $adodbType;
   }
 
   /*************************************
@@ -447,22 +471,6 @@ class ZenDbTypeInfo {
                                      "dropcolumn", "delete",
                                      "insert",     "update");
     
-  /** @var array maps aliases to the correct db info file */
-  var $_type_aliases = array(
-                            "oci8"      => "oracle",
-                            "oci8po"    => "oracle",
-                            "mssqlpo"   => "mssql",
-                            "postgres7" => "postgres",
-                            "mysqlt"    => "mysql");
-
-  /** @var array maps types to human readable names */
-  var $_typesToNames = array(
-                            "oracle"   => "Oracle 8i/9i",
-                            "mssql"    => "Microsoft SQL Server",
-                            "postgres" => "PostgreSQL",
-                            "mysql"    => "MySql"
-                            );
-
   /** @var string the type of db we are using (aliased) */
   var $_type;
 

@@ -74,10 +74,14 @@ db_pass = "{db_pass="zentrack"}"
 ; On improves efficiency, if your db experiences problems
 ; with too many open connections, or not closing connections
 ; when you would like, turn this Off
-db_persistent = "{db_persistent="0"}"
+db_persistent = {db_persistent="0"}
 
 ;the prefix for table names, keep in upper case
 db_prefix = "{db_prefix="ZENTRACK_"}"
+
+;the length time to cache queries in seconds
+;use blank to disable caching
+cache_time = {cache_time=0}
 
 ;;;;;;;;;;;;;;;;; PAGE DISPLAY ;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; The properties concerning how pages are displayed

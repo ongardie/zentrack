@@ -271,7 +271,7 @@ class ZenTemplate {
         $n = $this->_parseString($parts[2]);
         ZenUtils::safeDebug($this, "_insert", 
                             "using {ini:category:varname} for '$text'", 0, LVL_DEBUG);
-        return Zen::getIniVal($c,$n);
+        return ZenUtils::getIni($c,$n);
       }
       case "foreach":
       {

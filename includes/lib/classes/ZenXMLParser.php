@@ -9,11 +9,6 @@
  class ZenXMLParser {
 
   /** 
-   * @var object $_parser holds the xml parser object 
-   */
-  var $_parser;
-
-  /** 
    * @var object $_current holds the current ZenXNode object
    */ 
   var $_current;
@@ -35,15 +30,15 @@
       $xmlstring = join("",file($xmlstring));
     }
     // set up a new XML parser to do all the work for us
-    $this->_parser = xml_parser_create();
-    xml_set_object($this->_parser, $this);
-    xml_parser_set_option($this->_parser, XML_OPTION_CASE_FOLDING, false);
-    xml_set_element_handler($this->_parser, "startElement", "endElement");
-    xml_set_character_data_handler($this->_parser, "characterData");
-    
+    $parser = xml_parser_create();
+    xml_set_object($parser, $this);
+    xml_parser_set_option($parser, XML_OPTION_CASE_FOLDING, false);
+    xml_set_element_handler($parser, "startElement", "endElement");
+    xml_set_character_data_handler($parser, "characterData");
+
     // parse the data and free the parser...
-    xml_parse($this->_parser, $xmlstring);
-    xml_parser_free($this->_parser);	
+    xml_parse($parser, $xmlstring);
+    xml_parser_free($parser);
     
     return $this->_current;
   }
@@ -61,8 +56,8 @@
    */
   function endElement($parser, $name) {
     $this->_current->final();
-    if( $this->_current->getParent() != null ) {
-      $this->_current =& $this->_current->getParent();      
+    if( $this->_current->parent() != null ) {
+      $this->_current =& $this->_current->parent();      
     }      
   }
 
@@ -70,7 +65,7 @@
    * used by the xml parser to attach data to a node
    */
   function characterData($parser, $data) {
-    $this->_current->data( $data );
+    $this->_current->setData( $data );
   }
 
   /** 
@@ -89,23 +84,23 @@
     $parms = array();
     if( is_array($node) ) {
       foreach($node as $parm) {
-        $key = $parm->getProperty('name');
-        if( $parm->getProperty('eval') == 'true' ) {
-          $val = $parm->getData();
+        $key = $parm->prop('name');
+        if( $parm->prop('eval') == 'true' ) {
+          $val = $parm->data();
           eval("\$parms[\$key] = $val;");
         }
         else {
           // add element to existing array
           if( isset($parms[$key]) && is_array($parms[$key]) ) {
-            $parms[$key][] = $parm->getData();
+            $parms[$key][] = $parm->data();
           }
           // create an array from element
           else if( isset($parms[$key]) ) {
-            $parms[$key] = array($parms[$key], $parm->getData());
+            $parms[$key] = array($parms[$key], $parm->data());
           }
           // just add element
           else {
-            $parms[$key] = $parm->getData();
+            $parms[$key] = $parm->data();
           }
         }
       }
@@ -142,7 +137,7 @@ class ZenXNode {
    *
    * @param string $data to be added to this node
    */
-  function data( $data ) {
+  function setData( $data ) {
     $this->_data .= $data;
   }
 
@@ -151,8 +146,8 @@ class ZenXNode {
    *
    * @param reference $child reference to the child object
    */
-  function child( &$child ) {
-    $n = $child->getName();
+  function setChild( &$child ) {
+    $n = $child->name();
     $this->_children["$n"][] =& $child;
   }
 
@@ -162,7 +157,7 @@ class ZenXNode {
   function final() {
     $this->_data = trim($this->_data);
     if( $this->_parent )
-      $this->_parent->child($this);
+      $this->_parent->setChild($this);
   }
 
   /**
@@ -180,12 +175,12 @@ class ZenXNode {
       }
       print "</ul>\n";
     }
-    if( $this->getData() ) {
-      print "<li>Data: ".htmlentities($this->getData())."</li>\n";
+    if( $this->data() ) {
+      print "<li>Data: ".htmlentities($this->data())."</li>\n";
     }
-    if( count($this->getChildren()) ) {
+    if( count($this->children()) ) {
       print "<li>Children</li><ul $pad>\n";
-      foreach($this->getChildren() as $set) {
+      foreach($this->children() as $set) {
         if( is_array($set) ) {
           foreach($set as $val) {
             $val->show();
@@ -206,10 +201,10 @@ class ZenXNode {
     // format the text
     $tabs = str_repeat('   ',$indent);
     // get this nodes attributes
-    $name = $this->getName();
-    $children = $this->getChildren();
-    $props = $this->getProps();    
-    $data = $this->getData();
+    $name = $this->name();
+    $children = $this->children();
+    $props = $this->props();    
+    $data = $this->data();
     // print the tag
     $text = "$tabs<$name";
     // print properties
@@ -227,7 +222,7 @@ class ZenXNode {
       }
       if( count($children) ) {
         $text .= "\n";
-        foreach($this->getChildren() as $c) {
+        foreach($this->children() as $c) {
           foreach($c as $child) {
             $text .= $child->toXML( $indent+1 );
           }
@@ -348,9 +343,9 @@ class ZenXNode {
    * @return array containing node and all children
    */
   function toArray( $compress = false ) {
-    $vals = array("name"=>$this->getName(),"properties"=>$this->getProps(),"data"=>$this->getData());
+    $vals = array("name"=>$this->name(),"properties"=>$this->props(),"data"=>$this->data());
     $vals["children"] = array();
-    foreach($this->getChildren() as $k=>$v) {
+    foreach($this->children() as $k=>$v) {
       if( is_array($v) ) {
 	foreach($v as $val) {
           if( $compress && !isset($vals["children"]["$k"]) ) {
@@ -422,25 +417,47 @@ class ZenXNode {
     $xml = join("",file($xmlFile));
     $parser = new ZenXMLParser();
     return $parser->parse($xml);
-  } 
+  }
 
   /** 
    * @return string name of the node 
    */
+  function name() { return $this->getName(); }
+
+  /**
+   * Alias for {@link name()}
+   */
   function getName() { return $this->_name; }
 
-  /** 
-   * @return ZenXNode parent object of this node or null (if this is root)
+  /**
+   * Return the parent node for this one
+   *
+   * @return ZenXNode null if this is the root node
    */
-  function getParent() { return $this->_parent; }
+  function &parent() { return $this->_parent; }
+
+  /**
+   * Alias for {@link parent()}
+   */
+  function &getParent() { return $this->parent(); }
 
   /** 
    * @return String any data contained in this node: <code><node>...data...</node></code>
+   */
+  function data() { return $this->getData(); }
+
+  /**
+   * Alias for {@link data()}
    */
   function getData() { return $this->_data; }
 
   /** 
    * @return array properties from this node: <code><node property="prop..."></code>
+   */
+  function props() { return $this->getProps(); }
+
+  /**
+   * Alias for {@link props()}
    */
   function getProps() { return $this->_props; }
 
@@ -449,6 +466,11 @@ class ZenXNode {
    * there may be more than one child node with the same name
    *
    * @return array associative array of (string)name => array(ZenXNode) objects representing children of this node
+   */
+  function children() { return $this->getChildren(); }
+
+  /**
+   * Alias for {@link children()}
    */
   function getChildren() { return $this->_children; }
 
@@ -459,6 +481,11 @@ class ZenXNode {
    * @param integer $index [optional] if provided, returns only the specific ZenXNode, otherwise array of matches
    * @return mixed a single child ZenXNode, if the index is provided, or the array of children mathing this name
    */
+  function child( $child, $index = null ) { return $this->getChild($child,$index); }
+
+  /**
+   * Alias for {@link child()}
+   */
   function getChild( $child, $index = null ) { 
     if( isset($this->_children["$child"]) ) {
       return strlen($index)? $this->_children[$child][$index] : $this->_children[$child]; 
@@ -466,10 +493,30 @@ class ZenXNode {
     else { return null; }
   }
 
-  /** 
+  /**
+   * Returns a count of children matching the keyname
+   */
+  function count($child) { return $this->getChildCount($child); }
+
+  /**
+   * Alias for {@link count()}
+   */
+  function getChildCount( $child ) {
+    if( isset($this->_children["$child"]) ) {
+      return count($this->_children["$child"]);
+    }
+    return 0;
+  }
+
+  /**
    *
    * @param string $prop is name of property to retrieve
    * @return String value of a node property or null if not set
+   */
+  function prop($prop) { return $this->getProperty($prop); }
+
+  /**
+   * Alias for {@link prop()}
    */
   function getProperty( $prop ) {
     if( isset($this->_props["$prop"]) )

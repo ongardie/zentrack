@@ -99,19 +99,21 @@ class Zen {
    * which should contain the zen.ini directives
    *
    * @return object databaseObject
+   * @param boolean $connect, if false, the adodb object is created, but not connected to db
    */
-  function &getDbConnection() {
+  function &getDbConnection( $connect = true ) {
     if( !isset($GLOBALS['dbConnection']) || $GLOBALS['dbConnection'] == null ) {
       ZenUtils::safeDebug("Zen", "getDbConnection", "Creating database connection (cache empty)", 0, LVL_NOTE);
       $db = ZenUtils::getIni('db');
       $dir_cache = ZenUtils::getIni('directories','dir_dbcache');
       $prefix = ZenUtils::getIni('db','db_prefix');
       $GLOBALS['dbConnection'] = new ZenDatabase($db['db_type'], 
-                                                  $db['db_host'],
-                                                  $db['db_user'],
-                                                  $db['db_pass'],
-                                                  $db['db_instance'],
-                                                  $db['db_persistent']);
+                                                 $db['db_host'],
+                                                 $db['db_user'],
+                                                 $db['db_pass'],
+                                                 $db['db_instance'],
+                                                 $db['db_persistent'],
+                                                 $connect);
       $GLOBALS['dbConnection']->setCacheDirectory( $dir_cache );
       $GLOBALS['dbConnection']->setPrefix( $prefix );
     }
@@ -211,9 +213,9 @@ class Zen {
    * Determine time to cache general sql queries
    */
   function getCacheTime() {
-    $time = Zen::getSetting("common", "cache_time");
+    $time = ZenUtils::getIni("db", "cache_time");
     if( !$time ) {
-      $time = 0;
+      $time = null;
     }
     return $time;
   }

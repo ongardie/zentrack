@@ -38,18 +38,21 @@ class ZenDBXML {
     else { $tables = $this->_schema->listTables(); }
     $results = array(0,0);
     foreach( $tables as $t ) {
-      $table = $this->_schema->getTableArray($t);
+      $table = $this->_schema->getMetaTable($t);
       $t = strtolower($t);
       // do not query abstract tables
-      if( $table['is_abstract'] ) { continue; }
+      if( $table->abstract() ) { continue; }
 
       $rows = Zen::simpleQuery($t);
       if( !count($rows) ) {
-        ZenUtils::safeDebug($this, 'dumpDatabaseData', "$t contains no data, skipped", 0, LVL_INFO);
+        ZenUtils::safeDebug($this, 'dumpDatabaseData', 
+                            "$t contains no data, skipped", 0, LVL_INFO);
         continue;
       }
       else {
-        ZenUtils::safeDebug($this, 'dumpDatabaseData', "$t: backing up ".count($rows)." rows of data", 0, LVL_INFO);
+        ZenUtils::safeDebug($this, 'dumpDatabaseData', 
+                            "$t: backing up ".count($rows)." rows of data", 
+                            0, LVL_INFO);
       }
 
       $results[0]++;
@@ -64,7 +67,8 @@ class ZenDBXML {
       }
       $text .= "</dataDump>\n";
       if( !$this->_dumpToFile($file, $text, $compress) ) {
-        ZenUtils::safeDebug($this, 'dumpDatabaseData', "Unable to dump $t!", 220, LVL_ERROR);
+        ZenUtils::safeDebug($this, 'dumpDatabaseData', 
+                            "Unable to dump $t!", 220, LVL_ERROR);
       }
       else { 
         $results[1]++; 

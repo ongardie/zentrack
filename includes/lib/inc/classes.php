@@ -95,10 +95,12 @@
   /**
    * Loads a single class into memory if it doesn't exist already
    *
-   * If the location variable is not set, this method will attempt to divine the location by checking the ini settings ($GLOBAL or $_SESSION)
+   * If the location variable is not set, this method will attempt to divine the location by 
+   * checking the ini settings ($GLOBAL or $_SESSION)
    *
    * @param string $name the name of class to be loaded
-   * @param string $location is the full path to the libraries, if not provided, will search globals for ini settings
+   * @param string $location is the full path to the libraries, if not provided, 
+   *               will search globals for ini settings
    */
   function loadClass( $name, $location ) { 
     $file = (strpos($name, '.') > 0)? $name : "$name.php";

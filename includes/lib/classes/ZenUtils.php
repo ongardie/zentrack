@@ -824,7 +824,7 @@ class ZenUtils {
    */
   function parseBoolean($value, $default = false) {
     if( is_bool($value) ) { return $value; }
-    if( !$value ) { return false; }
+    if( !strlen($value) ) { return $default; }
     switch( strtolower(substr($value, 0, 1)) ) {
     case "t":
     case "y":

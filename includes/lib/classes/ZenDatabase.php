@@ -22,9 +22,10 @@ class ZenDatabase extends Zen {
    * @param string $dbuser database username
    * @param string $dbpass database password
    * @param string $dbinst database instance to connect to
+   * @param boolean $connect if false, no connection is made
    */
   function ZenDatabase( $dbtype, $dbhost, $dbuser, $dbpass, 
-                        $dbinst, $persistent = false ) {
+                        $dbinst, $persistent = false, $connect = true ) {
     $this->Zen();
     $this->_dbtype = $dbtype;
     $this->_dbhost = $dbhost;
@@ -38,7 +39,7 @@ class ZenDatabase extends Zen {
                         ." [persist:".($persistent?"true":"false")."]"
                         .(strlen($dbpass)? '':'(no password)'), 
                         0, LVL_NOTE);
-    ZenDatabase::_getDbConnection();
+    ZenDatabase::_getDbConnection($connect);
   }
 
   /**
@@ -143,7 +144,7 @@ class ZenDatabase extends Zen {
    *              Set to boolean false if you want to ignore caching altogether.
    * @return resource
    */
-  function execute( $query, $cacheTime = 0, $limit = 0, $offset = 0 ) {
+  function execute( $query, $cacheTime = null, $limit = 0, $offset = 0 ) {
     $this->_genDbError( "execute", "[cachetime:$cacheTime]$query", 
                         0, LVL_NOTE);
     if (!strlen($cacheTime) || !isset($GLOBALS['ADODB_CACHE_DIR']) 
@@ -202,7 +203,7 @@ class ZenDatabase extends Zen {
    * @param int $cacheTime The amount of time in seconds to cache the query. Set to 0 to clear cache(reset).
    * @return string
    */
-  function executeGetOne( $query, $cacheTime = 0) {
+  function executeGetOne( $query, $cacheTime = null) {
     if (!strlen($cacheTime) || !isset($GLOBALS['ADODB_CACHE_DIR']) || !strlen($GLOBALS['ADODB_CACHE_DIR'])) {
       $result = $this->_adodb->getOne($query);
     }
@@ -292,14 +293,10 @@ class ZenDatabase extends Zen {
   }
 
   /**
-   * Flush the database cache
+   * Flush the database cache.  To do this correctly, you should call
+   * {@link ZenMetaDb::clearCacheInfo()} rather than this method.
    */
   function flushCache() {
-    //todo
-    //todo
-    //todo
-    //todo check this function to make sure it works
-    //todo
     return $this->_adodb->cacheFlush();
   }
 
@@ -403,6 +400,13 @@ class ZenDatabase extends Zen {
   }
 
   /**
+   * Manually connect (only necessary if did not connect in the constructor)
+   */
+  function connect() {
+    if( !$this->isConnected() ) { $this->_connect(); }
+  }
+
+  /**
    * Reports whether connected to a database or not
    * @return boolean connection is open
    */
@@ -417,15 +421,18 @@ class ZenDatabase extends Zen {
    *
    * @access private
    * @since 1.0
+   * @param boolean $connect if false, the adodb object is returned, but not connected
    * @return object ADOConnection
    */
-  function _getDbConnection() {
+  function _getDbConnection( $connect = true ) {
     static $dbConnection;
     if (!isset($dbConnection)) {
       $dbConnection = &ADONewConnection($this->_dbtype);
     }
     $this->_adodb = $dbConnection;
-    $this->_connect();
+    if( $connect ) {
+      $this->_connect();
+    }
     return ($dbConnection);
   }
 
@@ -449,7 +456,7 @@ class ZenDatabase extends Zen {
   function _genDbError( $method, $message = 'Database error', $errnum = 200, $level = 1 ) {
     $this->_errmsg = $this->_adodb->ErrorMsg();
     $this->_errnum = $this->_adodb->ErrorNo();
-    return $this->_genDbError( $method, $message." [".$this->_adodb->ErrorNo()
+    return ZenUtils::safeDebug( $this, $method, $message." [".$this->_adodb->ErrorNo()
                         ."]".$this->_adodb->ErrorMsg(), $errnum, $level);      
   }
 

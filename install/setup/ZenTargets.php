@@ -187,7 +187,8 @@ class ZenTargets {
           $this->_help($target);
           return false;          
         }
-        return $this->_load_data( $p, $this->_getParm($target,1), $this->_getBooleanParm($target,2,true) );
+        return $this->_load_data( $p, $this->_getParm($target,1), 
+                                  $this->_getBooleanParm($target,2,true) );
       }
     case "merge_template_file":    
       {
@@ -545,7 +546,9 @@ class ZenTargets {
     // perform backups
     $dbc =& $this->getDbConnection();
     $dbx = new ZenDBXML( $dbc, $source.'/database.xml', $this->_ini['debug']['develop_mode'] );
-    $res = $dbx->dumpDatabaseData( $this->_getBackupLocation()."/".$dir, $tables, $this->_compress );
+    $res = $dbx->dumpDatabaseData( $this->_getBackupLocation()."/".$dir, 
+                                   $tables, $this->_compress );
+
     print "   {$res[1]} of {$res[0]} statements processed successfully\n";
     if( $res[0] != $res[1] && !$supress ) {
       $diff = $res[0] - $res[1];
@@ -793,6 +796,8 @@ class ZenTargets {
   function _clean_cache_data( $subdir = null ) {
     $success = true;
     print "- Cleaning cache data (you may need a superuser login to do this successfully)\n";
+
+    ZenMetaDb::clearCacheInfo();
 
     // get a list of directories
     $dh = @opendir($this->_ini['directories']['dir_cache']);
@@ -1577,7 +1582,7 @@ class ZenTargets {
 
     // backup first, supress all errors (there may not even be a db to backup)
     $this->_backup_database(null, true);
-
+    
     // add new schema
     print "- Create database schema\n";
     $dbc =& $this->getDbConnection();

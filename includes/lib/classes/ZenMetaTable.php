@@ -61,6 +61,13 @@ class ZenMetaTable extends Zen {
   function name() { return $this->getProp('name'); }
 
   /**
+   * Return true if this is an abstract table
+   *
+   * @return boolean
+   */
+  function abstract() { return $this->getProp('is_abstract'); }
+
+  /**
    * List the meta fields in this table
    *
    * @return array containing (string)name entries

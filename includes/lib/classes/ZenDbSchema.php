@@ -43,6 +43,7 @@ class ZenDbSchema extends Zen {
       }
       // load xml data
       $this->_load($xmlfile);
+
       // cache data for future loads
       if( $use_cache && isset($_SESSION) ) { 
         ZenUtils::serializeDataToFile( $cacheFile, $this->_tables );
@@ -149,54 +150,53 @@ class ZenDbSchema extends Zen {
    */
   function _load( $xmlfile ) {
     ZenUtils::safeDebug($this, '_load', "Loading xml data from $xmlfile", 0, LVL_DEBUG);
+
     // load xml data to an array
     $x = new ZenXMLParser();
-    $xnode =& $x->parse($xmlfile);
-    $xmldata = $xnode->toArray(true);
+    $rootNode =& $x->parse($xmlfile);
     $this->_tables = array();
     $this->_updateQueries = array();
 
-    // if there is only one entry then it was probably compressed, so
-    // lets uncompress it before we try to iterate through it and break
-    // everything
-    $atables = $xmldata['children']['abstractTables']['children']['table'];
-    if( count($atables) && !isset($atables[0]) ) { $atables = array($atables); }
-    $tables =  $xmldata['children']['tables']['children']['table'];
-    if( count($tables) && !isset($tables[0]) ) { $tables = array($tables); }
-    $updates = isset($xmldata['children']['upgradeQueries'])? 
-      $xmldata['children']['upgradeQueries']['children']['query'] : array();
-    if( count($updates) && !isset($updates[0]) ) {
-      $updates = array($updates);
+    $abstract = $rootNode->child('abstractTables',0);
+    $tables = $rootNode->child('tables',0);
+    $updates = $rootNode->child('upgradeQueries',0);
+
+    // read arrays and store as data
+    if( $abstract && $abstract->count('table') > 0 ) {      
+      foreach( $abstract->child('table') as $node ) {
+        $this->_loadTable( $node, true );
+      }
     }
-    
-    // read array 
-    foreach( $atables as $val ) {
-      $this->_loadTable( $val, true );
+    if( $tables && $tables->count('table') > 0 ) {
+      foreach( $tables->child('table') as $node ) {
+        $this->_loadTable( $node, false );
+      }
     } 
-    foreach( $tables as $val ) {
-      $this->_loadTable( $val, false );
+    if( $updates && $updates->count('query') > 0 ) {
+      foreach( $updates->child('query') as $node ) {
+        $this->_loadUpdateQuery( $node );
+      }
     } 
-    foreach( $updates as $val ) {
-      $this->_loadUpdateQuery($val);
-    }
+
   }
 
   /**
    * Read a table array into the schema
    *
    * @access private
+   * @param ZenXNode $node
+   * @param boolean $abstract
    */
-  function _loadTable( $data, $abstract = false ) {
-    $n = $data['properties']['name'];    
-    $c = $data['children'];
+  function _loadTable( $node, $abstract = false ) {
+    $n = $node->prop('name');
+    $c = $node->children();
     $t = array( 'name' => $n, 'fields' => array() );
-    $t['description'] = isset($c['description'])? $c['description']['data'] : null;
+    $d = $node->child('description',0);
+    $t['description'] = $d? $d->data() : null;
     $t['inherits'] = array();
-    if( isset($c['inherit']) ) {
-      // need to compress if only one
-      if( !isset($c['inherit'][0]) ) { $c['inherit'] = array($c['inherit']); }
-      foreach($c['inherit'] as $i) {
-	$t['inherits'][] = $i['data'];
+    if( $node->count('inherit') > 0 ) {
+      foreach($node->child('inherit') as $i) {
+	$t['inherits'][] = $i->data();
        }
     }
     // check for devmode param, skip
@@ -210,38 +210,35 @@ class ZenDbSchema extends Zen {
     $t['is_abstract'] = $abstract;
 
     // see if table supports transactions
-    if( isset($data['children']['transactions'])
-        && $data['children']['transactions'] == 'true' ) {
-      $t['has_transactions'] = true;
-    }
-    else {
-      $t['has_transactions'] = false;
-    }
+    $t['has_transactions'] = ZenUtils::parseBoolean($node->child('transactions',0));
 
     // the table may not have any columns (could simply inherit, or be an abstract with no columns)
-    if( count($c['columns']['children']) ) {
+    if( $node->count('columns') > 0 ) {
       // if there is only one column, it was compressed, so
       // lets fix this before we try to iterate through it
-      $columns = $c['columns']['children']['column'];
-      if( !isset($columns[0]) ) { $columns = array($columns); }
+      $columns = $node->child('columns',0);
+      $t['fields'] = array();
       
       // iterate through columns
-      foreach( $columns as $field ) {
-        $k = $field['properties']['name'];
-        $t['fields'][$k] = $this->_loadField($field, false);
+      if( $columns->count('column') > 0 ) {
+        foreach( $columns->child('column') as $field ) {
+          $k = $field->prop('name');
+          $t['fields'][$k] = $this->_loadField($field, false);
+        }
       }
     }
 
     // iterate through custom columns
-    if( isset($c['customList']['children']) ) {
+    if( $node->count('customList') > 0 ) {
       $t['has_custom_fields'] = true;
       // if there is only one column, it was compressed, so
       // lets fix this before we try to iterate through it
-      $customs = $c['customList']['children']['column'];
-      if( !isset($customs[0]) ) { $customs = array($customs); }
-      foreach($customs as $field) {
-	$k = $field['properties']['name'];
-	$t['fields'][$k] = $this->_loadField($field, true);
+      $clist = $node->child('customList',0);
+      if( $clist->count('custom') > 0 ) {
+        foreach($clist->child('custom') as $field) {
+          $k = $field->prop('name');
+          $t['fields'][$k] = $this->_loadField($field, true);
+        }
       }
     }
     else { $t['has_custom_fields'] = false; }
@@ -250,13 +247,13 @@ class ZenDbSchema extends Zen {
     // iterate through all indexes associated with this table
     // and create appropriately
     $indices = array();
-    if( isset($c['indexList']['children']) ) {
-      if( !isset($c['indexList']['children']['index'][0]) ) {
-        $c['indexList']['children']['index'] = array($c['indexList']['children']['index']);
-      }
-      foreach( $c['indexList']['children']['index'] as $index ) {
-        $key = $index['properties']['name'];
-        $indices[$key] = explode(',', $index['data']);
+    if( $node->count('indexList') > 0 ) {
+      $idlist = $node->child('indexList',0);
+      if( $idlist->count('index') > 0 ) {
+        foreach( $idlist->child('index') as $index ) {
+          $key = $index->prop('name');
+          $indices[$key] = explode(',', $index->data());
+        }
       }
     }
     $this->_indices[$n] = $indices;
@@ -266,47 +263,38 @@ class ZenDbSchema extends Zen {
    * Parse a field array and return the array set to use in schema
    *
    * @access private
+   * @param ZenXNode $field
+   * @param boolean $is_custom
    */
   function _loadField( $field, $is_custom = false ) {
-    $f = $field['properties'];
-    $c = $field['children'];
+    $f = $field->props();
     foreach( $this->_columnTags as $t ) {
-      $f[$t] = isset($c[$t])? $c[$t]['data'] : null;
-      if( $t == 'criteria' && isset($c[$t]) ) {
-        $f[$t] = array($c[$t]['properties']['type'], $f[$t]);
+      if( $t == 'criteria' && $field->count('criteria')>0 ) {
+        $criteria = $field->child('criteria','0');
+        $f[$t] = array($criteria->prop('type'), $criteria->data());
       }
       else if( $t == 'required' ) {
-        if( isset($c[$t]) && $c[$t] != "false" ) {
-          // in the case where we have a required param, we will
-          // use this
-          $f[$t] = 1;
-        }
-        else if( !isset($c[$t]) && isset($c['notnull']) && $c['notnull'] != "false" 
-                 && !isset($c['default']) ) {
-          // in the case that there is not a required param, the field is not null,
-          // and we do not have a default, then user input is required
-          $f[$t] = 1;
-        }
-        else {
-          // all other cases (since it isn't specified, or we have a default) can
-          // be assumed to be ok
-          $f[$t] = 0;
-        }
+        $val = ZenUtils::parseBoolean( $field->getChild($t,0) );
+        $f[$t] = $val? 1 : 0;
+      }
+      else {
+        $val = $field->getChild($t,0);
+        $f[$t] = $val? $val->data() : null;
       }
     }
     $f['custom'] = $is_custom;
     // relaxed 'requirement' status for label (should be required)
-    if( !isset($f['label']) ) { $f['label'] = ""; }
+    if( !isset($f['label']) ) { $f['label'] = $f['name']; }
     return $f;
   }
 
   /**
    * Loads update queries used to upgrade from previous database versions
    *
-   * @param array $query
+   * @param ZenXNode $query
    */
   function _loadUpdateQuery($query) {
-    $this->_updateQueries[] = array($query['children']['description'], $query['children']['sql']);
+    $this->_updateQueries[] = array($query->getChild('description',0), $query->getChild('sql',0));
   }
 
   /**
