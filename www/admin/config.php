@@ -17,15 +17,15 @@
       $errs[] = "No settings were recieved";
     } else {
       foreach($settings as $s) {
-	$k = $s["setid"];
+	$k = $s["setting_id"];
 	$newSettings["$k"] = $zen->stripPHP($newSettings["$k"]);
 	if( strlen($newSettings["$k"]) < 1 ) {
-	  $errs[] = $s["name"] . " must have a value, use zero instead of a blank";
+	  $errs[] = "$k must have a value, use zero instead of a blank";
 	} else if( ($s["value"] == "on" || $s["value"] == "off") 
 		   &&
 		   ($newSettings["$k"] != "on" && $newSettings["$k"] != "off") 
 		 ) {
-	  $errs[] = $s["name"] . " must be set to 'on' or 'off' (you specified: '" . $newSettings["value"] . "')"; 
+	  $errs[] = "$k must be set to 'on' or 'off'"; 
 	} else if( $newSettings["$k"] != $s["value"] ) {
 	  $newparams["$k"] = $newSettings["$k"];
 	}

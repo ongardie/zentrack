@@ -1,6 +1,6 @@
 <?php
 /*
-V1.81 22 March 2002 (c) 2000-2002 John Lim (jlim@natsoft.com.my). All rights reserved.
+V1.99 21 April 2002 (c) 2000-2002 John Lim (jlim@natsoft.com.my). All rights reserved.
   Released under both BSD license and Lesser GPL library license. 
   Whenever there is any discrepancy between the two licenses, 
   the BSD license will take precedence.
@@ -49,6 +49,7 @@ class ADODB_csv extends ADOConnection {
 	// returns true or false
 	function _connect($argHostname, $argUsername, $argPassword, $argDatabasename)
 	{
+		if (strtolower(substr($argHostname,0,7)) !== 'http://') return false;
 		$this->_url = $argHostname;
 		return true;	
 	}
@@ -56,6 +57,7 @@ class ADODB_csv extends ADOConnection {
 	// returns true or false
 	function _pconnect($argHostname, $argUsername, $argPassword, $argDatabasename)
 	{
+		if (strtolower(substr($argHostname,0,7)) !== 'http://') return false;
 		$this->_url = $argHostname;
 		return true;
 	}
@@ -69,9 +71,12 @@ class ADODB_csv extends ADOConnection {
 	// parameters use PostgreSQL convention, not MySQL
 	function &SelectLimit($sql,$nrows=-1,$offset=-1,$arg3=false)
 	{
-		$url = $this->_url.'?sql='.urlencode($sql)."&nrows=$nrows&offset=$offset&arg3=".urlencode($arg3);
+	global $ADODB_FETCH_MODE;
+	
+		$url = $this->_url.'?sql='.urlencode($sql)."&nrows=$nrows&fetch=$ADODB_FETCH_MODE&offset=$offset&arg3=".urlencode($arg3);
 		$err = false;
 		$rs = csv2rs($url,$err,false);
+		
 		if ($this->debug) print "$url<br><i>$err</i><br>";
 
 		$at = strpos($err,'::::');
@@ -82,8 +87,15 @@ class ADODB_csv extends ADOConnection {
 			$this->_errorMsg = substr($err,$at+4,1024);
 			$this->_errorNo = -9999;
 		}
+		if ($this->_errorNo) 
+			if ($fn = $this->raiseErrorFn) {
+				$fn($this->databaseType,'EXECUTE',$this->ErrorNo(),$this->ErrorMsg(),$sql,'');
+			}
+			
 		if (is_object($rs)) {
-			$rs->databaseType='csv';
+			$rs->databaseType='csv';		
+			$rs->fetchMode = $ADODB_FETCH_MODE;
+			$rs->connection = &$this;
 		}
 		return $rs;
 	}
@@ -91,7 +103,33 @@ class ADODB_csv extends ADOConnection {
 	// returns queryID or false
 	function Execute($sql,$inputarr=false,$arg3=false)
 	{
-		$url =  $this->_url.'?sql='.urlencode($sql);
+	global $ADODB_FETCH_MODE;
+	
+		if (!$this->_bindInputArray && $inputarr) {
+			$sqlarr = explode('?',$sql);
+			$sql = '';
+			$i = 0;
+			foreach($inputarr as $v) {
+
+				$sql .= $sqlarr[$i];
+				// from Ron Baldwin <ron.baldwin@sourceprose.com>
+				// Only quote string types	
+				if (gettype($v) == 'string')
+					$sql .= $this->qstr($v);
+				else if ($v === null)
+					$sql .= 'NULL';
+				else
+					$sql .= $v;
+				$i += 1;
+	
+			}
+			$sql .= $sqlarr[$i];
+			if ($i+1 != sizeof($sqlarr))	
+				print "Input Array does not match ?: ".htmlspecialchars($sql);
+			$inputarr = false;
+		}
+		
+		$url =  $this->_url.'?sql='.urlencode($sql)."&fetch=$ADODB_FETCH_MODE";
 		if ($arg3) $url .= "&arg3=".urlencode($arg3);
 		$err = false;
 		
@@ -105,10 +143,17 @@ class ADODB_csv extends ADOConnection {
 			$this->_errorMsg = substr($err,$at+4,1024);
 			$this->_errorNo = -9999;
 		}
+		
+		if ($this->_errorNo) 
+			if ($fn = $this->raiseErrorFn) {
+				$fn($this->databaseType,'EXECUTE',$this->ErrorNo(),$this->ErrorMsg(),$sql,$inputarr);
+			}
 		if (is_object($rs)) {
+			$rs->fetchMode = $ADODB_FETCH_MODE;
 			$this->_affectedrows = $rs->affectedrows;
 			$this->_insertid = $rs->insertid;
 			$rs->databaseType='csv';
+			$rs->connection = &$this;
 		}
 		return $rs;
 	}

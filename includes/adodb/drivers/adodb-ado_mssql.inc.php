@@ -1,6 +1,6 @@
 <?php
 /* 
-V1.81 22 March 2002 (c) 2000-2002 John Lim (jlim@natsoft.com.my). All rights reserved.
+V1.99 21 April 2002 (c) 2000-2002 John Lim (jlim@natsoft.com.my). All rights reserved.
   Released under both BSD license and Lesser GPL library license. 
   Whenever there is any discrepancy between the two licenses, 
   the BSD license will take precedence. 
@@ -21,7 +21,11 @@ if (!defined('_ADODB_ADO_LAYER')) {
 
 class  ADODB_ado_mssql extends ADODB_ado {	
 var $databaseType = 'ado_mssql';
-var $hasTop = true;
+var $hasTop = 'top';
+
+	function ADODB_ado_mssql()
+	{
+	}
 }
  
 class  ADORecordSet_ado_mssql extends ADORecordSet_ado {	

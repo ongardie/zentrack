@@ -14,13 +14,13 @@
      
      // determine what the incoming data is, and format it
      // for use
-     $ticketID = $id;
+     $ticket_id = $id;
      $input = array(
-		    "ticketID"       => "int",
+		    "ticket_id"       => "int",
 		    "userfile_name"  => "text"
 		    );
-     if( $logID ) {
-	$input["logID"] = "int";
+     if( $log_id ) {
+	$input["log_id"] = "int";
      }
      $required = array_keys($input);
      $input["comments"] = "html";
@@ -42,9 +42,9 @@
 	}
 	mt_srand(make_seed());
 	$randval = mt_rand();	          	          		
-	$file_name = $ticketID."_$randval";
+	$file_name = $ticket_id."_$randval";
 	while( file_exists( $zen->attachmentsDir."/$file_name" ) ) {
-	   $file_name = $ticketID."_$randval";	   
+	   $file_name = $ticket_id."_$randval";	   
 	}
 	$file_type = ereg_replace(".*[.]", "", $userfile_name);
 	if( preg_match("/\b$file_type\b/i",$zen->settings["attachment_text_types"]) ) {
@@ -72,7 +72,7 @@
 			   );
 	   if( $comments )
 	     $params["description"] = $comments;
-	   $res = $zen->attach_to_ticket( $ticketID, $login_id, $params, $logID);
+	   $res = $zen->attach_to_ticket( $ticket_id, $login_id, $params, $log_id);
 	   if( $res ) {
 	      add_system_messages("Attachment $userfile_name uploaded for ticket $id");
 	      header("Location: $rootUrl/ticket.php?id=$id&setmode=attachments\n");
@@ -88,11 +88,11 @@
   include("$libDir/nav.php");
 
   if( $actionComplete == 1 ) {
-     $id = $ticketID;
+     $id = $ticket_id;
      $ticket = $zen->get_ticket($id);     
   }
   extract($ticket);
-  if( strtolower($zen->types["$typeID"]) == "project" ) {
+  if( strtolower($zen->types["$type_id"]) == "project" ) {
      include("$templateDir/projectView.php");
   } else {
      include("$templateDir/ticketView.php");     

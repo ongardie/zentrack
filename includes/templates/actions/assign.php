@@ -18,13 +18,13 @@
 </tr>
 <tr>
  <td>
-<select name="userID">
+<select name="user_id">
 <?
   $bins = array_keys($zen->getAccess($login_id));
   foreach($zen->get_users($bins) as $v) {
-    if( $v["userID"] != $login_id ) {
-      $sel = ($v["userID"] == $userID)? "selected" : "";
-      print "<option value='$v[userID]' $sel>".$zen->formatName($v,1)."</option>\n";
+    if( $v["user_id"] != $login_id ) {
+      $sel = ($v["user_id"] == $user_id)? "selected" : "";
+      print "<option value='$v[user_id]' $sel>".$zen->formatName($v,1)."</option>\n";
     }
   }
 ?>

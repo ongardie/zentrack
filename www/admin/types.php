@@ -23,7 +23,7 @@
       }
       if( $newName[$i] ) {
 	$vars[] = array(
-			"typeID"      => $newID[$i],
+			"type_id"      => $newID[$i],
 			"name"     => $newName[$i], 
 			"priority" => $newPri[$i], 
 			"active"   => $newActive[$i]
@@ -70,7 +70,7 @@
   $zen->printErrors($errs);
   if( !$skip ) {  
     $type = "type";
-    $id_type = "typeID";
+    $id_type = "type_id";
     include("$templateDir/configForm.php");
   } else {
     include("$templateDir/adminMenu.php");

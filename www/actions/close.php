@@ -25,12 +25,12 @@
 	}
      }
 
-     if( $ticket["typeID"] == $zen->projectTypeID() ) {
+     if( $ticket["type_id"] == $zen->projectTypeID() ) {
 	$children = $zen->getProjectChildren($id,'id,type,status');
 	if( is_array($children) ) {
 	   foreach($children as $c) {
 	      if( $c["status"] != "CLOSED" ) {
-		 $errs[] = $zen->types["$c[typeID]"]." $c[id] is not completed.";
+		 $errs[] = $zen->types["$c[type_id]"]." $c[id] is not completed.";
 	      }
 	   }
 	}
@@ -54,7 +54,7 @@
   if( $actionComplete == 1 )
      $ticket = $zen->get_ticket($id);
   extract($ticket);
-  if( strtolower($zen->types["$typeID"]) == "project" ) {
+  if( strtolower($zen->types["$type_id"]) == "project" ) {
      include("$templateDir/projectView.php");
   } else {
      include("$templateDir/ticketView.php");     

@@ -4,11 +4,22 @@
  Clean, simple interface, fully adaptable administration,
  100 percent object oriented and database abstracted. 
 
+----- v2.0.1c beta (05-01-02) ------
+
+All upper case column names changed to lower case 
+entries for oracle/adodb compatibility
+
+Fixed bug in new project form concerning the start date.
+
+Comments added to configVars.php section to indicate
+better use of Oracle/adodb methods
 
 ----- v2.0.1 Beta (04-27-02) ------
   
 Oracle issue with uppercase column names (hopefully) overcome 
 with use of the ADODB function "oci8po"
+
+Fix for ONAMES and HOSTNAMES provided by Izzy (thanks Izzy!)
   
 Oracle build files tested and repaired.  Several bugs with
 reserved words and escape characters removed.
@@ -21,7 +32,6 @@ Sybase bug with reserved word "role" fixed.
 INSTALL.README, and install.html files updated
 
 CHANGELOG implemented (and needed)
-
 
 ----- v2.0 Beta (04-23-02) ------
   

@@ -8,14 +8,16 @@
 <body>
 <?php
 /*
-  V1.81 22 March 2002 (c) 2000-2002 John Lim (jlim@natsoft.com.my). All rights reserved.
+  V1.99 21 April 2002 (c) 2000-2002 John Lim (jlim@natsoft.com.my). All rights reserved.
   Released under both BSD license and Lesser GPL library license. 
   Whenever there is any discrepancy between the two licenses, 
   the BSD license will take precedence.
   Set tabs to 8.
  */
-# test connecting to 2 MySQL databases simultaneously
-
+#
+# test connecting to 2 MySQL databases simultaneously and ensure that each connection
+# is independant.
+#
 include("../tohtml.inc.php");
 include("../adodb.inc.php");	
 

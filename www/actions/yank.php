@@ -26,7 +26,7 @@
      if( !$errs ) {
 	$res = $zen->yank_ticket($id, $login_id, $comments);
 	if( $res ) {
-	   add_system_messages("Ticket $id yanked from ".$zen->formatName($ticket["userID"]).".");
+	   add_system_messages("Ticket $id yanked from ".$zen->formatName($ticket["user_id"]).".");
 	   header("Location:$rootUrl/ticket.php?id=$id&setmode=details");
 	} else {
 	   $errs[] = "System error: Ticket $id could not be yanked.".$zen->db_error;
@@ -41,7 +41,7 @@
   if( $actionComplete == 1 )
      $ticket = $zen->get_ticket($id);
   extract($ticket);
-  if( strtolower($zen->types["$typeID"]) == "project" ) {
+  if( strtolower($zen->types["$type_id"]) == "project" ) {
      include("$templateDir/projectView.php");
   } else {
      include("$templateDir/ticketView.php");     

@@ -60,7 +60,7 @@
     user ID
   </td>
   <td class="bars">
-    <input type="text" name="search_params[userID]" value="<?=strip_tags($search_params["userID"])?>" size="12" maxlength="12">
+    <input type="text" name="search_params[user_id]" value="<?=strip_tags($search_params["user_id"])?>" size="12" maxlength="12">
   </td>
 </tr>
 <tr>
@@ -111,8 +111,8 @@
       <option value="lt"<?=($search_access_method=="lt")?" selected":""?>">Less Than</option>
       <option value="eq"<?=($search_access_method=="eq")?" selected":""?>">Equals</option>
     </select>&nbsp;
-    <input type="text" name="search_params[accessLevel]" 
-	value="<?=strip_tags($search_params["accessLevel"])?>"
+    <input type="text" name="search_params[access_level]" 
+	value="<?=strip_tags($search_params["access_level"])?>"
 	size="2" maxlength="2">&nbsp;<span class="small">(enter a number)</span>
   </td>
 </tr>

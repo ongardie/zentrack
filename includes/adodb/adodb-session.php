@@ -1,6 +1,6 @@
 <?php
 /*
-V1.81 22 March 2002 (c) 2000-2002 John Lim (jlim@natsoft.com.my). All rights reserved.
+V1.99 21 April 2002 (c) 2000-2002 John Lim (jlim@natsoft.com.my). All rights reserved.
   Released under both BSD license and Lesser GPL library license. 
   Whenever there is any discrepancy between the two licenses, 
   the BSD license will take precedence.
@@ -177,8 +177,7 @@ function adodb_sess_destroy($key)
 
 	$qry = "DELETE FROM $ADODB_SESSION_TBL WHERE sesskey = '$key'";
 	$rs = $ADODB_SESS_CONN->Execute($qry);
-	if ($rs) $rs->Close();
-	return $rs;
+	return $rs ? true : false;
 }
 
 function adodb_sess_gc($maxlifetime) {

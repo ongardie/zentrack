@@ -34,8 +34,8 @@
                 " class='".$zen->statusHighlight($priority)."'":""
             ?>><?=$zen->priorities["$priority"]?></td>
 	   <td class="small"><? 
-	     if($userID) { 
-	       $user = $zen->get_user($userID); 
+	     if($user_id) { 
+	       $user = $zen->get_user($user_id); 
 	       print $user["fname"]." ".$user["lname"];
 	     } else { 
 	       print "-none-"; 

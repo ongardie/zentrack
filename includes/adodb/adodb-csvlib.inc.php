@@ -1,7 +1,7 @@
 <?php
 
 /* 
-V1.81 22 March 2002 (c) 2000-2002 John Lim (jlim@natsoft.com.my). All rights reserved.
+V1.99 21 April 2002 (c) 2000-2002 John Lim (jlim@natsoft.com.my). All rights reserved.
   Released under both BSD license and Lesser GPL library license. 
   Whenever there is any discrepancy between the two licenses, 
   the BSD license will take precedence. See License.txt. 
@@ -26,13 +26,14 @@ V1.81 22 March 2002 (c) 2000-2002 John Lim (jlim@natsoft.com.my). All rights res
 	 */
 	function &rs2csv(&$rs,$conn=false,$sql='')
 	{
-		$max =  $rs->FieldCount();
+		$max = ($rs) ? $rs->FieldCount() : 0;
+		
 		if ($sql) $sql = urlencode($sql);
 		// metadata setup
 		
-		if ($max <= 0 || $rs->EOF) { // no data returned
+		if ($max <= 0 || $rs->dataProvider == 'empty') { // is insert/update/delete
 			if (is_object($conn)) {
-        			$sql .= ','.$conn->Affected_Rows();
+        		$sql .= ','.$conn->Affected_Rows();
 				$sql .= ','.$conn->Insert_ID();
 			} else
 				$sql .= ',,';
@@ -112,17 +113,17 @@ V1.81 22 March 2002 (c) 2000-2002 John Lim (jlim@natsoft.com.my). All rights res
 					fclose($fp);
 					
 					if ($timeout > 0) {
-						//$err = ' Timeout for insert/update/delete illegal';
+						$err = " Illegal Timeout $timeout ";
 						return false;
 					}
-					$val = 1;
-					$rs = new ADORecordSet($val);
+					$rs->fields = array();
+					$rs->timeCreated = $meta[1];
+					$rs = new ADORecordSet($val=true);
 					$rs->EOF = true;
 					$rs->_numOfFields=0;
 					$rs->sql = urldecode($meta[2]);
 					$rs->affectedrows = (integer)$meta[3];
 					$rs->insertid = $meta[4];	
-					$rs->aa = '100';
 					return $rs;
 				}
 			# Under high volume loads, we want only 1 thread/process to _write_file
@@ -193,9 +194,11 @@ V1.81 22 March 2002 (c) 2000-2002 John Lim (jlim@natsoft.com.my). All rights res
 		}
 		
 		// slurp in the data
-		$text = '';
-		while ($tmp = fread($fp,100000))
-			$text .= $tmp;
+		$MAXSIZE = 128000;
+		$text = fread($fp,$MAXSIZE);
+		if (strlen($text) == $MAXSIZE) {
+			$text .= fread($fp,filesize($url)-$MAXSIZE);
+		}
 			
 		fclose($fp);
 		//$text = substr($text,0,44);

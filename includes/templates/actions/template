@@ -22,7 +22,7 @@
 <select name="newBin">
 <?
   foreach($zen->bins as $k=>$v) {
-    if( $k != $binID && $zen->checkAccess($login_id, $k) ) {
+    if( $k != $bin_id && $zen->checkAccess($login_id, $k) ) {
       $sel = ($k == $newBin)? "selected" : "";
       print "<option value='$k' $sel>$v</option>\n";
     }

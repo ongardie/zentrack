@@ -1,6 +1,6 @@
 <?php
 /* 
-V1.81 22 March 2002 (c) 2000-2002 John Lim (jlim@natsoft.com.my). All rights reserved.
+V1.99 21 April 2002 (c) 2000-2002 John Lim (jlim@natsoft.com.my). All rights reserved.
   Released under both BSD license and Lesser GPL library license. 
   Whenever there is any discrepancy between the two licenses, 
   the BSD license will take precedence. 
@@ -28,6 +28,7 @@ class ADODB_odbc extends ADOConnection {
 	var $_bindInputArray = false;      
 	var $_haserrorfunctions = false;
 	var $curmode = SQL_CUR_USE_DRIVER; // See sqlext.h, SQL_CUR_DEFAULT == SQL_CUR_USE_DRIVER == 2L
+	var $_genSeqSQL = "create table %s (id integer)";
 	
 	function ADODB_odbc() 
 	{ 	
@@ -41,6 +42,42 @@ class ADODB_odbc extends ADOConnection {
 			return @odbc_errormsg($this->_connectionID);
 		} else return ADOConnection::ErrorMsg();
 	}
+	
+	/*
+		This algorithm is not very efficient, but works even if table locking
+		is not available.
+		
+		Will return false if unable to generate an ID after $MAXLOOPS attempts.
+	*/
+	function GenID($seq='adodbseq',$start=1)
+	{	
+		// if you have to modify the parameter below, your database is overloaded,
+		// or you need to implement generation of id's yourself!
+		$MAXLOOPS = 100;
+		
+		while (--$MAXLOOPS>=0) {
+			$num = $this->GetOne("select id from $seq");
+			if ($num === false) {
+				$this->Execute(sprintf($this->_genSeqSQL ,$seq));	
+				$start -= 1;
+				$num = '0';
+				$ok = $this->Execute("insert into $seq values($start)");
+				if (!$ok) return false;
+			} 
+			$this->Execute("update $seq set id=id+1 where id=$num");
+			
+			if ($this->affected_rows() == 1) {
+				$num += 1;
+				$this->genID = $num;
+				return $num;
+			}
+		}
+		if ($fn = $this->raiseErrorFn) {
+			$fn($this->databaseType,'GENID',-32000,"Unable to generate unique id after $MAXLOOP attempts",$seq,$num);
+		}
+		return false;
+	}
+	
 	function ErrorNo()
 	{
 		if ($this->_haserrorfunctions) {
@@ -210,12 +247,15 @@ class ADODB_odbc extends ADOConnection {
 		return $retarr;
 	}
 	
-	function &Prepare($sql)
+	function Prepare($sql)
 	{
-		if ($this->debug) {
-			print "<hr>($this->databaseType): ".htmlspecialchars($sql)."<hr>";
+		if (! $this->_bindInputArray) return $sql; // no binding
+		$stmt = odbc_prepare($this->_connectionID,$sql);
+		if (!$stmt) {
+		//	print "Prepare Error for ($sql) ".$this->ErrorMsg()."<br>";
+			return $sql;
 		}
-		return odbc_prepare($this->_connectionID,$sql);
+		return array($sql,$stmt,false);
 	}
 
 	/* returns queryID or false */
@@ -226,17 +266,24 @@ class ADODB_odbc extends ADOConnection {
 		$this->_error = '';
 		
 		if ($inputarr) {
-			if (is_resource($sql)) $stmtid = $sql;
+			if (is_array($sql)) $stmtid = $sql[1];
 			else $stmtid = odbc_prepare($this->_connectionID,$sql);
+		
 			if ($stmtid == false) {
 				$this->_errorMsg = $php_errormsg;
 				return false;
 			}
 			if (! odbc_execute($stmtid,$inputarr)) {
 				@odbc_free_result($stmtid);
-				return $ret;
+				return false;
 			}
 			
+		} else if (is_array($sql)) {
+			$stmtid = $sql[1];
+			if (!odbc_execute($stmtid)) {
+				@odbc_free_result($stmtid);
+				return false;
+			}
 		} else
 			$stmtid = odbc_exec($this->_connectionID,$sql);
 		
@@ -327,7 +374,8 @@ class ADORecordSet_odbc extends ADORecordSet {
 		
 	function _initrs()
 	{
-		$this->_numOfRows = @odbc_num_rows($this->_queryID);
+	global $ADODB_COUNTRECS;
+		$this->_numOfRows = ($ADODB_COUNT_RECS) ? @odbc_num_rows($this->_queryID) : -1;
 		$this->_numOfFields = @odbc_num_fields($this->_queryID);
 	}	
 	
@@ -335,6 +383,30 @@ class ADORecordSet_odbc extends ADORecordSet {
 	{
 		return false;
 	}
+	
+	// speed up SelectLimit() by switching to ADODB_FETCH_NUM as ADODB_FETCH_ASSOC is emulated
+	function GetArrayLimit($nrows,$offset=-1) 
+	{
+		if ($offset <= 0) return $this->GetArray($nrows);
+		$savem = $this->fetchMode;
+		$this->fetchMode = ADODB_FETCH_NUM;
+		$this->Move($offset);
+		$this->fetchMode = $savem;
+		
+		if ($this->fetchMode == ADODB_FETCH_ASSOC) {
+			$this->fields = $this->GetRowAssoc(false);
+		}
+		
+		$results = array();
+		$cnt = 0;
+		while (!$this->EOF && $nrows != $cnt) {
+			$results[$cnt++] = $this->fields;
+			$this->MoveNext();
+		}
+		
+		return $results;
+	}
+	
 	
 	function MoveNext() 
 	{

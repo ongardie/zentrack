@@ -1,6 +1,6 @@
 <?php
 /**
- * @version V1.81 22 March 2002  (c) 2000-2002 John Lim (jlim@natsoft.com.my). All rights reserved.
+ * @version V1.99 21 April 2002  (c) 2000-2002 John Lim (jlim@natsoft.com.my). All rights reserved.
  * Released under both BSD license and Lesser GPL library license.
   Whenever there is any discrepancy between the two licenses,
   the BSD license will take precedence.
@@ -38,7 +38,7 @@ function ADODB_Error_Handler($dbms, $fn, $errno, $errmsg, $p1=false, $p2=false)
 		$host = $p1;
 		$database = $p2;
 
-		$s = "$dbms error: [$errno: $errmsg] in $fn($host, ?, ?, $database)\n";
+		$s = "$dbms error: [$errno: $errmsg] in $fn($host, '****', '****', $database)\n";
 		break;
 	default:
 		$s = "$dbms error: [$errno: $errmsg] in $fn($p1, $p2)\n";

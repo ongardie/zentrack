@@ -1,7 +1,7 @@
 <?php
 
 /** 
- * @version V1.81 22 March 2002 (c) 2000-2002 John Lim (jlim@natsoft.com.my). All rights reserved.
+ * @version V1.99 21 April 2002 (c) 2000-2002 John Lim (jlim@natsoft.com.my). All rights reserved.
  * Released under both BSD license and Lesser GPL library license. 
  * Whenever there is any discrepancy between the two licenses, 
  * the BSD license will take precedence. 
@@ -9,6 +9,8 @@
  * Set tabs to 4 for best viewing.
  * 
  * Latest version is available at http://php.weblogs.com
+ *
+ * Test GetUpdateSQL and GetInsertSQL.
  */
  
 error_reporting(E_ALL);

@@ -14,7 +14,7 @@
      foreach($userBins as $k=>$b) {
 	$vars = $zen->get_users($k);
 	for( $i=0;$i<count($vars);$i++ ) {
-	   $n = $vars[$i]["userID"];
+	   $n = $vars[$i]["user_id"];
 	   $users["$n"] = $vars[$i];
 	}
      }  
@@ -44,18 +44,18 @@
     Master Project
   </td>
   <td class="bars">
-    <select name="projectID">
+    <select name="project_id">
     <option value=''>--none--</option>
     <?
       $bins = $zen->getUsersBins($login_id);
       if( is_array($bins) ) {
-	 $params["binID"] = $bins;
+	 $params["bin_id"] = $bins;
 	 $params["status"] = "OPEN";
 	 $projects = $zen->get_projects($params,title);
       } 
       if( is_array($projects) ) {
 	 foreach($projects as $p) {
-	    $sel = ($p["id"] == $projectID)? " selected" : "";
+	    $sel = ($p["id"] == $project_id)? " selected" : "";
 	    print "<option value='$p[id]'$sel>".stripslashes($p["title"])."</option>\n";
 	 }
       }
@@ -78,13 +78,13 @@ value="<?=strip_tags($title)?>">
     System
   </td>
   <td class="bars">
-    <select name="systemID">
+    <select name="system_id">
 <?
     if( is_array($zen->systems) ) {
     	foreach($zen->getSystems(1) as $v) {
 	   $k = $v["sid"];
 	   $v = $v["name"];
-	   $check = ( $k == $systemID )? "selected" : "";	   
+	   $check = ( $k == $system_id )? "selected" : "";	   
 	   print "<option $check value='$k'>$v</option>\n";
 	}
     } else {
@@ -101,12 +101,12 @@ value="<?=strip_tags($title)?>">
     Owner
   </td>
   <td class="bars" width="515">
-    <select name="userID">
+    <select name="user_id">
       <option value=''>--not assigned--</option>
 <?
     if( is_array($users) ) {
     	foreach($users as $k=>$v) {
-	   $check = ( $k == $userID )? "selected" : "";
+	   $check = ( $k == $user_id )? "selected" : "";
 	   print "<option $check value='$k'>$v[lname], $v[fname]</option>\n";
 	}
     }
@@ -119,11 +119,11 @@ value="<?=strip_tags($title)?>">
     Bin
   </td>
   <td class="bars">
-    <select name="binID">
+    <select name="bin_id">
 <?
     if( is_array($userBins) ) {
     	foreach($userBins as $k=>$v) {
-	   $check = ( $k == $binID )? "selected" : "";
+	   $check = ( $k == $bin_id )? "selected" : "";
 	   print "<option $check value='$k'>$v</option>\n";
 	}
     } else {
@@ -170,7 +170,7 @@ value="<?=($deadline)?$zen->showDate(strip_tags($deadline)):""?>">&nbsp;(mm/dd/y
 </tr>				   
 <tr>
   <td class="bars">
-    Deadline
+    Start Date
   </td>
   <td class="bars">
     <input type="text" name="start_date" size="12" maxlength="10"

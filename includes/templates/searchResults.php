@@ -30,10 +30,10 @@
     $params[] = (count($sp)>1)? array("OR",$sp) : $sp[0];
   }
 
-  if( is_array($params) && !$params["binID"] ) {
+  if( is_array($params) && !$params["bin_id"] ) {
     $bins = $zen->getUsersBins($login_id);
     if( is_array($bins) ) {
-      $params[] = array("binID","in",$bins,1);
+      $params[] = array("bin_id","in",$bins,1);
     } else {
       $errs[] = "You do not have access to any bins, a search was not authorized";
     }

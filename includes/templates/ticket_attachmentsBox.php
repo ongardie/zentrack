@@ -47,12 +47,12 @@
 	?>
 	  <tr style="<?=$row?>">
 	  <td <?=$rollover_text?>>
-	    <a href='<?=$zen->settings["url_view_attachment"]?>?aid=<?=$a["attachmentID"]?>' 
+	    <a href='<?=$zen->settings["url_view_attachment"]?>?aid=<?=$a["attachment_id"]?>' 
 	    class='rowLink' target='_blank'><?=$a[name]?></a></td>
-	  <td <?=($a["logID"])? $rollover_text:"";?>>
-	    <?= ($a["logID"])?
+	  <td <?=($a["log_id"])? $rollover_text:"";?>>
+	    <?= ($a["log_id"])?
 	         "<a href='".$zen->settings["url_view_log"]
-                    ."?lid=$a[logID]' class='rowLink'>$a[logID]</a>" :
+                    ."?lid=$a[log_id]' class='rowLink'>$a[log_id]</a>" :
 	         "n/a";
 	    ?>
 	  </td>

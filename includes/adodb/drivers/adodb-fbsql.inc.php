@@ -1,6 +1,6 @@
 <?php
 /*
- @version V1.81 22 March 2002 (c) 2000-2002 John Lim (jlim@natsoft.com.my). All rights reserved.
+ @version V1.99 21 April 2002 (c) 2000-2002 John Lim (jlim@natsoft.com.my). All rights reserved.
  Released under both BSD license and Lesser GPL library license. 
   Whenever there is any discrepancy between the two licenses, 
   the BSD license will take precedence. 
@@ -24,15 +24,15 @@ class ADODB_fbsql extends ADOConnection {
 	{			
 	}
 	
-        function _insertid()
-        {
-                return fbsql_insert_id($this->_connectionID);
-        }
-        
-        function _affectedrows()
-        {
-                return fbsql_affected_rows($this->_connectionID);
-        }
+    function _insertid()
+    {
+            return fbsql_insert_id($this->_connectionID);
+    }
+    
+    function _affectedrows()
+    {
+            return fbsql_affected_rows($this->_connectionID);
+    }
   
   	function &MetaDatabases()
 	{
@@ -165,6 +165,14 @@ class ADORecordSet_fbsql extends ADORecordSet{
 	var $canSeek = true;
 	
 	function ADORecordSet_fbsql($queryID) {
+	global $ADODB_FETCH_MODE;
+	
+		switch($ADODB_FETCH_MODE) {
+		case ADODB_FETCH_NUM: $this->fetchMode = FBSQL_NUM; break;
+		default:
+		case ADODB_FETCH_BOTH: $this->fetchMode = FBSQL_BOTH; break;
+		case ADODB_FETCH_ASSOC: $this->fetchMode = FBSQL_ASSOC; break;
+		}
 		return $this->ADORecordSet($queryID);
 	}
 	
@@ -199,7 +207,7 @@ class ADORecordSet_fbsql extends ADORecordSet{
 	
 	function _fetch($ignore_fields=false)
 	{
-		$this->fields = @fbsql_fetch_array($this->_queryID);
+		$this->fields = @fbsql_fetch_array($this->_queryID,$this->fetchMode);
 		return ($this->fields == true);
 	}
 	

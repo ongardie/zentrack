@@ -67,7 +67,7 @@ if( is_array($tickets) ) {
 	$text = $zen->settings["color_text"];	 
       }     
       
-      if( $t["typeID"] == $zen->projectTypeID() ) {
+      if( $t["type_id"] == $zen->projectTypeID() ) {
 	 list($est,$wkd) = $zen->getProjectHours($t["id"]);
 	 $ttl_est += $est;
 	 $ttl_wkd += ($wkd > $est)? $est : $wkd;
@@ -99,10 +99,10 @@ if( is_array($tickets) ) {
 	  <?=$zen->priorities["$t[priority]"]?>
 	</td>
 	<td height="25" valign="middle">
-	  <?=$zen->types["$t[typeID]"]?>
+	  <?=$zen->types["$t[type_id]"]?>
 	</td>
 	<td width="40" height="25" valign="middle">
-	  <?=$zen->formatName($t["userID"],2)?>
+	  <?=$zen->formatName($t["user_id"],2)?>
 	</td>
 	<td width="40" height="25" valign="middle">
 	  <?=$t["status"]?>

@@ -1,6 +1,6 @@
 <?php
 /*
-V1.81 22 March 2002 (c) 2000-2002 John Lim. All rights reserved.
+V1.99 21 April 2002 (c) 2000-2002 John Lim. All rights reserved.
   Released under both BSD license and Lesser GPL library license. 
   Whenever there is any discrepancy between the two licenses, 
   the BSD license will take precedence.
@@ -23,23 +23,34 @@ class ADODB_oci8po extends ADODB_oci8 {
     var $databaseType = 'oci8po';
 	var $dataProvider = 'oci8';
 	
+	function Prepare($sql)
+	{
+		$sqlarr = explode('?',$sql);
+		$sql = $sqlarr[0];
+		for ($i = 1, $max = sizeof($sqlarr); $i < $max; $i++) {
+			$sql .=  ':'.($i-1) . $sqlarr[$i];
+		} 
+		return ADODB_oci8::Prepare($sql);
+	}
+	
 	// emulate handling of parameters ? ?, replacing with :bind0 :bind1
 	function _query($sql,$inputarr)
 	{
 		if (is_array($inputarr)) {
 			$i = 0;
-			$sqlarr = explode('?',$sql);
-			$sql = $sqlarr[0];
-			foreach($inputarr as $v) {
-				$name = 'bind'.$i++;
-				$arr[$name] = $v;
-				$sql .=  ":$name" . $sqlarr[$i];
-			} 
-			//print $sql;
-			//print_r($arr);
-		} else
-			$arr = false;
-		return ADODB_oci8::_query($sql,$arr);
+			if (is_array($sql)) {
+				foreach($inputarr as $v) {
+					$arr['bind'.$i++] = $v;
+				} 
+			} else {
+				$sqlarr = explode('?',$sql);
+				$sql = $sqlarr[0];
+				foreach($inputarr as $k => $v) {
+					$sql .=  ":$k" . $sqlarr[++$i];
+				}
+			}
+		}
+		return ADODB_oci8::_query($sql,$inputarr);
 	}
 
 }
@@ -54,8 +65,6 @@ class ADORecordset_oci8po extends ADORecordset_oci8 {
 	
         function ADORecordset_oci8po($queryID)
         {
-		global $ADODB_FETCH_MODE;
-		
 			$this->ADORecordset_oci8($queryID);
         }
 
@@ -140,5 +149,6 @@ class ADORecordset_oci8po extends ADORecordset_oci8 {
 		if ($ret && $this->fetchMode & OCI_ASSOC) $this->_updatefields();
 		return $ret;
 	}
+	
 }
 ?>

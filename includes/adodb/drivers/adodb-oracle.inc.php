@@ -1,6 +1,6 @@
 <?php
 /*
-V1.81 22 March 2002 (c) 2000-2002 John Lim (jlim@natsoft.com.my). All rights reserved.
+V1.99 21 April 2002 (c) 2000-2002 John Lim (jlim@natsoft.com.my). All rights reserved.
   Released under both BSD license and Lesser GPL library license. 
   Whenever there is any discrepancy between the two licenses, 
   the BSD license will take precedence.
@@ -9,7 +9,7 @@ V1.81 22 March 2002 (c) 2000-2002 John Lim (jlim@natsoft.com.my). All rights res
   
   Oracle data driver. Requires Oracle client. Works on Windows and Unix and Oracle 7 and 8.
   
-  If you are using Oracle 8, use the oci8 driver as ErrorMsg() and ErrorNo() work properly,
+  If you are using Oracle 8, use the oci8 driver which is much better and more reliable.
   
 */
 
@@ -26,7 +26,7 @@ class ADODB_oracle extends ADOConnection {
       
 	function ADODB_oracle() 
 	{
-    }
+	}
 
 	// format and return date string in database date format
 	function DBDate($d)
@@ -135,27 +135,31 @@ class ADODB_oracle extends ADOConnection {
 
 class ADORecordset_oracle extends ADORecordSet {
 
-       var $databaseType = "oracle";
+    var $databaseType = "oracle";
 	var $bind = false;
 
-       function ADORecordset_oracle($queryID)
-       {
-	$this->_queryID = $queryID;
-
-	$this->_inited = true;
-	$this->fields = array();
-	if ($queryID) {
-		$this->_currentRow = 0;
-		$this->EOF = !$this->_fetch();
-		@$this->_initrs();
-	} else {
-		$this->_numOfRows = 0;
-		$this->_numOfFields = 0;
-		$this->EOF = true;
-	}
+    function ADORecordset_oracle($queryID)
+    {
+	global $ADODB_FETCH_MODE;
+		
+		$this->fetchMode = $ADODB_FETCH_MODE;
+		
+		$this->_queryID = $queryID;
 	
+		$this->_inited = true;
+		$this->fields = array();
+		if ($queryID) {
+			$this->_currentRow = 0;
+			$this->EOF = !$this->_fetch();
+			@$this->_initrs();
+		} else {
+			$this->_numOfRows = 0;
+			$this->_numOfFields = 0;
+			$this->EOF = true;
+		}
+		
 		return $this->_queryID;
-       }
+	}
 
 
 
@@ -201,7 +205,10 @@ class ADORecordset_oracle extends ADORecordSet {
 
    function _fetch($ignore_fields=false) {
 // should remove call by reference, but ora_fetch_into requires it in 4.0.3pl1
-           return @ora_fetch_into($this->_queryID,&$this->fields,ORA_FETCHINTO_NULLS);
+		if ($this->fetchMode & ADODB_FETCH_ASSOC)
+			return @ora_fetch_into($this->_queryID,&$this->fields,ORA_FETCHINTO_NULLS|ORA_FETCHINTO_ASSOC);
+   		else 
+			return @ora_fetch_into($this->_queryID,&$this->fields,ORA_FETCHINTO_NULLS);
    }
 
    /*        close() only needs to be called if you are worried about using too much memory while your script

@@ -1,6 +1,6 @@
 <?php
 /* 
-V1.81 22 March 2002 (c) 2000-2002 John Lim (jlim@natsoft.com.my). All rights reserved.
+V1.99 21 April 2002 (c) 2000-2002 John Lim (jlim@natsoft.com.my). All rights reserved.
   Released under both BSD license and Lesser GPL library license. 
   Whenever there is any discrepancy between the two licenses, 
   the BSD license will take precedence. 
@@ -26,6 +26,10 @@ class  ADODB_odbc_oracle extends ADODB_odbc {
 	var $metaColumnsSQL = "select cname,coltype,width from col where tname='%s' order by colno";
 	//var $_bindInputArray = false;
 	
+	function ADODB_odbc_oracle()
+	{
+	}
+		
 	function &MetaTables() 
 	{
 		if ($this->metaTablesSQL) {

@@ -21,7 +21,7 @@
      $start_date = $zen->dateParse($start_date);
   }
 
-  $typeID = $zen->projectTypeID();
+  $type_id = $zen->projectTypeID();
   $description = nl2br(htmlentities($description));
 
   $fields = array(
@@ -29,14 +29,14 @@
 		  "priority"    => "int",
 		  "description" => "ignore",
 		  "otime"       => "int",
-		  "binID"       => "int",
-		  "typeID"      => "int",
-		  "userID"      => "int",
-		  "systemID"    => "int",
+		  "bin_id"       => "int",
+		  "type_id"      => "int",
+		  "user_id"      => "int",
+		  "system_id"    => "int",
 		  "tested"      => "int",
 		  "approved"    => "int",
 		  "relations"   => "text",
-		  "projectID"   => "int",
+		  "project_id"   => "int",
 		  "est_hours"   => "num",
 		  "deadline"    => "int",
 		  "start_date"  => "int"
@@ -45,9 +45,9 @@
 		   "title",
 		   "priority",
 		   "description",
-		   "binID",
-		   "typeID",
-		   "systemID"
+		   "bin_id",
+		   "type_id",
+		   "system_id"
 		   );
   $zen->cleanInput($fields);
   // check for required fields
@@ -63,7 +63,7 @@
 	   $params["$f"] = $$f;
 	}
      }
-     $params["creatorID"] = $login_id;
+     $params["creator_id"] = $login_id;
      // add the ticket to db
      $id = $zen->add_ticket($params);
      // check for errors

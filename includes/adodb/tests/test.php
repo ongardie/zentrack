@@ -1,6 +1,7 @@
 <?php
+
 /* 
-V1.81 22 March 2002 (c) 2000-2002 John Lim (jlim@natsoft.com.my). All rights reserved.
+V1.99 21 April 2002 (c) 2000-2002 John Lim (jlim@natsoft.com.my). All rights reserved.
   Released under both BSD license and Lesser GPL library license. 
   Whenever there is any discrepancy between the two licenses, 
   the BSD license will take precedence. 
@@ -64,6 +65,8 @@ set_time_limit(240); // increase timeout
 include("../tohtml.inc.php");
 include("../adodb.inc.php");
 
+if ($ADODB_FETCH_MODE != ADODB_FETCH_DEFAULT) print "<h3>FETCH MODE IS NOT ADODB_FETCH_DEFAULT</h3>";
+
 // the table creation code is specific to the database, so we allow the user 
 // to define their own table creation stuff
 function testdb(&$db,$createtab="create table ADOXYZ (id int, firstname char(24), lastname char(24), created date)")
@@ -89,15 +92,17 @@ GLOBAL $ADODB_vers,$ADODB_CACHE_DIR,$ADODB_FETCH_MODE, $HTTP_GET_VARS;
 	print "<br><i>ts2</i> (1999-02-20) = ".$db->DBTimeStamp('1999-2-20');
 	print "<br><i>ts3</i> (1970-1-2 +/- timezone) = ".$db->DBTimeStamp(24*3600)."<p>";
 
-	
-	print "<p>Testing bad connection. Ignore following error msgs:<br>";
-	$db2 = ADONewConnection();
-	$rez = $db2->Connect("bad connection");
-	$err = $db2->ErrorMsg();
+	// mssql too slow in failing bad connection
+	if ($db->databaseType != 'mssql') {
+		print "<p>Testing bad connection. Ignore following error msgs:<br>";
+		$db2 = ADONewConnection();
+		$rez = $db2->Connect("bad connection");
+		$err = $db2->ErrorMsg();
+		print "<i>Error='$err'</i></p>";
+		if ($rez) print "<b>Cannot check if connection failed.</b> The Connect() function returned true.</p>";
+	}
 	error_reporting($e);
 	
-	print "<i>Error='$err'</i></p>";
-	if ($rez) print "<b>Cannot check if connection failed.</b> The Connect() function returned true.</p>";
 	
 	$rs=$db->Execute('select * from adoxyz');
 	if($rs === false) $create = true;
@@ -106,12 +111,16 @@ GLOBAL $ADODB_vers,$ADODB_CACHE_DIR,$ADODB_FETCH_MODE, $HTTP_GET_VARS;
 	//if ($db->databaseType !='vfp') $db->Execute("drop table ADOXYZ");
         
 	if ($create) {
-                if ($db->databaseType == 'ibase') {
-                        print "<b>Please create the following table for testing:</b></p>$createtab</p>";
-                        return;
-                } else
-                        $db->Execute($createtab);
-        }
+	    if ($db->databaseType == 'ibase') {
+	        print "<b>Please create the following table for testing:</b></p>$createtab</p>";
+	        return;
+	    } else {
+			$db->debug = 1;
+			$e = error_reporting(E_ALL-E_WARNING);
+	        $db->Execute($createtab);
+			error_reporting($e);
+		}
+    }
 	
 	$rs = &$db->Execute("delete from ADOXYZ"); // some ODBC drivers will fail the drop so we delete
 	if ($rs) {
@@ -184,35 +193,91 @@ GLOBAL $ADODB_vers,$ADODB_CACHE_DIR,$ADODB_FETCH_MODE, $HTTP_GET_VARS;
 	
 	$db->debug = false;
 	
+	if ($db->databaseType == 'mssql') {
+/*
+ASSUME Northwind available...
+
+CREATE PROCEDURE SalesByCategory
+    @CategoryName nvarchar(15), @OrdYear nvarchar(4) = '1998'
+AS
+IF @OrdYear != '1996' AND @OrdYear != '1997' AND @OrdYear != '1998' 
+BEGIN
+	SELECT @OrdYear = '1998'
+END
+
+SELECT ProductName,
+	TotalPurchase=ROUND(SUM(CONVERT(decimal(14,2), OD.Quantity * (1-OD.Discount) * OD.UnitPrice)), 0)
+FROM [Order Details] OD, Orders O, Products P, Categories C
+WHERE OD.OrderID = O.OrderID 
+	AND OD.ProductID = P.ProductID 
+	AND P.CategoryID = C.CategoryID
+	AND C.CategoryName = @CategoryName
+	AND SUBSTRING(CONVERT(nvarchar(22), O.OrderDate, 111), 1, 4) = @OrdYear
+GROUP BY ProductName
+ORDER BY ProductName
+GO
+*/
+		print "<h4>Testing Stored Procedures for mssql</h4>";
+		$saved = $db->debug;
+		$db->debug=true;
+		
+		$cat = 'Dairy Products';
+		$yr = '1998';
+		
+		$stmt = $db->PrepareSP('SalesByCategory');
+		$db->Parameter($stmt,$cat,'CategoryName');
+		$db->Parameter($stmt,$yr,'OrdYear');
+		$rs = $db->Execute($stmt);
+		rs2html($rs);
+		
+		$cat = 'Grains/Cereals';
+		$yr = 1998;
+		
+		$stmt = $db->PrepareSP('SalesByCategory');
+		$db->Parameter($stmt,$cat,'CategoryName');
+		$db->Parameter($stmt,$yr,'OrdYear');
+		$rs = $db->Execute($stmt);
+		rs2html($rs);
+		
+		$db->debug = $saved;
+	} else if (substr($db->databaseType,0,4) == 'oci8') {
+		print "<h4>Testing Stored Procedures for oci8</h4>";
+		$saved = $db->debug;
+		$db->debug=true;
+		
+		$tname = 'A%';
+		
+		$stmt = $db->PrepareSP('select * from tab where tname like :tablename');
+		$db->Parameter($stmt,$tname,'tablename');
+		$rs = $db->Execute($stmt);
+		rs2html($rs);
+		
+		$db->debug = $saved;
+	}
 	print "<p>Inserting 50 rows</p>";
 
 	for ($i = 0; $i < 5; $i++) {	
 	
 	$time = $db->DBDate(time());
 	if (empty($HTTP_GET_VARS['hide'])) $db->debug = true;
-	switch($db->dataProvider){
-	case 'ado':
+	switch($db->databaseType){
 	default:
-		if ($db->databaseType != 'oci8') {
-			$arr = array(0=>'Caroline',1=>'Miranda');
-			$rs = $db->Execute("insert into ADOXYZ (id,firstname,lastname,created) values ($i*10+0,?,?,$time)",$arr);
-			if ($rs === false) print '<b>Error inserting with parameters</b><br>';
-	        else $rs->Close();
-		} else  {
-			$arr = array('first'=>'Caroline','last'=>'Miranda');
-			$rs = $db->Execute("insert into ADOXYZ (id,firstname,lastname,created) values ($i*10+0,:first,:last,$time)",$arr);
-			if ($rs === false) print '<b>Error inserting with parameters</b><br>';
-	        else $rs->Close();
-		}
+		$arr = array(0=>'Caroline',1=>'Miranda');
+		$sql = "insert into ADOXYZ (id,firstname,lastname,created) values ($i*10+0,?,?,$time)";
 		break;
-	/*
-	case 'odbc':
-	// currently there are bugs using parameters with ODBC with PHP 4
-		$rs=$db->Execute("insert into ADOXYZ (id,firstname,lastname,created) values ($i*10+0,'Caroline','Miranda',$time)");
-		if ($rs === false) print $rs->ErrorMsg.'<b>Error inserting Caroline</b><br>';
-                else $rs->Close();
-		break;*/
+	case 'oci8':
+		$arr = array('first'=>'Caroline','last'=>'Miranda');
+		$sql = "insert into ADOXYZ (id,firstname,lastname,created) values ($i*10+0,:first,:last,$time)";		
+		break;
 	}
+	if ($i & 1) {
+		$sql = $db->Prepare($sql);
+	}
+	$rs = $db->Execute($sql,$arr);
+		
+	if ($rs === false) print '<b>Error inserting with parameters</b><br>';
+    else $rs->Close();
+		
 	$db->debug = false;
 	$db->Execute("insert into ADOXYZ (id,firstname,lastname,created) values ($i*10+1,'John','Lim',$time)");
 	$db->Execute("insert into ADOXYZ (id,firstname,lastname,created) values ($i*10+2,'Mary','Lamb',$time )");
@@ -423,16 +488,19 @@ GLOBAL $ADODB_vers,$ADODB_CACHE_DIR,$ADODB_FETCH_MODE, $HTTP_GET_VARS;
 	}
 	
  //	$db->debug=true;
-	print "<p>Testing concat: concat firstname and lastname</p>";
+	print "<p>Testing ADODB_FETCH_ASSOC and concat: concat firstname and lastname</p>";
 	
+	$save = $ADODB_FETCH_MODE;
+	$ADODB_FETCH_MODE = ADODB_FETCH_ASSOC;
 	if ($db->databaseType == 'postgres')
-		$rs = &$db->Execute("select distinct ".$db->Concat('(firstname',$db->qstr(' ').')','lastname')." from ADOXYZ");
+		$rs = &$db->Execute("select distinct ".$db->Concat('(firstname',$db->qstr(' ').')','lastname').",id from ADOXYZ");
 	else
-		$rs = &$db->Execute("select distinct ".$db->Concat('firstname',$db->qstr(' '),'lastname')." from ADOXYZ");
+		$rs = &$db->Execute("select distinct ".$db->Concat('firstname',$db->qstr(' '),'lastname').",id from ADOXYZ");
 	if ($rs) {
 		if (empty($HTTP_GET_VARS['hide'])) rs2html($rs);
 	} else print "<b>Failed Concat</b></p>";
 	
+	$ADODB_FETCH_MODE = $save;
 	print "<hr>Testing GetArray() ";
 	$rs = &$db->Execute("select * from ADOXYZ order by id");
 	if ($rs) {
@@ -507,7 +575,7 @@ GLOBAL $ADODB_vers,$ADODB_CACHE_DIR,$ADODB_FETCH_MODE, $HTTP_GET_VARS;
 	
 	echo "<p> GenID test: ";
 	for ($i=1; $i <= 10; $i++) 
-		echo  "($i: ",$val = $db->GenID('abcseq3' ,5), ") ";
+		echo  "($i: ",$val = $db->GenID('abcseq5' ,5), ") ";
 	if ($val == 0) echo " <p><b>GenID not supported</b>";
 	echo "<p>";
 	
@@ -556,6 +624,19 @@ GLOBAL $ADODB_vers,$ADODB_CACHE_DIR,$ADODB_FETCH_MODE, $HTTP_GET_VARS;
 		print " ".$rs->Fields($fld->name); 
 	} 
 	
+	print "<p>ASSOC Test of SelectLimit<br>";
+	$ADODB_FETCH_MODE = ADODB_FETCH_ASSOC;
+	$rs = $db->selectlimit('select * from adoxyz order by id',3,4);
+	$cnt = 0;
+	while ($rs && !$rs->EOF) {
+		$cnt += 1;
+		if (!isset($rs->fields['firstname'])) {
+			print "<br><b>ASSOC returned numeric field</b></p>";
+			break;
+		}
+		$rs->MoveNext();
+	}
+	if ($cnt != 3) print "<br><b>Count should be 3, instead it was $cnt</b></p>";
 	
 	// PEAR TESTS BELOW
 	$ADODB_FETCH_MODE = ADODB_FETCH_NUM;
@@ -568,7 +649,7 @@ GLOBAL $ADODB_vers,$ADODB_CACHE_DIR,$ADODB_FETCH_MODE, $HTTP_GET_VARS;
 			$i++;
 			//print "$i ";
 			if ($arr[0] != $i) {
-				print "<p>PEAR DB emulation error.</p>";
+				print "<p><b>PEAR DB emulation error 1.</b></p>";
 				$pear = false;
 				break;
 			}
@@ -580,7 +661,7 @@ GLOBAL $ADODB_vers,$ADODB_CACHE_DIR,$ADODB_FETCH_MODE, $HTTP_GET_VARS;
 	include_once "PEAR.php";
 	$db->debug =true;
 	if ($i != 50) {
-		print "<p>PEAR DB emulation error 1.1 EOF ($i)</p>";
+		print "<p><b>PEAR DB emulation error 1.1 EOF ($i)</b></p>";
 		$pear = false;
 	}
 	
@@ -590,9 +671,11 @@ GLOBAL $ADODB_vers,$ADODB_CACHE_DIR,$ADODB_FETCH_MODE, $HTTP_GET_VARS;
 
 		while (!is_object($rs->fetchInto($arr))) {
 			$i2++;
+			
+	//			print_r($arr);
 	//		print "$i ";print_r($arr);
 			if ($arr[0] != $i2) {
-				print "<p>PEAR DB emulation error 2.</p>";
+				print "<p><b>PEAR DB emulation error 2.</b></p>";
 				$pear = false;
 				break;
 			}
@@ -600,7 +683,7 @@ GLOBAL $ADODB_vers,$ADODB_CACHE_DIR,$ADODB_FETCH_MODE, $HTTP_GET_VARS;
 		$rs->Close();
 	}
 	if ($i2 != $i+$top) {
-		print "<p>PEAR DB emulation error 2.1 EOF (correct=$i+$top, actual=$i2)</p>";
+		print "<p><b>PEAR DB emulation error 2.1 EOF (correct=$i+$top, actual=$i2)</b></p>";
 		$pear = false;
 	}
 	

@@ -11,19 +11,37 @@ V1.81 22 March 2002 (c) 2000-2002 John Lim (jlim@natsoft.com.my). All rights res
   Latest version is available at http://php.weblogs.com/
 */
 error_reporting(63);
-include("a../dodb.inc.php");
+include("../adodb.inc.php");
 include("../tohtml.inc.php");
 
 if (1) {
-	$db = ADONewConnection('oci8');
-	$db->PConnect('','scott','tiger');
+	$db = ADONewConnection('oci8po');
+	$db->PConnect('','scott','tiger','natsoftmts');
 	$db->debug = true;
+
+	if (!empty($testblob)) {
+		$varHoldingBlob = 'ABC DEF GEF John TEST';
+		$num = time()%10240;
+		// create table atable (id integer, ablob blob);
+		$db->Execute('insert into ATABLE (id,ablob) values('.$num.',empty_blob())');
+		$db->UpdateBlob('ATABLE', 'ablob', $varHoldingBlob, 'id='.$num, 'BLOB');
+		
+		$rs = &$db->Execute('select * from atable');
+		
+		if (!$rs) die("Empty RS");
+		if ($rs->EOF) die("EOF RS");
+		rs2html($rs);
+	}
+	$stmt = $db->Prepare('select * from adoxyz where id=?');
+	for ($i = 1; $i <= 10; $i++) {
 	$rs = &$db->Execute(
-		'select * from adoxyz where firstname=:first and trim(lastname)=:last',
-		array('first'=>'Caroline','last'=>'Miranda'));
-	if (!$rs) die("Empty RS");
-	if ($rs->EOF) die("EOF RS");
-	rs2html($rs);
+		$stmt,
+		array($i));
+			
+		if (!$rs) die("Empty RS");
+		if ($rs->EOF) die("EOF RS");
+		rs2html($rs);
+	}
 }
 if (1) {
 	$db = ADONewConnection('oci8');

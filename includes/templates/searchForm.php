@@ -71,7 +71,7 @@
      Owner
   </td>
   <td class="bars">
-     <select name="search_params[userID]">
+     <select name="search_params[user_id]">
        <option value="">----</option>
 <?
    $userBins = $zen->getUsersBins($login_id);
@@ -80,9 +80,9 @@
      if( is_array($users) ) {
        asort($users);
        foreach($users as $k=>$v) {
-	 $check = ( $search_params["userID"] && $v["userID"] == $search_params["userID"] )? 
+	 $check = ( $search_params["user_id"] && $v["user_id"] == $search_params["user_id"] )? 
 	   "selected" : "";
-	 print "<option $check value='$v[userID]'>$v[lname], $v[fname]</option>\n";
+	 print "<option $check value='$v[user_id]'>$v[lname], $v[fname]</option>\n";
        }
      }
    }
@@ -95,13 +95,13 @@
     Type
   </td>
   <td class="bars">
-    <select name="search_params[typeID]">
+    <select name="search_params[type_id]">
        <option value="">----</option>
 <?
     if( is_array($zen->types) ) {
     	foreach($zen->getTypes(1) as $v) {
-	  $k = $v["typeID"];
-	  $check = ( $search_params["typeID"] && $k == $search_params["typeID"] )? 
+	  $k = $v["type_id"];
+	  $check = ( $search_params["type_id"] && $k == $search_params["type_id"] )? 
 	     "selected" : "";
 	  print "<option $check value='$k'>$v[name]</option>\n";
 	}
@@ -117,12 +117,12 @@
     System
   </td>
   <td class="bars">
-    <select name="search_params[systemID]">
+    <select name="search_params[system_id]">
        <option value="">----</option>
 <?
     if( is_array($zen->systems) ) {
     	foreach($zen->systems as $k=>$v) {
-	   $check = ( $k == $search_params["systemID"] )? "selected" : "";	   
+	   $check = ( $k == $search_params["system_id"] )? "selected" : "";	   
 	   print "<option $check value='$k'>$v</option>\n";
 	}
     } else {
@@ -137,13 +137,13 @@
     Bin
   </td>
   <td class="bars">
-    <select name="search_params[binID]">
+    <select name="search_params[bin_id]">
        <option value="">----</option>
 <?
     if( is_array($userBins) ) {
     	foreach($userBins as $k=>$v) {
 	  if( $k ) {
-	    $check = ( $k == $search_params["binID"] )? "selected" : "";
+	    $check = ( $k == $search_params["bin_id"] )? "selected" : "";
 	    $n = $zen->bins["$k"];
 	    print "<option $check value='$k'>$n</option>\n";
 	  }

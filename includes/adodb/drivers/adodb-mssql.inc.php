@@ -1,6 +1,6 @@
 <?php
 /* 
-V1.81 22 March 2002 (c) 2000-2002 John Lim (jlim@natsoft.com.my). All rights reserved.
+V1.99 21 April 2002 (c) 2000-2002 John Lim (jlim@natsoft.com.my). All rights reserved.
   Released under both BSD license and Lesser GPL library license. 
   Whenever there is any discrepancy between the two licenses, 
   the BSD license will take precedence. 
@@ -28,79 +28,102 @@ class ADODB_mssql extends ADOConnection {
     var $hasAffectedRows = true;
 	var $metaTablesSQL="select name from sysobjects where type='U' or type='V' and (name not in ('sysallocations','syscolumns','syscomments','sysdepends','sysfilegroups','sysfiles','sysfiles1','sysforeignkeys','sysfulltextcatalogs','sysindexes','sysindexkeys','sysmembers','sysobjects','syspermissions','sysprotects','sysreferences','systypes','sysusers','sysalternates','sysconstraints','syssegments','REFERENTIAL_CONSTRAINTS','CHECK_CONSTRAINTS','CONSTRAINT_TABLE_USAGE','CONSTRAINT_COLUMN_USAGE','VIEWS','VIEW_TABLE_USAGE','VIEW_COLUMN_USAGE','SCHEMATA','TABLES','TABLE_CONSTRAINTS','TABLE_PRIVILEGES','COLUMNS','COLUMN_DOMAIN_USAGE','COLUMN_PRIVILEGES','DOMAINS','DOMAIN_CONSTRAINTS','KEY_COLUMN_USAGE'))";
 	var $metaColumnsSQL = "select c.name,t.name,c.length from syscolumns c join systypes t on t.xusertype=c.xusertype join sysobjects o on o.id=c.id where o.name='%s'";
-	var $hasTop = true;		// support mssql SELECT TOP 10 * FROM TABLE
+	var $hasTop = 'top';		// support mssql SELECT TOP 10 * FROM TABLE
 	var $_hastrans = false;
 	var $hasGenID = true;
+	var $sysDate = 'GetDate()';
+	var $_has_mssql_init;
+	var $maxParameterLen = 4000;
 	
 	function ADODB_mssql() {			
+		$this->_has_mssql_init = (strnatcmp(PHP_VERSION,'4.1.0')>=0);
 	}
 
-        // might require begintrans -- committrans
-        function _insertid()
-        {
-                $rs = $this->Execute('select @@identity');
-                if ($rs == false || $rs->EOF) return false;
-               $id = reset($rs->fields);
-               $rs->Close();
-               return $id;
-        }
-          // might require begintrans -- committrans
-        function _affectedrows()
-        {
-                $rs = $this->Execute('select @@rowcount');
-                if ($rs == false || $rs->EOF) return false;
-               $id = reset($rs->fields);
-               $rs->Close();
-               return $id;
-        }
-        function BeginTrans()
-		{       
+    // might require begintrans -- committrans
+    function _insertid()
+    {
+            return $this->GetOne('select @@identity');
+    }
+      // might require begintrans -- committrans
+    function _affectedrows()
+    {
+        return $this->GetOne('select @@rowcount');
+    }
+    function BeginTrans()
+	{       
 		$this->_hastrans = true;
-        $this->Execute('BEGIN TRAN');
-        return true;
-		}
-		
-	function GenID()
-	{
-		return $this->GetOne("SELECT CONVERT(varchar(255), NEWID()) AS 'Char'");
+       	$this->Execute('BEGIN TRAN');
+       	return true;
 	}
-	// Reserved for future expansion
+		
+	function GenID($seq='adodbseq',$start=1)
+	{	
+		//$this->debug=1;
+		$this->Execute('BEGIN TRANSACTION adodbseq');
+		$ok = $this->Execute("update $seq with (tablockx,holdlock) set id = id + 1");
+		if (!$ok) {
+			$this->Execute("create table $seq (id float(53))");
+			$ok = $this->Execute("insert into $seq with (tablockx,holdlock) values($start)");
+			if (!$ok) {
+				$this->Execute('ROLLBACK TRANSACTION adodbseq');
+				return false;
+			}
+			$this->Execute('COMMIT TRANSACTION adodbseq'); 
+			return 1;
+		}
+		$num = $this->GetOne("select id from $seq");
+		$this->Execute('COMMIT TRANSACTION adodbseq'); 
+		return $num;
+		
+		// in old implementation, pre 1.90, we returned GUID...
+		//return $this->GetOne("SELECT CONVERT(varchar(255), NEWID()) AS 'Char'");
+	}
+	
 	function CommitTrans()
 	{
+		if (!$this->_hastrans) return false;
 		$this->_hastrans = false;
         $this->Execute('COMMIT TRAN');
         return true;
 	}
-	// Reserved for future expansion
 	function RollbackTrans()
 	{
+		if (!$this->_hastrans) return false;
 		$this->_hastrans = false;
         $this->Execute('ROLLBACK TRAN');
         return true;
 	}
 	
+	function RowLock($table,$where) 
+	{
+		if (!$this->_hastrans) $this->BeginTrans();
+		if ($where) 
+			return $this->GetOne("select top 1 null as ignore from $table with (ROWLOCK,SERIALIZABLE) $where");
+		
+		return $this->GetOne("select null as ignore from $table with (TABLOCK,SERIALIZABLE)");
+	}
 	
 	//From: Fernando Moreira <FMoreira@imediata.pt>
-        function MetaDatabases() 
-		{ 
-                if(@mssql_select_db("master")) { 
-                         $qry="select name from sysdatabases where name <> 'master'"; 
-                         if($rs=@mssql_query($qry)){ 
-                                 $tmpAr=$ar=array(); 
-                                 while($tmpAr=@mssql_fetch_row($rs)) 
-                                         $ar[]=$tmpAr[0]; 
-                                @mssql_select_db($this->databaseName); 
-                                 if(sizeof($ar)) 
-                                         return($ar); 
-                                 else 
-                                         return(false); 
-                         } else { 
-                                 @mssql_select_db($this->databaseName); 
-                                 return(false); 
-                         } 
-                 } 
-                 return(false); 
-        } 
+	function MetaDatabases() 
+	{ 
+	    if(@mssql_select_db("master")) { 
+	             $qry="select name from sysdatabases where name <> 'master'"; 
+	             if($rs=@mssql_query($qry)){ 
+	                     $tmpAr=$ar=array(); 
+	                     while($tmpAr=@mssql_fetch_row($rs)) 
+	                             $ar[]=$tmpAr[0]; 
+	                    @mssql_select_db($this->databaseName); 
+	                     if(sizeof($ar)) 
+	                             return($ar); 
+	                     else 
+	                             return(false); 
+	             } else { 
+	                     @mssql_select_db($this->databaseName); 
+	                     return(false); 
+	             } 
+	     } 
+	     return(false); 
+	} 
 
 	function SelectDB($dbName) 
 	{
@@ -133,7 +156,6 @@ class ADODB_mssql extends ADOConnection {
 	{
 		$this->_connectionID = mssql_connect($argHostname,$argUsername,$argPassword);
 		if ($this->_connectionID === false) return false;
-		//$this->Execute('SET DATEFORMAT ymd');
 		if ($argDatabasename) return $this->SelectDB($argDatabasename);
 		return true;	
 	}
@@ -144,17 +166,73 @@ class ADODB_mssql extends ADOConnection {
 	{
 		$this->_connectionID = mssql_pconnect($argHostname,$argUsername,$argPassword);
 		if ($this->_connectionID === false) return false;
-		//$this->Execute('SET DATEFORMAT ymd');
 		if ($argDatabasename) return $this->SelectDB($argDatabasename);
 		return true;	
+	}
+	
+	function Prepare($sql)
+	{
+		return $sql;
+	}
+	
+	function PrepareSP($sql)
+	{
+		if (!$this->_has_mssql_init) {
+			print "PrepareSP: mssql_init only available since PHP 4.1.0<br>\n";
+			return $sql;
+		}
+		$stmt = mssql_init($sql,$this->_connectionID);
+		if (!$stmt)  return $sql;
+		return array($sql,$stmt);
+	}
+	
+	/* 
+	Usage:
+		$stmt = $db->PrepareSP('SP_RUNSOMETHING'); -- takes 2 params, @myid and @group
+		
+		# note that the parameter does not have @ in front!
+		$db->Parameter($stmt,$id,'myid');
+		$db->Parameter($stmt,$group,'group',false,64);
+		$db->Execute($stmt);
+		
+		@param $stmt Statement returned by Prepare() or PrepareSP().
+		@param $var PHP variable to bind to. Can set to null (for isNull support).
+		@param $name Name of stored procedure variable name to bind to.
+		@param [$isOutput] Indicates direction of parameter 0/false=IN  1=OUT  2= IN/OUT. This is ignored in oci8.
+		@param [$maxLen] Holds an maximum length of the variable.
+		@param [$type] The data type of $var. Legal values depend on driver.
+		
+		See mssql_bind documentation at php.net.
+	*/
+	function Parameter(&$stmt, &$var, $name, $isOutput=false, $maxLen=4000, $type=false)
+	{
+		if (!$this->_has_mssql_init) {
+			print "Parameter: mssql_bind only available since PHP 4.1.0<br>\n";
+			return $sql;
+		}
+
+		$isNull = is_null($var); // php 4.0.4 and above...
+			
+		if ($type === false) 
+			switch(gettype($var)) {
+			default:
+			case 'string': $type = SQLCHAR; break;
+			case 'double': $type = SQLFLT8; break;
+			case 'integer': $type = SQLINT4; break;
+			case 'boolean': $type = SQLINT1; break; # SQLBIT not supported in 4.1.0
+			}
+		
+		if  ($this->debug) {
+			print "Parameter(\$stmt, \$php_var='$var', \$name='$name'); (type=$type)<br>\n";
+		}
+		return mssql_bind($stmt[1], '@'.$name, &$var, $type, $isOutput, $isNull, $maxLen);
 	}
 	
 	// returns query ID if successful, otherwise false
 	function _query($sql,$inputarr)
 	{
-		
-		$val= mssql_query($sql,$this->_connectionID);
-		return $val;
+		if (is_array($sql)) return mssql_execute($sql[1]);
+		return mssql_query($sql,$this->_connectionID);
 	}
 	
 	// returns true or false
@@ -188,7 +266,18 @@ class ADORecordset_mssql extends ADORecordSet {
 		$this->fetchMode = $ADODB_FETCH_MODE;
 		return $this->ADORecordSet($id);
 	}
-	
+
+	//Contributed by "Sven Axelsson" <sven.axelsson@bokochwebb.se>
+	// get next resultset - requires PHP 4.0.5 or later
+	function NextRecordSet()
+	{
+	    if (!mssql_next_result($this->_queryID)) return false;
+	    $this->_inited = false;
+		$this->bind = false;
+	    $this->_currentRow = -1;
+	    $this->Init();
+	    return true;
+	}
 
 	/* Use associative array to get fields array */
 	function Fields($colname)
@@ -251,7 +340,6 @@ class ADORecordset_mssql extends ADORecordSet {
 	// also the date format has been changed from YYYY-mm-dd to dd MMM YYYY in 4.0.4. Idiot!
 	function _fetch($ignore_fields=false) 
 	{
-	
 		if ($this->fetchMode & ADODB_FETCH_ASSOC) $this->fields = @mssql_fetch_array($this->_queryID);
 		else $this->fields = @mssql_fetch_row($this->_queryID);
 		return (!empty($this->fields));

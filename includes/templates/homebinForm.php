@@ -14,6 +14,7 @@
   </td>
   <td class="bars">
     <select name="homebin">
+      <option value=''>--All--</option>
 <?
   $userBins = $zen->getUsersBins($login_id);
   $user = $zen->getUser($login_id);

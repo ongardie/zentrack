@@ -1,29 +1,29 @@
 
   <table width="600" align="center" cellpadding="2" cellspacing="2">
    <tr>  
-   <? if( $projectID ) { 
-       $project = $zen->get_ticket($projectID); 
+   <? if( $project_id ) { 
+       $project = $zen->get_ticket($project_id); 
    ?>
     <td colspan="3" class='titleCell'>PROJECT</td>
    <? } else { ?>
     <td colspan="3" rowspan="2"><span class="bigBold"><?=
-	strtoupper($zen->systems["$systemID"]." ".$zen->types["$typeID"]);
+	strtoupper($zen->systems["$system_id"]." ".$zen->types["$type_id"]);
 	?></span></td>
    <? } ?>
     <td width="30">&nbsp;</td>
     <td class="smallTitleCell">START DATE</td>
   </tr>
   <tr style='background:<?=$zen->settings["color_background"]?>'>
-   <? if( $projectID ) { ?>  
+   <? if( $project_id ) { ?>  
     <td colspan='3' <?=$rollover_text?>><a 
-	href='<?=$rootUrl?>/project.php?id=<?=$projectID?>&setmode=Tasks' 
-	class='rowLink'><?=$projectID?> -  
+	href='<?=$rootUrl?>/project.php?id=<?=$project_id?>&setmode=Tasks' 
+	class='rowLink'><?=$project_id?> -  
     	<?=stripslashes($project["title"])?></a></td>
     <? } ?>
     <td class='altCellInv'>&nbsp;</td>
     <td class='altCellInv'><?=($start_date)?$zen->showDate($start_date):"n/a"?></td>  
   </tr>
-  <? if( $projectID ) { ?>
+  <? if( $project_id ) { ?>
   <tr>
     <td colspan='5' height='10'>&nbsp;</td>
   </tr>
@@ -36,21 +36,21 @@
     <td class="smallTitleCell">ESTIMATED HOURS</td>
   </tr>
    <tr>
-    <td><?=($binID)?$zen->bins["$binID"]:"none"?></td>
-    <td><?=($typeID)?$zen->types["$typeID"]:"n/a"?></td>
-    <td><?=($systemID)?$zen->systems["$systemID"]:"none"?></td>
+    <td><?=($bin_id)?$zen->bins["$bin_id"]:"none"?></td>
+    <td><?=($type_id)?$zen->types["$type_id"]:"n/a"?></td>
+    <td><?=($system_id)?$zen->systems["$system_id"]:"none"?></td>
     <td>&nbsp;</td>  
     <?
          $set = ($page_browser == 'ns')? 
             "  SET  " : str_pad("SET",18," ",STR_PAD_RIGHT);
-         if( $typeID == $zen->projectTypeID() ) {
+         if( $type_id == $zen->projectTypeID() ) {
 	    list($est_hours,$wkd_hours) = $zen->getProjectHours($id);
 	    if( $est_hours <= 0 )
 	      $est_hours = "n/a";
 	    print "<td>$est_hours</td>\n";
 	 } else if($est_hours > 0) {
             print "<td>$est_hours</td>\n";
-	 } else if( $userID == $login_id ) {
+	 } else if( $user_id == $login_id ) {
 	    echo('
 		 <form method="post" action="'.$rootUrl.'/actions/estimate.php">
 		  <input type="hidden" name="id" value="'.$id.'">

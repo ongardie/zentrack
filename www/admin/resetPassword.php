@@ -9,15 +9,15 @@
   
   include("./admin_header.php");
 
-  if( $userID == 1 && $login_id != 1 ) {
+  if( $user_id == 1 && $login_id != 1 ) {
     $errs[] = "Only the root administrator can change the root administrator's password";
-  } else if( $userID ) {
+  } else if( $user_id ) {
     if( $zen->demo_mode == "on" ) {
       $msg = "Process completed successfully.  No changes were made because this is a demo site";
     } else {
-      $res = $zen->reset_password($userID);
+      $res = $zen->reset_password($user_id);
       if( $res ) {
-	$msg = "Password reset to the default [user's last name] for user $userID";
+	$msg = "Password reset to the default [user's last name] for user $user_id";
       } else { 
 	$errs[] = "The user password could not be found/edited";
       }	

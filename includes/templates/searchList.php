@@ -26,25 +26,25 @@ if( is_array($tickets) && count($tickets) ) {
              <b><span class="small"><?=$zen->prn("Status")?></span></b></span></div>
 	  </td>
         <? } ?>
-	<? if( !$search_params["userID"] || is_array($search_params["userID"]) ) { ?>
+	<? if( !$search_params["user_id"] || is_array($search_params["user_id"]) ) { ?>
 	  <td width="32" height="25" valign="middle" title="Person ticket is assinged to">
 	  <div align="center"><span style="color:<?=$zen->settings["color_title_txt"]?>">
              <b><span class="small"><?=$zen->prn("Owner")?></span></b></span></div>
 	  </td>
         <? } ?>
-	<? if( !$search_params["typeID"] || is_array($search_params["typeID"]) ) { ?>
+	<? if( !$search_params["type_id"] || is_array($search_params["type_id"]) ) { ?>
 	  <td width="32" height="25" valign="middle" title="Type of ticket">
 	  <div align="center"><span style="color:<?=$zen->settings["color_title_txt"]?>">
              <b><span class="small"><?=$zen->prn("Type")?></span></b></span></div>
 	  </td>
         <? } ?>
-	<? if( !$search_params["systemID"] || is_array($search_params["systemID"]) ) { ?>
+	<? if( !$search_params["system_id"] || is_array($search_params["system_id"]) ) { ?>
 	  <td width="32" height="25" valign="middle" title="System involved in ticket">
 	  <div align="center"><span style="color:<?=$zen->settings["color_title_txt"]?>">
              <b><span class="small"><?=$zen->prn("System")?></span></b></span></div>
 	  </td>
         <? } ?>
-	<? if( !$search_params["binID"] || is_array($search_params["binID"]) ) { ?>
+	<? if( !$search_params["bin_id"] || is_array($search_params["bin_id"]) ) { ?>
 	  <td width="32" height="25" valign="middle" title="Bin ticket is located in">
 	  <div align="center"><span style="color:<?=$zen->settings["color_title_txt"]?>">
              <b><span class="small"><?=$zen->prn("Bin")?></span></b></span></div>
@@ -101,24 +101,24 @@ if( is_array($tickets) && count($tickets) ) {
 	  <?=$t["status"]?>
 	</td>
 	<? } ?>
-	<? if( !$search_params["userID"] || is_array($search_params["userID"]) ) { ?>
+	<? if( !$search_params["user_id"] || is_array($search_params["user_id"]) ) { ?>
 	<td height="25" <?=$tx?> valign="middle">
-	  <?=$zen->formatName($t["userID"],2)?>
+	  <?=$zen->formatName($t["user_id"],2)?>
 	</td>
 	<? } ?>
-	<? if( !$search_params["typeID"] || is_array($search_params["typeID"]) ) { ?>
+	<? if( !$search_params["type_id"] || is_array($search_params["type_id"]) ) { ?>
 	<td height="25" <?=$tx?> valign="middle">
-	  <?=$zen->types["$t[typeID]"]?>
+	  <?=$zen->types["$t[type_id]"]?>
 	</td>
 	<? } ?>
-	<? if( !$search_params["systemID"] || is_array($search_params["systemID"]) ) { ?>
+	<? if( !$search_params["system_id"] || is_array($search_params["system_id"]) ) { ?>
 	<td height="25" <?=$tx?> valign="middle">
-	  <?=$zen->systems["$t[systemID]"]?>
+	  <?=$zen->systems["$t[system_id]"]?>
 	</td>
 	<? } ?>
-	<? if( !$search_params["binID"] || is_array($search_params["binID"]) ) { ?>
+	<? if( !$search_params["bin_id"] || is_array($search_params["bin_id"]) ) { ?>
 	<td height="25" <?=$tx?> valign="middle">
-	  <?=$zen->bins["$t[binID]"]?>
+	  <?=$zen->bins["$t[bin_id]"]?>
 	</td>
 	<? } ?>
 	</tr>	 	   

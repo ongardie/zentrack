@@ -9,9 +9,9 @@
   include("header.php");
 
   $params = array(
-		  "typeID"  => $zen->projectTypeID(),
+		  "type_id"  => $zen->projectTypeID(),
 		  "status"  => array("OPEN","PENDING"),
-		  "userID"  => $login_id
+		  "user_id"  => $login_id
 		  );
   $page_tile = "Projects";
   $page_section = "Projects";
@@ -22,9 +22,9 @@
   include("$libDir/nav.php");
 
   if( $login_bin ) {
-    $params["binID"] = $login_bin;
+    $params["bin_id"] = $login_bin;
   } else {
-    $params["binID"] = $zen->getUsersBins($login_id);
+    $params["bin_id"] = $zen->getUsersBins($login_id);
   }
   if( is_array($params) )
     $tickets = $zen->get_tickets($params);

@@ -23,7 +23,7 @@
       }
       if( $newName[$i] ) {
 	$vars[] = array(
-			"taskID"      => $newID[$i],
+			"task_id"      => $newID[$i],
 			"name"     => $newName[$i], 
 			"priority" => $newPri[$i], 
 			"active"   => $newActive[$i]
@@ -70,7 +70,7 @@
   $zen->printErrors($errs);
   if( !$skip ) {  
     $type = "task";
-    $id_type = "taskID";
+    $id_type = "task_id";
     include("$templateDir/configForm.php");
   } else {
     include("$templateDir/adminMenu.php");

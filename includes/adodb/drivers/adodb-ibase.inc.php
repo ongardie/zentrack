@@ -1,6 +1,6 @@
 <?php
 /*
-V1.81 22 March 2002 (c) 2000-2002 John Lim (jlim@natsoft.com.my). All rights reserved.  
+V1.99 21 April 2002 (c) 2000-2002 John Lim (jlim@natsoft.com.my). All rights reserved.  
   Released under both BSD license and Lesser GPL library license. 
   Whenever there is any discrepancy between the two licenses, 
   the BSD license will take precedence.
@@ -35,20 +35,20 @@ class ADODB_ibase extends ADOConnection {
 	var $ibasetrans = IBASE_DEFAULT;
 	var $hasGenID = true;
 	var $_bindInputArray = true;
-	
+	var $buffers = 0;
+	var $dialect = 1;
 
     function ADODB_ibase() 
 	{
         ibase_timefmt('%Y-%m-%d');
+	
   	}
 
     function BeginTrans()
-	{      
-		//return false; // currently not working properly
-		
-            $this->autoCommit = false;
-     		$this->_transactionID = $this->_connectionID;//ibase_trans($this->ibasetrans, $this->_connectionID);
-	      	return $this->_transactionID;
+	{     
+        $this->autoCommit = false;
+     	$this->_transactionID = $this->_connectionID;//ibase_trans($this->ibasetrans, $this->_connectionID);
+	    return $this->_transactionID;
 	}
 	
 	function CommitTrans()
@@ -72,6 +72,11 @@ class ADODB_ibase extends ADOConnection {
 		$this->_transactionID = false;   
 		
 		return $ret;
+	}
+	
+	function RowLock($table,$where)
+	{
+		//$this->Execute("SET TRANSACTION READ COMMITTED RESERVING $table FOR PROTECTED WRITE");
 	}
 	
 	function GenID($seqname='adodbseq',$startID=1)
@@ -113,10 +118,10 @@ class ADODB_ibase extends ADOConnection {
        // returns true or false
     function _connect($argHostname, $argUsername, $argPassword, $argDatabasename)
     {  
-		if ($this->charSet)
-			$this->_connectionID = ibase_connect($argHostname,$argUsername,$argPassword,$this->charSet);
-	        else        
-			$this->_connectionID = ibase_connect($argHostname,$argUsername,$argPassword);
+		//if ($this->charSet !== false)
+			$this->_connectionID = ibase_connect($argHostname,$argUsername,$argPassword,$this->charSet,$this->buffers,$this->dialect);
+	  //  else        
+		//	$this->_connectionID = ibase_connect($argHostname,$argUsername,$argPassword);
 	             	
 		if ($this->_connectionID === false) {
 			$this->_handleerror();
@@ -128,50 +133,60 @@ class ADODB_ibase extends ADOConnection {
        // returns true or false
     function _pconnect($argHostname, $argUsername, $argPassword, $argDatabasename)
     {
-		if ($this->charSet)
-			$this->_connectionID = ibase_pconnect($argHostname,$argUsername,$argPassword,$this->charSet);
-	       else        
-			$this->_connectionID = ibase_pconnect($argHostname,$argUsername,$argPassword);
+		//if ($this->charSet !== false)
+			$this->_connectionID = ibase_pconnect($argHostname,$argUsername,$argPassword,$this->charSet,$this->buffers,$this->dialect);
+	  //  else        
+		//	$this->_connectionID = ibase_pconnect($argHostname,$argUsername,$argPassword);
 	        	     
-	      	if ($this->_connectionID === false) {
+	    if ($this->_connectionID === false) {
 			$this->_handleerror();
 			return false;
 		}
         
         return true;
-    }
+    }	
+	
+	function Prepare($sql)
+	{
+		return $sql;
+		$stmt = ibase_prepare($sql);
+		if (!$stmt) return false;
+		return array($sql,$stmt);
+	}
 
        // returns query ID if successful, otherwise false
 	   // there have been reports of problems with nested queries - the code is probably not re-entrant?
     function _query($sql,$iarr=false)
     { 
+		if (is_array($sql)) {
+			$fn = 'ibase_execute';
+			$sql = $sql[1];
+		} else
+			$fn = 'ibase_query';
+		
 		if (!$this->autoCommit && $this->_transactionID) {
-			if (is_array($iarr)) {	
-				switch(sizeof($iarr)) {
-				case 1: $ret = ibase_query($this->_transactionID,$sql,$iarr[0]); break;
-				case 2: $ret = ibase_query($this->_transactionID,$sql,$iarr[0],$iarr[1]); break;
-				case 3: $ret = ibase_query($this->_transactionID,$sql,$iarr[0],$iarr[1],$iarr[2]); break;
-				case 4: $ret = ibase_query($this->_transactionID,$sql,$iarr[0],$iarr[1],$iarr[2],$iarr[3]); break;
-				default: print "<p>Too many parameters to ibase query $sql</p>";
-				case 5: $ret = ibase_query($this->_transactionID,$sql,$iarr[0],$iarr[1],$iarr[2],$iarr[3],$iarr[4]); break;
-				}
-			} else $ret = ibase_query($this->_transactionID,$sql); 
+			$conn = $this->_transactionID;
+			$docommit = false;
 		} else {
-			if (is_array($iarr)) {
-				switch(sizeof($iarr)) {
-				case 1: $ret = ibase_query($this->_connectionID,$sql,$iarr[0]); break;
-				case 2: $ret = ibase_query($this->_connectionID,$sql,$iarr[0],$iarr[1]); break;
-				case 3: $ret = ibase_query($this->_connectionID,$sql,$iarr[0],$iarr[1],$iarr[2]); break;
-				case 4: $ret = ibase_query($this->_connectionID,$sql,$iarr[0],$iarr[1],$iarr[2],$iarr[3]); break;
-				default: print "<p>Too many parameters to ibase query $sql</p>";
-				case 5: $ret = ibase_query($this->_connectionID,$sql,$iarr[0],$iarr[1],$iarr[2],$iarr[3],$iarr[4]); break;
-				
-				} 
-			} else $ret = ibase_query($this->_connectionID,$sql);
-	       
-		   // autocommit
-		    if ($ret === true) ibase_commit($this->_connectionID);
+			$conn = $this->_connectionID;
+			$docommit = true;
 		}
+		if (is_array($iarr)) {	
+			switch(sizeof($iarr)) {
+			case 1: $ret = $fn($conn,$sql,$iarr[0]); break;
+			case 2: $ret = $fn($conn,$sql,$iarr[0],$iarr[1]); break;
+			case 3: $ret = $fn($conn,$sql,$iarr[0],$iarr[1],$iarr[2]); break;
+			case 4: $ret = $fn($conn,$sql,$iarr[0],$iarr[1],$iarr[2],$iarr[3]); break;
+			case 5: $ret = $fn($conn,$sql,$iarr[0],$iarr[1],$iarr[2],$iarr[3],$iarr[4]); break;
+			case 6: $ret = $fn($conn,$sql,$iarr[0],$iarr[1],$iarr[2],$iarr[3],$iarr[4],$iarr[5]); break;
+			case 7: $ret = $fn($conn,$sql,$iarr[0],$iarr[1],$iarr[2],$iarr[3],$iarr[4],$iarr[5],$iarr[6]); break;
+			default: print "<p>Too many parameters to ibase query $sql</p>";
+			case 8: $ret = $fn($conn,$sql,$iarr[0],$iarr[1],$iarr[2],$iarr[3],$iarr[4],$iarr[5],$iarr[6],$iarr[7]); break;
+			}
+		} else $ret = $fn($conn,$sql); 
+	       
+		if ($docommit && $ret === true) ibase_commit($this->_connectionID);
+
 		$this->_handleerror();
     	return $ret;
     }

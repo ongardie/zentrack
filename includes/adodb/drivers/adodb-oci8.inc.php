@@ -1,6 +1,6 @@
 <?php
 /*
-V1.81 22 March 2002 (c) 2000-2002 John Lim. All rights reserved.
+V1.99 21 April 2002 (c) 2000-2002 John Lim. All rights reserved.
   Released under both BSD license and Lesser GPL library license. 
   Whenever there is any discrepancy between the two licenses, 
   the BSD license will take precedence.
@@ -49,6 +49,8 @@ class ADODB_oci8 extends ADOConnection {
 	var $hasAffectedRows = true;
 	var $upperCase = 'upper';
 	var $noNullStrings = false;
+	var $connectSID = false;
+	var $_bind = false;
 	
     function ADODB_oci8() {
     }
@@ -97,25 +99,26 @@ class ADODB_oci8 extends ADOConnection {
 	    $this->autoCommit = true;
 		return $ret;
 	}
-        
+	
+	
     function SelectDB($dbName) 
 	{
         return false;
     }
 
 	/* there seems to be a bug in the oracle extension -- always returns ORA-00000 - no error */
-        function ErrorMsg() 
-		{
-			$arr = @OCIerror($this->_stmt);
-			if ($arr === false) {
-				$arr = @OCIerror($this->_connectionID);
-				if ($arr === false) $arr = @OCIError();
-				if ($arr === false) return '';
-			}
-            $this->_errorMsg = $arr['message'];
-            return $this->_errorMsg;
-        }
-	
+    function ErrorMsg() 
+	{
+		$arr = @OCIerror($this->_stmt);
+		if ($arr === false) {
+			$arr = @OCIerror($this->_connectionID);
+			if ($arr === false) $arr = @OCIError();
+			if ($arr === false) return '';
+		}
+           $this->_errorMsg = $arr['message'];
+           return $this->_errorMsg;
+    }
+
 	function ErrorNo() 
 	{
 		if (is_resource($this->_stmt))
@@ -143,27 +146,30 @@ NATSOFT.DOMAIN =
   )
 */
     // returns true or false
-    function _connect($argHostname, $argUsername, $argPassword, $argDatabasename)
+    function _connect($argHostname, $argUsername, $argPassword, $argDatabasename,$persist=false)
     {
 		         
     	if($argHostname) { // added by Jorma Tuomainen <jorma.tuomainen@ppoy.fi>
         	if(strpos($argHostname,":")) {
-			$argHostinfo=explode(":",$argHostname);
-               		$argHostname=$argHostinfo[0];
-                	$argHostport=$argHostinfo[1];
+				$argHostinfo=explode(":",$argHostname);
+               	$argHostname=$argHostinfo[0];
+                $argHostport=$argHostinfo[1];
          	} else {
     			$argHostport="1521";
-   		}
-		if ( !strlen($argDatabasename) ) { // use oracle name services (added by Itzchak Rehberg <izzy@einsurance.de>)
-			$argDatabasename = $argHostname;
-		} else {
-			$argDatabasename="(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=".$argHostname
-				.")(PORT=".$argHostport."))(CONNECT_DATA=(SERVICE_NAME=".$argDatabasename.")))";
-		}
-    			$argHostport="1521";
+   			}
+			
+			if ($this->connectSID) {
+				$argDatabasename="(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=".$argHostname
+				.")(PORT=$argHostport))(CONNECT_DATA=(SID=$argDatabasename)))";
+			} else
+				$argDatabasename="(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=".$argHostname
+				.")(PORT=$argHostport))(CONNECT_DATA=(SERVICE_NAME=$argDatabasename)))";
     	}
-	//if ($argHostname) print "<p>Connect: 1st argument should be left blank for $this->databaseType</p>";
-        $this->_connectionID = OCIlogon($argUsername,$argPassword, $argDatabasename);
+				
+ 		//if ($argHostname) print "<p>Connect: 1st argument should be left blank for $this->databaseType</p>";
+       if ($persist)$this->_connectionID = OCIPLogon($argUsername,$argPassword, $argDatabasename);
+	   else $this->_connectionID = OCILogon($argUsername,$argPassword, $argDatabasename);
+	   
         if ($this->_connectionID === false) return false;
 		if ($this->_initdate) {
 			$this->Execute("ALTER SESSION SET NLS_DATE_FORMAT='YYYY-MM-DD'");
@@ -175,27 +181,7 @@ NATSOFT.DOMAIN =
         // returns true or false
     function _pconnect($argHostname, $argUsername, $argPassword, $argDatabasename)
 	{
-		if($argHostname) { // added by Jorma Tuomainen <jorma.tuomainen@ppoy.fi>
-        		if(strpos($argHostname,":")) {
-			$argHostinfo=explode(":",$argHostname);
-               		$argHostname=$argHostinfo[0];
-                	$argHostport=$argHostinfo[1];
-         	} else {
-    			$argHostport="1521";
-   		}
-		if ( !strlen($argDatabasename) ) { // use oracle name services (added by Itzchak Rehberg <izzy@einsurance.de>)
-			$argDatabasename = $argHostname;
-		} else {
-			$argDatabasename="(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=".$argHostname
-				.")(PORT=".$argHostport."))(CONNECT_DATA=(SERVICE_NAME=".$argDatabasename.")))";
-		}
-    	}
-	$this->_connectionID = OCIplogon($argUsername,$argPassword, $argDatabasename);
-        if ($this->_connectionID === false) return false;
-		if ($this->_initdate) {
-			$this->Execute("ALTER SESSION SET NLS_DATE_FORMAT='YYYY-MM-DD'");
-		}
-        return true;
+        return $this->_connect($argHostname, $argUsername, $argPassword, $argDatabasename,true);
 	}
 
 	/*
@@ -207,8 +193,11 @@ NATSOFT.DOMAIN =
 	as soon as they are identified. 
 
 	b. Uses rownum tricks to obtain only the required rows from a given offset.
-	 As this is uses complicated sql statements, we only use this if the $offset >= 100. 
-	 Does not appear to work with oracle 8.0.5 or earlier. This idea by Tomas V V Cox.
+	 As this uses complicated sql statements, we only use this if the $offset >= 100. 
+	 This idea by Tomas V V Cox.
+	 
+	 This implementation does not appear to work with oracle 8.0.5 or earlier. Comment
+	 out this function then, and the slower SelectLimit() in the base class will be used.
 	*/
 	function &SelectLimit($sql,$nrows=-1,$offset=-1, $inputarr=false,$arg3=false,$secs2cache=0)
 	{
@@ -268,15 +257,20 @@ NATSOFT.DOMAIN =
 	* Example: to store $var in a blob
 	*
 	*	$conn->Execute('insert into TABLE (id,ablob) values(12,empty_blob())');
-	*	$conn->UpdateBlob('TABLE', 'ablob', $varHoldingBlob, 'ID=1', 'BLOB');
+	*	$conn->UpdateBlob('TABLE', 'ablob', $varHoldingBlob, 'ID=12', 'BLOB');
 	*	
 	*	$blobtype supports 'BLOB' and 'CLOB', but you need to change to 'empty_clob()'.
 	*
 	*  to get length of LOB:
 	*  	select DBMS_LOB.GETLENGTH(ablob) from TABLE
+	*
+	* If you are using CURSOR_SHARING = force, it appears this will case a segfault
+	* under oracle 8.1.7.0. Run:
+	*     $db->Execute('ALTER SESSION SET CURSOR_SHARING=EXACT');
+	* before UpdateBlob() then...
 	*/
 
-	function UpdateBlob($table,$column,$val,$where,$blobtype='BLOB')
+	function UpdateBlob($table,$column,$val,$where,$blobtype='BLOB',$commit=true)
 	{
 		switch(strtoupper($blobtype)) {
 		default: print "<b>UpdateBlob</b>: Unknown blobtype=$blobtype<br>"; return false;
@@ -292,12 +286,11 @@ NATSOFT.DOMAIN =
 		$desc = OCINewDescriptor($this->_connectionID, OCI_D_LOB);
 		$arr['blob'] = array($desc,-1,$type);
 		
-		$this->BeginTrans();
+		if ($commit) $this->BeginTrans();
 		$rs = ADODB_oci8::Execute($sql,$arr);
-		$rez = !empty($rs);
-		$desc->save($val);
+		if ($rez = !empty($rs)) $desc->save($val);
 		$desc->free();
-		$this->CommitTrans();
+		if ($commit) $this->CommitTrans();
 		
 		if ($rez) $rs->Close();
 		return $rez;
@@ -324,8 +317,7 @@ NATSOFT.DOMAIN =
 		
 		$this->BeginTrans();
 		$rs = ADODB_oci8::Execute($sql,$arr);
-		$rez = !empty($rs);
-		$desc->savefile($val);
+		if ($rez = !empty($rs)) $desc->savefile($val);
 		$desc->free();
 		$this->CommitTrans();
 		
@@ -338,47 +330,152 @@ NATSOFT.DOMAIN =
 		
 		$stmt = $this->Prepare('insert into emp (empno, ename) values (:empno, :ename)');
 	*/
-	function &Prepare($sql)
+	function Prepare($sql)
 	{
-		return $sql;
-	/*
-	## doesn't work reliably, so emulate
-		if ($this->debug) {
-			print "<hr>($this->databaseType): ".htmlspecialchars($sql)."<hr>";
-		}
-		return OCIParse($this->_connectionID,$sql);
-	*/
+	static $BINDNUM = 0;
+	
+		$stmt = OCIParse($this->_connectionID,$sql);
+		if (!$stmt) return $sql; // error in statement, let Execute() handle the error
+		
+		$BINDNUM += 1;
+		return array($sql,$stmt,0,$BINDNUM);
 	}
 	
-	// returns query ID if successful, otherwise false
+	/*
+		Bind a variable -- very, very fast for executing repeated statements in oracle. 
+		Better than using
+			for ($i = 0; $i < $max; $i++) {	
+				$p1 = ?; $p2 = ?; $p3 = ?;
+				$this->Execute("insert into table (col0, col1, col2) values (:0, :1, :2)", 
+					array($p1,$p2,$p3));
+			}
+		
+		Usage:
+			$stmt = $DB->Prepare("insert into table (col0, col1, col2) values (:0, :1, :2)");
+			$DB->Bind($stmt, $p1);
+			$DB->Bind($stmt, $p2);
+			$DB->Bind($stmt, $p3);
+			for ($i = 0; $i < $max; $i++) {	
+				$p1 = ?; $p2 = ?; $p3 = ?;
+				$DB->Execute($stmt);
+			}
+			
+		Some timings:		
+			** Test table has 3 cols, and 1 index. Test to insert 1000 records
+			Time 0.6081s (1644.60 inserts/sec) with direct OCIParse/OCIExecute
+			Time 0.6341s (1577.16 inserts/sec) with ADOdb Prepare/Bind/Execute
+			Time 1.5533s ( 643.77 inserts/sec) with pure SQL using Execute
+			
+		Now if PHP only had batch/bulk updating like Java or PL/SQL...
+	
+		Note that the order of parameters differs from OCIBindByName,
+		because we default the names to :0, :1, :2
+	*/
+	function Bind(&$stmt,&$var,$size=4000,$type=false,$name=false)
+	{
+		if (!is_array($stmt)) return false;
+		if ($name == false) {
+			if ($type !== false) $rez = OCIBindByName($stmt[1],":".$name,$var,$size,$type);
+			else $rez = OCIBindByName($stmt[1],":".$stmt[2],$var,$size); // +1 byte for null terminator
+			$stmt[2] += 1;
+		} else {
+			if ($type !== false) $rez = OCIBindByName($stmt[1],":".$name,$var,$size,$type);
+			else $rez = OCIBindByName($stmt[1],":".$name,$var,$size); // +1 byte for null terminator
+		}
+		
+		return $rez;
+	}
+	
+	/* 
+	Usage:
+		$stmt = $db->Prepare('select * from table where id =:myid and group=:group');
+		$db->Parameter($stmt,$id,'myid');
+		$db->Parameter($stmt,$group,'group');
+		$db->Execute($stmt);
+		
+		@param $stmt Statement returned by Prepare() or PrepareSP().
+		@param $var PHP variable to bind to
+		@param $name Name of stored procedure variable name to bind to.
+		@param [$isOutput] Indicates direction of parameter 0/false=IN  1=OUT  2= IN/OUT. This is ignored in oci8.
+		@param [$maxLen] Holds an maximum length of the variable.
+		@param [$type] The data type of $var. Legal values depend on driver.
+		
+		See OCIBindByName documentation at php.net.
+	*/
+	function Parameter(&$stmt,&$var,$name,$isOutput=false,$maxLen=4000,$type=false)
+	{
+			if  ($this->debug) {
+				print "Parameter(\$stmt, \$php_var='$var', \$name='$name');<br>\n";
+			}
+			return $this->Bind($stmt,$var,$maxLen,$type,$name);
+	}
+	
+	/*
+	returns query ID if successful, otherwise false
+	this version supports:
+	
+	   1. $db->execute('select * from table');
+	   
+	   2. $db->prepare('insert into table (a,b,c) values (:0,:1,:2)');
+	      $db->execute($prepared_statement, array(1,2,3));
+		  
+	   3. $db->execute('insert into table (a,b,c) values (:a,:b,:c)',array('a'=>1,'b'=>2,'c'=>3));
+	   
+	   4. $db->prepare('insert into table (a,b,c) values (:0,:1,:2)');
+	      $db->$bind($stmt,1); $db->bind($stmt,2); $db->bind($stmt,3); 
+		  $db->execute($stmt);
+	*/ 
 	function _query($sql,$inputarr)
 	{
-		//if (!is_resource($sql))
-		$stmt=OCIParse($this->_connectionID,$sql);
-		//else $stmt = $sql;
+		if (is_array($sql)) { // is prepared sql
+			$stmt = $sql[1];
+			
+			// we try to bind to permanent array, so that OCIBindByName is persistent
+			// and carried out once only - note that max array element size is 4000 chars
+			if (is_array($inputarr)) {
+				$bindpos = $sql[3];
+				if (isset($this->_bind[$bindpos])) {
+				// all tied up already
+					$bindarr = &$this->_bind[$bindpos];
+				} else {
+				// one statement to bind them all
+					$bindarr = array();
+					foreach($inputarr as $k => $v) {
+						$bindarr[$k] = $v;
+						OCIBindByName($stmt,":$k",$bindarr[$k],4000);
+					}
+					$this->_bind[$bindpos] = &$bindarr;
+				}
+			}
+		} else
+			$stmt=@OCIParse($this->_connectionID,$sql);
 		
 		$this->_stmt = $stmt;
 		if (!$stmt) return false;
-		
+	
 		if (defined('ADODB_PREFETCH_ROWS')) @OCISetPrefetch($stmt,ADODB_PREFETCH_ROWS);
-		
+			
 		if (is_array($inputarr)) {
 			foreach($inputarr as $k => $v) {
 				if (is_array($v)) {
-					OCIBindByName($stmt,":$k",$inputarr[$k][0],$v[1],$v[2]);
-					//print_r($v);
+					if (sizeof($v) == 2) // suggested by g.giunta@libero.
+						OCIBindByName($stmt,":$k",$inputarr[$k][0],$v[1]);
+					else
+						OCIBindByName($stmt,":$k",$inputarr[$k][0],$v[1],$v[2]);
 				} else {
 					$len = -1;
-					if ($inputarr[$k] === ' ') $len = 1;
-					OCIBindByName($stmt,":$k",$inputarr[$k],$len);
-					//print " :$k $len ";
+					if ($v === ' ') $len = 1;
+					if (isset($bindarr)) {	// is prepared sql, so no need to ocibindbyname again
+						$bindarr[$k] = $v;
+					} else { 				// dynamic sql, so rebind every time
+						OCIBindByName($stmt,":$k",$inputarr[$k],$len);
+					}
 				}
 			}
 		}
 		if (OCIExecute($stmt,$this->_commit)) {
 		   /* Now this could be an Update/Insert or Delete */
-			if (strtoupper(substr($sql,0,6)) !== 'SELECT') return true;
-			
+			if (@OCIStatementType($stmt) != 'SELECT') return true;
 			return $stmt;
 		}
 	    return false;
@@ -502,28 +599,28 @@ class ADORecordset_oci8 extends ADORecordSet {
         {
 		global $ADODB_FETCH_MODE;
 		
-		switch ($ADODB_FETCH_MODE)
-		{
-		default:
-		case ADODB_FETCH_NUM: $this->fetchMode = OCI_NUM+OCI_RETURN_NULLS+OCI_RETURN_LOBS; break;
-		case ADODB_FETCH_ASSOC:$this->fetchMode = OCI_ASSOC+OCI_RETURN_NULLS+OCI_RETURN_LOBS; break;
-		case ADODB_FETCH_DEFAULT:
-		case ADODB_FETCH_BOTH:$this->fetchMode = OCI_NUM+OCI_ASSOC+OCI_RETURN_NULLS+OCI_RETURN_LOBS; break;
-		}
-	
+			switch ($ADODB_FETCH_MODE)
+			{
+			default:
+			case ADODB_FETCH_NUM: $this->fetchMode = OCI_NUM+OCI_RETURN_NULLS+OCI_RETURN_LOBS; break;
+			case ADODB_FETCH_ASSOC:$this->fetchMode = OCI_ASSOC+OCI_RETURN_NULLS+OCI_RETURN_LOBS; break;
+			case ADODB_FETCH_DEFAULT:
+			case ADODB_FETCH_BOTH:$this->fetchMode = OCI_NUM+OCI_ASSOC+OCI_RETURN_NULLS+OCI_RETURN_LOBS; break;
+			}
 		
-		$this->_inited = true;
-		$this->_queryID = $queryID;
-		$this->fields = array();
-		if ($queryID) {
-			$this->_currentRow = 0;
-			@$this->_initrs();
-			$this->EOF = !$this->_fetch(); 
-		} else {
-			$this->_numOfRows = 0;
-			$this->_numOfFields = 0;
-			$this->EOF = true;
-		}
+			
+			$this->_inited = true;
+			$this->_queryID = $queryID;
+			$this->fields = array();
+			if ($queryID) {
+				$this->_currentRow = 0;
+				@$this->_initrs();
+				$this->EOF = !$this->_fetch(); 
+			} else {
+				$this->_numOfRows = 0;
+				$this->_numOfFields = 0;
+				$this->EOF = true;
+			}
         }
 
 
@@ -535,17 +632,17 @@ class ADORecordset_oci8 extends ADORecordSet {
 
         function &_FetchField($fieldOffset = -1)
         {
-                 $fld = new ADOFieldObject;
-		 		 $fieldOffset += 1;
-                 $fld->name =OCIcolumnname($this->_queryID, $fieldOffset);
-                 $fld->type = OCIcolumntype($this->_queryID, $fieldOffset);
-                 $fld->max_length = OCIcolumnsize($this->_queryID, $fieldOffset);
-				 if ($fld->type == 'NUMBER') {
-				 	//$p = OCIColumnPrecision($this->_queryID, $fieldOffset);
-					$sc = OCIColumnScale($this->_queryID, $fieldOffset);
-					if ($sc == 0) $fld->type = 'INT';
-				 }
-                 return $fld;
+	         $fld = new ADOFieldObject;
+	 		 $fieldOffset += 1;
+	               $fld->name =OCIcolumnname($this->_queryID, $fieldOffset);
+	               $fld->type = OCIcolumntype($this->_queryID, $fieldOffset);
+	               $fld->max_length = OCIcolumnsize($this->_queryID, $fieldOffset);
+			 if ($fld->type == 'NUMBER') {
+			 	//$p = OCIColumnPrecision($this->_queryID, $fieldOffset);
+				$sc = OCIColumnScale($this->_queryID, $fieldOffset);
+				if ($sc == 0) $fld->type = 'INT';
+			 }
+	         return $fld;
         }
 	
 	/* For some reason, OCIcolumnname fails when called after _initrs() so we cache it */
@@ -629,70 +726,72 @@ class ADORecordset_oci8 extends ADORecordSet {
 		 return $this->fields[$this->bind[strtoupper($colname)]];
 	}
 	
-        function _initrs()
-        {
-            $this->_numOfRows = -1;
-            $this->_numOfFields = OCInumcols($this->_queryID);
-			if ($this->_numOfFields>0) {
-				$this->_fieldobjs = array();
-				$max = $this->_numOfFields;
-				for ($i=0;$i<$max; $i++) $this->_fieldobjs[] = $this->_FetchField($i);
-			}
-		//print_r($this->_fieldobjs);
-        }
+    function _initrs()
+    {
+        $this->_numOfRows = -1;
+        $this->_numOfFields = OCInumcols($this->_queryID);
+		if ($this->_numOfFields>0) {
+			$this->_fieldobjs = array();
+			$max = $this->_numOfFields;
+			for ($i=0;$i<$max; $i++) $this->_fieldobjs[] = $this->_FetchField($i);
+		}
+    }
 
-	
-        function _seek($row)
-        {
-                return false;
-        }
 
-        function _fetch() 
-		{
-			return @OCIfetchinto($this->_queryID,$this->fields,$this->fetchMode);
-        }
+    function _seek($row)
+    {
+    	return false;
+    }
 
-        /*        close() only needs to be called if you are worried about using too much memory while your script
-                is running. All associated result memory for the specified result identifier will automatically be freed.        */
+    function _fetch() 
+	{
+		return @OCIfetchinto($this->_queryID,$this->fields,$this->fetchMode);
+    }
 
-        function _close() {
-              OCIFreeStatement($this->_queryID);
-			  $this->_queryID = false;
-        }
+    /*        close() only needs to be called if you are worried about using too much memory while your script
+            is running. All associated result memory for the specified result identifier will automatically be freed.        */
 
-        function MetaType($t,$len=-1)
-        {
- 		switch (strtoupper($t)) {
-	        case 'VARCHAR':
-	        case 'VARCHAR2':
-	        case 'CHAR':
-			case 'VARBINARY':
-			case 'BINARY':
-			case 'NCHAR':
-			case 'NVARCHAR':
-	            if ($len <= $this->blobSize) return 'C';
-			
-			case 'NCLOB':
-	        case 'LONG':
-			case 'LONG VARCHAR':
-			case 'CLOB';
-				return 'X';
-				
-			case 'LONG RAW':
-			case 'LONG VARBINARY':
-			case 'BLOB':
-	              return 'B';
+    function _close() 
+	{
+    	OCIFreeStatement($this->_queryID);
+ 		$this->_queryID = false;
+    }
+
+    function MetaType($t,$len=-1)
+    {
+		switch (strtoupper($t)) {
+     	case 'VARCHAR':
+     	case 'VARCHAR2':
+		case 'CHAR':
+		case 'VARBINARY':
+		case 'BINARY':
+		case 'NCHAR':
+		case 'NVARCHAR':
+		         if ($len <= $this->blobSize) return 'C';
 		
-	        case 'DATE': 
-				return 'D';
-	
-	        //case 'T': return 'T';
-	
-			case 'INT': 
-			case 'SMALLINT':
-			case 'INTEGER': return 'I';
-            default: return 'N';
-            }
+		case 'NCLOB':
+		     case 'LONG':
+		case 'LONG VARCHAR':
+		case 'CLOB';
+		return 'X';
+		
+		case 'LONG RAW':
+		case 'LONG VARBINARY':
+		case 'BLOB':
+			return 'B';
+		
+		case 'DATE': 
+			return 'D';
+		
+		     //case 'T': return 'T';
+		
+		case 'INT': 
+		case 'SMALLINT':
+		case 'INTEGER': 
+			return 'I';
+			
+        default: return 'N';
         }
+    }
 }
 ?>

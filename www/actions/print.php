@@ -7,12 +7,12 @@
 	  die("Ticket not found.  Unable to load");
   }
 
-  $tid = $ticket["typeID"];
-  $userID = $ticket["userID"];
+  $tid = $ticket["type_id"];
+  $user_id = $ticket["user_id"];
   $title = ($zen->types["$tid"] == "Project")? strtoupper($zen->settings["system_name"])." PROJECT REPORT" : strtoupper($zen->settings["system_name"])." ".strtoupper($zen->types["$tid"])." REPORT";
   $ticketroj = ($zen->types["$tid"] == "Project")? 1 : '';
-  if( $ticket["projectID"] ) {
-     $parent = $zen->get_ticket($ticket["projectID"] );
+  if( $ticket["project_id"] ) {
+     $parent = $zen->get_ticket($ticket["project_id"] );
   }
 
 ?>
@@ -82,7 +82,7 @@
      <?
        $total_etc = $total_wkd = 0;
        foreach($ticket["children"] as $a) {
-	  if( $zen->types["$a[typeID]"] == "Project" ) {
+	  if( $zen->types["$a[type_id]"] == "Project" ) {
 	     list($a["est_hours"],$a["wkd_hours"]) = $zen->getProjectHours($a["id"]);
 	  }
 	  $total_etc += $a["est_hours"];
@@ -128,7 +128,7 @@
     <b>Bin:</b>
   </td>
   <td  width=250>
-    <?=$zen->bins["$ticket[binID]"]?>
+    <?=$zen->bins["$ticket[bin_id]"]?>
   </td>
 </tr>
 <tr>
@@ -142,7 +142,7 @@
     <b>Type:</b>
   </td>
   <td >
-    <?=$zen->types["$ticket[typeID]"]?>
+    <?=$zen->types["$ticket[type_id]"]?>
   </td>
 </tr>
 <tr>
@@ -156,7 +156,7 @@
     <b>System:</b>
   </td>
   <td >
-    <?=$zen->systems["$ticket[systemID]"]?>
+    <?=$zen->systems["$ticket[system_id]"]?>
   </td>
 </tr>
 <tr>
@@ -253,14 +253,14 @@
 	print ($l["entry"])? 
 	  $zen->showDateTime($l["created"])."  "
 	  .$l["action"]."-"
-	  .$zen->formatName($l["userID"])
-	  ."-".$zen->bins["$l[binID]"]
+	  .$zen->formatName($l["user_id"])
+	  ."-".$zen->bins["$l[bin_id]"]
 	  .":<br><i>".nl2br(htmlentities(stripslashes($l["entry"])))."</i><P>"
 	  : 
 	  $zen->showDateTime($l["created"])."  "
 	  .$l["action"]."-"
-	  .$zen->formatName($l["userID"])
-	  ."-".$zen->bins["$l[binID]"]."<P>";
+	  .$zen->formatName($l["user_id"])
+	  ."-".$zen->bins["$l[bin_id]"]."<P>";
      }                 
   }
 ?>

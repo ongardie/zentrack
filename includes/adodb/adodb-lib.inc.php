@@ -1,6 +1,6 @@
 <?php
 /* 
-V1.81 22 March 2002 (c) 2000-2002 John Lim (jlim@natsoft.com.my). All rights reserved.
+V1.99 21 April 2002 (c) 2000-2002 John Lim (jlim@natsoft.com.my). All rights reserved.
   Released under both BSD license and Lesser GPL library license. 
   Whenever there is any discrepancy between the two licenses, 
   the BSD license will take precedence. See License.txt. 
@@ -18,7 +18,7 @@ function _adodb_totalpages(&$rs)
 	} else return -1;
 }
 
-// Requires $ADODB_FETCH_MODE = ADODB_FETCH_ASSOC
+// Requires $ADODB_FETCH_MODE = ADODB_FETCH_NUM
 function _adodb_getmenu(&$zthis, $name,$defstr='',$blank1stItem=true,$multiple=false,
 			$size=0, $selectAttr='',$compareFields0=true)
 {

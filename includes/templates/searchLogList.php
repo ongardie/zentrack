@@ -22,13 +22,13 @@ if( is_array($logs) ) {
              <b><span class="small"><?=$zen->prn("Action")?></span></b></span></div>
 	  </td>
         <? } ?>
-	<? if( !$search_params["userID"] || is_array($search_params["userID"]) ) { ?>
+	<? if( !$search_params["user_id"] || is_array($search_params["user_id"]) ) { ?>
 	  <td width="32" height="25" valign="middle" title="Person ticket is assinged to">
 	  <div align="center"><span style="color:<?=$zen->settings["color_title_txt"]?>">
              <b><span class="small"><?=$zen->prn("User")?></span></b></span></div>
 	  </td>
         <? } ?>
-	<? if( !$search_params["binID"] || is_array($search_params["binID"]) ) { ?>
+	<? if( !$search_params["bin_id"] || is_array($search_params["bin_id"]) ) { ?>
 	  <td width="32" height="25" valign="middle" title="Bin ticket is located in">
 	  <div align="center"><span style="color:<?=$zen->settings["color_title_txt"]?>">
              <b><span class="small"><?=$zen->prn("Bin")?></span></b></span></div>
@@ -55,32 +55,32 @@ if( is_array($logs) ) {
 	<tr style="background:<?=$row?>;color:<?=$text?>">
 	<td height="25" valign="middle" <?=$td_ttl?> <?=$txt?>>
 	 <a class="rowLink" style="color:<?=$text?>" 
-            href="<?=$link?>?id=<?=$t["ticketID"]?>&setmode=log"><?=$t["ticketID"]?></a>
+            href="<?=$link?>?id=<?=$t["ticket_id"]?>&setmode=log"><?=$t["ticket_id"]?></a>
 	</td>
 	<td height="25" valign="middle" <?=$td_ttl?> <?=$txt?>>
 	  <a class="rowLink" style="color:<?=$text?>" 
-	     href="<?=$link?>?id=<?=$t["ticketID"]?>&setmode=log"><?=$zen->showDate($t["date"])?></a>
+	     href="<?=$link?>?id=<?=$t["ticket_id"]?>&setmode=log"><?=$zen->showDate($t["date"])?></a>
 	</td>
 	<? if( !$search_params["action"] || is_array($search_params["action"]) ) { ?>
 	<td height="25" valign="middle">
 	  <?=$t["action"]?>
 	</td>
 	<? } ?>
-	<? if( !$search_params["userID"] || is_array($search_params["userID"]) ) { ?>
+	<? if( !$search_params["user_id"] || is_array($search_params["user_id"]) ) { ?>
 	<td height="25" valign="middle">
-	  <?=$zen->formatName($t["userID"])?>
+	  <?=$zen->formatName($t["user_id"])?>
 	</td>
 	<? } ?>
-	<? if( !$search_params["binID"] || is_array($search_params["binID"]) ) { ?>
+	<? if( !$search_params["bin_id"] || is_array($search_params["bin_id"]) ) { ?>
 	<td height="25"  valign="middle">
-	  <?=$zen->bins["$t[binID]"]?>
+	  <?=$zen->bins["$t[bin_id]"]?>
 	</td>
 	<? } ?>
 	</tr>	 	   
 	<? if( trim($t["entry"]) ) { ?>
 	<tr style="background:<?=$row?>;color:<?=$text?>">
 	  <td height="25" colspan="8" <?=$td_ttl?> <?=$txt?>>
-	   <a class="rowLink" href='<?=$link?>?id=<?=$t["ticketID"]?>&setmode=log'>
+	   <a class="rowLink" href='<?=$link?>?id=<?=$t["ticket_id"]?>&setmode=log'>
 	   <?
 	     $t["entry"] = htmlentities($t["entry"]);
 	     $parts = explode("\n",$t["entry"]);

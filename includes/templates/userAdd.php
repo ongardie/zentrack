@@ -7,7 +7,7 @@
   $url = ($td)? "edit" : "add";
 ?>
 <form method="post" action="<?=$rootUrl?>/admin/<?=$url?>UserSubmit.php">
-<? if( $td ) { print "<input type='hidden' name='userID' value='".strip_tags($userID)."'>\n"; } ?>
+<? if( $td ) { print "<input type='hidden' name='user_id' value='".strip_tags($user_id)."'>\n"; } ?>
   
 <table width="640" align="left" cellpadding="2" cellspacing="2" bgcolor="<?=$zen->settings["color_background"]?>">
 <tr>
@@ -71,7 +71,7 @@
     Default Acces Level
   </td>
   <td class="bars">
-    <input type="text" name="accessLevel" value="<?=($accessLevel)? strip_tags($accessLevel) : 0?>" 
+    <input type="text" name="access_level" value="<?=($access_level)? strip_tags($access_level) : 0?>" 
            size="3" maxlength="2">
     <br><span class="small">(This grants the user the specified level of 
 	access to all bins not otherwise indicated by 'user access'.  Use zero if unsure.)</span>

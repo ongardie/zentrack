@@ -12,11 +12,11 @@
   $expand_tickets = 1;
   include("$libDir/nav.php");
 
-  $params = array("status"=>array('OPEN','PENDING'),"userID"=>$login_id);
+  $params = array("status"=>array('OPEN','PENDING'),"user_id"=>$login_id);
   if( $login_bin ) {
-    $params["binID"] = $login_bin;
+    $params["bin_id"] = $login_bin;
   } else {
-    $params["binID"] = $zen->getUsersBins($login_id);
+    $params["bin_id"] = $zen->getUsersBins($login_id);
   }
   if( is_array($params) )
     $tickets = $zen->get_tickets($params);

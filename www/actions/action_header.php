@@ -24,7 +24,7 @@
   // and this ticket allows the requested action
   // to be completed
   $ticket = $zen->get_ticket($id);
-  $tid = $ticket["typeID"];
+  $tid = $ticket["type_id"];
   if( $zen->types["$tid"] == "Project" ) {
      $ticket["children"] = $zen->getProjectChildren($id, array("id,title,status,est_hours,wkd_hours"));
      list($ticket["est_hours"],$ticket["wkd_hours"]) = $zen->getProjectHours($id);

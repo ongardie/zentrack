@@ -18,7 +18,7 @@
   */
   $user_fields = array(
 		       "login"    =>   "alphanum",
-		       "accessLevel"   =>   "int",
+		       "access_level"   =>   "int",
 		       "lname"    =>   "text",
 		       "fname"    =>   "text",
 		       "initials" =>   "alphanum",
@@ -30,12 +30,12 @@
   $user_required = array("login","lname","initials");
 
   $access_fields = array(
-			 "userID"  =>  "int",
-			 "binID"   =>  "int",
+			 "user_id"  =>  "int",
+			 "bin_id"   =>  "int",
 			 "lvl"     =>  "int",
 			 "notes"   =>  "text"
 			 );
-  $access_required = array("userID","binID");
+  $access_required = array("user_id","bin_id");
 
   /*
   ** NUMBER PULLDOWN FUNCTION

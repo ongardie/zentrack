@@ -44,7 +44,7 @@
 	$recipients = explode(",", $custom_email_addresses);
      }  
      
-     $subject = $zen->settings["system_name"].": ".$zen->types["$ticket[typeID]"]." $id";
+     $subject = $zen->settings["system_name"].": ".$zen->types["$ticket[type_id]"]." $id";
      unset($params);
      if( $comments )
        $params["message"] = $comments;
@@ -77,7 +77,7 @@
   include("$libDir/nav.php");
    
   extract($ticket);
-  if( strtolower($zen->types["$typeID"]) == "project" ) {
+  if( strtolower($zen->types["$type_id"]) == "project" ) {
      include("$templateDir/projectView.php");
   } else {
      include("$templateDir/ticketView.php");     

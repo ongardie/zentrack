@@ -12,9 +12,9 @@
   $page_tile = "Edit User";
   include("$libDir/nav.php");
 
-  $user = $zen->get_user($userID);
+  $user = $zen->get_user($user_id);
   
-  if( $userID == 1 && $login_id != 1 ) {
+  if( $user_id == 1 && $login_id != 1 ) {
     print "<ul><b>The Root Admin Account can only be modified by the Root Administrator</b></ul>\n";    
   } else if( is_array($user) ) {
     $TODO = 'EDIT';

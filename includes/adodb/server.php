@@ -1,6 +1,6 @@
 <?php
 /** 
- * (c)2001 John Lim (jlim@natsoft.com.my). All rights reserved.
+ * @version V1.99 21 April 2002 (c) 2000-2002 John Lim (jlim@natsoft.com.my). All rights reserved.
  * Released under both BSD license and Lesser GPL library license. 
   Whenever there is any discrepancy between the two licenses, 
   the BSD license will take precedence. 
@@ -13,6 +13,7 @@
  * sql = holds sql string
  * nrows = number of rows to return 
  * offset = skip offset rows of data
+ * fetch = $ADODB_FETCH_MODE
  * 
  * example:
  *
@@ -30,10 +31,10 @@ $ACCEPTIP = '';
  * Connection parameters
  */
 $driver = 'mysql';
-$host = 'mangrove'; // DSN for odbc
+$host = 'localhost'; // DSN for odbc
 $uid = 'root';
 $pwd = '';
-$database = 'xphplens';
+$database = 'northwind';
 
 /*============================ DO NOT MODIFY BELOW HERE =================================*/
 // $sep must match csv2rs() in adodb.inc.php
@@ -63,8 +64,7 @@ function undomq(&$m)
 ///////////////////////////////////////// DEFINITIONS
 
 
-if (isset($REMOTE_ADDR)) $remote = $REMOTE_ADDR; // Apache
-else $remote = $HTTP_SERVER_VARS["REMOTE_ADDR"]; // IIS
+$remote = $HTTP_SERVER_VARS["REMOTE_ADDR"]; 
  
 if (empty($HTTP_GET_VARS['sql'])) err('No SQL');
 
@@ -77,6 +77,9 @@ $conn = &ADONewConnection($driver);
 if (!$conn->Connect($host,$uid,$pwd,$database)) err($conn->ErrorNo(). $sep . $conn->ErrorMsg());
 $sql = undomq($HTTP_GET_VARS['sql']);
 
+if (isset($HTTP_GET_VARS['fetch']))
+	$ADODB_FETCH_MODE = $HTTP_GET_VARS['fetch'];
+	
 if (isset($HTTP_GET_VARS['nrows'])) {
 	$nrows = $HTTP_GET_VARS['nrows'];
 	$offset = isset($HTTP_GET_VARS['offset']) ? $HTTP_GET_VARS['offset'] : -1;
@@ -85,7 +88,7 @@ if (isset($HTTP_GET_VARS['nrows'])) {
 	$rs = $conn->Execute($sql);
 if ($rs){ 
 	//$rs->timeToLive = 1;
-	print rs2csv($rs,$conn,$sql);
+	echo rs2csv($rs,$conn,$sql);
 	$rs->Close();
 } else
 	err($conn->ErrorNo(). $sep .$conn->ErrorMsg());

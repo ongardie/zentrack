@@ -2,10 +2,10 @@
   <table width="600" align="center" cellpadding="2" cellspacing="2">
   <tr> 
      <form action="<?=$rootUrl?>/newTicket.php">
-     <input type="hidden" name="projectID" value="<?=strip_tags($id)?>">
+     <input type="hidden" name="project_id" value="<?=strip_tags($id)?>">
      <td align="right">
        <?
-         if( $zen->checkAccess($login_id,$ticket["binID"],"create") ) {
+         if( $zen->checkAccess($login_id,$ticket["bin_id"],"create") ) {
 	    $button = "submit";
 	    $color = $zen->settings["color_highlight"];
 	 } else {
@@ -19,10 +19,10 @@
    </tr>  
   <tr> 
      <form action="<?=$rootUrl?>/newProject.php">
-     <input type="hidden" name="projectID" value="<?=strip_tags($id)?>">
+     <input type="hidden" name="project_id" value="<?=strip_tags($id)?>">
      <td align="right">
        <?
-         if( $zen->checkAccess($login_id,$ticket["binID"],"create") ) {
+         if( $zen->checkAccess($login_id,$ticket["bin_id"],"create") ) {
 	    $button = "submit";
 	    $color = $zen->settings["color_highlight"];
 	 } else {

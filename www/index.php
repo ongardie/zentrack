@@ -17,9 +17,9 @@
   if( is_array($userBins) || count($userBins) < 1 ) {
      $params = array("status"=>array('OPEN','PENDING'));
      if( $login_bin ) {
-	$params["binID"] = $login_bin;
+	$params["bin_id"] = $login_bin;
      } else {
- 	$params["binID"] = $zen->getUsersBins($login_id);
+ 	$params["bin_id"] = $zen->getUsersBins($login_id);
      }
      if( is_array($params) )
        $tickets = $zen->get_tickets($params);

@@ -3,12 +3,12 @@
 #
 
 CREATE TABLE ZENTRACK_ACCESS (
-  accessID int(12) NOT NULL auto_increment,
-  userID int(12) default NULL,
-  binID int(12) default NULL,
+  access_id int(12) NOT NULL auto_increment,
+  user_id int(12) default NULL,
+  bin_id int(12) default NULL,
   lvl int(2) default NULL,
   notes varchar(25) default NULL,
-  PRIMARY KEY (accessID)
+  PRIMARY KEY (access_id)
 ) TYPE=MyISAM;
 
 #
@@ -16,14 +16,14 @@ CREATE TABLE ZENTRACK_ACCESS (
 #
 
 CREATE TABLE ZENTRACK_ATTACHMENTS (
-  attachmentID int(12) NOT NULL auto_increment,
-  logID int(12) default NULL,
-  ticketID int(12) default NULL,
+  attachment_id int(12) NOT NULL auto_increment,
+  log_id int(12) default NULL,
+  ticket_id int(12) default NULL,
   name varchar(25) default NULL,
   filename varchar(250) default NULL,
   filetype varchar(250) default NULL,
   description varchar(100) default NULL,
-  PRIMARY KEY (attachmentID)
+  PRIMARY KEY (attachment_id)
 ) TYPE=MyISAM;
 
 #
@@ -44,9 +44,9 @@ CREATE TABLE ZENTRACK_BINS (
 
 CREATE TABLE ZENTRACK_LOGS (
   lid int(12) NOT NULL auto_increment,
-  ticketID int(12) NOT NULL default '0',
-  userID int(12) NOT NULL default '0',
-  binID int(12) NOT NULL default '0',
+  ticket_id int(12) NOT NULL default '0',
+  user_id int(12) NOT NULL default '0',
+  bin_id int(12) NOT NULL default '0',
   created int(12) default NULL,
   action varchar(25) default NULL,
   hours decimal(10,2) default NULL,
@@ -60,9 +60,9 @@ CREATE TABLE ZENTRACK_LOGS (
 
 CREATE TABLE ZENTRACK_LOGS_ARCHIVED (
   lid int(12) default NULL,
-  ticketID int(12) default NULL,
-  userID int(12) default NULL,
-  binID int(12) default NULL,
+  ticket_id int(12) default NULL,
+  user_id int(12) default NULL,
+  bin_id int(12) default NULL,
   created int(12) default NULL,
   action varchar(25) default NULL,
   entry text
@@ -73,13 +73,13 @@ CREATE TABLE ZENTRACK_LOGS_ARCHIVED (
 #
 
 CREATE TABLE ZENTRACK_PREFERENCES (
-  userID int(12) NOT NULL default '0',
+  user_id int(12) NOT NULL default '0',
   bin int(12) default NULL,
   log varchar(255) default NULL,
   time varchar(255) default NULL,
   close varchar(255) default NULL,
   test varchar(255) default NULL,
-  PRIMARY KEY (userID)
+  PRIMARY KEY (user_id)
 ) TYPE=MyISAM;
 
 #
@@ -99,11 +99,11 @@ CREATE TABLE ZENTRACK_PRIORITIES (
 #
 
 CREATE TABLE ZENTRACK_SETTINGS (
-  setID int(12) NOT NULL auto_increment,
+  setting_id int(12) NOT NULL auto_increment,
   name varchar(25) default NULL,
   value varchar(100) default NULL,
   description varchar(200) default NULL,
-  PRIMARY KEY (setID),
+  PRIMARY KEY (setting_id),
   KEY name(name)
 ) TYPE=MyISAM;
 
@@ -124,11 +124,11 @@ CREATE TABLE ZENTRACK_SYSTEMS (
 #
 
 CREATE TABLE ZENTRACK_TASKS (
-  taskID int(12) NOT NULL auto_increment,
+  task_id int(12) NOT NULL auto_increment,
   name varchar(25) NOT NULL default '',
   priority int(4) default NULL,
   active int(1) default NULL,
-  PRIMARY KEY (taskID)
+  PRIMARY KEY (task_id)
 ) TYPE=MyISAM;
 
 #
@@ -143,15 +143,15 @@ CREATE TABLE ZENTRACK_TICKETS (
   description text,
   otime int(12) default NULL,
   ctime int(12) default NULL,
-  binID int(12) default NULL,
-  typeID int(12) default NULL,
-  userID int(12) default NULL,
-  systemID int(12) default NULL,
-  creatorID int(12) default NULL,
+  bin_id int(12) default NULL,
+  type_id int(12) default NULL,
+  user_id int(12) default NULL,
+  system_id int(12) default NULL,
+  creator_id int(12) default NULL,
   tested int(1) default '0',
   approved int(1) default '0',
   relations varchar(255) default NULL,
-  projectID int(12) default NULL,
+  project_id int(12) default NULL,
   est_hours decimal(10,2) default '0.00',
   deadline int(12) default NULL,
   start_date int(12) default NULL,
@@ -170,10 +170,10 @@ CREATE TABLE ZENTRACK_TICKETS_ARCHIVED (
   description text,
   otime int(12) default NULL,
   ctime int(12) default NULL,
-  typeID varchar(25) default NULL,
-  systemID int(12) default NULL,
+  type_id varchar(25) default NULL,
+  system_id int(12) default NULL,
   relations varchar(255) default NULL,
-  projectID int(12) default NULL,
+  project_id int(12) default NULL,
   est_hours decimal(10,2) default NULL,
   wkd_hours decimal(10,2) default NULL
 ) TYPE=MyISAM;
@@ -183,11 +183,11 @@ CREATE TABLE ZENTRACK_TICKETS_ARCHIVED (
 #
 
 CREATE TABLE ZENTRACK_TRANSLATION_STRINGS (
-  trID int(12) NOT NULL auto_increment,
+  trans_id int(12) NOT NULL auto_increment,
   language varchar(25) default NULL,
   identifier varchar(25) default NULL,
   string varchar(255) default NULL,
-  PRIMARY KEY (trID),
+  PRIMARY KEY (trans_id),
   KEY language(language)
 ) TYPE=MyISAM;
 
@@ -196,11 +196,11 @@ CREATE TABLE ZENTRACK_TRANSLATION_STRINGS (
 #
 
 CREATE TABLE ZENTRACK_TRANSLATION_WORDS (
-  wordID int(12) NOT NULL auto_increment,
+  word_id int(12) NOT NULL auto_increment,
   language varchar(25) default NULL,
   identifier varchar(50) default NULL,
   translation varchar(50) default NULL,
-  PRIMARY KEY (wordID),
+  PRIMARY KEY (word_id),
   KEY language(language),
   KEY identifier(identifier)
 ) TYPE=MyISAM;
@@ -210,11 +210,11 @@ CREATE TABLE ZENTRACK_TRANSLATION_WORDS (
 #
 
 CREATE TABLE ZENTRACK_TYPES (
-  typeID int(12) NOT NULL auto_increment,
+  type_id int(12) NOT NULL auto_increment,
   name varchar(25) NOT NULL default '',
   priority int(4) default NULL,
   active int(1) default NULL,
-  PRIMARY KEY (typeID)
+  PRIMARY KEY (type_id)
 ) TYPE=MyISAM;
 
 #
@@ -222,9 +222,9 @@ CREATE TABLE ZENTRACK_TYPES (
 #
 
 CREATE TABLE ZENTRACK_USERS (
-  userID int(12) NOT NULL auto_increment,
+  user_id int(12) NOT NULL auto_increment,
   login varchar(25) default NULL,
-  accessLevel int(2) default NULL,
+  access_level int(2) default NULL,
   passwd varchar(32) default NULL,
   lname varchar(50) default NULL,
   fname varchar(50) default NULL,
@@ -233,5 +233,5 @@ CREATE TABLE ZENTRACK_USERS (
   notes varchar(255) default NULL,
   homebin int(12) default NULL,
   active int(1) default '1',
-  PRIMARY KEY (userID)
+  PRIMARY KEY (user_id)
 ) TYPE=MyISAM;

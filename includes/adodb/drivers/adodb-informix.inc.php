@@ -1,6 +1,6 @@
 <?php
 /* 
-V1.81 22 March 2002 (c) 2000-2002 John Lim. All rights reserved.
+V1.99 21 April 2002 (c) 2000-2002 John Lim. All rights reserved.
   Released under both BSD license and Lesser GPL library license. 
   Whenever there is any discrepancy between the two licenses, 
   the BSD license will take precedence. 
@@ -19,7 +19,7 @@ class ADODB_informix extends ADOConnection {
 	var $fmtTimeStamp = "'Y-m-d H:i:s'";
 	var $hasInsertID = true;
     var $hasAffectedRows = true;
-	
+	var $hasTop = 'first';
 	# needs PORT  -- list all tables in current database (including views)
   	var $metaTablesSQL="select name from sysobjects where type='U' or type='V'";
 	
@@ -33,18 +33,20 @@ class ADODB_informix extends ADOConnection {
 	
 	function ADODB_informix() 
 	{
+		
+		// alternatively, use older method:
+		//putenv("DBDATE=Y4MD-");
+
 		// force ISO date format		
 		putenv('GL_DATE=%Y-%m-%d');	
 	}
  
-    // might require begintrans -- committrans
     function _insertid()
     {
 		$sqlca =ifx_getsqlca($this->lastQuery);
 		return @$sqlca["sqlerrd1"];
     }
 
-      // might require begintrans -- committrans
     function _affectedrows()
     {
 		if ($this->lastQuery) {
@@ -92,6 +94,7 @@ class ADODB_informix extends ADOConnection {
 		#if ($argDatabasename) return $this->SelectDB($argDatabasename);
 		return true;	
 	}
+
 	// returns true or false
 	function _pconnect($argHostname, $argUsername, $argPassword, $argDatabasename)
 	{
@@ -105,7 +108,6 @@ class ADODB_informix extends ADOConnection {
 	// returns query ID if successful, otherwise false
 	function _query($sql,$inputarr)
 	{
-		//sybase_free_result($this->_queryID);
 		$this->lastQuery = ifx_query($sql,$this->_connectionID);
 		if ($this->_autocommit) ifx_query('COMMIT',$this->_connectionID);
 		return $this->lastQuery;
@@ -132,6 +134,9 @@ class ADORecordset_informix extends ADORecordSet {
 	
 	function ADORecordset_informix($id)
 	{
+	global $ADODB_FETCH_MODE;
+	
+		$this->fetchMode = $ADODB_FETCH_MODE;
 		return $this->ADORecordSet($id);
 	}
 	
@@ -168,14 +173,25 @@ class ADORecordset_informix extends ADORecordSet {
 		return ifx_fetch_row($this->_queryID, $row);
 	}		
 
-	function _fetch($ignore_fields=false) {
+	function _fetch($ignore_fields=false) 
+	{
+	
 		$this->fields = ifx_fetch_row($this->_queryID);
-		return ($this->fields == true);
+		if (!is_array($this->fields)) return false;
+		
+		if ($this->fetchMode == ADODB_FETCH_NUM) {
+			foreach($this->fields as $v) {
+				$arr[] = $v;
+			}
+			$this->fields = $arr;
+		}
+		return true;
 	}
 	
 	/*	close() only needs to be called if you are worried about using too much memory while your script
 		is running. All associated result memory for the specified result identifier will automatically be freed.	*/
-	function _close() {
+	function _close() 
+	{
 		return ifx_free_result($this->_queryID);		
 	}
 

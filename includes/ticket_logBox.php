@@ -20,7 +20,7 @@
 	       print "<td class='$style'>";
 	       print $zen->showDateTime($l["created"],'M');
 	       print $sep.str_pad($l["action"],8,"-",STR_PAD_LEFT);
-	       print $sep.str_pad($zen->formatName($l["userID"],2),6,"-",STR_PAD_LEFT);
+	       print $sep.str_pad($zen->formatName($l["user_id"],2),6,"-",STR_PAD_LEFT);
 	       print (strlen($l["hours"]))? $sep.str_pad($l["hours"],4,"-",STR_PAD_LEFT)." hrs":"";
 	       //
 	       // the log and attachments
@@ -31,7 +31,7 @@
 	       if( is_array($att["$id"]["$lid"]) ) {
 	          print "<p><b>ATTACHMENT(s):</b><br>";
 		  foreach( $att["$id"]["$lid"] as $a ) {
-		     print "<a href='".$zen->settings["url_view_attachment"]."?aid=$a[attachmentID]' ";
+		     print "<a href='".$zen->settings["url_view_attachment"]."?aid=$a[attachment_id]' ";
 		     print "target='_blank'>$a[name]</a>";
 		     print "<span class='small'>($a[description])</span><br>\n";
 		  }

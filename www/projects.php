@@ -9,7 +9,7 @@
   include("header.php");
 
   $params = array(
-		  "typeID"  => $zen->projectTypeID(),
+		  "type_id"  => $zen->projectTypeID(),
 		  "status"  => array("OPEN","PENDING")
 		  );
   $page_tile = "Projects";
@@ -26,11 +26,11 @@
      print "<p class='hot'>You do not have access to any existing ".$zen->system_name." bins</p>\n";     
   } else {
      if( $login_bin ) {
-	$params["binID"] = $login_bin;
+	$params["bin_id"] = $login_bin;
      } else {
-	unset($params["binID"]);
-	$params["binID"] = $zen->getUsersBins($login_id);
-	if( !is_array($params["binID"]) ) {
+	unset($params["bin_id"]);
+	$params["bin_id"] = $zen->getUsersBins($login_id);
+	if( !is_array($params["bin_id"]) ) {
 	   unset($params);
 	}
      }

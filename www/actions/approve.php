@@ -32,7 +32,7 @@
 
   unset($action);
   extract($ticket);
-  if( strtolower($zen->types["$typeID"]) == "project" ) {
+  if( strtolower($zen->types["$type_id"]) == "project" ) {
      include("$templateDir/projectView.php");
   } else {
      include("$templateDir/ticketView.php");     

@@ -13,11 +13,11 @@
   if( $actionComplete == 1 ) {
      $input = array(
 		    "id"       => "int",
-		    "userID"   => "int",
+		    "user_id"   => "int",
 		    "comments" => "html"
 		    );
      $zen->cleanInput($input);
-     $required = array("userID","id");
+     $required = array("user_id","id");
      foreach($required as $r) {
 	if( !$$r ) {
 	   $errs[] = " $r is required";
@@ -25,9 +25,9 @@
      }
      
      if( !$errs ) {
-	$res = $zen->assign_ticket($id, $userID, $login_id, $comments);
+	$res = $zen->assign_ticket($id, $user_id, $login_id, $comments);
 	if( $res ) {
-	   add_system_messages("Ticket $id assigned to ".$zen->formatName($userID));
+	   add_system_messages("Ticket $id assigned to ".$zen->formatName($user_id));
 	   header("Location:$rootUrl/ticket.php?id=$id&setmode=details");
 	} else {
 	   $errs[] = "System error: Ticket $id could not be assigned".$zen->db_error;
@@ -42,7 +42,7 @@
   if( $actionComplete == 1 )
      $ticket = $zen->get_ticket($id);
   extract($ticket);
-  if( strtolower($zen->types["$typeID"]) == "project" ) {
+  if( strtolower($zen->types["$type_id"]) == "project" ) {
      include("$templateDir/projectView.php");
   } else {
      include("$templateDir/ticketView.php");     

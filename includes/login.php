@@ -33,7 +33,7 @@
 	   setcookie("zentrackUsername", $username, time()+2592000, "/", ".$HTTP_HOST");
 	   $skip = 1;
 	   unset($TODO);
-	   $login_level = $zen->user["accessLevel"];
+	   $login_level = $zen->user["access_level"];
 	   $login_name  = $zen->user["fname"]." ".$zen->user["lname"];
 	   $login_inits = $zen->user["initials"];
 	   $login_bin   = $zen->user["homebin"];

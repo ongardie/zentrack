@@ -30,7 +30,7 @@
 	$errs[] = "System Error: Unable to update bin.";
       } else {
 	$skip = 1;
-	$hb = ( !$homebin )? "-None-" : $zen->bins["$homebin"];
+	$hb = ( !$homebin )? "-All-" : $zen->bins["$homebin"];
 	$msg = "Your bin has been changed to $hb";
 	$login_bin = $homebin;
       }

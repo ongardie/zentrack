@@ -1,11 +1,17 @@
 
-Still to come:
+
+FUTURE PLANS
 
   Next Version
-     Language Translations (making zenTrack completely convertable to any language, with ease)
-     Graphical Reports (user, ticket, bin, and usage reports in graphical chart format)     
+     Language Translator
+     Graphical Reports
 
-  Features To Add/Fixes (date undetermined)
+  Idease for the Future (not planned yet)
+     Email Tickets - ability to create tickets from incoming emails
+     Inline Attachments View - view attachments embedded in the page
+     Calendar Integration - integrate into viewable calendar
+
+  Minor Enhancements/Fixes (date undetermined)
      Preferences (ability to:)
 	Sort ticket lists by user preferred method
 	View zenTrack in a custom language
@@ -20,8 +26,6 @@ Still to come:
      Store User Cookie - set a cookie for logged in users if setting is checked
 	                 in the admin screen that will auto-log users into system
 	                 when they open their browser
-
-  Bugs to Fix
      Related Tickets	
 	Tickets related to eachother work ok, but
 	once related, any changes cause problems,
@@ -31,10 +35,5 @@ Still to come:
 
 
 
-  Thoughts for the Future (not planned yet)
-     Inline Attachments View - view various mime types as insets in the body of the ticket
-	                       (instead of a link to a custom window)
-     Calendar Integration - include tickets in planner, showing them on calendar
-                            give timeline charting of users and projects
 
 

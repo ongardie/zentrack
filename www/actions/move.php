@@ -16,15 +16,15 @@
     header("Location: $rootUrl/ticket.php?id=$id&setmode=details");
 
   if( $actionComplete == 1 ) {
-     $userID = $login_id;
+     $user_id = $login_id;
      $input = array(
 		    "id"       => "int",
 		    "newBin"   => "int",
-		    "userID"   => "int",
+		    "user_id"   => "int",
 		    "comments" => "html"
 		    );
      $zen->cleanInput($input);
-     $required = array("id","newBin","userID");
+     $required = array("id","newBin","user_id");
      foreach($required as $r) {
 	if( !$$r ) {
 	   $errs[] = " $r is required";
@@ -49,7 +49,7 @@
   if( $actionComplete == 1 ) 
     $ticket = $zen->get_ticket($id);
   extract($ticket);
-  if( strtolower($zen->types["$typeID"]) == "project" ) {
+  if( strtolower($zen->types["$type_id"]) == "project" ) {
      include("$templateDir/projectView.php");
   } else {
      include("$templateDir/ticketView.php");     

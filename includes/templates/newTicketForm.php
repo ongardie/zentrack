@@ -31,18 +31,18 @@
     Project
   </td>
   <td class="bars">
-    <select name="projectID">
+    <select name="project_id">
     <option value=''>--none--</option>
     <?
       $bins = $zen->getUsersBins($login_id);
       if( is_array($bins) ) {
-	 $params["binID"] = $bins;
+	 $params["bin_id"] = $bins;
 	 $params["status"] = "OPEN";
 	 $projects = $zen->get_projects($params,title);
       } 
       if( is_array($projects) ) {
 	 foreach($projects as $p) {
-	    $sel = ($p["id"] == $projectID)? " selected" : "";
+	    $sel = ($p["id"] == $project_id)? " selected" : "";
 	    print "<option value='$p[id]'$sel>".stripslashes($p["title"])."</option>\n";
 	 }
       }
@@ -65,16 +65,16 @@ value="<?=strip_tags($title)?>">
     Type
   </td>
   <td class="bars">
-    <select name="typeID">
+    <select name="type_id">
 <?
     if( is_array($zen->types) ) {
     	foreach($zen->getTypes(1) as $v) {
-	   $k = $v["typeID"];
+	   $k = $v["type_id"];
 	   if( $k != $zen->projectTypeID() ) {
 	      // does not allow projects to be created here
 	      // user must use the "new project" link for this
 	      // task
-	      $check = ( $k == $typeID )? "selected" : "";
+	      $check = ( $k == $type_id )? "selected" : "";
 	      print "<option $check value='$k'>$v[name]</option>\n";
 	   }
 	}
@@ -90,11 +90,11 @@ value="<?=strip_tags($title)?>">
     System
   </td>
   <td class="bars">
-    <select name="systemID">
+    <select name="system_id">
 <?
     if( is_array($zen->systems) ) {
     	foreach($zen->systems as $k=>$v) {
-	   $check = ( $k == $systemID )? "selected" : "";	   
+	   $check = ( $k == $system_id )? "selected" : "";	   
 	   print "<option $check value='$k'>$v</option>\n";
 	}
     } else {
@@ -111,13 +111,13 @@ value="<?=strip_tags($title)?>">
     Owner
   </td>
   <td class="bars" width="515">
-    <select name="userID">
+    <select name="user_id">
       <option value=''>--not assigned--</option>
 <?
    if( is_array($users) && $zen->settings["allow_assign"] == "on" ) {
      foreach($users as $v) {
-       $check = ( $v["userID"] == $userID )? "selected" : "";
-       print "<option $check value='$v[userID]'>$v[lname], $v[fname]</option>\n";
+       $check = ( $v["user_id"] == $user_id )? "selected" : "";
+       print "<option $check value='$v[user_id]'>$v[lname], $v[fname]</option>\n";
      }
    }
 ?>
@@ -129,12 +129,12 @@ value="<?=strip_tags($title)?>">
     Bin
   </td>
   <td class="bars">
-    <select name="binID">
+    <select name="bin_id">
 <?
     if( is_array($userBins) ) {
     	foreach($userBins as $k) {
 	  if( $k ) {
-	    $check = ( $k == $binID || (!$binID && !$td && $k == $login_bin) )? "selected" : "";
+	    $check = ( $k == $bin_id || (!$bin_id && !$td && $k == $login_bin) )? "selected" : "";
 	    $n = $zen->bins["$k"];
 	    print "<option $check value='$k'>$n</option>\n";
 	  }

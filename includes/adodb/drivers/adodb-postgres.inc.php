@@ -1,6 +1,6 @@
 <?php
 /*
- V1.81 22 March 2002 (c) 2000-2002 John Lim (jlim@natsoft.com.my). All rights reserved.
+ V1.99 21 April 2002 (c) 2000-2002 John Lim (jlim@natsoft.com.my). All rights reserved.
   Released under both BSD license and Lesser GPL library license. 
   Whenever there is any discrepancy between the two licenses, 
   the BSD license will take precedence.
@@ -25,6 +25,7 @@ class ADODB_postgres extends ADOConnection{
   	var $concat_operator='||';
 	var $metaTablesSQL = "select tablename from pg_tables where tablename not like 'pg_%' order by 1";
 	var $isoDates = true; // accepts dates in ISO format
+	var $sysDate = 'now';
 	
 /*
 # show tables and views suggestion
@@ -41,7 +42,6 @@ SELECT tablename FROM pg_tables WHERE tablename NOT LIKE 'pg_%' ORDER BY 1"
 	
 	var $_hastrans = false;
 	var $hasAffectedRows = true;
-	var $hasTop = false;		
 	var $hasLimit = false;	// set to true for pgsql 7 only. support pgsql/mysql SELECT * FROM TABLE LIMIT 10
 	// below suggested by Freek Dijkstra 
 	var $true = 't';		// string that represents TRUE for a database

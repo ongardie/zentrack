@@ -1,6 +1,6 @@
 <?php
 /* 
-V1.81 22 March 2002 (c) 2000-2002 John Lim. All rights reserved.
+V1.99 21 April 2002 (c) 2000-2002 John Lim. All rights reserved.
   Released under both BSD license and Lesser GPL library license. 
   Whenever there is any discrepancy between the two licenses, 
   the BSD license will take precedence. 
@@ -25,6 +25,7 @@ class ADODB_sybase extends ADOConnection {
   	var $metaTablesSQL="select name from sysobjects where type='U' or type='V'";
 	var $metaColumnsSQL = "select c.name,t.name,c.length from syscolumns c join systypes t on t.xusertype=c.xusertype join sysobjects o on o.id=c.id where o.name='%s'";
 	var $concat_operator = '+'; 
+	var $sysDate = 'GetDate()';
 	
 	function ADODB_sybase() {			
 	}
@@ -32,20 +33,12 @@ class ADODB_sybase extends ADOConnection {
         // might require begintrans -- committrans
         function _insertid()
         {
-                $rs = $this->Execute('select @@identity');
-                if ($rs == false || $rs->EOF) return false;
-               $id = reset($rs->fields);
-               $rs->Close();
-               return $id;
+        	return $this->GetOne('select @@identity');
         }
           // might require begintrans -- committrans
         function _affectedrows()
         {
-                $rs = $this->Execute('select @@rowcount');
-                if ($rs == false || $rs->EOF) return false;
-               $id = reset($rs->fields);
-               $rs->Close();
-               return $id;
+           return $this->GetOne('select @@rowcount');
         }
 
               
@@ -129,13 +122,16 @@ class ADORecordset_sybase extends ADORecordSet {
 	var $canSeek = true;
 	// _mths works only in non-localised system
 	var  $_mths = array('JAN'=>1,'FEB'=>2,'MAR'=>3,'APR'=>4,'MAY'=>5,'JUN'=>6,'JUL'=>7,'AUG'=>8,'SEP'=>9,'OCT'=>10,'NOV'=>11,'DEC'=>12);	
-	
+
 	function ADORecordset_sybase($id)
 	{
+	global $ADODB_FETCH_MODE;
+	
+		if (!$ADODB_FETCH_MODE) $this->fetchMode = ADODB_FETCH_ASSOC;
+		else $this->fetchMode = $ADODB_FETCH_MODE;
 		return $this->ADORecordSet($id);
 	}
 	
-
 	/*	Returns: an object containing field information. 
 		Get column information in the Recordset object. fetchField() can be used in order to obtain information about
 		fields in a certain query result. If the field offset isn't specified, the next field that wasn't yet retrieved by
@@ -166,8 +162,10 @@ class ADORecordset_sybase extends ADORecordSet {
 	}		
 
 	function _fetch($ignore_fields=false) {
-		$this->fields = @sybase_fetch_array($this->_queryID);
-		return ($this->fields == true);
+		
+		if ($this->fetchMode == ADODB_FETCH_NUM) $this->fields = @sybase_fetch_row($this->_queryID);
+		else $this->fields = @sybase_fetch_array($this->_queryID);
+		return is_array($this->fields);
 	}
 	
 	/*	close() only needs to be called if you are worried about using too much memory while your script

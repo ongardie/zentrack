@@ -62,16 +62,16 @@ if( is_array($tickets) ) {
 	<?=$zen->priorities["$t[priority]"]?>
 	</td>
 	<td height="25" valign="middle">
-	<?=$zen->types["$t[typeID]"]?>
+	<?=$zen->types["$t[type_id]"]?>
 	</td>
 	<td height="25" valign="middle">
 	<?=($t["otime"])? $zen->showDate($t["otime"]) : "n/a";?>
 	</td>
 	<td width="40" height="25" valign="middle">
 	<? 
-	  $user = $zen->get_user($t["userID"]);
+	  $user = $zen->get_user($t["user_id"]);
           if( $user ) {
-	     print ($t["userID"] == $login_id)? 
+	     print ($t["user_id"] == $login_id)? 
 	       "<b>".$user["initials"]."</b>" :
 	       $user["initials"];
 	  } else {
@@ -80,7 +80,7 @@ if( is_array($tickets) ) {
         ?>
 	</td>
 	<td height="25" valign="middle">
-	<?=$zen->bins["$t[binID]"]?>
+	<?=$zen->bins["$t[bin_id]"]?>
 	</td>
 	<td height="25" valign="middle" align="right">
 	<?=round($zen->dateDiff(time(),$t["otime"],'hours'),1)?> hrs.

@@ -1,6 +1,6 @@
 <?php
 /* 
-V1.81 22 March 2002 (c) 2000-2002 John Lim (jlim@natsoft.com.my). All rights reserved.
+V1.99 21 April 2002 (c) 2000-2002 John Lim (jlim@natsoft.com.my). All rights reserved.
   Released under both BSD license and Lesser GPL library license. 
   Whenever there is any discrepancy between the two licenses, 
   the BSD license will take precedence. See License.txt. 
@@ -18,11 +18,16 @@ if (!defined('_ADODB_ODBC_LAYER')) {
 	
 class  ADODB_access extends ADODB_odbc {	
 	var $databaseType = 'access';
-	var $hasTop = true;		// support mssql SELECT TOP 10 * FROM TABLE
+	var $hasTop = 'top';		// support mssql SELECT TOP 10 * FROM TABLE
 	var $fmtDate = "#Y-m-d#";
 	var $fmtTimeStamp = "#Y-m-d h:i:sA#"; // note not comma
 	var $_bindInputArray = false; // strangely enough, setting to true does not work reliably
-
+	var $sysDate = 'now';
+	
+	function ADODB_access()
+	{
+	}
+	
 	function BeginTrans() { return false;}
 	
 	function &MetaTables()

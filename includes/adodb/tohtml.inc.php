@@ -1,6 +1,6 @@
 <?php 
 /*
-V1.81 22 March 2002 (c) 2000-2002 John Lim (jlim@natsoft.com.my). All rights reserved.
+V1.99 21 April 2002 (c) 2000-2002 John Lim (jlim@natsoft.com.my). All rights reserved.
   Released under both BSD license and Lesser GPL library license. 
   Whenever there is any discrepancy between the two licenses, 
   the BSD license will take precedence.
@@ -28,11 +28,10 @@ $gSQLBlockRows=20; // max no of rows per table block
 //
 //  USAGE:
 //    include('adodb.inc.php');
-//    ADOLoadCode('mysql');
-//    $db = ADONewConnection();
+//    $db = ADONewConnection('mysql');
 //    $db->Connect('mysql','userid','password','database');
 //    $rs = $db->Execute('select col1,col2,col3 from table');
-//  rs2html($rs, 'BORDER=2', array('Title1', 'Title2', 'Title3'));
+//    rs2html($rs, 'BORDER=2', array('Title1', 'Title2', 'Title3'));
 //    $rs->Close();
 //
 // RETURNS: number of rows displayed
@@ -71,7 +70,7 @@ GLOBAL $gSQLMaxRows,$gSQLBlockRows;
 		
     	for ($i=0, $v=($numoffset) ? $rs->fields[0] : reset($rs->fields); 
 			$i < $ncols; 
-			$v=($numoffset) ? @$rs->fields[++$i] : next($rs->fields)) {
+			$i++, $v = ($numoffset) ? @$rs->fields[$i] : next($rs->fields)) {
 			
 			$type = $typearr[$i];
                        

@@ -20,14 +20,14 @@
      $ticket = $zen->get_ticket($id);
      if( !is_array($ticket) ) {
        $errs[] = "Ticket $id could not be found";
-     } else if( !$zen->checkAccess($login_id,$ticket["binID"],"edit") ) {
-       $errs[] = "You cannot edit a ticket in the ".$zen->bins["$ticket[binID]"]." bin.";
+     } else if( !$zen->checkAccess($login_id,$ticket["bin_id"],"edit") ) {
+       $errs[] = "You cannot edit a ticket in the ".$zen->bins["$ticket[bin_id]"]." bin.";
      } else if( !$zen->actionApplicable($id,"edit",$login_id) ) {
        $errs[] = "Ticket $id cannot be edited in its current status";
      } else {
        $TODO = 'EDIT';
        extract($ticket);
-       if( $zen->projectTypeID() == $ticket["typeID"] )
+       if( $zen->projectTypeID() == $ticket["type_id"] )
 	 include("$templateDir/newProjectForm.php");
        else
 	 include("$templateDir/newTicketForm.php");

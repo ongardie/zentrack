@@ -1,6 +1,6 @@
 <?php
 /* 
-version V1.81 22 March 2002 (c) 2000-2002  John Lim (jlim@natsoft.com.my). All rights
+version V1.99 21 April 2002 (c) 2000-2002  John Lim (jlim@natsoft.com.my). All rights
 reserved.
   Released under both BSD license and Lesser GPL library license. 
   Whenever there is any discrepancy between the two licenses, 
@@ -50,12 +50,11 @@ if (!defined('ADODB_SYBASE_SQLANYWHERE')){
  define('ADODB_SYBASE_SQLANYWHERE',1);
 
  class ADODB_sqlanywhere extends ADODB_odbc {
-  var $databaseType = "sqlanywhere";	
-     var $hasInsertID = true;
+  	var $databaseType = "sqlanywhere";	
+    var $hasInsertID = true;
 
      function _insertid() {
-   $rs = $this->Execute('select @@identity');
-   return ($rs) ? $rs->fields[0] : false;
+  	   return $this->GetOne('select @@identity');
      }
 
   function create_blobvar($blobVarName) {
@@ -125,6 +124,24 @@ if (!defined('ADODB_SYBASE_SQLANYWHERE')){
    return;
   }
 
+ /*
+  Insert a null into the blob field of the table first.
+  Then use UpdateBlob to store the blob.
+
+  Usage:
+
+  $conn->Execute('INSERT INTO blobtable (id, blobcol) VALUES (1, null)');
+  $conn->UpdateBlob('blobtable','blobcol',$blob,'id=1');
+ */
+  function UpdateBlob($table,$column,&$val,$where,$blobtype='BLOB')
+  {
+   $blobVarName = 'hold_blob';
+   $this->create_blobvar($blobVarName);
+   $this->load_blobvar_from_var($blobVarName, $val);
+   $this->Execute("UPDATE $table SET $column=$blobVarName WHERE $where");
+   $this->drop_blobvar($blobVarName);
+   return true;
+  }
  }; //class
 
  class  ADORecordSet_sqlanywhere extends ADORecordSet_odbc {	

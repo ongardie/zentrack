@@ -18,7 +18,7 @@
     <? 
 
     foreach($settings as $s) {
-      $k = $s["setid"];
+      $k = $s["setting_id"];
       $class = ($class == "bars")? "cell" : "bars";
       print "<tr><td class='$class'>$k</td>\n";
       print "<td class='$class'>$s[name]</td>\n";

@@ -24,20 +24,20 @@
   if( !$approved )
      $approved = 0;
   if( $type == "project" )
-     $typeID = $zen->projectTypeID();
+     $type_id = $zen->projectTypeID();
 
   $fields = array(
 		  "title"       => "text",
 		  "priority"    => "int",
 		  "description" => "html",
-		  "binID"       => "int",
-		  "typeID"      => "int",
-		  "userID"      => "int",
-		  "systemID"    => "int",
+		  "bin_id"       => "int",
+		  "type_id"      => "int",
+		  "user_id"      => "int",
+		  "system_id"    => "int",
 		  "tested"      => "int",
 		  "approved"    => "int",
 		  "relations"   => "text",
-		  "projectID"   => "int",
+		  "project_id"   => "int",
 		  "est_hours"   => "num",
 		  "deadline"    => "int",
 		  "start_date"  => "int"
@@ -46,9 +46,9 @@
 		   "title",
 		   "priority",
 		   "description",
-		   "binID",
-		   "typeID",
-		   "systemID"
+		   "bin_id",
+		   "type_id",
+		   "system_id"
 		   );
   $zen->cleanInput($fields);
   // check for required fields
@@ -77,7 +77,7 @@
      include("$libDir/nav.php");
      $zen->print_errors($errs);
      $TODO = 'EDIT';
-     if( $zen->projectTypeID() == $ticket["typeID"] )
+     if( $zen->projectTypeID() == $ticket["type_id"] )
        include("$templateDir/newProjectForm.php");
      else
        include("$templateDir/newTicketForm.php");

@@ -22,7 +22,7 @@
   /*
   **  GET PARAMS FOR A PROJECT
   */
-  if( $ticket["typeID"] == $zen->projectTypeID() ) {
+  if( $ticket["type_id"] == $zen->projectTypeID() ) {
      unset($ticket);
      $ticket = $zen->get_project($id);
      $page_section = "Project $id";
@@ -30,24 +30,24 @@
   } else {
      if( strtolower($login_mode) == 'tasks' )
 	$login_mode = 'details';
-     $page_section = $zen->types["$ticket[typeID]"]." #$id";
+     $page_section = $zen->types["$ticket[type_id]"]." #$id";
      $expand_tickets = 1;     
   }
 
   // allow creator of ticket to view (if setting is on) even if no access
-  $is_creator = ($login_id == $ticket["creatorID"] && $zen->settings["allow_cview"] == "on");
+  $is_creator = ($login_id == $ticket["creator_id"] && $zen->settings["allow_cview"] == "on");
 
   /*
   ** PRINT OUT THE PAGE
   */ 
   include("$libDir/nav.php");
 
-  if( !$is_creator && !$zen->checkAccess($login_id,$ticket["binID"]) ) {
+  if( !$is_creator && !$zen->checkAccess($login_id,$ticket["bin_id"]) ) {
      print "<p class='hot'>You are not allowed to view tickets in this bin</p>\n";
   } else {
 
      extract($ticket);
-     if( $typeID == $zen->projectTypeID() ) {
+     if( $type_id == $zen->projectTypeID() ) {
 	include("$templateDir/projectView.php");
      } else {
 	include("$templateDir/ticketView.php");     
