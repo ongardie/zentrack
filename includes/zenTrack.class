@@ -2081,6 +2081,13 @@ class zenTrack extends zen {
     $vals = $this->db_queryIndexed($query);
     $this->addDebug("fetch_bin_roles","result: ".count($vals)
                     .", query: $query",3);
+                    
+    if (count($vals) == 0 && $role["default"]) {
+       // return the default for the requested role, if set
+       
+       $vals = array($role["default"]);
+    }
+    
     return( $vals );
   }
 
@@ -3059,9 +3066,12 @@ class zenTrack extends zen {
     // to the database
     // to make them customizeable and
     // available for triggers and flowpaths
+    
+    global $default_manager, $default_tester;
+    
     return array(
-                 "1"=>array("role_id"=>1,"name"=>"Manager"),
-                 "2"=>array("role_id"=>2,"name"=>"Tester")
+                 "1"=>array("role_id"=>1,"name"=>"Manager","default"=>$default_manager),
+                 "2"=>array("role_id"=>2,"name"=>"Tester","default"=>$default_tester)
                  );
   }
 

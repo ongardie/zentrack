@@ -5,7 +5,14 @@
  object oriented and database abstracted design lend to 
  endless possibilities for project expansion.
 
------ V2.4.1 (Development, See CVS) ----
+----- V2.4.2 (Development, See CVS) ----
+
+2003-05-09, Rob Hillis
+  Added default tester and manager for bins without these roles set.
+    - zentrack/install/header.php.default 1.9
+    - zentrack/includes/zenTrack.class 1.101
+
+----- V2.4.1 (2003-05-08) ----
 
 2003-05-07, Kato
   Added rollover effects to javascript/list pages
