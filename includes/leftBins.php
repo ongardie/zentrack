@@ -10,7 +10,7 @@
     <select name="newbin" onChange="document.newbin.submit()">
       <option value='all'>-All-</option>
     <?
-      foreach($zen->getBins(1) as $v) {
+     foreach($zen->getBins(1) as $v) {
 	 $k = $v["bid"];
 	 $zen->getAccess($login_id);
 	 if( (isset($zen->access["$k"]) && $zen->access["$k"] >= $zen->settings["level_view"])

@@ -20,10 +20,10 @@
   $homebin= $user["homebin"];
   if( is_array($userBins) ) {
     foreach($userBins as $k=>$v) {
-      if( $k ) {
-	$check = ( $k == $homebin )? "selected" : "";
-	$n = $zen->bins["$k"];
-	print "<option $check value='$k'>$n</option>\n";
+      if( $v ) {
+	$check = ( $v == $homebin )? "selected" : "";
+	$n = $zen->bins["$v"];
+	print "<option $check value='$v'>$n</option>\n";
       }
     }
   }
