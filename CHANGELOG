@@ -16,6 +16,8 @@ abstraction, and endless possibilities for project expansion.
 2005-03-15, cfalonso
   Standard fields don't respect ID in search page when used as menu fields  -Fixed
     - zentrack_2/includes/ZenFieldMap.class 1.11
+  FieldMap didn't show the current default value as "selected"  -Fixed
+    - zentrack_2/includes/templates/fieldMapForm.php 1.7
 
 2005-03-14, cfalonso
   Some bugfixes
