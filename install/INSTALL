@@ -1,0 +1,7 @@
+
+This will be the help file for installations.
+
+Basically, the process will involve opening the php.ini file that will be in this directory, and editing the contents.
+
+Then run installer Install or installer Upgrade as appropriate.
+

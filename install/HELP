@@ -1,0 +1,34 @@
+
+  Documentation
+
+    Docs - http://zendocs.phpzen.net/bin/view/Zentrack/IndexPage
+    FAQ - http://zendocs.phpzen.net/bin/view/Zentrack/ZentrackFAQ
+
+	
+  Debugging
+
+    Open up your includes/config/debug.xml file and set <root level="3" />
+    This will produce debugging output.  Check the settings in your zen.ini
+    file to see where this output is going.
+
+
+  Support
+
+   CRITICAL!!  When submitting a support request, always begin by turning 
+	on your debug output and copy/paste the output, or attaching 
+        the contents of your logs/debug_log.txt file to the support request!
+           
+
+    mailing list - zentrack-users is a great place to get help.  Answers usually
+             within an hour.  http://sourceforge.net/mail/?group_id=22724, never
+             ignored.
+
+    project - http://www.sourceforge.net/projects/zentrack (see the support pages)
+             (This will get you a response, probably in hours, maybe in days, but
+             you will get one)
+
+    irc    - zentrack now has a home on irc.sourceforge.net, #zentrack, this may
+             be a good place to find some help with more in depth issues.
+             (usually a response in minutes, sometimes ignored)
+
+
