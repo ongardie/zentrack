@@ -2205,6 +2205,13 @@ class zenTrack extends zen {
      return $this->projectTypeIDs;
    }
 
+   function inProjectTypeIDs($type_id) {
+     // determines whether the id provided
+     // is a valid project id
+     // and returns true or false
+     return( in_array($type_id,$this->projectTypeIDs()) );
+   }
+
    function noteTypeID( ) {
      // returns the bin id associated with note
      // types for use with the auto-close function

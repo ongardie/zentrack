@@ -24,7 +24,7 @@
    </tr>  
    <tr>  
      <td class="titleCell">
-        Attachments on Ticket <?=$id?>
+        Attachments on <?=$page_type." ".$id?>
      </td>
   </tr>
    <tr>
@@ -67,7 +67,7 @@
      }    
      print "</table>\n";
   } else {
-     print "No attachments exist for this ticket";
+     print "No attachments exist for this $page_type";
   }
 ?>
     </td>

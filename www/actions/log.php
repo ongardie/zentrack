@@ -47,10 +47,14 @@
 
   include("$libDir/nav.php");
 
-  if( $actionComplete == 1 )
+  if( $actionComplete == 1 && $page_type == "project" ) {
+     $ticket = $zen->get_project($id);
+  }
+  else if( $actionComplete ) {
      $ticket = $zen->get_ticket($id);
+  }
   extract($ticket);
-  if( strtolower($zen->types["$type_id"]) == "project" ) {
+  if( $page_type == "project" ) {
      include("$templateDir/projectView.php");
   } else {
      include("$templateDir/ticketView.php");     

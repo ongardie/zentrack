@@ -2,32 +2,31 @@
   
 if( is_array($tickets) ) {
  
-   $link = $zen->settings["url_view_ticket"];   
       ?>
         <table width="100%" cellspacing='1' cellpadding='2' bgcolor='<?=$zen->settings["color_alt_background"]?>'>
 	<tr bgcolor="<?=$zen->settings["color_title_background"]?>">
-	<td width="32" height="25" valign="middle" title="Tracking ID for the ticket">
+	<td width="32" height="25" valign="middle" title="Tracking ID for the <?=$page_type?>">
 	  <div align="center"><span style="color:<?=$zen->settings["color_title_txt"]?>"><b><span class="small"><?=$zen->prn("ID")?></span></b></span></div>
 	</td>
-	<td height="25" valign="middle" title="The name of the ticket">
+	<td height="25" valign="middle" title="The name of the <?=$page_type?>">
 	  <div align="center"><span style="color:<?=$zen->settings["color_title_txt"]?>"><b><span class="small"><?=$zen->prn("Title")?></span></b></span></div>
 	</td>
-	<td width="32" height="25" valign="middle" title="The importance of the ticket">
+	<td width="32" height="25" valign="middle" title="The importance of the <?=$page_type?>">
 	  <div align="center"><span style="color:<?=$zen->settings["color_title_txt"]?>"><b><span class="small"><?=$zen->prn("Pri")?></span></b></span></div>
 	</td>
 	<td width="32" height="25" valign="middle" title="The type of task to complete">
 	  <div align="center"><span style="color:<?=$zen->settings["color_title_txt"]?>"><b><span class="small"><?=$zen->prn("Type")?></span></b></span></div>
 	</td>
-	<td width="40" height="25" valign="middle" title="Who the ticket belongs to">
+	<td width="40" height="25" valign="middle" title="Who the <?=$page_type?> belongs to">
 	  <div align="center"><span style="color:<?=$zen->settings["color_title_txt"]?>"><b><span class="small"><?=$zen->prn("Owner")?></span></b></span></div>
 	</td>
-        <td width="40" height="25" valign="middle" title="The estimated time to complete this ticket">
+        <td width="40" height="25" valign="middle" title="The estimated time to complete this <?=$page_type?>">
 	  <div align="center"><span style="color:<?=$zen->settings["color_title_txt"]?>"><b><span class="small"><?=$zen->prn("Status")?></span></b></span></div>
         </td>     
-        <td width="40" height="25" valign="middle" title="The estimated time to complete this ticket">
+        <td width="40" height="25" valign="middle" title="The estimated time to complete this <?=$page_type?>">
 	  <div align="center"><span style="color:<?=$zen->settings["color_title_txt"]?>"><b><span class="small"><?=$zen->prn("Est Hrs")?></span></b></span></div>
         </td>
-        <td width="40" height="25" valign="middle" title="The estimated time to complete this ticket">
+        <td width="40" height="25" valign="middle" title="The estimated time to complete this <?=$page_type?>">
   	  <div align="center"><span style="color:<?=$zen->settings["color_title_txt"]?>"><b><span class="small"><?=$zen->prn("Worked")?></span></b></span></div>     
         </td>     
         <td width="40" height="25" valign="middle" title="Percent of Completion">
@@ -36,7 +35,7 @@ if( is_array($tickets) ) {
 	</tr>
       <?      
 
-   $td_ttl = "title='Click here to view the ticket.'";
+   $td_ttl = "title='Click here to view the $page_type.'";
    $ttl_est = 0;
    $ttl_wkd = 0;
    $ttl_ext = "";
@@ -67,12 +66,14 @@ if( is_array($tickets) ) {
 	$text = $zen->settings["color_text"];	 
       }     
       
-      if( $t["type_id"] == $zen->projectTypeID() ) {
+      if( $zen->inProjectTypeIDs($t["type_id"]) ) {
 	 list($est,$wkd) = $zen->getProjectHours($t["id"]);
 	 $ttl_est += $est;
 	 $ttl_wkd += ($wkd > $est)? $est : $wkd;
 	 $ttl_ext += ($wkd > $est)? $wkd - $est : 0;
+	$link = $projectUrl;
       } else {
+	$link = $ticketUrl;
 	 if( $t["est_hours"] > 0 ) {
 	    $est = $t["est_hours"];
 	    $ttl_est += $est;
@@ -159,9 +160,9 @@ if( is_array($tickets) ) {
    
 } else {
    if( $login_bin )
-     print "<p>&nbsp;</p><ul><b>No open tickets in ".$zen->bins["$login_bin"]."</b></ul>";
+     print "<p>&nbsp;</p><ul><b>No open {$page_type}s in ".$zen->bins["$login_bin"]."</b></ul>";
    else
-     print "<p>&nbsp;</p><ul><b>No tickets were found.</b></ul>";
+     print "<p>&nbsp;</p><ul><b>No {$page_type}s were found.</b></ul>";
 }
   
 ?>

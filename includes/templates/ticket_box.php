@@ -20,22 +20,20 @@
   */
 
   // set the page mode, for viewing tickets
-  if( !$_SESSION["project_mode"] ) 
-     $_SESSION["project_mode"] = "tasks";
-  if( !$_SESSION["ticket_mode"] )
-     $_SESSION["ticket_mode"] = "details";
   if( $setmode ) {    
     if( $page_type == "project" )
-      $_SESSION["project_mode"] = strtolower($setmode);
+      $project_mode = strtolower($setmode);
     else
-      $_SESSION["ticket_mode"] = strtolower($setmode);
+      $ticket_mode = strtolower($setmode);
   }
   if( $page_type == "project" ) {
-    $page_mode = $_SESSION["project_mode"];
+    $page_mode = $project_mode;
+    $pageUrl = $projectUrl;
   } else {
-    $page_mode = $_SESSION["ticket_mode"];
+    $page_mode = $ticket_mode;
+    $pageUrl = $ticketUrl;
   }
-      
+
   /*
   ** SHOW THE NAVIGATION TABS
   */
@@ -55,7 +53,7 @@
 	$class = 'tabOff';
 	$lclass = 'tabsOff';
      }
-     $link = ($t == 'System')? $_SERVER['SCRIPT_NAME'] : $ticketUrl;
+     $link = ($t == 'System')? $SCRIPT_NAME : $pageUrl;
      print "<td class='$class' height='$height_num' width='55'>";
      print "<a href='$link?id=$id&setmode=$t' class='$lclass'>$t</a></td>\n";
      if( $i < count($tabs) ) {

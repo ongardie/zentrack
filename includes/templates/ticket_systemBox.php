@@ -17,6 +17,9 @@
 ?>
        
   <table width="600" align="center" cellpadding="2" cellspacing="2">
+   <tr>
+    <td class='titleCell' align='center'>System History</td>
+   </tr>
    <tr>  
     <td height="250" valign="top">
       <? print_system_messages(); ?>

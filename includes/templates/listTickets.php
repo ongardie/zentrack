@@ -4,12 +4,6 @@ if( !$page_type )
   $page_type = "ticket";
   
 if( is_array($tickets) ) {
-   $login_mode = 'tasks'; 
-   if( $page_type == "ticket" ) {
-     $link = $zen->settings["url_view_ticket"];   
-   } else {
-     $link = $rootUrl."/project.php";
-   }
       ?>
         <table width="100%" cellspacing='1' cellpadding='2' bgcolor='<?=$zen->settings["color_alt_background"]?>'>
 	<tr bgcolor="<?=$zen->settings["color_title_background"]?>">
@@ -56,6 +50,12 @@ if( is_array($tickets) ) {
 	 $txt = $rollover_text;
 	 $text = $zen->settings["color_text"];	 
       }
+      if( $zen->inProjectTypeIDs($t["type_id"]) ) {
+	$link = $projectUrl;
+      } else {
+	$link = $ticketUrl;   
+      }
+
       ?>
 	<tr style="background:<?=$row?>;color:<?=$text?>">
 	<td height="25" valign="middle" <?=$td_ttl?> <?=$txt?>>
@@ -99,9 +99,9 @@ if( is_array($tickets) ) {
    
 } else {
    if( $login_bin )
-     print "<p>&nbsp;</p><ul><b>No open tickets in ".$zen->bins["$login_bin"]."</b></ul>";
+     print "<p>&nbsp;</p><ul><b>No open {$page_type}s in ".$zen->bins["$login_bin"]."</b></ul>";
    else
-     print "<p>&nbsp;</p><ul><b>No tickets were found.</b></ul>";
+     print "<p>&nbsp;</p><ul><b>No {$page_type}s were found.</b></ul>";
 }
   
 ?>

@@ -24,16 +24,16 @@
   **  GET PARAMS FOR A PROJECT
   */
   if( $page_type == "project" ) {
-     if( $_SESSION["project_mode"] == "" )
-	$_SESSION["project_mode"] = 'details';    
+     if( $project_mode == "" )
+	$project_mode = 'details';    
      $ticket = $zen->get_project($id);
      $page_section = "Project $id";
      $expand_projects = 1;
   } else {
      $page_type = "ticket";
      $ticket = $zen->get_ticket($id);
-     if( $_SESSION["ticket_mode"] == "" )
-	$_SESSION["ticket_mode"] = 'details';
+     if( $ticket_mode == "" )
+	$ticket_mode = 'details';
      $page_section = $zen->types["$ticket[type_id]"]." #$id";
      $expand_tickets = 1;     
   }

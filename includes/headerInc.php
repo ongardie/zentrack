@@ -31,6 +31,7 @@
   $listDir     = "$libDir/lists";
   $imageUrl    = "$rootUrl/images";
   $ticketUrl   = "$rootUrl/ticket.php";
+  $projectUrl   = "$rootUrl/project.php";
 
   /*
   **  BROWSER DETERMINATIONS
@@ -105,13 +106,13 @@
 	   } else if( $style != "smallGrey" ) {
 	      $style = "smallBold";
 	   }
+	   $login_messages[$i][2] = "Grey";
 	   if( $style == "smallGrey" && $flag )
 	     break;
 	   print "<br><span class='$style'>";
 	   print "[".$zen->showTime($v[1])."] ";
 	   print $v[0]."</span>\n";
 	}	
-	$login_messages[$i][2] = "Grey";
      } else {
 	print "<span class='smallGrey'>No system messages</span>";
      }
