@@ -14,7 +14,6 @@ class ZenDataType extends Zen {
   /**
    * CONSTRUCTOR - initialize Zen class and load data if appropriate
    *
-   * @param Object $child is a $this reference from the calling object
    * @param integer $id the id to load
    * @param ZenList $zenlist (optional) passing this avoids a database call to load the object
    */

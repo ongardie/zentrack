@@ -419,7 +419,12 @@ class ZenQuery extends Zen {
     if( $setPrimaryKey ) { $this->setPrimaryKey(); }
     $this->_queryType = 'INSERT';
     if( $this->_execute(false) ) {
-      return $this->_vals[$this->_key];
+      if( isset($this->_key) ) {
+        return $this->_vals[$this->_key];
+      }
+      else {
+        return true;
+      }
     }
     else { return false; }
   } 

@@ -50,7 +50,7 @@ url_www = "{url_www="http&#58;//mysite.com/zentrack"}"
 [db]
 
 ; the type of database
-; mysql, postgres, oci8 (oracle)
+; mysql, mysqlt(transaction enabled), postgres, oci8po (oracle), mssqlpo
 db_type = "{db_type="mysql"}"
 
 ; domain or ip for database server, sometimes blank is good

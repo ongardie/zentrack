@@ -97,17 +97,17 @@ class ZenList extends Zen {
    *
    * @return boolean there is another item after this one
    */
-  function hasNext() { return($this->_position < $this->_count()); }
+  function hasNext() { return($this->_position < $this->_count-1); }
 
   /**
    * resets the list counter to the first result
    */
-  function reset() { }
+  function reset() { $this->_position = 0; }
 
   /**
    * returns the number of items in the list
    */
-  function count() { }
+  function count() { return $this->_count; }
 
   /**
    * gets data from the database and loads it into $this->_rawdata
@@ -127,7 +127,7 @@ class ZenList extends Zen {
    * take an average of n/2 cycles, and the second will take an average of n/4 cycles, etc.
    *
    * @param integer $id is the id to be found
-   * @return Object of the type specified (see the extending class makeObject() method)
+   * @return Object of the ZenDataType specified (see the makeObject() method)
    */
   function find( $id ) {
     if( !is_array($this->_rawdata) ) {

@@ -18,6 +18,8 @@ class DbTypeInfo {
   function DbTypeInfo( &$dbo ) { 
     $this->_dir = dirname(__FILE__);
     $this->_dbo =& $dbo;
+    $t = $this->_dbo->getDbType();
+    $this->_type = isset($this->_type_aliases[$t])? $this->_type_aliases[$t] : $t;
     $this->_load();
   }
 
@@ -45,20 +47,38 @@ class DbTypeInfo {
    * @param string $table
    * @param array $columns array of (string) column syntax
    * @param boolean $transactions if true, this table will accept transactions
-   * @return array of sql statements
+   * @return array containing (String)sql_statements, the first is guaranteed to be the table create, others are supporting keys, etc.
    */
   function addTableSyntax( $table, $columns, $transactions ) {
     $columnText = "";
+    $pkinfo = $this->getSqlProps('primarykey');
+    $pkinline = ($pkinfo['location'] == 'inline');
+    $stmts = array( null ); //set first element, since our table command will go here
+    $keys = "";
     foreach($columns as $c) {
+      $pk = ($c['type'] == 'primarykey');
+      $keyname = $this->genKeyName($table, $c['name'], $c['type']);
       $new = array();
       if( $columnText ) { $columnText .= ", "; }
       $columnText .= $this->inlineColumnSyntax($c['name'], $c['type'], 
                                                $c['unique'], $c['notnull'], 
-                                               $c['size']);
+                                               $c['size'], $keyname,
+                                               $c['default'], ($pk && $pkinline) );
+      if( $pk && !$pkinline ) {
+        $txt = $this->getStatement('primarykey', array('keyname'=>$keyname, 'column'=>$c['name'], 'table'=>$table));
+        if( $pkinfo['location'] == 'internal' ) {
+          $keys .= ", ".$txt;
+        }
+        else {
+          $stmts[] = $txt;
+        }
+      }
     }
-    return $this->getStatement('create', 
+    $columnText .= $keys;
+    $stmts[0] = $this->getStatement('create', 
                                array('table'=>$table, 'columns'=>$columnText), 
                                $transactions);
+    return $stmts;
   }
 
   /**
@@ -78,19 +98,43 @@ class DbTypeInfo {
    * @param string $name of column
    * @param string $type data type
    * @param string $unique (true or false)
-   * @param integer $length (if applicable) of column
    * @param string $required (true or false)
+   * @param integer $length (if applicable) of column
+   * @param string $default the default value for column (will be quoted)
    * @return array of sql statements
    */
-  function inlineColumnSyntax( $name, $type, $unique, $required, $length ) {
+  function inlineColumnSyntax( $name, $type, $unique, $required, $length, $keyname, $default = null ) {
     $props = $this->getSqlProps('tablecolumn');
     $uniquetext = ($unique && isset($props['uniquelabel']))? $props['uniquelabel'] : '';
-    $attrtext = ($required && isset($props['notnull']))? $props['notnull'] : '';
+    $attrtext = "";
+    if( strlen($default) ) {
+      if( $default == 'NOW' ) {
+        $default = $this->getSyntax('now');
+      }
+      if( strlen($default) ) {
+        $deftxt = str_replace("%keyname%", $keyname, $props['default'])." ";
+        $attrtext .= str_replace("%default%", $this->_dbo->quote($default), $deftxt);
+      }
+    }
+    if( $pk ) {
+      $attrtext .= $this->getStatement('primarykey',array($keyname));
+    }
+    else if( $required && isset($props['notnull']) ) {
+      $attrtext .= str_replace("%keyname%", $keyname, $props['notnull']);
+    }
+    //todo
+    //todo
+    //todo figure out what the deal is with null values
+    //todo
+    //else if( $this->_type == 'mssql' && !strlen($default) ) {
+    // for mssql, default is not null, so we must explicity state for
+    // consistency with our design
+    //  $attrtext .= str_replace("%default%", "NULL", $props['default']);
+    //}
     $vals = array(
-                  'name'    => $name,
-                  'datatype'    => $this->makeTypeDef($type,$length),
-                  'unique'  => $uniquetext,
-                  'attr'    => $attrtext );
+                  'name'     => $name,
+                  'datatype' => $this->makeTypeDef($type,$length),
+                  'attr'     => $attrtext );
     return $this->getStatement('tablecolumn',$vals);
   }
   
@@ -103,10 +147,12 @@ class DbTypeInfo {
    * @param string $unique (true or false)
    * @param integer $length (if applicable) of column
    * @param string $required (true or false)
+   * @param string $default the default value for column (will be quoted)
    * @return array of sql statements
    */
-  function addColumnSyntax( $table, $name, $type, $unique, $required, $length ) { 
-    $def = $this->inlineColumnSyntax($name, $type, $unique, $required, $length);
+  function addColumnSyntax( $table, $name, $type, $unique, $required, $length, $default = null ) {
+    $def = $this->inlineColumnSyntax($name, $type, $unique, $required, $length, 
+                                     $this->getKeyName($table,$name,$type), $default);
     return $this->getStatement('addcolumn', array('table'=>$table, 'def'=>$def));
   }
   
@@ -207,7 +253,7 @@ class DbTypeInfo {
   function makeTypeDef( $type, $length = 0 ) {
     if( !isset($this->_dataTypes[$type]) ) {
       Zen::debug($this, "makeTypeDef", "Data type $type is invalid", 102, LVL_WARN);
-      return false;
+      return 'NOTYPE';
     }
 
     // get the properties
@@ -222,7 +268,7 @@ class DbTypeInfo {
       // check the size attribute
       if( !$props['size'] && !$length ) {
         Zen::debug($this, "makeTypeDef", "Data type $type requires a length", 101, LVL_WARN);
-        return false;
+        return 'NOSIZE';
       }
       if( $length > $props['max'] ) {
         Zen::debug($this, "makeTypeDef", "Maximum length exceeded for data type $type ($length)"
@@ -256,14 +302,14 @@ class DbTypeInfo {
     $success = true;
 
     // locate config file
-    $file = $this->_dir."/".$this->_dbo->getDbType().".xml";
+    $file = $this->_dir."/".$this->_type.".xml";
     if( !file_exists($file) ) {
       Zen::debug($this, "_load", "Config file $file not found", 21, LVL_ERROR);
       return false;
     }
 
     // parse xml data
-    $data = join("",file($this->_dir."/".$this->_dbo->getDbType().".xml"));
+    $data = join("",file($this->_dir."/".$this->_type.".xml"));
     $xp = new ZenXMLParser();
     $root =& $xp->parse($data);
 
@@ -329,10 +375,19 @@ class DbTypeInfo {
         $success = false;
       }
     }
-    
     return $success;
   }
 
+  /**
+   * STATIC: Generate a key name from table/column/type values
+   *
+   * @param string $table name of table
+   * @param string $column name of column
+   * @param string $type type of column
+   */
+  function genKeyName($table, $column, $type) {
+    return ($type=='primarykey'? "pk_" : "idx_").substr($table,0,3)."_".substr($column,0,3);
+  }
 
   /*************************************
    **   SETTINGS
@@ -378,7 +433,16 @@ class DbTypeInfo {
                                      "dropcolumn", "delete",
                                      "insert",     "update");
     
+  /** @var array maps aliases to the correct db info file */
+  var $_type_aliases = array(
+                            "oci8"      => "oracle",
+                            "oci8po"    => "oracle",
+                            "mssqlpo"   => "mssql",
+                            "postgres7" => "postgres",
+                            "mysqlt"    => "mysql");
 
+  /** @var string the type of db we are using (aliased) */
+  var $_type;
 
 }
 

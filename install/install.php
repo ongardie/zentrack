@@ -10,8 +10,10 @@
    * <ul>
    *   <li>--ini_file=file:  specify an alternate zen.ini (config) file to use (defaults to ./zen.ini)
    *   <li>--supress_confirm: supresses confirm dialog (answers yes to all, needed for cron jobs)
+   *   <li>--verbose:  increase message output to screen
+   *   <li>--compress=type: set compression on data output, null-do not compress(default), zip-use zip compression, 
+   *         gzip-use gzip compresion
    *   <li>--classdir=dir:  specify location of class files (for development)
-   *   <li>--verbose:  show all debug output (for development)
    * </ul>
    *
    * @package Setup
@@ -33,7 +35,8 @@
   $class_dir = "../includes/lib/classes";
   $supress = false;
   $verbose = false;
-
+  $compress = null;
+  
   // strip -- params and set if appropriate
   // we need two arrays because removing elements
   // from first array will change count and
@@ -51,8 +54,11 @@
       else if( $val[0] == 'classdir' ) { $class_dir = $val[1]; }
       else if( $val[0] == 'supress_confirm' ) { $supress = true; }
       else if( $val[0] == 'verbose' ) { $verbose = true; }
+      else if( $val[0] == 'compress' ) { $compress = $val[1]; }
     }
-    else { $newvals[] = $argv[$i]; }
+    else { 
+      $newvals[] = $argv[$i]; 
+    }
   }
   $argv = $newvals;
 
@@ -119,7 +125,9 @@
   // parse the ini file and set the verbosity of our messages
   if( $verbose ) { print "Parsing ini params\n"; }
   $GLOBALS['zen'] = ZenUtils::read_ini($ini_file);
-  $GLOBALS['installMode'] = $verbose? LVL_DEBUG : ($GLOBALS['zen']['debug']['develop_mode']? LVL_WARN : LVL_ERROR);
+  $GLOBALS['installMode'] = $verbose? 
+    ($GLOBALS['zen']['debug']['develop_mode']? LVL_DEBUG : LVL_NOTE) : 
+    ($GLOBALS['zen']['debug']['develop_mode']? LVL_WARN : LVL_ERROR);
 
   // include all appropriate libraries
   if( $verbose ) { print "Including libraries\n"; }
@@ -128,7 +136,8 @@
   load_classes($classes_all, $dir_classes);
 
   // run the targets
-  $z = new ZenTargets($GLOBALS['zen'], $supress);
+  if( $verbose ) { print "Compression set to ".($compress? $compress : "none"); }
+  $z = new ZenTargets($GLOBALS['zen'], $supress, $compress);
 
   // prepare to run
   $z->args( $argv );

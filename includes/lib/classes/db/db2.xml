@@ -23,16 +23,17 @@
 
 
   <sqlInfo>
+    <now>UNIX_TIMESTAMP(NOW())</now>
     <endline specialchar="\n"></endline>
     <escapechar>\</escapechar>
     <create>CREATE %table% {%columns%}</create>
     <droptable>DROP TABLE %table%</droptable>
-    <primarykey location="inline">CONSTRAINT %name% PRIMARY KEY</primarykey>
-    <index location="external" uniquelabel="UNIQUE">
+    <primarykey location="inline">CONSTRAINT %keyname% PRIMARY KEY</primarykey>
+    <index uniquelabel="UNIQUE">
       CREATE %unique% INDEX %name% ON %table%(%columns%)
     </index>
     <dropindex></dropindex>
-    <tablecolumn uniquelabel="CONSTRAINT UNIQUE" notnull="NOT NULL">%name% %datatype% %attr%</tablecolumn>
+    <tablecolumn uniquelabel="CONSTRAINT UNIQUE" notnull="NOT NULL" default="DEFAULT %default%">%name% %datatype% %attr%</tablecolumn>
     <addcolumn>ALTER TABLE %table% ADD COLUMN %def%</addcolumn>
     <dropcolumn>ALTER TABLE %table% DROP COLUMN %name%</dropcolumn>
     <delete>DELETE FROM %table% %where%</delete>

@@ -7,7 +7,7 @@
 
   <dataTypes>
     <dataType name="value"      type="VARCHAR2" size="25"   max="25"   fixed="true" />
-    <dataType name="string"     type="VARCHAR2" size=""     max="200"  fixed="false"/>
+    <dataType name="string"     type="VARCHAR2" size="200"  max="200"  fixed="false"/>
     <dataType name="maxstring"  type="VARCHAR2" size="4000" max="4000" fixed="true"/>
     <dataType name="text"       type="VARCHAR2" size="4000" max="4000" fixed="true"/>
     <dataType name="byte"       type="NUMBER"   size="1,0"  max="1,0"  fixed="true" />
@@ -21,14 +21,16 @@
   </dataTypes>
 
   <sqlInfo>
+    <now>CAST(CURRENT_TIMESTAMP as NUMBER(12,0))</now>
     <endline>;</endline>
     <escapechar>'</escapechar>
     <create>CREATE TABLE %table% (%columns%)</create>
-    <droptable>DROP TABLE %table%</droptable>
-    <primarykey location="internal">CONSTRAINT %name% PRIMARY KEY (%column%)</primarykey>
+    <droptable>DROP TABLE %table% CASCADE</droptable>
+    <primarykey location="internal">CONSTRAINT %keyname% PRIMARY KEY (%column%)</primarykey>
     <index uniquelabel="UNIQUE">CREATE %unique% INDEX %name% ON %table%(%columns%)</index>
     <dropindex></dropindex>
-    <tablecolumn uniquelabel="" notnull="NOT NULL">%name% %datatype% %attr% </tablecolumn>
+    <tablecolumn uniquelabel="CONSTRAINT %keyname% UNIQUE" notnull="CONSTRAINT %keyname% NOT NULL" 
+                 default="DEFAULT %default%">%name% %datatype% %attr%</tablecolumn>
     <addcolumn>ALTER TABLE %table% ADD COLUMN %def%</addcolumn>
     <dropcolumn>ALTER TABLE %table% DROP COLUMN %name%</dropcolumn>
     <delete>DELETE FROM %table% %where%</delete>

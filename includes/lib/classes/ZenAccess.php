@@ -12,7 +12,6 @@ class ZenAccess extends ZenDataType {
    *   A ZenUserGroup object, a ZenUserGroupList, a ZenUser object, a ZenUserList, or a ZenAccessList.  This will be the basis for making determinations.
    */
   function ZenAccess( $group_user_or_list ) { 
-    // call ZenDataType()
 
     // create access from group list
 

@@ -5,7 +5,7 @@
     <table name="ABSTRACT_DESCRIPTORS">
       <description>Descriptive columns common to many tables</description>
       <columns>
-	<column name="desc" type="string" ftype="text" label="Description" />      
+	<column name="descript" type="maxstring" ftype="text" label="Description" />      
 	<column name="last_update" type="date" ftype="hidden">
 	  <default>NOW</default>
 	</column>
@@ -135,19 +135,39 @@
 	     [5]Owner or unowned
 	   </criteria>
 	</column>
-	<column name="stage_reqs" type="string" ftype="checklist" label="Stage">
-	  <description>The required stage of the ticket to perform this action</description>
-	  <criteria type="zenlist">stages</criteria>
-	</column>
-	<column name="bin_reqs" type="string" ftype="checklist" label="Bin">
-	  <description>Set this action to only be active in certain bins (blank=all)</description>
-	  <criteria type="zenlist">bins</criteria>
-	</column>
       </columns>
       <indexList>
-        <index name="act_get">action_id,isactive</index>
-	<index name="act_sort">field_name,field_pri</index>
-	<index name="act_check">owner_reqs,stage_reqs,bin_reqs</index>
+        <index name="key_act_get">action_id,isactive</index>
+	<index name="key_act_sort">field_name,field_pri</index>
+	<index name="key_act_check">owner_reqs</index>
+      </indexList>
+    </table>
+
+    <table name="ACTION_BIN">
+      <description>Maps actions to the bins in which they are active</description>
+      <columns>
+         <column name="action_id" type="integer" ftype="hidden" label="Action" />
+         <column name="bin_id" type="integer" ftype="checklist" label="Active Bins">
+           <reference>BIN.bin_id</reference>
+           <criteria type="zenlist">bins</criteria>
+         </column>
+      </columns>
+      <indexList>
+        <index name="key_actbin_get">action_id,bin_id</index>
+      </indexList>
+    </table>
+
+    <table name="ACTION_STAGE">
+      <description>Maps actions to the stages in which they are active</description>
+      <columns>
+         <column name="action_id" type="integer" ftype="hidden" label="Action" />
+         <column name="stage_id" type="integer" ftype="checklist" label="Active Stages">
+           <reference>STAGE.stage_id</reference>
+           <criteria type="zenlist">stages</criteria>
+         </column>
+      </columns>
+      <indexList>
+        <index name="key_actbin_get">action_id,stage_id</index>
       </indexList>
     </table>
 
@@ -203,7 +223,7 @@
 	<column name="log_id" type="integer" ftype="immutable" label="Log Entry">
 	  <reference>LOG.log_id</reference>
 	</column>
-	<column name="file_name" type="value" ftype="immutable" label="File Name" />
+	<column name="field_name" type="value" ftype="immutable" label="File Name" />
 	<column name="file_type" type="value" ftype="immutable" label="File Type" />
       </columns>
       <indexList>
@@ -325,7 +345,7 @@
 	</column>
 	<column name="entry" type="text" ftype="textarea" label="Details" />	  
 	<column name="action_id" type="integer">
-	  <default>{action_id}</default>
+          <notnull>true</notnull>
 	  <reference>ACTION.action_id</reference>
 	</column>
         <column name="user_inits" type="string" ftype="hidden">
@@ -523,7 +543,10 @@
 
     <!-- meta data from the database construction -->
     <table name="TABLE_DEFS">
-      <description>Meta data describing how tables are structures</description>
+      <description>
+         Meta data describing how tables are structured.  This extends the xml schema and
+         allows users to edit certain properties of the fields.
+      </description>
       <columns>
         <column name="tbl_name" type="value" ftype="immutable" label="Name" />
 	<column name="tbl_inherits" type="string" ftype="immutable" label="Inherited From" />
@@ -689,7 +712,7 @@
         <column name="bin_id" type="integer" ftype="select">
 	  <reference>BIN.bin_id</reference>
 	  <criteria type="zenlist">bins</criteria>
-	</column>      
+	</column>
       </columns>
     </table>
 

@@ -19,3 +19,8 @@ directories:dir_config:database.xml:0:0744
 
 paths:path_www:header.php:1:0744
 
+# data and install files
+
+directories:dir_config:install.php:0:0744
+directories:dir_config:sample_data/:0:0744
+directories:dir_config:setup/:0:0744

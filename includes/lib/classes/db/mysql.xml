@@ -23,6 +23,7 @@
 
 
   <sqlInfo>
+    <now>UNIX_TIMESTAMP(NOW())</now>
     <endline>;</endline>
     <escapechar>\</escapechar>
     <create>CREATE TABLE %table% (%columns%)</create>
@@ -33,7 +34,7 @@
     </index>
     <transaction_table>TYPE = InnoDB</transaction_table>
     <dropindex></dropindex>
-    <tablecolumn uniquelabel="" notnull="NOT NULL">%name% %datatype% %attr% </tablecolumn>
+    <tablecolumn uniquelabel="UNIQUE" notnull="NOT NULL" default="DEFAULT %default%">%name% %datatype% %attr% </tablecolumn>
     <addcolumn>ALTER TABLE %table% ADD COLUMN %def% %after%</addcolumn>
     <dropcolumn>ALTER TABLE %table% DROP COLUMN %name%</dropcolumn>
     <delete>DELETE FROM %table% %where%</delete>

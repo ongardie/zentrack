@@ -8,11 +8,13 @@ class ZenTargets {
    *
    * @param array (associative) $ini_array is the ini file parsed by ZenUtils::read_ini()
    * @param boolean $supress_config_dialog prevents confirmation messages from appearing (answers yes to all)
+   * @param string $compression null-do not compress, zip-use zip compression, gzip-use gzip compression
    */
-  function ZenTargets( $ini_array, $supress_confirm_dialog = false ) {
+  function ZenTargets( $ini_array, $supress_confirm_dialog = false, $compression = null ) {
     $this->_supress = $supress_confirm_dialog;
     $this->_installdir = dirname(dirname(__FILE__));
     $this->_printHeading();
+    $this->_compress = $compression;
     $this->_dirs = $this->_parseConfigData("directories");
     $this->_configFiles = $this->_parseConfigData("configFiles");
     $this->_ini = $ini_array;
@@ -131,7 +133,7 @@ class ZenTargets {
     switch($target) {
     case "backup_all":        return $this->_backup_all();
     case "backup_config":     return $this->_backup_config();
-    case "backup_database":   return $this->_backup_database( $p );
+    case "backup_database":   return $this->_backup_database( $p, $this->_getParm($target,1) );
     case "changed_config":    return $this->_changed_config();
     case "check_directories": return $this->_check_directories( $p );
     case "check_permissions": return $this->_check_permissions();
@@ -144,10 +146,10 @@ class ZenTargets {
           $this->_help($target);
           return false;
         }
-        return $this->_create_database($p);
+        return $this->_create_database($p, $this->_getParm($target,1));
       }
     case "cvs_update":        return $this->_cvs_update();
-    case "drop_database":     return $this->_drop_database( $p );
+    case "drop_database":     return $this->_drop_database( $p, $this->_getParm($target,1) );
     case "extra_secure_mode":
       {
         $p2 = $this->_getParm($target, 1);
@@ -167,7 +169,7 @@ class ZenTargets {
         }
         return $this->_load_data( $p, $this->_getParm($target,1), $this->_getBooleanParm($target,2,true) );
       }
-    case "merge_template_file":    return $this->_merge_template_file( $p );
+    case "merge_template_file":    return $this->_merge_template_file( $p, $this->_getBooleanParm($target,1,false) );
     case "prepare_install_files": 
       {
         $p2 = $this->_getParm($target,0);
@@ -186,7 +188,8 @@ class ZenTargets {
 	return $this->_try_db_connection( $p, $this->_getParm($target, 1),
                                           $this->_getParm($target, 2), 
                                           $this->_getParm($target, 3),
-                                          $this->_getParm($target, 4));
+                                          $this->_getParm($target, 4),
+                                          $this->_getBooleanParm($target, 5, false));
       }
     case "update_db_schema":
       {
@@ -231,9 +234,16 @@ class ZenTargets {
     $description = isset($targets[$target])? $targets[$target] : "";
     if( $target ) { print "\n".strtoupper($target).": $description\n"; }
     switch( $target ) {
+    case "backup_database":
+      {
+        print "   Usage: install.php [modifiers] -$target [tables]\n";
+        print "   - where tables is a comma separated list of tables (default is to backup all tables)\n";
+        print "   - the backup is stored in includes/backups/yyyy-mm-dd-HH-mm directory\n";
+        break;
+      }
     case "create_database":
       {
-        print "   Usage: zen.php  [--config_file=zen.ini] -$target data_dir\n";
+        print "   Usage: install.php [modifiers] -$target data_dir\n";
         print "   - where data_dir is the source directory containing db schema and data\n";
         print "   - you must create the database instance before running this command\n";
         print "   - you must create the database user and priviledges before running this command\n";
@@ -241,12 +251,13 @@ class ZenTargets {
       }
     case "drop_database":  
       {
-        print "   Usage: install.php [--config_file=zen.ini] -$target\n";
+        print "   Usage: install.php [modifiers] -$target [table]\n";
+        print "   - where tables is a comma separated list of tables (default is to drop all tables)\n";
         break;
       }
     case "extra_secure_mode":
       {
-        print "   Usage: zen.php  [--config_file=zen.ini] -$target apache_user apache_group\n";
+        print "   Usage: install.php [modifiers] -$target apache_user apache_group\n";
         print "   - where apache_user is the name the apache web process runs as\n";
         print "   - where apache_group is the group the apache web process runs as\n";
         print "   - you must be a superuser to run this command\n";
@@ -255,32 +266,33 @@ class ZenTargets {
       }
     case "load_data":
       {
-        print "   Usage: zen.php [--config_file=zen.ini] -$target data_directory [delete_first]\n";
+        print "   Usage: install.php [modifiers] -$target data_directory [delete_first]\n";
         print "   - where data_directory is the source directory containing xml data to upload\n";
         print "   - where delete_first [default=true] is whether or not to delete existing data before uploading\n";
+        print "   - this command can read zip or gzip compressed data files\n";
         break;
       }
     case "prepare_install_files": 
       {
-        print "   Usage: zen.php [--config_file=zen.ini] -$target source destination\n";
+        print "   Usage: install.php [modifiers] -$target source destination\n";
         break;
       }
     case "try_db_connection":
       {
-        print "   Usage: zen.php [--config_file=zen.ini] -$target type host instance user password\n";
+        print "   Usage: install.php [modifiers] -$target type host instance user password\n";
         print "   - where type is the db type, such as mysql, pgsql, oci8po, etc (see zen.ini for details)\n";
         print "   - where host can be localhost or possibly '', and instance is the database name, or TNS file for oracle\n";
         break;
       }
     case "update_db_schema":
       {
-        print "   Usage: zen.php [--config_file=zen.ini] -$target new_schema.xml [true|false]\n";
+        print "   Usage: install.php [modifiers] -$target new_schema.xml [true|false]\n";
         print "   - where true|false is 'actually do it' vs. just preview it\n";
         break;
       }
     case "upgrade":
       {
-        print "   Usage: zen.php [--config_file=zen.ini] -$target old_version\n";
+        print "   Usage: install.php [modifiers] -$target old_version\n";
         print "   - where old_version is the version you want to upgrade from\n";
         break;
       }
@@ -289,7 +301,6 @@ class ZenTargets {
     case "verify_db_connection":
     case "backup_all":       
     case "backup_config":    
-    case "backup_database":  
     case "changed_config":   
     case "check_directories":
     case "check_permissions":
@@ -298,13 +309,13 @@ class ZenTargets {
     case "copy_config_files":
     case "cvs_update":       
       {
-        print "   Usage: install.php [--config_file=zen.ini] -$target\n";
+        print "   Usage: install.php [modifiers] -$target\n";
         break;
       }
     case "":
     case "help":
       {
-        print "   Usage: install.php [--config_file=zen.ini] -help target\n";
+        print "   Usage: install.php [modifiers] -help target\n";
         print "   - where command is the command to display help for\n";
         print "\n   Available targets:\n";
         foreach( $targets as $key=>$val ) {
@@ -317,6 +328,16 @@ class ZenTargets {
 	print "   No help found for specified target\n";        
       }
     }
+    print "\nThe following special modifiers are allowed:\n";
+    print "   --ini_file=file, specify an alternate zen.ini (config) file to use (defaults to ./zen.ini)\n";
+    print "   --supress_confirm, supresses confirm dialog (answers yes(or default) to all, needed for cron jobs)\n";
+    print "   --verbose, increases message output\n";
+    print "   --compress=type, set data compression:"
+      ."\n       null - do not compress(default)"
+      ."\n       zip  - use zip compression"
+      ."\n       gzip - use gzip compression\n";
+    print "\t--classdir=dir, specify location of class files (for development)\n";
+    return true;
   }
 
   /***********************************************
@@ -425,9 +446,9 @@ class ZenTargets {
     }
     
     // copy file
-    print "   B $dest\n";      
+    print "   C $dest\n";      
     if( !copy( $source, $dest ) ) {
-      $this->_printerr("_backup_file", "Backup of $file failed");
+      $this->_printerr("_backup_file", "Backup of $file failed ($source/$dest)");
       return false;
     }
     @chmod( $dest, 0600 );
@@ -446,7 +467,7 @@ class ZenTargets {
     // determine which tables to backup
     if( $table ) { $tables = explode(',',$table); }
     else { $tables = null; }
-    
+
     // create directory if not done yet
     $dir = "database";
     $source = $this->_ini['directories']['dir_config'];
@@ -468,7 +489,7 @@ class ZenTargets {
     // perform backups
     $dbc =& $this->getDbConnection();
     $dbx = new ZenDBXML( $dbc, $source.'/database.xml', $this->_ini['debug']['develop_mode'] );
-    $res = $dbx->dumpDatabaseData( $dir, $tables, true );
+    $res = $dbx->dumpDatabaseData( $this->_getBackupLocation()."/".$dir, $tables, $this->_compress );
     print "   {$res[1]} of {$res[0]} statements processed successfully\n";
     if( $res[0] != $res[1] && !$supress ) {
       $diff = $res[0] - $res[1];
@@ -515,13 +536,14 @@ class ZenTargets {
    * will not be created if our target runs over a minute
    */
   function _getBackupLocation() {
-    static $dir;
-    if( !$dir ) {
-      $dir = $this->_ini['directories']['dir_backups']."/".date("Y-m-d-h-m");
-      if( !@is_dir($dir) ) { @mkdir($dir, 0700); }
+    if( !$this->_bdir ) {
+      $this->_bdir = $this->_ini['directories']['dir_backups']."/".date("Y-m-d-H-i");
+      if( !@is_dir($this->_bdir) ) { @mkdir($this->_bdir, 0700); }
     }
-    return $dir;
+    return $this->_bdir;
   }
+
+  var $_bdir;
 
   /**
    * Backups up files from $src to $dest, if $recurse = true, do subdirectories too
@@ -625,7 +647,7 @@ class ZenTargets {
     // clean out all cache data
     if( !$this->_clean_cache_data ) {
       print "   The changed_config target has completed successfully; however, cache data could not be cleared.\n";
-      print "   Please login as an administrator and run install.php -clean_cache_data\n";
+      print "   Please login as an administrator and run install.php [modifiers] -clean_cache_data\n";
     }
 
     return true;
@@ -795,7 +817,6 @@ class ZenTargets {
    * be used to fill values as possible, to reduce the user configuration as much as possible.
    *
    * @param string $dest the full path and filename to be created
-   * @param string $fallback if provided and $dest doesn't exist, this will be used instead
    * @param boolean $replace if true, then the destination will be replaced instead of merged
    */
   function _merge_template_file( $dest, $replace = false ) {
@@ -887,7 +908,13 @@ class ZenTargets {
       $dest = $this->_ini[$sect][$var];
 
       // get source directory
-      $source = $this->_installdir."/defaults";
+      // this will be installs/defaults unless
+      // this is a directory or the install.php
+      // file itself, in either of those cases
+      // it will be installs/
+      $source = ($file == 'install.php' || preg_match('#/$#', $file))? 
+        $this->_installdir : $this->_installdir."/defaults";
+      $file = preg_replace('#/$#', '', $file);
 
       // check directory structure
       if( !@is_dir($source) ) {
@@ -896,7 +923,7 @@ class ZenTargets {
       }
       if( !@is_dir($dest) ) {
         $this->_printerr('_copy_config_files', 
-                         "$dest directory does not exist, try running 'install.php -check_directories true'");
+                         "$dest directory does not exist, try running 'install.php [modifiers] -check_directories true'");
         return false;
       }
 
@@ -1204,17 +1231,18 @@ class ZenTargets {
    * @param string $instance is the name of the database instance (zentrack perhaps?)
    * @param string $user is the user login
    * @param string $passwd is the user password
+   * @param boolean $persist if true, use a persistent connection
    * @return boolean true on success
    */
-  function _try_db_connection( $type, $host, $instance, $user, $passwd ) {
+  function _try_db_connection( $type, $host, $instance, $user, $passwd, $persist = false) {
     $db = $this->_ini['db'];
-    print "   Connecting to {$type}//{$user}@{$host}:{$instance}\n";
     // set params
     $this->_ini['db']['db_type'] = $type;
     $this->_ini['db']['db_host'] = $host;
     $this->_ini['db']['db_instance'] = $instance;
     $this->_ini['db']['db_user'] = $user;
     $this->_ini['db']['db_pass'] = $passwd;
+    $this->_ini['db']['db_persistent'] = $persist;
     // insure db connection isn't cached
     $GLOBALS['dbConnection'] = null;
     return $this->_verify_db_connection();
@@ -1229,11 +1257,10 @@ class ZenTargets {
     print "- Checking database connection\n";
     // set up the params
     $db = $this->_ini['db'];
-    print "   Connecting to {$db['db_type']}//{$db['db_user']}@{$db['db_host']}:{$db['db_instance']}\n";
     // establish and test connection
     $GLOBALS['dbConnection'] = null;  //delete any cached connection
     $dbc = $this->getDbConnection();
-    return $dbc->isConnected();
+    return $dbc && $dbc->isConnected();
   }
 
   /** 
@@ -1250,7 +1277,7 @@ class ZenTargets {
     }
     include_once("$dir/adodb/adodb.inc.php");
     $GLOBALS['zen'] = $this->_ini;
-    return Zen::getDbConnection();    
+    return Zen::getDbConnection();
   }
 
   /**
@@ -1263,6 +1290,11 @@ class ZenTargets {
    * @return boolean
    */
   function _create_database( $dataDirectory ) {
+    if( !$this->_verify_db_connection() ) {
+      $this->_printerr("_create_database", "Could not connect to database");
+      return false;
+    }
+
     // backup first, supress all errors (there may not even be a db to backup)
     $this->_backup_database(null, true);
 
@@ -1274,7 +1306,7 @@ class ZenTargets {
     print "   {$res[1]} of {$res[0]} tables created successfully\n";
     if( $res[0] != $res[1] ) {
       $diff = $res[0] - $res[1];
-      $this->_printerr("_drop_database", "Create error: $diff statements failed");
+      $this->_printerr("_create_database", "Create error: $diff statements failed");
       return false;
     }
     return true;
@@ -1292,14 +1324,14 @@ class ZenTargets {
     else { $tables = null; }
 
     // backup schema and data
-    if( !$this->_backup_database($table, true) ) {
+    if( !$this->_backup_database($tables, true) ) {
       $this->_printerr("_drop_database", "Unable to backup db tables, aborting");
       return false;
     }
 
     // confirm before dropping
     $msg = "This will destroy any existing data(it will be backed up first), continue?";
-    if( $this->_confirm($msg, array('y','n'), 'n') != 'y' ) {
+    if( $this->_confirm($msg, array('y','n'), 'y') != 'y' ) {
       print "   Cancelled\n";
       return false;
     }
@@ -1341,7 +1373,7 @@ class ZenTargets {
     }
 
     // backup existing data
-    if( !$this->_backup_database(null) ) {
+    if( !$this->_backup_database() ) {
       return false;
     }
 
@@ -1471,7 +1503,7 @@ class ZenTargets {
   }
 
   /**
-   * Prints the zen.php file header when a target is run
+   * Prints the install.php file header when a target is run
    *
    * @access private
    */
@@ -1788,6 +1820,9 @@ class ZenTargets {
 
   /** @var string the setup directory */
   var $_installdir;
+
+  /** @var string compression type: null-do not zip, zip-use zip compression, gzip-use gzip compression */
+  var $_compress = null;
 
 }
 

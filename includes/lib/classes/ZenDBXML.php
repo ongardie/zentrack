@@ -30,7 +30,7 @@ class ZenDBXML {
    *
    * @param string $ouptut is directory to output xml data to
    * @param mixed $table [optional] (string)table or (array)tables to dump, otherwise all
-   * @param string $compress compression type (null, gzip or zip)
+   * @param string $compress set compression type (null-none, gzip, zip)
    * @return array [0]files attempted, [1]files successfully dumped
    */
   function dumpDatabaseData( $output, $table = null, $compress = null ) { 
@@ -38,22 +38,37 @@ class ZenDBXML {
     else { $tables = $this->_schema->listTables(); }
     $results = array(0,0);
     foreach( $tables as $t ) {
+      $table = $this->_schema->getTableArray($t);
+      $t = strtolower($t);
+      // do not query abstract tables
+      if( $table['is_abstract'] ) { continue; }
+
+      $rows = Zen::simpleQuery($t);
+      if( !count($rows) ) {
+        ZenUtils::safeDebug($this, 'dumpDatabaseData', "$t contains no data, skipped", 0, LVL_INFO);
+        continue;
+      }
+      else {
+        ZenUtils::safeDebug($this, 'dumpDatabaseData', "$t: backing up ".count($rows)." rows of data", 0, LVL_INFO);
+      }
+
       $results[0]++;
       $text = "<dataDump>\n";
       $file = $output."/$t.xml";
-      $rows = Zen::simpleQuery($t);
       foreach($rows as $r) {
-        $text .= "\t<dataRow>\n";
+        $text .= "  <dataRow>\n";
         foreach($r as $col=>$val) {
-          $text .= "\t\t<$col>".htmlspecialchars($val)."</$col>\n";
+          $text .= "    <$col>".htmlspecialchars($val)."</$col>\n";
         }
-        $text .= "\t</dataRow>\n";
+        $text .= "  </dataRow>\n";
       }
       $text .= "</dataDump>\n";
-      if( !$this->_dumpToFile($output, $text, $compress) ) {
+      if( !$this->_dumpToFile($file, $text, $compress) ) {
         ZenUtils::safeDebug($this, 'dumpDatabaseData', "Unable to dump $t!", 220, LVL_ERROR);
       }
-      else { $results[1]++; }
+      else { 
+        $results[1]++; 
+      }
     }
     return $results;
   }
@@ -61,14 +76,17 @@ class ZenDBXML {
   /**
    * Loads xml data into database.  This will load all files in the source
    * directory ending with .xml or .gz, but not the database.xml file 
-   * (this is the schema file)
+   * (this is the schema file).
+   *
+   * <p>Note that this function will also update the counters for each table
+   * that it loads data into so that they will be current with the new rowids.
    *
    * @param string $dir is the source directory where xml dump is stored
-   * @param string $table if provided, then only this table will be loaded
+   * @param array $tables if provided, then these tables will be loaded
    * @param boolean $drop if true, drops data from table before loading new data
    * @return array [0]tables attempted, [1]tables successfully loaded
    */
-  function loadDatabaseData( $dir, $table = null, $drop = true ) {
+  function loadDatabaseData( $dir, $tables = null, $drop = true ) {
     $nums = array(0,0);
     $dh = opendir($dir);
     if( !$dh ) { 
@@ -77,7 +95,7 @@ class ZenDBXML {
     }
     $files = array();
     while( ($file = readdir($dh)) == true ) {
-      if( !strpos($file, '.') === 0 && $file != 'database.xml' && preg_match('/\.(gz|xml)$/', $file) ) {
+      if( !strpos($file, '.') === 0 && $file != 'database.xml' && preg_match('/\.(zip|gz|xml)$/', $file) ) {
         $files[] = $file;
       }
       else if( !strpos($file, '.')===0 ) {
@@ -85,22 +103,54 @@ class ZenDBXML {
                             25, LVL_WARN);
       }
     }
+    if( $tables ) {
+      $newfiles = array();
+      foreach($files as $f) {
+        $n = preg_replace('/[.][a-zA-Z0-9]+$/', '', $f);
+        if( in_array($n, $tables) ) {
+          $newfiles[] = $f;
+        }
+      }
+      $files = $newfiles;
+    }
     $nums[0] = count($files);
+    $max_ids = array();
     foreach($files as $f) {
       $rows = $this->_loadDataFromXML("$dir/$file");
       $table = substr($f, 0, strpos($f, '.'));
+      $this->msg("L $table");
       if( $rows ) {
         $count = 0;
         $row = 1;
         foreach($rows as $r) {
-          if( !Zen::simpleInsert($table, $r) ) {
+          $newid = Zen::simpleInsert($table, $r);
+          if( !$newid ) {
             ZenUtils::safeDebug($this, 'loadDatabaseData', 
                                 "Insert $row of ".count($rows)." failed for table $table", 
                                 26, LVL_ERROR);
           }
-          else { $count++; }
+          else { 
+            if( !isset($max_ids[$table]) || $newid > $max_ids[$table] ) {
+              $max_ids[$table] = $newid;
+            }
+            $count++; 
+          }
         }
         if( $count == count($rows) ) { $nums[1]++; }
+      }
+    }
+    // update the table_ids so that we don't run into a calamity
+    // when an attempt is made to do an insert in the future
+    foreach($max_ids as $table=>$max) {
+      $curr = $this->_dbobj->generateID($table);
+      if( $curr <= $max_ids ) {
+        $update = "UPDATE ".$this->_dbobj->makeTableName('TABLE_IDS')
+          ." SET current_id = current_id + 1 where name_of_table = '$table'";
+        if( !$this->_dbobj->execute($update) ) {
+          ZenUtils::safeDebug($this, 'loadDatabaseData', 
+                              "Unable to update primary key value for table $table", 
+                              200, LVL_WARN);
+        }
       }
     }
     return $nums;
@@ -118,7 +168,10 @@ class ZenDBXML {
     foreach($tables as $t) {
       $query = Zen::getNewQuery();
       $query->table($t);
-      if( $query->delete() ) { $nums[1]++; }
+      if( $query->delete() ) { 
+        $nums[1]++; 
+        $this->msg("T $t");
+      }
       else { 
         ZenUtils::safeDebug($this, 'deleteDatabaseData',
                             "Could not truncate $t", 220, LVL_ERROR);
@@ -150,7 +203,10 @@ class ZenDBXML {
         if( !$this->_dbobj->execute($sql) ) {
           ZenUtils::safeDebug($this, 'createDbSchema', 
                               "Table $name not dropped(probably ok)", 00, LVL_NOTE);           
-        }        
+        }
+        else {
+          $this->msg("D $dbt dropped");
+        }
       }
 
       // assign abstract fields and create
@@ -162,18 +218,29 @@ class ZenDBXML {
           }
         }
       }
-      $sql = $this->_dbTypeInfo->addTableSyntax($dbt, $table['fields'], 
-                                                ($table['has_transactions'] == true));
-      if( $this->_dbobj->execute($sql) ) {
+
+      $sql_stmts = $this->_dbTypeInfo->addTableSyntax($dbt, $table['fields'], 
+                                                      ($table['has_transactions'] == true));
+      if( $this->_dbobj->execute($sql_stmts[0]) ) {
+        $this->msg("C $dbt created");
+        // run special sql associated with table
+        // (may create sequences, indexes, or primary
+        // keys)
+        for($i=1; $i<count($sql_stmts); $i++) {
+          if( !$this->_dbobj->execute($sql_stmts[$i]) ) {
+            ZenUtils::safeDebug($this, 'createDbSchema', "Unable to create special table param: $sql", 
+                                220, LVL_ERROR);
+          }
+        }
         // create indices for table
         $indices = $this->_schema->getMergedIndices($name);
-        if( $indices ) {
+        if( count($indices) ) {
           foreach($indices as $index=>$columns) {
             $sql = $this->_dbTypeInfo->addIndexSyntax($index, $dbt, $columns, false);
             if( !$this->_dbobj->execute($sql) ) {
               ZenUtils::safeDebug($this, 'createDbSchema', 
-                                  "Unable to create index: $index", 220, LVL_ERROR); 
-            }            
+                                  "Unable to create index: $index", 220, LVL_WARN); 
+            }
           }
         }
         $num[1]++;
@@ -195,8 +262,9 @@ class ZenDBXML {
   function dropDbSchema( $tables = null ) {
     $num = array(0,0);
     if( $tables ) { $tables = is_array($tables)? $tables : array($tables); }
-    else { $tables = $this->_schema->getAllTables(); }
-    foreach($tables as $name=>$table) {
+    else { $tables = $this->_schema->listTables(); }
+    foreach($tables as $name) {
+      $table = $this->_schema->getTableArray($name);
       if( $table['is_abstract'] ) { continue; } // skip abstract tables
       $num[0]++;
       $dbt = $this->_dbobj->makeTableName($name);
@@ -205,7 +273,10 @@ class ZenDBXML {
         ZenUtils::safeDebug($this, 'dropDbSchema', 
                             "Unable to drop table: $name", 220, LVL_ERROR);
       }
-      else { $num[1]++; }
+      else { 
+        $this->msg("D $dbt");
+        $num[1]++; 
+      }
     }
     return $num;
   }
@@ -247,7 +318,10 @@ class ZenDBXML {
         ZenUtils::safeDebug($this, 'updateDbSchema', "{$u['action']}->{$u['table']} failed: $sql", 
                             220, LVL_ERROR);
       }
-      else { $res[1]++; }
+      else { 
+        $this->msg("U {$u['action']}->{$u['table']}");
+        $res[1]++; 
+      }
     }
     return $res;
   }
@@ -401,6 +475,12 @@ class ZenDBXML {
       }
       $file = join('',gzfile($file));
     }
+    else if( preg_match('/.zip$', $file) ) {
+      die("zip format not implemented!");
+      //todo
+      //todo
+      //todo
+    }
 
     // parse xml data
     $parser = new ZenXMLParser();
@@ -419,6 +499,11 @@ class ZenDBXML {
       }
     }
 
+    //todo
+    //todo undo htmlentities
+    //todo
+    //todo
+
     // return vals
     return $rows;
   }
@@ -428,24 +513,56 @@ class ZenDBXML {
    *
    * @param string $file the output file
    * @param string $data is the data to write to file
-   * @param boolean $compress compress output files (if available)
+   * @param string $compress null-do not compress, zip-zip compression, gzip-gzip compression
    * @param boolean $append if true, data is appended, otherwise file is overwritten
    */
   function _dumpToFile( $file, $data, $compress, $append = false ) {
-    if( !@file_exists($file) ) { return false; }
-    if( $compress ) {
+    $dir = dirname($file);
+    if( !@is_dir($dir) ) { 
+      ZenUtils::safeDebug($this, '_dumpToFile', "Invalid directory: $dir", 22, LVL_WARN);
+      return false; 
+    }
+    // strip off leading . for users like me who try to put the extension
+    if( $compress ) { $compress = str_replace('.','',$compress); }
+    // read gz compression
+    if( $compress == 'gzip' ) {
+      //todo
+      //todo add zip compression
+      //todo
+      //todo
       $gz = function_exists('gzopen');
       if( !$gz ) {
         ZenUtils::safeDebug($this, '_dumpToFile', 
                             "Looks like ZLib isn't compiled into php, unable to compress file",
-                            22, LVL_WARN);
+                            22, LVL_INFO);
       }
     }
-    $fp = $gz? gzopen($file, ($append? 'a9' : 'w9')) : fopen($file, ($append? 'a' : 'w'));
-    if( !$fp ) { return false; }
+    else if( $compress == 'zip' ) {
+      die("zip compression not implemented");
+      //todo
+      //todo
+      //todo
+      //todo
+    }
+    $fp = $gz? gzopen($file.".gz", ($append? 'a9' : 'w9')) : fopen($file, ($append? 'a' : 'w'));
+    if( !$fp ) { 
+      ZenUtils::safeDebug($this, '_dumpToFile', "Couldn't open file pointer: $file", 22, LVL_WARN);
+      return false; 
+    }
     fputs($fp, $data);
     fclose($fp);
+    $this->msg("B $file".($gz? ".gz":''));
     return true;
+  }
+
+  /**
+   * Since we will use this method mainly with the install script, wrap debug output and print
+   * in a special format for use by install prog
+   */
+  function msg( $txt ) {
+    if( $GLOBALS['installMode'] > 0 ) {
+      print "   $txt\n";
+    }
   }
 
   /* VARIABLES */

@@ -69,7 +69,7 @@ class Zen {
       if( !isset($_SESSION['cache']['common_settings']) ) {
         $query = Zen::getNewQuery();
         $query->table("SETTING");
-        $query->match("set_category", "common", ZEN_EQ);
+        $query->match("set_category", ZEN_EQ, "common");
         $vars = $query->select(0, true);
         $_SESSION['cache']['common_settings'] = ZenUtils::keySet($vars, "set_name", "set_value");
       }
@@ -143,7 +143,7 @@ class Zen {
   function simpleQuery($table, $field = null, $value = null, $sort = null) {
     $query = Zen::getNewQuery();
     $query->table($table);
-    if( $field ) { $query->match($field,$value); }
+    if( $field ) { $query->match($field,$value,ZEN_EQ); }
     if( $sort ) { $query->sort($sort); }
     return $query->select(Zen::getCacheTime(), true);
   }

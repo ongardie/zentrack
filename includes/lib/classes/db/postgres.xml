@@ -23,6 +23,7 @@
 
 
   <sqlInfo>
+    <now>UNIX_TIMESTAMP(NOW())</now>
     <endline>;</endline>
     <escapechar>\</escapechar>
     <create>CREATE TABLE %table% (%columns%)</create>
@@ -32,7 +33,7 @@
       CREATE INDEX %unique% %name% ON %table%(%columns%)
     </index>
     <dropindex></dropindex>
-    <tablecolumn uniquelabel="" notnull="NOT NULL">%name% %datatype% %attr% </tablecolumn>
+    <tablecolumn uniquelabel="UNIQUE" notnull="NOT NULL" default="DEFAULT %default">%name% %datatype% %attr% </tablecolumn>
     <addcolumn>ALTER TABLE %table% ADD COLUMN %def%</addcolumn>
     <dropColumn>ALTER TABLE %table% DROP COLUMN %name%</dropColumn>
     <delete>DELETE FROM %table% %where%</delete>
