@@ -1,0 +1,614 @@
+<? /* -*- Mode: C; c-basic-indent: 3; indent-tabs-mode: nil -*- ex: set tabstop=3 expandtab: */ 
+
+/** @package setup */
+
+class ZenTargets {
+
+  /**
+   * CONSTRUCTOR - loads config data files
+   */
+  function ZenTargets() {
+    $this->_dirs = $this->_parseConfigData("directories");
+    $this->_configFiles = $this->_parseConfigData("configFiles");
+  }
+
+  /**
+   * takes arguments and parses
+   *
+   * The arguments contain the following format
+   *   zen.php [--ini_file=zen.ini] -target arg1 arg2 arg3
+   *
+   * @param array $args is the user provided arguments
+   * @return boolean arguments were valid
+   */
+  function args( $args ) {
+    $this->_targets = array();
+    $ini = "zen.ini";
+    $n = "";    
+    foreach($args as $a) {
+      if( preg_match("/--ini_file=([^ ]+)/", $a, $matches) ) {
+	$ini = $matches[1];
+      }
+      else if( preg_match("/^-([^ ]+)/", $a, $matches) ) {
+	$n = $matches[1];
+	if( !method_exists($this, "_$n") ) {
+	  print "Invalid method ($n) specified, exiting.";
+	  return false;
+	}
+	$this->_targets[$n] = array();
+      }
+      else {
+	if( $n == "" ) {
+	  print "A valid target must be specified before providing params, exiting.";
+	  return false;
+	}
+	$this->_targets[$n][] = $this->_parseArg($a);
+      }      
+    }
+    if( !file_exists($ini) ) {
+      print "The ini file ($matches[1]) was not found or not readable, exiting.";
+      return false;
+    }
+    $this->_ini = Zen::read_ini($ini);
+    return true;
+  }
+
+  /**
+   * Parses an argument
+   *
+   * @param string $arg
+   * @return mixed parsed result
+   */
+  function _parseArg( $arg ) {
+    if( $arg == "true" ) {
+      return true;
+    }
+    else if( $arg == "false" ) {
+      return false;
+    }
+    else if( preg_match("/^[0-9]+$/", $a) ) {
+      return intval($a);
+    }
+    else if( $arg == "null" ) {
+      return null;
+    }
+    else {
+      return $a;
+    }
+  }
+
+  /**
+   * Validates and executes each target
+   *
+   * @return boolean all targets succeeded
+   */
+  function run() {
+    $this->_printHeading();
+    if( !count($this->_targets) ) {
+      print "\nNo targets found.  Exiting.";
+      return false;
+    }
+    foreach( $this->_targets as $target => $tmp ) {
+      $u = strtoupper( $target );
+      if( $this->_target( $target ) ) {
+	print "$u completed\n\n";
+      }
+      else {
+	$this->_printerr("run", "$u failed.\n");
+	return false;
+      }
+    }
+    return true;
+  }
+
+  /**
+   * Runs a target (if valid)
+   *
+   * @param string $target name of the target to run
+   * @return boolean target succeeded
+   */
+  function _target( $target ) {
+    $t = &$this->_targets;
+    $u = strtoupper($target);
+    print "Initiating $u...\n";
+
+    switch($target) {
+    case "backup_all":      return $this->_backup_all();
+    case "backup_config":   return $this->_backup_config();
+    case "backup_database": return $this->_backup_database();
+    case "check_directories":
+      {
+        $d = ( count($t[$target])>0 && $t[$target][0] )? $t[$target][0] : null;
+        return $this->_check_directories;
+      }
+    case "copy_class_files":
+      {
+	$d = ( count($t[$target])>0 && $t[$target][0] )? $t[$target][0] : null;
+	return $this->_copy_class_files($d);
+      }
+    case "copy_config_files":
+      {
+	$b = ( count($t[$target])>0 && is_bool($t[$target][0]) )? $t[$target][0] : false;
+	return $this->_copy_config_files($b);
+      }
+    case "cvs_update":      return $this->_cvs_update();
+    case "full_install":    return $this->_full_install();
+    case "merge_ini_file": 
+      {
+        if( !$this->_ini['debug']['develop_mode'] == "true" ) {
+          $this->_printerr("_target", "$u is only for use during development");
+          return false;
+        }
+        $b = ( count($t[$target])>0 && is_bool($t[$target][0]) )? $t[$target][0] : false;
+        return $this->_merge_ini_file($b);
+      }
+    case "prepare_install_files":
+      {
+        $d1 = $t[$target][0];
+        $d2 = $t[$target][1];
+        return $this->_prepare_install_files( $d1, $d2 );
+      }
+    case "verify_db_connection":
+      {
+	if( count($t[$target]) < 4 ) {
+	  print "\n$u requires four parameters: host instance user password, exiting\n";
+	  return false;
+	}
+	return $this->_verify_db_connection($t[$target][0], $t[$target][1], $t[$target][2], $t[$target][3]);
+      }
+    default:
+      {
+	print "\n$u was invalid: ignored\n";
+	return false;
+      }
+    }
+  }
+
+  function _printHeading() {
+    print join("",file("setup/headingInfo"));
+  }
+
+
+  /***********************************************
+   ****   TARGETS
+   **********************************************/
+
+  /**
+   * Backs up all config files, attachments, database content, and other relative info
+   */
+  function _backup_all() {
+    $success = true;
+    // backup config
+    if( !$this->_backupConfig() ) { $success = false; }
+
+    // backup attachments
+    if( !$this->_backupAttachments() ) { $success = false; }
+
+    // backup database
+    if( !$this->_backupDatabase() ) { $success = false; }
+
+    return $success;
+  }
+
+  /**
+   * Back up all configuration files
+   *
+   * @return boolean all backups successful
+   */
+  function _backup_config() {
+    $success = true;
+    $dest = $this->_ini['directories']['dir_backups']."/config";
+    print "- Backing up config files to $dest\n";
+    foreach( $this->_configFiles as $c) {
+      // set up destination
+      if ($c[0] == "includes")
+        $dir = $this->_ini['paths']['path_includes'];
+      else
+        $dir = $this->_ini['paths']['path_www'];
+
+      // check for file
+      if( !file_exits("$dir/$c[2]") ) {
+        print "    $dir/$c[2] not found: skipped";
+        continue;
+      }
+
+      // copy file
+      print "   $c[2]\n";      
+      if( !copy( "$dir/$c[2]", "$dest/$c[2]".date("Y-m-d-h-m") ) ) {
+        $this->_printerr("_backup_config", "Copy of $c[2] failed");
+        $success = false;
+      }      
+    }
+    return $success;
+  }
+
+  /**
+   * Back up database files
+   */
+  function _backup_database() {
+    print "- Backing up database contents\n";
+    
+  }
+
+  /**
+   * Back up attachments
+   */
+  function _backup_attachments() {
+    print "- Backing up attachments\n";
+    $success = true;
+    // create the backup directory
+    $src = $this->_ini['directories']['dir_attachments'];
+    $dest = $this->_ini['directories']['dir_backups']."/attachments/".date("Y-m-d-h-m");
+    if( !is_dir($dest) ) {
+      if( !mkdir($dest) ) {
+        $this->_printerr("_backup_attachments", "Unable to create $dest");
+        return false;
+      }
+      chmod( $dest, 0700 );
+    }
+    // load the files
+    $dh = opendir( $src );
+    if( !dh ) {
+      $this->_printerr("_backup_attachments", "Could not open attachments directory: $src");
+      return false;
+    }
+    while( ($file = readdir($dh)) == true ) {
+      if( !strpos($file, ".") === 0 ) {
+        print "   copying $file\n";
+        if( !copy( "$src/$file", "$dest/$file" ) ) {
+          $this->_printerr("_backup_attachments", "Failed to copy $file");
+          $success = false;
+        }
+      }
+    }    
+    return $success;
+  }
+
+  /**
+   * Check directory structures and create any missing directories
+   *
+   * @param boolean $create create any if missing
+   * @return boolean structure is validated
+   */
+  function _check_directories( $create = true ) {
+    $success = true;
+
+    // check the includes root folder
+    if( !is_dir( $this->_ini['paths']['path_includes'] ) ) {
+      $this->_printerr("The includes directory is missing: "+$this->_ini['paths']['path_includes']);
+      return false;
+    }
+
+    // check the www root folder
+    if( !is_dir( $this->_ini['paths']['path_www'] ) ) {
+      $this->_printerr("_check_directories", "The www directory is missing: "+$this->_ini['paths']['path_www']);
+      return false;
+    }
+
+    // check the dynamic directories created by system
+    foreach($this->_dirs as $d) {
+      $dir = ($d[0] == includes)? 
+        $this->_ini['paths']['path_includes']."/".$d[1] : $this->_ini['paths']['path_www']."/".$d[1];
+      if( !is_dir($dir) && !$create ) {
+        $this->_printerr("_check_directories", "A system directory is missing: $dir\n");
+        $success = false;                      
+      }
+      else if( !is_dir($dir) ) {
+        if( !mkdir( $dir, decoct($d[2]) ) ) {
+          $this->_printerr("_check_directories", "Failed to create system directory: $dir\n");
+          $success = false;
+        }
+      }
+      else {
+        if( !chmod( $dir, decoct($d[2]) ) ) {
+          $this->_printerr("_check_directories", "Unable to set permissions on directory: $dir ($d[2])");
+          $success = false;
+        }
+      }
+
+    }
+
+    // check the standard directories
+    foreach( $this->_ini['directories'] as $d ) {
+      if( !dir_exists($d) ) {
+        $this->_printerr("_check_directories", "A system directory is missing: $dir\n");
+        $success = false;
+      }
+    }
+    
+    return $success;
+  }
+
+  /**
+   * Copies required zen classes to the install directory (for installation packages and cvs setups)
+   *
+   * @param string $dir is the diretory to copy class files from (optional)
+   * @return boolean found and copied
+   */
+  function _copy_class_files( $dir = null ) {
+    print "- Copying class files to setup/\n";
+    if( !$dir && is_dir( $this->_ini['directories']['dir_classes'] ) ) {
+      $dir = $this->_ini['directories']['dir_classes'];
+    }
+    else if( !$dir && is_dir("../includes/lib/classes") ) {
+      $dir = "../includes/lib/classes";
+    }
+    if( !$dir ) {
+      $this->_printerr("_copy_class_files", "Cannot find class files for copy");
+      return false;
+    }    
+    $success = true;
+    $files = $this->_parseConfigData("classFiles");
+    foreach($files as $f) {
+      $fn = $f[0];
+      print "   $dir/$fn\n";
+      if( !copy("$dir/$fn", "setup/$fn") ) {
+        $success = false;
+      }
+    }
+    return $success;
+  }
+
+  /**
+   * Copies config files to the appropriate locations
+   *
+   * @param boolean $overwrite if set to true, overwrites existing config files (backed up)
+   * @return boolean success
+   */
+  function _copy_config_files( $overwrite = false ) {    
+    print "- Copying new config files\n";
+    $success = true;
+    $bulk = Zen::flatten_array($this->_ini); //get a single-dimension array from ini vals
+    foreach( $this->_configFiles as $c) {
+      // set up destination
+      if ($c[0] == "includes")
+        $dir = $this->_ini['paths']['path_includes'];
+      else
+        $dir = $this->_ini['paths']['path_www'];
+
+      // get file locations
+      $source = $c[3]? "defaults/".$c[2].".template" : "defaults/".$c[2];
+      $dest = $dir."/".$c[2];
+
+      // check overwrite
+      if( $overwrite || !file_exists($dest) ) {
+        if( !$c[3] ) {
+          if( !copy( $source, $dest ) ) {
+            $this->_printerr("_copy_config_files", "Failed to copy config: $dest");
+            $success = false;
+          }
+        }
+        else {
+          // parse templates
+          $template = new ZenTemplate( $source );
+          $template->values($bulk);
+          $txt = $template->process();
+          $fp = fopen($dest, "w");
+          if( !fputs($fp, $txt) ) {
+            $this->_printerr("_copy_config_files", "Failed to copy config: $dest");
+            $success = false;
+          }
+          fclose($fp);
+        }
+          
+        // set permissions
+        if( !chmod( $dest, decoct($c[4]) ) ) {
+          $this->_printerr("_copy_config_files", "Set permissions failed: $dest");
+        }
+      }
+      else {
+          print "   $dest exists: skipping(overwrite = false)\n";
+      }
+    }
+    // update the last_config_update counter
+    touch( $this->_ini['directories']['cache']."/last_config_update" );
+    return $success;
+  }
+
+  /**
+   * Merges the values from the setup/zen.ini and the contents setup/zen.ini.template to create a new
+   * ini file.  This prevents the need to modify both the zen.ini and zen.ini.template files for each
+   * new modification.  Any settings without values will be left empty for you to fill in.
+   *
+   * @param boolean $overwrite specifies whether the ini file should be overwritten if one is encountered
+   * @return boolean succeeded
+   */
+  function _merge_ini_file( $overwrite = false ) {
+    print "- Merging ini files\n";
+    // check for overwrite
+    if( $overwrite || !file_exists("zen.ini") ) {
+      // make a backup if file exists
+      if( $overwrite && file_exists("zen.ini") ) {
+        print "   zen.ini found, creating backup\n";
+        copy("zen.ini", "zen.ini.".date("Y-m-d-h-m"));
+      }
+
+      // read the .ini file
+      print "   reading default values from setup/zen.ini\n";
+      $bulk = Zen::flatten_array( Zen::read_ini( "defaults/zen.ini", false ) );
+
+      // parse ini.template
+      print "   merging into template file\n";
+      $template = new ZenTemplate( "defaults/zen.ini.template" );
+      $template->values($bulk);
+      $txt = $template->process();
+      $fp = fopen($dest, "w");
+      if( !fputs($fp, $txt) ) {
+        $this->_printerr("_merge_ini_file", "Failed to create merged ini file");
+        $success = false;
+      }
+      fclose($fp);
+      return true;
+    }
+    else {
+      $this->_printerr("_merge_ini_file", "Cannot overwrite existing zen.ini file.  (-merge_ini_file true to override)"); 
+      return false;
+    }
+  }
+
+  /**
+   * Updates the directory structure and information from a cvs download
+   * 
+   * @param boolean $overwrite overwrite config files with new versions (default true)
+   * @return boolean success
+   */
+  function _cvs_update( $overwrite = true ) {
+    $success = true;
+
+    // copy the class files
+    if( !$this->_copy_class_files() )
+      $success = false;
+
+    // test directory structures and permissions
+    if( !$this->_check_directories( true ) )
+      return false;
+    
+    // copy zen.ini file (backup before edits)
+    
+
+    // copy config files (backup before edits)
+
+    // delete cache data and touch cache/last_config_update??
+
+
+    // drop copy of current includes/lib/classes/Zen.class, ZenDatabase.class, ZenXMLParser.class into install/setup
+
+    return $success;
+  }
+
+  /**
+   * Performs a complete installation
+   *
+   * @return boolean success
+   */
+  function _full_install( ) {
+    // test directory structures
+    
+    // check db connections
+
+    // copy config files
+
+    // create database schema
+
+    // delete cache data and touch cache/last_config_update
+
+  }
+  
+  /**
+   * Parses a setup data file and sets results
+   *
+   * @param string $filename
+   * @return boolean loaded successfully
+   */
+  function _parseConfigData( $filename ) {
+    if( !file_exists("setup/$filename") ) {
+      print "ERROR: setup/$filename could not be loaded.  Setup will not run correctly!";
+      return false;
+    }
+    $vals = array();
+    $contents = file("setup/$filename");
+    foreach($contents as $c) {
+      $c = trim($c);
+      if( strlen($c) && strpos($c, "#") !== 0 ) {
+	$vals[] = explode(":", $c);
+      }
+    }
+    return $vals;
+  }
+
+  /**
+   * Prepares installation package to upload to sourceforge
+   *
+   * This will DESTROY a build if you run this on a working directory
+   * Only run this on a copy of your build, as it will take the directory
+   * and make it an "install build" before zipping and tarring
+   *
+   * @param string $src is the source directory to mutilate and prepare for install
+   * @param string $dest is the name of the zip/tar files to create
+   * @return boolean succeeded
+   */
+  function _prepare_install_files( $src, $dest ) {
+    // copy defaults/zen.ini to install directory, set develop_mode = false
+
+    // copy class files
+    
+    // remove includes/cache
+
+    // remove includes/config
+
+    // remove www/header.php
+
+    // tar and package a .tar.gz and a .zip file
+
+  }
+
+  /**
+   * Performs an upgrade from a previous version
+   *
+   * @param string $version is the previous version we are updating from
+   */
+  function _upgrade( $version ) {
+    // test directory structures
+
+    // check db connections
+
+    // check config files
+
+    // create database schema
+
+    // delete cache data and touch cache/last_config_update
+
+  }
+
+  /**
+   * Validates proper directory structure in place to load files
+   *
+   * @param boolean $create create any directories which are missing
+   * @return boolean success
+   */
+  function _validate_directories( $create = true ) {
+
+  }
+
+  /**
+   * Verifies database connectivity
+   *
+   * @return boolean success
+   */
+  function _verify_db_connection( $host, $instance, $user, $passwd ) {
+
+  }
+
+  /**
+   * Prints an error message
+   *
+   * @param string $method is the method where error occurred
+   * @param string $msg is the error to print
+   */
+  function _printerr( $method, $msg ) {
+    print "<<<ERROR>>> $msg\n";
+  }
+
+  /***********************************
+   ****  VARIABLES
+   **********************************/
+
+
+  /** @var array $_configFiles is a list of config files to copy, locations, and permissions */
+  var $_configFiles;
+
+  /** @var array $_dirs is a list of required directories */
+  var $_dirs;
+
+  /** @var array $_args is the arguments provided by user at command line */
+  var $_args;
+
+  /** @var array $_targets is a key-value pair of targets(keys) and their params(values) */
+  var $_targets;
+
+  /** @var string $_ini is the parsed contents of the specified ini file for use */
+  var $_ini;
+
+}
+
+?>

@@ -198,7 +198,7 @@ class ZenXNode {
    * @return array containing node and all children
    */
   function toArray() {
-    $vals = array("name"=>$this->getName(),"properties"=>$this->getProps());
+    $vals = array("name"=>$this->getName(),"properties"=>$this->getProps(),"data"=>$this->getData());
     $vals["children"] = array();
     foreach($this->getChildren() as $k=>$v) {
       if( is_array($v) ) {

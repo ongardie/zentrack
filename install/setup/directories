@@ -1,0 +1,25 @@
+
+#################################
+### Directories created by system
+#################################
+
+# cach directories
+
+includes:cache:766
+includes:cache/db:766
+includes:cache/config:766
+includes:cache/translations:766
+includes:cache/attachments:766
+
+# config directories
+
+includes:config:644
+includes:config/setup:644
+includes:config/defaults:444
+
+# backups
+
+includes:backups:700
+includes:backups/config:700
+includes:backups/db:700
+includes:backups:attachments:700

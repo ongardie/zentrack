@@ -6,18 +6,24 @@
   // set the zen variable
   if( !isset($_SESSION['zen']) ) { $_SESSION['zen'] = null; }
 
-  // set up the static data
-  if( !isset($_SESSION['data_types']) ) {
-    foreach($global_data_types as $t) {
-      $_SESSION['data_types'][$t] = array();
-    }
-  }
+  // set the config update time
+  if( !isset($_SESSION['configLastUpdated']) )
+    $_SESSION['configLastUpdated'] = 0;
+
+  // store session cache information
+  function clearZenSessionCache() {
+    $_SESSION['cache'] = array();
     
-  // store the common system settings that will be used
-  // by most every page
-  if( !isset($_SESSION['common_settings']) ) {
-    $_SESSION['common_settings'] = null;
+    // set up the type data
+    $_SESSION['cache']['data_types'] = null;
+    
+    // store the common settings used by most pages
+    $_SESSION['cache']['common_settings'] = null;    
+    
+    // store the MessageListConfig (parsed from debug.xml)
+    $_SESSION['cache']['MessageListConfig'] = null;
   }
+  if( !isset($_SESSION['cache']) || $_SESSION['cache'] == null ) clearZenSessionCache();
 
   // set up the login data
   if( !isset($_SESSION['login']) ) {

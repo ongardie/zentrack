@@ -13,15 +13,14 @@
   </class>
 
   <format>
-    <label>
-      <![CDATA[<br><span class='error'>Errors Encountered</span>]]>
-    </label>
-    <openblock>
-      <![CDATA[<ul>]]>
-    </openblock>
-    <closeblock>
-      <![CDATA[</ul>]]>
-    </closeblock>
+    <block>
+      <open>
+        <![CDATA[<ul>]]>
+      </open>
+      <close>
+        <![CDATA[</ul>]]>
+      </close>
+    </block>
     <level1>
       <open>
         <![CDATA[<li class='error'>]]>

@@ -191,6 +191,27 @@ class Zen {
    ********************************/
 
   /**
+   * STATIC: Flatten an multi-dimensional associative array to depth of 1
+   *
+   * Note that any variables in sub-arrays will overwrite the base values
+   *
+   * @param array $vals is a multi-dimensional associative array
+   * @return array a single dimension associative array
+   */
+  function flatten_array( $vals ) {
+    $newvals = array();
+    foreach($vals as $key=>$val) {
+      if( is_array($val) ) {
+        $newvals = array_merge($newvals, Zen::flatten_array($val));
+      }
+      else {
+        $newvals[$key] = $val;
+      }
+    }
+    return $newvals;
+  }
+
+  /**
    * Formats a value for display in forms
    *
    * @param String $text
@@ -289,6 +310,31 @@ class Zen {
    */
   function loadDataTypeArray( $type ) {}
 
+  /**
+   * STATIC: Reads a .ini file, replaces occurences of %variable_name% with another value already declared
+   *
+   * Note that variables to be used as replacements MUST ALREADY BE CALLED
+   * Additionally, all properties in the ini file must appear under a section heading
+   * or this will fail miserably.
+   *
+   * @param string $ini_file is the absolute path to the file
+   * @return array parsed ini file contents
+   */
+  function read_ini( $ini_file ) {
+    $data = parse_ini_file( $ini_file, TRUE );
+    $bulk = array();
+    foreach($data as $section=>$vals) {
+      foreach($vals as $key=>$val) {
+        while( preg_match("/\%([a-zA-Z0-9_]+)\%/", $val, $matches) ) {
+          $v = $matches[1];
+          $val = preg_replace("/\%$v\%/", $bulk[$v], $val);
+        }
+        $data[$section][$key] = $val;
+        $bulk[$key] = $data[$section][$key];
+      }
+    }
+    return $data;
+  }
 
   /********************************
    * VARIABLES 

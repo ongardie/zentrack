@@ -22,11 +22,11 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 [paths]
 
-path_includes = "/web/zentrack/includes" ;absolute path to includes directory (not web path)
+path_includes = "{path_includes}" ;absolute path to includes directory (not web path)
 
-path_www = "/web/zentrack/www/zentrack"  ;absolute path to www directory (not web path)
+path_www = "{path_www}"  ;absolute path to www directory (not web path)
 
-url_www = "http://my.site.com/zentrack"       ;browser path to zentrack www directory
+url_www = "{url_www}"       ;browser path to zentrack www directory
 
 
 ;;;;;;;;;;;;;;; DATABASE SETTINGS ;;;;;;;;;;;;;;;;;;;;;;
@@ -38,35 +38,35 @@ url_www = "http://my.site.com/zentrack"       ;browser path to zentrack www dire
 
 ; the type of database
 ; mysql, postgres, oci8 (oracle)
-database_type = "mysql"
+database_type = "{database_type}"
 
 ;domain or ip for database server, sometimes blank is good
-database_host = "localhost"
+database_host = "{database_host}"
 
 ; the table set or instance to use for zentrack
-database_instance = "zentrack" 
+database_instance = "{database_instance}" 
 
 ; username for logging into db
-database_user = "test" 
+database_user = "{database_user}" 
 
 ; password for logging in, sometimes blank for postgres
-database_pass = "test"         
+database_pass = "{database_pass}"
 
 ;the prefix for table names, keep in upper case
-table_prefix = "ZENTRACK_"     
+table_prefix = "{table_prefix}"
 
 ;;;;;;;;;;;;;;;;; PAGE DISPLAY ;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; The properties concerning how pages are displayed
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 [layout]
 
-system_name = "zenTrack"                 ;system name to display
+system_name = "{system_name}"                 ;system name to display
 
-page_title = "zenTrack Tracking System"  ;the default title displayed by browser
+page_title = "{page_title}"  ;the default title displayed by browser
 
-page_prefix = "zenTrack | "              ;the prefix for titles displayed by browser
+page_prefix = "{page_prefix}"              ;the prefix for titles displayed by browser
 
-template = "default"                     ;which layout templates to employ
+template = "{template}"                     ;which layout templates to employ
 
 ;;;;;;;;;;;;;;;;; DEBUGGING OUTPUT ;;;;;;;;;;;;;;;;;;;;;
 ;;; The debug settings are controlled in an xml file
@@ -77,16 +77,16 @@ template = "default"                     ;which layout templates to employ
 [debug]
 
 ; true or false, display messages on screen
-debug_display = true
+debug_display = {debug_display}
 
 ; location of the debug config file
-debug_configfile = debug.xml
+debug_configfile = {debug_configfile}
 
 ; location of log file, blank disables file output
-debug_logfile = debug_log.txt
+debug_logfile = {debug_logfile}
 
 ; set to true if you are developing, this will enable useful notices and such
-develop_mode = false
+develop_mode = {develop_mode}
 
 ;;;;;;;;;;;;;;; ADVANCED SETTINGS ;;;;;;;;;;;;;;;;;;;;;;
 ;;; It's probably best to leave these settings "as is"
@@ -94,15 +94,15 @@ develop_mode = false
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 [directories]
-dir_cache         = "%path_includes%/cache"
-dir_lib           = "%path_includes%/lib"
+dir_cache         = "{dir_cache}"
+dir_lib           = "{dir_lib}"
 
-dir_attachments   = "%dir_cache%/attachments"
-dir_backups       = "%path_includes%/backups"
-dir_classes       = "%dir_lib%/classes"
-dir_config        = "%path_includes%/config"
-dir_logs          = "%path_includes%/logs"
-dir_templates     = "%path_includes%/lib/templates"
+dir_attachments   = "{dir_attachments}"
+dir_backups       = "{dir_backups}"
+dir_classes       = "{dir_classes}"
+dir_config        = "{dir_config}"
+dir_logs          = "{dir_logs}"
+dir_templates     = "{dir_templates}"
 
 [login requirements]
 ; any directories or files entered here will be excluded from login requirements
@@ -113,14 +113,14 @@ dir_templates     = "%path_includes%/lib/templates"
 ;     actions/log.php     the log.php file located in subdirectory actions/
 ;     index.php           the index.php in the root zentrack folder
 ;
-excluded = "help/,styles.php"
+excluded = "{excluded}"
 
 ; any directories or files entered here will be added to login requirements
 ; this, of course, overrides the excluded directive, so that you can say:
 ;    excluded = "help/"
 ;    included = "help/special.php"
 ; (i.e. help/ directory doesn't require login, except the special.php page)
-included = ""
+included = "{included}"
 
 
 

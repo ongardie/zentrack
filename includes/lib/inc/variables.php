@@ -1,50 +1,34 @@
 <?{ /* -*- Mode: C; c-basic-indent: 3; indent-tabs-mode: nil -*- ex: set tabstop=3 expandtab: */ 
 
   // check and set $_GLOBALS['thisurl'] appropriately
+  //todo
 
   // check and set $_GLOBALS['thisfile'] appropriately
+  //todo
 
   // set up the $zen properties
-  $_GLOBALS['zen'] &= $_SESSION['zen'];
-  $zen &= $_GLOBALS['zen']; //for convenience
-
-  // see if $zen was found in the session, otherwise initialize
-  if( $zen == null ) {
-    $zen = parse_ini_file( $ini_file );
-  }
+  $_GLOBALS['zen'] =& $_SESSION['zen'];
+  $zen =& $_GLOBALS['zen']; //for convenience
 
   // set the path variables
-  $libDir = $zen['directories']['lib'];
+  $libDir = $zen['directories']['dir_lib'];
   $includesDir = $zen['paths']['path_includes'];
-  $cacheDir = $zen['directories']['cache'];
-  $templateDir = $zen['directories']['templates']."/".$zen['layout']['template'];
-
+  $cacheDir = $zen['directories']['dir_cache'];
+  $templateDir = $zen['directories']['dir_templates']."/".$zen['layout']['template_set'];
+  $classDir = $zen['directories']['dir_classes'];
   $webDir = $zen['paths']['path_www'];
   $webUrl = $zen['paths']['url_www'];
 
   /**
    * @var array $zen is an array parsed from the php.ini file settings
    */
-  $_GLOBALS['libDir'] = $libDir;
-  $_GLOBALS['includesDir'] = $includesDir;
-  $_GLOBALS['cacheDir'] = $cacheDir;
+
   $_GLOBALS['templateDir'] = $templateDir;
   $_GLOBALS['dbConnection'] = null;
   $_GLOBALS['messageList'] = null;
   $_GLOBALS['webDir'] = $webDir;
   $_GLOBALS['webUrl'] = $webUrl;
-
-  // set the system params
-  $_GLOBALS['data_types'] &= $_SESSION['data_types'];
-  $_GLOBALS['settings'] = array();
-  $_GLOBALS['settings']['common'] &= $_SESSION['common_settings'];
-
-  $_GLOBALS['login'] &= $_SESSION['login'];
-  foreach($global_data_types as $t) {
-    if( !count($_GLOBALS['data_types'][$t]) ) {
-      $_GLOBALS['data_types'][$t] = Zen::loadDataTypeArray($t);
-    }
-  }    
+  $_GLOBALS['configLastUpdated'] =& $_SESSION['configLastUpdated'];
 
   /**
    * @var array $_GLOBALS['cache'] is an array containing various data types which have been loaded for use with static methods
@@ -56,6 +40,19 @@
                              "trigger" => array(),
                              "user"    => array()
                              );
+
+  // session settings (referenced here for convenience)
+  $_GLOBALS['login'] =& $_SESSION['login'];
+  $_GLOBALS['cache']['data_types'] =& $_SESSION['cache']['data_types'];
+  if( $_GLOBALS['cache']['data_types'] == null ) {
+    $_GLOBALS['cache']['data_types'] = array();
+    foreach($global_data_types as $t) {
+      $_GLOBALS['data_types'][$t] = Zen::loadDataTypeArray($t);
+    }
+  }
+  $_GLOBALS['cache']['settings'] = array();
+  $_GLOBALS['cache']['settings']['common'] =& $_SESSION['cache']['common_settings'];
+  $_GLOBALS['cache']['MessageListConfig'] =& $_SESSION['cache']['MessageListConfig'];
 
   // clean up page variables
   $page_title = $zen['layout']['page_title'];

@@ -14,42 +14,58 @@ class ZenMessage extends Zen {
    * @param integer $errnum error number (http://zendocs.phpzen.net/bin/view/Zentrack/ErrorMessages)
    * @param integer $level the level of the message
    */
-  function ZenMessage( $class, $method, $message, $errnum = 0, $level = 3 ) { }
+  function ZenMessage( $class, $method, $message, $errnum = 0, $level = 3 ) { 
+    $this->_class = $class;
+    $this->_method = $method;
+    $this->_message = $message;
+    $this->_errnum = $errnum;
+    $this->_level = $level;
+  }
 
   /**
    * returns the message string, without formatting
    *
    * @return string unformatted message
    */
-  function get() { }
+  function get() { 
+    return $this->_message;
+  }
 
   /**
    * Returns the error number
    *
    * @return int zenError number
    */
-  function getNumber() { }
+  function getNumber() { 
+    return $this->_number;
+  }
 
   /**
    * Returns the error level
    *
    * @return int level of error
    */
-  function getLevel() { }
+  function getLevel() { 
+    return $this->_level;
+  }
 
   /**
    * Returns the class name or script name which produced error
    *
    * @return String class name which produced error
    */
-  function getClass() { }
+  function getClass() { 
+    return $this->_class;
+  }
 
   /**
    * Returns the method or section which produced error
    *
    * @return String method name which produced error
    */
-  function getMethod() { }
+  function getMethod() { 
+    return $this->_method;
+  }
 
   /**
    * Returns true or false based on whether this error is relative to provided params
@@ -60,7 +76,17 @@ class ZenMessage extends Zen {
    * @param int $number is an error number to validate against
    * @return boolean true-is relative, or false-not relative
    */
-  function meets( $level = null, $class = null, $method = null, $number = null ) { }
+  function meets( $level = null, $class = null, $method = null, $number = null ) { 
+    if( $level && $this->getLevel() > $level )
+      return false;
+    if( $class && $this->getClass() != $class )
+      return false;
+    if( $method && $this->getMethod() != $method )
+      return false;
+    if( $number && $this->getNumber() != $number )
+      return false;
+    return true;
+  }
   
 
   /* VARIABLES */
