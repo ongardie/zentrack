@@ -9,6 +9,11 @@
   }
 
   if( !$login_id ) {
+    if( isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW']) ) {
+      // use htaccess authentication
+      $username = $_SERVER['PHP_AUTH_USER'];
+      $passphrase = $_SERVER['PHP_AUTH_PW'];
+    }
     if( isset($username) && $username && isset($passphrase) ) {
       $login_id = $zen->login_user( $username, $passphrase );
       if( $login_id && $zen->demo_mode != "on" 

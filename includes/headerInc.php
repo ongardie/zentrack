@@ -220,6 +220,9 @@
     case "menu":
       $opts = genDataGroupChoices($varfield['field_value']);
       $inp = "<select name='{$key}'{$onblur}>\n";
+      if( !$varfield['is_required'] && (count($opts)!=1 || strlen($opts[0]['field_value'])) ) {
+	print "<option value=''>---</option>\n";
+      }
       foreach($opts as $o) {
         $sel=($o['field_value']==$value)?" selected" : "";
 	$inp .= "<option value='{$o['field_value']}'$sel>{$o['label']}</option>\n";

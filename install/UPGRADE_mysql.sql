@@ -109,6 +109,7 @@ INSERT INTO ZENTRACK_VARFIELD_IDX (field_name,       field_label,       sort_ord
 
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (96,'level_edit_varfields','2','Access level required to edit fields on the "custom" tab.');
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (97,'varfield_tab_name', 'Custom', 'Name to appear on the variable fields tab');
+INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (98,'allow_htaccess', 'on', 'If on, will attempt to authenticate users based on apache htaccess (username and password must match ZT)');
 
 
 /* CREATE AN ENTRY FOR EACH EXISTING TICKET IN THE VARFIELDS TABLE */

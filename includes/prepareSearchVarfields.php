@@ -4,7 +4,8 @@
  $varfieldsDates = array();
  $varfieldsParms = array();
  
- foreach( $varfieldsAll as $v ) {
+ for($i=0; $i<count($varfieldsAll); $i++) {
+   $v = $varfieldsAll[$i];
    $key = $v['field_name'];
    $label = $v['field_label'];
    switch( getVarfieldDataType($key) ) {
