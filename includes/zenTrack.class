@@ -15,7 +15,8 @@
   **  db.class (database access and retrieval)
   */
 
-include_once("$libDir/zen.class");  
+include_once("$libDir/zen.class");
+include_once("$libDir/smtp.class");
   
 class zenTrack extends zen {
 
@@ -1531,11 +1532,29 @@ class zenTrack extends zen {
 	 }
 	 $headers .= "cc: $cc_address\n";
       }
-      
+
+      // initialize the smtp class
+      $smtp = new smtp;
+
       // finalize and send the message
       $message = (get_magic_quotes_gpc())? $message : addslashes($message);
       $subject = (get_magic_quotes_gpc())? $subject : addslashes($subject);
-      return( mail( $recipient_address, $subject, $message, $headers ) );      
+      return( $smtp->smail( $recipient_address, $subject, $message, $headers ) );
+/* * Debug output *
+   * Comment by Izzy: I just did a "fast plug-in" of the smtp mailer. Will *
+   * have to fine-tune this later, e.g. for enhanced error reporting. *
+      $rc = $smtp->smail( $recipient_address, $subject, $message, $headers );
+      echo "<H1 ALIGN=CENTER>EMAIL REPORT</H1>\nSMail returned '$rc'.<BR>"
+         . "Values of internal error array:<BR>"
+	 . "  code: '" . $smtp->err["code"] . "'<BR>"
+	 . "   msg: '" . $smtp->err["msg"] . "'<BR>"
+	 . "  desc: '" . $smtp->err["desc"] . "'<BR>\n";
+      echo "<BR>Variables used by SMTP module:<BR>"
+         . " fromuser  : '" . $smtp->fromuser . "'<BR>"
+         . " hostname  : '" . $smtp->hostname . "'<BR>"
+         . " smtpserver: '" . $smtp->smtpserver . "'<BR>\n";
+      exit;
+*/
    }
    
    function getTicketCount( $status = '', $bin_id = '' ) {
