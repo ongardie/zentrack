@@ -1,0 +1,15 @@
+<debug settings>
+
+  <!-- show errors for all classes -->
+  <root level="1" />
+
+  <!-- show warnings and errors -->
+  <class name="ZenDatabase" level="2" />
+
+  <!-- show differing levels for certain methods -->
+  <class name="Zen">
+    <method name="getTicket" level="3" />
+    <method name="getSetting" level="2" />
+  </class>
+
+</debug settings>

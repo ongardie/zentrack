@@ -13,8 +13,9 @@ class ZenMessageList extends Zen {
    *
    * the messages will be filtered according to the debug settings in zen.ini
    *
+   * @param string $config is the xml file which holds the debug config info
    */
-  function ZenMessageList() { } // should set $_* arrays to array()
+  function ZenMessageList( $config ) { } // should set $_* arrays to array()
 
   /**
    * adds a message to the list (if it meets the level requirement)
@@ -22,9 +23,10 @@ class ZenMessageList extends Zen {
    * @param string $class is the page or class adding the message
    * @param string $method is the method or section adding the message
    * @param string $message is the message to add
+   * @param integer $errnum is the error number associated with message
    * @param integer $level is the level of importance
    */
-  function add( $class, $method, $message, $level = 3 ) { }
+  function add( $class, $method, $message, $errnum, $level = 3 ) { }
 
   /**
    * returns the complete list of erros in standard output format
@@ -61,11 +63,19 @@ class ZenMessageList extends Zen {
   function clearFilters() { }
 
   /**
-   * returns a count of ZenMessage objects matchign the current filter criteria
+   * returns a count of ZenMessage objects matching the current filter criteria
    *
    * @return integer the count
    */
   function count() { }
+
+  /**
+   * Loads the xml debugging config file and parses into memory
+   *
+   * The values are stored in $this->_levels, indexed by error level, class and name
+   */
+  function _loadConfig() { }
+
 
   /* VARIABLES */
 

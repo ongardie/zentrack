@@ -26,21 +26,20 @@ class ZenMessage extends Zen {
    */
   function getPlain() { }
 
-  /**
-   * logs the messages according to current log settings
-   */
-  function log() { }
 
   /* VARIABLES */
 
-  /** @var integer $level The level of the message */
-  var $level;
+  /** @var integer $_errnum the error number associated with message */
+  var $_errnum;
 
-  /** @var string $class the class responsible */
-  var $class;
+  /** @var integer $_level The level of the message */
+  var $_level;
 
-  /** @var string $method the method responsible */
-  var $method;
+  /** @var string $_class the class responsible */
+  var $_class;
+
+  /** @var string $_method the method responsible */
+  var $_method;
 
   /** @var string $_message */
   var $_message;
