@@ -1,4 +1,4 @@
-<? 
+<?
   /*
   **  TICKET DISPLAY PAGE
   **  
