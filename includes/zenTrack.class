@@ -368,13 +368,13 @@ class zenTrack extends zen {
       // $params is an array passed on to the log function
       //   (user_id, comments)
       
-      if( $override || $this->check_status($pid, 'READY') ) {
-    $children = $this->getProjectChildren($pid, array('id'));
-    for( $i=0; $i<count($children); $i++ ) {
-       $this->close_ticket($children[$i]);    
-    }
-    return( $this->change_status($pid, 'CLOSED', $params) );    
-      }
+     if( $override || $this->check_status($pid, 'READY') ) {
+       $children = $this->getProjectChildren($pid, array('id'));
+       for( $i=0; $i<count($children); $i++ ) {
+	 $this->close_ticket($children[$i]);    
+       }
+       return( $this->change_status($pid, 'CLOSED', $params) );    
+     }
    }
    
    
@@ -384,53 +384,71 @@ class zenTrack extends zen {
    
 
    function accept_ticket( $id, $user_id, $comments = '', $bin_id = '' ) {
-      // changes the tickets user_id to reflect
-      // a new owner for the ticket
-      // logs this in the db if settings["log_accept"] = "On";
-
-      $params = array( "user_id" => $user_id );
-      $res = $this->update_ticket($id,$params);
-      if( $res && $this->settings["log_accept"] == "on" ) {
-    $logParams = array(
-             "action"   =>  'ACCEPTED',
-             "user_id"   =>  $user_id,
-             "ticket_id" =>  $id
-             );
-    if( !$bin_id ) {
-       $t = $this->get_ticket($id);
-       $bin_id = $t["bin_id"];
-    }
-    $logParams["bin_id"] = $bin_id;
-    if( $comments )
-      $logParams["entry"] = htmlentities($comments);   
-    $res = $this->add_log($id, $logParams);
-      }
-      return( $res );
+     // changes the tickets user_id to reflect
+     // a new owner for the ticket
+     // logs this in the db if settings["log_accept"] = "On";
+     
+     $params = array( "user_id" => $user_id );
+     $res = $this->update_ticket($id,$params);
+     if( $res && $this->settings["log_accept"] == "on" ) {
+       $logParams = array(
+			  "action"   =>  'ACCEPTED',
+			  "user_id"   =>  $user_id,
+			  "ticket_id" =>  $id
+			  );
+       if( !$bin_id ) {
+	 $t = $this->get_ticket($id);
+	 $bin_id = $t["bin_id"];
+       }
+       $logParams["bin_id"] = $bin_id;
+       if( $comments )
+	 $logParams["entry"] = htmlentities($comments);   
+       $res = $this->add_log($id, $logParams);
+     }
+     return( $res );
    }
    
    function approve_ticket( $id, $user_id, $comments = '' ) {
-      // changes the approval status to 2 for the ticket
-      // if the ticket is ready for closure, then this function
-      // will also close out the ticket
-      
-      $t = $this->get_ticket($id);
-      $params = array("approved"=>2);
-      $res = $this->update_ticket($id,$params);
-      if( $res && $this->settings["log_approve"] ) {
-    $logParams = array(
-             "action"   =>  'APPROVED',
-             "user_id"   =>  $user_id,
-             "ticket_id" =>  $id
-             );
-    $logParams["bin_id"] = $t["bin_id"];
-    if( $comments )
-      $logParams["entry"] = htmlentities($comments);
-    $this->add_log($id, $logParams);    
-      }     
-      if( $t["tested"] != 1 ) {
-    $res = $this->close_ticket($id);
-      }
-      return( $res );
+     // changes the approval status to 2 for the ticket
+     // if the ticket is ready for closure, then this function
+     // will also close out the ticket
+     
+     $t = $this->get_ticket($id);
+     $params = array("approved"=>2);
+     $res = $this->update_ticket($id,$params);
+     if( $res && $this->settings["log_approve"] ) {
+       $logParams = array(
+			  "action"   =>  'APPROVED',
+			  "user_id"   =>  $user_id,
+			  "ticket_id" =>  $id
+			  );
+       $logParams["bin_id"] = $t["bin_id"];
+       if( $comments )
+	 $logParams["entry"] = htmlentities($comments);
+       $this->add_log($id, $logParams);    
+     }     
+     if( $t["tested"] != 1 ) {
+       $res = $this->close_ticket($id);
+     }
+     else if( $this->settings["email_pending"] == "on" ) {
+       $bin = $t["bin_id"];
+       $vars = $this->fetch_bin_roles($bin,'manager');
+       if( is_array($vars) ) {
+	 foreach($vars as $v) {
+	   $recipient[] = $v["user_id"];
+	 }
+       }
+       if( is_array($recipient) ) {
+	 $subject = "[".$this->settings["system_name"]."] ticket #$id closed";
+	 $emailParams["Close Time"] = $this->showDateTime($this->currTime);
+	 if( $comments )
+	   $emailParams["body"] = htmlentities($comments);
+	 $emailParams["tid"] = $id;
+	 $message = $this->formatEmailMessage($emailParams);
+	 $this->sendEmail($recipient,$subject,$message,$user_id);
+       }       
+     }
+     return( $res );
    }
    
    function assign_ticket( $id, $recipient, $user_id = '', $comments = '' ) {
@@ -507,90 +525,106 @@ class zenTrack extends zen {
    }
       
    function close_ticket( $id, $user_id = '', $hours = '', $comments = '' ) {
-      // closes the ticket (sets the status to CLOSED)
-      // if there is testing or approval yet required, then
-      // simply sets status to pending.
-      // however, if both of these are completed, then 
-      // closes out the ticket
-         
-      $t = $this->get_ticket($id);
-      if( $t["tested"] != 1 && $t["approved"] != 1 
-    && ($t["status"] == 'PENDING' || $t["status"] == 'OPEN') ) {
-    $params = array(
-          "status"  =>  'CLOSED',
-          "user_id"  =>  'NULL',
-          "ctime"   =>  $this->currTime
-          );
-    $res = $this->update_ticket($id, $params);
-    if( $res && $this->settings["log_close"] == "on" ) {
-       $logParams = array(
-                "action"   =>  'CLOSED',
-                "ticket_id" =>  $id,
-                "entry"    =>  $entry
-                );
-       if( $user_id ) {
-          $logParams["user_id"] = $user_id;
-       }
-       $logParams["bin_id"] = $t["bin_id"];
-       if( $hours )
-         $logParams["hours"] = $hours;
-       if( $comments )
-         $logParams["entry"] = $comments;
-       $this->add_log($id, $logParams);    
-    }
-    if( $res && $this->settings["email_closed"] == "on" ) {
-       $bin = $t["bin_id"];
-       $recipient = $t["creator_id"];
-       $subject = "[".$this->settings["system_name"]."] ticket #$id closed";
-       $emailParams["Close Time"] = $this->showDateTime($this->currTime);
-       if( $comments )
-         $emailParams["body"] = htmlentities($comments);
-       $emailParams["tid"] = $id;
-       $message = $this->formatEmailMessage($emailParams);
-       $this->sendEmail($recipient,$subject,$message,$user_id);       
-    }
-      } else if( ($t["tested"] == 1 || $t["approved"] == 1) && $t["status"] == "OPEN" ) {
-    $params = array(
-          "status"  =>  'PENDING',
-          "user_id"  =>  'NULL'
-          );
-    $res = $this->update_ticket($id, $params);
-    if( $res && $this->settings["log_pending"] == "on" ) {
-       $logParams = array(
-                "action"   =>  'PENDING',
-                "ticket_id" =>  $id,
-                "entry"    =>  $entry
-                );
-       if( $user_id ) {
-          $logParams["user_id"] = $user_id;
-       }
-       $logParams["bin_id"] = $t["bin_id"];      
-       if( $hours )
-         $logParams["hours"] = $hours;
-       if( $comments )
-         $logParams["entry"] = $comments;
-       $this->add_log($id, $logParams);    
-    }  
-    if( $res && $this->settings["email_pending"] == "on" ) {
-       $bin = $t["bin_id"];
-       $vars = $this->fetch_bin_roles($bin,'manager');
-       if( is_array($vars) ) {
-	 foreach($vars as $v) {
-	   $recipient[] = $v["user_id"];
+     // closes the ticket (sets the status to CLOSED)
+     // if there is testing or approval yet required, then
+     // simply sets status to pending.
+     // however, if both of these are completed, then 
+     // closes out the ticket
+
+     // get ticket info
+     $t = $this->get_ticket($id);
+     if( $this->check_status($t,"READY") ) {
+       // if ticket is ready to close, then close it
+       $params = array(
+		       "status"  =>  'CLOSED',
+		       "user_id"  =>  'NULL',
+		       "ctime"   =>  $this->currTime
+		       );
+       $res = $this->update_ticket($id, $params);
+       if( $this->settings["log_close"] == "on" ) {
+	 // create a log entry
+	 $logParams = array(
+			    "action"   =>  'CLOSED',
+			    "ticket_id" =>  $id,
+			    "entry"    =>  $entry
+			    );
+	 // get the params
+	 if( $user_id ) {
+	   $logParams["user_id"] = $user_id;
 	 }
+	 $logParams["bin_id"] = $t["bin_id"];
+	 if( $hours )
+	   $logParams["hours"] = $hours;
+	 if( $comments )
+	   $logParams["entry"] = $comments;
+	 // send the log
+	 $this->add_log($id, $logParams);    
        }
-       if( is_array($recipient) ) {
-          $subject = "[".$this->settings["system_name"]."] ticket #$id closed";
-          $emailParams["Close Time"] = $this->showDateTime($this->currTime);
-          if( $comments )
-	    $emailParams["body"] = htmlentities($comments);
-          $emailParams["tid"] = $id;
-          $message = $this->formatEmailMessage($emailParams);
-          $this->sendEmail($recipient,$subject,$message,$user_id);
-       }
-    }  
-      }
-      return($res);
+       if( $this->settings["email_closed"] == "on" ) {
+	 // send email
+	 $bin = $t["bin_id"];
+	 $recipient = $t["creator_id"];
+	 $subject = "[".$this->settings["system_name"]."] ticket #$id closed";
+	 $emailParams["Close Time"] = $this->showDateTime($this->currTime);
+	 if( $comments )
+	   $emailParams["body"] = htmlentities($comments);
+	 $emailParams["tid"] = $id;
+	 $message = $this->formatEmailMessage($emailParams);
+	 $this->sendEmail($recipient,$subject,$message,$user_id);       
+       } 
+     } else if( ($t["tested"] == 1 || $t["approved"] == 1) 
+		&& $t["status"] == "OPEN" ) {
+       // update status to pending
+       $params = array(
+		       "status"  =>  'PENDING',
+		       "user_id"  =>  'NULL'
+		       );
+       $res = $this->update_ticket($id, $params);
+       if( $this->settings["log_pending"] == "on" ) {
+	 // make a log entry
+	 $logParams = array(
+			    "action"   =>  'PENDING',
+			    "ticket_id" =>  $id,
+			    "entry"    =>  $entry
+			    );
+	 if( $user_id ) {
+	   $logParams["user_id"] = $user_id;
+	 }
+	 $logParams["bin_id"] = $t["bin_id"];      
+	 if( $hours )
+	   $logParams["hours"] = $hours;
+	 if( $comments )
+	   $logParams["entry"] = $comments;
+	 $this->add_log($id, $logParams);    
+       }  
+       if( $this->settings["email_pending"] == "on" ) {
+	 // send an email
+	 $bin = $t["bin_id"];
+	 // get people to send email to
+	 if( $t["tested"] == 1 ) {
+	   $vars = $this->fetch_bin_roles($bin,'tester');
+	 } else {
+	   $vars = $this->fetch_bin_roles($bin,'manager');
+	 }
+	 // determine if we found anyone
+	 if( is_array($vars) ) {
+	   foreach($vars as $v) {
+	     $recipient[] = $v["user_id"];
+	   }
+	 }
+	 if( is_array($recipient) ) {
+	   // send the email
+	   $subject = "[".$this->settings["system_name"]."] ticket #$id closed";
+	   $emailParams["Close Time"] = $this->showDateTime($this->currTime);
+	   if( $comments )
+	     $emailParams["body"] = htmlentities($comments);
+	   $emailParams["tid"] = $id;
+	   $message = $this->formatEmailMessage($emailParams);
+	   $this->sendEmail($recipient,$subject,$message,$user_id);
+	 } 
+       } 
+     }
+     return($res);
    }
    
    function log_ticket( $id, $user_id, $action = 'LOG', $hours = '', $comments = '' ) {
@@ -802,6 +836,24 @@ class zenTrack extends zen {
        // approved       
        $this->close_ticket($id);
      }         
+     else if( $this->settings["email_pending"] == "on" ) {
+       $bin = $t["bin_id"];
+       $vars = $this->fetch_bin_roles($bin,'manager');
+       if( is_array($vars) ) {
+	 foreach($vars as $v) {
+	   $recipient[] = $v["user_id"];
+	 }
+       }
+       if( is_array($recipient) ) {
+	 $subject = "[".$this->settings["system_name"]."] ticket #$id closed";
+	 $emailParams["Close Time"] = $this->showDateTime($this->currTime);
+	 if( $comments )
+	   $emailParams["body"] = htmlentities($comments);
+	 $emailParams["tid"] = $id;
+	 $message = $this->formatEmailMessage($emailParams);
+	 $this->sendEmail($recipient,$subject,$message,$user_id);
+       }       
+     }
      return( $res );
    }
    
@@ -1320,46 +1372,58 @@ class zenTrack extends zen {
       //    CLOSED  - is closed?
       // returns 1 if $code can be met
       $c = strtoupper(substr($code,0,2));
-      $ticket = $this->get_ticket($id);
+      if( is_array($id) ) {
+	$ticket = $id;
+      } else {
+	$ticket = $this->get_ticket($id);
+      }
       if( $c == 'OP' ) {
-	if( $ticket["status"] == 'OPEN' )
-	  return 1;
+	return( $ticket["status"] == 'OPEN' );
       } else if( $c == 'PE' ) {
-	if( $ticket["status"] == 'PENDING' )
-	  return 1;
+	return( $ticket["status"] == 'PENDING' );
       } else if( $c == 'TE' ) {
-	if( $ticket["status"] == 'PENDING' && ($ticket["tested"] == 1) )
-	  return 1;
+	return( $ticket["status"] == 'PENDING' && ($ticket["tested"] == 1) );
       } else if( $c == 'AP' ) {
-	if( $ticket["status"] == 'PENDING' && $ticket["tested"] != 1 )
-	  return 1;
+	return( $ticket["status"] == 'PENDING' && $ticket["tested"] != 1 );
       } else if( $c == 'RE' ) {
-	if( ($ticket["status"] == 'PENDING' && $ticket["tested"] == 2 && $ticket["approved"] == 2)
-	    ||
-	    ($ticket["status"] == 'OPEN' && $ticket["tested"] == 0 && $ticket["approved"] == 0))
-	  return 1;
+	return( ($ticket["status"] == 'PENDING' && $ticket["tested"] == 2 
+		 && $ticket["approved"] == 2)
+		||
+		($ticket["status"] == 'OPEN' && $ticket["tested"] == 0 
+		 && $ticket["approved"] == 0));
       } else if( $c == 'CL' ) {
-	if( $ticket["status"] == 'CLOSED' )
-	  return 1;
+	return( $ticket["status"] == 'CLOSED' );
       }
    }   
    
    function fetch_bin_roles( $bin_id, $role = '' ) {
-      // fetches members of bin with a particular
-      // role.  If $role is given, fetches only
-      // members listed as fulfilling that particular
-      // role. Returns the user_id and their role in an
-      // indexed array
-      
+     // fetches members of bin with a particular
+     // role.  If $role is given, fetches only
+     // members listed as fulfilling that particular
+     // role. Returns the user_id and their role in an
+     // indexed array
+     
+     // check the role id
      if( preg_match("@[^0-9]@", $role) ) {
        $role = $this->getRoleID($role);
      }
+     // set up the query parameters
      $where = ($role)? " bin_id = $bin_id and notes = '$role'" : 
        " bin_id = $bin_id";
+     if( $role ) {
+       $where .= " AND notes = '$role' ";
+     }
+     else {
+       $where .= " AND notes IS NOT NULL ";
+     }
+     // set the fields to retrieve
      $fields = ($role)? " user_id " : " user_id, notes ";
+     // run the query
      $query = "SELECT $fields FROM ".$this->table_access
-       ." WHERE $where AND notes IS NOT NULL) ";
-     return( $this->db_queryIndexed($query) );
+       ." WHERE $where";
+     $vals = $this->db_queryIndexed($query);
+     $this->addDebug("fetch_bin_roles","result: ".count($vals).", query: $query",1);
+     return( $vals );
    }
    
    function fetch_user_roles( $user_id, $bin_id = '' ) {
@@ -1372,7 +1436,9 @@ class zenTrack extends zen {
      $query = "SELECT bin_id, notes FROM "
        .$this->table_access." WHERE $where"
        ." AND (notes IS NOT NULL) ";
-     return( $this->db_queryIndexed($query) );
+     $vals = $this->db_queryIndexed($query);
+     $this->addDebug("fetch_user_roles","result: ".count($vals).", query: $query",3);
+     return( $vals );
    }
    
    function format_name( $user_id, $flag = '' ) {
@@ -1583,7 +1649,12 @@ class zenTrack extends zen {
        // finalize and send the message
        $message = (get_magic_quotes_gpc())? $message : addslashes($message);
        $subject = (get_magic_quotes_gpc())? $subject : addslashes($subject);
+       $this->addDebug("sendEmail","$recipient_address,$subject,$headers",3);
        return( @mail( $recipient_address, $subject, $message, $headers ) );      
+     } else {
+       $this->addDebug("sendEmail","recipient_address was blank... "
+		       ."this could be that the email was sent to a user "
+		       ."who doesn't have an email address",2);
      }
    }
    
@@ -2098,6 +2169,7 @@ class zenTrack extends zen {
        if( strtolower($v["name"]) == strtolower($name) )
 	 return $k;
      }
+     $this->addDebug("getRoleID","role '$name' wasn't found!", 1);
    }
 
    function getRoles($active = 1) {

@@ -6,6 +6,11 @@
 
 ----- V2.2.2 (not released) -----
 2003-02-09, Kato
+  Fixed some postgres sql bugs
+    - install/build_postgres.sql v1.3
+  Enhanced popup calendar
+    - www/popcalendar.js v1.2
+    - includes/templates/newTicketForm.php v1.13
   Fixed SCRIPT_NAME issues with php binary installs as CGI executable
     - includes/session_start.php v1.5
   Enhanced / Corrected the access/roles functions
