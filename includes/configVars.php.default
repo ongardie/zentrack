@@ -148,5 +148,21 @@
    // the attachments folder under includes
    $this->attachmentsDir = $this->libDir."/attachments"; 
 
-   
+
+  /*
+   *  MAIL SETTINGS
+  */
+
+  // hostname of the machine zenTrack is installed on
+  // may be left blank if you can trust your web server to set up
+  // $HOSTNAME correctly (Apache does)
+  // $this->hostname = "machine.domain.com";
+
+  // mail server (to whom we can deliver mail via SMTP)
+  $this->smtpserver = "localhost";
+
+  // default return path for bounced mails (should be replaced by the
+  // email address of the logged-in user)
+  $this->fromuser   = "me@domain.com";
+
 }?>
