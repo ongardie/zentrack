@@ -164,7 +164,7 @@ foreach($fields as $f=>$field) {
         $txt = "<select ".fmfName($f,'default_val').">";
         $txt .= "<option value=''>--</option>";
         foreach($choices as $k=>$v) {
-          $sel = $field['default_val'] === $k? " selected" : "";
+          $sel = $field['default_val'] == $k? " selected" : "";
           $txt .= "<option value='$k'{$sel}>$v</option>";
         }
         $txt .= "</select>";
