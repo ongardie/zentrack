@@ -404,14 +404,15 @@ class ZenTargets {
       }
     }
     print "\nThe following special modifiers are allowed:\n";
-    print "   --ini_file=file, specify an alternate zen.ini (config) file to use (defaults to ./zen.ini)\n";
-    print "   --suppress_confirm, suppresses confirm dialog (answers yes(or default) to all, needed for cron jobs)\n";
-    print "   --verbose, increases message output\n";
-    print "   --compress=type, set data compression:"
+    print "   --ini=file: specify an alternate zen.ini (config) file to use (defaults to ./zen.ini)\n";
+    print "   --s: suppresses confirm dialog (answers yes(or default) to all, needed for cron jobs)\n";
+    print "   --v: (verbose) increases message output\n";
+    print "   --c=type: set data compression:"
       ."\n       null - do not compress(default)"
       ."\n       zip  - use zip compression"
       ."\n       gzip - use gzip compression\n";
-    print "\t--classdir=dir, specify location of class files (for development)\n";
+    print "   --classdir=dir, specify location of class files (for development)\n";
+    print "   --makeini:  create an ini file then exit (rather than running targets normally)\n";
     return true;
   }
 
@@ -1222,9 +1223,9 @@ class ZenTargets {
       }
     }
 
-    $template = new ZenTemplate( $source );
+    $template = new ZenTemplate();
     $template->assign($vals);
-    $newtext = $template->fetch();
+    $newtext = $template->fetch($source);
 
     $fp = fopen($dest, 'w');
     if( !$fp ) { 

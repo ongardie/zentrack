@@ -1034,16 +1034,23 @@ class ZenUtils {
    * concatenated directories, because it won't handle slashes which don't point
    * the correct direction
    *
-   * This method will only work reliably on full paths. (a windows path might accidentally
-   * be translated as a unix path if it doesn't begin with a drive letter and colon.)
-   *
    * @param string $dir
    * @return string
    */
   function cleanPath( $dir ) {
-    $dir = realpath($dir);
     $alt = DIRECTORY_SEPARATOR == '/'? '\\' : '/';
     $dir = str_replace($alt, DIRECTORY_SEPARATOR, $dir);
+    if( @is_dir($dir) ) {
+      // using realpath on a directory that doesn't exist returns
+      // a null value, which is probably not what we want here
+      $dir = realpath($dir);
+    }
+    else if( @is_dir(dirname($dir)) ) {
+      // if the directory doesn't exist, we may be planning to create
+      // it, so see if the parent directory exists, and try to use
+      // that instead
+      $dir = realpath(dirname($dir)).DIRECTORY_SEPARATOR.basename($dir);
+    }
     return $dir;
   }
   
