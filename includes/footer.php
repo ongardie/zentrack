@@ -50,3 +50,6 @@
      print "</span>\n";
   }
 ?>
+
+</body>
+</html>

@@ -129,13 +129,17 @@ value="<?=strip_tags($title)?>">
     <select name="userID">
       <option value=''>--not assigned--</option>
 <?
-    if( is_array($users) ) {
-        asort($users);
-    	foreach($users as $k=>$v) {
-	   $check = ( $k == $userID )? "selected" : "";
-	   print "<option $check value='$k'>$v[lname], $v[fname]</option>\n";
-	}
-    }
+   $userBins = $zen->getUsersBins($login_id);
+   if( is_array($userBins) && $zen->settings["allow_assign"] == "on" ) {
+     $users = $zen->get_users($userBins);
+     if( is_array($users) ) {
+       asort($users);
+       foreach($users as $k=>$v) {
+	 $check = ( $k == $userID )? "selected" : "";
+	 print "<option $check value='$k'>$v[lname], $v[fname]</option>\n";
+       }
+     }
+   }
 ?>
     </select>&nbsp;(optional)
   </td>
@@ -148,10 +152,12 @@ value="<?=strip_tags($title)?>">
     <select name="binID">
 <?
     if( is_array($userBins) ) {
-        asort($userBins);
     	foreach($userBins as $k=>$v) {
-	   $check = ( $k == $binID )? "selected" : "";
-	   print "<option $check value='$k'>$v</option>\n";
+	  if( $k ) {
+	    $check = ( $k == $binID )? "selected" : "";
+	    $n = $zen->bins["$k"];
+	    print "<option $check value='$k'>$n</option>\n";
+	  }
 	}
     } else {
       print "<option value=''>--no bins--</option>\n";

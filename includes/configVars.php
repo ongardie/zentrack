@@ -19,16 +19,16 @@
   */
   
    // the root includes folder
-   $this->libDir         = "/web/zentrack/includes";
+   $this->libDir         = "/web/phpzen/sub/devtrack/includes";
 
    // the folder under includes holding utility files
-   $this->listDir        = "/web/zentrack/includes/lists";
+   $this->listDir        = "/web/phpzen/sub/devtrack/includes/lists";
    
    // the folder under includes holding templates
-   $this->templateDir    = "/web/zentrack/includes/templates";
+   $this->templateDir    = "/web/phpzen/sub/devtrack/includes/templates";
    
    // the attachments folder under includes
-   $this->attachmentsDir = "/web/zentrack/includes/attachments"; 
+   $this->attachmentsDir = "/web/phpzen/sub/devtrack/includes/attachments"; 
 
    
   /*
@@ -59,7 +59,7 @@
    //      database_pass:  tiger
    //      database_intance: TNSName (try the TNSname here, then try the whole connection string!)      
    $this->database_type      = 'mysql';          //mysql,oracle,postgres,sqlserver
-   $this->database_instance  = 'zentrack';	 //database name
+   $this->database_instance  = 'devtrack';	 //database name
    $this->database_login     = 'test';           //database login
    $this->database_password  = 'test';           //database password
    $this->database_host      = 'localhost';      //host name, if on same machine, 
@@ -93,7 +93,7 @@
    */
    
    // not yet implemented (upcoming for 2.1)
-   $this->debug = "off";  // on/off (shows debug information)
+   $this->debug = "on";  // on/off (shows debug information)
    $this->sql_debug = "off"; // on/off (shows all queries)
    
 }?>

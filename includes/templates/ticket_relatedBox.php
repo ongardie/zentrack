@@ -13,7 +13,7 @@
      $tids = explode(",", $ticket["relations"]);
   }
   $tickets = $zen->get_tickets( array("id"=>$tids) );
-  if( is_array($tickets) ) {
+  if( is_array($tickets) && count($tickets) ) {
      include("$templateDir/listTickets.php");
   } else {
      print "No tickets have been associated with this ticket.";

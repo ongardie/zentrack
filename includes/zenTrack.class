@@ -182,7 +182,7 @@ class zenTrack extends zen {
    function get_user( $uid ) {
       // returns a specific user
       // by the user id
-      
+            
       $query = "SELECT * FROM ".$this->table_users." WHERE uid = $uid";
       return( $this->db_quickIndexed($query) );
    }
@@ -200,7 +200,10 @@ class zenTrack extends zen {
 		       );
 
       if( !is_array($bins) ) {
-	$bins = array($bins);
+	if( ereg(",",$bins) ) 
+	  $bins = explode(",",$bins);
+	else
+	  $bins = array($bins);
       }
       $query = "SELECT DISTINCT userID FROM ".$this->table_access." WHERE binID IN(".join(",",$bins).") AND level >= ".$this->settings["level_user"];
       $ids = $this->db_list($query);
@@ -645,13 +648,15 @@ class zenTrack extends zen {
       // and dropRelation() method to encompass non-global updates)
       
       $t = $this->get_ticket($id);      
-      if( !is_array($relations) )
-	$relations = split(" *, *", $relations);
+      if( !is_array($relations) ) {
+	 $relations = trim($relations);
+	 $relations = split(" *, *", $relations);
+      }
       $relations = $this->checkRelations($relations);
   
-      if( is_array($relations) ) {
-	 $rel = join(",",$relations);
-	 $res = $this->update_ticket($id, array("relations"=>$rel));
+      $rel = (is_array($relations))? join(",",$relations) : "";
+      $res = $this->update_ticket($id, array("relations"=>$rel));
+      if( is_array($relations) ) {      
 	 //
 	 // 
 	 // 
@@ -666,7 +671,8 @@ class zenTrack extends zen {
 	 // 
 	 // 
 	 // 
-      }                  
+      }
+
       if( $res && $this->settings["log_relate"] == "on" && $userID ) {
 	 $logParams["action"] = "RELATED";
 	 $logParams["binID"] = $t["binID"];
@@ -1691,13 +1697,15 @@ class zenTrack extends zen {
      $user   = $this->getUser($uid);
      if( is_array($this->bins) ) {
        foreach($this->bins as $k=>$v) {
-	 if( strlen($access["$k"]) ) {
-	   if( $access["$k"] >= $this->settings["$level"] ) {
-	     $vars[] = $k;
-	   }
-	 } else {
-	   if( $user["access"] >= $this->settings["$level"] ) {
-	     $vars[] = $k;
+	 if( $k ) {
+	   if( strlen($access["$k"]) ) {
+	     if( $access["$k"] >= $this->settings["$level"] ) {
+	       $vars[] = $k;
+	     }
+	   } else {
+	     if( $user["access"] >= $this->settings["$level"] ) {
+	       $vars[] = $k;
+	     }
 	   }
 	 }
        }
