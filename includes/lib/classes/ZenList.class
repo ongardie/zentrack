@@ -93,7 +93,7 @@ class ZenList extends Zen {
    *
    * @return boolean there is another item after this one
    */
-  function hasNext() { return $this->_position < $this->_count() }
+  function hasNext() { return($this->_position < $this->_count()); }
 
   /**
    * resets the list counter to the first result

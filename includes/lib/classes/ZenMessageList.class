@@ -18,10 +18,10 @@ class ZenMessageList extends Zen {
    * @return ZenMessageList the static instance of the message list class
    */
   function getInstance() {
-    if( !$_GLOBALS['messageList'] ) {
-      $_GLOBALS['messageList'] = new ZenMessageList( $_GLOBALS['zen']['debug']['debug_configfile'] );
+    if( !$GLOBALS['messageList'] ) {
+      $GLOBALS['messageList'] = new ZenMessageList( $GLOBALS['zen']['debug']['debug_configfile'] );
     }
-    return $_GLOBALS['messageList'];
+    return $GLOBALS['messageList'];
   }
 
   /**
@@ -288,10 +288,10 @@ class ZenMessageList extends Zen {
    * @return integer 0-failed, 1-loaded from session, 2-loaded from file
    */
   function _loadConfig( $xmlfile ) {
-    if( is_array($_GLOBALS['cache']['MessageListConfig']) {
+    if( is_array($GLOBALS['cache']['MessageListConfig'])
         && 
-        @filemtime($_GLOBALS['zen']['cacheDir']."/last_config_update") <= $_GLOBALS['configLastUpdated'] )
-      $this->_levels = $_GLOBALS['cache']['MessageListConfig'];
+        @filemtime($GLOBALS['zen']['cacheDir']."/last_config_update") <= $GLOBALS['configLastUpdated'] ) {
+      $this->_levels = $GLOBALS['cache']['MessageListConfig'];
       return 1;
     }
     else {

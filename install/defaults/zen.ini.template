@@ -34,23 +34,23 @@ url_www = "{url_www}"       ;browser path to zentrack www directory (this should
 ;;; more database types can be found at: 
 ;;;   http://php.weblogs.com/ADOdb_manual#drivers
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-[database]
+[db]
 
 ; the type of database
 ; mysql, postgres, oci8 (oracle)
-database_type = "{database_type}"
+db_type = "{database_type}"
 
 ;domain or ip for database server, sometimes blank is good
-database_host = "{database_host}"
+db_host = "{database_host}"
 
 ; the table set or instance to use for zentrack
-database_instance = "{database_instance}" 
+db_instance = "{database_instance}" 
 
 ; username for logging into db
-database_user = "{database_user}" 
+db_user = "{database_user}" 
 
 ; password for logging in, sometimes blank for postgres
-database_pass = "{database_pass}"
+db_pass = "{database_pass}"
 
 ;the prefix for table names, keep in upper case
 table_prefix = "{table_prefix}"
@@ -66,7 +66,7 @@ page_prefix = "{page_prefix}"              ;the prefix for titles displayed by b
 
 page_title = "{page_title}"  ;the default title displayed by browser
 
-template = "{template}"                     ;which layout templates to employ
+template_set = "{template}"                     ;which layout templates to employ
 
 ;;;;;;;;;;;;;;;;; DEBUGGING OUTPUT ;;;;;;;;;;;;;;;;;;;;;
 ;;; The debug settings are controlled in an xml file

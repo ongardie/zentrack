@@ -9,8 +9,6 @@
     array_shift($argv);
   }
 
-  //  print_r($argv);
-
   /****************************************************
    ***** ENVIRONMENT
    ***************************************************/
@@ -55,6 +53,8 @@
   include("setup/ZenDatabase.class");
   include("setup/ZenTemplate.class");
   include("setup/ZenTargets.class");
+
+  print `whoami`;
 
   $z = new ZenTargets();
   $z->args( $argv );

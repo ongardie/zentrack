@@ -1,12 +1,15 @@
 <? /* -*- Mode: C; c-basic-indent: 3; indent-tabs-mode: nil -*- ex: set tabstop=3 expandtab: */ 
 
-  // this variable must match the location of the includes/ directory
-  $inc_dir = "{inc_dir}";
-
   // this variable must match the full file path location of your zen.ini file
-  $ini_file = "$inc_dir/config/zen.ini";
+  $ini_file = "{dir_config}/zen.ini";
+
+  // lib directory, must match the path to includes/lib
+  $dir_lib = "{dir_lib}";
+
+  // class directory, must match path to includes/lib/classes
+  $dir_classes = "{dir_classes}";
 
   // these lines do not need to be edited
-  include("$inc_dir/lib/inc/global.php");
+  include("$dir_lib/inc/global.php");
 
 ?>

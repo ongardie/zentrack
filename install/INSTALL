@@ -5,3 +5,27 @@ Basically, the process will involve opening the php.ini file that will be in thi
 
 Then run installer Install or installer Upgrade as appropriate.
 
+
+
+
+
+ SECURITY
+
+  In a unix environment, to improve system security, log in as super user and run 
+      
+    zen.php -extra_secure_mode apache_user apache_group
+
+    ..apache_user - the user your apache process runs as (nobody)
+    ..apache_group - the group your apache process runs as (nobody)
+
+  You must be the super user to run this.  You must know the user
+  and group of you server to accomplish this.
+
+  This will set the directory permissions to the most strict applicable.
+
+  To return them to a relaxed state, run
+
+     zen.php -check_permissions
+
+  Note that you must run the extra_secure_mode after each upgrade to ensure compliance
+

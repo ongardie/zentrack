@@ -9,24 +9,40 @@
    * @param string $var if the first value was an array, then this one can specify which value (null=whole array)
    */
   function getGlobal( $name, $var = null ) {
-    return ($var)? $_GLOBALS["$name"]["$var"] : $_GLOBALS["$name"];
+    return ($var)? $GLOBALS[$name][$var] : $GLOBALS[$name];
   }
 
   /**
-   * Sets a global variable, just a wrapper to make this quicker and easier
+   * Retrieves an ini setting from the zen array
    *
-   * @param string $name is the variable, or if in an array, the array it is in
-   * @param mixed $val is the value to be assigned
-   * @param string $var if the first value was an array, then this one can specify which value (null=whole array)
+   * @param string $section is the section in the ini file
+   * @param string $name is the name of the setting, if null, returns entire section array
+   * @return string
    */
-  function setGlobal( $name, $val, $var = null ) {
-    return ($var)? $_GLOBALS["$name"]["$var"] = $val : $_GLOBALS["$name"] = $val;
+  function getini( $section, $name = null ) {
+    if( !$name && isset($_SESSION['zen'][$section]) ) {
+      return $_SESSION['zen'][$section];
+    }
+    else if( $name && isset($_SESSION['zen'][$section][$name]) ) {
+      return $_SESSION['zen'][$section][$name];
+    }
+    else if( $_SESSION['zen']['debug']['develop_mode'] > 0 ) {
+      die("ini setting $section:$name doesn't exist!");        
+    }
+    else { return null; }
+  }
+
+  /**
+   * Returns the unix timestamp representing the last config update
+   */
+  function lastConfigUpdate() {
+    return @filemtime( getini('directories','dir_cache').'/last_config_update');
   }
 
   /**
    * Touched the last_config_update placeholder so that proper cache data will be updated
    */
-  function updateConfigDate() {
-    @touch( $_GLOBALS['zen']['cacheDir']."/last_config_upate" );
+  function configHasChanged() {
+    @touch( getini('directories','dir_cache')."/last_config_upate" );
   }
 }?>

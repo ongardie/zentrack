@@ -3,18 +3,19 @@
 ### Config Files and Locations
 ###############################
 ## The parameters in this file are as follows:
-##   0- includes or www (the dest path)
-##   1- subdirectory under dest path
+##   0- ini file section
+##   1- ini property
 ##   2- filename
 ##   3- template? if so, tacks .template onto filename and parses
 ##   4- permissions to create with
 
 # config files
 
-includes:config:zen.ini:1:644
-includes:config:debug.xml:0:644
-includes:config:database.xml:0:644
+directories:dir_config:zen.ini:1:0744
+directories:dir_config:debug.xml:0:0744
+directories:dir_config:database.xml:0:0744
 
 # header.php
 
-www::header.php:1:644
+paths:path_www:header.php:1:0744
+

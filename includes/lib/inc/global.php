@@ -11,18 +11,18 @@
                              );
 
   // start the session information
-  require_once("$libDir/inc/session.php");
+  require_once("$dir_lib/inc/session.php");
 
   // include all the object classes
-  require_once("$libDir/inc/classes.php");
+  require_once("$dir_lib/inc/classes.php");
 
   // include all global functions
-  require_once("$libDir/inc/functions.php");
+  require_once("$dir_lib/inc/functions.php");
 
   // check the php environment settings
-  require_once("$libDir/inc/environment.php");
+  require_once("$dir_lib/inc/environment.php");
 
   // include all global variables
-  require_once("$libDir/inc/variables.php");
+  require_once("$dir_lib/inc/variables.php");
 
 }?>

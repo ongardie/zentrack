@@ -7,7 +7,7 @@ class Zen {
   /**
    * CONSTRUCTOR: constructs common vars and objects
    * 
-   * This method relies on the global array: $_GLOBALS['zen']
+   * This method relies on the global array: $GLOBALS['zen']
    * which is created in header.php in the www/ directory.
    *
    * This method should be invoked by all child constructors
@@ -67,15 +67,15 @@ class Zen {
    * @return object databaseObject
    */
   function getDbConnection() { 
-    if( !isset($_GLOBALS['dbConnection']) || $_GLOBALS['dbConnection'] == null ) {
-      $db = $_GLOBALS['zen']['database'];
-      $_GLOBALS['dbConnection'] = new ZenDatabase($db['database_type'], 
+    if( !isset($GLOBALS['dbConnection']) || $GLOBALS['dbConnection'] == null ) {
+      $db = $GLOBALS['zen']['database'];
+      $GLOBALS['dbConnection'] = new ZenDatabase($db['database_type'], 
                                                   $db['database_host'],
                                                   $db['database_user'],
                                                   $db['database_pass'],
                                                   $db['database_instance']);
     }
-    return $_GLOBALS['dbConnection'];
+    return $GLOBALS['dbConnection'];
   }
 
   /**
@@ -132,6 +132,32 @@ class Zen {
    * @return ZenUser object or false
    */
   function getUser( $user_id ) { }
+
+  /**
+   * STATIC: Retrieves a template, parses, inserts variables
+   *
+   * @param string $template the name of the template (directory path will be added)
+   * @param array $vars (optional) the variables to be inserted into the template
+   * @param string $path (optional) the path to the template (usually not necessary as long as $GLOBALS['zen'] has been created)
+   */
+  function loadTemplate( $template, $vars = null, $path = '' ) {
+    if( !$path ) {
+      if( isset($GLOBALS['templateDir']) ) {
+        // grab the path if created
+        $path = $GLOBALS['templateDir'];
+      }
+      else {
+        // try to create a path
+        $path = $GLOBALS['zen']['directories']['dir_templates']."/".$GLOBALS['zen']['layout']['template_set'];
+      }
+    }
+    $file = $path."/".$template;
+    $tpl = new ZenTemplate( $file );
+    if( is_array($vars) && count($vars) ) {
+      $tpl->values( $vars );
+    }
+    return $tpl->process();
+  }
 
   /*************************
    * DATA CLASS UTILS
@@ -283,7 +309,7 @@ class Zen {
    * @param string $date is the date to parse
    * @return integer unix timestamp representative of date
    */
-  function parseDate( $date ) { }
+  function parseDate( $date ) { return strtotime($date); }
 
   /**
    * Determines if a date lies on the interval of a date range

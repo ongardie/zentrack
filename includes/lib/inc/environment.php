@@ -11,14 +11,14 @@
   }
 
   // check our cached values and make sure things are up to date
-  $ft = @filemtime($_SESSION['zen']['paths']['path_includes']."/cache/last_config_update");
+  $ft = lastConfigUpdate();
   if( $_SESSION['configLastUpdated'] == null ) {
     $_SESSION['configLastUpdated'] = $ft;
   }
-  if( $ft > $_SESSION['configLastUpdated'] ) {
+  if( $ft > $_SESSION['configLastUpdated'] || $ft < 1 ) {
     clearZenSessionCache();
     $_SESSION['configLastUpdated'] = $ft;
-    $_SESSION['zen'] = parse_ini_file( $ini_file );
+    $_SESSION['zen'] = Zen::read_ini( $ini_file );
   }
   unset($ft);
 
@@ -33,7 +33,7 @@
   @set_magic_quotes_runtime(0);
 
   // setup develop mode params
-  if( $zen['debug']['develop_mode'] > 0 ) {    
+  if( getIni('debug','develop_mode') > 0 ) {    
     // turn on most restrictive error_reporting (E_ALL)
     error_reporting(E_ALL);
     
@@ -43,5 +43,14 @@
   else {
     @error_reporting(E_ALL ^ E_NOTICE);
   }
+
+  // prepare all the class objects
+  //todo
+
+  // initialize database
+  //todo
+
+  // initialize translations
+  //todo
 
 }?>

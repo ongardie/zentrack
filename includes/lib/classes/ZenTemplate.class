@@ -260,7 +260,7 @@ class zenTemplate {
     // execute the query if we met if condition
     if( $tf ) {
       // determine if we are expecting to include a template or not
-      if( preg_match("|^%.+%$|", $parts[2])  {
+      if( preg_match("|^%.+%$|", $parts[2]) )  {
         // return template
         
         $tplname = substr(substr($parts[2], 1), -1);
@@ -349,14 +349,14 @@ class zenTemplate {
   function _parseSubtemplates ( $template, $value, $key = '' ) {
     $tpl = new zenTemplate($this->templateDir."/".$tplname);
     
-    if is_array($value) {
+    if( is_array($value) ) {
       // $value is an indexed array to be passed to the sub-template
       
       $tpl->values($value);
     } else {
       // $value/$key are a string pair to be passed as {pkey} and {pval}
       
-      $tpl->values(array("pkey" -> $key, "pval" -> $value);
+      $tpl->values(array("pkey" => $key, "pval" => $value));
     }
     
     return $tpl->process();

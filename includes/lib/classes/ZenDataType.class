@@ -51,7 +51,7 @@ class ZenDataType extends Zen {
    *
    * @return boolean contain a system ID
    */
-  function loaded() { return ($this->_id > 0 && count($this->_fields)) }
+  function loaded() { return ($this->_id > 0 && count($this->_fields)); }
   
   /**
    * Fetches a field in this object
