@@ -41,9 +41,9 @@
 
      -build the database
         create a database instance and a user with access to this DB
-	locate installs/build_[yourdb].sql and run in SQL interface
+	locate install/build_[yourdb].sql and run in SQL interface
 	   this will create your db tables
-	locate installs/seed_[yourdb].sql and run in SQL interface
+	locate install/seed_[yourdb].sql and run in SQL interface
            this will populate your db
 	
      -chmod 777 includes/attachments (if using attachments)
