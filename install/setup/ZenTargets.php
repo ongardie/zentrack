@@ -1,15 +1,19 @@
 <? /* -*- Mode: C; c-basic-indent: 3; indent-tabs-mode: nil -*- ex: set tabstop=3 expandtab: */ 
 
-/** @package setup */
-
+/** @package Setup */
 class ZenTargets {
 
   /**
    * CONSTRUCTOR - loads config data files
+   *
+   * @param array (associative) $ini_array is the ini file parsed by ZenUtils::read_ini()
    */
-  function ZenTargets() {
+  function ZenTargets( $ini_array ) {
+    $this->_thisdir = dirname(__FILE__);
+    $this->_printHeading();
     $this->_dirs = $this->_parseConfigData("directories");
     $this->_configFiles = $this->_parseConfigData("configFiles");
+    $this->_ini = $ini_array;
   }
 
   /**
@@ -26,10 +30,11 @@ class ZenTargets {
     $ini = "zen.ini";
     $n = "";    
     foreach($args as $a) {
-      if( preg_match("/--ini_file=([^ ]+)/", $a, $matches) ) {
-	$ini = $matches[1];
+      $a = trim($a);
+      if( preg_match("/^--/", $a, $matches) ) {
+        // ignore these
       }
-      else if( preg_match("/^-([^ -]+)/", $a, $matches) ) {
+      else if( preg_match("/^-([^ ]+)/", $a, $matches) ) {
 	$n = $matches[1];
 	if( !method_exists($this, "_$n") ) {
 	  print "Invalid method ($n) specified, exiting.";
@@ -45,12 +50,10 @@ class ZenTargets {
 	$this->_targets[$n][] = $this->_parseArg($a);
       }      
     }
-    if( !file_exists($ini) ) {
+    if( !is_array($this->_ini) ) {
       print "The ini file ($ini) was not found or not readable, exiting.";
       return false;
     }
-    $this->_ini = ZenUtils::read_ini($ini);
-
     return true;
   }
 
@@ -84,7 +87,6 @@ class ZenTargets {
    * @return boolean all targets succeeded
    */
   function run() {
-    $this->_printHeading();
     if( !count($this->_targets) ) {
       print "\nNo targets found.  Exiting.";
       return false;
@@ -113,6 +115,12 @@ class ZenTargets {
     $target = strtolower($target);
     print "Initiating $u...\n";
     $p = $this->_getParm($target,0);
+
+    //todo
+    //todo
+    //todo add a target for test_config that will run tests on config file contents
+    //todo make this fxn fairly independant of the config's contents
+    //todo
 
     switch($target) {
     case "backup_all":        return $this->_backup_all();
@@ -199,15 +207,25 @@ class ZenTargets {
    * Backs up all config files, attachments, database content, and other relative info
    */
   function _backup_all() {
+    // we will retrieve a directory ahead of time,
+    // overriding the defaults for each process
+    // to cause all of the backups to go to the same
+    // directory (for sanity) in case they overlap
+    // in minutes/hours
+    $dir = $this->_getBackupLocation();
+
     $success = true;
     // backup config
-    if( !$this->_backup_config() ) { $success = false; }
+    if( !$this->_backup_config($dir) ) { $success = false; }
 
     // backup attachments
-    if( !$this->_backup_attachments() ) { $success = false; }
+    if( !$this->_backup_attachments($dir) ) { $success = false; }
 
     // backup database
-    if( !$this->_backup_database() ) { $success = false; }
+    if( !$this->_backup_database($dir) ) { $success = false; }
+
+    // backup user files
+    if( !$this->_backup_userfiles($dir) ) { $success = false; }
 
     return $success;
   }
@@ -217,13 +235,18 @@ class ZenTargets {
    *
    * @return boolean all backups successful
    */
-  function _backup_config() {
+  function _backup_config($dir = null) {
     $success = true;
-    $dest = $this->_ini['directories']['dir_backups']."/config";
+
+    // create directory if not done yet
+    if( !$dir ) { $dir = $this->_getBackupLocation(); }
+    $dest = "$dir/config";
+
     print "- Backing up config files to $dest\n";
     foreach( $this->_configFiles as $c) {
       // split the array
       list($sect,$var,$name,$is_tmplt,$permissions) = $c;
+
       // set up destination
       $file = $this->_ini[$sect][$var]."/".$name;
 
@@ -246,9 +269,13 @@ class ZenTargets {
   /**
    * Back up database files
    */
-  function _backup_database() {
+  function _backup_database($dir = null) {
     //todo
     print "- Backing up database contents\n";
+
+    // create directory if not done yet
+    if( !$dir ) { $dir = $this->_getBackupLocation(); }
+
     print "   NOT YET FUNCTIONAL\n";
     return true;
   }
@@ -256,25 +283,60 @@ class ZenTargets {
   /**
    * Back up attachments
    */
-  function _backup_attachments() {
+  function _backup_attachments($dir = null) {
     print "- Backing up attachments\n";
-    $success = true;
-    // create the backup directory
+
+    // create directory if not done yet
+    if( !$dir ) { $dir = $this->_getBackupLocation(); }
+
     $src = $this->_ini['directories']['dir_attachments'];
-    $dest = $this->_ini['directories']['dir_backups']."/attachments/".date("Y-m-d-h-m");
+    $dest = "$dir/attachments";
+    return $this->_backup_directory( $src, $dest, false );
+  }
+
+  /**
+   * Back up any files contributed by user
+   */
+  function _backup_userfiles($dir = null) {
+    print "- Backing up userfiles\n";
+
+    // create directory if not done yet
+    if( !$dir ) { $dir = $this->_getBackupLocation(); }
+
+    $src = $this->_ini['directories']['dir_user'];
+    $dest = "$dir/user";
+    return $this->_backup_directory( $src, $dest, true );
+  }
+
+  /**
+   * Validates backup directory (creates if needed) 
+   * and returns correct path for backups
+   */
+  function _getBackupLocation() {
+    $dir = $this->_ini['directories']['dir_backups']."/".date("Y-m-d-h-m");
+    if( !@is_dir($dir) ) { @mkdir($dir, 0700); }
+    return $dir;
+  }
+
+  /**
+   * Backups up files from $src to $dest, if $recurse = true, do subdirectories too
+   */
+  function _backup_directory( $src, $dest, $recurse = false ) {
+    $success = true;
+    $subdirs = array();
     if( !@is_dir($dest) ) {
       if( !@mkdir($dest) ) {
-        $this->_printerr("_backup_attachments", "Unable to create $dest");
+        $this->_printerr("_backup_directory", "Unable to create destination: $dest");
         return false;
       }
       if( !@chmod( $dest, 0700 ) ) {
-        $this->_printerr("_backup_attachments", "Unable to set permissions on $dest");
+        $this->_printerr("_backup_directory", "Unable to set permissions on destination: $dest");
       }
     }
     // load the files
     $dh = @opendir( $src );
     if( !dh ) {
-      $this->_printerr("_backup_attachments", "Could not open attachments directory: $src");
+      $this->_printerr("_backup_directory", "Could not open source directory: $src");
       return false;
     }
     while( ($file = readdir($dh)) == true ) {
@@ -282,11 +344,25 @@ class ZenTargets {
       if( !(strpos($file, ".") === 0) && !@is_dir($file) ) {
         print "   copying $file\n";
         if( !@copy( "$src/$file", "$dest/$file" ) ) {
-          $this->_printerr("_backup_attachments", "Failed to copy $file");
+          $this->_printerr("_backup_directory", "Failed to copy $file");
           $success = false;
         }
       }
-    }    
+      else if( $recurse && !(strpos($file, ".") === 0) && @is_dir($file) ) {
+        // save subdirectories for recursion (if enabled)
+        // only process one at a time to prevent
+        // opening numerous directory handles at once
+        // and also to produce tidy output to stdout
+        $subdirs[] = $file;
+      }
+    }
+    // recurse if needed
+    if( $recurse && count($subdirs) > 0 ) {
+      foreach( $subdirs as $s ) {
+        if( !$this->_backup_directory( $src."/$s", $dest."/$s", true ) )
+          $success = false;
+      }
+    }
     return $success;
   }
 
@@ -341,6 +417,12 @@ class ZenTargets {
     // update the last_config_update counter
     touch( $this->_ini['directories']['dir_cache']."/last_config_update" );
     chmod( $this->_ini['directories']['dir_cache']."/last_config_update", 0766 );
+
+    // clean out all cache data
+    if( !$this->_clean_cache_data ) {
+      print "   The changed_config target has completed successfully; however, cache data could not be cleared.\n";
+      print "   Please login as an administrator and run install.php -clean_cache_data\n";
+    }
 
     return true;
   }
@@ -465,7 +547,7 @@ class ZenTargets {
    * @return boolean found and copied
    */
   function _copy_class_files( $dir = null ) {
-    print "- Copying class files to setup/\n";
+    print "- Copying class files\n";
 
     // get the class directory
     if( !$dir ) {
@@ -480,19 +562,24 @@ class ZenTargets {
       return false;
     }
 
-    print "   Source directory: $dir\n";
+    $thisdir = $this->_thisdir;
+    print "   Copying from $dir to $thisdir\n";
 
     // copy the files specified in data file
     $success = true;
-    $files = $this->_parseConfigData("classFiles");
+
+    // we don't use _parseConfigData() here because the ZenUtils class may not exist yet(we're copying it)
+    $files = file( "$thisdir/classFiles" );
     foreach($files as $f) {
-      $fn = $f[0];
+      $fn = trim($f);
+      if( !strlen($fn) || strpos($fn, '#') === 0 ) { continue; }
       print "   C $fn\n";
-      if( !@copy("$dir/$fn", "setup/$fn") ) {
-        $this->_printerr("_copy_class_files", "Unable to copy: [source]$dir/$fn -> [dest]setup/$fn");
+      if( !@copy("$dir/$fn", "$thisdir/$fn") ) {
+        $this->_printerr("_copy_class_files", "Unable to copy: $dir/$fn -> $thisdir/$fn");
         return false;
       }
     }
+
     return $success;
   }
 
@@ -551,7 +638,7 @@ class ZenTargets {
         }
         else {
           // parse templates and write
-          $template = new ZenTemplate( $source, false );
+          $template = new ZenTemplate( $source );
           $template->values($bulk);
           $txt = $template->process();
           $fp = @fopen($dest, "w");
@@ -568,7 +655,7 @@ class ZenTargets {
         }
       }
       else {
-          print "   !!!$dest exists: skipping(overwrite = false), this file should be manually inspected for updates!\n";
+          print "   $dest exists: skipping(overwrite = false)\n";
       }
     }
     // update the last_config_update counter
@@ -942,7 +1029,7 @@ class ZenTargets {
    *
    */
   function _printHeading() {
-    print join("",file("setup/headingInfo"));
+    print join("",file($this->_thisdir."/headingInfo"));
   }
 
   /**
@@ -1122,19 +1209,16 @@ class ZenTargets {
    * @return boolean loaded successfully
    */
   function _parseConfigData( $filename ) {
-    if( !@file_exists("setup/$filename") ) {
-      print "ERROR: setup/$filename could not be loaded.  Setup will not run correctly!";
+    $filename = $this->_thisdir."/$filename";
+    if( !@file_exists($filename) ) {
+      print "ERROR: $filename could not be loaded.  Setup will not run correctly!";
       return false;
     }
-    $vals = array();
-    $contents = file("setup/$filename");
-    foreach($contents as $c) {
-      $c = trim($c);
-      if( strlen($c) && strpos($c, "#") !== 0 ) {
-	$vals[] = explode(":", $c);
-      }
+    if( !class_exists('ZenUtils') ) {
+      $this->_copy_class_files();
+      require_once( $this->_thisdir."/ZenUtils.php" );
     }
-    return $vals;
+    return ZenUtils::parse_datafile($filename);
   }
 
   /**
@@ -1169,6 +1253,32 @@ class ZenTargets {
     }
     return ($res == "y")? true : false;
   }
+
+  /**
+   * Returns a list of valid targets
+   */
+  function getValidTargets() {
+    return array(
+                 "backup_all" => "Run all backup targets",
+                 "backup_config" => "Backup config files",
+                 "backup_database" => "Backup database",
+                 "changed_config" => "Backup config files",
+                 "check_directories" => "Check directory structure(and edit as necessary)",
+                 "check_permissions" => "Check permissions on directories (and edit)",
+                 "clean_cache_data" => "Delete all cached data",
+                 "copy_class_files" => "Copy class files needed by installer(development tool)",
+                 "copy_config_files" => "Copy config files to working directory",
+                 "create_database" => "Create a new database(install tool)",
+                 "cvs_update" => "Update code from cvs repository(development tool)",
+                 "extra_secure_mode" => "Tighten directory permissions(for unix, need to know unix)",
+                 "full_install" => "Install a new zentrack version",
+                 "merge_ini_file" => "Merge ini params with template(development tool)",
+                 "prepare_install_files" => "Prepare install file(development tool)",
+                 "try_db_connection" => "Test db connectivity",
+                 "update_db_schema" => "Update db schema to new release(ran by upgrade)",
+                 "upgrade" => "Upgrade to new release",
+                 "verify_db_connection" => "Test db connection" );
+  }
   
 
   /***********************************
@@ -1189,6 +1299,9 @@ class ZenTargets {
 
   /** @var string $_ini is the parsed contents of the specified ini file for use */
   var $_ini;
+
+  /** @var string the setup directory */
+  var $_thisdir;
 
 }
 

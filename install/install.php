@@ -71,7 +71,7 @@
   // We include the classes in such a roundabout way because the first time we
   // call this install prog there may not be any class file, so we will have to
   // copy them.  This should only ever happen during development.
-  $class_files = array('ZenTargets.class', 'ZenUtils.php');
+  $class_files = array('ZenTargets.php', 'ZenUtils.php');
   foreach($class_files as $c) {
     if( !@file_exists("$thisdir/setup/$c") ) {
       // try to locate the class files and copy them
@@ -98,7 +98,8 @@
   // make sure we have parameters to work with
   if( count($argv) < 1 || (preg_match("/--ini_file=/",$argv[0]) && count($argv) < 2) ) {
     print "Nothing to do: please specify a target\n\n";
-    foreach( $z->validTargets as $key=>$val ) {
+    $targets = $z->getValidTargets();
+    foreach( $targets as $key=>$val ) {
       print "\t$key - $val\n";
     }
     exit;
