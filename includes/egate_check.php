@@ -5,11 +5,17 @@
  ** injects them via the egate utils
  */
    
-  $start = time();
+  $start_time = time();
 
   // include utils and config
   include("egate_utils.php");
   
+  // check for imap install
+  if( !function_exists("imap_open") ) {
+    egate_log("Imap functions haven't been installed.  See installation section on email gateway for details",1);
+    exit;
+  }
+
   // connect to mailbox
   $mb = imap_open($smtp_string, $smtp_user, $smtp_pass);
   
@@ -28,7 +34,7 @@
   // get the number of messages in the box
   // and log it
   $number_of_messages = imap_num_msg($mb);
-  egate_log(date("Y-m-d-h-m: Mailbox contains $number_of_messages message").($number_of_messages!=1?"s":""),2);
+  egate_log("Mailbox contains $number_of_messages message".($number_of_messages!=1?"s":""),2);
   
   // collect messages
   for($i=1; $i<=$number_of_messages; $i++) {
@@ -43,11 +49,9 @@
   
   // delete messages from box
   imap_expunge($mb);
+
   // close the connection
   imap_close($mb);
-  
-  $errs = imap_errors();
-  egate_log($errs,2);
   
   $exectime = time()-$start_time;
   egate_log("Completed in $exectime seconds",3);

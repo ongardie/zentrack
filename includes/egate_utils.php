@@ -129,7 +129,6 @@
   // include the mail decoding functions
   include_once('Mail/mimeDecode.php');
   
-  // check for PEAR library Mail_Mime
   // make sure we are using the email interface
   if( $zen->settings["email_interface_enabled"] != "on" ) {
     egate_log("ERROR: email ignored, email_interface_enabled = off",1);
@@ -381,7 +380,10 @@
     if( $action == "add" || $action == "drop" ) {
       $action = "notify_$action";
     }
-    
+    if( $action == "status" ) {
+      $action = "view";
+    }
+
     // get a list of valid actions
     $valid_actions = fetch_valid_actions($id);
 
@@ -745,6 +747,10 @@
 	create_new_ticket($user_id,$name,$email,$body,$params);
 	break;
       }
+    case "view":
+      {
+	$body["recipients"] = $email;
+      }
     case "email":
       {
 	// set up email params
@@ -962,7 +968,7 @@
     case "template":
       {
 	$str = strtolower(get_subject_param($params,"template",$body));
-	if( $str == "create" ) {
+	if( $str == "create" || $str == "help" ) {
 	  egate_store_template("form_$str.template");
 	  egate_log("returning $str template",3);
 	}
@@ -1035,14 +1041,14 @@
     $email = $params->headers["reply-to"]? 
       trim($params->headers["reply-to"]) : trim($params->headers["from"]);
     if( preg_match("/([^<]*)<([a-zA-Z0-9_@.-]+)>/", $email, $matches) ) {
-      $name = $matches[1];
-      $email = $matches[2];
+      $name = trim($matches[1]);
+      $email = trim($matches[2]);
     }
     if( !$name ) {
       if( preg_match("/([^<]*)<([a-zA-Z0-9_@.-]+)>/", 
 		     $params->headers["from"], 
 		     $matches) ) {
-	$name = $matches[1];
+	$name = trim($matches[1]);
       }
       else {
 	$name = "unknown";
@@ -1177,13 +1183,16 @@
 	$temp->values($vals);	
 	$txt .= $temp->process();
       }
+
+      print "sending email\n";//debug
       
       // send messages
       $i=0;
       $from = $egate_user["email"];
       foreach($recipients as $r) {
-	$to = ($r["name"])? "{$r['name']}<{$r['email']}>" : $r['email'];
-	$res = mail($to,$subject,$txt,"From:$from\nReply-to:$from\n");
+	$txt = preg_replace("/\n/", "\r\n", $txt);
+	$res = mail($email,$subject,$txt,"From:$from\r\nReply-to:$from");
+	//$res = 1;//debug
 	if( $res )
 	  $i++;
       }

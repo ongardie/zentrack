@@ -2048,6 +2048,8 @@ class zenTrack extends zen {
       // finalize and send the message
       $message = (get_magic_quotes_gpc())? $message : addslashes($message);
       $subject = (get_magic_quotes_gpc())? $subject : addslashes($subject);
+      $message = str_replace("\n", "\r\n", $message);
+      $headers = str_replace("\n", "\r\n", $headers);
       $this->addDebug("sendEmail","$recipient_address,$subject,$headers",3);
       return( @mail( $recipient_address, $subject, $message, $headers ) );
     } else {
@@ -2708,7 +2710,7 @@ class zenTrack extends zen {
 			       "access"   => 1,
 			       "status"   => null,
 			       "override" => 0,
-			       "egate"    => 0,
+			       "egate"    => 1,
 			       "level"    => $this->settings["level_view"]
 			       );
       $actions["yank"] = array(

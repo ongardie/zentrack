@@ -71,9 +71,13 @@ The nnnn listed in the actions below represents the ticket id number.
 
 #nnnn: remove - This will remove the address that the ticket was recieved from from the notify list.
 
+#nnnn: status - This is an alias for view (see below)
+
 #nnnn: test - Using this option will set the ticket as having been successfully tested.  The hours worked may be entered using the following format:
   @hours: nnnn
      (where nnn is the number of hours)
+
+#nnnn: view - Returns a summary of the ticket.
 
 Special options:
 
