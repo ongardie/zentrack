@@ -1350,7 +1350,7 @@ class zenTrack extends zen {
 	$user = $this->get_user($user_id);
       
       if( !is_array($user) )
-	return( $this->settings["bot_name"] );
+	return( "n/a" );
       if( $flag == 2 )
 	return( $user["initials"] );
       else if( $flag == 1 )
@@ -1535,7 +1535,8 @@ class zenTrack extends zen {
       // finalize and send the message
       $message = (get_magic_quotes_gpc())? $message : addslashes($message);
       $subject = (get_magic_quotes_gpc())? $subject : addslashes($subject);
-      return( mail( $recipient_address, $subject, $message, $headers ) );      
+      return( mail( $recipient_address, $subject, $message, $headers ) );
+      //print "mail($recipient_address\n\n$subject\n\n".$message."\n\n$headers)<br>\n";//debug
    }
    
    function getTicketCount( $status = '', $bin_id = '' ) {
