@@ -3,16 +3,21 @@
   if( $action ) {   
      
      if( $actionComplete == 1 ) {
-	print_system_messages(1);
+       print_system_messages(1);
      }
-     
+
      // if there is an action, include the appropriate window
      // so that the user can input the action data and commit
-     
-     include("$templateDir/actions/$action.php");
+
+     if( file_exists("$templateDir/actions/$action.php") ) {
+       include("$templateDir/actions/$action.php");
+     }
+     else {
+       print "<p class='error'>Invalid action declared</p>\n";
+     }
   
      print "<p>&nbsp;</p>\n";
-  }
+  } else {
      
 ?>
        
@@ -27,3 +32,4 @@
    </tr>  
    </table>
 
+<? } ?>

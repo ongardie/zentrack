@@ -3,9 +3,9 @@
   <tr> 
      <td align="right">
      <form action="<?=$rootUrl?>/actions/addToNotify.php">
-     <input type="hidden" name="ticket_id" value="<?=$zen->checkNum($id)?>">
+     <input type="hidden" name="id" value="<?=$zen->checkNum($id)?>">
        <?
-         if( $zen->checkAccess($login_id,$ticket["bin_id"],"notify_set") ) {
+         if( $zen->checkAccess($login_id,$ticket["bin_id"],"notify") ) {
 	    $button = "submit";
 	    $color = $zen->settings["color_highlight"];
 	 } else {
@@ -13,7 +13,9 @@
 	    $color = $zen->settings["color_alt_background"];
 	 }
        ?>
-       <input type="<?=$button?>" value=" Add Recipient " class="actionButton" style="width:125;color:<?=$color?>">  
+       <input type="<?=$button?>"
+         value=" Add Recipient " class="actionButton" 
+         style="width:125;color:<?=$color?>">  
      </form>
      </td>
    </tr>
@@ -24,10 +26,10 @@
    </tr>  
    <tr>
      <td valign="top">
-     <form action="<?=$rootUrl?>/actions/dropFromNotify.php">
-     <input type="hidden" name="ticket_id" value="<?=$zen->checkNum($id)?>">
+     <form action="<?=$rootUrl?>/actions/dropFromNotify.php" method="post">
+     <input type="hidden" name="id" value="<?=$zen->checkNum($id)?>">
 <?
-  $notify_list = $this->get_notify_list($id);
+  $notify_list = $zen->get_notify_list($id);
   if( is_array($notify_list) ) {
 ?>
     <table width='500'>
@@ -38,7 +40,7 @@
      </tr>
 <?  
     foreach($notify_list as $n) {
-      $row = ($row == "bars") "altBars" : "bars";
+      $row = ($row == "bars")? "cell" : "bars";
       if( $n["user_id"] ) {
 	$u = $zen->get_user($n["user_id"]);
 	$name = $zen->formatName($u);
@@ -70,7 +72,9 @@
 	    $color = $zen->settings["color_alt_background"];
 	 }
        ?>
-       <input type="<?=$button?>" value=" Drop Recipients " class="actionButton" style="width:125;color:<?=$color?>">  
+       <input type="<?=$button?>" 
+	  value=" Drop Recipients " 
+	  class="actionButton" style="width:125;color:<?=$color?>">  
 <?
    }
    else {

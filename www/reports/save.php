@@ -102,7 +102,7 @@ if( !$tempid || !is_array($template)) {
 	."&return_field=select_users\",\"popupHelper\",375,400)'";
      print "&nbsp;<input type='button' class='searchbox' value=' ... ' $onclick>\n";
      print "<br><span class='note'>Type ids separated by "
-	."commas, or press 'search'</span>\n";
+	."commas, or click on the button.</span>\n";
 ?>
     <br><span class='note'>Optional. You do not need to select yourself</span>
   </td>

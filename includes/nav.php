@@ -2,6 +2,9 @@
   <head>
   <title><?=$page_prefix.$page_title?></title>
   <LINK HREF="<?=$rootUrl?>/styles.php" REL="STYLESHEET" TYPE="text/css">
+  <script language="javascript">
+    var imageUrl = "<?=$imageUrl?>";
+  </script>
   <script language="javascript" src="<?=$rootUrl?>/javascript.js"></script>
   <script language="javascript" src="<?=$rootUrl?>/popcalendar.js"></script>
   </head>
@@ -39,7 +42,22 @@
   <tr>
   <td valign="top" height="400" style="background:<?=$zen->settings["color_bars"]?>;">
   
-  <? if( $msg ) { print "&nbsp;<p><b>$msg</b></p>"; unset($msg); } ?>
+  <? 
+      // print out any system messages
+      // which are queued up for display
+      if( is_array($msg) && count($msg) ) { 
+	print "&nbsp;<p><b>\n";
+	foreach($msg as $m) {
+	  print "$m<br>";	  
+	}
+	print "</b></p>\n";
+	$msg = array();
+      }
+      else if( $msg ) {
+	print "&nbsp;<p><b>$msg</b></p>";
+	$msg = array();
+      }
+  ?>
   
   <!-- END OF NAVIGATION -->
   

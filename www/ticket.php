@@ -14,7 +14,7 @@
 
   // redirect to somewhere user can pick a ticket if no id was recieved
   if( !$id ) {
-    include("./index.php");
+    include("index.php");
     exit;
     //header("Location: $rootUrl/index.php\n");
   }

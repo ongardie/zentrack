@@ -25,7 +25,7 @@
   /*
   **  URL DETERMINATIONS
   */
- 
+
   $templateDir = "$libDir/templates";
   $listDir     = "$libDir/lists";
   $imageUrl    = "$rootUrl/images";
@@ -76,15 +76,16 @@
      global $system_message_limit;
      
      if( count($msg) >= $system_message_limit ) {
-   unset($login_messages);
+       unset($login_messages);
      }
      if( !is_array($login_messages) )
        $login_messages = array();
      if( count($login_messages)+count($msg) > $system_message_limit ) {
-   $login_messages = array_slice( $login_messages,0,($system_message_limit - count($msg)) );
+       $login_messages = array_slice( $login_messages,0,
+			($system_message_limit - count($msg)) );
      }
      foreach( $msg as $m ) {  
-   array_unshift($login_messages, array($m,time(),$code) );
+       array_unshift($login_messages, array($m,time(),$code) );
      }
   }
 
@@ -157,6 +158,7 @@
       "Log",
       "Related",     
       "Attachments",
+      "Notify",
       "System"
       );  
   

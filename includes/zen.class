@@ -72,6 +72,17 @@ class zen extends zenDate {
 	     preg_replace("@[^0-9.]@", "", $val) :
 	     preg_replace("@[^0-9]@", "", $val) );
    }
+
+   function checkEmail( $val = '' ) {
+     if( $val ) {
+       $val = preg_replace("/[^a-zA-Z0-9_.@-]/", "", $val);
+       if( !preg_match("/[a-zA-Z0-9_.-]+@[a-zA-Z0-9_-]+\.[a-zA-Z0-9_.-]+/",
+		       $val) ) {
+	 $val = "";
+       }
+     }
+     return $val;
+   }
    
    function stripPHP( $val = '' ) {
      // replaces php tags with ascii code

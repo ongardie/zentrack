@@ -163,9 +163,11 @@ class zenTrack extends zen {
 
   /**
    * returns a count of entries concerning this ticket
+   * 
+   * indexes returned are attachments, logs, tasks, notify, related
    *
    * @param integer $id the id of the ticket
-   * @return array indexed array of integers: attachments, logs, tasks
+   * @return array indexed array of integers
    */
   function get_ticket_stats( $id ) {
     // if $id is an array, we probably have the ticket, so
@@ -179,7 +181,8 @@ class zenTrack extends zen {
     }
     $vals = array();
     // get attachments
-    $query = "SELECT count(*) FROM ".$this->table_attachments." WHERE ticket_id = $id";
+    $query = "SELECT count(*) FROM ".$this->table_attachments
+      ." WHERE ticket_id = $id";
     $vals["attachments"] = $this->db_get($query);
     // get log entries
     $query = "SELECT count(*) FROM ".$this->table_logs." WHERE ticket_id = $id";
@@ -187,19 +190,28 @@ class zenTrack extends zen {
     // get related
     $vals["related"] = count(explode(",",$t["relations"]));
     $this->addDebug("get_ticket_stats","returning counts: ".implode(",",$vals),3);
+    // get notify
+    $query = "SELECT count(*) FROM ".$this->table_notify_list
+      ." WHERE ticket_id = $id";
+    $vals["notify"] = $this->db_get($query);
     return $vals;
   }
 
+  /**
+    * retrieves a list of tickets
+    * 
+    * $params can contain:
+    *     bins  - string/array of bins to retrieve for
+    *     users - string/array of users to retrieve for
+    *     id    - an array of specific ticket ids to retrieve
+    * the default columns returned can be overriden by using $columns to 
+    * specify what should be returned from this function.  Note that the 
+    * sort must correspond to the $columns values for SQL compatibility
+    * @param array $params see description
+    * @param string $sort [optional] comma separated list for ORDER BY clause
+    * @param string $columns [optional] comma separated list of columns to select 
+    */
   function get_tickets( $params = '', $sort = 'priority, otime desc', $columns = '', $archive_flag = 0 ) {
-    // retrieves a list of tickets
-    // $params can contain:
-    //     bins  - string/array of bins to retrieve for
-    //     users - string/array of users to retrieve for
-    //     id    - an array of specific ticket ids to retrieve
-    // the default columns returned can be overriden by using $columns to 
-    // specify what should be returned from this function.  Note that the 
-    // sort must correspond to the $columns values for SQL compatibility
-
     $table = ($archive_flag)? 
       $this->table_tickets_archived : $this->table_tickets;
 
@@ -277,15 +289,15 @@ class zenTrack extends zen {
     // doesn't support JOINS and/or UNIONS as needed for this.
 
     // query for registered users
-    $query  = "SELECT u.email FROM ".$this->table_users." AS u, ";
-    $query .= $this->table_notify_list." AS nl WHERE ";
+    $query  = "SELECT u.email FROM ".$this->table_users." u, ";
+    $query .= $this->table_notify_list." nl WHERE ";
     $query .= "u.user_id = nl.user_id AND nl.ticket_id = '";
     $query .= $ticket_id."' ";
 
     // query for non-registered users
     $query2  = "SELECT email FROM ".$this->table_notify_list." WHERE ";
-    $query2 .= "user_id IS NULL AND ticket_id = '".$ticket_id."' ";
-
+    $query2 .= "user_id IS NULL AND ticket_id = '".$ticket_id."' ";    
+	
     // get the lists of recipients and merge them
     $list = array_merge($this->db_list($query),$this->db_list($query2));
     // print a debug message
@@ -316,16 +328,35 @@ class zenTrack extends zen {
       if( $new_id )
 	$insert_ids[] = $new_id;
     }
-    $this->add_debug("set_notify_list",count($insert_ids)
+    $this->addDebug("set_notify_list",count($insert_ids)
 		     ." inserts for ticket $ticket_id",3);
     return $insert_ids;
   }
 
+  /**
+   * add a new entry to the notify list
+   *
+   * @param integer $ticket_id the id of the ticket
+   * @param array $params indexed array of "column"=>"value"
+   */
   function add_to_notify_list( $ticket_id, $params ) {
+    // check for existing entry (avoid dups)
+    $list = $this->get_notify_list($ticket_id);
+    if( is_array($list) ) {
+      foreach($list as $l) {
+	if( $params["user_id"] && $params["user_id"] == $l["user_id"] ) {
+	  return 0;
+	}
+	else if( !$params["user_id"] && $l["email"] 
+		 && $l["email"] == $params["email"] ) {
+	  return 0;
+	}
+      }
+    }
     // appends a new entry to the existing notify list
     $params["ticket_id"] = $ticket_id;
     $id = $this->db_insert($this->table_notify_list,$params);
-    if( $id ) {    
+    if( $id ) {
       $msg = ($params["user_id"])?
 	"user {$params['user_id']} added to ticket $ticket_id"
 	: "email address {$params['email']} added to ticket $ticket_id"; 
@@ -339,7 +370,7 @@ class zenTrack extends zen {
     $query = "DELETE FROM ".$this->table_notify_list
       ." WHERE notify_id = $notify_id";
     $this->addDebug("delete_from_notify_list",$query,3);
-    return $this->db_query($query);
+    return $this->db_result($query);
   }
 
   /**
@@ -781,9 +812,11 @@ class zenTrack extends zen {
       // if ticket is ready to close, then close it
       $params = array(
 		      "status"  =>  'CLOSED',
-		      "user_id"  =>  'NULL',
 		      "ctime"   =>  $this->currTime
 		      );
+      if( $user_id ) {
+	$params["user_id"] = $user_id;
+      }
       $res = $this->update_ticket($id, $params);
       if( $this->settings["log_close"] == "on" ) {
 	// create a log entry
@@ -1227,7 +1260,7 @@ class zenTrack extends zen {
    function update_ticket( $id, $params ) {
      $set = $this->makeInsertVals($params,1);
      $query = "UPDATE ".$this->table_tickets." SET $set WHERE id = $id";
-     $this->update_notify_list($zen->get_ticket($id),$params);
+     $this->update_notify_list($this->get_ticket($id),$params);
      $this->addDebug("update_ticket",$query,3);
      return( $this->db_result($query) );
    }      
@@ -1365,6 +1398,14 @@ class zenTrack extends zen {
     // check for duplicate login names
     $query = "SELECT user_id FROM ".$this->table_users." WHERE login = '$login'";
     return $this->db_get($query);
+  }
+
+  function check_user_id( $user_id ) {
+    // check to make sure a user_id appears
+    // in the database
+    $query = "SELECT count(*) FROM ".$this->table_users
+      ." WHERE user_id = $user_id";
+    return( $this->db_get($query) > 0 );
   }
 
   function add_user( $params ) {
@@ -2500,7 +2541,7 @@ class zenTrack extends zen {
 			       );
       // add an entry to notify list
       // used exclusively by egate system
-      // use notify_set for all ticket actions
+      // use 'notify' for all permissions
       $actions["notify_add"] = array(
 				     "owner"    => 0,
 				     "access"   => 1,
@@ -2511,7 +2552,7 @@ class zenTrack extends zen {
 				     );
       // drop an entry from the notify list
       // used exclusively by the egate system
-      // use notify_set for all ticket actions
+      // use 'notify' for all permissions
       $actions["notify_drop"] = array(
 				      "owner"    => 0,
 				      "access"   => 1,
@@ -2522,14 +2563,14 @@ class zenTrack extends zen {
 				      );
       // used to modify the list of recipients in
       // ticket's notify list
-      $actions["notify_set"] = array(
-				     "owner"    => 1,
-				     "access"   => 1,
-				     "status"   => array('OPEN','PENDING'),
-				     "override" => 1,
-				     "egate"    => 0,
-				     "level"    => $this->settings["level_user"]
-				     );
+      $actions["notify"] = array(
+				 "owner"    => 1,
+				 "access"   => 1,
+				 "status"   => array('OPEN','PENDING'),
+				 "override" => 1,
+				 "egate"    => 0,
+				 "level"    => $this->settings["level_user"]
+				 );
       $actions["print"] = array(
 				"owner"    => 0,
 				"access"   => 1,

@@ -7,5 +7,5 @@
   **
   */
   $page_type = "project";  
-  include("./ticket.php");
+  include("ticket.php");
 ?>

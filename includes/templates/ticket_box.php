@@ -52,7 +52,7 @@
 
   $i = 1;
 
-  $counts = $zen->get_ticket_stats($ticket);
+  $counts = $zen->get_ticket_stats($id);
   foreach( $tabs as $t ) {
     $lt = strtolower($t);
     if( $page_mode == $lt ) {
@@ -65,7 +65,8 @@
     $txt = (isset($counts[$lt]) && $counts[$lt])?
       "$t (".$counts["$lt"].")" : $t;
     $link = ($t == 'System')? $SCRIPT_NAME : $pageUrl;
-    print "<td class='$class' height='$height_num' width='80'>";
+    $w = ($lt == "attachments")? 85 : 60;
+    print "<td class='$class' height='$height_num' width='$w'>";
     print "<a href='$link?id=$id&setmode=$t' class='$lclass'>$txt</a></td>\n";
     if( $i < count($tabs) ) {
       print "<td width='3'><img src='$rootUrl/images/empty.gif' width='3' height='1'></td>\n";
@@ -85,9 +86,13 @@
   /*
   ** DETERMINE WHICH SCREEN TO SHOW AND SHOW IT
   */
-  
   $name = "ticket_".$page_mode."Box.php";
   $name = ereg_replace("[.]{2}", "", $name);
+  // check for valid filename
+  if( !file_exists("$templateDir/$name") ) {
+    $name = "ticket_systemBox.php";
+    $this->addDebug("ticket_box","Invalid filename $name declared... redirecting",1);
+  }
   include("$templateDir/$name");
 ?>
    <br>

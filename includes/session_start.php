@@ -45,15 +45,23 @@ $session_vars = array("login_name",
 		      "login_messages",
 		      "project_mode",
 		      "ticket_mode");
-foreach($session_vars as $s) {
-  if( !isset($_SESSION) || !count($_SESSION) || !isset($_SESSION["$s"] ) )
-    $_SESSION["$s"] = "";
+if( !isset($_SESSION) ) {
+  foreach($session_vars as $s) {
+    session_register($s);
+  }
 }
-  
-// this only makes them available for reading.. they still 
-// need to be set in $_SESSION before we close up the page
-extract($_SESSION);
-
+else {
+  foreach($session_vars as $s) {
+    if( !isset($_SESSION[$s]) ) {
+      $_SESSION[$s] = "";
+    }
+    else {
+      $$s = $_SESSION[$s];
+    }
+  }
+  // this only makes them available for reading.. they still 
+  // need to be set in $_SESSION before we close up the page
+}
 
 // you can't have any spaces after this closing tag!
 ?>
