@@ -1412,7 +1412,7 @@ class zenTrack extends zen {
 	    $message .= "Owner:\t$name\n";
 	    $message .= "URL:\t$url\n";
             $des = preg_replace("#&quot;#",'"',preg_replace("#&amp;#","&",$t["description"]));
-	    $des = preg_repalce("@<br( /)?>@", "", $des);
+	    $des = preg_replace("@<br( /)?>@", "", $des);
 	    $message .= "\n\n$des\n\n------------------\n\n";
 	 } else if( $k == "log" ) {
 	    // print the log for the ticket
