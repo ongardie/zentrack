@@ -301,7 +301,7 @@
   }
   
   // used to set table cell padding (since netscape cant handle padding-top/bottom)
-  $height_num = $zen->settings["font_size"]+4;
+  $height_num = $zen->settings["font_size"] + 4;
   
   // function to retrieve the available languages from the translations/ dir  
   function get_languages_available() { 

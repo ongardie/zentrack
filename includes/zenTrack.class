@@ -4949,7 +4949,9 @@ class zenTrack extends zen {
     $this->addDebug('getSettings', "Retrieved ".count($vals)." settings from database", 3);
     
     // store vals in session
-    $this->_session->storeDataType('settings',$vals);
+    if( !$flag ) {
+      $this->_session->storeDataType('settings',$vals);      
+    }
     
     return($vals);
   }

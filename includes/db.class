@@ -257,7 +257,7 @@ class DB {
     } else {
       $id = $this->db_link->genID($sequence);
     }
-    $this->addDebug("db_insertID", "created: $id", 3);
+    $this->addDebug("db_insertID", "created id '$id' for sequence '$sequence'", 3);
     return $id;
   }
   

@@ -2,16 +2,15 @@
   Welcome to zenTrack!
 
   If you checked this version out from the CVS repository you will need to
-  run ./setup_from_cvs from the zentrack/ install directory, or
-  run setup_from_cvs.cmd if you are on windows
+  run zentrack/setup_from_cvs or zentrack/setup_from_cvs.cmd if you are on windows
 
-  If that paragraph didn't make sense to you, you can probably ignore it.
+  If "CVS repository" doesn't ring a bell, you can probably ignore that paragraph.
  
   --------------
   REQUIREMENTS
   --------------
     Basic Install
-       PHP 4.3 or greater
+       PHP >= 4.3 && < 5 (PHP5 will be supported in ZT 2.6)
        Mysql, Oracle, Postgres, or SqlServer
        A Basic knowledge of PHP is helpful
     Email Gateway (optional)
@@ -44,12 +43,12 @@
 
      1. Place files where you want them:
         - place www/ in the htdocs/wwwroot directory tree
-        - place includes/ in a non-httpd directory (for security)
+        - place includes/ in a non-httpd directory (for maximum security)
      
      2. Configure the header file:
-   	- open www/header.php
-	- look through this file carefully
-	- you must configure $libDir and $rootUrl or nothing will work
+        - open www/header.php
+        - look through this file carefully
+        - you must configure $libDir and $rootUrl or nothing will work
 
      3. Build the database:
         - create a database instance and a user with access to this DB
@@ -101,7 +100,7 @@
       -Check your database and insure there are entries in the ZENTRACK_USERS
        table.
 
-      -The Administrator password is admin, User password is User, Guest
+      -The Administrator password is Administrator, User password is User, Guest
        password is Guest.
 
       -Sessions have to be working properly, cookies enabled
@@ -129,13 +128,15 @@
       
       -Make sure you have the egate user account set up with proper permissions 
          (this account doesn't have to be active)
+         
+      -Make sure you turn on email_gateway in the configuration panel.
 
       -Make sure that you have your egate scripts chmod to 755 (executable)
 
     POSTGRES USERS
-      -Please report any postgres nuisances... we just released postgres in 2.4
+      -Please report any postgres nuisances.  It seems to be running
+       smoothly, but we do have a postgres test box.
 
     OTHER DATABASE USERS
       -We can support, upon request, DB2, Sybase, or other
        install scripts, with some assistance from you.
-
