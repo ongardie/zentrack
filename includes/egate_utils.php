@@ -254,6 +254,9 @@
       egate_log_write();
       return false;
     }
+
+    //todo: make a setting for deadline and start date in config settings
+    //todo: employ these in template pages
     
     //todo: figure out how to restrict actions we don't want
     //todo: the email interface to use

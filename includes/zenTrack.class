@@ -880,6 +880,7 @@ class zenTrack extends zen {
     }
     if( $res && $this->settings["email_arrival"] == "on" ) {
       $recipient = $this->fetch_bin_roles($t["bin_id"],'manager');
+      $subject = "Ticket $id reopened";
       if( $recipient ) {
 	foreach($recipient as $r) {
 	  $to[] = $r["user_id"];
