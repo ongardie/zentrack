@@ -81,6 +81,9 @@ class Assert {
 
 /**
  * All PHPUnit tests should extend this class
+ *
+ * Try calling the phpunit.php page for documentation on usage.
+ *
  * @package PHPUnit
  */
 class Test {
@@ -110,11 +113,16 @@ class Test {
     if( $xml ) {
       $parser = new ZenXMLParser();
       $xmlnode =& $parser->parse($xml);
+    }
+    if( method_exists($this, "load") ) {
       if( $xmlnode ) {
 	$child = $xmlnode->getChild('setup');
 	if( $child ) { $this->load($child[0]); }
       }
-    }    
+      else {
+	$this->load();
+      }
+    }
 
     foreach ($methods as $method) {
       // Don't continue running tests if something really bad happened.
@@ -156,6 +164,10 @@ class Test {
 	}
       }
     }
+
+    if( method_exists($this, "unload") ) {
+      $this->unload();
+    }
   }
     
   /** Print html for a new table row */
@@ -180,6 +192,7 @@ class Test {
 }
 
 $directory  = isset($_GET['directory']) ? $_GET['directory'] : '';
+$showdebug = isset($_GET['showdebug'])? $_GET['showdebug'] : '';
 $dirValid   = ($directory != '' && is_dir($directory));
 
 if ($dirValid) 
@@ -190,6 +203,23 @@ else
 {
   $title = ': Configuration'; 
 }
+
+/**
+ * Generates a list of possible tests by listing
+ * all subdirectories of the test directory
+ * (where this file is located)
+ */
+ function getTestList() {
+   $dir = dirname(__FILE__);
+   $dh = opendir($dir);
+   $list = array();
+   while( $file = readdir($dh) ) {
+     if( is_dir("$dir/$file") && strpos($file, '.') !== 0 && $file != 'CVS') {
+       $list[] = "$dir/$file";
+     }
+   }
+   return $list;
+ }
 ?>
 <html>
   <head>
@@ -249,6 +279,20 @@ else
   
   <body>
     <h1>PHP Unit Tester<?php echo $title ?></h1>
+  <form name='selectForm'>
+    <b>Directory</b>: 
+    <select name='directory' onChange='document.selectForm.submit()'>
+<?
+     foreach( getTestList() as $key ) {
+       $val = basename($key);
+       $sel = (isset($directory) && $directory == $key)? ' selected' : '';
+       print "<option value='$key'$sel>$val</option>\n";
+     }
+?>
+    </select>
+    &nbsp;<input type='checkbox' name='showdebug' value='1' <?=$showdebug? 'checked':''?>> Debug
+    &nbsp; <input type=submit value="Run Tests">
+  </form>
 <?php
 if ($dirValid) 
 {
@@ -286,11 +330,6 @@ if ($dirValid)
 else 
 {
 ?>
-  <h2>Set the Test Directory</h2>
-  <form>
-    <b>Directory</b>: <input type=text name="directory" value="<?= strip_tags($directory) ?>" 
-    size=30> <input type=submit value="Run Tests">
-  </form>
   <p>
     <b>Tip</b>: After setting the correct directory and clicking <b>Run Tests</b>, save 
     a bookmark to the resulting page. Opening that bookmark will immediately re-run all
@@ -336,8 +375,34 @@ else
             unset($this->file);
             $this->file = new File();
         }
+
+	/**
+	 * This optional method will be run if it exists before tests begin.
+	 * if the optional <setup> tag exists in the optional xml file, then
+	 * the values listed in <setup> will be passed here.  This is useful
+	 * for constructing objects, opening db connections, etc before testing.
+	 */
+	function load( [$vals] ) 
+	{
+	  // do some load stuff here
+        }
+
+	/**
+	 * This optional method will be run, if it exists, after all tests are
+	 * completed.  It will be run even if an Assert::assert() call returns 
+	 * false (causing the class to abort())
+	 */
+	function unload()
+	{
+	  // do unload stuff here
+	}
 		
-        function testCreate() 
+
+	/**
+	 * This method is assumed to have an entry in the optional xml file.  Thus
+	 * it will be passed a list of values (from xml data) each time it is run.
+	 */
+        function testCreate( $vals ) 
         {
             Assert::assert(isset($this->file), "File object could not be instantiated");
         }
@@ -366,7 +431,21 @@ else
   </p>
   <ul>
     <li>There's no need to call the parent constructor; it doesn't even exist.</li>
-    <li>A method that executes a test should have a name starting with <b>test</b>.</li>
+    <li>An optional xml file may be used to provide params to the method.  The xml file will
+       	have the same name as the class (ClassNameTest.xml) and reside in the same folder.
+    <li>An optional <b>load()</b> method may exist in the class, this method will be run before
+        any tests.  If the optional xml file contains a node called &lt;setup&gt; then those
+	parameters will be passed here.
+    <li>A method starting with <b>test</b> is considered to be one of the tests to run.
+    <ul>
+       <li>If optional xml file is provided, and a node is found with the 
+         same name as the function (must be in lower case) the test will be run once
+	 for each set of params.  See the example below for more.
+       <li>If no xml file is provided, then the test is run once, without any arguments.
+    </ul>
+    <li>If an optional <b>unload()</b> method is provided, it will be ran after all tests
+        are completed.  This method will run even if Assert::assert() returns false
+	(cancelling all further tests).
     <li>There should be no method with the name <b>run</b>. This is the <i>only</i>
         method defined in class <b>Test</b>, and it isn't meant to be overridden.</li>
     <li>Test methods are called in the order they are defined in the class. This allows
@@ -383,6 +462,54 @@ else
     <li><b>Assert::equalsFalse</b> is like <b>Assert::equalsTrue</b>, with <b>false</b>
         instead of <b>true</b>. (What a surprise...)
   </ul>
+  <p><b>Optional XML File format</b></p>
+<pre><code>
+&lt;TestUnit&gt;
+  &lt;!--
+    If the optional 'setup' node is provided, then the class is assumed to
+    contain a method named "load" which will be passed all the params
+    contained in the setup node.
+
+    The load() method will run before any tests are performed.
+   --&gt;
+  &lt;setup&gt;
+    &lt;param name='variable1'&gt;value1&lt;/param&gt;
+    &lt;param name='variable2'&gt;value2&lt;/param&gt;
+    &lt;param name='variable3'&gt;value3&lt;/param&gt;
+  &lt;/setup&gt;
+
+  &lt;!--
+    The rest of the nodes (anything not called setup) is assumed to be
+    the name of a corresponding method in the class.  Note that the node
+    name must be in lower case, due to reflection properties of php.
+
+    The node may contain any number of parameter sets.  The method will
+    be called once for each set of parameters placed here.
+  --&gt;
+  &lt;testmethod_a&gt;
+
+     &lt;!-- the test is run once for each param set, add as many as you need --&gt;
+     &lt;param_set_1&gt;
+	&lt;!-- everything here will be passed to the function in an array, add as many as needed --&gt;
+        &lt;param name='variable1'&gt;value1&lt;/param&gt;
+	&lt;param name='variable2'&gt;value2&lt;/param&gt;
+     &lt;/param_set_1&gt;
+
+     &lt;param_set_2&gt;
+        &lt;!-- the special property eval='true' will cause the value of the node to be
+	     evaluated as php code just as if it ran with &lt;?php eval( value ) ?&gt; --&gt;
+        &lt;param name='variable1' eval='true'&gt;null&lt;/param&gt;
+	&lt;param name='variable2' eval='true'&gt;false&lt;/param&gt;
+	&lt;param name='variable3' eval='true'&gt;magic_quotes_gpc()&lt;/param&gt;
+     &lt;/param_set_2&gt;
+
+  &lt;/testmethod_a&gt;
+
+  &lt;!-- add a node for every method that should be passed params --&gt;
+
+&lt;/TestUnit&gt;
+</code></pre>
+  </p>
   <p>
     As mentioned earlier, it's all very simple. At the same time I find it very useful. 
     If you want the application to do more, you are free to modify this code for your
@@ -403,10 +530,12 @@ else
 ?>
 
 <br><br><br>
-<p>------ DEBUG ------</p>
 <?
-  $list = Zen::getMessageList();
-  print $list->outputHTML();
+  if( class_exists("Zen") && $showdebug ) {
+    print "<p>------ DEBUG ------</p>";
+    $list = Zen::getMessageList();
+    print $list->outputHTML(true);
+  }
 ?>
 
 

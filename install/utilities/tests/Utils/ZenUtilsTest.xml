@@ -55,7 +55,6 @@
    </testclassnamefromtable>
 
    <testconvertsecondsto>
-
      <testsec>
        <param name="seconds">60</param>
        <param name="period">seconds</param>
@@ -91,12 +90,10 @@
        <param name="period">weeks</param>
        <param name="expected">2</param>
      </testweek2>
-
    </testconvertsecondsto> 
 
 
    <testsecondsin>
-
      <testsec>
        <param name="period">seconds</param>
        <param name="num">180</param>
@@ -126,8 +123,26 @@
        <param name="num">1</param>
        <param name="expected">604800</param>
      </testweek>
-
-
    </testsecondsin>
+
+
+  <testgetini>
+    <test1>
+      <param name='cat'>debug</param>
+      <param name='name'>debug_configfile</param>
+      <param name='expected'>debug.xml</param>
+    </test1>
+    <test2>
+      <param name='cat'>debug</param>
+      <param name='name'>debug_logfile</param>
+      <param name='expected'>debug_log.txt</param>
+    </test2>
+    <test3>
+      <param name='cat'>login requirements</param>
+      <param name='name'>excluded</param>
+      <param name='expected'>help/,styles.php</param>
+    </test3>
+  </testgetini>
+
 
 </TestUnit>

@@ -1,0 +1,351 @@
+<TestUnit>
+
+  <!-- 
+     **************************
+     test data for PHPUnit tests
+
+     An optional <setup> node can
+     appear in the list, if it exists
+     then it will be passed as the
+     ZenXNode to the (assumed to exist)
+     $this->load() method
+
+     The xml should contain nodes
+     named the same as the method the
+     data applies to.
+
+     Each method node can contain any
+     number of test nodes which will
+     each contain a set of <param>
+     nodes which will be passed back
+     to the test method
+
+     An optional eval='true' attribute
+     can be applied to any param tag
+     which will cause the data block to
+     be run using eval() (executed as code)
+     
+     This is useful for creating boolean vals,
+     for running functions, using variables, etc
+
+     IMPORTANT NOTE: the method names need
+     to be in all lower case here, since the
+     call uses get_class_methods, which returns
+     them entirely in lower case
+     **************************
+  -->
+
+  <setup>
+    <param name='xmlfile'>ZenDbSchema_config.xml</param>
+  </setup>
+
+  <testaddtable>
+     <test_1>
+        <param name='name'>spiffy</param>
+        <param name='description'>very spiffy</param>
+        <param name='is_abstract' eval='true'>true</param>
+        <param name='has_custom_fields' eval='true'>true</param>
+        <param name='inherits'>ABSTRACT_DESCRIPTORS</param>
+     </test_1>
+     <test_2>
+        <param name='name'>happy</param>
+        <param name='description'>not spiffy</param>
+        <param name='is_abstract' eval='true'>false</param>
+        <param name='has_custom_fields' eval='true'>false</param>
+        <param name='inherits'></param>
+     </test_2>
+  </testaddtable>
+
+  <testaddcolumn>
+     <test_1>
+        <param name='table'>TICKET</param>
+        <param name='name'>newfield</param>
+        <param name='label'>It's a new field</param>
+        <param name='size'>0</param>
+        <param name='type'>VALUE</param>
+        <param name='ftype'>select</param>
+        <param name='notnull'>1</param>
+        <param name='required'>0</param>
+        <param name='criteria'>some criteria</param>
+        <param name='reference'>TICKET.ticket_id</param>
+        <param name='default'>a default "value"</param>
+        <param name='description'>a description which should contain
+	things that make stuff break!</param>
+        <param name='custom' eval='true'>false</param>
+        <param name='order'>20</param>
+        <param name='unique'>0</param>
+	<param name='expected' eval='true'>true</param>
+     </test_1>
+     <test_2>
+        <param name='table'>USER</param>
+        <param name='name'>afield</param>
+        <param name='label'>a field label</param>
+        <param name='size'>20</param>
+        <param name='type'>string</param>
+        <param name='ftype'>text</param>
+        <param name='notnull'>1</param>
+        <param name='required'>1</param>
+        <param name='criteria'></param>
+        <param name='reference' eval='true'>null</param>
+        <param name='default'></param>
+        <param name='description'></param>
+        <param name='custom'>1</param>
+        <param name='order'></param>
+        <param name='unique'>1</param>
+	<param name='expected' eval='true'>true</param>
+     </test_2>
+     <test_3>
+        <param name='table'>not a valid table</param>
+        <param name='name'>not a valid field</param>
+        <param name='label'></param>
+        <param name='size'></param>
+        <param name='type'></param>
+        <param name='ftype'></param>
+        <param name='notnull'></param>
+        <param name='required'></param>
+        <param name='criteria'></param>
+        <param name='reference'></param>
+        <param name='default'></param>
+        <param name='description'></param>
+        <param name='custom'></param>
+        <param name='order'></param>
+        <param name='unique'></param>
+	<param name='expected' eval='true'>false</param>
+     </test_3>
+  </testaddcolumn>
+
+  <testgettablearray>
+     <test_1>
+        <param name='name'>ABSTRACT_INDEX_BASE</param>
+        <param name='description'>Includes common index fields for associations</param>
+        <param name='is_abstract' eval='true'>true</param>
+        <param name='has_custom_fields' eval='true'>false</param>
+        <param name='inherits'></param>
+        <param name='expected' eval='true'>true</param>
+     </test_1>     
+     <test_2>
+        <param name='name'>TICKET</param>
+        <param name='description'>Ticket entries and their properties</param>
+        <param name='is_abstract' eval='true'>false</param>
+        <param name='has_custom_fields' eval='true'>true</param>
+        <param name='inherits'>ABSTRACT_DESCRIPTORS</param>
+        <param name='expected' eval='true'>true</param>
+     </test_2>     
+     <test_3>
+        <param name='name'>not_a_table</param>
+        <param name='description'></param>
+        <param name='is_abstract' eval='true'>null</param>
+        <param name='has_custom_fields' eval='true'>null</param>
+        <param name='inherits'></param>
+        <param name='expected' eval='true'>false</param>
+     </test_3>     
+  </testgettablearray>
+
+  <testgetfieldarray>
+     <test_1>
+        <param name='table'>LOG</param>
+        <param name='name'>task_id</param>
+        <param name='label'></param>
+        <param name='size'></param>
+        <param name='type'>integer</param>
+        <param name='ftype'>select</param>
+        <param name='notnull'>true</param>
+        <param name='required'></param>
+        <param name='criteria'></param>
+        <param name='reference'>TASK.task_id</param>
+        <param name='default'></param>
+        <param name='description'></param>
+        <param name='custom' eval='true'>false</param>
+        <param name='order'></param>
+        <param name='unique'></param>
+	<param name='expected' eval='true'>true</param>
+     </test_1>
+     <test_2>
+        <param name='table'>ABSTRACT_DATA_TYPE</param>
+        <param name='name'>isactive</param>
+        <param name='label'>Active</param>
+        <param name='size'></param>
+        <param name='type'>byte</param>
+        <param name='ftype'>checkbox</param>
+        <param name='notnull'></param>
+        <param name='required'></param>
+        <param name='criteria'></param>
+        <param name='reference'></param>
+        <param name='default'>1</param>
+        <param name='description'>Controls whether this item is actively used... items cannot be deleted, but they can be deactivated by unchecking this box</param>
+        <param name='custom'></param>
+        <param name='order'></param>
+        <param name='unique'></param>
+	<param name='expected' eval='true'>true</param>
+     </test_2>
+     <test_3>
+        <param name='table'>TICKET</param>
+        <param name='name'>customer</param>
+        <param name='label'>Customer</param>
+        <param name='size'></param>
+        <param name='type'>string</param>
+        <param name='ftype'>text</param>
+        <param name='notnull'></param>
+        <param name='required'></param>
+        <param name='criteria'></param>
+        <param name='reference'></param>
+        <param name='default'></param>
+        <param name='description'></param>
+        <param name='custom' eval='true'>true</param>
+        <param name='order'></param>
+        <param name='unique'></param>
+	<param name='expected' eval='true'>true</param>
+     </test_3>
+     <test_4>
+        <param name='table'>LOG</param>
+        <param name='name'>not_a_real_field</param>
+        <param name='label'></param>
+        <param name='size'></param>
+        <param name='type'></param>
+        <param name='ftype'></param>
+        <param name='notnull'></param>
+        <param name='required'></param>
+        <param name='criteria'></param>
+        <param name='reference'></param>
+        <param name='default'></param>
+        <param name='description'></param>
+        <param name='custom' eval='true'>null</param>
+        <param name='order'></param>
+        <param name='unique'></param>
+	<param name='expected' eval='true'>false</param>
+     </test_4>
+     <test_5>
+        <param name='table'>not_a_real_table</param>
+        <param name='name'>not_a_real_field</param>
+        <param name='label'></param>
+        <param name='size'></param>
+        <param name='type'></param>
+        <param name='ftype'></param>
+        <param name='notnull'></param>
+        <param name='required'></param>
+        <param name='criteria'></param>
+        <param name='reference'></param>
+        <param name='default'></param>
+        <param name='description'></param>
+        <param name='custom' eval='true'>null</param>
+        <param name='order'></param>
+        <param name='unique'></param>
+	<param name='expected' eval='true'>false</param>
+     </test_5>
+  </testgetfieldarray>
+  
+  <testdroptable>
+     <test_1>
+        <param name='table'>ACTION_PARAMS</param>
+	<param name='exists' eval='true'>true</param>
+     </test_1>
+     <test_2>
+        <param name='table'>not_a_real_table</param>
+	<param name='exists' eval='true'>false</param>
+     </test_2>
+  </testdroptable>
+
+  <testdropcolumn>
+     <test_1>
+        <param name='table'>ACTION</param>
+	<param name='field'>stage_reqs</param>
+	<param name='exists' eval='true'>true</param>
+     </test_1>
+     <test_2>
+        <param name='table'>not_a_real_table</param>
+	<param name='field'>not_a_real_field</param>
+	<param name='exists' eval='true'>false</param>
+     </test_2>
+  </testdropcolumn>
+
+  <testgetinheritedfields>
+     <test_1>
+        <param name='table'>LOG</param>
+	<param name='expected' eval='true'>true</param>
+	<param name='fieldnames'>name,description,last_update,syslock,priority,isactive,user_id,bin_id,ticket_id</param>
+     </test_1>
+     <test_2>
+        <param name='table'>not_a_real_table</param>
+	<param name='expected' eval='true'>false</param>
+	<param name='fieldnames'></param>
+     </test_2>
+  </testgetinheritedfields>
+
+  <testgetmetafield>
+     <test_1>
+        <param name='table'>ABSTRACT_INDEX_BASE</param>
+	<param name='field'>bin_id</param>
+	<param name='expected' eval='true'>true</param>
+     </test_1>
+     <test_2>
+        <param name='table'>ACTION_PARAMS</param>
+	<param name='field'>param_type</param>
+	<param name='expected' eval='true'>true</param>
+     </test_2>
+     <test_3>
+        <param name='table'>not_a_table</param>
+	<param name='field'>not_a_field</param>
+	<param name='expected' eval='true'>false</param>
+     </test_3>
+  </testgetmetafield>
+
+  <testgetmetatable>
+     <test_1>
+        <param name='table'>ABSTRACT_INDEX_LIST</param>
+	<param name='expected' eval='true'>true</param>
+     </test_1>
+     <test_2>
+        <param name='table'>ATTACHMENT</param>
+	<param name='expected' eval='true'>true</param>
+     </test_2>
+     <test_3>
+        <param name='table'>not_a_table</param>
+	<param name='expected' eval='true'>false</param>
+     </test_3>
+  </testgetmetatable>
+
+  <testsetcolumnproperty>
+     <test_1>
+        <param name='table'>ABSTRACT_DESCRIPTORS</param>
+	<param name='column'>last_update</param>
+	<param name='property'>default</param>
+	<param name='newval'>super spiffy</param>
+	<param name='expected' eval='true'>true</param>
+     </test_1>
+     <test_2>
+        <param name='table'>BIN</param>
+	<param name='column'>bin_id</param>
+	<param name='property'>reference</param>
+	<param name='newval'>TICKET.ticket_id</param>
+	<param name='expected' eval='true'>true</param>
+     </test_2>
+     <test_3>
+        <param name='table'>not_a_table</param>
+	<param name='column'>not_a_field</param>
+	<param name='property'></param>
+	<param name='newval'></param>
+	<param name='expected' eval='true'>false</param>
+     </test_3>
+  </testsetcolumnproperty>
+
+  <testsettableproperty>
+     <test_1>
+        <param name='table'>ABSTRACT_FILTER_TYPE</param>
+	<param name='property'>name</param>
+	<param name='newval'>ABSTRACT_FILTEROO</param>
+	<param name='expected' eval='true'>true</param>
+     </test_1>
+     <test_2>
+        <param name='table'>ACCESS</param>
+	<param name='property'>is_abstract</param>
+	<param name='newval' eval='true'>true</param>
+	<param name='expected' eval='true'>true</param>
+     </test_2>
+     <test_3>
+        <param name='table'>not_a_table</param>
+	<param name='property'></param>
+	<param name='newval'></param>
+	<param name='expected' eval='true'>false</param>
+     </test_3>
+  </testsettableproperty>
+</TestUnit>

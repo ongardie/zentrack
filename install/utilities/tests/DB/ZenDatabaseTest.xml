@@ -1,0 +1,283 @@
+
+<TestUnit>
+
+  <!-- 
+     **************************
+     test data for PHPUnit tests
+
+     An optional <setup> node can
+     appear in the list, if it exists
+     then it will be passed as the
+     ZenXNode to the (assumed to exist)
+     $this->load() method
+
+     The xml file should contain nodes
+     named the same as the method the
+     data applies to.
+
+     Each method node can contain any
+     number of test nodes which will
+     each contain a set of <param>
+     nodes which will be passed back
+     to the test method
+
+     An optional eval='true' attribute
+     can be applied to any param tag
+     which will cause the data block to
+     be run using eval() (executed as code)
+     
+     This is useful for creating boolean vals,
+     for running functions, using variables, etc
+
+     IMPORTANT NOTE: the method names need
+     to be in all lower case here, since the
+     call uses get_class_methods, which returns
+     them entirely in lower case
+     **************************
+  -->
+  <!-- {table} will be replaced by table name, {key} will be replaced by primary key value -->
+  <setup>
+    <insert_1>
+      <param name='statement'>INSERT INTO {table} (column_primarykey, column_value, column_string, column_integer, column_byte) 
+                              VALUES( {key}, 'apple', 'green', 10, 1 )</param>
+      <param name='table'>DBTEST</param>
+      <param name='passfail' eval='true'>true</param>
+    </insert_1>
+    <insert_2>
+      <param name='statement'>INSERT INTO {table} (column_primarykey, column_value, column_string, column_integer, column_byte) 
+                              VALUES( {key}, 'orange', 'orange', 20, 0 )</param>
+      <param name='table'>DBTEST</param>
+      <param name='passfail' eval='true'>true</param>
+    </insert_2>
+    <insert_3>
+      <param name='statement'>INSERT INTO {table} (column_primarykey, column_value, column_string, column_integer, column_byte) 
+                              VALUES( {key}, 'cherry', 'red', 5, 1 )</param>
+      <param name='table'>DBTEST</param>
+      <param name='passfail' eval='true'>true</param>
+    </insert_3>
+    <insert_4>
+      <param name='statement'>INSERT INTO {table} (column_primarykey, column_value, column_string, column_integer, column_byte) 
+                              VALUES( {key}, 'lemon', 'yellow', 15, 0 )</param>
+      <param name='table'>DBTEST</param>
+      <param name='passfail' eval='true'>true</param>
+    </insert_4>
+  </setup>
+
+  <testsetandgetprefix>
+    <string>
+      <param name='prefix'>PREF_TEST_1</param>
+    </string>
+    <null>
+      <param name='prefix' eval='true'>null</param>
+    </null>
+    <boolean>
+      <param name='prefix' eval='true'>false</param>
+    </boolean>
+    <emptystring>
+      <param name='prefix'></param>
+    </emptystring>
+  </testsetandgetprefix>
+
+  <!-- {table} will be replaced by the table name[optional] 
+       none of the values here should contain any funky things
+       which need to be escaped, except for the testquote params
+       none of the others are quoted or checked for proper escapes
+       that should be handled by ZenQuery
+  -->
+  <testquote>
+    <test1>
+      <param name='string'>some "very" cool 'text'</param>
+    </test1>
+    <test2>
+      <param name='string'>this is \something else "entire'ly''\'</param>
+    </test2>
+    <test3>
+
+    </test3>
+  </testquote>
+  <testexecute>
+    <pass_1>
+      <param name='statement'>SELECT 1 + 2 as expected_val</param>
+      <param name='table'></param>
+      <param name='limit'></param>
+      <param name='cache' eval='true'>false</param>
+      <param name='passfail' eval='true'>true</param>
+      <param name='expected_count' eval='true'>1</param>
+      <param name='expected_val'>3</param>
+    </pass_1>
+    <pass_2>
+      <param name='statement'>SELECT column_primarykey as expected_val FROM {table} WHERE column_integer &lt; 10</param>
+      <param name='table'>DBTEST</param>
+      <param name='limit'></param>
+      <param name='cache' eval='true'>false</param>
+      <param name='passfail' eval='true'>true</param>
+      <param name='expected_count'>1</param>
+    </pass_2>    
+    <pass_3>
+      <param name='statement'>SELECT column_primarykey as expected_val FROM {table} WHERE column_integer &lt; 30</param>
+      <param name='table'>DBTEST</param>
+      <param name='limit'>2</param>
+      <param name='cache' eval='true'>false</param>
+      <param name='passfail' eval='true'>true</param>
+      <param name='expected_count'>2</param>
+    </pass_3>    
+    <pass_4>
+      <param name='statement'>SELECT column_primarykey as expected_val FROM {table} WHERE column_integer &gt; 100</param>
+      <param name='table'>DBTEST</param>
+      <param name='limit'></param>
+      <param name='cache' eval='true'>false</param>
+      <param name='passfail' eval='true'>true</param>
+      <param name='expected_count'>0</param>
+    </pass_4>
+    <pass_5>
+      <param name='statement'>SELECT column_primarykey as expected_val FROM {table} WHERE column_integer &lt;= 10</param>
+      <param name='table'>DBTEST</param>
+      <param name='limit'></param>
+      <param name='cache'>10</param>
+      <param name='passfail' eval='true'>true</param>
+      <param name='expected_count'>2</param>
+    </pass_5>    
+    <pass_6>
+      <param name='statement'>SELECT column_primarykey as expected_val FROM {table} WHERE column_byte &lt; 10</param>
+      <param name='table'>DBTEST</param>
+      <param name='limit'>2</param>
+      <param name='cache'>10</param>
+      <param name='passfail' eval='true'>true</param>
+      <param name='expected_count'>2</param>
+    </pass_6>    
+    <pass_7>
+      <param name='statement'>SELECT column_primarykey as expected_val FROM {table} WHERE column_byte &gt; 100</param>
+      <param name='table'>DBTEST</param>
+      <param name='limit'>2</param>
+      <param name='cache'>10</param>
+      <param name='passfail' eval='true'>true</param>
+      <param name='expected_count'>0</param>
+    </pass_7>
+    <fail_1>
+      <param name='statement'>SELECT true FROM 1=2</param>
+      <param name='table'></param>
+      <param name='limit'></param>
+      <param name='cache' eval='true'>false</param>
+      <param name='passfail' eval='true'>false</param>
+    </fail_1>
+    <fail_2>
+      <param name='statement'>SELECT true FROM fweijioe184798237r89327fwejoi</param>
+      <param name='table'></param>
+      <param name='limit'></param>
+      <param name='cache' eval='true'>false</param>
+      <param name='passfail' eval='true'>false</param>
+    </fail_2>    
+  </testexecute>
+
+  <!-- {table} will be replaced by table name [optional] -->
+  <testexecutegetone>
+    <pass_1>
+      <param name='statement'>SELECT 1 + 2 as expected_val</param>
+      <param name='table'></param>
+      <param name='limit'></param>
+      <param name='cache' eval='true'>false</param>
+      <param name='passfail' eval='true'>true</param>
+      <param name='expected_count'>1</param>
+      <param name='expected_val'>3</param>
+    </pass_1>
+    <pass_2>
+      <param name='statement'>SELECT column_primarykey as expected_val FROM {table} WHERE column_integer &lt; 10</param>
+      <param name='table'>DBTEST</param>
+      <param name='limit'></param>
+      <param name='cache' eval='true'>false</param>
+      <param name='passfail' eval='true'>true</param>
+      <param name='expected_count'>1</param>
+    </pass_2>    
+    <pass_3>
+      <param name='statement'>SELECT column_primarykey as expected_val FROM {table} WHERE column_integer &lt; 30</param>
+      <param name='table'>DBTEST</param>
+      <param name='limit'>2</param>
+      <param name='cache' eval='true'>false</param>
+      <param name='passfail' eval='true'>true</param>
+      <param name='expected_count'>1</param>
+    </pass_3>    
+    <pass_4>
+      <param name='statement'>SELECT column_primarykey as expected_val FROM {table} WHERE column_integer &gt; 100</param>
+      <param name='table'>DBTEST</param>
+      <param name='limit'></param>
+      <param name='cache' eval='true'>false</param>
+      <param name='passfail' eval='true'>true</param>
+    </pass_4>
+    <pass_5>
+      <param name='statement'>SELECT column_primarykey as expected_val FROM {table} WHERE column_integer &lt;= 10</param>
+      <param name='table'>DBTEST</param>
+      <param name='limit'></param>
+      <param name='cache'>10</param>
+      <param name='passfail' eval='true'>true</param>
+      <param name='expected_count'>1</param>
+    </pass_5>    
+    <pass_6>
+      <param name='statement'>SELECT column_primarykey as expected_val FROM {table} WHERE column_byte &lt; 10</param>
+      <param name='table'>DBTEST</param>
+      <param name='limit'>2</param>
+      <param name='cache'>10</param>
+      <param name='passfail' eval='true'>true</param>
+      <param name='expected_count'>1</param>
+    </pass_6>    
+    <pass_7>
+      <param name='statement'>SELECT column_primarykey as expected_val FROM {table} WHERE column_byte &gt; 100</param>
+      <param name='table'>DBTEST</param>
+      <param name='limit'>2</param>
+      <param name='cache'>10</param>
+      <param name='passfail' eval='true'>true</param>
+    </pass_7>
+    <fail_1>
+      <param name='statement'>SELECT true FROM 1=2</param>
+      <param name='table'></param>
+      <param name='cache' eval='true'>false</param>
+      <param name='passfail' eval='true'>false</param>
+    </fail_1>
+    <fail_2>
+      <param name='statement'>SELECT true FROM fjewifjew84798324fjkewjfiojweio</param>
+      <param name='table'></param>
+      <param name='cache' eval='true'>false</param>
+      <param name='passfail' eval='true'>false</param>
+    </fail_2>
+  </testexecutegetone>
+
+  <testinsert>
+    <insert_1>
+      <param name='statement'>INSERT INTO {table} (column_primarykey, column_value, column_string, column_integer, column_byte) 
+                              VALUES( {key}, 'spiffy', 'happy', 299, 1 )</param>
+      <param name='table'>DBTEST</param>
+      <param name='passfail' eval='true'>true</param>
+    </insert_1>
+    <insert_2>
+      <param name='statement'>INSERT INTO {table} (column_primarykey, column_value, column_string, column_integer, column_byte) 
+                              VALUES( 290, 'yah', 'nah', 299, 1 )</param>
+      <param name='table'>DBTEST</param>
+      <param name='passfail' eval='true'>true</param>
+    </insert_2>
+    <fail_1>
+      <param name='statement'>INSERT INTO {table} (column_primarykey, column_value, column_string, column_integer, column_byte) 
+                              VALUES( null, 'weee', 'yay', 299, 1 )</param>
+      <param name='table'>DBTEST</param>
+      <param name='passfail' eval='true'>false</param>
+    </fail_1>
+    <fail_2>
+      <param name='statement'>INSERT INTO {table} (column_notacolumn, column_value, column_string, column_integer, column_byte) 
+                              VALUES( {key}, 'hoohaw', 'weevul', 'a', 20 )</param>
+      <param name='table'>DBTEST</param>
+      <param name='passfail' eval='true'>false</param>
+    </fail_2>
+  </testinsert>
+
+  <testgenerateid>
+    <test_1>
+      <param name='table'>DBTEST</param>
+    </test_1>
+  </testgenerateid>
+
+</TestUnit>
+
+
+
+
+
+
+

@@ -30,6 +30,12 @@
       Assert::equals( $result, $vals['expected'] );
     }
 
+    /** Test the getIni function, this will create a $_GLOBALS['zen'] object, and parse ini file contents */
+    function testGetIni( $vals ) {
+      $val = ZenUtils::getIni( $vals['cat'], $vals['name'] );
+      Assert::equals( $val, $vals['expected'], "Expected {$vals['expected']}, found $val" );
+    }
+
     function testConvertSecondsTo( $vals ) {
       $result = ZenUtils::convertSecondsTo( $vals['seconds'], $vals['period'] );
       Assert::equals( $result, $vals['expected'], "result ($result) != expected ({$vals['expected']})."
