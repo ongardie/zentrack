@@ -79,7 +79,7 @@
 </tr>
 <tr>
   <td class="bars">
-    Notes/Duties (tester,manager,etc)
+    Notes
   </td>
   <td class="bars">
     <input type="text" name="notes" value="<?=strip_tags($notes)?>" size="50" maxlength="255">
