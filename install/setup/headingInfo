@@ -1,12 +1,23 @@
 
-############################
-#  Zentrack Setup Program  #
-############################
-#                          #
-# Please read the INSTALL  #
-# instructions located in  #
-# this directory before    #
-# use.                     #
-#                          #
-############################
+###################################
+#    Zentrack Setup Program       #
+###################################
+#                                 #
+# Please read the INSTALL         #     
+# instructions located in this    #
+# this directory before use.      #
+#                                 #
+# List targets:                   #
+#   install.php help              #
+#                                 #
+# Help/usage for target:          #
+#   install.php help target       #
+#                                 #
+# Note that on windows you must   #
+# run this from the command       #
+# prompt, and you must specify    #
+# the php binary first, i.e.:     #
+# c:\php\cli\php.exe install.php  #
+#                                 #
+###################################
 

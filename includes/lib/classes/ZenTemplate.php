@@ -49,6 +49,9 @@
    * A string consists of two elements: variable names and string literals.  String literals are surrounded
    * by quotes (" "), and are printed exactly as they appear, variables are parsed into the value passed to the
    * template system.  a + is used to join variables and strings together.  Here are some examples:
+   *
+   * Note that listeral " and : characters can be included in template tags using &quot; and &#58; repectively.  
+   * These will be reverted once the template tags have been parsed.
    * 
    * <code>
    *  // assuming color = 'blue', fruit = 'apple'
@@ -116,8 +119,9 @@ class ZenTemplate {
   }
 
   /**
-   * <b>private</b>: parse the contents of the template and insert values
+   * Parse the contents of the template and insert values
    *
+   * @access private
    * @return string parsed contents
    */
   function _parse() {
@@ -129,13 +133,16 @@ class ZenTemplate {
   }
 
   /**
-   * <b>private</b>: parse the inserts in the template and return text for replacement
+   * Parse the inserts in the template and return text for replacement
    *
+   * @access private
    * @param string $text text to be replaced
    * @return string text to insert
    */
   function _insert( $text ) {
+    // parse tags and fix literal : chars
     $parts = explode(":", $text);
+    $parts = preg_replace('/&#58;/', ':', $parts);
     $index = strtolower(trim($parts[0]));
     if( count($parts) == 1 ) {
       // {varname} - inserts value of varname
@@ -386,7 +393,8 @@ class ZenTemplate {
 	$str .= preg_replace('/^"/', "", preg_replace('/"$/', "", $v)); 
       }
       // this is the foreach key
-      else if( $v == "index" ) {
+   
+   else if( $v == "index" ) {
 	$str .= "{index}";
       }
       // this is the foreach value
@@ -401,6 +409,11 @@ class ZenTemplate {
     // fix return chars
     $str = str_replace('\n', "\n", $str);
     $str = str_replace('\t', "\t", $str);
+    // fix html entities
+    $str = str_replace('&quot;', '"', $str);
+    $str = str_replace('&#34;', '"', $str);
+    $str = str_replace('&amp;', '&', $str);
+    $str = str_replace('&#38;', '&', $str);
     return $str;
   }
   

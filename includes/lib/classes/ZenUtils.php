@@ -93,7 +93,8 @@ class ZenUtils {
       if( !file_exists($file) ) {
         return null;
       }
-      return ZenUtils::read_ini($file);
+      $GLOBALS['zen'] = ZenUtils::read_ini($file);
+      return $GLOBALS['zen'];
     }
   }
 

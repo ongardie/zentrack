@@ -14,11 +14,15 @@ class ZenDbSchema extends Zen {
    * CONSTRUCTOR
    *
    * @param string $xmlfile filename or valid xml data to parse
-   * @param boolean $use_cache if true, check for cached data rather than parsing $xmlfile
+   * @param boolean $use_cache if true, check for cached data rather than parsing $xmlfile (this is essential for install ops)
+   * @param boolean $devmode are we in develop mode? (will search for this if not provided)
    */
-  function ZenDbSchema( $xmlfile, $use_cache = true ) {
+  function ZenDbSchema( $xmlfile, $use_cache = true, $devmode = null ) {
     // call Zen()
     $this->Zen();
+
+    // develop mode?
+    $this->_devmode = $devmode? $devmode : ZenUtils::getIni('debug','develop_mode');
 
     $cacheFile = ZenUtils::getIni('directories','dir_cache').'/dbSchemaInfo';
     $this->_tables = false;
@@ -149,21 +153,30 @@ class ZenDbSchema extends Zen {
     $xnode =& $x->parse($xmlfile);
     $xmldata = $xnode->toArray(true);
     $this->_tables = array();
+    $this->_updateQueries = array();
 
     // if there is only one entry then it was probably compressed, so
     // lets uncompress it before we try to iterate through it and break
     // everything
     $atables = $xmldata['children']['abstractTables']['children']['table'];
-    if( !isset($atables[0]) ) { $atables = array($atables); }
+    if( count($atables) && !isset($atables[0]) ) { $atables = array($atables); }
     $tables =  $xmldata['children']['tables']['children']['table'];
-    if( !isset($tables[0]) ) { $tables = array($tables); }
-
+    if( count($tables) && !isset($tables[0]) ) { $tables = array($tables); }
+    $updates = isset($xmldata['children']['upgradeQueries'])? 
+      $xmldata['children']['upgradeQueries']['children']['query'] : array();
+    if( count($updates) && !isset($updates[0]) ) {
+      $updates = array($updates);
+    }
+    
     // read array 
     foreach( $atables as $val ) {
       $this->_loadTable( $val, true );
     }
     foreach( $tables as $val ) {
       $this->_loadTable( $val, false );
+    }
+    foreach( $updates as $val ) {
+      $this->_loadUpdateQuery($val);
     }
   }
 
@@ -185,6 +198,13 @@ class ZenDbSchema extends Zen {
 	$t['inherits'][] = $i['data'];
        }
     }
+    // check for devmode param, skip
+    // if this is a test table
+    if( !$this->_devmode && in_array('ABSTRACT_TEST',$t['inherits']) ) {
+      Zen::debug($this, '_load', "Not in develop mode, skipping test table: $n", 0, LVL_DEBUG);
+      return;
+    }
+
     // see if table is abstract
     $t['is_abstract'] = $abstract;
 
@@ -255,6 +275,15 @@ class ZenDbSchema extends Zen {
     // relaxed 'requirement' status for label (should be required)
     if( !isset($f['label']) ) { $f['label'] = ""; }
     return $f;
+  }
+
+  /**
+   * Loads update queries used to upgrade from previous database versions
+   *
+   * @param array $query
+   */
+  function _loadUpdateQuery($query) {
+    $this->_updateQueries[] = array($query['children']['description'], $query['children']['sql']);
   }
 
   /**
@@ -420,6 +449,13 @@ class ZenDbSchema extends Zen {
   function getAllIndices() { return $this->_indices; }
 
   /**
+   * Returns the update queries associated with this db schema
+   */
+  function getUpgradeQueries() {
+    return $this->_updateQueries;
+  }
+
+  /**
    * Retrieve inherited fields recursively
    *
    * @param mixed $tables is null, string, or array of table names
@@ -463,6 +499,16 @@ class ZenDbSchema extends Zen {
    * @var array $_indices is a mapped array of (string)table_name -> (array)related_indices
    */
   var $_indices;
+
+  /**
+   * @var array $_updateQueries array( (string)description, (string)sql statement ) for use with upgrading dbs
+   */
+  var $_updateQueries;
+
+  /**
+   * @var boolean $_devmode are we in develop mode? if not, we skip test tables
+   */
+  var $_devmode;
   
 }
 

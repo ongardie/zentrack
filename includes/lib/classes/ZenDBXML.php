@@ -12,12 +12,13 @@ class ZenDBXML {
    *
    * @param string $dbobject is a ZenDatabase instance
    * @param string $xmlfile is the full path and name of the xml file which holds the database schema info
+   * @param boolean $devmode zen.ini->develop mode parameter, affects how tables are created/loaded
    */
-  function ZenDBXML( &$dbobject, $xmlfile ) {     
+  function ZenDBXML( &$dbobject, $xmlfile, $devmode ) {
     $this->_dbobj =& $dbobject;
     $this->_dbtype = $this->_db->getDbType();
     $this->_dbTypeInfo = new DbTypeInfo( &$dbobject );
-    $this->_schema = new ZenDbSchema( $xmlfile, false );
+    $this->_schema = new ZenDbSchema( $xmlfile, false, $devmode );
   }
 
   /* HIGH LEVEL METHODS */
@@ -28,12 +29,12 @@ class ZenDBXML {
    * //todo
    *
    * @param string $ouptut is directory to output xml data to
-   * @param string $table [optional] dumps only one table
+   * @param mixed $table [optional] (string)table or (array)tables to dump, otherwise all
    * @param string $compress compression type (null, gzip or zip)
    * @return array [0]files attempted, [1]files successfully dumped
    */
-  function dumpDatabaseData( $output, $table, $compress ) { 
-    if( $table ) { $tables = array($table); }
+  function dumpDatabaseData( $output, $table = null, $compress = null ) { 
+    if( $table ) { $tables = is_array($table)? $table : array($table); }
     else { $tables = $this->_schema->listTables(); }
     $results = array(0,0);
     foreach( $tables as $t ) {
@@ -217,6 +218,35 @@ class ZenDBXML {
       else { $res[1]++; }
     }
     return $res;
+  }
+
+  /**
+   * Reads and executes the sql statements needed to synchronize data in an upgraded schema
+   *
+   * @params string $newxml is the new xml schema from which the statements will be retrieved
+   * @return array [0]attempts, [1]successes
+   */
+  function synchronizeUpgradedDbData( $newxml ) {
+    $queries = $this->getUpgradeQueries( $newxml );
+    $nums = array( count($queries), 0 );
+    foreach($queries as $q) {
+      if( !$this->_dbobj->execute($sql) ) {
+        ZenUtils::safeDebug(true, $this, 'updateDbSchema', "Sql failed: $sql", 
+                            220, LVL_ERROR);
+      }
+      else { $nums[1]++; }
+    }
+    return $nums;
+  }
+
+  /**
+   * Returns all upgrade queries which are associated with a database schema
+   *
+   * @param string $xmlfile the xml schema to examine
+   */
+  function getUpgradeQueries($xmlfile) {
+    $newschema = new ZenDbSchema( $xmlfile, false );
+    return $newschema->getUpgradeQueries();
   }
 
   /**

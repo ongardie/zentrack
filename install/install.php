@@ -37,8 +37,13 @@
   // from first array will change count and
   // cause problems with iterator
   $newvals = array();
+  if( !$argv || !count($argv) ) { $argv = array('-help'); }
+  if( preg_match('#^(help|list|/h|--help|-h|/\?|/h)$#', $argv[0]) ) {
+    $argv[0] = '-help';
+  }
   for( $i=0; $i < count($argv); $i++ ) {
-    if( strpos(trim($argv[$i]), '--') === 0 ) {
+    $argv[$i] = trim($argv[$i]);
+    if( strpos($argv[$i], '--') === 0 ) {
       $val = explode('=',substr(trim($argv[$i]),2));
       if( $val[0] == 'ini_file' ) { $ini_file = $val[1]; }
       else if( $val[0] == 'classdir' ) { $class_dir = $val[1]; }
@@ -112,13 +117,12 @@
   $z = new ZenTargets($ini_set, $supress);
 
   // make sure we have parameters to work with
-  if( count($argv) < 1 || (preg_match("/--ini_file=/",$argv[0]) && count($argv) < 2) ) {
-    print "Nothing to do: please specify a target\n\n";
-    $targets = $z->getValidTargets();
-    foreach( $targets as $key=>$val ) {
-      print "\t$key - $val\n";
-    }
-    exit;
+  $count = 0;
+  while( isset($argv[$count]) && preg_match('/^--/', $argv[$count]) ) {
+    $count++;
+  }
+  if( !isset($argv[$count]) ) {
+    die("No valid target specified.  Please try install.php help\n");
   }
 
   // prepare to run

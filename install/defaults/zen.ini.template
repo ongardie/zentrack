@@ -39,7 +39,7 @@ path_includes = "{path_includes="/web/zentrack/includes"}"
 path_www = "{path_www="/web/zentrack/www"}"  
 
 ;browser path to zentrack www directory (this should include the domain name)
-url_www = "{url_www="http://mysite.com/zentrack"}"    
+url_www = "{url_www="http&#58;//mysite.com/zentrack"}"    
 
 
 ;;;;;;;;;;;;;;; DATABASE SETTINGS ;;;;;;;;;;;;;;;;;;;;;;

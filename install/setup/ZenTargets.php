@@ -30,7 +30,6 @@ class ZenTargets {
   function args( $args ) {
     $this->_targets = array();
     $ini = "zen.ini";
-    $n = "";    
     foreach($args as $a) {
       $a = trim($a);
       if( preg_match("/^--/", $a, $matches) ) {
@@ -45,7 +44,7 @@ class ZenTargets {
 	$this->_targets[$n] = array();
       }
       else {
-	if( $n == "" ) {
+	if( !count($this->_targets) ) {
 	  print "A valid target must be specified before providing params, exiting.";
 	  return false;
 	}
@@ -118,6 +117,11 @@ class ZenTargets {
     print "Initiating $u...\n";
     $p = $this->_getParm($target,0);
 
+    if( strlen($p) && preg_match('#^(-\?|-h|--help|/\?|/h)$#', $p) ) {
+      $p = $target;
+      $target = 'help';
+    }
+
     //todo
     //todo
     //todo add a target for test_config that will run tests on config file contents
@@ -127,7 +131,7 @@ class ZenTargets {
     switch($target) {
     case "backup_all":        return $this->_backup_all();
     case "backup_config":     return $this->_backup_config();
-    case "backup_database":   return $this->_backup_database();
+    case "backup_database":   return $this->_backup_database( $p );
     case "changed_config":    return $this->_changed_config();
     case "check_directories": return $this->_check_directories( $p );
     case "check_permissions": return $this->_check_permissions();
@@ -136,23 +140,32 @@ class ZenTargets {
     case "copy_config_files": return $this->_copy_config_files( $this->_getBooleanParm($target,0,false) );
     case "create_database":   return $this->_create_database();
     case "cvs_update":        return $this->_cvs_update();
+    case "drop_database":     return $this->_drop_database( $p );
     case "extra_secure_mode":
       {
+        $p = $this->_getParm($target, 0);
         $p2 = $this->_getParm($target, 1);
         if( !$p || !$p2 ) {
-          print "   Usage: zen.php  [--config_file=zen.ini] -$target apache_user apache_group\n";
-          print "   You must be super user to run this command\n";
+          $this->_help($target);
           return false;
         }
         return $this->_extra_secure_mode( $p, $p2 );
       }
     case "full_install":      return $this->_full_install();
+    case "load_data":
+      {
+        if( !strlen($p) ) {
+          $this->_help($target);
+          return false;          
+        }
+        return $this->_load_data( $p, $this->_getBooleanParm($target,1,true) );
+      }
     case "merge_template_file":    return $this->_merge_template_file( $p );
     case "prepare_install_files": 
       {
         $p2 = $this->_getParm($target,0);
         if( !$p || !$p2 ) {
-          print "   Usage: zen.php [--config_file=zen.ini] -$target source destination\n";
+          $this->_help($target);
           return false;
         }
         return $this->_prepare_install_files( $p, $p2 );
@@ -160,10 +173,7 @@ class ZenTargets {
     case "try_db_connection":
       {
 	if( count($this->_targets[$target]) < 5 ) {
-          print_r($this->_targets);
-          print "   Usage: zen.php [--config_file=zen.ini] -$target type host instance user password\n";
-          print "   Where type is the db type, such as mysql, pgsql, oci8po, etc (see zen.ini for details)\n";
-          print "   Where host can be localhost or possibly '', and instance is the database name, or TNS file for oracle\n";
+          $this->_help($target);
 	  return false;
 	}
 	return $this->_try_db_connection( $p, $this->_getParm($target, 1),
@@ -174,8 +184,7 @@ class ZenTargets {
     case "update_db_schema":
       {
         if( !$p ) {
-          print "   Usage: zen.php [--config_file=zen.ini] -$target new_schema.xml [true|false]\n";
-          print "   Where true|false is 'actually do it' vs. just preview it\n";
+          $this->_help($target);
           return false;
         }
         return $this->_update_db_schema( $p, $this->_getBooleanParm($target, 1, false) );
@@ -183,8 +192,7 @@ class ZenTargets {
     case "upgrade":
       {
         if( !$p ) {
-          print "   Usage: zen.php [--config_file=zen.ini] -$target old_version\n";
-          print "   Where old_version is the version you want to upgrade from\n";
+          $this->_help($target);
           return false;
         }
         return $this->_update( $p );
@@ -193,10 +201,102 @@ class ZenTargets {
       {
         return $this->_verify_db_connection();
       }
+    case "help":
+      {
+        $this->_help($p);
+        return true;
+      }
     default:
       {
 	print "\n$u was an invalid target: ignored\n";
 	return false;
+      }
+    }
+  }
+
+  /**
+   * Displays usage and brief help for a command
+   *
+   * @params string $target
+   */
+  function _help( $target ) {
+    $targets = $this->getValidTargets();
+    $description = isset($targets[$target])? $targets[$target] : "";
+    if( $target ) { print "\n".strtoupper($target).": $description\n"; }
+    switch( $target ) {
+    case "extra_secure_mode":
+      {
+        print "   Usage: zen.php  [--config_file=zen.ini] -$target apache_user apache_group\n";
+        print "   - where apache_user is the name the apache web process runs as\n";
+        print "   - where apache_group is the group the apache web process runs as\n";
+        print "   - you must be a superuser to run this command\n";
+        print "   - this command means nothing to windows\n";
+        break;
+      }
+    case "load_data":
+      {
+        print "   Usage: zen.php [--config_file=zen.ini] -$target data_directory [delete_first]\n";
+        print "   - where data_directory is the source directory containing xml data to upload\n";
+        print "   - where delete_first [default=true] is whether or not to delete existing data before uploading\n";
+        break;
+      }
+    case "prepare_install_files": 
+      {
+        print "   Usage: zen.php [--config_file=zen.ini] -$target source destination\n";
+        break;
+      }
+    case "try_db_connection":
+      {
+        print "   Usage: zen.php [--config_file=zen.ini] -$target type host instance user password\n";
+        print "   - where type is the db type, such as mysql, pgsql, oci8po, etc (see zen.ini for details)\n";
+        print "   - where host can be localhost or possibly '', and instance is the database name, or TNS file for oracle\n";
+        break;
+      }
+    case "update_db_schema":
+      {
+        print "   Usage: zen.php [--config_file=zen.ini] -$target new_schema.xml [true|false]\n";
+        print "   - where true|false is 'actually do it' vs. just preview it\n";
+        break;
+      }
+    case "upgrade":
+      {
+        print "   Usage: zen.php [--config_file=zen.ini] -$target old_version\n";
+        print "   - where old_version is the version you want to upgrade from\n";
+        break;
+      }
+    case "full_install": 
+    case "merge_template_file": 
+    case "verify_db_connection":
+    case "backup_all":       
+    case "backup_config":    
+    case "backup_database":  
+    case "changed_config":   
+    case "check_directories":
+    case "check_permissions":
+    case "clean_cache_data": 
+    case "copy_class_files": 
+    case "copy_config_files":
+    case "create_database":  
+    case "cvs_update":       
+    case "drop_database":  
+      {
+        print "   Usage: install.php [--config_file=zen.ini] -$target\n";
+        break;
+      }
+    case "":
+    case "help":
+      {
+        print "   Usage: install.php [--config_file=zen.ini] -help target\n";
+        print "   - where command is the command to display help for\n";
+        print "\n   Available targets:\n";
+        foreach( $targets as $key=>$val ) {
+          print "   -$key ($val)\n";
+        }
+        break;
+      }
+    default:
+      {
+	print "   No help found for specified target\n";        
       }
     }
   }
@@ -262,12 +362,14 @@ class ZenTargets {
   /**
    * Back up a file.  Will create necessary directories.
    *
+   * @access private
    * @param string $name the name of file
    * @param string $source the source directory (without filename)
    * @param string $dest the backup directory (this is the subdirectory under backup only)
+   * @param string $newname if provided, the backup will be created with this name
    * @return boolean returns false only if source exists and copy failed, otherwise true
    */
-  function _backup_file($name, $source, $dest = '') {
+  function _backup_file($name, $source, $dest = '', $newname = '') {
     // get base backups directory
     $base = $this->_getBackupLocation();
 
@@ -287,7 +389,8 @@ class ZenTargets {
     $dest = $dest? $base."/".$dest : $base;
 
     // create the destination file
-    $dest .= "/$name";
+    if( !$newname ) { $newname = $name; }
+    $dest .= "/$newname";
     
     // create the source file
     $source = $source."/$name";
@@ -310,15 +413,35 @@ class ZenTargets {
   
   /**
    * Back up database files
+   *
+   * @param string $table if provided, only tables listed here will be backed up (separate names with a comma)
    */
-  function _backup_database() {
-    //todo
+  function _backup_database( $table = null ) {
     print "- Backing up database contents\n";
 
+    // determine which tables to backup
+    if( $table ) { $tables = explode(',',$table); }
+    else { $tables = null; }
+    
     // create directory if not done yet
     $dir = $this->_getBackupLocation()."/database";
+    $source = $this->_ini['directories']['dir_config']."/database.xml";
+    
+    // backup the database schema
+    if( !$this->_backup_file('database.xml', $source, $dir, 'database.xml.schema') ) {
+      $this->_printerr("_backup_database", "Could not backup schema file");
+      return false;
+    }
 
-    print "   NOT YET FUNCTIONAL\n";
+    // perform backups
+    $dbx = new ZenDBXML( Zen::getDbConnection(), $source );                 
+    $res = $dbx->dumpDatabaseData( $dir, $tables, true );
+    print "   {$res[1]} of {$res[0]} statements processed successfully\n";
+    if( $res[0] != $res[1] ) {
+      $diff = $res[0] - $res[1];
+      $this->_printerr("_backup_database", "Backup error: $diff statements failed");
+      return false;
+    }
     return true;
   }
 
@@ -637,10 +760,6 @@ class ZenTargets {
    * @param boolean $replace if true, then the destination will be replaced instead of merged
    */
   function _merge_template_file( $dest, $replace = false ) {
-    //todo
-    //todo
-    //todo
-    //todo change all the templates in defaults/ directory to use default= values
     $file = basename($dest);
     $tmplt = $this->_installdir."/defaults/{$file}.template";
     
@@ -690,9 +809,9 @@ class ZenTargets {
    */
   function _stripConfigVals( $file ) {
     $contents = file($file);
-    $vals = array();
+    $vals = ZenUtils::flatten_array($this->_ini);
     foreach($contents as $c) {
-      if( preg_match("/\\$(a-zA-Z0-9_) *= *[\"']?([^\"';]+)/", $c, $matches) ) {
+      if( preg_match("/^[ \t]*[$]?([a-zA-Z0-9_]+) *= *[\"']?([^\"';]+)/", $c, $matches) ) {
         $n = $matches[1];
         $vals[$n] = trim($matches[2]);
       }
@@ -751,8 +870,9 @@ class ZenTargets {
         // if it is a template, we will try to merge it
         // if not we either replace or skip
         $choices = $is_tmplt? array('m','r','s') : array('r','s');
+        $d = $is_tmplt? 'm' : 'r';
         $choicetext = $is_tmplt? "merge, replace, or skip" : "replace or skip";
-        $choice = $this->_confirm("   $file exists, $choicetext?", $choices, 'm');
+        $choice = $this->_confirm("   $file exists, $choicetext?", $choices, $d);
       }
       else if( file_exists($dest) && $overwrite ) {
         // we will automagically merge or replace
@@ -863,6 +983,7 @@ class ZenTargets {
    * @return boolean success
    */
   function _cvs_update( $overwrite = true ) {
+    $success = true;
     // check for develop mode
     if( $this->_ini['debug']['develop_mode'] < 1 ) {
       $this->_printerr("_cvs_update", "This method is only available during development [develop_mode=true]");
@@ -882,15 +1003,15 @@ class ZenTargets {
     if( !$this->_copy_class_files() ) { $success = false; }
 
     // copy config files if flag set
-    if( !$this->_merge_config_files() ) { $success = false; }
+    if( !$this->_copy_config_files() ) { $success = false; }
     
     // delete cache data and touch cache/last_config_update??
-    if( !$this->_clean_cache_data() ) { return false; }
+    if( !$this->_clean_cache_data() ) { $success = false; }
 
     // compare and update db schema
     if( !$this->_update_db_schema( true ) ) { return false; }
 
-    return true;
+    return $success;
   }
 
   /**
@@ -982,6 +1103,11 @@ class ZenTargets {
 
     // tar and package a .tar.gz and a .zip file
 
+    // prompt developer to update the sql queries for database.xml (for upgrades)
+    // and to update documentation
+
+    // can we make this submit news and mailing list articles?
+
   }
 
   /**
@@ -1022,6 +1148,8 @@ class ZenTargets {
     // compare and update db schema
     if( !$this->_update_db_schema( true ) ) { return false; }
 
+    //todo
+    //todo
     // notify user of any manual updates required or config files
     // which were backed up/replaced
     //todo
@@ -1031,6 +1159,16 @@ class ZenTargets {
 
   }
 
+  /**
+   * Manually specify the database settings and attempt a connection for testing
+   *
+   * @param string $type is the database type as specified here: {@link http://phplens.com/lens/adodb/docs-adodb.htm#drivers}
+   * @param string $host is the server hostname (localhost, 192.168.1.100, db.mysite.com, etc)
+   * @param string $instance is the name of the database instance (zentrack perhaps?)
+   * @param string $user is the user login
+   * @param string $passwd is the user password
+   * @return boolean true on success
+   */
   function _try_db_connection( $type, $host, $instance, $user, $passwd ) {
     $db = $this->_ini['db'];
     print "   Connecting to {$type}//{$user}@{$host}:{$instance}\n";
@@ -1046,7 +1184,7 @@ class ZenTargets {
   }
 
   /**
-   * Verifies database connectivity
+   * Verifies database connectivity.  This uses the current ini settings
    *
    * @return boolean success
    */
@@ -1062,7 +1200,7 @@ class ZenTargets {
   }
 
   /** Establish a database connection */
-  function _get_db_connection() {
+  function &_get_db_connection() {
     // find adodb and include
     $dir = $this->_ini['directories']['dir_classes'];
     if( !@is_dir($dir) ) {
@@ -1075,31 +1213,104 @@ class ZenTargets {
   }
 
   /**
-   * Updates a database schema
+   * Create a database schema.  If the schema already exists, it will be deleted!!
    *
-   * @param string $source is the xml file to get the new schema from
-   * @param boolean $perform false - tells what it will update, true - performs the update 
+   * Note that this will not create the database instance.  Users must manually create the
+   * database instance, user and password.
+   *
+   * @param boolean perform if false, then simply display what would happen during a create
+   * @return boolean
    */
-  function _update_db_schema( $source, $perform = true ) {
-    print "- update_db_schema is not ready for use\n";
-    return false;
+  function _create_database() {
+    // drop database and backup first, supress errors
 
-    //todo
+    // add new schema
 
-    // confirm
-
-    // establish db connection (remember to include adodb)
+    // load new data
     
+  }
+
+  /**
+   * Drop a database schema.  Be very careful using this!
+   *
+   * @param boolean $backup_first if true, db schema will be backed up before deleting
+   * @param boolean $supress_errors (system use only) supresses errors if this is just a precautionary measure
+   */
+  function _drop_database() {
+    // backup schema and data
+    
+    // drop tables
+
+  }
+
+  /**
+   * Loads data from xml dump into the database.  Use with care!
+   *
+   * <b>NOTE</b>: the default behavior is to drop all existing data.  You must override this to load data
+   * without deleting old data first.
+   * 
+   * @param string $dir the directory where xml data will be loaded from
+   * @param boolean $dropOldData if true, all data in database will be dropped before loading new data
+   */
+  function _load_data( $dir, $dropOldData = true ) {
+    // confirm data directory
+
+    // backup existing data
+
+    // drop existing data
+
+    // load new data
+  }
+
+  /**
+   * Updates a database schema.  This is a dangerous operation if you don't know what you are doing.
+   *
+   * @param string $newschema is the xml file to get the new schema from
+   * @param boolean $perform if false, then it will simply display what would have happened during an update
+   * @param boolean $skip used to skip backups (only available to install program) when they are already completed
+   * @return boolean
+   */
+  function _update_db_schema( $newschema, $perform = true, $skip = false ) {
     // backup the data
+    if( !$skip ) {
+      if( $perform && !$this->_backup_database() ) {
+        return false;
+      }
+    }
 
-    // parse the new schema
-    
-    // collect the old schema
+    print $perform? "- Updating database schema\n" : "- (simulated)Updating database schema\n";
+
+    // get the backup folder
+    $dir = $this->_getBackupLocation()."/database";
+
+    // create schema parser and backup utility
+    $source = $this->_ini['directories']['dir_config']."/database.xml";
+    $dbx = new ZenDBXML( Zen::getDbConnection(), $source );                 
 
     // perform the update (or preview)
+    if( $perform ) {
+      $res = $dbx->updateDbSchema($newschema);
+      print "   {$res[1]} of {$res[0]} updates processed successfully\n";
+      if( $res[0] != $res[1] ) {
+        $diff = $res[0] - $res[1];
+        $this->_printerr('_update_db_schema', "DB Update failed: $diff statements failed");
+        return false;
+      }
+    }
+    else {
+      $updates = $dbx->compareXMLSchemas($newschema);
+      foreach( $updates as $u ) {
+        print "   A {$u['action']}: ";
+        $sep = "";
+        foreach( $u as $key=>$val ) {
+          if( $key == action ) { continue; }
+          print "{$sep}[{$key}]{$val}";
+          $sep = ", ";          
+        }
+      }
+    }
     
-    // determine if there is new data to be uploaded
-
+    return $this->_synchronize_db_data($newschema, $perform);
   }
 
   /*****************************************************
@@ -1107,8 +1318,42 @@ class ZenTargets {
    ****************************************************/
 
   /**
+   * Synchronized data in a newly upgraded database, performing any queries needed to insure
+   * data will work with new schema format.
+   *
+   * <b>NOTE</b>: this function does not backup data before running!  Use with care.
+   *
+   * @access private
+   * @param string $newxml xml file to examine and run updates from
+   * @param ZenDBXML $dbx the dbxml schema object to use
+   * @param boolean $perform if false, simulates running this method
+   */
+  function _synchronize_db_data($newxml, $dbx, $perform) {
+    // synchronize data by performing any upgrade sql statements
+    print "- Synchronizing data\n";
+    if( $perform ) {
+      $res = $dbx->synchronizeUpgradedDbData($newxml);
+      print "   {$res[1]} of {$res[0]} queries processed successfully\n";
+      if( $res[0] != $res[1] ) {
+        $diff = $res[0] - $res[1];
+        $this->_printerr('_update_db_schema', "Synchronize data failed: $diff queries failed");
+        return false;
+      }
+    }
+    else {
+      $queries = $dbx->getUpgradeQueries($newxml);
+      foreach($queries as $q) {
+        print "   Q ($q[0])$q[1]\n";
+      }
+    }
+    return true;
+  }
+
+  /**
    * Attempts to locate the directory where the classes are
    * located
+   *
+   * @access private
    */
   function _find_classes_directory() {
     $dir = null;
@@ -1127,6 +1372,7 @@ class ZenTargets {
   /**
    * Prints the zen.php file header when a target is run
    *
+   * @access private
    */
   function _printHeading() {
     print join("",file($this->_installdir."/setup/headingInfo"));
@@ -1135,6 +1381,7 @@ class ZenTargets {
   /**
    * retrieves an input parameter (insures that it exists, etc)
    *
+   * @access private
    * @param string $target is the target the param is for
    * @param integer $key is the index of the var to get
    * @param mixed $default is the value to substitute if not found
@@ -1152,6 +1399,7 @@ class ZenTargets {
   /**
    * retrieves a boolean input parameter (if a value is entered that is not boolean, will be parsed as one)
    *
+   * @access private
    * @param string $target is the target the param is for
    * @param integer $key is the index of the var to get
    * @param mixed $default is the value to substitute if not found
@@ -1179,6 +1427,7 @@ class ZenTargets {
   /**
    * Checks a specific directory, creates if specified
    *
+   * @access private
    * @param string $dir is the path to the directory to create
    * @param boolean $create tells whether to check directory or not
    * @param integer $permissions unix permission string... run if $create = true, even if not created
@@ -1205,6 +1454,8 @@ class ZenTargets {
 
   /**
    * Recursively reads directories and drops files.. for use with clean_cache_data
+   *
+   * @access private
    * @param string $dir is the directory to recurse through
    */
   function _clean_recursively( $dir ) {
@@ -1255,6 +1506,7 @@ class ZenTargets {
   /**
    * Performs a recursive copy from one directory to another
    *
+   * @access private
    * @param string $source the directory to copy from
    * @param string $dest the directory to copy to
    * @param integer $chmod is the permissions to create any needed directories with
@@ -1317,6 +1569,7 @@ class ZenTargets {
   /**
    * Parses a setup data file and sets results
    *
+   * @access private
    * @param string $filename
    * @return boolean loaded successfully
    */
@@ -1336,6 +1589,7 @@ class ZenTargets {
   /**
    * Prints an error message
    *
+   * @access private
    * @param string $method is the method where error occurred
    * @param string $msg is the error to print
    */
@@ -1349,6 +1603,7 @@ class ZenTargets {
    * Note that if the --supress_confirm option was passed, then this function will simply return the default
    * or the first element in the list.
    *
+   * @access private
    * @param string $msg message to user
    * @param array $choices if provided, whatever is here is a valid choice, otherwise y/n
    * @return string returns char typed
@@ -1386,9 +1641,12 @@ class ZenTargets {
 
   /**
    * Returns a list of valid targets
+   *
+   * @access private
    */
   function getValidTargets() {
     return array(
+                 "help" => "Brief help/usage info for targets",
                  "backup_all" => "Run all backup targets",
                  "backup_config" => "Backup config files",
                  "backup_database" => "Backup database",
@@ -1400,14 +1658,15 @@ class ZenTargets {
                  "copy_config_files" => "Copy config files to working directory",
                  "create_database" => "Create a new database(install tool)",
                  "cvs_update" => "Update code from cvs repository(development tool)",
+                 "drop_database" => "Delete a database (use with caution!!)",
                  "extra_secure_mode" => "Tighten directory permissions(for unix, need to know unix)",
                  "full_install" => "Install a new zentrack version",
                  "merge_ini_file" => "Merge ini params with template(development tool)",
                  "prepare_install_files" => "Prepare install file(development tool)",
-                 "try_db_connection" => "Test db connectivity",
-                 "update_db_schema" => "Update db schema to new release(ran by upgrade)",
+                 "try_db_connection" => "Test db connectivity by manually specifying connection info",
+                 "update_db_schema" => "Upgrade a database schema by comparing current to a new xml schema(use with caution!!)",
                  "upgrade" => "Upgrade to new release",
-                 "verify_db_connection" => "Test db connection" );
+                 "verify_db_connection" => "Test db connection using ini settings" );
   }
   
 
