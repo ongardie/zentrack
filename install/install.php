@@ -14,6 +14,7 @@
    *   <li>--compress=type: set compression on data output, null-do not compress(default), zip-use zip compression, 
    *         gzip-use gzip compresion
    *   <li>--classdir=dir:  specify location of class files (for development)
+   *   <li>--makeini:  create an ini file
    * </ul>
    *
    * @package Setup
@@ -36,6 +37,7 @@
   $supress = false;
   $verbose = false;
   $compress = null;
+  $makeini = false;
   
   // strip -- params and set if appropriate
   // we need two arrays because removing elements
@@ -55,8 +57,10 @@
       else if( $val[0] == 'supress_confirm' ) { $supress = true; }
       else if( $val[0] == 'verbose' ) { $verbose = true; }
       else if( $val[0] == 'compress' ) { $compress = $val[1]; }
+      else if( $val[0] == 'makeini') { $makeini = true; }
+      else { print "Invalid modifier ".$argv[$i]."\n"; }
     }
-    else { 
+    else {
       $newvals[] = $argv[$i]; 
     }
   }
@@ -88,7 +92,7 @@
 
   // find the ini file, if none exists, fail
   if( $verbose ) { print "Checking for ini file\n"; }
-  if( !file_exists($ini_file) || !is_readable($ini_file) ) {
+  if( !$makeini && ( !file_exists($ini_file) || !is_readable($ini_file) ) ) {
     print "The ini file ($ini_file) could not be read.\n\n";
     print "You must either run this script from the same directory as the zen.ini file,";
     print "or specify a valid ini file\n\n";
@@ -120,6 +124,12 @@
 	  ."Try using --classdir=source_dir/includes/lib/classes.\n");
     }
     include("$thisdir/setup/$c");
+  }
+
+  if( $makeini ) {
+    ZenTargets::makeNewIniFile($class_dir, $thisdir);
+    print "Finished, please edit to your needs.\n";
+    exit;
   }
 
   // parse the ini file and set the verbosity of our messages

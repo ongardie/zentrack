@@ -222,12 +222,13 @@ class ZenTargets {
       }
     case "prepare_install_files": 
       {
-        $p2 = $this->_getParm($target,0);
-        if( !$p || !$p2 ) {
+        $p2 = $this->_getParm($target,1);
+        $p3 = $this->_getParm($target,2);
+        if( !$p || !$p2 || !$p3 ) {
           $this->_help($target);
           return false;
         }
-        return $this->_prepare_install_files( $p, $p2 );
+        return $this->_prepare_install_files( $p, $p2, $p3 );
       }
     case "try_db_connection":
       {
@@ -1512,9 +1513,10 @@ class ZenTargets {
    *
    * @param string $src is the source directory to mutilate and prepare for install
    * @param string $dest is the name of the zip/tar files to create
+   * @param string $version is the version number to build, as it will appear in database (i.e. 2.4.4-RC1)
    * @return boolean succeeded
    */
-  function _prepare_install_files( $src, $dest ) {
+  function _prepare_install_files( $src, $dest, $version ) {
     // check for develop mode
     if( $this->_ini['debug']['develop_mode'] < 1 ) {
       $this->_printerr("_prepare_install_file", "This target is only used during development [develop_mode=true]");
@@ -1526,7 +1528,8 @@ class ZenTargets {
     print "- prepare_install_files not ready for use yet\n";
     return true;
 
-    // copy defaults/zen.ini to install directory, set develop_mode = 0
+    // create zen.ini in new install directory
+    ZenTargets::makeNewIniFile( $this->_ini['directories']['dir_classes'], $dest."/install" );
 
     // check directories
 
@@ -1540,10 +1543,12 @@ class ZenTargets {
 
     // get database schema
 
-    // tar and package a .tar.gz and a .zip file
+    // update the version info
 
     // prompt developer to update the sql queries for database.xml (for upgrades)
     // and to update documentation
+
+    // tar and package a .tar.gz and a .zip file
 
     // can we make this submit news and mailing list articles?
 
@@ -2129,6 +2134,29 @@ class ZenTargets {
       // set value to default if it is blank and one was provided
       if( !$res && $default ) { $res = $default; }
     }
+    return $res;
+  }
+
+  /**
+   * STATIC: Creates a zen.ini file from the template (when there is no original to merge with)
+   *
+   * @param string $class_dir the directory where ZenTemplate.php is located
+   * @param string $output_dir the directory to create ini file in
+   * @return boolean
+   */
+  function makeNewIniFile( $class_dir, $output_dir = '' ) {
+    print "Creating new zen.ini file\n";
+    $file = $output_dir? "$output_dir/zen.ini" : "zen.ini";
+    if( file_exists($file) ) {
+      print "  - $file already exists in this directory (cowardly refusing to overwrite)\n";
+      return false;
+    }
+    ZenUtils::prep('ZenTemplate',$class_dir);
+    $template = new ZenTemplate('defaults/zen.ini.template');
+    $text = $template->process();
+    $fp = fopen('zen.ini','w');
+    $res = fputs($fp, $text);
+    fclose($fp);
     return $res;
   }
 
