@@ -704,7 +704,13 @@ class zenTrack extends zen {
    * @param array $fields mapped field_name -> array(data fields)
    */
   function updateBehaviorDetails( $behavior_id, $fields ) { 
-    return $this->db_update( $this->table_behavior_detail, "behavior_id", $behavior_id, $fields );
+    $this->db_delete($this->table_behavior_detail, "behavior_id", $behavior_id);
+    foreach($fields as $f) {
+      // make sure we add in the behavior id to each row
+      $v['behavior_id'] = $behavior_id;
+      list($ck,$cv) = $this->makeInsertVals($v);
+      $this->db_result("INSERT INTO ".$this->table_behavior_detail." ($ck) VALUES($cv)");
+    }
   }
 
 
@@ -825,6 +831,8 @@ class zenTrack extends zen {
    */
   function getDataGroupLabels( $table, $details ) {
     $table = strtoupper($table);
+    $idfield = $this->getDataTypeId($table);
+    $sortfield = $this->getDataTypeSort($table);
     if( !is_array($details) || !count($details) ) {
       $this->addDebug("getDataGroupLabels", "Empty detail list, returning empty set", 2);
       return array();
@@ -834,10 +842,11 @@ class zenTrack extends zen {
       $ids[] = $d['value'];
     }
     $query = "SELECT * FROM {$table} WHERE {$idfield} IN( ".join(",",$ids).")";
+    $query .= " ORDER BY {$sortfield}";
     $vals = $this->db_queryIndexed($query);
     $retvals = array();
     foreach($vals as $val) {
-      $k = $val[ $this->getDataTypeId($table) ];
+      $k = $val[ $idfield ];
       $retvals[$k] = $this->getDataTypeLabel($table,$val);
     }
     return $retvals;
@@ -940,7 +949,7 @@ class zenTrack extends zen {
    */
   function _insertGroupDetails( $group_id, $vals ) {
     foreach($vals as $v) {
-      // make sure we add in the new group id to each row
+      // make sure we add in the group id to each row
       $v['group_id'] = $group_id;
       list($ck,$cv) = $this->makeInsertVals($v);
       $this->db_result("INSERT INTO ".$this->table_group_detail." ($ck) VALUES($cv)");
@@ -2858,6 +2867,21 @@ class zenTrack extends zen {
       return $vals['name'];
     case "ZENTRACK_USERS":
       return $this->formatName($vals);
+    }
+    return null;
+  }
+
+  functiong getDataTypeSort( $table ) {
+    // be careful using this, it's still limited
+    switch( strtoupper($table) ) {
+    case "ZENTRACK_BINS":
+    case "ZENTRACK_PRIORITIES":
+    case "ZENTRACK_SYSTEMS":
+    case "ZENTRACK_TASKS":
+    case "ZENTRACK_TYPES":
+      return "priority";
+    case "ZENTRACK_USERS":
+      return "last_name, first_name";
     }
     return null;
   }
