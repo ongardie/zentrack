@@ -7,6 +7,37 @@
 
 ----- V2.4.3 (Development, See CVS) ----
 
+2003-07-28, Kato
+  Created a seperate access level for creating projects,
+  this is no longer determined using the level_create prop
+    - zentrack_2/UPGRADE.readme 1.13
+    - zentrack_2/install/seed_mssqlserver.sql 1.14
+    - zentrack_2/install/seed_mysql.sql 1.25
+    - zentrack_2/install/seed_oracle.sql 1.21
+    - zentrack_2/install/seed_postgres.sql 1.20
+    - zentrack_2/install/upgrade_mssqlserver.sql 1.1
+    - zentrack_2/install/upgrade_mysql.sql 1.1
+    - zentrack_2/install/upgrade_oracle.sql 1.1
+    - zentrack_2/install/upgrade_postgres.sql 1.1
+    - zentrack_2/includes/templates/newProjectForm.php 1.23
+  Cleaned up internationalization issues and array initialization
+  Overall audit of admin section and efficiency improvements
+    - zentrack_2/includes/editTicketSubmit.php 1.6
+    - zentrack_2/includes/templates/accessForm.php 1.7
+    - zentrack_2/includes/templates/binForm.php 1.6
+    - zentrack_2/includes/templates/configForm.php 1.5
+    - zentrack_2/includes/templates/configSettingsForm.php 1.8
+    - zentrack_2/includes/templates/newProjectForm.php 1.23
+    - zentrack_2/includes/templates/searchResults.php 1.4
+    - zentrack_2/www/admin/access.php 1.7
+    - zentrack_2/www/admin/addUserSubmit.php 1.11
+    - zentrack_2/www/admin/bins.php 1.6
+    - zentrack_2/www/admin/editUserSubmit.php 1.11
+    - zentrack_2/www/admin/priorities.php 1.5
+    - zentrack_2/www/admin/systems.php 1.6
+    - zentrack_2/www/admin/tasks.php 1.6
+    - zentrack_2/www/admin/types.php 1.6
+
 2003-07-21, Kato
   Closed ticket email now displays international chars correctly
     - zentrack/includes/zenTrack.class 1.111
