@@ -12,7 +12,13 @@
 2004-09-09, Kato
   Repaired login problems caused by using the default bin -All-
   Fixed minor paging issue (not showing numbers in some cases)
-    - zentrack_2/www/projects.php 1.8
+    - zentrack_2/includes/login.php 1.26
+    - zentrack_2/includes/paging.php 1.3
+    - zentrack_2/includes/zenTrack.class 1.150
+    - zentrack_2/www/assignedTickets.php 1.11
+    - zentrack_2/www/index.php 1.13
+    - zentrack_2/www/phpinfo.php 1.4
+    - zentrack_2/www/projects.php 1.9
   Fixed URL bugs in help section
     - zentrack_2/includes/zenTrack.class 1.149
     - zentrack_2/includes/headerInc.php 1.46
@@ -23,11 +29,11 @@
   Fixed url bug with the contact tab on ticket page
   (selecting a group refreshed to broken url in some instanced)
   Added link to create contact if none exist in the ticket tab
+    - zentrack_2/www/projects.php 1.8
     - zentrack_2/includes/templates/bugForm.php 1.1
     - zentrack_2/www/help/english/support.php 1.3
     - zentrack_2/includes/templates/newContacteForm.php 1.3
-    - zentrack_2/includes/templates/actions/contacts.php 1.3
-  
+    - zentrack_2/includes/templates/actions/contacts.php 1.3  
   Fixed up 'Report A Bug' - changed email addy to bugs@zentrack.net
   and created an alternate method to send via email if needed.
     - zentrack_2/www/styles.php 1.20
