@@ -1,8 +1,8 @@
-<!--
- 
 <?
   include_once("./header.php");  
 ?>
+<!--
+ 
   /*** PAGE PROPERTIES ***/
   
   BODY {
@@ -153,16 +153,23 @@ $mc = $zen->settings["color_priority_med"];
 $hc = $zen->settings["color_priority_hi"];
 $mp = $zen->settings["priority_medium"];
 
-foreach ($zen->getPriorities(1) as $v) {
+$pri_list = $zen->getPriorities(1);
+foreach ($pri_list as $v) {
    if ($v["priority"] < $lowp) $lowp = $v["priority"];
    if ($v["priority"] > $hip) $hip = $v["priority"];
 }
       
 $num = $hip - $lowp;
 
-foreach ($zen->getPriorities(1) as $v) {
+unset ($previous);
+
+foreach (array_reverse($pri_list) as $v) {
+   print "  ";
+   if ($previous) print ".priority{$previous}over, ";
+   $previous = $v["pid"];
+   $previous = $v["pid"];
 ?>
-  .priority<?=$v["pid"]?> {
+.priority<?=$v["pid"]?> {
      background:      <?=priority_color($v["priority"])?>;
 <?
    if ($v["priority"] == $hip) {?>
@@ -412,5 +419,4 @@ foreach ($zen->getPriorities(1) as $v) {
      color:      <?=$zen->settings["color_alt_text"]?>;
      background: <?=$zen->settings["color_alt_background"]?>;
   }
-
 -->
