@@ -35,6 +35,7 @@
 	  "<option selected value='on'>On</option>" : "<option value='on'>On</option>\n";
 	print ($s["value"] == "off")?
 	  "<option selected value='off'>Off</option>" : "<option value='off'>Off</option>\n";
+	print "</select>\n";
       } else {
 	print "<input type='text' style='font-size:"
 	   .$zen->settings["font_size_small"]."px' name='newSettings[$k]' "

@@ -1,0 +1,37 @@
+
+  MAKE A BACKUP OF YOUR includes/configVars.php and www/header.php
+
+  These files will no longer be useful.. but you may want settings from them.
+
+  Documentation and Install info will continue to grow at:
+     http://zendocs.phpzen.net/bin/view/Zentrack/IndexPage
+
+  QUICK INSTALL STEPS
+
+    - Differences from previous versions
+	* There is no longer a need to modify includes/configVars.php
+	* This code should work as is with PHP 4.2.x, no register_globals 
+	    problems
+	* There are several additions to the DB, but they shouldn't harm
+	    your existing content
+    - Setting up the code
+	* Make a backup of your includes/configVars.php and www/header.php files
+	* Backup any modifications you have made to the code
+	* Replace your existing code with the new install code
+	    It's probably a good idea to move the existing install
+	    to a .old directory and keep it for a bit.. then place the
+	    new code in the vacant directory
+	* Modify the www/header.php file to reflect your database and system 
+	    settings.  Many of the things you found previously in configVars are	         either here, or moved into the database.	
+    - Modifying your database
+	It's a good idea to make a dump of your data first... although you 
+	    will most likely be just fine
+	Find the script called installs/Upgrade.your_db_type and load this
+	    script into your SQL interface
+	Open your web browser, browse to admin->Configuration Settings, and 
+	    configure the new settings to your taste.
+    - Troubleshooting
+	See the INSTALL.readme for troubleshooting notes
+
+
+

@@ -2268,28 +2268,32 @@ class zenTrack extends zen {
       // if $language is given, it will override the value
       // from the configVars file
       
-     // the root includes folder
-     global $libDir;
-     $this->libDir = $libDir;
-
       include("$file");
       
       $this->zen();
-      $this->DB( $this->database_host, $this->database_login, $this->database_password, $this->database_instance);
+      $this->DB( $this->database_host, $this->database_login, 
+		 $this->database_password, $this->database_instance);
       
       $this->bins        = $this->getBins();
       $this->systems     = $this->getSystems();
-      //$this->strings     = $this->getStrings($this->language);
+      //$this->strings   = $this->getStrings($this->language);
       $this->settings    = $this->getSettings();
       $this->settings["font_size_small"] = $this->settings["font_size"] - 2;
       $this->settings["font_size_large"] = $this->settings["font_size"] + 4;
       // this is a quick hack to fix an oops
       // should eventually go through code and fix this
       $this->settings["color_title_txt"] = $this->settings["color_title_text"];
-      $this->types       = $this->getTypes();
-      $this->priorities  = $this->getPriorities();
-      $this->tasks       = $this->getTasks();
-      
+      $this->types          = $this->getTypes();
+      $this->priorities     = $this->getPriorities();
+      $this->tasks          = $this->getTasks();
+
+      $this->date_fmt_long  = $this->settings["date_fmt_long"];
+      $this->date_fmt_short = $this->settings["date_fmt_short"];
+      $this->time_fmt       = $this->settings["date_fmt_time"];
+      $this->elapsed_unit   = $this->settings["time_elapsed_unit"];
+
+      $this->language       = $this->settings["language_default"];
+
       if( $user ) {
 	$this->user = $this->get_user($user_id);
 	$this->access = $this->get_access($user_id);
@@ -2300,7 +2304,7 @@ class zenTrack extends zen {
    
   
    /*
-    *  REPORTING FUNCTIONS (incomplete... add later)
+    *  REPORTING FUNCTIONS
    */     
 
    /**

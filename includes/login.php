@@ -11,7 +11,7 @@
 
   // if there is no login id then include the form
   // or process the form results
-  if( $login_level == 'first_login' && !ereg("pwc\.php",$_SERVER["SCRIPT_NAME"]) )
+  if( $login_level == 'first_login' && !ereg("pwc\.php",$SCRIPT_NAME) )
 	   header("Location:$rootUrl/misc/pwc.php?var=2");
 
   if( !$login_id ) {
@@ -40,7 +40,7 @@
 	   $login_inits = $zen->user["initials"];
 	   $login_bin   = $zen->user["homebin"];
 	   $zentrackUsername = $username;
-	   setcookie("zentrackUsername", $username, time()+2592000, "/", ".$HTTP_HOST");
+	   //setcookie("zentrackUsername", $username, time()+2592000, "/", ".$HTTP_HOST");
 	   $skip = 1;
 	   unset($TODO);
 	   $zen->addDebug("login.php:userLogin",

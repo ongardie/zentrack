@@ -23,3 +23,8 @@
      -chmod 777 includes/attachments (if using attachments)
 
    
+  TROUBLESHOOTING
+      -Problems viewing png images
+	You can manually set the image type to "jpeg" if you have
+	trouble with pngs by opening includes/reportConfig.php
+	and finding the line called image_type.
