@@ -34,20 +34,24 @@ BehaviorMapEntry.prototype.addField = function(name, operator, value) {
 function BehaviorMapField(name, operator, value) {
   this.name = name;
   this.operator = operator;
-  this.value = value;
+  // always store value in lower case for case insensitive matching
+  this.value = value == null? '' : value.toLowerCase();
 }
 
 /**
  * Create a group map entry
  */
-function GroupMapEntry(id, name, table) {
+function GroupMapEntry(id, name, table, evalType, evalText) {
   this.id = id;
   this.name = name;
   this.table = table;
+  this.evalType = evalType;
+  this.evalText = evalText;
   this.fields = new Array();
 }
 
 GroupMapEntry.prototype.addField = function(value, label) {
+  if( !label ) { label = value; }
   this.fields[ this.fields.length ] = new GroupMapField( value, label );    
 }
 
@@ -130,6 +134,10 @@ if( is_array($groups) ) {
     print "groupMap['$k'] = new GroupMapEntry($k";
     print ','.$zen->fixJsVal($g['group_name']);
     print ','.$zen->fixJsVal($g['table_name']);
+    print ','.$zen->fixJsVal($g['eval_type']);
+    // encode the eval text to prevent corrupting
+    // the javascript syntax
+    print ", '".rawurlencode($g['eval_text'])."'";
     print ");\n";
     for($i=0; $i < count($g['fields']); $i++) {
       // add all fields used for matching to the group map entry
@@ -249,6 +257,13 @@ function executeBehavior( formObj, behaviorId ) {
     return false;
   }
 
+  // note that this behavior was executed
+  // this may be true even if we don't get
+  // a return value from setFormValsUsingGroup
+  // because it may already contain the values
+  // we attempt to set there
+  addBehaviorFlag( behavior.field );
+
   // store field modified
   var fieldModified = false;
 
@@ -258,7 +273,15 @@ function executeBehavior( formObj, behaviorId ) {
   }
 
   // disable/enable field as appropriate
-  fieldObj.disabled = behavior.disabled;
+  fieldObj.disabled = behavior.disabled? true : false;
+
+  if( fieldObj.disabled ) {
+    mClassX(fieldObj, 'inputDisabled');
+  }
+  else {
+    mClassX(fieldObj, 'input');
+  }
+
   return fieldModified;
 }
 
@@ -268,7 +291,7 @@ function executeBehavior( formObj, behaviorId ) {
 function setFormValsUsingGroup( fieldObj, group ) {
   // we keep a history to avoid redundantly setting the values if they
   // already are and to prevent infinite loops
-  if( behaviorHistoryMap[ fieldObj.name ] == group.id ) {
+  if( behaviorHistoryMap[ fieldObj.name ] == group.id && group.evalType != 'Javascript' ) {
     behaviorDebug(3, "(setFormValsUsingGroup)field "+fieldObj.name
 		  +" is already set to "+group.name+" (skipping)");
     return false;
@@ -277,13 +300,46 @@ function setFormValsUsingGroup( fieldObj, group ) {
   // record the group_id that we have used to generate the field's
   // current entries
   behaviorHistoryMap[ fieldObj.name ] = group.id;
+
+  // handle javascript eval type
+  if( group.evalType == 'Javascript' ) {
+    // we encode the eval text so it won't cause erros in js
+    // so we unencode it here and then replace occurences
+    // of {form} with the form name
+    var f = 'window.document.'+fieldObj.form.name;
+    var vals = evalJsString( unescape(group.evalText).replace( /\{form\}/, f) );
+    
+    // clear any existing values from fields array
+    group.fields = new Array();
+    
+    // only bother if vals were returned
+    if( vals != null && vals.length > 0 ) {
+      if( vals[0] && vals[0].value ) {
+	// if each value of the array is a label/value pair
+	// add the labels and values
+	for( k in vals ) {
+	  group.addField( vals[0].value, vals[0].label );
+	}
+      }
+      else {
+	// otherwise just set the values
+	for( var i=0; i < vals.length; i++ ) {
+	  group.addField( vals[i] );
+	}
+      }
+    }
+  }
   
   // set the field values
   behaviorDebug(3, "(setFormValsUsingGroup)updating "+fieldObj.name
 		+" using "+group.name+"["+fieldObj.type+"]");
   switch( fieldObj.type ) {
-  case "button":
   case "checkbox":
+    if( group.fields[0].value ) {
+      fieldObj.checked = true;
+    }
+    break;
+  case "button":
   case "submit":
   case "text":
   case "textarea":
@@ -296,7 +352,7 @@ function setFormValsUsingGroup( fieldObj, group ) {
       // store the currently selected value and try to reproduce in a minute
       var oldValue = fieldObj.options[ fieldObj.selectedIndex ].value;
     }
-    fieldObj.length = group.fields.length;
+    fieldObj.length = 0;
     for(var i=0; i < group.fields.length; i++) {
       var f = group.fields[i];
       behaviorDebug(3, "(setFormValsUsingGroup)Setting option "+i+" to ["+f.label+"]"+f.value);
@@ -318,6 +374,7 @@ function setFormValsUsingGroup( fieldObj, group ) {
     behaviorDebug(1, "(setFormValsUsingGroup)Invalid field type: "+fieldObj.name+"["+fieldObj.type+"]");
     return false;
   }
+
   return true;
 }
 
@@ -410,7 +467,7 @@ function matchBehaviorCriteria( formObject, behaviorMapField ) {
     return false; 
   }
 
-  fieldVal = getFormFieldValue(formField,behaviorMapField);
+  fieldVal = getFormFieldValue(formField,behaviorMapField).toLowerCase();
 
   // otherwise, evaluate the match and deal accordingly
   switch( behaviorMapField.operator ) {
@@ -432,8 +489,10 @@ function matchBehaviorCriteria( formObject, behaviorMapField ) {
   case "ew":
     // ends with
     var len1 = behaviorMapField.value.length;
-    var len2 = formField.length;
-    return fieldVal.substring(len2-len1,len1) == behaviorMapField.value;
+    var len2 = fieldVal.length;
+    var len3 = len2-len1;
+    return len3 >= 0 &&
+      fieldVal.substr(len3,len1) == behaviorMapField.value;
   case "gt":
     // greater than
     return fieldVal > behaviorMapField.value;
@@ -448,6 +507,9 @@ function matchBehaviorCriteria( formObject, behaviorMapField ) {
     return fieldVal <= behaviorMapField.value;
   case "js":
     // evaluate js code
+    var f = 'window.document.'+formField.form.name;
+    behaviorMapField.value.replace(/\{form\}/, f);
+    behaviorMapField.value.replace(/\{field\}/, f+'.'+formField.name);
     return eval(behaviorMapField.value);
   default:
     behaviorDebug(1, "Invalid comparator: "+behaviorMap.operator);
@@ -460,7 +522,7 @@ function matchBehaviorCriteria( formObject, behaviorMapField ) {
  * Creates a debug message for behaviors
  */
 function behaviorDebug( errorLevel, str ) {
-  if( useBehaviorDebug <= errorLevel ) {
+  if( useBehaviorDebug >= errorLevel ) {
     str = "["+makeTimeString()+"] "+str;
     behaviorDebugMessages[ behaviorDebugMessages.length ] = [errorLevel, str];
   }
@@ -524,9 +586,10 @@ function pageLoadedBehavior() {
   // iterate over form elements and check for behaviors
   for( var x=0; x < behaviorFormSet.length; x++ ) {
     if( !behaviorFormSet[x] || !behaviorFormSet[x].elements ) {
-      behaviorDebug(1, "(pageLoadedBehavior)invalid form: "+new String(behaviorFormSet[x]));
+      behaviorDebug(1, "(pageLoadedBehavior)invalid form: "+(behaviorFormSet[x]? behaviorFormSet[x].name : 'undefined'));
       continue;
     }
+    behaviorDebug(3, "(pageLoadedBehavior)loading form: "+behaviorFormSet[x].name);
     for( var i=0; i < behaviorFormSet[x].elements.length; i++ ) {
       if( fieldMap[ behaviorFormSet[x].elements[i].name ] ) {
 	setBehaviorOnChange( behaviorFormSet[x].elements[i] );
@@ -615,6 +678,14 @@ function probablyNumericComparator( behaviorMapField ) {
  */
 function isIntegerValue( val ) {
   return val.search(/[^0-9]/) < 0 && parseInt(val) > 0;
+}
+
+/**
+ * Evaluate js code and return results
+ */
+function evalJsString( s ) {
+  eval( s );
+  return x;
 }
 
 window.onload = mergeFunctions( window.onload, pageLoadedBehavior );

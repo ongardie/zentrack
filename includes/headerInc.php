@@ -65,13 +65,6 @@
   $zen = new zenTrack( $configFile );
 
   /**
-   * Generate group info, since it takes several queries
-   */
-  if( is_array($_SESSION) && !$_SESSION['data_groups'] ) {
-    $_SESSION['data_groups'] = $zen->generateDataGroupInfo();
-  }
- 
-  /**
    * Translator Object Initialization (mlively)
    */
   // set language to default if unspecified 
@@ -167,6 +160,7 @@
   }
 
   function getVarfieldDataType( $varfieldName ) {
+    $varfieldName = strtolower($varfieldName);
     preg_match('/^custom_([a-z]+)[0-9]+$/', $varfieldName, $matches);
     return isset($matches[1])? $matches[1] : null;
   }
@@ -188,13 +182,19 @@
       $onblur = " onblur='{$varfield['js_validation']}'";
     }
 
+    $key = $varfield['field_name'];
+
     switch( $type ) {
+    case "boolean":
+      $inp = "<input type='checkbox' name='{$key}' "
+	." value='1'";
+      $inp .= $value? ' checked>\n' : '>\n';
     case "string":
-      $inp = "<input type='text' name='{$varfield['field_name']}' "
+      $inp = "<input type='text' name='{$key}' "
 	." value='{$value}' size='20' maxlength='250'{$onblur}>\n";
       break;
     case "text":
-      $inp = "<textarea name='{$varfield['field_name']}' cols='50' "
+      $inp = "<textarea name='{$key}' cols='50' "
 	." rows='4'{$onblur}>{$value}</textarea>";
       break;
     case "date":
@@ -205,7 +205,7 @@
 	$value = $zen->showDateTime($value); 
       }
       // create input field and date picker
-      $inp = "<input type='text' name='{$varfield['field_name']}' "
+      $inp = "<input type='text' name='{$key}' "
 	." value='{$value}' size='20' maxlength='250'{$onblur}>\n"
         ." <img name='date_button' src='{$rootUrl}/images/cal.gif' "
 	."  onClick=\"popUpCalendar(this, document.{$formName}.{$varfield['field_name']}, '"
@@ -214,21 +214,12 @@
       break;
     case "number":
       if( $value == 'NULL' ) { $value = ''; }
-      $inp = "<input type='text' name='{$varfield['field_name']}' "
+      $inp = "<input type='text' name='{$key}' "
 	." value='{$value}' size='10' maxlength='100'{$onblur}>\n";      
       break;
     case "menu":
-      $v = $varfield['field_value'];
-      $group = $_SESSION['data_groups']["$v"];
-      if( $group ) {
-	// get the fields for our group
-	$opts = $group['fields'];
-      }
-      else {
-	// generate a mock field
-	$opts = array( array('field_value'=>'', 'label'=>'-none-') );
-      }
-      $inp = "<select name='{$varfield['field_name']}'{$onblur}>\n";
+      $opts = genDataGroupChoices($varfield['field_value']);
+      $inp = "<select name='{$key}'{$onblur}>\n";
       foreach($opts as $o) {
         $sel=($o['field_value']==$value)?" selected" : "";
 	$inp .= "<option value='{$o['field_value']}'$sel>{$o['label']}</option>\n";
@@ -242,6 +233,24 @@
     return $inp;
   }
 
+  function genDataGroupChoices( $group_id, $use_default = true ) {
+    if( isset($_SESSION['data_groups']["$group_id"]) ) {
+      // get the fields for our group
+      $group = $_SESSION['data_groups']["$group_id"];
+      if( count($group['fields']) ) {
+	return $group['fields'];
+      }
+    }
+
+    // generate a mock field
+    if( $use_default ) {
+      return array( array('field_value'=>'', 'label'=>'---') );
+    }
+    else {
+      return array();
+    }
+  }
+
   if( isset($newbin) && $newbin == 'all' ) {
      unset($login_bin);
   } else if( isset($newbin) && $newbin && $zen->bins["$newbin"] && $zen->checkAccess($login_id,$newbin) ) {
@@ -249,7 +258,7 @@
   }
 
   // security
-  $onLoad = false;
+  $onLoad = array();
   $vars = array();
   $msg = array();
   $errs = "";
@@ -336,6 +345,15 @@
   if( !eregi("(/help/|styles[.]php|behavior_js[.]php)",$SCRIPT_NAME) ) {
      include_once("$libDir/login.php");
   }     
+
+  /**
+   * Generate group info, since it takes several queries
+   * This array is reset when a logoff occurs, so make sure this
+   * is after the login include
+   */
+  if( is_array($_SESSION) && !$_SESSION['data_groups'] ) {
+    $_SESSION['data_groups'] = $zen->generateDataGroupInfo();
+  }
 
   /**
    * The list of valid log action types

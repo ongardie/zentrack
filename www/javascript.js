@@ -84,12 +84,10 @@ function mClassX( obj, classname, hand ) {
      obj.style.cursor = 'default';
   }
   //refToElement.className = 'newclass', or refToElement.setAttribute('class', 'newclass')
-  if( obj.className ) {
-    obj.className = classname;
-  }
-  else {
+  if( obj.setAttribute ) {
     obj.setAttribute('class',classname);
   }
+  obj.className = classname;
 }
 
 function makeTimeString() {

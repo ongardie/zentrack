@@ -16,7 +16,9 @@
   $data_group_fields = array(
                              "NewTableName"       => "alphanum",
                              "NewGroupName"       => "html",
-                             "NewDescript"        => "html"
+                             "NewDescript"        => "html",
+			     "NewEvalType"        => "alphanum",
+			     "NewEvalText"        => "html"
                              );
 
   $data_group_required = array("NewGroupName");
@@ -33,8 +35,11 @@
     if( $zen->demo_mode == "on" ) {
       $msg = tr("Process successful.  Group was not added, because this is a demo site.");
     } else {
-      $group_id = $zen->addDataGroup( $NewGroupName, $NewTableName, $NewDescript, array() );
+      $group_id = $zen->addDataGroup( $NewGroupName, $NewTableName, $NewDescript, 
+				      $NewEvalType, $NewEvalText, array() );
       if( $group_id ) {
+	$vars = $zen->generateDataGroupInfo( array($group_id) );
+	$_SESSION['data_groups'][$group_id] = $vars[$group_id];
         $msg = tr("Group '?' (ID=?) was added successfully. ? to customize this group's details.",
                              array($NewGroupName, $group_id, "--link--" . tr("Click Here") . "</a>", $NewGroupName));
         $msg = str_replace("--link--", "<br><a href='$rootUrl/admin/editGroupDetails.php?group_id=$group_id'>", $msg);
@@ -49,7 +54,7 @@
     $zen->printErrors($errs);
     include("$templateDir/groupAdd.php");
   } else {
-    include("$templateDir/adminMenu.php");
+    include("$templateDir/groupForm.php");
   }
 
   include("$libDir/footer.php");

@@ -6,8 +6,8 @@
   $button = ($td)? "Save Changes" : "Create Group";
   $url = ($td)? "edit" : "add";
 ?>
-<form method="post" action="<?=$rootUrl?>/admin/<?=$url?>GroupSubmit.php">
-<? if( $td ) { print "<input type='hidden' name='group_id' value='".strip_tags($group_id)."'>\n"; } ?>
+<form method="post" action="<?=$rootUrl?>/admin/<?=$url?>GroupSubmit.php" name='groupAddForm'>
+<? if( $td ) { print "<input type='hidden' name='group_id' value='".$zen->ffv($group_id)."'>\n"; } ?>
   
 <table width="640" align="left" cellpadding="2" cellspacing="2" bgcolor="<?=$zen->settings["color_background"]?>">
 <tr>
@@ -42,7 +42,7 @@
     <?=tr("Group Name")?>*
   </td>
   <td class="bars">
-    <input type="text" name="NewGroupName" value="<?=strip_tags($group['group_name'])?>" size="40" maxlength="100">
+    <input type="text" name="NewGroupName" value="<?=$zen->ffv($group['group_name'])?>" size="40" maxlength="100">
   </td>
 </tr>
 <tr>
@@ -50,7 +50,28 @@
     <?=tr("Description")?>
   </td>
   <td class="bars">
-    <input type="text" name="NewDescript" value="<?=strip_tags($group['descript'])?>" size="40" maxlength="255">
+    <input type="text" name="NewDescript" value="<?=$zen->ffv($group['descript'])?>" size="40" maxlength="255">
+  </td>
+</tr>
+<tr>
+  <td class="bars">
+    <?=tr("Eval Type")?>
+  </td>
+  <td class="bars">
+    <select name='NewEvalType' onChange='toggleEvalText(this)'>
+      <option<?=$group['eval_type'] == 'Matches'? ' selected':''?>>Matches</option>
+      <option<?=$group['eval_type'] == 'Javascript'? ' selected':''?>>Javascript</option>
+    </select>
+  </td>
+</tr>
+<tr>
+  <td class="bars">
+    <?=tr("Eval Script")?>
+  </td>
+  <td class="bars">
+    <textarea name='NewEvalText' cols='50' rows='4'<?=
+	       $group['eval_type'] != 'Javascript'? ' disabled=true class="greytext"' : ' class="fieldtext"'
+     ?>><?=$zen->ffv($group['eval_text'])?></textarea>
   </td>
 </tr>
 <tr>
@@ -66,3 +87,16 @@
 </table>
 
 </form>
+<script language='javascript'>
+   function toggleEvalText( selectObj ) {
+     var fld = window.document.groupAddForm.NewEvalText;
+     if( selectObj.options[ selectObj.selectedIndex ].text == 'Javascript' ) {
+       fld.disabled = false;
+       fld.style.color = '<?=$zen->settings['color_bar_text']?>';
+     }
+     else {       
+       window.document.groupAddForm.NewEvalText.disabled = true;
+       fld.style.color = '<?=$zen->settings['color_grey']?>';
+     }
+   }
+</script>

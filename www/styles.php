@@ -1,5 +1,6 @@
 <?
   include_once(dirname(__FILE__)."/header.php");  
+  header("Content-Type: text/css");
 ?>
 <!--
  
@@ -295,6 +296,11 @@ else {
    font-size: <?=$zen->settings["font_size_small"]?>px;
 }
 
+.warning {
+   color:  <?=$zen->settings["color_text"]?>;
+   font-size: <?=$zen->settings["font_size_small"]?>px;
+}
+
 .smallHighlight {
    color:       <?=$zen->settings["color_highlight"]?>;
    font-weight: bold;
@@ -304,9 +310,14 @@ else {
   /*** FORM PROPERTIES ***/
 
 
-  INPUT, TEXTAREA, SELECT {
+  INPUT, TEXTAREA, SELECT, .input {
      color:      <?=$zen->settings["color_bar_text"]?>;
-     background: <?=$zen->settings["color_bars"]?>;
+     background: <?=$zen->settings["color_background"]?>;
+  }
+
+  .inputDisabled {
+     color:      <?=$zen->settings['color_grey']?>;
+     background: <?=$zen->settings['color_bars']?>;
   }
 
   BUTTON, .navButtons {

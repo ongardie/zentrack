@@ -16,7 +16,9 @@
   $data_group_fields = array(
                              "NewTableName"       => "alphanum",
                              "NewGroupName"       => "html",
-                             "NewDescript"        => "html"
+                             "NewDescript"        => "html",
+			     "NewEvalType"        => "alphanum",
+			     "NewEvalText"        => "html"
                              );
 
   $data_group_required = array("NewGroupName");
@@ -34,14 +36,16 @@
     if( $zen->demo_mode == "on" ) {
       $msg = tr("Process successful.  Group was not updated, because this is a demo site.");
     } else {
-      $res = $zen->updateDataGroup($group_id,$NewGroupName,$NewTableName,( strlen($NewDescript) )?$NewDescript : "NULL");
+      $res = $zen->updateDataGroup($group_id,$NewGroupName,$NewTableName,
+				   $NewEvalType,$NewEvalText,
+				   ( strlen($NewDescript) )?$NewDescript : "NULL");
       if( $res ) {
 	// update session info with changes
 	$vars = $zen->generateDataGroupInfo( array($group_id) );
 	$_SESSION['data_groups'][$group_id] = $vars[$group_id];
 
 	// print useful messages for user
-	$msg = tr("Group ? was updated successfully. ? to customize group ?'s details.",
+	$msg = tr("Group '?' was updated successfully. ? to customize group '?'s details.",
 		  array($NewGroupName,
 			"--link--",
 			$NewGroupName));
@@ -59,7 +63,7 @@
     $TODO = 'EDIT';
     include("$templateDir/groupAdd.php");
   } else {
-    include("$templateDir/adminMenu.php");
+    include("$templateDir/groupForm.php");
   }
 
   include("$libDir/footer.php");

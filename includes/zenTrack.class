@@ -729,6 +729,7 @@ class zenTrack extends zen {
     foreach($fields as $f) {
       // make sure we add in the behavior id to each row
       $f['behavior_id'] = $behavior_id;
+      if( !$f['sort_order'] ) { $f['sort_order'] = 0; }
       list($ck,$cv) = $this->makeInsertVals($f);
       $this->db_result("INSERT INTO ".$this->table_behavior_detail." ($ck) VALUES($cv)");
     }
@@ -1022,16 +1023,20 @@ class zenTrack extends zen {
       return array();
     }
     $ids = array();
-    foreach($details as $d) {
-      $ids[] = $d['field_value'];
+    if( is_array($details) && count($details) ) {
+      foreach($details as $d) {
+        $ids[] = $d['field_value'];
+      }
     }
     $query = "SELECT * FROM {$table} WHERE {$idfield} IN( ".join(",",$ids).")";
     $query .= " ORDER BY {$sortfield}";
     $vals = $this->db_queryIndexed($query);
     $retvals = array();
-    foreach($vals as $val) {
-      $k = $val[ $idfield ];
-      $retvals[$k] = $this->getDataTypeLabel($table,$val);
+    if( is_array($vals) && count($vals) ) {
+      foreach($vals as $val) {
+        $k = $val[ $idfield ];
+        $retvals[$k] = $this->getDataTypeLabel($table,$val);
+      }
     }
     return $retvals;
   }
@@ -1080,12 +1085,19 @@ class zenTrack extends zen {
    * @param string $name name of the group
    * @param string $table the table this group applies to
    * @param array $vals the values as they would be passed to {@link ZenTrack::updateDataGroupDetails()}
+   * @param string $evalType 'Javascript' or 'Matches'
+   * @param string $evalText javascript text for evals
    * @return integer
    */
-  function addDataGroup( $name, $table, $descript, $vals ) { 
+  function addDataGroup( $name, $table, $descript, $evalType, $evalText, $vals = null ) { 
     // create the group first
-    $id = $this->db_insert( $this->table_group, array("table_name"=>$table, "group_name"=>$name, "descript"=>$descript) );
-    if( $id ) {
+    $id = $this->db_insert( $this->table_group, 
+                            array("table_name"=>$table, 
+                                  "group_name"=>$name, 
+                                  "descript"=>$descript,
+                                  "eval_type"=>$evalType,
+                                  "eval_text"=>$evalText) );
+    if( $id && $vals ) {
       $this->_insertGroupDetails($id, $vals);
     }
     return $id;
@@ -1113,15 +1125,20 @@ class zenTrack extends zen {
    * @param integer $group_id the id of the data group to be updated
    * @param string $name the updated name of the group
    * @param string $table the updated table for the group
+   * @param string $evalType 'Javascript' or 'Matches'
+   * @param string $evalText javascript text for evals
    */
-  function updateDataGroup( $group_id, $name, $table, $descript ) { 
+  function updateDataGroup( $group_id, $name, $table, $evalType, $evalText, $descript ) { 
     $group = $this->get_data_group($group_id);
     if( $group['table_name'] != $table ) {
       $this->db_delete($table_group_detail, "group_id", $group_id);
     }
     return $this->db_update($this->table_group, "group_id", $group_id, 
-			    array("group_name"=>$name,"table_name"=>$table,
-                                  "descript"=>$descript));
+			    array("group_name"=>$name,
+                                  "table_name"=>$table,
+                                  "descript"=>$descript,
+                                  "eval_type"=>$evalType,
+                                  "eval_text"=>$evalText) );
   }
 
   /**
@@ -1225,10 +1242,16 @@ class zenTrack extends zen {
       $tables = $this->table_tickets;
     }
 
-    $tf_pri = preg_match("/priority/", $order_by);
     $tbl = $this->table_tickets;
-    $leftjoin = " LEFT JOIN $this->table_varfield ON "
-              . "$this->table_tickets.id=$this->table_varfield.ticket_id";
+    $select = "$tbl.*";
+    $tf_pri = preg_match("/priority/", $order_by);
+
+    $tbl_var = $this->table_varfield;
+    $tables .= ",{$tbl_var}";
+    $select .= ", $tbl_var.*";
+    $where = $where?
+      "$tbl_var.ticket_id = $tbl.id AND ($where)"
+      : "$tbl_var.ticket_id = $tbl.id";
 
     if( $tf_pri ) {
       $tblpri = $this->table_priorities;
@@ -1238,13 +1261,26 @@ class zenTrack extends zen {
       $where = ($where)? "$tbl.priority = $tblpri.pid AND ($where)": "$tbl.priority = $tblpri.pid";
     }
 
-    $query = "SELECT $tbl.* "
+    $query = "SELECT $select "
       ." FROM $tables "
-      ." $leftjoin "
       ." WHERE $where"
       ." ORDER BY $order_by";
-    $this->addDebug("search_ticketsQuery:",$query,2);
+    $this->addDebug("search_ticketsQuery:",$query,3);
     return(  $this->db_queryIndexed($query) );      
+  }
+
+  function _hasCustomFields($params) {
+    foreach( $params as $key=>$val ) {
+      if( $val[0] == 'AND' || $val[0] == 'OR' ) {
+        if( $this->_hasCustomFields($val[1]) ) {
+          return true;
+        }
+      }
+      if( !(strpos($val[0], 'custom_') === false) ) {
+        return true;
+      }
+    }
+    return false;
   }
 
   function search_users( $params, $andor = "AND", $order_by = 'lname,fname' ) {
@@ -2913,6 +2949,7 @@ class zenTrack extends zen {
     // alternately, $recipients can contain valid email addresses rather 
     // than a user_id value (to send to non-zentrack users)
     // $recipients, $sender, and $cc can all be an array
+    // if email is successful, no result is returned, otherwise error string returned
 
     // grab the egate account
     $egate_email = "";
@@ -3013,11 +3050,16 @@ class zenTrack extends zen {
         $headers = str_replace("\n", "\r\n", $headers);
       }
       $this->addDebug("sendEmail","$recipient_address::$subject::$headers",3);
-      return( mail( $recipient_address, $subject, $message, $headers ) );
+      print 'mail('.$recipient_address.','.$subject.','.$message.','.$headers.");<br>\n";//debug
+      if( !mail( $recipient_address, $subject, $message, $headers ) ) {
+        return "System error: send failed";
+      }
     } else {
-      $this->addDebug("sendEmail","recipient_address was blank... "
-		      ."this could be that the email was sent to a user "
-		      ."who doesn't have an email address",2);
+      $str = "recipient_address was blank... "
+        ."this could be that the email was sent to a user "
+        ."who doesn't have an email address";
+      $this->addDebug("sendEmail",$str,1);
+      return $str;
     }
   }
   

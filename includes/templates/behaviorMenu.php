@@ -5,6 +5,9 @@
 ?>
       <br>
       <p class='error'><?=tr("Edit existing behaviors or create a new one.")?></p>
+      <p>Note that behaviors are meant to provide suggested values to
+         the user.  They are not meant to be used as a security mechanism
+         and could be circumvented by creative users.</p>
       <ul>
       <form name='behaviorForm' action='<?=$elnk?>' method='post'>
       <input type='hidden' name='TODO' value=''>
@@ -42,7 +45,7 @@
 	     print "$t".$zen->ffv(($v['match_all'])?tr("All rules") : tr("Any rule"))."$te";
 	     print "$t".$zen->ffv($v['field_name'])."$te";
              print "$t".$groups[$v['group_id']]."$te";
-	     print "$t".$zen->ffv(($v['field_enabled'])?tr("Normal") : tr("Protected"))."$te";
+	     print "$t".$zen->ffv(($v['field_enabled'])?tr("Normal") : tr("Read-only"))."$te";
              print "$t";
 
              print "\n<span class='small'>"

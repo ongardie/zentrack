@@ -12,9 +12,11 @@
       $errs[] = tr("You cannot edit a ticket in this bin");
     } else if( !$zen->actionApplicable($id,"edit",$login_id) ) {
       $errs[] = tr("Ticket #? cannot be edited in its current status",array($id));
-    } else {
+    } else {      
       $skip = 1;
       $TODO = 'EDIT';
+      $varfields = $zen->getVarfieldVals($id);
+      extract($varfields);
       extract($ticket);
       $description = preg_replace("@<br ?/?>@","\n",$description); 
       if( $zen->inProjectTypeIDs($ticket["type_id"]) )

@@ -9,6 +9,7 @@
   
   include_once("admin_header.php");
 
+  if( !isset($more) ) { $more = 3; }
   if( $TODO == 'MORE' ) {
     $more = $more+3;
   } else if( $TODO == 'LESS' ) {
@@ -23,9 +24,9 @@
       if( $NewFieldName[$i] && strlen($NewFieldName[$i])>0 ) {
         $elements[] = array(
                         "field_name" => $NewFieldName[$i],
-                        "field_operator" => $NewComparator[$i],
+                        "field_operator" => $zen->checkAlphaNum($NewComparator[$i]),
                         "field_value"=> $NewMatchValue[$i],
-                        "sort_order" => $NewSortOrder[$i]
+                        "sort_order" => $zen->checkNum($NewSortOrder[$i])
                         );
       }
     }
@@ -40,9 +41,9 @@
         if( $NewFieldName[$i] && strlen($NewFieldName[$i])>0 ) {
           $elements[] = array(
                         "field_name" => $NewFieldName[$i],
-                        "field_operator" => $NewComparator[$i],
+                        "field_operator" => $zen->checkAlphaNum($NewComparator[$i]),
                         "field_value"=> $NewMatchValue[$i],
-                        "sort_order" => $NewSortOrder[$i]
+                        "sort_order" => $zen->checkNum($NewSortOrder[$i])
                               );
           $j++;
         }

@@ -7,6 +7,17 @@
 
 ----- V2.5 (in development) ----
 
+2004-08-23, Kato
+  Email error handling cleaned up
+
+  Added variable fields to the search screen
+  Improved date search capabilities
+
+  Cleaned up behavior bugs and enhanced js eval capabilities
+
+  Fixed issue with edit screens and project identification when errors occur
+  Added editing of varfields to edit screens
+
 2004-08-13, cfalonso
   Function $zen->getDataGroups raised an error when no data groups exists. Fixed.
     - zentrack_2/includes/zenTrack.class 1.138

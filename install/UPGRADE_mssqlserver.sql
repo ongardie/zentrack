@@ -46,6 +46,8 @@ CREATE TABLE ZENTRACK_VARFIELD (
   custom_string2 VARCHAR(255),
   custom_number1 NUMERIC(20),
   custom_number2 NUMERIC(20),
+  custom_boolean1 NUMERIC(1),
+  custom_boolean2 NUMERIC(2),
   custom_date1 NUMERIC(12),
   custom_date2 NUMERIC(12),
   custom_text1 TEXT
@@ -89,6 +91,11 @@ INSERT INTO ZENTRACK_VARFIELD_IDX (field_name,       field_label,       sort_ord
                            VALUES ('custom_number1', 'Custom Number 1', 1         );
 INSERT INTO ZENTRACK_VARFIELD_IDX (field_name,       field_label,       sort_order) 
                            VALUES ('custom_number2', 'Custom Number 2', 1         );
+
+INSERT INTO ZENTRACK_VARFIELD_IDX (field_name,       field_label,       sort_order) 
+                           VALUES ('custom_boolean1', 'Custom Boolean 1', 1         );
+INSERT INTO ZENTRACK_VARFIELD_IDX (field_name,       field_label,       sort_order) 
+                           VALUES ('custom_boolean2', 'Custom Boolean 2', 1         );
 
 INSERT INTO ZENTRACK_VARFIELD_IDX (field_name,       field_label,       sort_order) 
                            VALUES ('custom_date1', 'Custom Date 1', 1         );

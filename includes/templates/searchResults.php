@@ -1,61 +1,97 @@
-
 <?{
-	
+  // set up search parms
+  include("{$libDir}/prepareSearchVarfields.php");
+
   // integrity
   unset($params);
   
-	//#####################################################
-	//organize the date
-	//#####################################################
-	//start date
-	if (!empty($date)){
-	  $search_params["otime"] = $zen->dateParse(strip_tags($date));
-	  $search_params["otime_end"] = $search_params[otime] + 86400;
-	}
-	   
-  	//begin date
-  	if (!empty($begin)){
-	  $search_params["begin"] = $zen->dateParse(strip_tags($begin));
-	}
-		
-    //end date
-    if (!empty($end)){
-	  $search_params["end"] = $zen->dateParse(strip_tags($end)) + 86400;
-	}
-	$date = NULL;
-	$begin = NULL;
-	$end = NULL;
+  //#####################################################
+  //organize the date
+  //#####################################################
   
- 	//#####################################################
-  	//orderby checken
-  	//#####################################################
-  	if ($orderby == "") {
-	  $orderby="status DESC, priority DESC";
- 	}
+  //opened date
+  $search_dates = array();
+  if (!empty($otime_begin)){
+    $d1 = $zen->dateParse($otime_begin);
+    $params[] = array("otime", ">=", $d1, 1);
+    if (!empty($otime_end)){
+      $d2 = $zen->dateParse($otime_end);
+      $params[] = array("otime", "<=", $d2+86400, 1);
+    }
+    else {
+      $d2 = $d1;
+      $params[] = array("otime", "<=", $d2+86400, 1);
+    }
+    $search_dates['otime_begin'] = $d1;
+    $search_dates['otime_end'] = $d2;
+  }
+  $otime_begin = null;
+  $otime_end = null;
+  
+  //closed date
+  if (!empty($ctime_begin)){
+    $d1 = $zen->dateParse($ctime_begin);
+    $params[] = array("ctime", ">=", $d1, 1);
+    if (!empty($ctime_end)){
+      $d2 = $zen->dateParse($ctime_end);
+      $params[] = array("ctime", "<=", $d2+86400, 1);
+    }
+    else {
+      $d2 = $d1;
+      $params[] = array("ctime", "<=", $d2+86400, 1);
+    }
+    $search_dates['ctime_begin'] = $d1;
+    $search_dates['ctime_end'] = $d2;
+  }
+  $ctime_begin = null;
+  $ctime_end = null;
+
+  // custom dates
+  foreach( $varfieldsDates as $k=>$v ) {
+    $kb = "{$k}_begin";
+    $rb = "custom_$kb";
+    $ke = "{$k}_end";
+    $re = "custom_$ke";
+    if( !empty($$rb) ) {
+      $d1 = $zen->dateParse($$rb);
+      $params[] = array($k, ">=", $d1, 1);
+      if (!empty($$re)){
+	$d2 = $zen->dateParse($$re);
+	$params[] = array($k, "<=", $d2+86400, 1);
+      }
+      else {
+	$d2 = $d1;
+	$params[] = array($k, "<=", $d2+86400, 1);
+      }
+    }
+    $search_dates[$kb] = $d1;
+    $search_dates[$ke] = $d2;
+  }
+  
+  //#####################################################
+  //orderby checkin
+  //#####################################################
+  if ($orderby == "") {
+    $orderby="status DESC, priority DESC";
+  }
   
   // organize the search params
   if( is_array($search_params) ) {
     foreach($search_params as $k=>$v) {
       if( strlen($v) ) {
-	switch($k) {
-	case "priority":
-	  $params[] = array($zen->table_tickets.".$k","<=",$v,1);
-	  break;
-	case "otime":
-	  $params[] = array("otime", ">=",$v,1);
-	  break;
-	case "otime_end":
-	  $params[] = array("otime", "<=",$v,1);
-	  break;
-	case "begin":
-	  $params[] = array("otime", ">=",$v,1);
-	  break;
-	case "end":
-	  $params[] = array("otime", "<=",$v,1);
-	  break;
-	default: 
-	  $params[] = array($k,"=",$v,1);
-	  break;
+	$type = getVarfieldDataType($k);
+	if( $type == 'boolean' ) {
+	  $params[] = array($k, ($v? "=":"!="), 1, 1);
+	}
+	else {
+	  switch($k) {
+	  case "priority":
+	    $params[] = array($zen->table_tickets.".$k","<=",$v,1);
+	    break;
+	  default: 
+	    $params[] = array($k, "=", $v, 1);
+	    break;
+	  }
 	}
       }
     }
@@ -67,7 +103,8 @@
   if( $search_text && is_array($search_fields) && count($search_fields)>0 ) {
     unset($sp);
     foreach($search_fields as $k=>$f) {
-      $sp[] = array($f,"contains",$search_text);
+      $c = !(strpos($k, 'custom_text')===false && strpos($k,'description') === false);
+      $sp[] = array($f,"contains",$search_text, $c);
     }
     $params[] = (count($sp)>1)? array("OR",$sp) : $sp[0];
   }
@@ -97,8 +134,8 @@
       $dp[] = "'".join("','",$v)."'";
     }
     $zen->addDebug("searchResults.php-params[]",join("|",$dp),3);
-    // debug
-    $tickets = $zen->search_tickets($params, "AND","0",$orderby);//"status DESC, priority DESC"
+
+    $tickets = $zen->search_tickets($params, "AND", "0", $orderby);//"status DESC, priority DESC"
   }
+
 }?>
-    

@@ -52,6 +52,9 @@
 				);
 	  $res = $zen->update_custom_field_idx($newFieldName[$i], $updateParams); 
 	  if( $res ) { $j++; }
+	  else {
+	    $errs[] = "Failed to update '".$newFieldLabel[$i]."'";
+	  }
 	}
       }
       $msg = tr("? custom field definitions were saved to the database. Updates complete", array($j));

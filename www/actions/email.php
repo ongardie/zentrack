@@ -60,52 +60,52 @@
 	$errs[] = tr("There were no recipients");
      $message = $zen->formatEmailMessage($params);
      if( !$errs ) {
-	$res = $zen->sendEmail($recipients, $subject, $message, $login_id);
-	if( $res ) {
-     if( $zen->settings["log_email"] == 'on' ) {
-       $name = $zen->formatName($user,1);
-       $logParams = array(
-         "action"   =>  'EMAIL',
-         "user_id"   =>  $login_id,
-         "bin_id" => $ticket["bin_id"]
-         );
-       
-       // Generate log entry with list of email addresses
-       $entry = "Ticket emailed to ";
-       foreach ($recipients as $v) {
-         $entry .= $v . ", ";
+       $err = $zen->sendEmail($recipients, $subject, $message, $login_id);
+       if( !$err ) {
+	 if( $zen->settings["log_email"] == 'on' ) {
+	   $name = $zen->formatName($user,1);
+	   $logParams = array(
+			      "action"   =>  'EMAIL',
+			      "user_id"   =>  $login_id,
+			      "bin_id" => $ticket["bin_id"]
+			      );
+	   
+	   // Generate log entry with list of email addresses
+	   $entry = "Ticket emailed to ";
+	   foreach ($recipients as $v) {
+	     $entry .= $v . ", ";
+	   }
+	   $entry = substr($entry, 0, -2);
+	   $logParams["entry"] = $entry;
+	   if( $message )
+	     $logParams["entry"] .= "";
+	   $zen->add_log($id, $logParams);
+	   $zen->addDebug("www/actions/email.php", "Ticket emailled by $login_id", 3);
+	 }
+	 add_system_messages(tr("Ticket ? emailed to selected recipients", array($id)));
+	 $setmode = "system";
+	 include("../ticket.php");
+	 exit;
+	 //header("Location:$rootUrl/ticket.php?id=$id&setmode=system");
+	 //unset($action);
+	 //exit;
+       } else {
+	 $errs[] = tr("Ticket ? not mailed: ?", array($id, tr($err)));
        }
-       $entry = substr($entry, 0, -2);
-       $logParams["entry"] = $entry;
-       if( $message )
-       $logParams["entry"] .= "";
-       $zen->add_log($id, $logParams);
-       $zen->addDebug("www/actions/email.php", "Ticket emailled by $login_id", 3);
-     }
-	   add_system_messages(tr("Ticket ? emailed to selected recipients", array($id)));
-	   $setmode = "system";
-	   include("../ticket.php");
-	   exit;
-	   //header("Location:$rootUrl/ticket.php?id=$id&setmode=system");
-	   //unset($action);
-	   //exit;
-	} else {
-	   $errs[] = tr("System error: Ticket ? could not be emailed. ", array($id)).$zen->db_error;
-	}
      }
      if( $errs )
-       add_system_messages( $errs, 'Error' );     
+       add_system_messages( $errs, 'Error' );
   }
-
+  
   include("$libDir/nav.php");
-   
+  
   extract($ticket);
   if( strtolower($zen->types["$type_id"]) == "project" ) {
-     include("$templateDir/projectView.php");
+    include("$templateDir/projectView.php");
   } else {
-     include("$templateDir/ticketView.php");     
+    include("$templateDir/ticketView.php");     
   }
-
+  
   include("$libDir/footer.php");
-
+  
 }?>

@@ -939,12 +939,13 @@
 	}
 	if( is_array($recipients) ) {
 	  // do the message
-	  $res = $zen->sendEmail($recipients,$subject,$message,$user_id);
-	  if( $res ) {
+	  $err = $zen->sendEmail($recipients,$subject,$message,$user_id);
+	  if( !$err ) {
 	    egate_log("Ticket summary delivered: $str",3);
+	    $success = true;
 	  }
 	  else {
-	    egate_log("Failed to deliver ticket summary for #$id to $str",2);
+	    egate_log("Deliver of ticket #$id to $str failed: $err",2);
 	    $success = false;
 	  }
 	}

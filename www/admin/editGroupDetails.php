@@ -36,7 +36,7 @@
     for($i=0; $i<count($NewValue); $i++) {
       $elements[] = array(
 			  "field_value" => $NewValue[$i],
-			  "sort_order"  => $NewSortOrder[$i],
+			  "sort_order"  => $zen->checkNum($NewSortOrder[$i]),
 			  "new_delete"  => $NewDelete[$i]? 1 : 0
 			  );
     }
@@ -50,7 +50,7 @@
       if( $NewValue[$i] != '-new-' && !$NewDelete[$i] ) {
 	$elements[] = array(
 			    "field_value"      => $NewValue[$i],
-			    "sort_order" => $NewSortOrder[$i]
+			    "sort_order" => $zen->checkNum($NewSortOrder[$i])
 			    );
       }
     }
@@ -73,7 +73,7 @@
 	  if( $v > 0 ) {
 	    $elements[] = array(
 				"field_value" => $NewValue[$k],
-				"sort_order"  => $NewSortOrder[$k]
+				"sort_order"  => $zen->checkNum($NewSortOrder[$k])
 				);
 	  }
 	}
@@ -84,7 +84,7 @@
 	  if( $NewValue[$i] != "-new-" && !$NewDelete[$i] ) {
 	    $elements[] = array(
 				"field_value" => $NewValue[$i],
-				"sort_order"  => $NewSortOrder[$i]
+				"sort_order"  => $zen->checkNum($NewSortOrder[$i])
 				);
 	  }
 	}
@@ -96,7 +96,7 @@
       // update the session info with new changes
       if( $num ) {
 	$vars = $zen->generateDataGroupInfo( array($group_id) );
-	$_SESSION['data_groups'][$group_id] = $vars[$group_id];
+	$_SESSION['data_groups'][$group_id] = $vars["$group_id"];
       }
 
       // print useful information for user
@@ -138,7 +138,7 @@
       include("$templateDir/customGroupDetailsForm.php");
     }
   } else {
-    include("$templateDir/adminMenu.php");
+    include("$templateDir/groupForm.php");
   }
   include("$libDir/footer.php");
   

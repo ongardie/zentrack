@@ -61,6 +61,11 @@
   // allow creator of ticket to view (if setting is on) even if no access
   $is_creator = $zen->checkCreator($login_id, $id);
 
+  // load behavior js if needed
+  if( isset($setmode) && $setmode == 'custom' ) {
+    $onLoad[] = "behavior_js.php?formset=ticket_customForm";
+  }
+
   /*
   ** PRINT OUT THE PAGE
   */ 

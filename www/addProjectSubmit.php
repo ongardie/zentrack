@@ -80,14 +80,14 @@
   }
 
   if( !$errs ) {
-     $setmode = "tasks";
-     include("project.php");
-     exit;
-     //header("Location:$rootUrl/project.php?id=$id");
+    $setmode = "tasks";
+    include("project.php");
+    exit;
   } else {
-     include("$libDir/nav.php");
-     $zen->print_errors($errs);
-     include("$templateDir/newProjectForm.php");
-     include("$libDir/footer.php");
+    $onLoad[] = "behavior_js.php?formset=ticketForm";
+    include("$libDir/nav.php");
+    $zen->print_errors($errs);
+    include("$templateDir/newProjectForm.php");
+    include("$libDir/footer.php");
   }
 ?>

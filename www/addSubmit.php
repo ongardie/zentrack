@@ -109,6 +109,7 @@
     exit;
     //header("Location:$rootUrl/ticket.php?id=$id");
   } else {
+    $onLoad[] = "behavior_js.php?formset=ticketForm";
     include("$libDir/nav.php");
     $zen->print_errors($errs);
     include("$templateDir/newTicketForm.php");

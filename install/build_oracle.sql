@@ -295,6 +295,8 @@ CREATE TABLE ZENTRACK_VARFIELD (
   custom_string2 varchar2(255),
   custom_number1 NUMBER(20),
   custom_number2 NUMBER(20),
+  custom_boolean1 NUMBER(1),
+  custom_boolean2 NUMBER(1),
   custom_date1 NUMBER(12),
   custom_date2 NUMBER(12),
   custom_text1 VARCHAR2(4000)

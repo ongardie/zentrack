@@ -5,6 +5,7 @@
     $login_id = "";
     $login_name = "";
     $login_level = "";
+    $_SESSION['data_groups'] = null;
   }
 
   if( !$login_id ) {

@@ -71,7 +71,7 @@
     $zen->printErrors($errs);
     include("$templateDir/behaviorAdd.php");
   } else {
-    include("$templateDir/adminMenu.php");
+    include("$templateDir/behaviorMenu.php");
   }
 
   include("$libDir/footer.php");

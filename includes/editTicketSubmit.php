@@ -20,8 +20,10 @@ if( !$zen->checkAccess($login_id,$ticket["bin_id"],"edit") ) {
      $tested = 0;
   if( !$approved )
      $approved = 0;
-  if( $type == "project" )
+  if( $type == "project" && !$type_id )
      $type_id = $zen->projectTypeID();
+
+  $is_project = $type == 'project' || $zen->inProjectTypeIds($type_id);
 
   $fields = array(
         "title"       => "text",
@@ -58,7 +60,7 @@ if( !$zen->checkAccess($login_id,$ticket["bin_id"],"edit") ) {
      $params = array();
      // create an array of existing fields
      foreach(array_keys($fields) as $f) {
-         $params["$f"] = $$f;
+       $params["$f"] = $$f;
      }
      // update the ticket info
      $res = $zen->edit_ticket($id,$login_id,$params);
@@ -66,26 +68,61 @@ if( !$zen->checkAccess($login_id,$ticket["bin_id"],"edit") ) {
      if( !$res ) {
        $errs[] = tr("System Error").": ".tr("Ticket could not be edited.")." ".$zen->db_error;
      }
+     else {
+       $x = $is_project? 'Project' : 'Ticket';
+       $cfvals = $zen->getCustomFields(1, $x);
+       $params = array();
+       foreach($cfvals as $key=>$label) {
+	 $v = $$key;
+	 $type = getVarfieldDataType($key);
+	 switch( $type ) {
+	 case 'boolean':
+	   $params[$key] = strlen($v)? 1 : 0;
+	   break;
+	 case 'date':
+	   $params[$key] = strlen($v)? $zen->dateParse($v) : 'NULL';
+	   break;
+	 case 'number':
+	   $params[$key] = $zen->checkNum($v);
+	   break;
+	 case 'text':
+	 case 'string':
+	 case 'menu':
+	   $params[$key] = $v;
+	   break;
+	 default:
+	   $zen->addDebug('editTicketSubmit', "Invalid varfield type: {$key}->{$type}", 3);
+	   break;
+	 }
+       }
+       $res = $zen->updateVarfieldVals($id, $params, $login_id, $bin_id);
+       if( !$res ) {
+	 $errs[] = tr("Ticket updated, but variable fields could not be saved");
+       }
+     }
   }
 
   if( !$errs ) {
-     add_system_messages(tr("Edited ticket")." $id.");
+    add_system_messages(tr("Edited ticket #?", array($id)));
      //header("Location:$rootUrl/ticket.php?id=$id&setmode=Details");
      $setmode = "Details";
-     if( $zen->inProjectTypeIDs($bin_id) ) {
+     if( $is_project ) {
        include("../project.php");
      } else {
        include("../ticket.php");
      }
      exit;
   } else {
+     $onLoad[] = "behavior_js.php?formset=ticketForm";
      include_once("$libDir/nav.php");
      $zen->print_errors($errs);
      $TODO = 'EDIT';
-     if( $zen->inProjectTypeIDs($bin_id) )
+     if( $is_project ) {
        include("$templateDir/newProjectForm.php");
-     else
+     }
+     else {
        include("$templateDir/newTicketForm.php");
+     }
      include("$libDir/footer.php");
   }
 ?>

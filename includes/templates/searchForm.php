@@ -1,4 +1,6 @@
-
+<?
+  include("{$libDir}/prepareSearchVarfields.php");
+?>
 <form action="<?=$SCRIPT_NAME?>" name="searchForm">
 <input type="hidden" name="TODO" value="SEARCH">
   
@@ -36,11 +38,6 @@
    //default checked
    $sfd = ((is_array($search_fields) && in_array("description",$search_fields))
 	    || !is_array($search_fields)); 
-   $cf = $zen->getCustomFields(1,"","S");
-   foreach($cf as $k=>$v) {
-     $sfCustom["$k"] = ((is_array($search_fields) && in_array("$k",$search_fields))
-            || !is_array($search_fields));
-   }
   ?>
   <input type="checkbox" name="search_fields[title]" value="title"<?=($sft)?" checked":""?>>
    &nbsp;<?=tr("Title")?>
@@ -48,11 +45,15 @@
   <input type="checkbox" name="search_fields[description]" value="description"<?=($sfd)?" checked":""?>>
    &nbsp;<?=tr("Description")?>
   <?
-   foreach($cf as $k=>$v) {
+   foreach($varfieldsText as $key=>$label) {
+     $sel = $search_fields[$key]? ' checked' : '';
   ?>
      <br>
-     <input type="checkbox" name="search_fields[<?=$k?>]" value="<?=$k?>"<?=($sfCustom["$k"])?" checked":""?>>
-      &nbsp;<?=tr("$v")?>
+     <input type="checkbox" 
+            name="search_fields[<?=$key?>]" 
+            value="<?=$key?>"
+            <?=$sel?>>
+      &nbsp;<?=tr($label)?>
   <?
    }
   ?>
@@ -60,56 +61,103 @@
 </tr>
 
 
-<?
-//#####################################################
-//create Date field - Johan test
-//#####################################################
-?>
-
-<tr>
-  <td colspan="2" class="subTitle">
-    <?=tr("By Date")?>
-  </td>
-</tr>
-<tr>
-  <td class="bars">
-    <?=tr("Date")?>
-  </td>
-  <td class="bars">
-    <input type="text" name="date" size="12" maxlength="10"
-value="<?if (!empty($search_params[otime])) {echo $zen->showDate($search_params[otime]);}?>">
-    <img name="date_button" src='<?=$rootUrl?>/images/cal.gif' 
-  onClick="popUpCalendar(this, document.searchForm.date, '<?=$zen->popupDateFormat()?>')"
-  alt="Select a Date">
-  </td>
-</tr>   
 <?  
 //#####################################################
 // between date field
 //#####################################################
 ?>
 <tr>
-  <td class="bars">
+  <td colspan="2" class="subTitle">
+    <?=tr("By Date")?>
+  </td>
+</tr>
 
-    <?=tr("From")?>
+<tr>
+  <td class="bars">
+    <?=tr("Opened")?>
   </td>
   <td class="bars">
-    <input type="text" name="begin" size="12" maxlength="10" 
-value="<?if (!empty($search_params[begin])) {echo $zen->showDate($search_params[begin]);}?>">
+    <span class='note'><?= tr("between") ?>
+    <input type="text" name="otime_begin" size="12" maxlength="10" 
+      value="<?
+        if (!empty($search_dates['otime_begin'])) {
+          echo $zen->showDate($search_dates['otime_begin']);
+        }?>">
     <img name="date_button" src='<?=$rootUrl?>/images/cal.gif' 
-  onClick="popUpCalendar(this,document.searchForm.begin, '<?=$zen->popupDateFormat()?>')"
+  onClick="popUpCalendar(this,document.searchForm.otime_begin, '<?=$zen->popupDateFormat()?>')"
   alt="Select a Date">
-    &nbsp;(<?=tr("to")?>)&nbsp;
-    <input type="text" name="end" size="12" maxlength="10"
-value="<?if (!empty($search_params[end])) {echo $zen->showDate($search_params[end]);}?>">
+    &nbsp;<?=tr("and")?>&nbsp;
+    <input type="text" name="otime_end" size="12" maxlength="10"
+      value="<?= empty($search_dates['otime_end'])? "+1 day" : $zen->showDate($search_dates['otime_end']) ?>">
     <img name="date_button" src='<?=$rootUrl?>/images/cal.gif' 
-  onClick="popUpCalendar(this,document.searchForm.end, '<?=$zen->popupDateFormat()?>')"
+      onClick="popUpCalendar(this,document.searchForm.otime_end, '<?=$zen->popupDateFormat()?>')"
+      alt="Select a Date">
+    </span>
+  </td>
+</tr>
+
+<tr>
+  <td class="bars">
+    <?=tr("Closed")?>
+  </td>
+  <td class="bars">
+    <span class='note'><?= tr("between") ?>
+    <input type="text" name="ctime_begin" size="12" maxlength="10" 
+      value="<?
+        if (!empty($search_dates['ctime_begin'])) {
+          echo $zen->showDate($search_dates['ctime_begin']);
+        }?>">
+    <img name="date_button" src='<?=$rootUrl?>/images/cal.gif' 
+  onClick="popUpCalendar(this,document.searchForm.ctime_begin, '<?=$zen->popupDateFormat()?>')"
   alt="Select a Date">
+    &nbsp;<?=tr("and")?>&nbsp;
+    <input type="text" name="ctime_end" size="12" maxlength="10"
+      value="<?= empty($search_dates['ctime_end'])? "+1 day" : $zen->showDate($search_dates['ctime_end']) ?>">
+    <img name="date_button" src='<?=$rootUrl?>/images/cal.gif' 
+      onClick="popUpCalendar(this,document.searchForm.ctime_end, '<?=$zen->popupDateFormat()?>')"
+      alt="Select a Date">
+    </span>
+  </td>
+</tr>
+
+<?
+//#####################################################
+// variable field dates
+//#####################################################
+    foreach( $varfieldsDates as $key=>$label ) {
+     $keyb = "{$key}_begin";
+     $keye = "{$key}_end";
+?>
+<tr>
+  <td class="bars">
+    <?=tr("$label")?>
+  </td>
+  <td class="bars">
+    <span class='note'><?= tr("between") ?>
+    <input type="text" name="dates_<?=$keyb?>" size="12" maxlength="10" 
+      value="<?
+        if (!empty($search_dates[$keyb])) {
+          echo $zen->showDate($search_dates[$keyb]);
+        }?>">
+    <img name="date_button" src='<?=$rootUrl?>/images/cal.gif' 
+        onClick="popUpCalendar(this,document.searchForm.dates_<?=$keyb?>, '<?=$zen->popupDateFormat()?>')"
+        title="Select a Date">
+    &nbsp;<?=tr("and")?>&nbsp;
+    <input type="text" name="dates_<?=$keye?>" size="12" maxlength="10"
+      value="<?= empty($search_dates[$keye])? "+1 day" : $zen->showDate($search_dates[$keye]) ?>">
+    <img name="date_button" src='<?=$rootUrl?>/images/cal.gif' 
+      onClick="popUpCalendar(this,document.searchForm.dates_<?=$keye?>, '<?=$zen->popupDateFormat()?>')"
+      title="Select a Date">
+    </span>
   </td>
 </tr>
 <?
+   }
+?>
+
+<?
 //#####################################################
-// end of from to field
+// Parameter Fields
 //#####################################################
 ?>
 
@@ -169,16 +217,16 @@ value="<?if (!empty($search_params[end])) {echo $zen->showDate($search_params[en
     <select name="search_params[type_id]">
        <option value="">----</option>
 <?
-    if( is_array($zen->types) ) {
-    	foreach($zen->getTypes(1) as $v) {
-	  $k = $v["type_id"];
-	  $check = ( $search_params["type_id"] && $k == $search_params["type_id"] )? 
-	     "selected" : "";
-	  print "<option $check value='$k'>$v[name]</option>\n";
-	}
-    } else {
-      print "<option value=''>--no types--</option>\n";
-    }
+   if( is_array($zen->types) ) {
+     foreach($zen->getTypes(1) as $v) {
+       $k = $v["type_id"];
+       $check = ( $search_params["type_id"] && $k == $search_params["type_id"] )? 
+       "selected" : "";
+       print "<option $check value='$k'>$v[name]</option>\n";
+     }
+   } else {
+     print "<option value=''>--no types--</option>\n";
+   }
 ?>
     </select>
   </td>
@@ -191,14 +239,14 @@ value="<?if (!empty($search_params[end])) {echo $zen->showDate($search_params[en
     <select name="search_params[system_id]">
        <option value="">----</option>
 <?
-    if( is_array($zen->systems) ) {
-    	foreach($zen->systems as $k=>$v) {
-	   $check = ( $k == $search_params["system_id"] )? "selected" : "";	   
-	   print "<option $check value='$k'>$v</option>\n";
-	}
-    } else {
-      print "<option value=''>--no systems--</option>\n";
+  if( is_array($zen->systems) ) {
+    foreach($zen->systems as $k=>$v) {
+      $check = ( $k == $search_params["system_id"] )? "selected" : "";	   
+      print "<option $check value='$k'>$v</option>\n";
     }
+  } else {
+    print "<option value=''>--no systems--</option>\n";
+  }
 ?>
     </select>
   </td>
@@ -211,18 +259,17 @@ value="<?if (!empty($search_params[end])) {echo $zen->showDate($search_params[en
     <select name="search_params[bin_id]">
        <option value="">----</option>
 <?
-   if( is_array($userBins) ) {
-    	foreach($zen->getBins(1) as $v) {
-         $k = $v["bid"];
-         
-         if (in_array($k, $userBins)) {
-             $check = ( $v == $search_params["bin_id"] )? "selected" : "";
-             print "<option $check value='$k'>$v[name]</option>";
-         }
+  if( is_array($userBins) ) {
+    foreach($zen->getBins(1) as $v) {
+      $k = $v["bid"];      
+      if (in_array($k, $userBins)) {
+	$check = ( $k == $search_params["bin_id"] )? " selected" : "";
+	print "<option $check value='$k' $check>$v[name]</option>";
       }
-   } else {
-      print "<option value=''>--no bins--</option>\n";
-   }
+    }
+  } else {
+    print "<option value=''>--no bins--</option>\n";
+  }
 ?>
     </select>
   </td>
@@ -235,20 +282,61 @@ value="<?if (!empty($search_params[end])) {echo $zen->showDate($search_params[en
     <select name="search_params[priority]">
        <option value="">----</option>
 <?
-    if( is_array($zen->priorities) ) {
-    	foreach($zen->getPriorities(1) as $v) {
-	   $k = $v["pid"];
-	   $v = $v["name"];
-	   $check = ( $k == $search_params[priority] )? "selected" : "";
-	   print "<option $check value='$k'>$v</option>\n";
-	}
-    } else {
-      print "<option value=''>--no priorities--</option>\n";
+  if( is_array($zen->priorities) ) {
+    foreach($zen->getPriorities(1) as $v) {
+      $k = $v["pid"];
+      $v = $v["name"];
+      $check = ( $k == $search_params["priority"] )? "selected" : "";
+      print "<option $check value='$k'>$v</option>\n";
     }
+  } else {
+    print "<option value=''>--no priorities--</option>\n";
+  }
 ?>
     </select>&nbsp;<span class='small'><?=tr("(or higher)")?></span>
   </td>
 </tr>
+
+<?
+  foreach( $varfieldsParms as $key=>$val ) {
+?>
+<tr>
+  <td class='bars'>
+   <?=tr($val['field_label'])?>
+  </td>
+  <td class='bars'>
+<?
+  $type = getVarfieldDataType($key);
+  if( $type == 'menu' ) {
+    print "    <select name='search_params[{$key}]'>\n";
+    print "        <option value=''>---</option>\n";
+    foreach( genDataGroupChoices($val['field_value'], false) as $v ) {
+      $t = $v['label'];
+      $k = $v['field_value'];
+      $sel = $k == $search_params[$key]? ' selected' : '';
+      print "      <option value='$k'$sel>$t</option>\n";
+    }
+    print "    </select>\n";
+  }
+  else if( $type == 'boolean' ) {
+?>
+    <select name='search_params[<?=$key?>]'>
+      <option value=''>---</option>
+      <option value='1'>True</option> 
+      <option value='0'>False</option>
+    </select> 
+<?
+  }
+  else {
+    $zen->addDebug('searchForm', "Invalid parm type: $type, ignoring", 1);
+  }
+?> 
+  </td>
+</tr>
+<?
+  }
+?>
+
 <tr>
   <td colspan="2" class="subTitle">
 	<?=tr("Click 'Search' to execute the search")?>

@@ -4,15 +4,12 @@
 ?>
       <br>
       <p class='error'><?=tr("Edit existing groups or create a new group.")?></p>
-      <p>Note that behaviors are meant to provide suggested values to
-         the user.  They are not meant to be used as a control mechanism
-         and could be circumvented by creative users.</p>
       <ul>
       <form name='groupForm' action='<?=$elnk?>' method='post'>
       <input type='hidden' name='TODO' value=''>
       <table cellpadding="4" cellspacing="1" class='cell'>
 	 <tr>
-	 <td class='titleCell' align='center' colspan='6'>
+	 <td class='titleCell' align='center' colspan='7'>
 	   <b><?=tr("Data Groups")?></b>
 	 </td>
 	 </tr>
@@ -20,12 +17,14 @@
            <td width="30" class='cell' align='center'><b><?=uptr("id")?></b></td>
            <td class='cell' align='center'><b><?=tr("Group Name")?></b></td>
            <td class='cell' align='center'><b><?=tr("Table Name")?></b></td>
+           <td class='cell' align='center'><b><?=tr("Type")?></b></td>
            <td class='cell' align='center'><b><?=tr("Entries")?></b></td>
            <td class='cell' align='center'><b><?=tr("Description")?></b></td>
            <td class='cell' align='center'><b><?=tr("Actions")?></b></td>
 	 </tr>
     <? 
          $tables=$zen->getDataGroupTablesArray();
+         $vars = $_SESSION['data_groups'];
          $num = count($vars);
 	 if( is_array($vars) ) {
 	   $j = 0;
@@ -49,9 +48,17 @@
                }
              }
 
+	     // the eval type
+	     print $t.$zen->ffv($v['eval_type']).$te;
+
 	     // the number of details for this row
              print "$te\n";
-	     $c = $counts["$key"] > 0? $counts["$key"] : 0;
+	     if( $v['eval_type'] == 'Javascript' ) {
+	       $c = 'n/a';
+	     }
+	     else {
+	       $c = count($v['fields']) > 0? count($v['fields']) : 0;
+	     }
 	     print $t.$c.$te;
 
 	     // description for the row
@@ -63,18 +70,23 @@
 	       . "[<a href='".$elnk."?group_id=".$v['group_id']."'>"
 	       .uptr('properties')."</a>]";
              print "<br>";
-             print "<span class='small'>"
-	       . "[<a href='".$llnk."?group_id=".$v['group_id']."'>"
-	       .uptr('entries')."</a>]";
-             print $te;
-
+	     if( $v['eval_type'] == 'Javascript' ) {
+	       print "<span class='smallGrey'>[".uptr("entries")."]</span>\n";
+	     }
+	     else {
+	       print "<span class='small'>"
+		 . "[<a href='".$llnk."?group_id=".$v['group_id']."'>"
+		 .uptr('entries')."</a>]";
+	     }
+	     print $te;
+	       
 	     print "</tr>\n";
 	     $j++;
 	   }
 	 }
     ?>
 <tr>
-  <td class="titleCell" colspan="6">
+  <td class="titleCell" colspan="7">
     <?=tr('Press NEW to create new data groups')?>
     <br>
     <?=tr('Press DONE when you have finished with the edition')?>

@@ -39,6 +39,7 @@
                  print "<option value='{$key}'{$sel}>{$label}</option>\n";
                }
                print "$te";
+	       $item['field_value'] = $zen->ffv($item['field_value']);
                print "{$t}<input type='text' name='NewMatchValue[{$j}]' "
 		 ." value='{$item['field_value']}' size='20' maxlength='255'>{$te}";
                print "{$t}<input type='text' name='NewSortOrder[{$j}]' "

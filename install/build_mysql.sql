@@ -305,6 +305,9 @@ CREATE TABLE ZENTRACK_VARFIELD (
   custom_number1 int(20),
   custom_number2 int(20),
 
+  custom_boolean1 int(1),
+  custom_boolean2 int(1),
+
   custom_date1 int(12),
   custom_date2 int(12),
 

@@ -361,7 +361,7 @@ class DB {
     **      or a comma seperated list of values in
     **      the case that the condition is "in"
     **   flag is an optional parameter which, if set
-    **      to 1, would make the match case sensetive
+    **      to 1, would make the match case sensitive
     **
     **   optionally, any of the sets of data in the incoming
     **   params clause could also be an array of data sets with

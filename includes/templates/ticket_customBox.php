@@ -9,6 +9,7 @@ if( $TODO == 'SAVED' ) {
   $editMode = $zen->checkAccess($login_id, $bin_id, 'varfield_edit');
 
   if( $editMode ) {
+
 ?><form name="ticket_customForm" action="<?=$rootUrl?>/actions/editCustomSubmit.php" method='POST'><?
   }
 ?>

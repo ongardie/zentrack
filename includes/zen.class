@@ -122,7 +122,7 @@ class zen extends zenDate {
        $val = preg_replace("/[^a-zA-Z0-9_.@-]/", "", $val);
        if( !preg_match("/[a-zA-Z0-9_.-]+@[a-zA-Z0-9_-]+\.[a-zA-Z0-9_.-]+/",
              $val) ) {
-    $val = "";
+         $val = "";
        }
      }
      return $val;
@@ -212,8 +212,8 @@ class zen extends zenDate {
         $match = array($match);
      for( $i=0; $i<count($text); $i++ ) {
        foreach($match as $m) {
-    $text[$i] = ereg_replace('#','\#',$text[$i]);
-         $text[$i] = preg_replace("#($m)#i", "$h[0]\\1$h[1]", $text[$i]);
+         $m = str_replace('/','\\/',$m);
+         $text[$i] = preg_replace("/($m)/i", "$h[0]\\1$h[1]", $text[$i]);
        }
      }
      if( $join ) {
@@ -554,7 +554,7 @@ class zen extends zenDate {
     */
    function printDebugMessages() {  
      if( is_array($this->debugMessages) ) {
-       $styles = array("","error","","note");
+       $styles = array("","error","warning","note");
        print "<p>--------<b>MESSAGES</b>--------<ul>\n";
        print "<i>To disable this output, set \$Debug_Mode "
          ."in header.php to 0.</i><br>\n";

@@ -98,8 +98,10 @@
 
   // check for valid filename
   if( !file_exists("$templateDir/$name") ) {
+    if( !file_exists("$templateDir/actions/$page_mode.php") ) {
+      $zen->addDebug("ticket_box","Invalid filename $name declared... redirecting",1);
+    }
     $name = "ticket_systemBox.php";
-    $zen->addDebug("ticket_box","Invalid filename $name declared... redirecting",1);
   }
   include("$templateDir/$name");
 ?>

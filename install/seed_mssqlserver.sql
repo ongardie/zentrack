@@ -224,6 +224,10 @@ INSERT INTO ZENTRACK_VARFIELD_IDX (field_name,       field_label,       sort_ord
 INSERT INTO ZENTRACK_VARFIELD_IDX (field_name,       field_label,       sort_order) 
                            VALUES ('custom_number2', 'Custom Number 2', 1         );
 INSERT INTO ZENTRACK_VARFIELD_IDX (field_name,       field_label,       sort_order) 
+                           VALUES ('custom_boolean1', 'Custom Boolean 1', 1         );
+INSERT INTO ZENTRACK_VARFIELD_IDX (field_name,       field_label,       sort_order) 
+                           VALUES ('custom_boolean2', 'Custom Boolean 2', 1         );
+INSERT INTO ZENTRACK_VARFIELD_IDX (field_name,       field_label,       sort_order) 
                            VALUES ('custom_date1', 'Custom Date 1', 1         );
 INSERT INTO ZENTRACK_VARFIELD_IDX (field_name,       field_label,       sort_order) 
                            VALUES ('custom_date2', 'Custom Date 2', 1         );
