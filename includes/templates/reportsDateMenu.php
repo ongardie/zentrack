@@ -23,7 +23,7 @@
 ?>
 <tr>
   <td class='<?=($tf_data && !$tf_date)?"titleCell":"subTitle"?>' colspan='3'>
-    Date Range
+    <?=tr("Date Range")?>
   </td>
 </tr>
 
@@ -44,7 +44,7 @@
 ?>
 <tr>
   <td class="bars">
-    Range    
+    <?=tr("Range")?>
   </td>
   <td class="bars">
     <select name='date_value'>
@@ -57,35 +57,42 @@
     </select>
     &nbsp;
     <select name='date_range'>
-       <option value='hours'<?=($date_range == "hours")?" selected":""?>>Hours</option>
-       <option value='days'<?=($date_range == "days")?" selected":""?>>Days</option>
-       <option value='weeks'<?=($date_range == "weeks")?" selected":""?>>Weeks</option>
-       <option value='months'<?=($date_range == "months")?" selected":""?>>Months</option>
-       <option value='years'<?=($date_range == "years")?" selected":""?>>Years</option>
+       <option value='hours'<?=($date_range == "hours")?" selected":""?>
+	  value="Hours"><?=tr("Hours")?></option>
+       <option value='days'<?=($date_range == "days")?" selected":""?>
+	  value="Days"><?=tr("Days")?></option>
+       <option value='weeks'<?=($date_range == "weeks")?" selected":""?>
+	  value="Weeks"><?=tr("Weeks")?></option>
+       <option value='months'<?=($date_range == "months")?" selected":""?>
+	  value="Months"><?=tr("Months")?></option>
+       <option value='years'<?=($date_range == "years")?" selected":""?>
+	  value="Years"><?=tr("Years")?></option>
     </select>
   </td>
   <td rowspan='3' class='bars'>
    <? if( $tf_date ) { ?>
-    <input type='submit' value=' Change '>
+    <input type='submit' value=' <?=tr("Change")?> '>
    <? } else { ?>
-    <input type='submit' class='submit' value=' Set '>
+    <input type='submit' class='submit' value=' <?=tr("Set")?> '>
    <? } ?>
   </td>
 </tr>
 <tr>
   <td class="bars" colspan='2'>
     <? $chkd = (!strlen($date_selector)||$date_selector == "range")? " checked" : ""; ?>
-    <input type='radio' name='date_selector' value='range'<?=$chkd?>>&nbsp; Most Current
+    <input type='radio' name='date_selector' value='range'<?=$chkd?>>
+	&nbsp; <?=tr("Most Current")?>
   </td>
 </tr>
 <tr>
   <td class="bars">
     <? $chkd = ($date_selector == "value")? " checked" : ""; ?>
-    <input type='radio' name='date_selector' value='value'<?=$chkd?>>&nbsp;Start From Date
+    <input type='radio' name='date_selector' value='value'<?=$chkd?>>
+	&nbsp;<?=tr("Start From Date")?>
   </td>
   <td class="bars">
     <input type='text' onFocus="moveReportSelector()" name='date_start' maxlength='12' size='14' value='<?=$zen->ffv($date_start)?>'>
-    <span class='note'>&nbsp;mm/dd/yyyy hh:mm (time optional)</note>
+    <span class='note'>(<?=tr("Any valid date format")?> <?=tr("use 4 digit year, time is optional")?>)</note>
   </td>
 </tr>
 </form>

@@ -5,12 +5,12 @@
 <table width="300" cellpadding="5">
 <tr>
   <td colspan="2" class="titleCell" align="center" height="20">
-    <b>Change Your Default Bin</b>
+    <b><?=tr("Change Your Default Bin")?></b>
   </td>
 </tr>
 <tr>
   <td class="bars">
-    <b>New Default Bin</b>
+    <b><?=tr("New Default Bin")?></b>
   </td>
   <td class="bars">
     <select name="homebin">
@@ -33,12 +33,12 @@
 </tr>
 <tr>
   <td class="titleCell" colspan="2">
-    Click 'Update' to change your default bin
+    <?=tr("Click 'Update' to change your default bin")?>
   </td>
 </tr>
 <tr>
   <td class="bars" colspan="2">
-    <input type="submit" value="Update" class="submit">
+    <input type="submit" value="<?=tr("Update")?>" class="submit">
   </td>
 </tr>
 </table>

@@ -6,30 +6,30 @@ if( is_array($logs) ) {
    $c = count($logs);
       ?>
         <table width="100%" cellspacing='1' cellpadding='2' bgcolor='<?=$zen->settings["color_alt_background"]?>'>
-        <tr><td class='titleCell' colspan="8" align='center'><?=($c>1)? "$c Matches" : "1 Match";?></td></tr>
+        <tr><td class='titleCell' colspan="8" align='center'><?=($c>1)? tr("? Matches",array($c)) : tr("1 Match");?></td></tr>
    <tr bgcolor="<?=$zen->settings["color_title_background"]?>">
-   <td width="32" height="25" valign="middle" title="Tracking ID for the ticket">
+   <td width="32" height="25" valign="middle" title="<?=tr("ID of the ticket")?>">
      <div align="center"><span style="color:<?=$zen->settings["color_title_txt"]?>"><b><span class="small"><?=tr("ID")?></span></b></span></div>
    </td>
-        <td width="32" height="25" valign="middle" title="Date Logged">
+        <td width="32" height="25" valign="middle" title="<?=tr("Date log was created")?>">
           <div align="center"><span style="color:<?=$zen->settings["color_title_txt"]?>">
        <b><span class="small"><?=tr("Date")?></span></b></span>
           </div>
         </td>
    <? if( !$search_params["action"] || is_array($search_params["action"]) ) { ?>
-     <td width="32" height="25" valign="middle" title="Action Taken">
+     <td width="32" height="25" valign="middle" title="<?=tr("Action Taken")?>">
      <div align="center"><span style="color:<?=$zen->settings["color_title_txt"]?>">
              <b><span class="small"><?=tr("Action")?></span></b></span></div>
      </td>
         <? } ?>
    <? if( !$search_params["user_id"] || is_array($search_params["user_id"]) ) { ?>
-     <td width="32" height="25" valign="middle" title="Person ticket is assigned to">
+     <td width="32" height="25" valign="middle" title="<?=tr("Person ticket is assigned to")?>">
      <div align="center"><span style="color:<?=$zen->settings["color_title_txt"]?>">
              <b><span class="small"><?=tr("User")?></span></b></span></div>
      </td>
         <? } ?>
    <? if( !$search_params["bin_id"] || is_array($search_params["bin_id"]) ) { ?>
-     <td width="32" height="25" valign="middle" title="Bin ticket is located in">
+     <td width="32" height="25" valign="middle" title="<?=tr("Bin ticket is located in")?>">
      <div align="center"><span style="color:<?=$zen->settings["color_title_txt"]?>">
              <b><span class="small"><?=tr("Bin")?></span></b></span></div>
      </td>
@@ -37,7 +37,7 @@ if( is_array($logs) ) {
    </tr>
       <?      
 
-   $td_ttl = "title='Click here to view this ticket.'";
+   $td_ttl = "title='".tr("Click here to view this ticket.")."'";
    foreach($logs as $t) {
       unset($txt);
       unset($est);
@@ -108,7 +108,7 @@ if( is_array($logs) ) {
     <tr>
      <form method="post" action="<?=$SCRIPT_NAME?>">
      <td colspan="8" class="titleCell">
-   <input type="submit" class="smallSubmit" value="Modify Search">
+   <input type="submit" class="smallSubmit" value="<?=tr("Modify Search")?>">
    <input type="hidden" name="search_text" value="<?=strip_tags($search_text)?>">
    <input type="hidden" name="search_fields[title]" value="<?=strip_tags($search_fields["title"])?>">
    <input type="hidden" name="search_fields[entry]" value="<?=strip_tags($search_fields["entry"])?>">

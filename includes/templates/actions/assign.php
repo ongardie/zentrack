@@ -6,14 +6,14 @@
 <table width="450" cellpadding="4" cellspacing="1" border="0">
 <tr>
  <td>
-   <span class="bigBold">ASSIGN TICKET</span>
+   <span class="bigBold"><?=uptr("Assign Ticket")?></span>
    <br>
-   <span class="small">(Assign the ticket to a new user)</span>
+   <span class="small">(<?=tr("Assign the ticket to a new user")?>)</span>
  </td>
 </tr>
 <tr>
  <td class="titleCell">
-   Select a Recipient
+   <?=tr("Select a Recipient")?>
  </td>
 </tr>
 <tr>
@@ -34,7 +34,7 @@
     }
   }
   else {
-    print "<option value=''>--none--</option>\n";
+    print "<option value=''>--".tr("none")."--</option>\n";
   }
 ?>
 </select>
@@ -42,7 +42,7 @@
 </tr>
 <tr>
   <td class="titleCell">
-     Comments or Instructions <span class="small">(optional)</span>
+     <?=tr("Comments or Instructions")?> <span class="small">(<?=tr("optional")?>)</span>
   </td>
 </tr>
 <tr>
@@ -53,13 +53,13 @@
 </tr>
 <tr>
   <td class="titleCell">
-    Click button to assign
+    <?=tr("Click button to assign")?>
   </td>
 </tr>
 <tr>
   <td>
     <input type="submit" value=" ASSIGN " class="submit">
-<p class='note'>Note: only users who have permission to work on tickets in the current bin are listed.</p>
+<p class='note'><?=tr("Note").":".tr("Only users who have permission to work on tickets in the current bin are listed.")?></p>
   </td>
 </tr>
 <tr>

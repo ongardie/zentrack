@@ -2,7 +2,7 @@
   <table width="600" align="center" cellpadding="2" cellspacing="2">
    <tr>  
      <td class='titleCell'>
-       Related <?=$page_type?>s    
+       <?=tr("Related ?s", array($page_type))?>    
      </td>
    </tr>  
    <tr>
@@ -20,7 +20,7 @@
   if( is_array($tickets) && count($tickets) ) {
      include("$templateDir/listTickets.php");
   } else {
-     print "No tickets have been associated with this ticket.";
+     print tr("No tickets have been associated with this ticket.");
   }
 ?>
      </td>

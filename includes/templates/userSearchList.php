@@ -5,35 +5,35 @@ if( is_array($users) && count($users) ) {
    $c = count($users);
       ?>
         <table width="100%" cellspacing='1' cellpadding='2' bgcolor='<?=$zen->settings["color_alt_background"]?>'>
-        <tr><td class='titleCell' colspan="8" align='center'><?=($c>1)? "$c Matches" : "1 Match";?></td></tr>
+        <tr><td class='titleCell' colspan="8" align='center'><?=($c>1)? "$c ".tr("matches") : "1 ".tr("match");?></td></tr>
    <tr bgcolor="<?=$zen->settings["color_title_background"]?>">
-   <td width="32" height="25" valign="middle" title="Users System ID">
+   <td width="32" height="25" valign="middle" title="<?=tr("Users System ID")?>">
      <div align="center"><span style="color:<?=$zen->settings["color_title_txt"]?>"><b><span class="small"><?=tr("ID")?></span></b></span></div>
    </td>
-   <td height="25" valign="middle" title="The name of the user">
+   <td height="25" valign="middle" title="<?=tr("The name of the user")?>">
      <div align="center"><span style="color:<?=$zen->settings["color_title_txt"]?>">
         <b><span class="small"><?=tr("Name")?></span></b></span></div>
    </td>
-   <td height="25" valign="middle" title="Users Initials">
+   <td height="25" valign="middle" title="<?=tr("Users Initials")?>">
      <div align="center"><span style="color:<?=$zen->settings["color_title_txt"]?>">
         <b><span class="small"><?=tr("Initials")?></span></b></span></div>
    </td>
-   <td width="32" height="25" valign="middle" title="Default Access Level">
+   <td width="32" height="25" valign="middle" title="<?=tr("Default Access Level")?>">
      <div align="center"><span style="color:<?=$zen->settings["color_title_txt"]?>"><b><span class="small"><?=tr("Access")?></span></b></span></div>
    </td>
-   <td height="25" valign="middle" title="The name of the user">
+   <td height="25" valign="middle" title="<?=tr("Users email address")?>">
      <div align="center"><span style="color:<?=$zen->settings["color_title_txt"]?>">
         <b><span class="small"><?=tr("Email")?></span></b></span></div>
    </td>
-     <td width="32" height="25" valign="middle" title="Account is Active">
+     <td width="32" height="25" valign="middle" title="<?=tr("Account is Active")?>">
      <div align="center"><span style="color:<?=$zen->settings["color_title_txt"]?>">
              <b><span class="small"><?=tr("Active")?></span></b></span></div>
      </td>
-     <td width="32" height="25" valign="middle" title="Users Default Bin">
+     <td width="32" height="25" valign="middle" title="<?=tr("Users Default Bin")?>">
      <div align="center"><span style="color:<?=$zen->settings["color_title_txt"]?>">
              <b><span class="small"><?=tr("Home")?></span></b></span></div>
      </td>
-     <td width="32" height="25" valign="middle" title="Administrative Options">
+     <td width="32" height="25" valign="middle" title="<?=tr("Administrative Options")?>">
      <div align="center"><span style="color:<?=$zen->settings["color_title_txt"]?>">
              <b><span class="small"><?=tr("Options")?></span></b></span></div>
      </td>
@@ -80,24 +80,25 @@ if( is_array($users) && count($users) ) {
      <?=$u["email"]?>
         </td>
    <td height="25" valign="middle">
-     <?=($u["active"])? "Yes" : "No"?>
+     <?=($u["active"])? uptr("yes") : uptr("no")?>
         </td>
    <td height="25" valign="middle">
      <?=$zen->bins["$u[homebin]"]?>
         </td>  
    <td <?=($u["notes"])? "rowspan='2'" : ""?> valign="middle">
      <span class="small">
-     [<a href='<?=$elnk?>?user_id=<?=$u["user_id"]?>'>EDIT</a>]
+     [<a href='<?=$elnk?>?user_id=<?=$u["user_id"]?>'><?=uptr("edit")?></a>]
      <br>
-     [<a href='<?=$alnk?>?user_id=<?=$u["user_id"]?>'>ACCESS</a>]
+     [<a href='<?=$alnk?>?user_id=<?=$u["user_id"]?>'><?=uptr("access")?></a>]
      <br>
           [<a href='<?=$plnk?>?user_id=<?=$u["user_id"]?>'
-      onClick='return confirm("RESET THE PASSWORD for user <?=$u["user_id"]?>?");'
-           >PASSWORD</a>]
+      onClick='return confirm("<?=
+	tr("Reset the password for user ??",array($u["user_id"]))?>");'
+           ><?=uptr("password")?></a>]
      <br>
           [<a href='<?=$dlnk?>?user_id=<?=$u["user_id"]?>'
-      onClick='return confirm("PERMANENTLY remove user <?=$u["user_id"]?>?");'
-           ><span class='error'>DELETE</span></a>]
+      onClick='return confirm("<?=tr("Permanently remove user ??",array($u["user_id"]))?>");'
+           ><span class='error'><?=uptr("delete")?></span></a>]
         </td>
         </tr>
    <? 

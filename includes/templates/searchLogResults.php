@@ -40,7 +40,7 @@
     $logs = $zen->search_logs($params, "AND");
   } else {
     // set an error message
-    $errs[] = "No valid fields were provided to conduct a search";
+    $errs[] = tr("No valid fields were provided to conduct a search");
   }
 
 }?>

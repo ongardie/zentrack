@@ -1,6 +1,6 @@
 <table width='300'>
 <tr>
-  <td class='titleCell' align='center'>View Reports</td>
+  <td class='titleCell' align='center'><?=tr("View Reports")?></td>
 </tr>
 <tr>
   <td class='bars' height='40' valign='top'>
@@ -14,7 +14,7 @@
        print "<option value='{$r['report_id']}'>".$r["report_name"]."</option>\n";
      }
    } else {
-     print "<option value=''>--none available--</option>\n";
+     print "<option value=''>--".tr("none")."--</option>\n";
    } 
 ?>
    </select>
@@ -23,10 +23,10 @@
   </td>
 </tr>
 <tr>
-  <td class='titleCell' align='center'>Manage Reports</td>
+  <td class='titleCell' align='center'><?=tr("Manage Reports")?></td>
 </tr>
 <tr>
-  <td class='subTitle' align='center'>Modify Reports</td>
+  <td class='subTitle' align='center'><?=tr("Modify Reports")?></td>
 </tr>
 <tr>
   <td class='bars' height='40' valign='top'>
@@ -37,14 +37,14 @@
        print "<option value='{$r['report_id']}'>{$r['report_name']}</option>\n";
      }
    } else {
-     print "<option value=''>--none available--</option>\n";
+     print "<option value=''>--".tr("none")."--</option>\n";
    } 
-?></select>&nbsp;<input type='submit' class='submit' value='Modify'>
+?></select>&nbsp;<input type='submit' class='submit' value='<?=tr("Modify")?>'>
     </form>
   </td>
 </tr>
 <tr>
-  <td class='subTitle'>Delete Reports</td>
+  <td class='subTitle'><?=tr("Delete Reports")?></td>
 </tr>
 <tr>
   <td class='bars'>
@@ -56,21 +56,22 @@
        print "<option value='{$r['report_id']}'>{$r['report_name']}</option>\n";
      }
    } else {
-     print "<option value=''>--none available--</option>\n";
+     print "<option value=''>--".tr("none")."--</option>\n";
    } 
 ?>
      </select>
-     &nbsp; <input type='submit' class='submit' value='Delete' onClick='return confirm("Are you sure you want to PERMANENTLY delete this template?")'>
+     &nbsp; <input type='submit' class='submit' value='<?=tr("Delete")?>' 
+	onClick='return confirm("<?=tr("Are you sure you want to permanently delete this template?")?>")'>
     </form>
   </td>
 </tr>
 <tr>
-  <td class='subTitle'>Create Reports</td>
+  <td class='subTitle'><?=tr("Create Reports")?></td>
 </tr>
 <tr>
   <td class='bars'>
     <form method='get' action='custom.php'>
-      <input type='submit' class='submit' value='New Report'>
+      <input type='submit' class='submit' value='<?=tr("New Report")?>'>
     </form>
   </td>
 </tr>

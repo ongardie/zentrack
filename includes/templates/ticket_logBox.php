@@ -3,8 +3,8 @@
       <?
   $logs = $zen->get_logs($id);
   if( is_array($logs) && count($logs) > 0) {
-    print "<tr><td class='titleCell'>Log Entries ("
-      .count($logs)." total)</td></tr>\n";
+    print "<tr><td class='titleCell'>".tr("Log Entries");
+    print "</td></tr>\n";
     $att = $zen->get_attachments($id,null,1);
     $i = 1;
     $sep = "\n--";
@@ -40,7 +40,7 @@
 	print $l["entry"];
       }
       if( is_array($att["$id"]["$lid"]) ) {
-	print "<p><b>ATTACHMENT(s):</b><br>";
+	print "<p><b>".uptr("Attachments").":</b><br>";
 	foreach( $att["$id"]["$lid"] as $a ) {
 	  print "<a href='".$zen->settings["url_view_attachment"]
 	    ."?aid=$a[attachment_id]' ";
@@ -53,7 +53,8 @@
       $i++;
     }	    
   } else {
-    print "<tr><td height='300' valign='top'>The log is empty.</td></tr>\n";
+    print "<tr><td height='300' valign='top'>"
+      .tr("The log is empty")."</td></tr>\n";
   }
 ?>
   </table>

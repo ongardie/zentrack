@@ -144,6 +144,7 @@ class Translator {
    foreach($vals as $v) {
       $string = preg_replace("/\?/", $v, $string, 1);   
    } 
+   return $string;
  }
 
 /**

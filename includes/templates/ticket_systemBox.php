@@ -13,7 +13,7 @@
        include("$templateDir/actions/$action.php");
      }
      else {
-       print "<p class='error'>Invalid action declared</p>\n";
+       print "<p class='error'>".tr("Invalid action declared")."</p>\n";
      }
   
      print "<p>&nbsp;</p>\n";
@@ -23,7 +23,7 @@
        
   <table width="600" align="center" cellpadding="2" cellspacing="2">
    <tr>
-    <td class='titleCell' align='center'>System History</td>
+    <td class='titleCell' align='center'><?=tr("System History")?></td>
    </tr>
    <tr>  
     <td height="250" valign="top">

@@ -12,7 +12,7 @@
   $page_title = "Configuration Settings";
 
   $settings = $zen->getSettings(1);
-  if( $TODO == 'Save' ) {
+  if( $TODO ) {
     unset($newparams);
     if( !is_array($newSettings) ) {
       $errs[] = "No settings were recieved";

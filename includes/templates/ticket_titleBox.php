@@ -6,17 +6,17 @@
        <td valign="top" width="440"><table 
           width="400" cellpadding="2" cellspacing="1">
 	  <tr>
-	   <td class="smallTitleCell" height="<?=$height_num?>">ID</td>
-	   <td class="smallTitleCell" colspan="2">TITLE</td>
+	   <td class="smallTitleCell" height="<?=$height_num?>"><?=tr("ID")?></td>
+	   <td class="smallTitleCell" colspan="2"><?=uptr("Title")?></td>
 	  </tr>
 	  <tr>
 	   <td class="small"><?=$id?></td>
 	   <td class="small" colspan="2"><?=stripslashes($title)?></td>
 	  </tr>
 	  <tr>
-	   <td class="smallTitleCell" height="<?=$height_num?>">ELAPSED</td>  
-	   <td class="smallTitleCell" width="100">OPENED</td>
-	   <td class="smallTitleCell" width="100">DEADLINE</td>
+	   <td class="smallTitleCell" height="<?=$height_num?>"><?=uptr("Elapsed")?></td>  
+	   <td class="smallTitleCell" width="100"><?=uptr("Opened")?></td>
+	   <td class="smallTitleCell" width="100"><?=uptr("Deadline")?></td>
 	  </tr>
 	  <tr>
 	   <td class="small"><?=$zen->showTimeElapsed($otime,$ctime,1,0)?></td>  
@@ -25,8 +25,8 @@
 	  </tr>
 	  <tr>
 	   <td rowspan="2"><span class="bigBold"><?=strtoupper($status)?></span></td>
-	   <td class="smallTitleCell" height="<?=$height_num?>">PRIORITY</td>	  
-	   <td class="smallTitleCell">OWNER</td>
+	   <td class="smallTitleCell" height="<?=$height_num?>"><?=uptr("Priority")?></td> 
+	   <td class="smallTitleCell"><?=uptr("Owner")?></td>
 	  </tr>
 	  <tr>
             <td<?=

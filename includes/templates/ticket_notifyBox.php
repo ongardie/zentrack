@@ -14,14 +14,14 @@
 	 }
        ?>
        <input type="<?=$button?>"
-         value=" Add Recipient " class="actionButton" 
+         value=" <?=tr("Add Recipient")?> " class="actionButton" 
          style="width:125;color:<?=$color?>">  
      </form>
      </td>
    </tr>
    <tr>  
      <td class='titleCell'>
-       Notify List
+       <?=tr("Notify List")?>
      </td>
    </tr>  
    <tr>
@@ -34,9 +34,9 @@
 ?>
     <table width='500'>
      <tr>
-       <td class='subTitle' align='center'>Name</td>
-       <td class='subTitle' align='center'>Email</td>
-       <td class='subTitle' align='center'>Delete</td>
+       <td class='subTitle' align='center'><?=tr("Name")?></td>
+       <td class='subTitle' align='center'><?=tr("Email")?></td>
+       <td class='subTitle' align='center'><?=tr("Delete")?></td>
      </tr>
 <?  
     foreach($notify_list as $n) {
@@ -73,12 +73,12 @@
 	 }
        ?>
        <input type="<?=$button?>" 
-	  value=" Drop Recipients " 
+	  value=" <?=tr("Drop Recipients")?> " 
 	  class="actionButton" style="width:125;color:<?=$color?>">  
 <?
    }
    else {
-    print "<b>No recipients on notify list</b>";
+    print "<b>".tr("No recipients on notify list")."</b>";
    }
 ?>
      </form>

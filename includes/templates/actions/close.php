@@ -6,14 +6,14 @@
 <table width="450" cellpadding="4" cellspacing="1" border="0">
 <tr>
  <td>
-   <span class="bigBold">CLOSE TICKET</span>
+   <span class="bigBold"><?=tr("Close Ticket")?></span>
    <br>
-   <span class="small">(Set status to closed/pending)</span>
+   <span class="small">(<?=tr("Set status to closed/pending")?>)</span>
  </td>
 </tr>
 <tr>
   <td class="titleCell">
-    Enter any hours worked not previously accounted for <span class="small">(optional)</span>
+    <?=tr("Enter any hours worked not previously accounted for")?> <span class="small">(<?=tr("optional")?>)</span>
   </td>
 </tr>
 <tr>
@@ -23,7 +23,7 @@
 </tr>
 <tr>
   <td class="titleCell">
-     Comments or Instructions <span class="small">(required)</span>
+     <?=tr("Comments or Instructions")?> <span class="small">(<?=tr("required")?>)</span>
   </td>
 </tr>
 <tr>
@@ -34,12 +34,12 @@
 </tr>
 <tr>
   <td class="titleCell">
-    Click button to close
+    <?=tr("Click button to close")?>
   </td>
 </tr>
 <tr>
   <td>
-    <input type="submit" value=" CLOSE " class="submit">
+    <input type="submit" value=" <?=uptr("Close")?> " class="submit">
   </td>
 </tr>
 <tr>

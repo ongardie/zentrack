@@ -14,18 +14,18 @@
 <table width="640" align="left" cellpadding="2" cellspacing="2" bgcolor="<?=$zen->settings["color_background"]?>">
 <tr>
   <td colspan="2" width="640" class="titleCell" align="center">
-     Search For Logs
+     <?=tr("Search For Logs")?>
   </td>
 </tr>
 
 <tr>
   <td colspan="2" class="subTitle">
-    By Text Match
+    <?=tr("By Text Match")?>
   </td>
 </tr>
 <tr>
   <td class="bars">
-     Containing
+     <?=tr("Containing")?>
   </td>
   <td class="bars">
    <input type="text" name="search_text" 
@@ -35,12 +35,12 @@
 
 <tr>
   <td colspan="2" class="subTitle">
-    By Date
+    <?=tr("By Date")?>
   </td>
 </tr>
 <tr>
   <td class="bars">
-     Maximum Age
+     <?=tr("Maximum Age")?>
   </td>
   <td class="bars">
    <input type="text" name="search_date" 
@@ -51,13 +51,13 @@
 
 <tr>
   <td colspan="2" class="subTitle">
-    By Parameters
+    <?=tr("By Parameters")?>
   </td>
 </tr>
 
 <tr>
   <td class="bars">
-    Action
+    <?=tr("Action")?>
   </td>
   <td class="bars">
     <select name="search_params[action]">
@@ -75,7 +75,7 @@
 
 <tr>
   <td class="bars">
-     User
+     <?=tr("User")?>
   </td>
   <td class="bars">
      <select name="search_params[user_id]">
@@ -100,7 +100,7 @@
 
 <tr>
   <td class="bars">
-    Bin
+    <?=tr("Bin")?>
   </td>
   <td class="bars">
     <select name="search_params[bin_id]">
@@ -124,12 +124,12 @@
 
 <tr>
   <td colspan="2" class="subTitle">
-    Click 'Search' to execute the log search
+    <?=tr("Click 'Search' to execute the search")?>
   </td>
 </tr>
 <tr>
   <td class="bars" colspan="2">
-     <input type="submit" class="submit" value="Search">
+     <input type="submit" class="submit" value="<?=tr("Search")?>">
   </td>
 </tr>
 

@@ -9,14 +9,14 @@
 <table width="450" cellpadding="4" cellspacing="1" border="0">
 <tr>
  <td>
-   <span class="bigBold">UPLOAD ATTACHMENT</span>
+   <span class="bigBold"><?=uptr("Upload Attachment")?></span>
    <br>
-   <span class="small">(create an attachment for this ticket)</span>
+   <span class="small">(<?=tr("create an attachment for this ticket")?>)</span>
  </td>
 </tr>
 <tr>
  <td class="titleCell">
-   Select a file to upload
+   <?=tr("Select a file to upload")?>
  </td>
 </tr>
 <tr>
@@ -26,7 +26,8 @@
 </tr>
 <tr>
   <td class="titleCell">
-     Description of Attachment <span class="small">(optional)</span>
+     <?=tr("Description of Attachment")?>
+     &nbsp;<span class="small">(<?=tr("optional")?>)</span>
   </td>
 </tr>
 <tr>
@@ -37,16 +38,16 @@
 </tr>
 <tr>
   <td class="titleCell">
-    Click button to upload file and attach to ticket
+    <?=tr("Click button to upload file and attach to ticket")?>
   </td>
 </tr>
 <tr>
   <td>
-    <input type="submit" value=" ATTACH " class="submit">
+    <input type="submit" value=" <?=uptr("Attach")?> " class="submit">
   </td>
 </tr>
 <tr>
 </table>
 </ul>
 
-</form>			     
+</form>

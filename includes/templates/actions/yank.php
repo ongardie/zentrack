@@ -7,14 +7,14 @@
 <table width="450" cellpadding="4" cellspacing="1" border="0">
 <tr>
  <td>
-   <span class="bigBold">YANK TICKET</span>
+   <span class="bigBold"><?=uptr("Yank Ticket")?></span>
    <br>
-   <span class="small">(Pull ticket from the current owner)</span>
+   <span class="small">(<?=tr("Pull ticket from the current owner")?>)</span>
  </td>
 </tr>
 <tr>
   <td class="titleCell">
-     Reason <span class="small">(optional)</span>
+     Reason <span class="small">(<?=tr("optional")?>)</span>
   </td>
 </tr>
 <tr>
@@ -25,12 +25,12 @@
 </tr>
 <tr>
   <td class="titleCell">
-    Click button to yank ticket
+    <?=tr("Click button to yank ticket")?>
   </td>
 </tr>
 <tr>
   <td>
-    <input type="submit" value=" YANK " class="submit">
+    <input type="submit" value=" <?=uptr("Yank")?> " class="submit">
   </td>
 </tr>
 <tr>

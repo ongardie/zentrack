@@ -7,14 +7,14 @@
 <table width="450" cellpadding="4" cellspacing="1" border="0">
 <tr>
  <td>
-   <span class="bigBold">MOVE TICKET</span>
+   <span class="bigBold"><?=uptr("Move Ticket")?></span>
    <br>
-   <span class="small">(Send ticket to another bin)</span>
+   <span class="small">(<?=tr("Send ticket to another bin")?>)</span>
  </td>
 </tr>
 <tr>
   <td class="titleCell">
-     Comments <span class="small">(optional)</span>
+     <?=tr("Comments")?> <span class="small">(<?=tr("optional")?>)</span>
   </td>
 </tr>
 <tr>
@@ -34,7 +34,7 @@
 	    print "<option value='$v'>$n</option>\n";
 	  }
 	} else {
-	  print "<option value=''>--no bins--<option>\n";
+	  print "<option value=''>--".tr("none")."--<option>\n";
 	}
      ?>
     </select>
@@ -42,12 +42,12 @@
 </tr>
 <tr>
   <td class="titleCell">
-    Click button to move ticket
+    <?=tr("Click button to move ticket")?>
   </td>
 </tr>
 <tr>
   <td>
-    <input type="submit" value=" MOVE " class="submit">
+    <input type="submit" value=" <?=uptr("Move")?> " class="submit">
   </td>
 </tr>
 <tr>

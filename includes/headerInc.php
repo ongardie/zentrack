@@ -69,6 +69,10 @@
   //save a bit on memory
   unset($translator_init);
 
+  function uptr($string, $vals = '') {
+    return strtoupper(tr($string,$vals));
+  }
+
   /*
   **  SOME FUNCTIONS FOR USE IN
   **  PAGE CONTENT

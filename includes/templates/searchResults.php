@@ -35,13 +35,13 @@
     if( is_array($bins) ) {
       $params[] = array("bin_id","in",$bins,1);
     } else {
-      $errs[] = "You do not have access to any bins, a search was not authorized";
+      $errs[] = tr("You do not have access to any bins.")." ".tr("A search was not authorized");
     }
   }
 
   if( !is_array($params) || !count($params) ) {
     // set an error message if there was no form data
-    $errs[] = "No valid fields were provided to conduct a search";
+    $errs[] = tr("No valid fields were provided to conduct a search");
   }
 
   // if there are any search params

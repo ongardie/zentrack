@@ -5,7 +5,9 @@
   if( is_array($userBins) ) {
     $users = $zen->get_users( $userBins, "level_user" );
   } else {
-    print "<span class='error'>You do not have permission to create projects.</span>\n";
+    print "<span class='error'>".
+      tr("You do not have permission to create projects.")
+      ."</span>\n";
     include("$libDir/footer.php");
     exit;
   }
@@ -22,23 +24,23 @@
 <table width="640" align="left" cellpadding="2" cellspacing="2" bgcolor="<?=$zen->settings["color_background"]?>">
 <tr>
   <td colspan="2" width="640" class="titleCell" align="center">
-     Enter Project Information
+     <?=tr("Enter Project Information")?>
   </td>
 </tr>
   
 <tr>
   <td colspan="2" class="subTitle">
-    Details
+    <?=tr("Details")?>
   </td>
 </tr>
 
   <tr>
   <td class="bars">
-    Master Project
+    <?=tr("Master Project")?>
   </td>
   <td class="bars">
     <select name="project_id">
-    <option value=''>--none--</option>
+    <option value=''>--<?=tr("none")?>--</option>
     <?
       $bins = $zen->getUsersBins($login_id);
       if( is_array($bins) ) {
@@ -59,7 +61,7 @@
  
 <tr>
   <td class="bars">
-    Title
+    <?=tr("Title")?>
   </td>
   <td class="bars">
     <input type="text" name="title" size="30" maxlength="255"
@@ -68,7 +70,7 @@ value="<?=strip_tags($title)?>">
 </tr>
 <tr>
   <td class="bars">
-    System
+    <?=tr("System")?>
   </td>
   <td class="bars">
     <select name="system_id">
@@ -82,7 +84,7 @@ value="<?=strip_tags($title)?>">
 	   print "<option $check value='$k'>$v</option>\n";
 	}
     } else {
-      print "<option value=''>--no systems--</option>\n";
+      print "<option value=''>--none--</option>\n";
     }
 ?>
     </select>
@@ -92,11 +94,11 @@ value="<?=strip_tags($title)?>">
   <td>
 <tr>
   <td class="bars" width="125">
-    Owner
+    <?=tr("Owner")?>
   </td>
   <td class="bars" width="515">
     <select name="user_id">
-      <option value=''>--not assigned--</option>
+      <option value=''>--<?=tr("none")?>--</option>
 <?
 /*
     if( is_array($users) ) {
@@ -126,12 +128,12 @@ value="<?=strip_tags($title)?>">
     }
 ?>
 
-    </select>&nbsp;(optional)
+    </select>&nbsp;(<?=tr("optional")?>)
   </td>
 </tr>				   
 <tr>
   <td class="bars">
-    Bin
+    <?=tr("Bin")?>
   </td>
   <td class="bars">
     <select name="bin_id">
@@ -143,20 +145,20 @@ value="<?=strip_tags($title)?>">
 	   print "<option $check value='$k'>".$zen->bins["$k"]."</option>\n";
 	}
     } else {
-      print "<option value=''>--no bins--</option>\n";
+      print "<option value=''>--".tr("none")."--</option>\n";
     }
 ?>
     </select>
   </td>
-</tr>				   
+</tr>
 <tr>
   <td colspan="2" class="subtitle">
-    Requirements
+    <?=tr("Requirements")?>
   </td>
 </tr>
 <tr>
   <td class="bars">
-    Priority
+    <?=tr("Priority")?>
   </td>
   <td class="bars">
     <select name="priority">
@@ -177,7 +179,7 @@ value="<?=strip_tags($title)?>">
 </tr>
 <tr>
   <td class="bars">
-    Start Date
+    <?=tr("Start Date")?>
   </td>
   <td class="bars">
     <input type="text" name="start_date" size="12" maxlength="10"
@@ -185,12 +187,12 @@ value="<?=strip_tags($title)?>">
     <img name="date_button" src='<?=$rootUrl?>/images/cal.gif' 
 	onClick="popUpCalendar(this,document.newProjectForm.start_date, 'mm/dd/yyyy')"
 	alt="Select a Date">
-    &nbsp;(optional)
+    &nbsp;(<?=tr("optional")?>)
   </td>
 </tr>
 <tr>
   <td class="bars">
-    Deadline
+    <?=tr("Deadline")?>
   </td>
   <td class="bars">
     <input type="text" name="deadline" size="12" maxlength="10"
@@ -198,21 +200,21 @@ value="<?=($deadline)?$zen->showDate(strip_tags($deadline)):""?>">
     <img name="date_button" src='<?=$rootUrl?>/images/cal.gif' 
 	onClick="popUpCalendar(this,document.newProjectForm.deadline, 'mm/dd/yyyy')"
 	alt="Select a Date">
-    &nbsp;(optional)
+    &nbsp;(<?=tr("optional")?>)
   </td>
-</tr>				   
+</tr>   
 <tr>
   <td class="bars">
-    Testing Required
+    <?=tr("Testing Required")?>
   </td>
   <td class="bars">
     <input type="checkbox" name="tested" value="1" 
   <?= $zen->getDefaultValue("default_test_checked"); ?>>
   </td>
-</tr>				   
+</tr>   
 <tr>
   <td class="bars">
-    Approval Required
+    <?=tr("Approval Required")?>
   </td>
   <td class="bars">
     <input type="checkbox" name="approved" value="1" 
@@ -222,7 +224,7 @@ value="<?=($deadline)?$zen->showDate(strip_tags($deadline)):""?>">
   
 <tr>
   <td colspan="2" class="subtitle">
-    Description
+  <?=tr("Description")?>
   </td>
 </tr>
   
@@ -235,12 +237,12 @@ value="<?=($deadline)?$zen->showDate(strip_tags($deadline)):""?>">
 </tr>
 <tr>
   <td class="titleCell" colspan="2" align="center">
-  Click button to <?=($TODO=='EDIT')? "save your changes":"create your ticket."?>
+  <?=tr("Click button to")?> <?=tr($TODO=='EDIT'? "save your changes":"create your ticket")?>
   </td>
 </tr>
 <tr>
   <td colspan="2" class="bars">
-   <input type="submit" value=" <?=($TODO=='EDIT')?"Save":"Create"?> " class="submit">
+   <input type="submit" value=" <?=tr($TODO=='EDIT'?"Save":"Create")?> " class="submit">
   </td>
 </tr>
 </table>

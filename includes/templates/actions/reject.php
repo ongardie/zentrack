@@ -7,14 +7,14 @@
 <table width="450" cellpadding="4" cellspacing="1" border="0">
 <tr>
  <td>
-   <span class="bigBold">REJECT TICKET</span>
+   <span class="bigBold"><?=uptr("Reject Ticket")?></span>
    <br>
-   <span class="small">(Return ticket to sender)</span>
+   <span class="small">(<?=tr("Return ticket to sender")?>)</span>
  </td>
 </tr>
 <tr>
   <td class="titleCell">
-     Reason <span class="highlight">(required)</span>
+     <?=tr("Reason")?> <span class="highlight">(<?=tr("required")?>)</span>
   </td>
 </tr>
 <tr>
@@ -25,12 +25,12 @@
 </tr>
 <tr>
   <td class="titleCell">
-    Click button to reject
+    <?=tr("Click button to reject")?>
   </td>
 </tr>
 <tr>
   <td>
-    <input type="submit" value=" REJECT " class="submit">
+    <input type="submit" value=" <?=uptr("Reject")?> " class="submit">
   </td>
 </tr>
 <tr>

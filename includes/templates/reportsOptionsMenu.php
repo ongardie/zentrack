@@ -32,7 +32,7 @@
 ?>
 <tr>
   <td colspan="3" class="<?=($tf_date && !$tf_options)? "titleCell":"subTitle"?>">
-     Chart Options
+     <?=tr("Chart Options")?>
   </td>
 </tr>
 <?
@@ -77,41 +77,46 @@
   <td class='bars'>
    <input type='radio' name='text_output' 
 	value='0'<?=(!strlen($text_output)||$text_output==0)?" CHECKED":""?>>
-	&nbsp;Show Graph (Image)
+	&nbsp;<?=tr("Show Graph")?> (<?=tr("Image")?>)
    <br><input type='radio' name='text_output' 
 	value='1'<?=(isset($text_output)&&$text_output==1)?" CHECKED":""?>>
-	&nbsp;Show Tables (Text)
+	&nbsp;<?=tr("Show Tables")?> (<?=tr("Text")?>)
    <br><input type='radio' name='text_output' 
 	value='2'<?=(isset($text_output)&&$text_output==2)?" CHECKED":""?>>
-	&nbsp;Show Both
+	&nbsp;<?=tr("Show Both")?>
   </td>
   <td class="bars" rowspan='6'>
    <? if( $tf_options ) { ?>
-    <input type='submit' name='buttonPressed' value=' Change '>
+    <input type='submit' name='buttonPressed' value=' <?=tr("Change")?> '>
    <? } else { ?>
-    <input type='submit' name='buttonPressed' class='submit' value=' Set '>
+    <input type='submit' name='buttonPressed' class='submit' value=' <?=tr("Set")?> '>
    <? } ?>
   </td>
 </tr> 
 <tr>
   <td class="bars">
-    Image Type
+    <?=tr("Image Type")?>
   </td>
   <td class="bars">
     <select name='chart_type'>
 <!-- onChange='document.reportOptionForm.submit()'> -->
-      <option<?=($chart_type=="Line Chart")?" SELECTED":""?>>Line Chart</option>
-      <option<?=($chart_type=="Bar Chart")?" SELECTED":""?>>Bar Chart</option>
-      <option<?=($chart_type=="Stack Chart")?" SELECTED":""?>>Stack Chart</option>
-      <option<?=($chart_type=="Scatter Chart")?" SELECTED":""?>>Scatter Chart</option>
-<!--  <option<?=($chart_type=="Pie Chart")?" SELECTED":""?>>Pie Chart</option>  -->
+      <option<?=($chart_type=="Line Chart")?" SELECTED":""?>
+	  value='Line Chart'><?=tr("Line Chart")?></option>
+      <option<?=($chart_type=="Bar Chart")?" SELECTED":""?>
+	  value='Bar Chart'><?=tr("Bar Chart")?></option>
+      <option<?=($chart_type=="Stack Chart")?" SELECTED":""?>
+	  value='Stack Chart'><?=tr("Stack Chart")?></option>
+      <option<?=($chart_type=="Scatter Chart")?" SELECTED":""?>
+	  value='Scatter Chart'><?=tr("Scatter Chart")?></option>
+<!--  <option<?=($chart_type=="Pie Chart")?" SELECTED":""?>
+	  value='Pie Chart'><?=tr("Pie Chart")?></option>  -->
     </select>
-    <br><span class='note'>A large number of elements will appear better in a line chart, bar charts tend to be more pleasing with smaller numbers.</span>
+    <br><span class='note'><?=tr("A large number of elements will appear better in a line chart, bar charts tend to be more pleasing with smaller numbers.")?></span>
   </td>
 </tr>
 <tr>
   <td class="bars">
-    Title
+    <?=tr("Title")?>
   </td>
   <td class="bars">
    <input type='text' name='chart_title' value='<?=$zen->ffv($chart_title)?>' size='30' maxlength='255'>
@@ -119,7 +124,7 @@
 </tr>
 <tr>
   <td class="bars">
-    Subtitle
+    <?=tr("Subtitle")?>
   </td>
   <td class="bars">
    <input type='text' name='chart_subtitle' value='<?=$zen->ffv($chart_subtitle)?>' size='30' maxlength='255'>
@@ -128,30 +133,30 @@
 <? if( $chart_type != "Pie Chart" ) { ?>
 <tr>
   <td class="bars">
-    Data Options
+    <?=tr("Data Options")?>
   </td>
   <td class="bars">
 <? if(count($data_set)>1) { ?>
 <? /*** not yet
     <input type='checkbox' name='chart_add_ttl' 
 	value='1'<?=($chart_add_ttl)?" CHECKED":""?>>
-     &nbsp;Add a total figure
+     &nbsp;<?=tr("Add a total figure")?>
     <br><input type='checkbox' name='chart_add_avg' 
 	value='1'<?=($chart_add_avg)?" CHECKED":""?>>
-     &nbsp;Add an average figure
+     &nbsp;<?=tr("Add an average figure")?>
 ***/?>
     <br><input type='checkbox' name='show_data_vals' 
 	value='1'<?=($show_data_vals)?" CHECKED":""?>>
-     &nbsp;Display Values
+     &nbsp;<?=tr("Display Values")?>
     <br><input type='checkbox' name='chart_combine' 
 	value='1'<?=($chart_combine>0)?" CHECKED":""?>>
-	&nbsp;Combine selected <?=strip_tags($report_type)?>s
-    <br><span class='note'>Try using <i>Combine Selected</i> with a very large number of elements, if you intend to view a graphical image.</span>
+	&nbsp;<?=tr("Combine selected ?s",array(strip_tags($report_type)))?>
+    <br><span class='note'><?=tr("Try using Combine Selected with a very large number of elements, if you intend to view a graphical image.")?></span>
 <? } else { 
   $zen->hiddenField("chart_add_ttl",0); 
   $zen->hiddenField("chart_add_avg",0); 
   $zen->hiddenField("chart_combine",0); 
-  print "These options aren't useful when only graphing one element.";
+  print tr("These options aren't useful when only graphing one element.");
 
 } ?>
   </td>
@@ -159,14 +164,14 @@
 <? } ?>
 <tr>
   <td class="bars">
-    What to Graph
+    <?=tr("What to Graph")?>
   </td>
   <td class="bars">
 <?
     foreach($option_names as $k=>$v) {
       $sel = (is_array($chart_options)&&in_array($k,$chart_options))?" checked":"";
       $optname = ($opttype=="radio")? "chart_options":"chart_options[]";
-      print "<input type='$opttype' name='$optname' value='$k'$sel>&nbsp;$v<br>\n";
+      print "<input type='$opttype' name='$optname' value='$k'$sel>&nbsp;".tr($v)."<br>\n";
     }
 ?>
 </td>

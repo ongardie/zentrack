@@ -4,14 +4,14 @@
    <? if( $project_id ) { 
        $project = $zen->get_ticket($project_id); 
    ?>
-    <td colspan="3" class='titleCell'>PROJECT</td>
+    <td colspan="3" class='titleCell'><?=uptr("Project")?></td>
    <? } else { ?>
     <td colspan="3" rowspan="2"><span class="bigBold"><?=
 	strtoupper($zen->systems["$system_id"]." ".$zen->types["$type_id"]);
 	?></span></td>
    <? } ?>
     <td width="30">&nbsp;</td>
-    <td class="smallTitleCell">START DATE</td>
+    <td class="smallTitleCell"><?=uptr("Start Date")?></td>
   </tr>
   <tr style='background:<?=$zen->settings["color_background"]?>'>
    <? if( $project_id ) { ?>  
@@ -29,24 +29,24 @@
   </tr>
   <? } ?>
   <tr>
-    <td class="smallTitleCell" width="140" height="<?=$height_num?>">BIN</td>
-    <td class="smallTitleCell" width="140">TYPE</td>
-    <td class="smallTitleCell" width="140">SYSTEM</td>
+    <td class="smallTitleCell" width="140" height="<?=$height_num?>"><?=uptr("Bin")?></td>
+    <td class="smallTitleCell" width="140"><?=uptr("Bin")?></td>
+    <td class="smallTitleCell" width="140"><?=uptr("System")?></td>
     <td>&nbsp;</td>
-    <td class="smallTitleCell">ESTIMATED HOURS</td>
+    <td class="smallTitleCell"><?=uptr("Estimated Hours")?></td>
   </tr>
    <tr>
-    <td><?=($bin_id)?$zen->bins["$bin_id"]:"none"?></td>
-    <td><?=($type_id)?$zen->types["$type_id"]:"n/a"?></td>
-    <td><?=($system_id)?$zen->systems["$system_id"]:"none"?></td>
+    <td><?=($bin_id)?$zen->bins["$bin_id"]:tr("n/a")?></td>
+    <td><?=($type_id)?$zen->types["$type_id"]:tr("n/a")?></td>
+    <td><?=($system_id)?$zen->systems["$system_id"]:tr("n/a")?></td>
     <td>&nbsp;</td>  
     <?
          $set = ($page_browser == 'ns')? 
-            "  SET  " : str_pad("SET",18," ",STR_PAD_RIGHT);
+            "  ".uptr("Set")."  " : str_pad(uptr("Set"),18," ",STR_PAD_RIGHT);
          if( $type_id == $zen->projectTypeID() ) {
 	    list($est_hours,$wkd_hours) = $zen->getProjectHours($id);
 	    if( $est_hours <= 0 )
-	      $est_hours = "n/a";
+	      $est_hours = tr("n/a");
 	    print "<td>$est_hours</td>\n";
 	 } else if($est_hours > 0) {
             print "<td>$est_hours</td>\n";
@@ -68,36 +68,36 @@
         ?>
   </tr>
   <tr>
-    <td class="smallTitleCell" height="<?=$height_num?>">CLOSED</td>
-    <td class="smallTitleCell">TESTING</td>
-    <td class="smallTitleCell">APPROVAL</td>
+    <td class="smallTitleCell" height="<?=$height_num?>"><?=uptr("Closed")?></td>
+    <td class="smallTitleCell"><?=uptr("Testing")?></td>
+    <td class="smallTitleCell"><?=uptr("Approval")?></td>
     <td>&nbsp;</td>    
-    <td class="smallTitleCell">WORKED HOURS</td>  
+    <td class="smallTitleCell"><?=uptr("Hours Worked")?></td>  
   </tr>
    <tr>
-    <td><?=($ctime)?$zen->showDate($ctime):"n/a"?></td>    
+    <td><?=($ctime)?$zen->showDate($ctime):tr("n/a")?></td>    
     <td><? 
       switch($tested){
         case 1: 
-	 print "<b>required</b>";
+	 print "<b>".tr("required")."</b>";
 	 break; 
 	case 2:
-	 print "completed";
+	 print tr("completed");
 	 break; 
 	default:
-	 print "n/a";
+	 print tr("n/a");
       } 
      ?></td>
     <td><? 
       switch($approved){
         case 1: 
-	 print "<b>required</b>";
+	 print "<b>".tr("required")."</b>";
 	 break; 
 	case 2:
-	 print "completed";
+	 print tr("completed");
 	 break; 
 	default:
-	 print "n/a";
+	 print tr("n/a");
       } 
      ?></td>  
     <td>&nbsp;</td>    
@@ -112,7 +112,7 @@
     <td><img src="<?=$rootUrl?>/images/empty.gif" width="2" height="5"></td>  
    </tr>
    <tr>
-    <td colspan="5" class="smallTitleCell" height="<?=$height_num?>">DESCRIPTION</td>
+    <td colspan="5" class="smallTitleCell" height="<?=$height_num?>"><?=uptr("Description")?></td>
    </tr>
    <tr>
     <td colspan="5" class="outlined">

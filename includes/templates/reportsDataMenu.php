@@ -16,7 +16,7 @@
 ?>
 <tr>
   <td class='<?=($tf_type && !$tf_data)?"titleCell":"subTitle"?>' colspan='3'>
-    Data Selection
+    <?=tr("Data Selection")?>
   </td>
 </tr>
 <?
@@ -50,7 +50,7 @@
 <input type='hidden' name='report_type' value='<?=$zen->ffv($report_type)?>'>
 <tr>
   <td class="bars">
-    Select <?=$zen->ffv($report_type)?>(s)
+    <?=tr("Select ?s",array($zen->ffv($report_type)))?>
   </td>
   <td class="bars">
 <?
@@ -60,11 +60,11 @@
      print "</textarea>\n";
      $onclick = "onClick='return popupWindowScrolls(\"$rootUrl/helpers/$searchbox.php?return_form=reportDataForm&return_field=data_set\",\"popupHelper\",375,400)'";
      print "&nbsp;<input type='button' class='searchbox' value=' ... ' $onclick>\n";
-     print "<br><span class='note'>Type ids separated by commas, or press button to search</span>\n";
+     print "<br><span class='note'>".tr("Type ids separated by commas, or press button to search")."</span>\n";
    } else {
      print "<select name='data_set[]' multiple>\n";
      if( !is_array($type_list) || count($type_list) < 1 ) {
-       print "\t<option value=''>None found</option>\n";
+       print "\t<option value=''>".tr("None found")."</option>\n";
      }
      else { 
        foreach($type_list as $k=>$v) {
@@ -74,16 +74,17 @@
        }
      }
      print "</select>\n";
-     print "<br><span class='note'>Select multiples using control-click</span>\n";
+     print "<br><span class='note'>".tr("Select multiples using control-click")
+	."</span>\n";
    }
 ?>
   </td>
   <td class='bars'>
     <input type='hidden' name='action' value='set_report'>
    <? if( $tf_data ) { ?>
-    <input type='submit' value=' Change '>
+    <input type='submit' value=' <?=tr("Change")?> '>
    <? } else { ?>
-    <input type='submit' class='submit' value=' Set '>
+    <input type='submit' class='submit' value=' <?=tr("Set")?> '>
    <? } ?>
   </td>
 </tr>
@@ -94,7 +95,7 @@
 ?>
 <tr>
   <td class='bars' colspan='3'>&nbsp;</td>
-</tr>
+</tr> 
 
 <? } ?>
 

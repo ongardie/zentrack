@@ -7,14 +7,14 @@
 <table width="450" cellpadding="4" cellspacing="1" border="0">
 <tr>
  <td>
-   <span class="bigBold">LOG / HOURS</span>
+   <span class="bigBold"><?=uptr("Log")?></span>
    <br>
-   <span class="small">(Create a log entry, or log hours worked)</span>
+   <span class="small">(<?=tr("Create a log entry, or log hours worked")?>)</span>
  </td>
 </tr>
 <tr>
  <td class="titleCell">
-   Select an activity
+   <?=tr("Select an activity")?>
  </td>
 </tr>
 <tr>
@@ -32,7 +32,7 @@
 </tr>
 <tr>
   <td class="titleCell">
-    Enter the hours worked on this project <span class="small">(accepts up to 2 decimal places)</span>
+    <?=tr("Enter the hours worked for this entry")?> <span class="small">(<?=tr("accepts up to 2 decimal places")?>)</span>
   </td>
 </tr>
 <tr>
@@ -42,7 +42,7 @@
 </tr>
 <tr>
   <td class="titleCell">
-     Comments or Instructions
+     <?=tr("Comments or Instructions")?>
   </td>
 </tr>
 <tr>
@@ -53,12 +53,12 @@
 </tr>
 <tr>
   <td class="titleCell">
-    Click button to create log
+    <?=tr("Click button to create log")?>
   </td>
 </tr>
 <tr>
   <td>
-    <input type="submit" value=" LOG " class="submit">
+    <input type="submit" value=" <?=uptr("Log")?> " class="submit">
   </td>
 </tr>
 <tr>

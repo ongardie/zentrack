@@ -18,13 +18,13 @@
 	    $color = $zen->settings["color_alt_background"];
 	 }
        ?>
-       <input type="<?=$button?>" value=" ADD ATTACHMENT " class="actionButton" style="width:125;color:<?=$color?>">
+       <input type="<?=$button?>" value=" <?=uptr("Add Attachment")?> " class="actionButton" style="width:125;color:<?=$color?>">
      </td>
      </form>
    </tr>  
    <tr>  
      <td class="titleCell">
-        Attachments on <?=$page_type." ".$id?>
+        <?=tr("Attachments on ? #?",array($page_type,$id))?>
      </td>
   </tr>
    <tr>
@@ -37,10 +37,10 @@
      ?>
        <table width="100%" cellpadding='2' cellspacing='1' border='0'>
        <tr>
-         <td class='bars' width='150'>Attachment</td>
-         <td class='bars' width='50'>LogID</td>
-         <td class='bars' width='50'>Type</td>
-         <td class='bars'>Description</td>
+         <td class='bars' width='150'><?=tr("Attachment")?></td>
+         <td class='bars' width='50'><?=tr("Log ID")?></td>
+         <td class='bars' width='50'><?=tr("Type")?></td>
+         <td class='bars'><?=tr("Description")?></td>
        </tr>
      <?
      foreach($attachments as $a) {
@@ -67,7 +67,7 @@
      }    
      print "</table>\n";
   } else {
-     print "No attachments exist for this $page_type";
+     print tr("No attachments exist for this $page_type");
   }
 ?>
     </td>

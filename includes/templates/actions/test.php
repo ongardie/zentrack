@@ -6,14 +6,14 @@
 <table width="450" cellpadding="4" cellspacing="1" border="0">
 <tr>
  <td>
-   <span class="bigBold">TEST TICKET</span>
+   <span class="bigBold"><?=uptr("Test Ticket")?></span>
    <br>
-   <span class="small">(Set testing to completed on ticket)</span>
+   <span class="small">(<?=tr("Set testing to completed on ticket")?>)</span>
  </td>
 </tr>
 <tr>
  <td class="titleCell">
-   Enter hours worked
+   <?=tr("Enter hours worked")?>
  </td>
 </tr>
 <tr>
@@ -23,7 +23,8 @@
 </tr>
 <tr>
   <td class="titleCell">
-     Comments or Instructions <span class="small">(optional)</span>
+     <?=tr("Comments or Instructions")?>
+	&nbsp;<span class="small">(<?=tr("optional")?>)</span>
   </td>
 </tr>
 <tr>
@@ -39,7 +40,7 @@
 </tr>
 <tr>
   <td>
-    <input type="submit" value=" TESTED " class="submit">
+    <input type="submit" value=" <?=tr("Tested")?> " class="submit">
   </td>
 </tr>
 <tr>

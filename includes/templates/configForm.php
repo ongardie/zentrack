@@ -1,22 +1,21 @@
       <br>
-      <p class='error'>Changing this configuration list has a large system impact.  Please 
-	 consider this before making modifications.</p>
-      <p class='error'>Items in this list cannot be destroyed, to maintain data integrity.</p>
-      <p class='smallBold'>To remove a <?=$type?> from use, uncheck the 'active' box.</p>
-
+      <p class='error'><?=tr("Changing this configuration list has a large system impact.")?>  <?=tr("Please consider this before making modifications.")?></p>
+      <p class='error'><?=tr("Items in this list cannot be destroyed, to maintain data integrity.")?></p>
+      <p class='smallBold'><?=tr("To remove a ? from use, uncheck the 'active' box.",array($type))?></p>
+	
       <ul>
       <form name='configForm' action='<?=$SCRIPT_NAME?>' method='post'>
       <table cellpadding="2" cellspacing="1" class='plainCell'>
-	 <trf>
+	 <tr>
 	 <td class='titleCell' align='center' colspan='4'>
-	   <b>Edit the Active <?=ucfirst($type)?></b>
+	   <b><?=tr("Edit the Active ?s",array(ucfirst($type)))?></b>
 	 </td>
 	 </tr>
 	 <tr>
-	 <td width="30" class='cell' align='center'><b>ID</b></td>
-	 <td class='cell' align='center'><b>Name</b></td>
-	 <td width="30" class='cell' align='center'><b>Order</b></td>
-	 <td width="30" class='cell' align='center'><b>Active</b></td>
+	 <td width="30" class='cell' align='center'><b><?=tr("ID")?></b></td>
+	 <td class='cell' align='center'><b><?=tr("Name")?></b></td>
+	 <td width="30" class='cell' align='center'><b><?=tr("Order")?></b></td>
+	 <td width="30" class='cell' align='center'><b><?=tr("Active")?></b></td>
 	 </tr>
     <? 
          unset($js_vals);
@@ -27,7 +26,7 @@
 	   $te = "</td>\n";
 	   foreach($vars as $v) {
 	     print "<tr>\n";
-	     $i = ($v["$id_type"])? $v["$id_type"] : "-new-";
+	     $i = ($v["$id_type"])? $v["$id_type"] : "-".tr("new")."-";
 	     print "$t$i$te";
 	     print "<input type='hidden' name='newID[$j]' value='$v[$id_type]'>\n";
 	     print "$t<input type='text' name='newName[$j]' "
@@ -43,7 +42,7 @@
 	     $j++;
 	   }
 	 }
-	 for( $i=0; $i<$more; $i++ ) {
+	 for( $i=0; $i<$more; $i++ ) { 
 	   print "<tr>\n";
 	   print $t."-new-".$te;
 	   print "<input type='hidden' name='newID[$j]' value=''>\n";
@@ -61,24 +60,24 @@
     ?>
 <tr>
   <td class="titleCell" colspan="4">
-    Press MORE to create new rows
+    <?=tr("Press MORE to create new rows")?>
     <br>
-    Press LESS to remove blank rows
+    <?=tr("Press LESS to remove blank rows")?>
     <br>
-    Press Save to save changes
+    <?=tr("Press Save to save changes")?>
     <br>
-    Press Reset to return to original values
+    <?=tr("Press Reset to return to original values")?>
   </td>
 </tr>
       <tr>
 	 <td class='cell' colspan='4'>
-	 <input type='submit' name='TODO' value='MORE'>
+	 <input type='submit' name='TODO' value='<?=uptr("More")?>'>
          &nbsp;
-         <input type='submit' name='TODO' value='LESS'>	
+         <input type='submit' name='TODO' value='<?=uptr("Less")?>'>	
 	 &nbsp;
-	 <input type='submit' class='submit' name='TODO' value='Save'>
+	 <input type='submit' class='submit' name='TODO' value='<?=uptr("Save")?>'>
 	 &nbsp;
-	 <input type='submit' class='submitPlain' name='TODO' value='Reset'>
+	 <input type='submit' class='submitPlain' name='TODO' value='<?=uptr("Reset")?>'>
          </td>
       </tr>
       </table>
@@ -97,7 +96,7 @@
 	   for( i=0; i<bin.length; i++ ) {
 	     if( i != num ) {
 	       if( bin[i] > 0 && bin[i] == val ) {
-		 alert("There is already an entry with that value.");
+		 alert("<?=tr("There is already an entry with that value.")?>");
 		 f.selectedIndex = bin[num];
 		 return false;
 	       }
@@ -107,11 +106,4 @@
 	   return true;
 	 }
       </script> 
-
-
-
-
-
-
-
 

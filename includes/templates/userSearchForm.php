@@ -2,12 +2,12 @@
 <table width="640" align="left" cellpadding="2" cellspacing="2" bgcolor="<?=$zen->settings["color_background"]?>">
 <tr>
   <td colspan="2" width="640" class="titleCell" align="center">
-    Search For Users
+    <?=tr("Search For Users")?>
   </td>
 </tr>
 <tr>
   <td colspan="2" class="subTitle">
-    Show All Users
+    <?=tr("Show All Users")?>
   </td>
 </tr>
 
@@ -16,8 +16,8 @@
 
 <tr>
   <td class="bars" colspan="2">
-   <input type="submit" class="submit" value="List All Users" 
-     onClick='return confirm("This could be a long list! Proceed anyways?")'>
+   <input type="submit" class="submit" value="<?=tr("List All Users")?>" 
+     onClick='return confirm("<?=tr("This could be a long list! Proceed anyways?")?>")'>
   </td>
 </tr>
 
@@ -27,12 +27,12 @@
 
 <tr>
   <td colspan="2" class="subTitle">
-    By Text
+    <?=tr("By Text")?>
   </td>
 </tr>
 <tr>
   <td class="bars">
-     Containing
+     <?=("Containing")?>
   </td>
   <td class="bars">
    <input type="text" name="search_text" 
@@ -41,7 +41,7 @@
 </tr>
 <tr>
   <td class="bars">
-     In any of these
+     <?=("In any of these")?>
   </td>
   <td class="bars">
   <?
@@ -53,28 +53,28 @@
    $sfi = (is_array($search_fields) && in_array("initials",$search_fields));
   ?>
   <input type="checkbox" name="search_fields[lname]" value="lname"<?=($sfl)?" checked":""?>>
-   &nbsp;Last Name
+   &nbsp;<?=tr("Last Name")?>
   <br>
   <input type="checkbox" name="search_fields[fname]" value="fname"<?=($sff)?" checked":""?>>
-   &nbsp;First Name
+   &nbsp;<?=tr("First Name")?>
   <br>
   <input type="checkbox" name="search_fields[initials]" value="initials"<?=($sfi)?" checked":""?>>
-   &nbsp;Initials
+   &nbsp;<?=tr("Initials")?>
   <br>
   <input type="checkbox" name="search_fields[notes]" value="notes"<?=($sfn)?" checked":""?>>
-   &nbsp;Role
+   &nbsp;<?=("Role")?>
   </td>
 </tr>
 
 <tr>
   <td colspan="2" class="subTitle">
-    By Parameters
+    <?=tr("By Parameters")?>
   </td>
 </tr>
 
 <tr>
   <td class="bars">
-    user ID
+    <?=tr("user ID")?>
   </td>
   <td class="bars">
     <input type="text" name="search_params[user_id]" value="<?=strip_tags($search_params["user_id"])?>" size="12" maxlength="12">
@@ -82,7 +82,7 @@
 </tr>
 <tr>
   <td class="bars">
-    Home Bin
+    <?=tr("Home Bin")?>
   </td>
   <td class="bars">
     <select name="search_params[homebin]">
@@ -106,41 +106,41 @@
 </tr>
 <tr>
   <td class="bars">
-    Status
+    <?=tr("Status")?>
   </td>
   <td class="bars">
     <select name="search_params[active]">
        <option value="">----</option>
-       <option value="1" <?=($search_params["active"] == 1)?"selected":""?>>Active</option>
+       <option value="1" <?=($search_params["active"] == 1)?"selected":""?>><?=tr("Active")?></option>
        <option value="0" <?=
 	 (strlen($search_params["active"]) && $search_params["active"] == 0)?"selected":"";
-	 ?>>Disabled</option>
+	 ?>><?=tr("Disabled")?></option>
     </select>
   </td>
 </tr>
 <tr>
   <td class="bars">
-    Default Access Level
+    <?=tr("Default Access Level")?>
   </td>
   <td class="bars">
     <select name="search_access_method">
-      <option value="gt"<?=($search_access_method=="gt")?" selected":""?>">Greater Than</option>
-      <option value="lt"<?=($search_access_method=="lt")?" selected":""?>">Less Than</option>
-      <option value="eq"<?=($search_access_method=="eq")?" selected":""?>">Equals</option>
+      <option value="gt"<?=($search_access_method=="gt")?" selected":""?>"><?=tr("Greater Than")?></option>
+      <option value="lt"<?=($search_access_method=="lt")?" selected":""?>"><?=tr("Less Than")?></option>
+      <option value="eq"<?=($search_access_method=="eq")?" selected":""?>"><?=tr("Equals")?></option>
     </select>&nbsp;
     <input type="text" name="search_params[access_level]" 
 	value="<?=strip_tags($search_params["access_level"])?>"
-	size="2" maxlength="2">&nbsp;<span class="small">(enter a number)</span>
+	size="2" maxlength="2">&nbsp;<span class="small">(<?=tr("enter a number")?>)</span>
   </td>
 </tr>
 <tr>
   <td colspan="2" class="subTitle">
-    Click 'Search' to execute the search
+    <?=tr("Click 'Search' to execute the search")?>
   </td>
 </tr>
 <tr>
   <td class="bars" colspan="2">
-     <input type="submit" class="submit" value="Search">
+     <input type="submit" class="submit" value="<?=tr("Search")?>">
   </td>
 </tr>
 

@@ -6,46 +6,46 @@ if( is_array($tickets) && count($tickets) ) {
    $c = count($tickets);
       ?>
         <table width="100%" cellspacing='1' cellpadding='2' bgcolor='<?=$zen->settings["color_alt_background"]?>'>
-        <tr><td class='titleCell' colspan="8" align='center'><?=($c>1)? "$c Matches" : "1 Match";?></td></tr>
+        <tr><td class='titleCell' colspan="8" align='center'><?=($c>1)? tr("? Matches",array($c)) : tr("1 Match");?></td></tr>
    <tr bgcolor="<?=$zen->settings["color_title_background"]?>">
-   <td width="32" height="25" valign="middle" title="Tracking ID for the ticket">
+   <td width="32" height="25" valign="middle" title="<?=tr("ID of the ticket")?>">
      <div align="center"><span style="color:<?=$zen->settings["color_title_txt"]?>"><b><span class="small"><?=tr("ID")?></span></b></span></div>
    </td>
-   <td height="25" valign="middle" title="The name of the ticket">
+   <td height="25" valign="middle" title="<?=tr("The name of the ticket")?>">
      <div align="center"><span style="color:<?=$zen->settings["color_title_txt"]?>">
         <b><span class="small"><?=tr("Title")?></span></b></span></div>
    </td>
    <? if( !$search_params["priority"] || is_array($search_params["priority"]) ) { ?>
-   <td width="32" height="25" valign="middle" title="The importance of the ticket">
+   <td width="32" height="25" valign="middle" title="<?=tr("The importance of the ticket")?>">
      <div align="center"><span style="color:<?=$zen->settings["color_title_txt"]?>"><b><span class="small"><?=tr("Pri")?></span></b></span></div>
    </td>
        <? } ?>
    <? if( !$search_params["status"] || is_array($search_params["status"]) ) { ?>
-     <td width="32" height="25" valign="middle" title="Current status of the ticket">
+     <td width="32" height="25" valign="middle" title="<?=tr("Current status of the ticket")?>">
      <div align="center"><span style="color:<?=$zen->settings["color_title_txt"]?>">
              <b><span class="small"><?=tr("Status")?></span></b></span></div>
      </td>
         <? } ?>
    <? if( !$search_params["user_id"] || is_array($search_params["user_id"]) ) { ?>
-     <td width="32" height="25" valign="middle" title="Person ticket is assigned to">
+     <td width="32" height="25" valign="middle" title="<?=tr("Person ticket is assigned to")?>">
      <div align="center"><span style="color:<?=$zen->settings["color_title_txt"]?>">
              <b><span class="small"><?=tr("Owner")?></span></b></span></div>
      </td>
         <? } ?>
    <? if( !$search_params["type_id"] || is_array($search_params["type_id"]) ) { ?>
-     <td width="32" height="25" valign="middle" title="Type of ticket">
+     <td width="32" height="25" valign="middle" title="<?=tr("Type of ticket")?>">
      <div align="center"><span style="color:<?=$zen->settings["color_title_txt"]?>">
              <b><span class="small"><?=tr("Type")?></span></b></span></div>
      </td>
         <? } ?>
    <? if( !$search_params["system_id"] || is_array($search_params["system_id"]) ) { ?>
-     <td width="32" height="25" valign="middle" title="System involved in ticket">
+     <td width="32" height="25" valign="middle" title="<?=tr("System involved in ticket")?>">
      <div align="center"><span style="color:<?=$zen->settings["color_title_txt"]?>">
              <b><span class="small"><?=tr("System")?></span></b></span></div>
      </td>
         <? } ?>
    <? if( !$search_params["bin_id"] || is_array($search_params["bin_id"]) ) { ?>
-     <td width="32" height="25" valign="middle" title="Bin ticket is located in">
+     <td width="32" height="25" valign="middle" title="<?=tr("Bin ticket is located in")?>">
      <div align="center"><span style="color:<?=$zen->settings["color_title_txt"]?>">
              <b><span class="small"><?=tr("Bin")?></span></b></span></div>
      </td>
@@ -53,7 +53,7 @@ if( is_array($tickets) && count($tickets) ) {
    </tr>
       <?      
 
-   $td_ttl = "title='Click here to view the ticket.'";
+   $td_ttl = "title='<?=tr("Click here to view the ticket")?>'";
    foreach($tickets as $t) {
       unset($txt);
       unset($tx);
@@ -151,7 +151,7 @@ if( is_array($tickets) && count($tickets) ) {
     <tr>
      <form method="post" action="<?=$SCRIPT_NAME?>">
      <td colspan="8" class="titleCell">
-   <input type="submit" class="smallSubmit" value="Modify Search">
+   <input type="submit" class="smallSubmit" value="<?=tr("Modify Search")?>">
    <input type="hidden" name="search_text" value="<?=strip_tags($search_text)?>">
    <input type="hidden" name="search_fields[title]" value="<?=strip_tags($search_fields["title"])?>">
    <input type="hidden" name="search_fields[description]" value="<?=strip_tags($search_fields["description"])?>">

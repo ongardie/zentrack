@@ -17,16 +17,16 @@
 <table width="450" cellpadding="4" cellspacing="1" border="0">
 <tr>
  <td>
-   <span class="bigBold">EMAIL TICKET</span>
+   <span class="bigBold"><?=tr("Email Ticket")?></span>
    <br>
-   <span class="small">(Send ticket to specified recipients)</span>
+   <span class="small">(<?=tr("Send ticket to specified recipients")?>)</span>
  </td>
 </tr>
 <tr>
  <td class="titleCell">
    <input type='radio' name='emethod' value='1' 
    <?=(!isset($emethod) || $emethod == 1)? 'CHECKED' : ''?>
-   > Select a <?=$zen->settings["system_name"]?> User
+   > <?=tr("Select a User")?>
  </td>
 </tr>
 <tr>
@@ -47,14 +47,14 @@
     }
   }
 ?>
-</select><span class='small'>(hold control or shift to select multiple users)</span>
+</select><span class='small'>(<?=tr("hold control or shift to select multiple users")?>)</span>
   </td>			     
 </tr>
 <tr>
  <td class="titleCell">
    <input type='radio' name='emethod' value='2' 
    <?=($emethod == 2)? 'CHECKED' : ''?>
-   > OR manually enter email addresses, seperated by commas
+   > <?=tr("OR manually enter email addresses, seperated by commas")?>
  </td>
 </tr>
 <tr>
@@ -66,7 +66,8 @@
 </tr>
 <tr>
   <td class="titleCell">
-   Comments or Instructions <span class="small">(optional)</span>
+   <?=tr("Comments or Instructions")?>
+    &nbsp;<span class="small">(<?=tr("optional")?>)</span>
   </td>
 </tr>
 <tr>
@@ -77,27 +78,27 @@
 </tr>
 <tr>
   <td class="titleCell">
-    Choose one of the following options
+    <?=tr("Choose one of the following options")?>
   </td>
 </tr>
 <tr>
   <td>
    <input type="radio" name="method" value="1" <?=($method == 1)? "checked" : "";?>>
-   &nbsp;Send a link to this ticket only<br>
+   &nbsp;<?=tr("Send a link to this ticket only")?><br>
    <input type="radio" name="method" value="2" <?=($method == 2 || !isset($method))? "checked" : "";?>>
-   &nbsp;Send a summary of the ticket<br>
+   &nbsp;<?=tr("Send a summary of the ticket")?><br>
    <input type="radio" name="method" value="3" <?=($method == 3)? "checked" : "";?>>
-   &nbsp;Send a summary, and the ticket's log
+   &nbsp;<?=tr("Send a summary, and the ticket's log")?>
   </td>
 </tr>
 <tr>
   <td class="titleCell">
-    Click button to send email
+    <?=tr("Click button to send email")?>
   </td>
 </tr>
 <tr>
   <td>
-    <input type="submit" value=" EMAIL " class="submit">
+    <input type="submit" value=" <?=uptr("Email")?> " class="submit">
   </td>
 </tr>
 <tr>

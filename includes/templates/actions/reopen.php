@@ -7,14 +7,15 @@
 <table width="450" cellpadding="4" cellspacing="1" border="0">
 <tr>
  <td>
-   <span class="bigBold">REOPEN TICKET</span>
+   <span class="bigBold"><?=uptr("Reopen Ticket")?></span>
    <br>
-   <span class="small">(Open ticket closed in error)</span>
+   <span class="small">(<?=tr("Open ticket closed in error")?>)</span>
  </td>
 </tr>
 <tr>
   <td class="titleCell">
-     Comments or Instructions <span class="small">(required)</span>
+     <?=tr("Comments or Instructions")?>
+	&nbsp;<span class="small">(<?=tr("required")?>)</span>
   </td>
 </tr>
 <tr>
@@ -25,12 +26,12 @@
 </tr>
 <tr>
   <td class="titleCell">
-    Click button to open
+    <?=tr("Click button to open")?>
   </td>
 </tr>
 <tr>
   <td>
-    <input type="submit" value=" REOPEN " class="submit">
+    <input type="submit" value=" <?=uptr("Reopen")?> " class="submit">
   </td>
 </tr>
 <tr>

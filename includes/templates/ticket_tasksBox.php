@@ -13,7 +13,7 @@
 	    $color = $zen->settings["color_alt_background"];
 	 }
        ?>
-       <input type="<?=$button?>" value=" Add Ticket to Project " class="actionButton" style="width:125;color:<?=$color?>">  
+       <input type="<?=$button?>" value=" <?=$zen->ttl("Add ticket to project")?> " class="actionButton" style="width:125;color:<?=$color?>">  
      </form>
      </td>
    </tr>  
@@ -30,13 +30,13 @@
 	    $color = $zen->settings["color_alt_background"];
 	 }
        ?>
-       <input type="<?=$button?>" value=" Create Sub-Project " class="actionButton" style="width:125;color:<?=$color?>">  
+       <input type="<?=$button?>" value=" <?=tr("Create Sub-Project")?> " class="actionButton" style="width:125;color:<?=$color?>">  
      </form>
      </td>
    </tr>    
    <tr>  
      <td class='titleCell'>
-       Tasks for this Project    
+       <?=tr("Tasks for this project")?>
      </td>
    </tr>  
    <tr>
@@ -47,7 +47,7 @@
      unset($children);
      include("$templateDir/listTickets_workFormat.php");
   } else {
-     print "No tickets have been added to this Project.";
+     print tr("No tickets have been added to this Project.");
   }
 ?>
      </td>

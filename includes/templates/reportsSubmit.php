@@ -1,7 +1,7 @@
 <!-- SUBMIT MENU -->
 <tr>
   <td class='<?=($tf_options)? "titleCell" : "subTitle" ?>' colspan='3'>
-    Submit Results
+    <?=tr("Submit Results")?>
   </td>
 </tr>
 <?
@@ -42,7 +42,7 @@
     $zen->hiddenField("show_data_vals",$show_data_vals);
 ?>
 <tr>
-  <td class='bars' colspan='3'><input type='submit' class='submit' value=' View Chart '></td>
+  <td class='bars' colspan='3'><input type='submit' class='submit' value=' <?=tr("View Chart")?> '></td>
 </tr>  
 </form>
 <?

@@ -7,11 +7,11 @@
     // letting the user edit the ticket
     $ticket = $zen->get_ticket($id);
     if( !is_array($ticket) ) {
-      $errs[] = "Ticket $id could not be found";
+      $errs[] = tr("Ticket #? could not be found",array($id));
     } else if( !$zen->checkAccess($login_id,$ticket["bin_id"],"edit") ) {
-      $errs[] = "You cannot edit a ticket in the ".$zen->getBinName($ticket["bin_id"])." bin.";
+      $errs[] = tr("You cannot edit a ticket in this bin");
     } else if( !$zen->actionApplicable($id,"edit",$login_id) ) {
-      $errs[] = "Ticket $id cannot be edited in its current status";
+      $errs[] = tr("Ticket #? cannot be edited in its current status",array($id));
     } else {
       $skip = 1;
       $TODO = 'EDIT';
@@ -27,10 +27,11 @@
     $zen->printErrors($errs);
    ?>
    <br><blockquote>
-      <b>Please enter a ticket ID</b>
+      <b><?=tr("Please enter a ticket ID")?></b>
    <form action='<?=$SCRIPT_NAME?>'>
     <input type="text" name="id" size="8" maxlength="12">
    </form> 
    <?
   }
 ?>
+

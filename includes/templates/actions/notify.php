@@ -11,14 +11,14 @@
 <table width="550" cellpadding="4" cellspacing="1" border="0">
 <tr>
  <td>
-   <span class="bigBold">Add Notify Recipient</span>
+   <span class="bigBold"><?=tr("Add Notify Recipient")?></span>
    <br>
-   <span class="small">Add recipients to the notify list for this ticket</span>
+   <span class="small">(<?=tr("Add recipients to the notify list for this ticket")?>)</span>
  </td>
 </tr>
 <tr>
   <td class="titleCell">
-     Enter registered users
+     <?=tr("Enter registered users")?>
   </td>
 </tr>
 <tr>
@@ -33,19 +33,20 @@
     ."&return_field=user_accts\",\"popupHelper\",375,400)'";
   print "&nbsp;<input type='button' class='searchbox' "
     ." value=' ... ' $onclick>\n";
-  print "<br><span class='note'>Type ids separated by "
-  ."commas, or click on the button.</span>\n";
+  print "<br><span class='note'>"
+	.tr("Type ids separated by commas, or click on the button.")
+	."</span>\n";
 ?>
   </td>
 </tr>
 <tr>
   <td class="titleCell">
-     Or add an unregistered user
+     <?=tr("Or add an unregistered user")?>
   </td>
 </tr>
 <tr>
   <td class='subTitle'>
-    Name
+    <?=tr("Name")?>
   </td>
 </tr>
 <tr>
@@ -56,7 +57,7 @@
 </tr>
 <tr>
   <td class='subTitle'>
-    Email
+    <?=tr("Email")?>
   </td>
 </tr>
 <tr>
@@ -67,12 +68,12 @@
 </tr>
 <tr>
   <td class="titleCell">
-    Click button to add recipients
+    <?=tr("Click button to add recipients")?>
   </td>
 </tr>
 <tr>
   <td>
-    <input type="submit" value=" Add " class="submit">
+    <input type="submit" value=" <?=uptr("Add")?> " class="submit">
   </td>
 </tr>
 <tr>

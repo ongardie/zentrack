@@ -66,7 +66,7 @@
     }
   }
   function opt_roles( $selected = '' ) {
-    print "<option value=''>--none--</option>\n";
+    print "<option value=''>--".tr("none")."--</option>\n";
     // fetch the roles which can be picked from
     if( isset($GLOBALS) ) { $zen = $GLOBALS["zen"]; }
     else { global $zen; }
@@ -88,13 +88,13 @@
 <table width="300" cellpadding="5">
 <tr>
   <td colspan="3" class="titleCell" align="center" height="20">
-    <b>Set Access for <?=$zen->formatName($user_id)?></b>
+    <b><?=tr("Set Access for ?",array($zen->formatName($user_id)))?></b>
   </td>
 </tr>
 <tr>
-  <td class='subTitle'>Bin Name</td>
-  <td class='subTitle'>Level</td>
-  <td class='subTitle'>Role</td>
+  <td class='subTitle'><?=tr("Bin Name")?></td>
+  <td class='subTitle'><?=tr("Level")?></td>
+  <td class='subTitle'><?=tr("Role")?></td>
 </tr>
 
 <?
@@ -126,32 +126,33 @@
     print "</tr>\n";
   }
   if( ( !is_array($bins)||!count($bins) ) && !$more ) {
-    print "<tr><td colspan='3'>There are no custom defined bins for this user. "
-      ."Choose 'more' to add some.</td></tr>\n";
+    print "<tr><td colspan='3'>"
+      .tr("There are no custom defined bins for this user.")
+      ." Choose 'more' to add some.</td></tr>\n";
   }
 ?>
 <tr>
   <td class="titleCell" colspan="3">
 <? if( is_array($userBins) && count($userBins) ) { ?>
-    Press MORE to add more custom fields
+   <?=tr("Press MORE to add more custom fields")?>
     <br>
 <? } ?>
-    Press LESS to remove blank fields
+    <?=tr("Press LESS to remove blank fields")?>
     <br>
-    Press Update to save changes
+    <?=tr("Press Update to save changes")?>
     <br>
-    Press Reset to return to users existing values
+    <?=tr("Press Reset to return to users existing values")?>
   </td>
 </tr>
 <tr>
   <td class="bars" colspan="3">
-    <input type="submit" name="TODO" value="MORE">
+    <input type="submit" name="TODO" value="<?=uptr("More")?>">
    &nbsp;&nbsp;&nbsp;&nbsp;
-    <input type="submit" name="TODO" value="LESS">
+    <input type="submit" name="TODO" value="<?=uptr("less")?>">
    &nbsp;&nbsp;&nbsp;&nbsp;
-    <input type="submit" name="TODO" value="Update" class="submit">
+    <input type="submit" name="TODO" value="<?=tr("Update")?>" class="submit">
     &nbsp;&nbsp;&nbsp;&nbsp;
-   <input type="submit" name="TODO" value="Reset" class="submit">
+   <input type="submit" name="TODO" value="<?=tr("Reset")?>" class="submit">
   </td>
 </tr>
 </table>

@@ -7,14 +7,14 @@
 <table width="450" cellpadding="4" cellspacing="1" border="0">
 <tr>
  <td>
-   <span class="bigBold">ESTIMATE TICKET HOURS</span>
+   <span class="bigBold"><?=uptr("Estimate Ticket Hours")?></span>
    <br>
-   <span class="small">(Set the expected hours this ticket will take to complete)</span>
+   <span class="small">(<?=tr("Set the expected hours this ticket will take to complete")?>)</span>
  </td>
 </tr>
 <tr>
   <td class="titleCell">
-    Enter the number of hours (can contain up to 2 decimal places)
+    <?=tr("Enter the number of hours (can contain up to 2 decimal places)")?>
   </td>
 <tr>
 <tr>
@@ -24,12 +24,12 @@
 </tr>
 <tr>
   <td class="titleCell">
-    Click button to set estimated hours to completion
+    <?=tr("Click button to set estimated hours to completion")?>
   </td>
 </tr>
 <tr>
   <td>
-    <input type="submit" value=" SET " class="submit">
+    <input type="submit" value=" <?=uptr("Set")?> " class="submit">
   </td>
 </tr>
 <tr>

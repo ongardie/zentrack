@@ -19,7 +19,7 @@
   </tr>
   <tr>
   <td <?=$nav_rollover_text?>>
-    <a class="subMenuLink" href="<?=$rootUrl?>/admin/editTicket.php"><?=tr("Edit Users")?></a>
+    <a class="subMenuLink" href="<?=$rootUrl?>/admin/editTicket.php"><?=tr("Edit Tickets")?></a>
   </td>
   </tr>  
   <tr>
