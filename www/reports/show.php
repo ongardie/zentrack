@@ -9,6 +9,11 @@
   $page_tile = "Show Report";
   include_once("$libDir/nav.php");
 
+//security
+$repid = $zen->checkNum($repid);
+$tempid = $zen->checkNum($tempid);
+
+// check for contents
 if( !$repid ) {
   print "<span class='error'>Processing Error: Report ID Missing</span>\n";
 } else {
@@ -25,7 +30,7 @@ if( !$repid ) {
  if( $params["text_output"] != 1 ) {
 ?>
   <img 
-	src='view_image.php?tempid=<?=$tempid?>' 
+	src='view_image.php?repid=<?=$repid?>&tempid=<?=$tempid?>' 
 	width='<?=$zen->reportImageWidth?>' 
 	height='<?=$zen->reportImageHeight?>' alt='generated chart'>
   </td>

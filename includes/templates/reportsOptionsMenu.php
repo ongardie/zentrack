@@ -37,7 +37,7 @@
 </tr>
 <?
   // set hidden fields
-  if( $tf_data ) {
+  if( $tf_date ) {
     print "<form method='post' action='$rootUrl/reports/custom.php' name='reportOptionForm'>\n";
     $zen->hiddenField("report_type",$report_type);
     for($i=0; $i<count($data_set); $i++) {
@@ -132,12 +132,14 @@
   </td>
   <td class="bars">
 <? if(count($data_set)>1) { ?>
+<? /*** not yet
     <input type='checkbox' name='chart_add_ttl' 
 	value='1'<?=($chart_add_ttl)?" CHECKED":""?>>
      &nbsp;Add a total figure
     <br><input type='checkbox' name='chart_add_avg' 
 	value='1'<?=($chart_add_avg)?" CHECKED":""?>>
      &nbsp;Add an average figure
+***/?>
     <br><input type='checkbox' name='show_data_vals' 
 	value='1'<?=($show_data_vals)?" CHECKED":""?>>
      &nbsp;Display Values

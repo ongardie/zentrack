@@ -57,8 +57,8 @@
 
   // change the font angle if we have a lot
   // of stuff to graph, so it will fit better
-  if( ($params["chart_type"] == "column" || $params["chart_type"] == "stack")
-      && count($date_labels) * count($set_index) > 25 )
+  if( $params["chart_type"] == "column" 
+	&& count($date_labels) * count($set_index) > 25 )
 	$graph->valueFontAngle = 90;
 
   if( count($date_labels) > 10 ) {

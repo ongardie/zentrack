@@ -1,5 +1,7 @@
 <?
 
+$title_length = 25;
+
 // retrieve the params of the report
 if( $tempid ) { $params = $zen->getTempReport($tempid); }
 else if( $repid ) { $params = $zen->getReportParams($repid); }
@@ -33,7 +35,7 @@ if( is_array($params) ) {
       if( $d == "user" ) {
 	$val = $zen->formatName($vals,1);
       } else {
-	$val = substr($vals["title"],0,20);
+	$val = substr($vals["title"],0,$title_length);
       }
       $set_index["$k"] = $val;
     }    
@@ -132,7 +134,11 @@ if( is_array($params) ) {
 	    if( in_array($v["type_id"],$zen->projectTypeIDs()) ) {
 	      $nvars = $zen->getProjectChildren($v["id"]);
 	      if( is_array($nvars) ) {
-		$vals = array_merge($vals,$nvars);
+		$xvars = array();
+		foreach($nvars as $n) {
+		  $xvars[] = $n["id"];
+		}
+		$vals = array_merge($vals,$xvars);
 	      }
 	    } 
 	    $vals[] = $v["id"];

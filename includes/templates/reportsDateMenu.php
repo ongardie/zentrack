@@ -9,6 +9,8 @@
   }
   if( $date_low ) {
     $date_start = strftime($zen->date_fmt_short,$date_low);
+  } else if( !$date_selector ) {
+    $date_selector = "range";
   }
   if( $date_range ) {
     $date_range = $zen->checkAlphaNum($date_range);  // just chars

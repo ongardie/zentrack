@@ -42,7 +42,7 @@ if( !$tempid || !is_array($template)) {
     <select name='report_id'>
 <?
    foreach($templates as $t) {
-     print "\t<option value='{$t['id']}'>{$t['name']}</option>\n";
+     print "\t<option value='{$t['report_id']}'>{$t['report_name']}</option>\n";
    }
 ?>	    
     </select>
@@ -85,7 +85,7 @@ if( !$tempid || !is_array($template)) {
    }
 ?>
     </select>
-    <br><span class='note'>Use control or shift to select multiples</span>
+    <br><span class='note'>Optional.  Use control or shift to select multiples</span>
   </td>
 </tr>
 <tr>
@@ -104,7 +104,7 @@ if( !$tempid || !is_array($template)) {
      print "<br><span class='note'>Type ids separated by "
 	."commas, or press 'search'</span>\n";
 ?>
-    <br><span class='note'>You do not need to select yourself</span>
+    <br><span class='note'>Optional. You do not need to select yourself</span>
   </td>
 </tr>
 <tr>

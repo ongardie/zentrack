@@ -468,7 +468,7 @@ class zen extends zenDate {
 
    function printDebugMessages() {	
      if( is_array($this->debugMessages) ) {
-	$styles = array("error","","note");
+	$styles = array("","error","","note");
        print "<p>--------<b>DEBUG</b>--------<ul>\n";
        if( is_array($this->debugMessages) ) {	
 	 foreach($this->debugMessages as $v) {

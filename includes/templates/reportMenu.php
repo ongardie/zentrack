@@ -4,14 +4,14 @@
 </tr>
 <tr>
   <td class='bars' height='40' valign='top'>
-   <form action='<?=$rootUrl?>/reports/view.php' method='get'>
+   <form action='<?=$rootUrl?>/reports/show.php' method='get'>
    <select name='repid'>
 <?
    $usersBins = $zen->getUsersBins($login_id);
    $reps = $zen->getReportTemplates($usersBins,$login_id);
    if( is_array($reps) && count($reps) ) {
      foreach($reps as $r) {
-       print "<option value='$r'>".$zen->getBinName($r)."</option>\n";
+       print "<option value='{$r['report_id']}'>".$r["report_name"]."</option>\n";
      }
    } else {
      print "<option value=''>--none available--</option>\n";
@@ -27,12 +27,12 @@
 </tr>
 <tr>
   <td class='bars' height='40' valign='top'>
-    <form method='get' action='list.php'>
+    <form method='get' action='custom.php'>
       <select name='repid'>
 <?
    if( is_array($reps) && count($reps) ) {
      foreach($reps as $r) {
-       print "<option value='$r'>".$zen->getBinName($r)."</option>\n";
+       print "<option value='{$r['report_id']}'>{$r['report_name']}</option>\n";
      }
    } else {
      print "<option value=''>--none available--</option>\n";
@@ -44,13 +44,41 @@
   </td>
 </tr>
 <tr>
-  <td class='titleCell' align='center'>New Report</td>
+  <td class='titleCell' align='center'>Manage Reports</td>
+</tr>
+<tr>
+  <td class='subTitle'>Create Reports</td>
 </tr>
 <tr>
   <td class='bars'>
     <form method='get' action='custom.php'>
-      <input type='submit' class='submit' value='Create'>
+      <input type='submit' class='submit' value='New Report'>
     </form>
   </td>
 </tr>
+<tr>
+  <td class='subTitle'>Delete Reports</td>
+</tr>
+<tr>
+  <td class='bars'>
+    <form method='get' action='custom.php'>
+      <select name='repid'>
+<?
+   if( is_array($reps) && count($reps) ) {
+     foreach($reps as $r) {
+       print "<option value='{$r['report_id']}'>{$r['report_name']}</option>\n";
+     }
+   } else {
+     print "<option value=''>--none available--</option>\n";
+   } 
+?>
+     </select>
+     &nbsp; <input type='submit' class='submit' value='Delete'>
+    </form>
+  </td>
+</tr>
+<tr>
+  <td class='subTitle'>Purge Reports</td>
+</tr>
 </table>
+

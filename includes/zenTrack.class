@@ -2275,19 +2275,22 @@ class zenTrack extends zen {
     * both optional, and can be arrays.
     */
    function getReportTemplates( $bin_id = '', $user_id = '' ) {
-     $query = "SELECT id,name FROM ".$this->table_reports_index
-       ." WHERE ((bin_id IS 'NULL OR bin_id == '') "
-       ." OR (user_id IS 'null' or user_id == '') ";
+     $query = "SELECT DISTINCT i.report_id,r.report_name FROM "
+       .$this->table_reports_index
+       ." i,".$this->table_reports." r WHERE i.report_id = r.report_id AND ("
+       ."(i.bid IS NULL OR i.bid = '') "
+       ." OR (i.user_id IS NULL or i.user_id = '') ";
      if( $bin_id ) {
        $query .= (is_array($bin_id))? 
-	 " OR bin_id IN(".join(",",$bin_id).")" : " OR bin_id = $bin_id";
-     } else if( $user_id ) {
-       $query .= (is_array($user_id))? 
-	 " OR user_id IN(".join(",",$user_id).")" : " OR user_id = $user_id";
+	 " OR i.bid IN(".join(",",$bin_id).")" : " OR i.bid = $bin_id";
      }
-     $query .= " ORDER BY name";
+     if( $user_id ) {
+       $query .= (is_array($user_id))? 
+	 " OR i.user_id IN(".join(",",$user_id).")" : " OR i.user_id = $user_id";
+     }
+     $query .= ") ORDER BY r.report_name";
      $this->addDebug("getReportTemplates",$query,3);
-     return $this->db_listIndexed($query);
+     return $this->db_queryIndexed($query);
    }
    
    /**
@@ -2297,7 +2300,7 @@ class zenTrack extends zen {
     * $bins is optional list of bins who can view report
     * $users is optional list of users who can view report
     */
-   function saveReport( $temp_id, $bins = '', $users = '' ) {
+   function saveReport( $name, $temp_id, $bins = '', $users = '' ) {
      // get the params
      $params = $this->getTempReport($temp_id);
      if( !is_array($params) || !count($params) )
@@ -2305,6 +2308,7 @@ class zenTrack extends zen {
      // get rid of extra tempid info
      unset($params["created"]);
      unset($params["report_id"]);
+     $params["report_name"] = $name;
      $res = $this->db_insert($this->table_reports,$params);
      // add indexes to bins
      $t = $this->table_reports_index;
