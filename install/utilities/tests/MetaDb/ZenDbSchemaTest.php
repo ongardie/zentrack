@@ -28,11 +28,11 @@
 
     /** Load config file (gets params from <setup> node) */
     function load( $vals ) {
-      $vals = ZenXMLParser::getParmSet( $vals->getChild('param') );
+      $vals = ZenXMLParser::getParmSet( $vals->child('param') );
       // delete cache file to make sure it gets created with fresh data
       $this->unload();
       // load the schema
-      $this->obj = new ZenDbSchema( dirname(__FILE__).'/'.$vals['xmlfile'], true );
+      $this->obj = new ZenDbSchema( dirname(dirname(__FILE__)).'/DB/'.$vals['xmlfile'], true );
     }
 
     /** Clear out cached data and reset system */

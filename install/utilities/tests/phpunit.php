@@ -115,13 +115,7 @@ class Test {
       $xmlnode =& $parser->parse($xml);
     }
     if( method_exists($this, "load") ) {
-      if( $xmlnode ) {
-	$child = $xmlnode->getChild('setup');
-	if( $child ) { $this->load($child[0]); }
-      }
-      else {
-	$this->load();
-      }
+      $this->load($xmlnode->child('setup',0));
     }
 
     foreach ($methods as $method) {
@@ -135,18 +129,18 @@ class Test {
 	$ERROR_FOUND = false;
 	$node = null;
 	if( $xmlnode ) {
-	  $n = $xmlnode->getChild($method); 
+	  $n = $xmlnode->child($method); 
 	  if( $n ) {
 	    $node = $n[0];
 	  }
 	}
 	if( $node ) {
-	  $sets = $node->getChildren();
+	  $sets = $node->children();
 	  foreach( $sets as $testname=>$valset ) {
 	    foreach( $valset as $val ) {
 	      $ERROR_FOUND = false;
 	      $TESTS_TOTAL++;
-	      $children = $val->getChild('param');
+	      $children = $val->child('param');
 	      $parms = ZenXMLParser::getParmSet( $children );
 	      $this->_openRow( substr($method,4).": <i>$testname</i>" );
 	      $this->$method( $parms );

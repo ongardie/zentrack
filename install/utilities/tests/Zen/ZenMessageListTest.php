@@ -38,10 +38,10 @@
       Assert::assert( is_object($this->obj), "ZenMessageList was not initialized properly" );
       $this->obj->clearMessages();
       if( $node ) { 
-        $this->msgvals = $node->getChild('message');
+        $this->msgvals = $node->child('message');
       }
       foreach($this->msgvals as $m) {
-        $parms = ZenXMLParser::getParmSet($m->getChild('param'));
+        $parms = ZenXMLParser::getParmSet($m->child('param'));
         $this->obj->add( $parms['class'], $parms['method'], $parms['message'], 
                          $parms['errnum'], $parms['lvl'] );
       }

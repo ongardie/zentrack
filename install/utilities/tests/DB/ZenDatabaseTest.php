@@ -74,9 +74,9 @@
       // get xml setting
       $this->_getAndParseXML();
       
-      $dbi = $this->_xml->getChild('dbInfo',0);
-      $xml_node = $dbi->getChild('preferredCase',0);
-      $xml_case = $xml_node->getData();
+      $dbi = $this->_xml->child('dbInfo',0);
+      $xml_node = $dbi->child('preferredCase',0);
+      $xml_case = $xml_node->data();
 
       // get dbo setting
       $dbo_case = $this->_dbo->getPreferredCase();
@@ -240,9 +240,9 @@
       $this->_clearTable();
 
       // perform inserts
-      foreach( $node->getChildren() as $childset ) {
+      foreach( $node->children() as $childset ) {
         // Extract values from node
-        $v = ZenXMLParser::getParmSet( $childset[0]->getChild('param') );
+        $v = ZenXMLParser::getParmSet( $childset[0]->child('param') );
         
         // perform insert, check results
         $id = $this->_dbo->generateID( $this->_dbo->makeTableName($v['table']) );

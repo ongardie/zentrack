@@ -1,0 +1,293 @@
+<TestUnit>
+
+  <!-- 
+     **************************
+     test data for PHPUnit tests
+
+     An optional <setup> node can
+     appear in the list, if it exists
+     then it will be passed as the
+     ZenXNode to the (assumed to exist)
+     $this->load() method
+
+     The xml should contain nodes
+     named the same as the method the
+     data applies to.
+
+     Each method node can contain any
+     number of test nodes which will
+     each contain a set of <param>
+     nodes which will be passed back
+     to the test method
+
+     An optional eval='true' attribute
+     can be applied to any param tag
+     which will cause the data block to
+     be run using eval() (executed as code)
+     
+     This is useful for creating boolean vals,
+     for running functions, using variables, etc
+
+     IMPORTANT NOTE: the method names need
+     to be in all lower case here, since the
+     call uses get_class_methods, which returns
+     them entirely in lower case
+     **************************
+  -->
+
+  <setup>
+    <!-- set the db schema to use, load some fields for testing -->
+    <xmlfile>dbtest.xml</xmlfile>
+    <field>
+      <name>an_integer</name>
+      <label>an integer</label>
+      <size>10</size>
+      <type>integer</type>
+      <ftype>text</ftype>
+      <notnull>1</notnull>
+      <criteria type='zen'>bins</criteria>
+      <reference>DBTEST.column_primarykey</reference>
+      <default>2</default>
+      <description>a description</description>
+      <custom>0</custom>
+      <table>DATATYPE_TEST</table>
+    </field>
+    <field>
+      <name>a_byte</name>
+      <label>a byte</label>
+      <type>byte</type>
+      <ftype>checkbox</ftype>
+      <description>another description</description>
+      <table>DATATYPE_TEST</table>
+    </field>
+    <field>
+      <name>a_string</name>
+      <label>a string</label>
+      <size>50</size>
+      <type>string</type>
+      <ftype>select</ftype>
+      <notnull>1</notnull>
+      <required>1</required>
+      <criteria type='list'>a,b,c</criteria>
+      <reference>DBTEST.column_primarykey</reference>
+      <default>2</default>
+      <description>a description</description>
+      <custom>0</custom>
+      <table>DATATYPE_TEST</table>
+    </field>
+    <field>
+      <name>a_primarykey</name>
+      <label>a primary key</label>
+      <type>primarykey</type>
+      <ftype>immutable</ftype>
+      <description>a primarykey desription</description>
+      <table>DATATYPE_TEST</table>
+    </field>
+    <field>
+      <name>a_custom_email</name>
+      <label>a custom email</label>
+      <type>email</type>
+      <ftype>text</ftype>
+      <notnull>1</notnull>
+      <required>1</required>
+      <description>a custom email description</description>
+      <table>DATATYPE_TEST</table>
+      <unique>1</unique>
+    </field>
+  </setup>
+
+  <testdatatype>
+    <test_1>
+      <param name='name'>an_integer</param>
+    </test_1>
+    <test_2>
+      <param name='name'>a_byte</param>
+    </test_2>
+    <test_3>
+      <param name='name'>a_string</param>
+    </test_3>
+    <test_4>
+      <param name='name'>a_primarykey</param>
+    </test_4>
+    <test_5>
+      <param name='name'>a_custom_email</param>
+    </test_5>
+  </testdatatype>
+
+  <testcopy>
+    <test_1>
+      <param name='name'>an_integer</param>
+    </test_1>
+    <test_2>
+      <param name='name'>a_byte</param>
+    </test_2>
+    <test_3>
+      <param name='name'>a_string</param>
+    </test_3>
+    <test_4>
+      <param name='name'>a_primarykey</param>
+    </test_4>
+    <test_5>
+      <param name='name'>a_custom_email</param>
+    </test_5>
+  </testcopy>
+
+  <testforcechanged>
+    <test_1>
+      <param name='name'>an_integer</param>
+    </test_1>
+    <test_2>
+      <param name='name'>a_custom_email</param>
+    </test_2>
+  </testforcechanged>
+
+  <testformtype>
+    <test_1>
+      <param name='name'>an_integer</param>
+    </test_1>
+    <test_2>
+      <param name='name'>a_string</param>
+    </test_2>
+    <test_3>
+      <param name='name'>a_custom_email</param>
+    </test_3>
+  </testformtype>
+
+  <testgetfieldarray>
+    <test_1>
+      <param name='name'>an_integer</param>
+    </test_1>
+    <test_2>
+      <param name='name'>a_custom_email</param>
+    </test_2>
+  </testgetfieldarray>
+
+  <testgetprop>
+    <test_1>
+      <param name='name'>an_integer</param>
+      <param name='prop'>type</param>
+    </test_1>
+    <test_2>
+      <param name='name'>a_byte</param>
+      <param name='prop'>custom</param>
+    </test_2>
+    <test_3>
+      <param name='name'>a_string</param>
+      <param name='prop'>order</param>
+    </test_3>
+    <test_4>
+      <param name='name'>a_primarykey</param>
+      <param name='prop'>name</param>
+    </test_4>
+    <test_5>
+      <param name='name'>a_custom_email</param>
+      <param name='prop'>criteria</param>
+    </test_5>
+  </testgetprop>
+
+  <testimmutable>
+    <test_1>
+      <param name='name'>an_integer</param>
+      <param name='prop'>label</param>
+      <param name='expected' eval='true'>false</param>
+    </test_1>
+    <test_2>
+      <param name='name'>a_byte</param>
+      <param name='prop'>syslock</param>
+      <param name='expected' eval='true'>true</param>
+    </test_2>
+    <test_3>
+      <param name='name'>a_string</param>
+      <param name='prop'>order</param>
+      <param name='expected' eval='true'>false</param>
+    </test_3>
+    <test_4>
+      <param name='name'>a_primarykey</param>
+      <param name='prop'>criteria</param>
+      <param name='expected' eval='true'>true</param>
+    </test_4>
+    <test_5>
+      <param name='name'>a_custom_email</param>
+      <param name='prop'>criteria</param>
+      <param name='expected' eval='true'>false</param>
+    </test_5>
+  </testimmutable>
+
+  <testiscustom>
+    <test_1>
+      <param name='name'>a_primarykey</param>
+    </test_1>
+    <test_2>
+      <param name='name'>a_custom_email</param>
+    </test_2> 
+  </testiscustom>
+
+  <testisproperty>
+    <test_1>
+      <param name='name'>an_integer</param>
+      <param name='prop'>label</param>
+      <param name='expected' eval='true'>true</param>
+    </test_1>
+    <test_2>
+      <param name='name'>a_byte</param>
+      <param name='prop'>fjewjiewojf</param>
+      <param name='expected' eval='true'>false</param>
+    </test_2>
+  </testisproperty>
+
+  <testisrequired>
+    <test_1>
+      <param name='name'>a_string</param>
+      <param name='expected' eval='true'>true</param>
+    </test_1>
+    <test_2>
+      <param name='name'>an_integer</param>
+      <param name='expected' eval='true'>true</param>
+    </test_2>
+    <test_3>
+      <param name='name'>a_byte</param>
+      <param name='expected' eval='true'>false</param>
+    </test_3>
+  </testisrequired>
+
+  <testname>
+    <test_1>
+      <param name='name'>an_integer</param>
+    </test_1>
+    <test_2>
+      <param name='name'>a_custom_email</param>
+    </test_2>
+  </testname>
+
+  <testsave>
+    <pass_1>
+      <param name='table'>DATATYPE_TEST</param>
+      <param name='field'>syslock</param>
+      <param name='set'>label</param>
+      <param name='value'>Spifflock</param>
+      <param name='expected' eval='true'>true</param>
+    </pass_1>
+    <fail_1>
+      <param name='table'>DATATYPE_TEST</param>
+      <param name='field'>fjwefjewoi</param>
+      <param name='set'>Spifflock</param>
+      <param name='value'>1</param>
+      <param name='expected' eval='true'>false</param>
+    </fail_1>
+    <fail_2>
+      <param name='table'>DATATYPE_TEST</param>
+      <param name='field'>syslock</param>
+      <param name='set'>type</param>
+      <param name='value'>string</param>
+      <param name='expected' eval='true'>false</param>
+    </fail_2>
+    <fail_3>
+      <param name='table'>DATATYPE_TEST</param>
+      <param name='field'>field_name</param>
+      <param name='expected' eval='true'>false</param>
+    </fail_3>
+  </testsave>
+
+  
+  
+</TestUnit>

@@ -28,9 +28,9 @@
     }
 
     function load( $node ) {
-      list($tableNode,) = $node->getChild('table');
-      $table = $tableNode->getData();
-      $inserts = $node->getChild('insert');
+      list($tableNode,) = $node->child('table');
+      $table = $tableNode->data();
+      $inserts = $node->child('insert');
       // clear test table
       $query = Zen::getNewQuery();
       $query->table($table);
@@ -38,7 +38,7 @@
 
       // load test data
       foreach( $inserts as $i ) {
-        $params = ZenXmlParser::getParmSet($i->getChild('param'));
+        $params = ZenXmlParser::getParmSet($i->child('param'));
         $query = Zen::getNewQuery();
         $query->table($table);
         $query->setPrimaryKey('column_primarykey');

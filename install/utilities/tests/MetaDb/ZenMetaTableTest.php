@@ -7,7 +7,7 @@
    */
 
   /** Try to include the config file for testing */
-  include_once( realpath(dirname(__FILE__)."/../")."/phpunit_config.php");
+  include_once( realpath(dirname(__FILE__)."/../phpunit_config.php"));
 
   /**
    * Test the ZenMetaTable.php class methods
@@ -32,7 +32,7 @@
       // delete cache file to make sure it gets created with fresh data
       $this->unload();
       // load the schema
-      $this->dbSchema = new ZenDbSchema( dirname(__FILE__).'/'.$vals['xmlfile'], true );
+      $this->dbSchema = new ZenDbSchema( dirname(dirname(__FILE__)).'/DB/'.$vals['xmlfile'], true );
     }
 
     /** Clear out cached data and reset system */

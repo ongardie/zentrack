@@ -1,0 +1,222 @@
+
+<TestUnit>
+
+  <!-- 
+     **************************
+     test data for PHPUnit tests
+
+     An optional <setup> node can
+     appear in the list, if it exists
+     then it will be passed as the
+     ZenXNode to the (assumed to exist)
+     $this->load() method
+
+     The xml file should contain nodes
+     named the same as the method the
+     data applies to.
+
+     Each method node can contain any
+     number of test nodes which will
+     each contain a set of <param>
+     nodes which will be passed back
+     to the test method
+
+     An optional eval='true' attribute
+     can be applied to any param tag
+     which will cause the data block to
+     be run using eval() (executed as code)
+     
+     This is useful for creating boolean vals,
+     for running functions, using variables, etc
+
+     IMPORTANT NOTE: the method names need
+     to be in all lower case here, since the
+     call uses get_class_methods, which returns
+     them entirely in lower case
+     **************************
+  -->
+
+  <setup>
+    <xmlfile>testdb.xml</xmlfile>
+  </setup>
+
+  <testgetfield>
+    <pass_1>
+      <param name='rowid'>1</param>
+      <param name='field'>field_name</param>
+      <param name='value'>test_field_1</param>
+      <param name='expected' eval='true'>true</param>
+      <param name='uselist' eval='true'>false</param>
+    </pass_1>
+    <pass_2>
+      <param name='rowid'>3</param>
+      <param name='field'>syslock</param>
+      <param name='value'>1</param>
+      <param name='expected' eval='true'>true</param>
+      <param name='uselist' eval='true'>true</param>
+    </pass_2>
+    <pass_3>
+      <param name='rowid'>2</param>
+      <param name='field'>field_pri</param>
+      <param name='value'>1</param>
+      <param name='expected' eval='true'>true</param>
+      <param name='uselist' eval='true'>true</param>
+    </pass_3>
+
+    <fail_1>
+      <param name='rowid'>10</param>
+      <param name='field'>happy</param>
+      <param name='value'>sad</param>
+      <param name='expected' eval='true'>false</param>
+      <param name='uselist' eval='true'>false</param>
+    </fail_1>
+    <fail_2>
+      <param name='rowid'>1</param>
+      <param name='field'>zippy</param>
+      <param name='value'>skippy</param>
+      <param name='expected' eval='true'>false</param>
+      <param name='uselist' eval='true'>true</param>
+    </fail_2>
+  </testgetfield>
+
+  <!-- test both with id and without id -->
+  <testgetmetainfo>
+    <pass_1>
+      <param name='rowid'>2</param>
+      <param name='uselist' eval='true'>false</param>
+    </pass_1>
+    <pass_2>
+      <param name='rowid'></param>
+      <param name='uselist' eval='true'>false</param>
+    </pass_2>
+    <pass_3>
+      <param name='rowid'>1</param>
+      <param name='uselist' eval='true'>true</param>
+    </pass_3>
+    <pass_4>
+      <param name='rowid'></param>
+      <param name='uselist' eval='true'>true</param>
+    </pass_4>
+  </testgetmetainfo>
+
+  <testid>
+    <pass_1>
+      <param name='rowid'>2</param>
+      <param name='uselist' eval='true'>false</param>
+      <param name='expected' eval='true'>true</param>
+    </pass_1>
+    <pass_2>
+      <param name='rowid'>3</param>
+      <param name='uselist' eval='true'>true</param>
+      <param name='expected' eval='true'>true</param>
+    </pass_2>
+
+    <fail_1>
+      <param name='rowid'></param>
+      <param name='uselist' eval='true'>true</param>
+      <param name='expected' eval='true'>false</param>
+    </fail_1>
+    <fail_2>
+      <param name='rowid'></param>
+      <param name='uselist' eval='true'>false</param>
+      <param name='expected' eval='true'>false</param>
+    </fail_2>
+  </testid>
+
+  <!-- we won't eval the expected for these since
+       it could return a string, true, or false, and
+       we need to test for each -->
+  <testsetfield>
+    <pass_1>
+      <param name='rowid'>2</param>
+      <param name='uselist' eval='true'>false</param>
+      <param name='field'>field_pri</param>
+      <param name='newval'>20</param>
+      <param name='expected'>true</param>
+    </pass_1>
+    <pass_2>
+      <param name='rowid'>3</param>
+      <param name='uselist' eval='true'>true</param>
+      <param name='field'>field_name</param>
+      <param name='newval'>spiffy field</param>
+      <param name='expected'>true</param>
+    </pass_2>
+
+    <fail_1>
+      <param name='rowid'>2</param>
+      <param name='uselist' eval='true'>false</param>
+      <param name='field'>zippy</param>
+      <param name='newval'>skippy</param>
+      <param name='expected'>error</param>
+    </fail_1>
+    <fail_2>
+      <param name='rowid'>3</param>
+      <param name='uselist' eval='true'>true</param>
+      <param name='field'>syslock</param>
+      <param name='newval'>1</param>
+      <param name='expected'>false</param>
+    </fail_2>
+    <fail_3>
+      <param name='rowid'>2</param>
+      <param name='uselist' eval='true'>true</param>
+      <param name='field'>syslock</param>
+      <param name='newval'>a</param>
+      <param name='expected'>error</param>
+    </fail_3>
+    <fail_4>
+      <param name='rowid'>1</param>
+      <param name='uselist' eval='true'>true</param>
+      <param name='field'>isacive</param>
+      <param name='newval'>2.5</param>
+      <param name='expected'>error</param>
+    </fail_4>
+    <fail_5>
+      <param name='rowid'>1</param>
+      <param name='uselist' eval='true'>true</param>
+      <param name='field'>field_name</param>
+      <param name='newval'></param>
+      <param name='expected'>error</param>
+    </fail_5>
+  </testsetfield>
+
+  <testischanged>
+    <pass_1>
+      <param name='rowid'>2</param>
+      <param name='uselist' eval='true'>false</param>
+      <param name='field'>field_pri</param>
+      <param name='newval'>20</param>
+      <param name='expected' eval='true'>true</param>
+    </pass_1>
+    <pass_2>
+      <param name='rowid'>3</param>
+      <param name='uselist' eval='true'>true</param>
+      <param name='field'>field_name</param>
+      <param name='newval'>spiffy field</param>
+      <param name='expected' eval='true'>true</param>
+    </pass_2>
+
+    <fail_1>
+      <param name='rowid'>2</param>
+      <param name='uselist' eval='true'>false</param>
+      <param name='field'>zippy</param>
+      <param name='newval'>skippy</param>
+      <param name='expected' eval='true'>false</param>
+    </fail_1>
+    <fail_2>
+      <param name='rowid'>3</param>
+      <param name='uselist' eval='true'>true</param>
+      <param name='field'>syslock</param>
+      <param name='newval'>1</param>
+      <param name='expected' eval='true'>false</param>
+    </fail_2>
+    <fail_3>
+      <param name='rowid'>2</param>
+      <param name='uselist' eval='true'>true</param>
+      <param name='field'>syslock</param>
+      <param name='newval'>a</param>
+      <param name='expected' eval='true'>false</param>
+    </fail_3>
+  </testischanged>
+
+
+</TestUnit>
