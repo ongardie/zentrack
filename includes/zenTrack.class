@@ -1588,7 +1588,7 @@ class zenTrack extends zen {
      // displays a long date format
      if( !$utime )
        $utime = time();
-     return strftime($this->date_format_long,$utime);
+     return strftime($this->date_fmt_long,$utime);
    }
    
    function showDate( $utime = '') {
