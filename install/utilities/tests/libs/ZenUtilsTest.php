@@ -23,7 +23,23 @@
    */
   class ZenUtilsTest extends Test {
 
-    function testNotReady() { Assert::assert( false, "ZenUtilsTest not implemented yet" ); }
+    //    function testNotReady() { Assert::assert( false, "ZenUtilsTest not implemented yet" ); }
+   
+    function testClassNameFromTable( $vals ) { 
+      $result = ZenUtils::classNameFromTable( $vals['table'] );
+      Assert::equals( $result, $vals['expected'] );
+    }
+
+    function testConvertSecondsTo( $vals ) {
+      $result = ZenUtils::convertSecondsTo( $vals['seconds'], $vals['period'] );
+      Assert::equals( $result, $vals['expected'], "result ($result) != expected ({$vals['expected']})."
+                      ."<br> seconds = {$vals['seconds']}, period = {$vals['period']}" );
+    }
+
+    function testSecondsIn( $vals ) {
+      $result = ZenUtils::secondsIn( $vals['period'], $vals['num'] );
+      Assert::equals( $result, $vals['expected'] );
+    }
 
   }
 

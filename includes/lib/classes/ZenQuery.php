@@ -351,14 +351,13 @@ class ZenQuery extends Zen {
   /**
    * Performs a select statement and returns results with the given criteria.
    *
-   * Returns an array containing the results from the query. If the query fails a boolean value of 
-   * false is returned.
+   * Returns an array containing the results from the query. If the query fails, it will return an empty array
    *
    * @access public
    * @since 1.0
    * @param boolean $indexed whether results are returned in an associative (true) or plain array (false)
    * @param int $cacheTime The amount of time to leave the query in the cache.
-   * @return array
+   * @return array (empty array if query fails)
    */
   function select($cacheTime = 0, $indexed = false) {
     $this->_dbobject->setFetchMode($indexed);
@@ -366,19 +365,24 @@ class ZenQuery extends Zen {
     $result = $this->_execute($cacheTime);
     if ($result) {
       return $result->GetArray();
-    } 
+    }
+    else { return array(); }
   }
 
   /**
    * Peforms an insert with the given criteria.
    *
+   * Note that this only works properly properly 
+   * if a primary key has been set.
    *
    * @access public
    * @since 1.0
+   * @see ZenQuery::setPrimaryKey()
+   * @param boolean $setPrimaryKey if true, will attempt to run {@link ZenQuery::setPrimaryKey()}
+   * @return integer representing id of inserted row or false if none
    */
-  function insert() {
-    // todo
-    // make this generate and return an id
+  function insert( $setPrimaryKey = false ) {
+    if( $setPrimaryKey ) { $this->setPrimaryKey(); }
     $this->_queryType = 'INSERT';
     if( $this->_execute(false) ) {
       return $this->_vals[$this->_key];
@@ -393,7 +397,7 @@ class ZenQuery extends Zen {
    *
    * @access public
    * @since 1.0
-   * @return integer
+   * @return integer representing number of affected rows
    */
   function update() {
     $this->_queryType = 'UPDATE';
@@ -408,7 +412,7 @@ class ZenQuery extends Zen {
    *
    * @access public
    * @since 1.0
-   * @return integer
+   * @return integer representing number of affected rows
    */
   function delete() {
     $this->_queryType = 'DELETE';
@@ -426,7 +430,7 @@ class ZenQuery extends Zen {
    * @access public
    * @since 1.0
    * @param mixed $field the field to match on, if the value is set to array then all fields will be matched.
-   * @return integer
+   * @return 0=failure, 1=updated, 2=inserted
    */
   function replace($field) {
     $table = $this->_tables[0];
@@ -452,15 +456,22 @@ class ZenQuery extends Zen {
   function _execute($cacheTime = 0) {
     // generate query
     $query = $this->_buildQuery();
+    $this->_queryString = $query; //store for debugging
     if ($query === false) {
       $this->debug($this, '_execute', '_buildQuery() failed', LVL_ERROR);
       return false;
     }
 
-    // get the results
-    return $this->_dbobject->execute($query, $cacheTime, $this->_limit, $this->_offset);    
+    return $this->_dbobject->execute($query, $cacheTime, $this->_limit, $this->_offset);
   }
-  
+
+  /**
+   * Returns the query string for debugging(only useful after calling {@link ZenQuery::execute()}
+   */
+  function getQueryString() {
+    return $this->_queryString;
+  }
+
   /**
    * Creates a field set clause for a SELECT statement based on the given parameters.
    *
@@ -790,6 +801,11 @@ class ZenQuery extends Zen {
    * @var string
    */
   var $_queryType;
+
+  /**
+   * @var the query, stored for debugging
+   */
+  var $_queryString;
 
 }
 

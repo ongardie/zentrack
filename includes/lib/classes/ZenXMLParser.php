@@ -74,7 +74,7 @@
   }
 
   /** 
-   * STATIC: Process a set of parm tags from an xml node 
+   * STATIC: Process a set of parm tags from an array of xml param nodes
    *
    * The parm tags must have a name="" attribute, which
    * will be used to create the index for the return values
@@ -82,6 +82,8 @@
    * and may optionally include an eval='true' attribute, which
    * will cause the node data to be run with $param = eval(..data..)
    * (thus it must include valid php code)
+   *
+   * @var array $node is an array of nodes recieved from {@link ZenXNode->getChild('param')}
    */
   function getParmSet( $node ) {
     $parms = array();
@@ -93,7 +95,18 @@
           eval("\$parms[\$key] = $val;");
         }
         else {
-          $parms[$key] = $parm->getData();
+          // add element to existing array
+          if( isset($parms[$key]) && is_array($parms[$key]) ) {
+            $parms[$key][] = $parm->getData();
+          }
+          // create an array from element
+          else if( isset($parms[$key]) ) {
+            $parms[$key] = array($parms[$key], $parm->getData());
+          }
+          // just add element
+          else {
+            $parms[$key] = $parm->getData();
+          }
         }
       }
     }

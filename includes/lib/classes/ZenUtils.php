@@ -316,7 +316,7 @@ class ZenUtils {
    * This method rounds to the nearest whole unit (dropping partial times)
    *
    * @param integer $seconds is the unix timestampe
-   * @param string $period is the period to use (minutes,hours,days,weeks,years,decades)
+   * @param string $period is the period to use (minutes,hours,days,weeks)
    * @return float or false if $period is invalid
    */
   function convertSecondsTo( $seconds, $period ) {
@@ -326,7 +326,7 @@ class ZenUtils {
   /**
    * STATIC: Returns the number of seconds in a measure of time
    *
-   * @param $period is the time period (days,hours,weeks,months,years)
+   * @param $period is the time period (minutes,days,hours,weeks)
    * @param $num is the number of days/hours/weeks to measure [default to 1]
    * @return integer the result or false if invalid period
    */

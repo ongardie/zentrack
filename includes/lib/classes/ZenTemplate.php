@@ -25,9 +25,11 @@
    *
    * <b>Valid template entries are:</b>
    * <ul> 
-   *  <li>{varname} - inserts value of varname
+   *  <li>{varname} - inserts value of varname, if the value is an array
+   *                  <br>then the values will be iterated each time it is requested
    *  <li>{varname/"default_value"} - inserts val of varname, or default if not found, default is a string
-   *  <li>{zen:category:varname} - inserts value from config settings, i.e. Zen::getSetting("category","varname")
+   *  <li>{zen:category:varname} - inserts value from database settings using {@link Zen::getSetting()}
+   *  <li>{ini:category:varname} - inserts value from ini settings using {@link Zen::getIniVal()}
    *  <li>{foreach:varname:"text"+index+"more text"+value} - loops through indexed array and prints name/value
    *  <li>{foreach:varname:%sub-template%} - loops through the indexed array and passes name/value to sub-template
    *  <li>{list:varname:"text"+value+"text"} - loops through array and prints values
@@ -38,7 +40,6 @@
    *  <li>{if:field=something:"text to print"+field+"more text"} - inserts text if field = something
    *  <li>{if:field=something:%sub-template%} - inserts sub-template if field = something
    *  <li>{function:function_name:param1,param2,param3} - runs a global function and inserts the return value
-   *  <li>{toggle} - prints a value which alternates for each row
    *  <li>{helper:file_name} - runs a helper script located in includes/lib/helpers and inserts results
    *  <li>{script:file_name} - runs a script located in includes/users/code and inserts results
    * </ul>
@@ -87,15 +88,6 @@ class zenTemplate {
   }
 
   /**
-   * Set a list of values to use for the toggle (alternates each line of foreach or list)
-   *
-   * @var array $value the list of values to be used by the alternating toggle
-   */
-  function setToggleVal( $value ) {
-    $this->_toggle = value;
-  }
-
-  /**
    * return a text string representing the parsed contents of the template
    *
    * @return string parsed template data, ready for use
@@ -118,19 +110,6 @@ class zenTemplate {
       Zen::debug($this, "_get", "Could not load template '{$this->_template}'", 21, LVL_ERROR);
       $this->_text = array("Template file {$this->_template} could not be found.");
     }
-  }
-
-  /**
-   * <b>private</b>: returns a zen object
-   *
-   * @return object zen object
-   */
-  function _getZenObject() {    
-    if( !is_object($this->_zen) ) {
-      global $zen;
-      $this->_zen = &$zen;
-    }
-    return $this->_zen;
   }
 
   /**
@@ -164,11 +143,18 @@ class zenTemplate {
       case "zen":
       {
         // {zen:category:varname}
-        $zen = &$this->_getZenObject();
         $c = trim($parts[1]);
         $n = trim($parts[2]);
         Zen::debug($this, "_insert", "using {zen:category:varname} for '$text'", 0, LVL_DEBUG);
-        return isset($zen->settings["$n"])? $zen->settings["$n"] : "";
+        return Zen::getSetting($c,$n);
+      }
+      case "ini":
+      {
+        // {ini:category:varname}
+        $c = trim($parts[1]);
+        $n = trim($parts[2]);
+        Zen::debug($this, "_insert", "using {ini:category:varname} for '$text'", 0, LVL_DEBUG);
+        return Zen::getIniVal($c,$n);
       }
       case "foreach":
       {
@@ -408,20 +394,31 @@ class zenTemplate {
   }
   
   /**
-   * <b>private</b>: returns a value recieved from the $this->values()
+   * <b>private</b>: returns a value from the value set provided by the user
+   *
+   * If the value found is an array, then it will be iterated each time this is called.
+   * The first time it will return element 0, the second time it will return element 1, etc.
    *
    * @param string $name the varname
    * @return string the value of the varname
    */
   function _getVar($name) {
+    // find out if we have a default value
     if( strpos($name, "/") > 0 ) {
       list($name,$default) = explode('/',$name);
     }
     else { $default = null; }
-    if( is_array($this->_vars) && isset($this->_vars["$name"]) )
+    // parse the array or string
+    if( is_array($this->_vars) && isset($this->_vars["$name"]) && is_array($this->_vars["$name"]) ) {
+      // if it is an array, we iterate each time it is requested (get the next value)
+      return $this->_vars["$name"][$this->_getIteratorIndex($name)];
+    }
+    else if( is_array($this->_vars) && isset($this->_vars["$name"]) ) {
       return $this->_vars["$name"];
-    else
+    }
+    else {
       return $default? $this->_parseString($default) : '';
+    }
   }
 
   /**
@@ -449,6 +446,24 @@ class zenTemplate {
   }
 
   /**
+   * Returns an index that represents the next value in a toggle set
+   */
+  function _getIteratorIndex( $key ) {
+    // initialize iterator
+    if( !isset($this->_arrayIteratorIndex["$key"]) ) {
+      $this->_arrayIteratorIndex["$key"] = -1;
+    }
+    // increment iterator each time this is called
+    $this->_arrayIteratorIndex["$key"]++;
+    // reset iterator when count is reached
+    if( $this->_arrayIteratorIndex["$key"] == count($this->_vars["$key"]) ) {
+      $this->_arrayIteratorIndex["$key"] = 0;
+    }
+    // return the current iterator
+    return $this->_arrayIteratorIndex["$key"];
+  }
+
+  /**
    * Set the default directory for retrieving templates from
    */
   function setDefaultTemplateDir( $newdir ) {
@@ -459,17 +474,11 @@ class zenTemplate {
   var $_templateDir;
 
   var $_template; //the file we are using
-  var $_zen;
   var $_text;  //the template data loaded and ready for parsing
   var $_vars;  //the variables to use for template parsing
 
-  /** @var a value to use for alternating between rows */
-  var $_toggle;
-
-  /** @var specifies the current value of the alternating toggle */
-  var $_currentToggleValue;
-
-  //todo: implement the toggle
+  /** @var specifies the current index of an array in the values */
+  var $_arrayIteratorIndex = array();
 
 }
 

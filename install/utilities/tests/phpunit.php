@@ -135,15 +135,16 @@ class Test {
 	if( $node ) {
 	  $sets = $node->getChildren();
 	  foreach( $sets as $testname=>$valset ) {
-	    $ERROR_FOUND = false;
-	    $TESTS_TOTAL++;
-	    $val = $valset[0];
-	    $children = $val->getChild('param');
-	    $parms = ZenXMLParser::getParmSet( $children );
-	    $this->_openRow( substr($method,4).": <i>$testname</i>" );
-	    $this->$method( $parms );
-	    if( !$ERROR_FOUND ) { $TESTS_COMPLETED++; }
-	    $this->_closeRow( $ERROR_FOUND );
+	    foreach( $valset as $val ) {
+	      $ERROR_FOUND = false;
+	      $TESTS_TOTAL++;
+	      $children = $val->getChild('param');
+	      $parms = ZenXMLParser::getParmSet( $children );
+	      $this->_openRow( substr($method,4).": <i>$testname</i>" );
+	      $this->$method( $parms );
+	      if( !$ERROR_FOUND ) { $TESTS_COMPLETED++; }
+	      $this->_closeRow( $ERROR_FOUND );
+	    }
 	  }
 	}
 	else {
