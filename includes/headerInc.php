@@ -204,6 +204,7 @@
   // includes/templates dir
   $tabs = array(
       "Details",
+      "Custom",
       "Log",
       "Related",     
       "Attachments",
