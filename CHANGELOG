@@ -7,6 +7,17 @@
 
 ----- V2.4 (development, see CVS) ----
 
+2003-04-18, MLively
+  Added new diff utility for translations
+    - devtools/transdiff.php 1.1
+  Update the tr-parser to be a bit more inclusive
+    - devtools/tr-parser.php 1.2
+  Added new entries to the current translation files
+    - zentrack/includes/translations/french.trans 1.2
+    - zentrack/includes/translations/german.trans 1.2
+    - zentrack/includes/translations/spanish.trans 1.2
+
+
 2003-04-18, Rob Hillis
   Fix un-ordered display of bins when creating new ticket or project and when searching.
     - zentrack/includes/templates/newTicketForm.php 1.23
