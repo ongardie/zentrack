@@ -1083,7 +1083,7 @@ class zenTrack extends zen {
      // automatically
       
       if( $params["passphrase"] )
-   $params["passphrase"] = $this->encval($params["passphrase"]);
+	$params["passphrase"] = $this->encval($params["passphrase"]);
       $set = $this->makeInsertVals($params,1);
       $query = "UPDATE ".$this->table_users." SET $set WHERE user_id = $user_id";
       $this->addDebug("update_user()Query",$query,2);
@@ -1158,7 +1158,7 @@ class zenTrack extends zen {
      // for a user.  This will probably be the users last name
 
      $user = $this->get_user($user_id);
-     $params["passphrase"] = $this->encval($user["lname"]);
+     $params["passphrase"] = $user["lname"];
      return $this->update_user($user_id, $params);
    }
    
