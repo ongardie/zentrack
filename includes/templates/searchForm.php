@@ -80,9 +80,9 @@
      if( is_array($users) ) {
        asort($users);
        foreach($users as $k=>$v) {
-	 $check = ( $search_params["userID"] && $v["uid"] == $search_params["userID"] )? 
+	 $check = ( $search_params["userID"] && $v["userID"] == $search_params["userID"] )? 
 	   "selected" : "";
-	 print "<option $check value='$v[uid]'>$v[lname], $v[fname]</option>\n";
+	 print "<option $check value='$v[userID]'>$v[lname], $v[fname]</option>\n";
        }
      }
    }

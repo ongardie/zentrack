@@ -22,9 +22,9 @@
 <?
   $bins = array_keys($zen->getAccess($login_id));
   foreach($zen->get_users($bins) as $v) {
-    if( $v["uid"] != $login_id ) {
-      $sel = ($v["uid"] == $userID)? "selected" : "";
-      print "<option value='$v[uid]' $sel>".$zen->formatName($v,1)."</option>\n";
+    if( $v["userID"] != $login_id ) {
+      $sel = ($v["userID"] == $userID)? "selected" : "";
+      print "<option value='$v[userID]' $sel>".$zen->formatName($v,1)."</option>\n";
     }
   }
 ?>

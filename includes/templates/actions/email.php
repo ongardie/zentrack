@@ -37,13 +37,13 @@
 <?
   $bins = array_keys($zen->getAccess($login_id));
   foreach($zen->get_users($bins) as $v) {
-    if( $v["uid"] != $login_id ) {
+    if( $v["userID"] != $login_id ) {
       if( is_array($users_to_email) ) {
-	 $sel = (in_array($v["uid"],$users_to_email))? "selected" : "";
+	 $sel = (in_array($v["userID"],$users_to_email))? "selected" : "";
       } else {
 	 $sel = "";
       }
-      print "<option value='$v[uid]' $sel>".$zen->formatName($v,1)."</option>\n";
+      print "<option value='$v[userID]' $sel>".$zen->formatName($v,1)."</option>\n";
     }
   }
 ?>

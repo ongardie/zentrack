@@ -18,9 +18,6 @@
    *  DIRECTORY SETTINGS 
   */
   
-   // the root includes folder
-   $this->libDir         = "/zentrack/includes";
-
    // the folder under includes holding utility files
    $this->listDir        = $this->libDir."/lists";
    
@@ -31,18 +28,6 @@
    $this->attachmentsDir = $this->libDir."/attachments"; 
 
    
-  /*
-  **  RETRIEVAL SETTINGS
-  */
-   
-   $this->get_tickets_columns = array(
-				"id", 	        "title", 
-				"priority",     "otime", 
-				"ctime",        "project_id", 
-				"est_hours",    "wkd_hours",
-				"status"
-				);    //specifies columns returned by get_tickets()
-
   /*
    *  DATABASE SETTINGS
   */

@@ -7,12 +7,12 @@
   // mumbo-jumbo and get down to business
   // otherwise sort out and determine
   // how to use the parameters given
-  if( $search_params["uid"] ) {
-    $params[] = array("uid","=",$search_params["uid"]);
+  if( $search_params["userID"] ) {
+    $params[] = array("userID","=",$search_params["userID"]);
   } else {
     // organize the search params
     if( is_array($search_params) ) {
-      if( $search_params["access"] ) {
+      if( $search_params["accessLevel"] ) {
 	switch($search_access_method) {
 	case "gt":
 	  $op = ">=";
@@ -24,12 +24,12 @@
 	  $op = "=";
 	  break;
 	}
-	$search_params["access"] = ereg_replace("[^0-9]", "", $search_params["access"]);
+	$search_params["accessLevel"] = ereg_replace("[^0-9]", "", $search_params["accessLevel"]);
       }
       foreach($search_params as $k=>$v) {
 	if( strlen($v) ) {
 	  switch($k) {
-	  case "access":
+	  case "accessLevel":
 	    $params[] = array($k,$op,$v,1);
 	    break;
 	  default: 

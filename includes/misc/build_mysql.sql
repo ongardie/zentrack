@@ -3,12 +3,12 @@
 #
 
 CREATE TABLE ZENTRACK_ACCESS (
-  aid int(12) NOT NULL auto_increment,
+  accessID int(12) NOT NULL auto_increment,
   userID int(12) default NULL,
   binID int(12) default NULL,
   lvl int(2) default NULL,
   role varchar(25) default NULL,
-  PRIMARY KEY (aid)
+  PRIMARY KEY (accessID)
 ) TYPE=MyISAM;
 
 #

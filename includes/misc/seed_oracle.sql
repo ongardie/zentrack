@@ -2,11 +2,11 @@
 -- Dumping data for table 'ZENTRACK_ACCESS'
 --
 
-INSERT INTO ZENTRACK_ACCESS (aid, userID, binID, lvl, role) VALUES (1,2,2,1,NULL);
-INSERT INTO ZENTRACK_ACCESS (aid, userID, binID, lvl, role) VALUES (2,2,3,1,NULL);
-INSERT INTO ZENTRACK_ACCESS (aid, userID, binID, lvl, role) VALUES (3,2,3,2,NULL);
-INSERT INTO ZENTRACK_ACCESS (aid, userID, binID, lvl, role) VALUES (4,2,4,1,NULL);
-INSERT INTO ZENTRACK_ACCESS (aid, userID, binID, lvl, role) VALUES (5,2,3,1,NULL);
+INSERT INTO ZENTRACK_ACCESS (accessID, userID, binID, lvl, role) VALUES (1,2,2,1,NULL);
+INSERT INTO ZENTRACK_ACCESS (accessID, userID, binID, lvl, role) VALUES (2,2,3,1,NULL);
+INSERT INTO ZENTRACK_ACCESS (accessID, userID, binID, lvl, role) VALUES (3,2,3,2,NULL);
+INSERT INTO ZENTRACK_ACCESS (accessID, userID, binID, lvl, role) VALUES (4,2,4,1,NULL);
+INSERT INTO ZENTRACK_ACCESS (accessID, userID, binID, lvl, role) VALUES (5,2,3,1,NULL);
 
 --
 -- Dumping data for table 'ZENTRACK_BINS'
@@ -277,7 +277,7 @@ INSERT INTO ZENTRACK_TYPES (typeID, name, priority, active) VALUES (8,'Task',0,1
 -- Dumping data for table 'ZENTRACK_USERS'
 --
 
-INSERT INTO ZENTRACK_USERS (uid, login, access, passwd, lname, fname, initials, email, notes, homebin, active) VALUES (1,'Administrator',5,'7b7bc2512ee1fedcd76bdc68926d4f7b','Administrator','zenTrack','ADMIN','root@localhost','This is the master login',2,2);
-INSERT INTO ZENTRACK_USERS (uid, login, access, passwd, lname, fname, initials, email, notes, homebin, active) VALUES (2,'Guest',0,'adb831a7fdd83dd1e2a309ce7591dff8','Visitor','Guest','GUEST',NULL,NULL,2,1);
-INSERT INTO ZENTRACK_USERS (uid, login, access, passwd, lname, fname, initials, email, notes, homebin, active) VALUES (3,'User',3,'8f9bfe9d1345237cb3b2b205864da075','User','Default','USER',NULL,'Default User Account',2,1);
+INSERT INTO ZENTRACK_USERS (userID, login, accessLevel, passwd, lname, fname, initials, email, notes, homebin, active) VALUES (1,'Administrator',5,'7b7bc2512ee1fedcd76bdc68926d4f7b','Administrator','zenTrack','ADMIN','root@localhost','This is the master login',2,2);
+INSERT INTO ZENTRACK_USERS (userID, login, accessLevel, passwd, lname, fname, initials, email, notes, homebin, active) VALUES (2,'Guest',0,'adb831a7fdd83dd1e2a309ce7591dff8','Visitor','Guest','GUEST',NULL,NULL,2,1);
+INSERT INTO ZENTRACK_USERS (userID, login, accessLevel, passwd, lname, fname, initials, email, notes, homebin, active) VALUES (3,'User',3,'8f9bfe9d1345237cb3b2b205864da075','User','Default','USER',NULL,'Default User Account',2,1);
 

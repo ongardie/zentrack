@@ -21,7 +21,7 @@
 	$bins["$k"] = $newVals[$i];
     }
   } else {
-    $bins = $zen->get_access($uid);
+    $bins = $zen->get_access($userID);
   }
 
   if( $TODO == 'Reset' )
@@ -49,12 +49,12 @@
 
 <form method="post" action="<?=$SCRIPT_NAME?>">
 <input type="hidden" name="more" value="<?= strip_tags($more) ?>">
-<input type="hidden" name="uid" value="<?= strip_tags($uid) ?>">
+<input type="hidden" name="userID" value="<?= strip_tags($userID) ?>">
 <blockquote>
 <table width="300" cellpadding="5">
 <tr>
   <td colspan="2" class="titleCell" align="center" height="20">
-    <b>Set Access for <?=$zen->formatName($uid)?></b>
+    <b>Set Access for <?=$zen->formatName($userID)?></b>
   </td>
 </tr>
 

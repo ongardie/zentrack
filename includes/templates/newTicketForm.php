@@ -116,8 +116,8 @@ value="<?=strip_tags($title)?>">
 <?
    if( is_array($users) && $zen->settings["allow_assign"] == "on" ) {
      foreach($users as $v) {
-       $check = ( $v["uid"] == $userID )? "selected" : "";
-       print "<option $check value='$v[uid]'>$v[lname], $v[fname]</option>\n";
+       $check = ( $v["userID"] == $userID )? "selected" : "";
+       print "<option $check value='$v[userID]'>$v[lname], $v[fname]</option>\n";
      }
    }
 ?>

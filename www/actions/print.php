@@ -8,7 +8,7 @@
   }
 
   $tid = $ticket["typeID"];
-  $uid = $ticket["userID"];
+  $userID = $ticket["userID"];
   $title = ($zen->types["$tid"] == "Project")? strtoupper($zen->settings["system_name"])." PROJECT REPORT" : strtoupper($zen->settings["system_name"])." ".strtoupper($zen->types["$tid"])." REPORT";
   $ticketroj = ($zen->types["$tid"] == "Project")? 1 : '';
   if( $ticket["projectID"] ) {

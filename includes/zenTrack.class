@@ -25,9 +25,9 @@ class zenTrack extends zen {
    */
    
    
-   function get_access( $uid, $flag = 0 ) {
+   function get_access( $userID, $flag = 0 ) {
       // retrieves the access priviledges
-      // by the uid (user id)
+      // by the userID (user id)
       // if flag set to 1, then it returns
       // a simple array containing all the columns
       //  ( [0] = array(..all columns in db..) )
@@ -35,7 +35,7 @@ class zenTrack extends zen {
       // with a value of the level for that bin
       //  ( ["binID"] = $bin_level )
       
-      $query = "SELECT * FROM ".$this->table_access." WHERE userID = $uid";
+      $query = "SELECT * FROM ".$this->table_access." WHERE userID = $userID";
       $this->addDebug("get_access()Query",$query,3); //debug
       $vars = $this->db_queryIndexed($query);
       if( $flag ) {
@@ -50,13 +50,13 @@ class zenTrack extends zen {
       }
    }   
    
-   function get_attachment($aid) {
+   function get_attachment($accessID) {
       // retrieves all properties for a given attachment
       // this is by the attachmentID and not the ticket or log ID
       // and creates a file location to the actual 
       // attachment which is stored as ["location"]
       
-      $query = "SELECT * FROM ".$this->table_attachments." WHERE attachmentID = $aid";
+      $query = "SELECT * FROM ".$this->table_attachments." WHERE attachmentID = $accessID";
       $vars = $this->db_quickIndexed($query);
       if( is_array($vars) ) {
 	 $vars["location"] = $this->attachmentsDir."/".$vars["name"];
@@ -180,11 +180,11 @@ class zenTrack extends zen {
       return( $this->db_queryIndexed($query) );
    }      
    
-   function get_user( $uid ) {
+   function get_user( $userID ) {
       // returns a specific user
       // by the user id
             
-      $query = "SELECT * FROM ".$this->table_users." WHERE uid = $uid";
+      $query = "SELECT * FROM ".$this->table_users." WHERE userID = $userID";
       return( $this->db_quickIndexed($query) );
    }
 
@@ -209,9 +209,9 @@ class zenTrack extends zen {
 	$ids = $this->db_list($query);
       }
       if( is_array($ids) ) {
-	 $where = " (uid IN(".join(",",$ids).") OR access >= $level) ";
+	 $where = " (userID IN(".join(",",$ids).") OR accessLevel >= $level) ";
       } else {
-	 $where = " access >= $level ";
+	 $where = " accessLevel >= $level ";
       }
       if( $active )
 	$where .= " AND active = 1 ";
@@ -971,14 +971,14 @@ class zenTrack extends zen {
       return( $this->db_insert($table,$params) );
    }
    
-   function delete_attachment( $aid ) { 
+   function delete_attachment( $accessID ) { 
       // deletes attachments by attachmentID
       // can be an array
       
-      if( !is_array($aid) )
-	$aid = array($aid);
-      for( $i=0; $i<count($aid); $i++ ) {
-	 $att = $this->get_attachment($aid[$i]);
+      if( !is_array($accessID) )
+	$accessID = array($accessID);
+      for( $i=0; $i<count($accessID); $i++ ) {
+	 $att = $this->get_attachment($accessID[$i]);
 	 $file = $this->attachmentDir."/$att[name]";
 	 unlink($file);	
       }
@@ -995,10 +995,10 @@ class zenTrack extends zen {
       foreach($id as $i) {
 	 $att = $this->get_attachments($i, $flag);
 	 for( $i=0; $i<count($att); $i++ ) {
-	    $aid[] = $att["attachmentID"];
+	    $accessID[] = $att["attachmentID"];
 	 }
       }
-      return( $this->deleteAttachment($aid) );
+      return( $this->deleteAttachment($accessID) );
    }
    
    
@@ -1009,7 +1009,7 @@ class zenTrack extends zen {
    
    function add_user( $params ) {
       // creates a new user entry in the db
-      // if $params["access"] is an array
+      // if $params["accessLevel"] is an array
       // then it will also run add_access()
       // with this array once the user has
       // been created
@@ -1019,48 +1019,48 @@ class zenTrack extends zen {
       // to the users last name until that user
       // logs into the system and changes it
       
-      if( $params["access"] ) {
-	 $access = $params["access"];
-	 unset($params["access"]);
+      if( $params["accessLevel"] ) {
+	 $accessLevel = $params["accessLevel"];
+	 unset($params["accessLevel"]);
       }
       $params["passwd"] = ($params["passwd"])?
 	$this->encval($params["passwd"]) : $this->encval($params["lname"]);
       $table = $this->table_users;
       $id = $this->db_insert($table, $params);
       if( $id ) {
-	 if( is_array($access) )
-	   $this->add_access($id, $access);
+	 if( is_array($accessLevel) )
+	   $this->add_access($id, $accessLevel);
 	 return($id);
       }
    }
    
-   function delete_user( $uid ) {
+   function delete_user( $userID ) {
       // deletes a user from the db by the
       // user's id.  also deletes all access
       // and prefs entries for this user
-      // $uid can be an array
+      // $userID can be an array
       
-      $where = (is_array($uid))? " uid IN(".join(",",$uid).")" : " uid = $uid";
+      $where = (is_array($userID))? " userID IN(".join(",",$userID).")" : " userID = $userID";
       $query = "DELETE FROM ".$this->table_users." WHERE $where";
       $this->addDebug("delete_user()Query",$query,2);
-      $this->delete_access($uid);
+      $this->delete_access($userID);
       return( $this->db_result($query) );
    }
    
-   function update_user( $uid, $params ) {
-     // updates user settings by uid
+   function update_user( $userID, $params ) {
+     // updates user settings by userID
      // do not encrypt the password, this is done
      // automatically
       
       if( $params["passwd"] )
 	$params["passwd"] = $this->encval($params["passwd"]);
       $set = $this->makeInsertVals($params,1);
-      $query = "UPDATE ".$this->table_users." SET $set WHERE uid = $uid";
+      $query = "UPDATE ".$this->table_users." SET $set WHERE userID = $userID";
       $this->addDebug("update_user()Query",$query,2);
       return( $this->db_result($query) );
    }
    
-   function add_access( $uid, $params ) {
+   function add_access( $userID, $params ) {
       // adds new access parameters for the 
       // given user, ignores ones that 
       // currently exist for that user
@@ -1068,7 +1068,7 @@ class zenTrack extends zen {
       //   "binID" => level (integer)
 
       foreach($params as $k=>$v) {
-	 $query = "INSERT INTO ".$this->table_access." (userID,binID,lvl) VALUES($uid,$k,$v)";
+	 $query = "INSERT INTO ".$this->table_access." (userID,binID,lvl) VALUES($userID,$k,$v)";
 	 $res = $this->db_result($query);
 	 if( $res )
 	   $i++;
@@ -1076,26 +1076,26 @@ class zenTrack extends zen {
       return($i);
    }
    
-   function update_access( $uid, $params ) {
+   function update_access( $userID, $params ) {
       // deletes the users old access privileges 
       // and replaces them with the ones given in 
-      // $params, $uid is the userID
+      // $params, $userID is the userID
       
-      $this->delete_access( $uid );
-      return( $this->add_access($uid, $params) );
+      $this->delete_access( $userID );
+      return( $this->add_access($userID, $params) );
    }
    
    function delete_access( $id, $flag = '' ) {
       // deletes access privedges based on $flag
       //   NULL - by userID
       //   1    - by binID
-      //   2    - by aid
+      //   2    - by accessID
       // $id can be an array
       
       if( $flag == 1 )
 	$field = "binID";
       else if( $flag == 2 )
-	$field = "aid";
+	$field = "accessID";
       else
 	$field = "userID";
       $where = (is_array($id))?
@@ -1106,30 +1106,30 @@ class zenTrack extends zen {
       return( $this->db_result($query) );
    }
    
-   function add_prefs( $uid, $params ) {
-      // adds prefs for a uid
+   function add_prefs( $userID, $params ) {
+      // adds prefs for a userID
 
-      $params["userID"] = $uid;
+      $params["userID"] = $userID;
       list($cols,$vals) = $this->makeInsertVals($params);
       $query = "REPLACE INTO ".$this->table_preferences." ($cols) values($vals)";
       return( $this->db_result($query) );
    }
       
-   function delete_prefs( $uid ) {
-      // deletes prefs entries by uid
-      // uid can be an array      
+   function delete_prefs( $userID ) {
+      // deletes prefs entries by userID
+      // userID can be an array      
 
-      $query = "DELETE FROM ".$this->table_preferences." WHERE userID = $uid";
+      $query = "DELETE FROM ".$this->table_preferences." WHERE userID = $userID";
       return( $this->db_result($query) );
    }
 
-   function reset_password( $uid ) {
+   function reset_password( $userID ) {
      // resets the users password to the default value
      // for a user.  This will probably be the users last name
 
-     $user = $this->get_user($uid);
+     $user = $this->get_user($userID);
      $params["passwd"] = $user["lname"];
-     return $this->update_user($uid, $params);
+     return $this->update_user($userID, $params);
    }
    
    
@@ -1237,22 +1237,22 @@ class zenTrack extends zen {
    
    function login_user( $username, $password ) {
       // perform a login check for username and password
-      // returns the user's uid
+      // returns the user's userID
       
-      $query = "select uid from ".$this->table_users
+      $query = "select userID from ".$this->table_users
 	." where login = '$username' and passwd = '".$this->encval($password)."' and active > 0";
-      $uid = $this->db_get($query);
-      if( $uid )
-	$this->getUser($uid);
-      return($uid);
+      $userID = $this->db_get($query);
+      if( $userID )
+	$this->getUser($userID);
+      return($userID);
    }
 
-   function check_bin_access( $uid, $binID, $level = 1 ) {
+   function check_bin_access( $userID, $binID, $level = 1 ) {
      // check the user's access priviledges for the given binID
-     // based on the users uid. and $level (returns true
+     // based on the users userID. and $level (returns true
      // if equal to or greater than this)
      
-     $access =  $this->getAccess( $uid );
+     $access =  $this->getAccess( $userID );
      return( ($access["$binID"] >= $level) );
    }
    
@@ -1320,12 +1320,12 @@ class zenTrack extends zen {
       return( $this->db_queryIndexed($query) );
    }
    
-   function format_name( $uid, $flag = '' ) {
+   function format_name( $userID, $flag = '' ) {
       // alias for formatName()      
-      return($this->formatName($uid, $flag));
+      return($this->formatName($userID, $flag));
    }
    
-   function formatName( $uid, $flag = '' ) {
+   function formatName( $userID, $flag = '' ) {
       // if the user properties are available, pass those here
       // otherwise pass the user id, and he/she will be retrieved
       // from the db (user properties can be passed as an array in
@@ -1334,10 +1334,10 @@ class zenTrack extends zen {
       // if $flag = 1, then returns "lname, fname"
       // if !$flag, then returns "fname lname"
       
-      if( is_array($uid) )
-	$user = $uid;
+      if( is_array($userID) )
+	$user = $userID;
       else
-	$user = $this->get_user($uid);
+	$user = $this->get_user($userID);
       
       if( !is_array($user) )
 	return( $this->settings["bot_name"] );
@@ -1462,9 +1462,9 @@ class zenTrack extends zen {
       
    function sendEmail( $recipients, $subject, $message, $sender = '', $cc = '' ) {
       // send email updates to $recipients
-      // $recipients and $sender are the uid of the sender and recipient
+      // $recipients and $sender are the userID of the sender and recipient
       // alternately, $recipients can contain valid email addresses rather 
-      // than a uid value (to send to non-zentrack users)
+      // than a userID value (to send to non-zentrack users)
       // $recipients, $sender, and $cc can all be an array
       
       // figure out who sent it
@@ -1689,48 +1689,48 @@ class zenTrack extends zen {
    */
    
    
-   function getUser( $uid ) {
+   function getUser( $userID ) {
       // retrieves the user who is logged in 
       // to zenTrack.  This function prevents 
       // multiple queries to retrieve user info
       // on a single page by checking the stored
-      // user information and validating the uid
+      // user information and validating the userID
       // first.
       // 
       // Do not use this function for any data other
       // than that of the logged in system user
       
-      if( !$this->user || $this->user["uid"] != $uid ) {
-	 $this->user = $this->get_user($uid);
+      if( !$this->user || $this->user["userID"] != $userID ) {
+	 $this->user = $this->get_user($userID);
       }
       return( $this->user );
    }
    
-   function getAccess( $uid ) {
-      if( !$this->access || $this->access["userID"] != $uid ) {
-	 $this->access = $this->get_access($uid);
-	 $this->access["userID"] = $uid;
+   function getAccess( $userID ) {
+      if( !$this->access || $this->access["userID"] != $userID ) {
+	 $this->access = $this->get_access($userID);
+	 $this->access["userID"] = $userID;
       }
       return( $this->access );
    }
 
-   function getUsersBins( $uid, $level = "level_view" ) {
+   function getUsersBins( $userID, $level = "level_view" ) {
      // gets the users bins, compares those to the
      // settings required to access $this->bins and 
      // then checks against the users default level to
      // return a simple list of binIDs that this user
      // has access to
-     // $uid is the user's id
+     // $userID is the user's id
      // $level is the access level to meet
      // (i.e. could be set to level_user to only
-     // retrieve bins this uid is a "user" for,
+     // retrieve bins this userID is a "user" for,
      // defaults to level_view)
      // this function caches results for efficiency, so repeating
      // calls for the same user will not result slow the system
 
-     if( $uid != $this->lastUsersID || !is_array($this->lastUsersBins) ) {
-       $access = $this->getAccess($uid);
-       $user   = $this->getUser($uid);
+     if( $userID != $this->lastUsersID || !is_array($this->lastUsersBins) ) {
+       $access = $this->getAccess($userID);
+       $user   = $this->getUser($userID);
        if( is_array($this->bins) ) {
 	 foreach($this->bins as $k=>$v) {
 	   if( $k ) {
@@ -1739,7 +1739,7 @@ class zenTrack extends zen {
 		 $vars[] = $k;
 	       }
 	     } else {
-	       if( $user["access"] >= $this->settings["$level"] ) {
+	       if( $user["accessLevel"] >= $this->settings["$level"] ) {
 		 $vars[] = $k;
 	       }
 	     }
@@ -1753,7 +1753,7 @@ class zenTrack extends zen {
      return $this->lastUsersBins;
    }
    
-   function checkAccess( $uid, $binID, $action = '' ) {
+   function checkAccess( $userID, $binID, $action = '' ) {
       // takes the userID, the binID and the action in
       // question, and determines whether the logged in
       // user can perform it
@@ -1777,12 +1777,12 @@ class zenTrack extends zen {
 	 $level = ($this->settings["$action"])? 
 	    $this->settings["$action"] : $this->settings["level_view"];
       }
-      $access = $this->getAccess($uid);
+      $access = $this->getAccess($userID);
       if( strlen($access["$binID"]) ) {
 	 return( $access["$binID"] >= $level );
       } else {
-	 $user = $this->getUser($uid);
-	 return( $user["access"] >= $level );
+	 $user = $this->getUser($userID);
+	 return( $user["accessLevel"] >= $level );
       }
    }
    
@@ -1846,7 +1846,7 @@ class zenTrack extends zen {
 	 if( $ticket["userID"] != $userID ) {
 	    if( !$c[3] 
 	       || ( strlen($access["$binID"]) && $access["binID"] < $this->settings["level_super"] )
-	       || ( !strlen($access["$binID"]) && $user["access"] < $this->settings["level_super"])
+	       || ( !strlen($access["$binID"]) && $user["accessLevel"] < $this->settings["level_super"])
 	       )
 	       return false;
 	 }
@@ -2120,6 +2120,12 @@ class zenTrack extends zen {
       // if $language is given, it will override the value
       // from the configVars file
       
+     // the root includes folder
+     global $libDir;
+     $this->libDir = $libDir;
+
+
+
       include("$file");
       
       $this->zen();
@@ -2139,8 +2145,8 @@ class zenTrack extends zen {
       $this->tasks       = $this->getTasks();
       
       if( $user ) {
-	 $this->user = $this->get_user($uid);
-	 $this->access = $this->get_access($uid);
+	 $this->user = $this->get_user($userID);
+	 $this->access = $this->get_access($userID);
       }
       if( $language )
 	$this->language = $language;
@@ -2152,7 +2158,7 @@ class zenTrack extends zen {
    */     
    
    
-   function report_user( $uid, $start = '', $end = '' ) {
+   function report_user( $userID, $start = '', $end = '' ) {
       // will fetch all tickets assigned to this user
       // all actions conducted by this user, and 
       // calculate summary report as well

@@ -18,7 +18,7 @@
   */
   $user_fields = array(
 		       "login"    =>   "alphanum",
-		       "access"   =>   "int",
+		       "accessLevel"   =>   "int",
 		       "lname"    =>   "text",
 		       "fname"    =>   "text",
 		       "initials" =>   "alphanum",

@@ -3,12 +3,12 @@
 --
 
 CREATE TABLE ZENTRACK_ACCESS (
-  aid number(12),
+  accessID number(12),
   userID number(12) default NULL,
   binID number(12) default NULL,
   lvl   number(2) default NULL,
   role varchar2(25) default NULL,
-  CONSTRAINT access_pk PRIMARY KEY (aid)
+  CONSTRAINT access_pk PRIMARY KEY (accessID)
 ) ;
 
 --

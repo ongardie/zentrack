@@ -30,9 +30,9 @@
      print "<a href='$rootUrl/phpinfo.php'>phpinfo</a><br>\n";
      print "$HTTP_USER_AGENT<br>\n";
      print "page_browser: $page_browser<br>\n";
-     print "bid: $bid<br>\n";
+     print "binID: $binID<br>\n";
      print "id: $id<br>\n";
-     print "uid: $uid<br>\n";
+     print "userID: $userID<br>\n";
      print "databaseConnection: ".$zen->db_link."<br>\n";
      print "settings count: ".count($zen->settings)."<br>\n";
      print "bins: ".join(",",$zen->bins)."<br>\n";

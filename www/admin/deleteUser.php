@@ -9,17 +9,17 @@
   
   include("./admin_header.php");
 
-  if( $uid == 1 ) {
+  if( $userID == 1 ) {
     $errs[] = "The root administrator account cannot be deleted";
   } else {
     if( $zen->demo_mode == "on" ) {
       $msg = "The action completed successfully.  The account was not actually deleted, because this is a demo site";
     } else {
-      $res = $zen->delete_user($uid);
+      $res = $zen->delete_user($userID);
       if( !$res ) {
-	$errs[] = "The account ($uid) could not be found/deleted successfully";
+	$errs[] = "The account ($userID) could not be found/deleted successfully";
       } else {
-	$msg = "The account($uid) was successfully removed";
+	$msg = "The account($userID) was successfully removed";
       }
     }
   }

@@ -14,7 +14,7 @@
      foreach($userBins as $k=>$b) {
 	$vars = $zen->get_users($k);
 	for( $i=0;$i<count($vars);$i++ ) {
-	   $n = $vars[$i]["uid"];
+	   $n = $vars[$i]["userID"];
 	   $users["$n"] = $vars[$i];
 	}
      }  

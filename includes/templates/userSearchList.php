@@ -65,7 +65,7 @@ if( is_array($users) && count($users) ) {
 
 	<tr style="background:<?=$row?>;color:<?=$text?>">
 	<td height="25" valign="middle">
-	  <?=$u["uid"]?>
+	  <?=$u["userID"]?>
 	</td>
 	<td height="25" valign="middle">
 	  <?=$name?>
@@ -74,7 +74,7 @@ if( is_array($users) && count($users) ) {
 	  <?=$inits?>
         </td>
 	<td height="25" valign="middle">
-	  <?=$u["access"]?>
+	  <?=$u["accessLevel"]?>
         </td>
 	<td height="25" valign="middle">
 	  <?=$u["email"]?>
@@ -87,16 +87,16 @@ if( is_array($users) && count($users) ) {
         </td>	
 	<td <?=($u["notes"])? "rowspan='2'" : ""?> valign="middle">
 	  <span class="small">
-	  [<a href='<?=$elnk?>?uid=<?=$u["uid"]?>'>EDIT</a>]
+	  [<a href='<?=$elnk?>?userID=<?=$u["userID"]?>'>EDIT</a>]
 	  <br>
-	  [<a href='<?=$alnk?>?uid=<?=$u["uid"]?>'>ACCESS</a>]
+	  [<a href='<?=$alnk?>?userID=<?=$u["userID"]?>'>ACCESS</a>]
 	  <br>
-          [<a href='<?=$plnk?>?uid=<?=$u["uid"]?>'
-	   onClick='return confirm("RESET THE PASSWORD for user <?=$u["uid"]?>?");'
+          [<a href='<?=$plnk?>?userID=<?=$u["userID"]?>'
+	   onClick='return confirm("RESET THE PASSWORD for user <?=$u["userID"]?>?");'
            >PASSWORD</a>]
 	  <br>
-          [<a href='<?=$dlnk?>?uid=<?=$u["uid"]?>'
-	   onClick='return confirm("PERMANENTLY remove user <?=$u["uid"]?>?");'
+          [<a href='<?=$dlnk?>?userID=<?=$u["userID"]?>'
+	   onClick='return confirm("PERMANENTLY remove user <?=$u["userID"]?>?");'
            ><span class='error'>DELETE</span></a>]
         </td>
         </tr>

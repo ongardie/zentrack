@@ -16,8 +16,8 @@
       $errs[] = ucfirst($u)." is required";
     }
   }
-  if( !$access ) {
-    $access = 0;
+  if( !$accessLevel ) {
+    $accessLevel = 0;
   }
 
   if( !$errs ) {
@@ -29,11 +29,11 @@
     if( $zen->demo_mode == "on" ) {
       $msg = "Process completed successfully.  Account not added, because this is a demo site";
     } else {
-      $uid = $zen->add_user($params);
-      if( $uid ) {
-	$msg = "New user #$uid was added successfully."
-	  ."<br><a href='$rootUrl/admin/access.php?uid=$uid'>Click Here</a> "
-	  ." to customize user $uid's access permissions.";
+      $userID = $zen->add_user($params);
+      if( $userID ) {
+	$msg = "New user #$userID was added successfully."
+	  ."<br><a href='$rootUrl/admin/access.php?userID=$userID'>Click Here</a> "
+	  ." to customize user $userID's access permissions.";
       } else {
 	$errs[] = "System Error: Could not add $lname, $fname to the system";
       }
