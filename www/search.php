@@ -15,7 +15,9 @@
   $expand_search = 1;
   include("$libDir/nav.php");
 
-  print "This will be a search page to filter ticket results.";
+  ?>
+  Search page
+  <?
 
   include("$libDir/footer.php");
 ?>
