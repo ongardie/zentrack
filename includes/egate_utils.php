@@ -472,11 +472,11 @@
    * @param object $params the object obtained from decode_contents()
    * @return integer ticket id or 0 if failed
    */
-  function create_new_ticket($user_id, $name, $email, $body, $params) {
+  function create_new_ticket($user_id, $name, $email, $body) {
     global $zen;
     global $egate_user;
     $vals = array("creator_id"=>$user_id);
-    $fullname = ($name)? "$name <$email>" : $email;
+    $fullname = ($name)? "\"$name\" <$email>" : $email;
     // here we run through all the body elements
     // and prepare the results
     foreach($body as $k=>$v) {
@@ -497,7 +497,7 @@
 	break;
       case "owner":
 	{
-	  if( strtolower($v) == "me" ) {
+	  if( strtolower($v) == "me" || strtolower($v) == "myself" ) {
 	    $vals["user_id"] = find_user_id($name,$email);
 	  }
 	  else if( preg_match("/^[0-9]+$/", $v) ) {
@@ -547,8 +547,8 @@
       }      
     }
     // include the proper template
-    egate_store_subject("Create New Ticket");
-    egate_store_template("create.template");
+    //egate_store_subject("Create New Ticket");
+    //egate_store_template("create.template");
 
     // check required fields
     $success = true;
@@ -560,7 +560,7 @@
 		   "type_id",
 		   "system_id",
 		   "creator_id"
-		   );    
+		   );
     foreach($required as $r) {
       if( !isset($vals[$r]) || !$vals[$r] ) {
 	$success = false;
@@ -573,6 +573,12 @@
       $id = $zen->add_ticket($vals,$notes);
       if( $id ) {
 	egate_log("Ticket created with id #$id",3);
+	// add user to notify list if they create
+	// a ticket through the egate system
+	// and default_notify_creator == "on"
+	if( $user_id == $egate_user["user_id"] && $zen->settings["default_notify_creator"] == "on" ) {
+	  $zen->add_to_notify_list( $id, array("name"=>$name,"email"=>$email) );
+	}
 	return $id;
       }
       else {
@@ -779,7 +785,7 @@
       $body["details"] = "";
     
     // format a name entry for logging
-    $fullname = ($name)? "$name <$email>" : $email;
+    $fullname = ($name)? "\"$name\" <$email>" : $email;
 
     // take an appropriate ticket action
     switch( $action ) {
@@ -866,9 +872,11 @@
     case "create":
       {
 	// create a new ticket
-	$res = create_new_ticket($user_id,$name,$email,$body,$params);
+	$res = create_new_ticket($user_id,$name,$email,$body);
 	if( !$res )
 	  $success = false;
+	else
+	  $success = $res;
 	break;
       }
     case "view":
@@ -1145,6 +1153,90 @@
   }
 
   /**
+   * process raw message and create new ticket from contents
+   *
+   * @param string $input is the raw message data
+   * @return boolen succeeded
+   */
+  function create_ticket_from_message($input) {
+    // process the input data and return results
+    $success = true;
+    global $zen;
+    global $egate_user;
+    global $egate_default_options;
+
+    // decode the data
+    $params = decode_contents($input);
+    
+    // validate the data
+    if( !validate_params($params) ) { egate_log_write(); return false; }
+
+    // create the body elements
+    $body = $egate_default_options;
+    $body["title"] = $params->headers["subject"];
+    $body["details"] = trim($params->body);
+    $body["creator_id"] = $egate_user["user_id"];
+    list($name,$email) = get_name_and_email($params);
+    $user_id = find_user_id($name,$email);
+
+    // don't process tickets with no return address
+    if( !$email ) {
+      egate_log("No return email address",2);
+      $success = false;
+    }
+    
+    // create the ticket
+    if( $success ) {    
+      $id = create_new_ticket($user_id,$name,$email,$body);
+    }
+
+    // todo: send a reply email
+    $rec = array(array("name"=>$name,"email"=>$email));
+    $rep = send_reply_mail( $rec, $id, $success, "new ticket" );
+    if( !$rep ) {
+      egate_log("reply email failed to $name <$email>",2);
+    }
+
+    // close up shop
+    egate_log_write();
+    return $success;
+  }
+
+  /**
+   * parse out the user's email address and name
+   *
+   * @param $params is the output from decode_contents()
+   * @return array (name,email)
+   */
+  function get_name_and_email($params) {
+    // initialize
+    $name = "";
+    $email = "";
+    
+    // set up the return email address
+    // and the user's name, if it can be found
+    $email = $params->headers["reply-to"]? 
+      trim($params->headers["reply-to"]) : trim($params->headers["from"]);
+    if( preg_match("/([^<]*)<([a-zA-Z0-9_@.-]+)>/", $email, $matches) ) {
+      $name = trim($matches[1]);
+      $email = trim($matches[2]);
+    }
+    if( !$name ) {
+      if( preg_match("/([^<]*)<([a-zA-Z0-9_@.-]+)>/", 
+		     $params->headers["from"], 
+		     $matches) ) {
+	$name = trim($matches[1]);
+      }
+      else {
+	$name = "unknown";
+      }
+    }
+    $name = preg_replace('/["\'<>]/',"",$name);
+    $email = preg_replace('/["\'<>]/',"",$email);
+    return array($name,$email);
+  }
+  
+  /**
    * process raw message and take appropriate actions 
    *
    * @param string $input is the raw message data
@@ -1156,7 +1248,7 @@
     global $valid_actions;
     global $zen;
     global $egate_user;
-    
+
     // check for input
     if( $input == "" ) {
       egate_log("input stream was empty",2);
@@ -1179,27 +1271,7 @@
     // retrieve the contents from the body
     // of the email
     $body = parse_message_body($params->body);
-
-    // set up the return email address
-    // and the user's name, if it can be found
-    $email = $params->headers["reply-to"]? 
-      trim($params->headers["reply-to"]) : trim($params->headers["from"]);
-    if( preg_match("/([^<]*)<([a-zA-Z0-9_@.-]+)>/", $email, $matches) ) {
-      $name = trim($matches[1]);
-      $email = trim($matches[2]);
-    }
-    if( !$name ) {
-      if( preg_match("/([^<]*)<([a-zA-Z0-9_@.-]+)>/", 
-		     $params->headers["from"], 
-		     $matches) ) {
-	$name = trim($matches[1]);
-      }
-      else {
-	$name = "unknown";
-      }
-    }
-    $name = preg_replace('/["\'<>]/',"",$name);
-    $email = preg_replace('/["\'<>]/',"",$email);
+    list($name,$email) = parse_name_and_email($params);
 
     // don't process tickets with no return address
     if( !$email ) {
@@ -1210,7 +1282,6 @@
     if( $success ) {
       // peform the action
       $success = perform_ticket_action($name,$email,$action,$ticket,$body,$params);
-
     }
 
     // todo: send a reply email
@@ -1272,7 +1343,7 @@
       $temp->values($vals);
       $txt .= $temp->process();
 
-      if( $id > 0 && !in_array($action,array("help","template","create")) ) {
+      if( $id > 0 && !in_array($action,array("help","template")) ) {
 	// create reply
 	$temp = new zenTemplate("$libDir/templates/email/reply.template");
 	$temp->values($vals);

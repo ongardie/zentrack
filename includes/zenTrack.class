@@ -1346,7 +1346,6 @@ class zenTrack extends zen {
       }
       // the ticket creator
       if( $this->settings["default_notify_creator"] == "on" ) {
-        // make sure we don't add the egate user
         $notify_list[]["user_id"] = $params["creator_id"];
       }
       // the ticket owner

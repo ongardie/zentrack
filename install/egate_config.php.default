@@ -35,9 +35,25 @@
   $egate_account = "egate";
   
   /*
-  **  IF USING THE PIPE TO EGATE OPTION, you are done
+  ** DEFAULT NEW TICKET PROPERTIES
   **
-  **  IF CHECKING A POP MAIL BOX, configure the rest of these
+  ** These are used by the egate_create.php and egate_check_create.php scripts.
+  **
+  ** If you are using these scripts, set the values below, otherwise, you may skip these.
+  */
+  $egate_default_options = array(
+				 "Type"              => "Support Request",
+				 "Bin"               => "Tech Support",
+				 "Priority"          => "None",
+				 "System"            => "Website",
+				 "Testing Required"  => 0,      //0=no, 1=yes
+				 "Approval Required" => 0       //0=no, 1=yes
+				 );
+  
+  /*
+  **  IF USING A PIPE FROM THE MAIL SERVER, you are done
+  **
+  **  IF CHECKING A POP MAIL BOX, configure the settings below
   */
   
   // use an ip address, 
