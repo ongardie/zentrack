@@ -1074,7 +1074,7 @@
 	    // nobody was found to remove
 	    egate_log("No recipients were found to remove from $id notify list",2);
 	    $success = false;
-	  }	  
+	  }
 	}
 	break;
       }
@@ -1090,7 +1090,7 @@
 	if( $body["details"] ) {
 	  $res = $zen->reject_ticket($id,$user_id,$body["details"]);
 	  if( $res ) {
-	    egate_log("Rejected to sender",3);	    
+	    egate_log("Rejected to sender",3);
 	  }
 	  else {
 	    egate_log("Could not reject ticket",2);
@@ -1099,7 +1099,7 @@
 	}
 	else {
 	  egate_log("You must provide a reason when rejecting a ticket",2);
-	  $success = false;	  
+	  $success = false;
 	}
 	break;
       }
@@ -1382,10 +1382,15 @@
       $i=0;
       $from = $egate_user["email"];
       foreach($recipients as $r) {
-	$to = ($r["name"])? "\"{$r['name']}\" <{$r['email']}>" : $r['email'];
-	$res = mail($to,$subject,$txt,"From:$from\r\nReply-to:$from\r\n");
-	if( $res )
-	  $i++;
+	if( strlen($r) ) {
+	  $to = ($r["name"])? "\"{$r['name']}\" <{$r['email']}>" : $r['email'];
+	  $res = mail($to,$subject,$txt,"From:$from\r\nReply-to:$from\r\n");
+	  if( $res )
+	    $i++;
+	}
+	else {
+	  egate_log("return recipient was blank, skipping reply email");
+	}
       }
       return $i;
     }

@@ -764,7 +764,7 @@ class zenTrack extends zen {
         $logParams["entry"] = htmlentities($comments);   
       $res = $this->add_log($id, $logParams);
     }
-    if( $res && $this->settings["email_assign"] == "on" ) {
+    if( $res && $this->settings["email_accept"] == "on" ) {
       $recipients = $this->get_notify_recipients($id);
       if( is_array($recipients) && count($recipients) ) {
         $subject = $this->ptrans("ticket #?: accepted by ?",array($id,$name));
@@ -810,6 +810,10 @@ class zenTrack extends zen {
     }
     else if( $this->settings["email_pending"] == "on" ) {
       $recipients = $this->get_notify_recipients($id);
+      // make sure testers get notification      
+      $vals = $this->get_bin_roles($t['bin_id'], $this->getRoleId("tester"));
+      $this->checkIncludedRecipients($recipients,$vals);
+      // create email
       if( is_array($recipients) && count($recipients) ) {
         $bin = $t["bin_id"];
         $subject = $this->ptrans("Ticket #?: closed",array($id));
@@ -866,6 +870,9 @@ class zenTrack extends zen {
     }
     if( $res && $this->settings["email_assign"] == "on" ) {
       $recipients = $this->get_notify_recipients($id);
+      // make sure the assignee gets a notification
+      $this->checkIncludedRecipients($recipients,$recipient);
+      // create email
       if( is_array($recipients) && count($recipients) ) {
         if( !$name )
           $name = $this->formatName($recipient,1);
@@ -957,6 +964,10 @@ class zenTrack extends zen {
       if( $this->settings["email_closed"] == "on" ) {
 	// send email
 	$recipients = $this->get_notify_recipients($id);
+        // make sure the manager gets a notification
+        $vals = $this->get_bin_roles($t['bin_id'],$this->getRoleId('manager'));
+        $this->checkIncludedRecipients($recipients,$vals);
+        // create email
 	if( is_array($recipients) && count($recipients) ) {
 	  $bin = $t["bin_id"];
 	  $subject = $this->ptrans("Ticket #?: closed",array($id));
@@ -996,6 +1007,15 @@ class zenTrack extends zen {
       if( $this->settings["email_pending"] == "on" ) {
 	// send an email
 	$recipients = $this->get_notify_recipients($id);
+        // make sure the testers/managers gets a notification
+        if( $t['tested'] == 1 ) {
+          $vals = $this->get_bin_roles($t['bin_id'], $this->getBinId('tester'));
+        }
+        if( $t['tested'] != 1 || !is_array($vals) ) {
+          $vals = $this->get_bin_roles($t['bin_id'], $this->getBinId('manager'));
+        }        
+        $this->checkIncludedRecipients($recipients, $vals);
+        // create email
 	if( is_array($recipients) && count($recipients) ) {
 	  $bin = $t["bin_id"];
 	  $subject = $this->ptrans("Ticket #?: closed",array($id));
@@ -1068,6 +1088,10 @@ class zenTrack extends zen {
     }
     if( $res && $this->settings["email_arrival"] == "on" ) {
       $recipients = $this->get_notify_recipients($id);
+      // make sure the manager gets a notification
+      $vals = $this->get_bin_roles($t['bin_id'], $this->getBinId('manager'));
+      $this->checkIncludedRecipients($recipients,$vals);
+      // create email
       if( is_array($recipients) && count($recipients) ) {
         $eParams = array(
                          "From" => $this->bins["$t[bin_id]"], 
@@ -1103,6 +1127,8 @@ class zenTrack extends zen {
     }
     if( $res && $this->settings["email_reject"] == "on" ) {
       $recipients = $this->get_notify_recipients($id);
+      // make sure the sender gets an email
+      $this->checkIncludedRecipients($recipients,$sender['user_id']);
       if( is_array($recipients) && count($recipients) ) {
         // add the sender if not on notify list
         if( $sender && $sender["user_id"] ) {
@@ -1214,6 +1240,7 @@ class zenTrack extends zen {
     if( $res && ($this->settings["email_created"] == "on" 
                  || $this->settings["email_arrival"] == "on")  ) {
       $recipients = $this->get_notify_recipients($id);
+      $this->checkIncludedRecipients($recipients,$t['user_id']);
       if( is_array($recipients) && count($recipients) ) {
         $subject = $this->ptrans("Ticket #?: reopened",array($id));
         $eParams = array(
@@ -1256,6 +1283,10 @@ class zenTrack extends zen {
     else if( $this->settings["email_pending"] == "on" ) {
       $bin = $t["bin_id"];
       $recipients = $this->get_notify_recipients($id);
+      // make sure the testers/managers gets a notification
+      $vals = $this->get_bin_roles($t['bin_id'], $this->getBinId('manager'));
+      $this->checkIncludedRecipients($recipients,$vals);
+      // create email
       if( is_array($recipients) ) {
         $subject = $this->ptrans("Ticket #?: closed",array($id));
         $emailParams["Close Time"] = $this->showDateTime($this->currTime);
@@ -1289,6 +1320,7 @@ class zenTrack extends zen {
       }
       if( $this->settings["email_assign"] == "on" ) {
         $recipients = $this->get_notify_recipients($id);
+        $this->checkIncludedRecipients($recipients,$t['user_id']);
         $name = $this->formatName($user_id);
         if( is_array($recipients) && count($recipients) ) {
           $subject = $this->ptrans("Ticket #?: yanked by ?",array($id,$name));
@@ -1372,6 +1404,7 @@ class zenTrack extends zen {
         $bin = $t["bin_id"];
         // set the recipient list
         $recipients = $this->get_notify_recipients($id);
+        $this->checkIncludedRecipients($recipients,$params['user_id']);
         if( is_array($recipients) && count($recipients) ) {
           $recipient = array_unique($recipients);
           $subject = $this->ptrans("Ticket #?: created",array($id));
@@ -1899,6 +1932,31 @@ class zenTrack extends zen {
    *  TOOLS 
    */   
 
+  /**
+   * insures that members are included in a recipient list
+   *
+   * @param array $recipients the list to be added to
+   * @param array $vals the list to insert if missing
+   * @return array complete list
+   */
+  function checkIncludedRecipients( &$recipients, $vals ) {
+    if( !is_array($recipients) && $vals ) {
+      $recipients = is_array($vals)? $vals : array($vals);
+    }
+    else if( is_array($vals) ) {
+      foreach($vals as $v) {
+        if( !in_array($v,$recipients) ) {
+          $recipients[] = $v;
+        }
+      }
+    }
+    else if( $vals ) {
+      if( !in_array($vals,$recipients) ) {
+        $recipients[] = $vals;
+      }
+    }
+  }
+
   function check_status( $id, $code = 'OPEN' ) {
     // checks to see if a ticket is ready for the 
     // given action, the $code codes are:
@@ -2171,16 +2229,18 @@ class zenTrack extends zen {
     if( !is_array($recipients) )
       $recipients = array($recipients);
     foreach($recipients as $r) {      
-      if( $recipient_address )
-	$recipient_address .= ", ";
-      if( eregi("^[0-9]+$", $r) ) {
-	$s = $this->get_user($r);
-	if( $s["email"] ) {
-	  $recipient_address .= $s["email"];
-	}
-      } else {
-	$recipient_address .= $r;
-      }  
+      if( strlen($r) ) {
+        if( $recipient_address )
+          $recipient_address .= ", ";
+        if( eregi("^[0-9]+$", $r) ) {
+          $s = $this->get_user($r);
+          if( $s["email"] ) {
+            $recipient_address .= $s["email"];
+          }
+        } else {
+          $recipient_address .= $r;
+        }
+      }
     }
     
     if( strlen($recipient_address) ) {
