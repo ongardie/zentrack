@@ -3,12 +3,11 @@
          $llnk="$rootUrl/admin/editGroupDetails.php";
 ?>
       <br>
-      <p class='error'><?=tr("This screen will let you list, add, edit and delete data groups.") . '  '
-          .tr("Please refer to documentation.")?></p>
+      <p class='error'><?=tr("Edit existing groups or create a new group.")?></p>
       <ul>
       <form name='groupForm' action='<?=$elnk?>' method='post'>
       <input type='hidden' name='TODO' value=''>
-      <table cellpadding="2" cellspacing="1" class='plainCell'>
+      <table cellpadding="4" cellspacing="1" class='cell'>
 	 <tr>
 	 <td class='titleCell' align='center' colspan='5'>
 	   <b>Edit the Data Groups</b>

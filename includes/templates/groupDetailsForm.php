@@ -1,6 +1,5 @@
       <br>
-      <p class='error'><?=tr("This screen will let you list, add, edit and delete data group details.") . '  '
-          .tr("Please refer to documentation.")?></p>
+      <p class='error'><?=tr("Select the items that will appear in this group and their order.")?></p>
       <ul>
       <form name='groupDetailsForm' action='<?=$SCRIPT_NAME?>' method='post'>
       <input type='hidden' name='TODO' value=''>
@@ -12,9 +11,9 @@
 	 </td>
 	 </tr>
 	 <tr>
-	 <td width="30" class='cell' align='center'><b>Use in group</b></td>
-	 <td class='cell' align='center'><b>Element</b></td>
-	 <td class='cell' align='center'><b>Sort Order</b></td>
+	 <td width="30" class='cell' align='center'><b>Show</b></td>
+	 <td class='cell' align='center'><b>Item</b></td>
+	 <td class='cell' align='center'><b>Order</b></td>
 	 </tr>
     <? 
 	 if( is_array($elements) ) {

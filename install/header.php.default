@@ -24,18 +24,18 @@
   **
   **  DATABASE SETTINGS
   **
-  **
   **  Valid SQL Types:
   **     mysql
+  **     mssqlpo
   **     oci8po (oracle >= 8i)
   **     postgres (postgres >= 7)
-  **     (see http://php.weblogs.com/ADOdb_manual#drivers for more)
+  **     (see http://phplens.com/lens/adodb/docs-adodb.htm#drivers for more)
   */
   $Db_Type      = "mysql";      //sql type
   $Db_Instance  = "zentrack";   //db name
   $Db_Login     = "test";       //username
   $Db_Pass      = "test";       //password
-  $Db_Host      = "localhost";  //host of database
+  $Db_Host      = "localhost";  //host of database (localhost doesn't work with sqlserver)
 
    // ORACLE USERS! the order of items may be changed
    // it may be that the entry will be:
@@ -70,11 +70,14 @@
   ** the output into any support requests
   **
   */
-  //set this from 0=overview, 1=errors, 2=warnings, 3=notices, null=none
-  $Debug_Mode = 0;  
+  //the overview of system settings, 0=off, 1=on
+  $Debug_Overview = 1;
+
+  //set this from 0=off, 1=errors, 2=warnings, 3=notices(all)
+  $Debug_Mode = 1;  
 
   //set this to "on" prevents users from doing anything you don't
-  //them doing on a demo site
+  //want them doing on a demo site
   $Demo_Mode = "off"; 
   
   /*

@@ -36,7 +36,7 @@
     } else {
       $group_id = $zen->addDataGroup( $NewGroupName, $NewTableName, $NewDescript, array() );
       if( $group_id ) {
-        $msg = tr("Group ? (ID=?) was added successfully. ? to customize group ?'s details.",
+        $msg = tr("Group '?' (ID=?) was added successfully. ? to customize this group's details.",
                              array($NewGroupName, $group_id, "--link--" . tr("Click Here") . "</a>", $NewGroupName));
         $msg = str_replace("--link--", "<br><a href='$rootUrl/admin/editGroupDetails.php?group_id=$group_id'>", $msg);
       } else {

@@ -122,13 +122,19 @@ class DB {
       $id_field = $fields[0];
       $params["$id_field"] = $id;
     }
+    // this allows us to insert the generated id in sql server
+    // see http://msdn.microsoft.com/library/default.asp?url=/library/en-us/tsqlref/ts_set-set_7zas.asp
+    if( !(strpos($this->database_type, 'mssql') === false) ) {
+      $query = "SET IDENTITY_INSERT $table ON";
+      $this->db_result($query);
+    }
     list($cols,$vals) = $this->makeInsertVals($params);
     $query = "INSERT INTO $table ($cols) VALUES($vals)";
     $this->addDebug("db_insert",$query,3);
     $res = $this->db_link->Execute($query);
     if( $res && $this->database_type == "mysql" ) {
       $id = $this->db_insertID();
-    }      
+    }
     if( $res ) {
       return( $id );
     }
@@ -194,10 +200,12 @@ class DB {
     // forget to manually add the id with the insert statement in 
     // this case!
     if( $this->database_type == 'mysql' ) {
-      return( mysql_insert_id() );
+      $id = mysql_insert_id();
     } else {
-      return( $this->db_link->genID($sequence) );
+      $id = $this->db_link->genID($sequence);
     }
+    $this->addDebug("db_insertID", "created: $id", 3);
+    return $id;
   }
    
   function checkSlashes( $val = '' ) {
