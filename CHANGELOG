@@ -17,6 +17,10 @@
   Fix syntax error on ticket closing.
     - zentrack/includes/zenTrack.class
 
+2003-04-21, Kato
+  Fixed save config error
+    - zentrack/includes/templates/configForm.php 1.4
+
 2003-04-21, Rob Hillis
   Rename mis-spelled LISCENCE-GPL-2.0 in install/ directory
     - zentrack/install/LISCENCE-GPL-2.0 <del>
