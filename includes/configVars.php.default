@@ -60,22 +60,25 @@
 
    // ORACLE USERS! the order of items may be changed
    // it may be that the entry will be:
-   //      database_host: serverip:port#
-   //      database_login: scott
-   //      database_pass:  tiger
-   //      database_intance: servicename
+   //      database_host: "serverip:port#"
+   //      database_login: "scott"
+   //      database_pass:  "tiger"
+   //      database_intance: "servicename"
    // or:
    //      database_host: ""
-   //      database_login: scott
-   //      database_pass:  tiger
-   //      database_intance: TNSName (try the TNSname here, then try the whole connection string!)   
-	 // also... you may need to uncomment the following for oracle to work properly:
-	 // the database instance
-   //   putenv("ORACLE_SID=ORACLE");
-   // the oracle installation directory
-   //   putenv("ORACLE_HOME=/opt/oracle/oracle/8.0.3");
-   // the directory of the tnsnames.ora file
-   //   putenv("TNS_ADMIN=/opt/oracle/product/8.1.5/network/admin");
+   //      database_login: "scott"
+   //      database_pass:  "tiger"
+   //      database_intance: "TNSName"
+   // hints for these entries:
+   // - for Oracle 8 and later, use "oci8po" as database_type
+   // - if using an Oracle Names Server, leave database_instance blank and put
+   //   the database alias into database_host
+   // - the same applies if you want to use a whole TNS connection string
+   // - to connect to a local instance, you may leave the database_host blank
+   // also... you may need to uncomment the following for oracle to work properly:
+//   putenv("ORACLE_SID=ORACLE"); // the database instance
+//   putenv("ORACLE_HOME=/opt/oracle/oracle/8.0.3"); // the oracle installation directory
+//   putenv("TNS_ADMIN=/opt/oracle/product/8.1.5/network/admin"); // the directory of the tnsnames.ora file
 
    $this->database_type      = 'mysql';
 	// the database types that can be used here are:
@@ -83,7 +86,11 @@
 	//    oracle
 	//    oci8po (oracle 8i)
 	//    mssql  (Microsoft SQL Server 7/2000)
-	//    for more, see http://php.weblogs.com/ADOdb_manual#drivers
+	//  for more, see http://php.weblogs.com/ADOdb_manual#drivers
+	//  (you may need to create your own includes/misc/*.sql files
+	//  to set up your database structure when using a db other than
+	//  Oracle 8i+ or MySQL. When you succeeded, we would be glad if
+	//  you'ld share these files with us :-)
 
    $this->database_instance  = 'zentrack';	 //database name
    $this->database_login     = 'test';           //database login
