@@ -160,10 +160,10 @@ $ztf = array(
   ),
   
   "views" => array(//           disabled, view_only, has_behaviors, admin_view, multiple, sections
-    "ticket_create"   => array(    false,    false,      true, false, false, false  ), 
-    "project_create"  => array(    false,    false,      true, false, false, false  ),
-    "ticket_edit"     => array(    false,    false,      true, false, false, false  ), 
-    "project_edit"    => array(    false,    false,      true, false, false, false  ),
+    "ticket_create"   => array(    false,    false,      true, false, false, true  ), 
+    "project_create"  => array(    false,    false,      true, false, false, true  ),
+    "ticket_edit"     => array(    false,    false,      true, false, false, true  ), 
+    "project_edit"    => array(    false,    false,      true, false, false, true  ),
     "ticket_list"     => array(    false,     true,     false, false, false, false ),
     "project_list"    => array(    false,     true,     false, false, false, false ),
     "ticket_search"   => array(     true,    false,      true, false, true , true  ),
