@@ -13,6 +13,12 @@ abstraction, and endless possibilities for project expansion.
 
 ----- VERSION 2.5.0.3 (development) -----
 
+2005-03-01, cfalonso
+  Fixed a problem in saving created and edited tickets
+    - zentrack_2/includes/ZenFieldMap.class 1.7
+    - zentrack_2/includes/editTicketSubmit.php 1.14
+    - zentrack_2/www/addSubmit.php 1.24
+
 2005-02-28, kato
   Removed hypot() dependency, since some impls of php seem
   to be missing this function.
