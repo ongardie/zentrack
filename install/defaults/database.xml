@@ -39,7 +39,7 @@
       <columns>
 	<column name="table_name" type="value" ftype="hidden" />
 	<column name="field_name" type="value" ftype="select">
-	  <criteria type="helper">field:table_name</criteria>
+	  <criteria type="helper">field:table_name,field:field_name</criteria>
 	</column>
 	<column name="andor" type="byte" ftype="select" label="Grouping">
 	  <criteria type="standard">grouping</criteria>
@@ -55,10 +55,12 @@
       <description>Includes common index fields for associations</description>
       <columns>
         <column name="user_id" type="integer" ftype="searchbox">
-	  <reference>user.user_id</reference>
+	  <reference>USER.user_id</reference>
+	  <notnull>true</notnull>
 	</column>
         <column name="bin_id" type="integer" ftype="selection">
-	  <reference>bin.bin_id</reference>
+	  <reference>BIN.bin_id</reference>
+	  <notnull>true</notnull>
 	</column>
       </columns>
     </table>
@@ -68,7 +70,8 @@
       <inherit>ABSTRACT_INDEX_BASE</inherit>
       <columns>
         <column name="ticket_id" type="integer" ftype="searchbox">
-	  <reference>ticket.ticket_id</reference>
+	  <reference>TICKET.ticket_id</reference>
+	  <notnull>true</notnull>
 	</column>
       </columns>
     </table>
@@ -85,13 +88,13 @@
       <columns>
         <column name="access_id" type="primarykey" ftype="hidden" />
 	<column name="bin_id" type="integer" ftype="selection">
-	  <reference>bin.bin_id</reference>
+	  <reference>BIN.bin_id</reference>
 	</column>
 	<column name="role_id" type="integer" ftype="selection">
-	  <reference>role.role_id</reference>
+	  <reference>ROLE.role_id</reference>
 	</column>
 	<column name="action_id" type="integer" ftype="selection">
-	  <reference>action.action_id</reference>
+	  <reference>ACTION.action_id</reference>
 	</column>
 	<column name="yesorno" type="byte" ftype="checkbox" label="Active">
 	  <default>1</default>
@@ -191,10 +194,10 @@
       <columns>
         <column name="attachment_id" type="primarykey" ftype="immutable" />
 	<column name="ticket_id" type="integer" ftype="immutable" label="Ticket ID">
-	  <reference>ticket.ticket_id</reference>
+	  <reference>TICKET.ticket_id</reference>
 	</column>
 	<column name="log_id" type="integer" ftype="immutable" label="Log Entry">
-	  <reference>log.log_id</reference>
+	  <reference>LOG.log_id</reference>
 	</column>
 	<column name="file_name" type="value" ftype="immutable" label="File Name" />
 	<column name="file_type" type="value" ftype="immutable" label="File Type" />
@@ -308,11 +311,9 @@
       <inherit>ABSTRACT_DATA_TYPE</inherit>
       <columns>
         <column name="log_id" type="primarykey" ftype="hidden" />
-	<column name="ticket_id" type="integer">
-	  <reference>ticket.ticket_id</reference>
-	</column>
 	<column name="task_id" type="integer" ftype="select">
-	  <reference>task.task_id</reference>
+	  <reference>TASK.task_id</reference>
+	  <notnull>true</notnull>
 	</column>
 	<column name="ctime" type="date" ftype="hidden" />
 	<column name="hours" type="decimal" ftype="text" label="Hours Worked">
@@ -321,7 +322,7 @@
 	<column name="entry" type="text" ftype="textarea" label="Details" />	  
 	<column name="action_id" type="integer">
 	  <default>{action_id}</default>
-	  <reference>action.action_id</reference>
+	  <reference>ACTION.action_id</reference>
 	</column>
         <column name="user_inits" type="string" ftype="hidden">
 	  <description>Initials of person who created entry</description>
@@ -340,13 +341,13 @@
       <columns>
         <column name="notify_id" type="primarykey" ftype="hidden" />
 	<column name="bin_id" type="integer" ftype="hidden">
-	  <reference>bin.bin_id</reference>
+	  <reference>BIN.bin_id</reference>
 	</column>
 	<column name="ticket_id" type="integer" ftype="hidden">
-	  <reference>ticket.ticket_id</reference>
+	  <reference>TICKET.ticket_id</reference>
 	</column>
 	<column name="user_id" type="integer" ftype="searchbox" label="User ID">
-	  <reference>user.user_id</reference>
+	  <reference>USER.user_id</reference>
 	</column>
 	<column name="name" type="string" ftype="text" label="Name">
 	  <size>50</size>
@@ -359,12 +360,24 @@
       </columns>
     </table>
 
+    <table name="OWNER">
+      <description>Map of tickets to their owners</description>
+      <columns>
+        <column name="user_id" type="integer" ftype="immutable">
+	  <reference>USER.user_id</reference>
+	</column>
+	<column name="ticket_id" type="integer" ftype="immutable">
+	  <reference>TICKET.ticket_id</reference>
+	</column>
+      </columns>
+    </table>
+
     <table name="PREFS">
       <description>User Preferences</description>
       <columns>
 	<column name="user_id" type="integer" ftype="hidden">
 	  <default>{login_id}</default>
-	  <reference>user.user_id</reference>
+	  <reference>USER.user_id</reference>
 	</column>
 	<column name="pref_name" type="value" ftype="hidden" />
 	<column name="pref_value" type="string" ftype="hidden" />
@@ -404,7 +417,7 @@
 	</column>
 	<column name="filter_id" type="integer" ftype="select" label="Filter Name">
 	  <criteria type="helper">{login_id},{login_bins}</criteria>
-	  <reference>filter.filter_id</reference>
+	  <reference>FILTER.filter_id</reference>
 	</column>
 	<column name="date_start" type="date" ftype="datebox" label="Start Date">
 	  <description>Leave blank to create a floating range (i.e. from the current date)</description>
@@ -428,7 +441,7 @@
       <description>Data fields to be displayed on report</description>
       <columns>
         <column name="report_id" type="integer" ftype="hidden">
-	  <reference>report.report_id</reference>
+	  <reference>REPORT.report_id</reference>
 	</column>
 	<column name="table_name" type="value" ftype="hidden" />
 	<column name="field_name" type="value" ftype="select" label="Field Name">
@@ -545,30 +558,27 @@
 	<column name="otime" type="date" ftype="immutable" label="Opened" />
 	<column name="ctime" type="date" ftype="immutable" label="Closed" />
 	<column name="stage_id" type="integer" ftype="immutable" label="Status">
-	  <reference>stage.stage_id</reference>
+	  <reference>STAGE.stage_id</reference>
 	</column>
 	<column name="priority_id" type="integer" ftype="select" label="Priority">
 	  <criteria type="helper">{login_id},{type_id}</criteria>
 	  <default>0</default>
-	  <reference>priority.priority_id</reference>
+	  <reference>PRIORITY.priority_id</reference>
 	</column>
 	<column name="bin_id" type="integer" ftype="select">
 	  <criteria type="zenlist">bins</criteria>
-	  <reference>bin.bin_id</reference>
+	  <reference>BIN.bin_id</reference>
 	</column>
 	<column name="type_id" type="integer" ftype="select">
 	  <criteria type="zenlist">types</criteria>
-	  <reference>type.type_id</reference>
+	  <reference>TYPE.type_id</reference>
 	</column>
 	<column name="system_id" type="integer" ftype="select">
 	  <criteria type="zenlist">systems</criteria>
-	  <reference>system.system_id</reference>
-	</column>
-	<column name="user_id" type="integer" ftype="searchbox">
-	  <reference>user.user_id</reference>
+	  <reference>SYSTEM.system_id</reference>
 	</column>
 	<column name="creator_id" type="integer" ftype="immutable">
-	  <reference>user.user_id</reference>
+	  <reference>USER.user_id</reference>
 	</column>
       </columns>
       <customList>
@@ -601,12 +611,12 @@
       <description>Actions trigger activates, and their params</description>
       <columns>
         <column name="trigger_id" type="integer">
-	  <reference>trigger.trigger_id</reference>
+	  <reference>TRIGGER.trigger_id</reference>
 	</column>
 	<column name="action_id" type="integer" ftype="select" label="Action">
   	  <!-- this criteria will probably need to be updated when this is more prepared -->
 	  <criteria type="helper">field:trigger_id,field:action_id</criteria>
-	  <reference>action.action_id</reference>
+	  <reference>ACTION.action_id</reference>
 	</column>
 	<column name="priority" type="smallint" ftype="text" label="Order">
 	  <description>Order that actions will take place</description>
@@ -622,11 +632,11 @@
       <inherit>ABSTRACT_FILTER_TYPE</inherit>
       <columns>
         <column name="trigger_id" type="integer">
-	  <reference>trigger.trigger_id</reference>
+	  <reference>TRIGGER.trigger_id</reference>
 	</column>
       </columns>
       <indexList>
-        <index name="tgrfld_find">table_name,field_name</index>    
+        <index name="trgrfld_find">table_name,field_name</index>   
       </indexList>
     </table>
 
@@ -646,10 +656,10 @@
       <description>The staging order for this ticket type</description>
       <columns>
         <column name="type_id" type="integer">
-	  <reference>type.type_id</reference>
+	  <reference>TYPE.type_id</reference>
 	</column>
 	<column name="stage_id" type="integer" ftype="select" label="Stage">
-	  <reference>stage.stage_id</reference>
+	  <reference>STAGE.stage_id</reference>
 	  <criteria type="zenlist">stages</criteria>
 	</column>
 	<column name="priority" type="smallint" ftype="text" label="Order">
@@ -665,7 +675,7 @@
       <description>fields used in this type</description>
       <columns>
         <column name="type_id" type="integer">
-	  <reference>type.type_id</reference>
+	  <reference>TYPE.type_id</reference>
 	</column>
 	<column name="field_name" type="value" ftype="select" label="Field">
 	  <criteria type="helper">ticket</criteria>
@@ -680,10 +690,10 @@
       <description>Bins used by this type</description>
       <columns>
         <column name="type_id" type="integer">
-	  <reference>type.type_id</reference>
+	  <reference>TYPE.type_id</reference>
 	</column>
         <column name="bin_id" type="integer" ftype="select">
-	  <reference>bin.bin_id</reference>
+	  <reference>BIN.bin_id</reference>
 	  <criteria type="zenlist">bins</criteria>
 	</column>      
       </columns>
@@ -693,10 +703,10 @@
       <description>Systems used by this type</description>
       <columns>
         <column name="type_id" type="integer">
-	  <reference>type.type_id</reference>
+	  <reference>TYPE.type_id</reference>
 	</column>
         <column name="system_id" type="integer" ftype="select">
-	  <reference>system.system_id</reference>
+	  <reference>SYSTEM.system_id</reference>
 	  <criteria type="zenlist">systems</criteria>
 	</column>      
       </columns>
@@ -706,10 +716,10 @@
       <description>Priorities used by this type</description>
       <columns>
         <column name="type_id" type="integer">
-	  <reference>type.type_id</reference>
+	  <reference>TYPE.type_id</reference>
 	</column>
         <column name="priority_id" type="integer" ftype="select">
-	  <reference>priority.priority_id</reference>
+	  <reference>PRIORITY.priority_id</reference>
 	  <criteria type="zenlist">priorities</criteria>
 	</column>      
       </columns>
@@ -719,10 +729,10 @@
       <description>Actions used by this type</description>
       <columns>
         <column name="type_id" type="integer">
-	  <reference>type.type_id</reference>
+	  <reference>TYPE.type_id</reference>
 	</column>
         <column name="action_id" type="integer" ftype="select">
-	  <reference>action.action_id</reference>
+	  <reference>ACTION.action_id</reference>
 	  <criteria type="zenlist">actions</criteria>
 	</column>      
       </columns>
@@ -756,7 +766,7 @@
 	</column>
 	<column name="email" value="string" ftype="email" label="Email" />
 	<column name="homebin" value="integer" ftype="select" label="Home Bin">
-	  <reference>bin.bin_id</reference>
+	  <reference>BIN.bin_id</reference>
 	  <criteria type="helper"></criteria>
 	  <notnull>true</notnull>
 	  <default>0</default>
@@ -777,11 +787,11 @@
       <description>Define user roles</description>
       <columns>
         <column name="user_id" type="integer">
-	  <reference>user.user_id</reference>
+	  <reference>USER.user_id</reference>
 	</column>
 	<column name="role_id" type="integer" ftype="select">
 	  <criteria type="helper">field:user_id</criteria>
-	  <reference>role.role_id</reference>
+	  <reference>ROLE.role_id</reference>
 	</column>
       </columns>
       <indexList>

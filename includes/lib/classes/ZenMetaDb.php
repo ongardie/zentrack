@@ -57,6 +57,10 @@ class ZenMetaDb extends Zen {
     foreach( $tableInfo as $t ) {
       $table = $t['tbl_name'];
       $this->_tables[$table] = $this->_schema->getTableArray($table);
+      if( count($this->_tables[$table]['inherits']) > 0 ) {
+        $newfields = $this->_schema->getInheritedFields($table);
+        $this->_tables[$table]['fields'] = array_merge($this->_tables[$table]['fields'], $newfields);
+      }
       foreach( $t as $key=>$val ) {
         $this->_tables[$table][$this->mapTableDbToProp($key)] = $val;
       }
@@ -66,20 +70,10 @@ class ZenMetaDb extends Zen {
       $table = $f['table_name'];
       $this->_tables[$table]['fields'][$field] = $this->_schema->getFieldArray($table,$field);
       foreach( $f as $key=>$val ) {
-        //todo
-        //todo
-        //todo
-        //todo come up with a better method
-        //todo to determine which fields go in db
-        //todo also, address problems with how to
-        //todo override xml vals, especially when
-        //todo desire is to override value with a blank
-        if( $val != null ) {
-          if( $key == 'col_criteria' ) {
-            $val = explode('=',$val);
-          }
-          $this->_tables[$table]['fields'][$field][$this->mapFieldDbToProp($key)] = $val;
+        if( $key == 'col_criteria' ) {
+          $val = explode('=',$val);
         }
+        $this->_tables[$table]['fields'][$field][$this->mapFieldDbToProp($key)] = $val;
       }      
     }
     Zen::debug($this, '_load', count($tableInfo)." tables were loaded, containing ".count($fieldInfo)." fields", 01, LVL_DEBUG);    

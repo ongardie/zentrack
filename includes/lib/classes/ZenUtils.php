@@ -1,5 +1,5 @@
 <? /* -*- Mode: C; c-basic-indent: 3; indent-tabs-mode: nil -*- ex: set tabstop=3 expandtab: */ 
-
+ 
 /** 
  * Utility functions (all static, call with ZenUtils::method())
  *
@@ -166,12 +166,57 @@ class ZenUtils {
    * @return boolean true if the object was valid and printed
    */
   function printArray( $vals, $title = null ) {
-    if( !is_array($vals) ) { return false; }
     if( $title ) { print "<p><b>$title</b><div style='font-size:11px'>\n"; }
+    if( !is_array($vals) ) { print "<p style='color:red'>-not_array-</p>"; }
     print "<pre>\n";
     print_r($vals);
     print "</pre>\n";
     if( $title ) { print "</div>\n"; }
+    return true;
+  }
+
+  /**
+   * STATIC: safely check for equality of two values when type is unsure
+   *
+   * @param mixed $val1
+   * @param mixed $val2
+   * @return boolean
+   */
+  function safeEquals( $val1, $val2 ) {
+    if( !isset($val) xor !isset($val2) ) {
+      // if only one is set
+      return false;
+    }
+    else if( is_array($val1) && is_array($val2) ) {      
+      return ZenUtils::arrayEquals($val1, $val2);
+    }
+    else if( $val1 != $val2 || strlen($val1) != strlen($val2) ) {
+      return false;
+    }
+    return true;
+  }
+
+  /**
+   * STATIC: Recursively checks values of two arrays for equality
+   *
+   * @param array $arr1
+   * @param array $arr2
+   * @return boolean
+   */
+  function arrayEquals( $arr1, $arr2 ) {
+    foreach( $arr1 as $key=>$val ) {
+      if( !isset($arr2[$key]) ) {
+        // don't try to test if arr2[key] isn't set or causes warnings
+        // so see if val isset
+        if( isset($val) ) {
+          return false;
+        }
+        continue;
+      }
+      if( !ZenUtils::safeEquals($val, $arr2[$key]) ) {
+        return false;
+      }
+    }
     return true;
   }
 

@@ -30,14 +30,15 @@ class ZenMetaTable extends Zen {
    * @return boolean
    */
   function copy( $table ) {
-    if( !is_object($table) || get_class($table) != "ZenMetaTable" ) { 
-      Zen::debug($this, 'copy', 'Param was not a valid ZenMetaTable object', 105, LVL_ERROR);
+    if( !is_object($table) || get_class($table) != "zenmetatable" ) { 
+      Zen::debug($this, 'copy', 'Param was not a valid ZenMetaTable object: '.get_class($table), 105, LVL_ERROR);
       return false; 
     }
+    Zen::debug($this, 'copy', "Running copy from ".$table->name()."/".get_class($table), 0, LVL_NOTE);
     $this->_data = $table->getTableArray();
     $this->_updated = true;
     $this->_changed = array();
-    return true;
+    return is_array($this->_data);
   }
 
   /**
@@ -47,8 +48,8 @@ class ZenMetaTable extends Zen {
    */
   function _load( $data ) {
     if( !isset($data['fields']) || !is_array($data['fields']) ) { $data['fields'] = array(); }
-    foreach( $this->_props as $p ) {
-      $this->_props[$p] = isset($data[$p])? $data[$p] : null;
+    foreach( $this->listProperties() as $p ) {
+      $this->_data[$p] = isset($data[$p])? $data[$p] : null;
     }
   }
 
@@ -109,7 +110,7 @@ class ZenMetaTable extends Zen {
    * @return boolean if valid property
    */
   function setProp( $property, $value ) {
-    if( $property == 'fields' || !isset($this->_data[$property]) ) {
+    if( $property == 'fields' || !$this->isProperty($property) ) {
       Zen::debug($this, 'setProp', 'Attempted to set an invalid property: $property', 105, LVL_ERROR);
       return false;
     }
@@ -142,7 +143,7 @@ class ZenMetaTable extends Zen {
   function validate( $values ) {
     $errors = array();
     foreach( $values as $k=>$v ) {
-      if( isset($this->_data[$k]) ) {
+      if( isset($this->_data['fields'][$k]) ) {
         $f = new ZenMetaField($this->_data[$k]);
         $e = $f->validate( $v );
         if( $e !== true ) { $errors[] = $e; }
@@ -199,6 +200,26 @@ class ZenMetaTable extends Zen {
     return $res;
   }
 
+  /**
+   * List the available properties
+   *
+   * @static
+   */
+  function listProperties() {
+    return array( 'name', 'description', 'inherits', 'is_abstract', 'has_custom_fields', 'fields' );
+  }
+
+  /**
+   * Determine if the given property is a valid ZenMetaTable property
+   *
+   * @static
+   * @param string $property
+   * @return boolean
+   */
+  function isProperty( $property ) {
+    return in_array( $property, ZenMetaTable::listProperties() );
+  }
+
   /* VARIABLES */
   
 
@@ -210,7 +231,6 @@ class ZenMetaTable extends Zen {
 
   /** @var array $_changed a list of fields which have changed */
   var $_changed = array();
-
 
 }
 

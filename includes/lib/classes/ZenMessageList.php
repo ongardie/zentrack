@@ -43,7 +43,7 @@ class ZenMessageList extends Zen {
    */
   function &getInstance() {
     if( !isset($GLOBALS['messageList']) || !is_object($GLOBALS['messageList']) ) {
-      $file = Zen::getIniVal('directories','dir_config')."/".Zen::getIniVal('debug','debug_configfile');
+      $file = ZenUtils::getIni('directories','dir_config')."/".ZenUtils::getIni('debug','debug_configfile');
       $GLOBALS['messageList'] = new ZenMessageList( $file );
     }
     return $GLOBALS['messageList'];

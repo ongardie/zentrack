@@ -46,7 +46,7 @@ class ZenMetaField extends Zen {
    * @access private
    */
   function _load( $data ) {
-    foreach($this->_props as $d) {
+    foreach($this->listProperties() as $d) {
       $this->_data[$d] = isset($data[$d])? $data[$d] : null;
     }
   }
@@ -69,7 +69,7 @@ class ZenMetaField extends Zen {
    * @return boolean
    */
   function setProp( $property, $value ) {
-    if( in_array($property, $this->_props) ) {
+    if( $this->isProperty($property) ) {
       $this->_updated = true;
       $this->_data[$property] = $value;
       return true;
@@ -106,14 +106,14 @@ class ZenMetaField extends Zen {
    *
    * @return string
    */
-  function dataType() { return $this->_getProp('data_type'); }
+  function dataType() { return $this->_getProp('type'); }
 
   /**
    * Returns the form type of this field
    *
    * @return string
    */
-  function formType() { return $this->_getProp('form_type'); }
+  function formType() { return $this->_getProp('ftype'); }
 
   /**
    * Tells if this is a custom(user defined) field
@@ -240,16 +240,34 @@ class ZenMetaField extends Zen {
     }
   }
 
+  /**
+   * List the available field properties
+   *
+   * @static
+   */
+  function listProperties() { 
+    return array('name','label','size','type','ftype','notnull',
+                 'required','criteria','reference','default','description',
+                 'custom','order','table','unique');
+
+  }
+
+  /**
+   * Determine if the given property is a valid ZenMetaField property
+   *
+   * @static
+   * @param string $property
+   * @return boolean
+   */
+  function isProperty( $property ) {
+    return in_array( $property, ZenMetaField::listProperties() );
+  }
+
   /* VARIABLES */
 
   /** @var array $_data The data contained in this field */
   var $_data;
   
-  /** @var array $_props The list of valid properties for a field */
-  var $_props = array('name','label','size','data_type','form_type','notnull',
-                      'required','criteria','reference','default','description',
-                      'custom','order','table','unique');
-
   /** @var boolean $_updated true if this field has changed since loading */
   var $_updated = false;
 

@@ -243,15 +243,125 @@ class ZenXNode {
   /**
    * converts the node and its children to an associative array
    *
+   * <b>About compress parameter:</b>
+   *
+   * The compress parameter controls how deeply the arrays are structured for the children nodes and 
+   * is greatly useful in envirnments where most of the nodes will be unique (where it is not intuitive
+   * to have to iterate through a bunch of lists which only contain one entry).  
+   *
+   * If this parameter is false, then all child nodes contain an array of nodes.  If true, then only child
+   * nodes which have more than one match will be in an array.  Example return value follows(note
+   * differences in the 'orange' node and how it is converted to an array):
+   *
+   * <code>
+   *   //XML DATA:
+   *   <fruit type='colored'>
+   *      <orange>orange of course</orange>
+   *      <apple>red</apple>
+   *      <apple>green</apple>
+   *   </fruit>
+   *   
+   *   //$fruitNode->toArray(true) returns:
+   *   Array
+   *   (
+   *       [name] => fruit
+   *       [properties] => Array
+   *       (
+   *               [type] => colored
+   *       )
+   *       [data] => 
+   *       [children] => Array
+   *       (
+   *               [orange] => Array
+   *               (
+   *                       [name] => orange
+   *                       [properties] => Array()
+   *                       [data] => orange of course
+   *                       [children] => Array()
+   *               )
+   *               [apple] => Array
+   *               (
+   *                       [0] => Array
+   *                       (
+   *                               [name] => apple
+   *                               [properties] => Array()
+   *                               [data] => red
+   *                               [children] => Array()
+   *                       )
+   *   
+   *                       [1] => Array
+   *                       (
+   *                               [name] => apple
+   *                               [properties] => Array()
+   *                               [data] => green
+   *                               [children] => Array()
+   *                       )
+   *               )
+   *       )
+   *   )
+   *
+   *   //$fruitNode->toArray(false) returns:
+   *   Array
+   *   (
+   *       [name] => fruit
+   *       [properties] => Array
+   *           (
+   *               [type] => colored
+   *           )
+   *       [data] => 
+   *       [children] => Array
+   *           (
+   *               [orange] => Array
+   *                   (
+   *                       [0] => Array
+   *                           (
+   *                               [name] => orange
+   *                               [properties] => Array()
+   *                               [data] => orange of course
+   *                               [children] => Array()
+   *                           )
+   *                   )
+   *               [apple] => Array
+   *                   (
+   *                       [0] => Array
+   *                           (
+   *                               [name] => apple
+   *                               [properties] => Array()
+   *                               [data] => red
+   *                               [children] => Array()
+   *                           )
+   *                       [1] => Array
+   *                           (
+   *                               [name] => apple
+   *                               [properties] => Array()
+   *                               [data] => green
+   *                               [children] => Array()
+   *                           )
+   *                   )
+   *           )
+   *   )
+   *   
+   *
+   * </code>
+   *
+   * @param boolean $compress see description for details
    * @return array containing node and all children
    */
-  function toArray() {
+  function toArray( $compress = false ) {
     $vals = array("name"=>$this->getName(),"properties"=>$this->getProps(),"data"=>$this->getData());
     $vals["children"] = array();
     foreach($this->getChildren() as $k=>$v) {
       if( is_array($v) ) {
 	foreach($v as $val) {
-	  $vals["children"]["$k"][] = $val->toArray(); 
+          if( $compress && !isset($vals["children"]["$k"]) ) {
+            $vals["children"]["$k"] = $val->toArray( $compress );
+          }
+          else if( $compress && !isset($vals["children"]["$k"][0]) ) {
+            $vals["children"]["$k"] = array( $vals["children"]["$k"], $val->toArray( $compress ) );
+          }
+          else {
+            $vals["children"]["$k"][] = $val->toArray( $compress ); 
+          }
 	}
       }
     }
