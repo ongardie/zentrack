@@ -8,11 +8,37 @@
 ----- V2.5 (in development) ----
 
 2004-08-07, Kato
+  Fixed login bugs with Guest account
+    - zentrack_2/includes/login.php 1.23
   Updated documentation
-
+    - zentrack_2/www/help/about.php 1.5
+    - zentrack_2/www/help/support.php 1.5
   Tested/debugged custom fields, implemented in create screens
-
+    - zentrack_2/includes/editCustomSubmit.php 1.4
+    - zentrack_2/includes/headerInc.php 1.36
+    - zentrack_2/includes/zen.class 1.24
+    - zentrack_2/includes/zenTrack.class 1.135
+    - zentrack_2/includes/templates/newTicketForm.php 1.31
+    - zentrack_2/includes/templates/ticket_box.php 1.12
+    - zentrack_2/includes/templates/ticket_customBox.php 1.4
+    - zentrack_2/includes/templates/ticket_detailsBox.php 1.11
+    - zentrack_2/includes/templates/actions/relate.php 1.5
+    - zentrack_2/www/addSubmit.php 1.17
+    - zentrack_2/www/behavior_js.php 1.3
+    - zentrack_2/www/styles.php 1.15
+    - zentrack_2/www/ticket.php 1.19
+    - zentrack_2/www/actions/action_header.php 1.12
+    - zentrack_2/www/actions/editCustomSubmit.php 1.2
+    - zentrack_2/www/admin/editCustom.php 1.4
+    - zentrack_2/www/admin/systems.php 1.7
   Updated upgrade scripts
+    - zentrack_2/install/UPGRADE_mssqlserver.sql 1.8
+    - zentrack_2/install/UPGRADE_mysql.sql 1.14
+    - zentrack_2/install/UPGRADE_oracle.sql 1.15
+    - zentrack_2/install/seed_mysql.sql 1.28
+  Added new directory in preparation for formula evaluation in groups
+    - zentrack_2/setup_from_cvs 1.11
+    - zentrack_2/setup_from_cvs.cmd 1.2
 
 2004-08-04, Kato
   Completed behaviors, which now work on edit and new ticket/project screens
