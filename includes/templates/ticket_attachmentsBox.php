@@ -10,7 +10,7 @@
      <input type="hidden" name="id" value="<?=strip_tags($id)?>">
      <td align="right">
        <?
-         if( $zen->actionApplicable("upload",$login_id) ) {
+         if( $zen->actionApplicable($id,"upload",$login_id) ) {
 	    $button = "submit";
 	    $color = $zen->settings["color_highlight"];
 	 } else {
