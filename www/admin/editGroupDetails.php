@@ -8,7 +8,24 @@
   
   
   include("admin_header.php");
-  if( $TODO == 'Save' ) {
+
+  if( $TODO == 'MORE' ) {
+    $more = $more+3;
+  } else if( $TODO == 'LESS' ) {
+    $more = $more-3;
+  }
+
+  $elements=array();
+  if( $TODO == 'MORE' || $TODO == 'LESS' ) {
+    for( $i=0; $i<count($NewValue); $i++ ) {
+      if( $NewValue[$i] && $NewValue[$i] != "-new-" ) {
+        $elements[] = array(
+                        "value"      => $NewValue[$i],
+                        "sort_order" => $NewSortOrder[$i]
+                        );
+      }
+    }
+  } else if( $TODO == 'Save' ) {
     if( $zen->demo_mode == "on" ) {
       $msg = tr("Process completed successfully. Groups were not updated since this is a demo site.");
       $skip = 1;

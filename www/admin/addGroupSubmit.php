@@ -19,7 +19,7 @@
                              "NewDescript"        => "html"
                              );
 
-  $data_group_required = array("NewTableName","NewGroupName");
+  $data_group_required = array("NewGroupName");
 
 
   $zen->cleanInput($data_group_fields);

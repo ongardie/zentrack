@@ -30,7 +30,7 @@
                  $so=$group_details[$k]['sort_order'];
                }
              }
-             print "><input type='hidden' name='NewValue[".$j."]' value='".$elements[$i][0]."'"."$te";
+             print "><input type='hidden' name='NewValue[".$j."]' value='".$elements[$i][0]."'>"."$te";
 	     print "$t".$zen->ffv($elements[$i][1])."$te";
              print "$t"."<input type='text' name='NewSortOrder[".$j."]' value='".$so."' size='3' maxlength='3'>"."$te";
 	     print "</tr>\n";
