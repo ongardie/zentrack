@@ -1,0 +1,56 @@
+<dataDump>
+  <dataRow>
+    <role_id>1</role_id>
+    <descript>This is a guest, with no rights</descript>
+    <last_update>0</last_update>
+    <syslock>0</syslock>
+    <field_pri>0</field_pri>
+    <isactive>1</isactive>
+    <field_name>Guest</field_name>
+  </dataRow>
+  <dataRow>
+    <role_id>2</role_id>
+    <descript>This is a basic user, with limited rights</descript>
+    <last_update>0</last_update>
+    <syslock>0</syslock>
+    <field_pri>0</field_pri>
+    <isactive>1</isactive>
+    <field_name>User</field_name>
+  </dataRow>
+  <dataRow>
+    <role_id>3</role_id>
+    <descript>This is a tester, with limited rights</descript>
+    <last_update>0</last_update>
+    <syslock>0</syslock>
+    <field_pri>0</field_pri>
+    <isactive>1</isactive>
+    <field_name>Tester</field_name>
+  </dataRow>
+  <dataRow>
+    <role_id>4</role_id>
+    <descript>Supervisor with special rights</descript>
+    <last_update>0</last_update>
+    <syslock>0</syslock>
+    <field_pri>0</field_pri>
+    <isactive>1</isactive>
+    <field_name>Supervisor</field_name>
+  </dataRow>
+  <dataRow>
+    <role_id>5</role_id>
+    <descript>Manager with special rights</descript>
+    <last_update>0</last_update>
+    <syslock>0</syslock>
+    <field_pri>0</field_pri>
+    <isactive>1</isactive>
+    <field_name>Manager</field_name>
+  </dataRow>
+  <dataRow>
+    <role_id>6</role_id>
+    <descript>System administrator, with advanced rights</descript>
+    <last_update>0</last_update>
+    <syslock>0</syslock>
+    <field_pri>0</field_pri>
+    <isactive>1</isactive>
+    <field_name>Administrator</field_name>
+  </dataRow>
+</dataDump>

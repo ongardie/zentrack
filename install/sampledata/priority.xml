@@ -1,0 +1,52 @@
+<dataDump>
+  <dataRow>
+    <priority_id>1</priority_id>
+    <colorpick>#FF9999</colorpick>
+    <descript>Highest priority</descript>
+    <last_update>0</last_update>
+    <syslock>0</syslock>
+    <field_pri>0</field_pri>
+    <isactive>1</isactive>
+    <field_name>Highest</field_name>
+  </dataRow>
+  <dataRow>
+    <priority_id>2</priority_id>
+    <colorpick>#FFCC99</colorpick>
+    <descript>High Priority</descript>
+    <last_update>0</last_update>
+    <syslock>0</syslock>
+    <field_pri>0</field_pri>
+    <isactive>1</isactive>
+    <field_name>High</field_name>
+  </dataRow>
+  <dataRow>
+    <priority_id>3</priority_id>
+    <colorpick>#FFCCCC</colorpick>
+    <descript>Medium Priority</descript>
+    <last_update>0</last_update>
+    <syslock>0</syslock>
+    <field_pri>0</field_pri>
+    <isactive>1</isactive>
+    <field_name>Medium</field_name>
+  </dataRow>
+  <dataRow>
+    <priority_id>4</priority_id>
+    <colorpick>#FFFFCC</colorpick>
+    <descript>Low Priority</descript>
+    <last_update>0</last_update>
+    <syslock>0</syslock>
+    <field_pri>0</field_pri>
+    <isactive>1</isactive>
+    <field_name>Low</field_name>
+  </dataRow>
+  <dataRow>
+    <priority_id>5</priority_id>
+    <colorpick>#FFFFFF</colorpick>
+    <descript>No priority assigned</descript>
+    <last_update>0</last_update>
+    <syslock>0</syslock>
+    <field_pri>0</field_pri>
+    <isactive>1</isactive>
+    <field_name>None</field_name>
+  </dataRow>
+</dataDump>

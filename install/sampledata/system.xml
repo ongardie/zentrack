@@ -1,0 +1,38 @@
+<dataDump>
+  <dataRow>
+    <system_id>1</system_id>
+    <descript>Mail server and related components</descript>
+    <last_update>0</last_update>
+    <syslock>0</syslock>
+    <field_pri>0</field_pri>
+    <isactive>1</isactive>
+    <field_name>Mail Server</field_name>
+  </dataRow>
+  <dataRow>
+    <system_id>2</system_id>
+    <descript>Web server and related components</descript>
+    <last_update>0</last_update>
+    <syslock>0</syslock>
+    <field_pri>0</field_pri>
+    <isactive>1</isactive>
+    <field_name>Web Server</field_name>
+  </dataRow>
+  <dataRow>
+    <system_id>3</system_id>
+    <descript>A personal computer</descript>
+    <last_update>0</last_update>
+    <syslock>0</syslock>
+    <field_pri>0</field_pri>
+    <isactive>1</isactive>
+    <field_name>PC</field_name>
+  </dataRow>
+  <dataRow>
+    <system_id>4</system_id>
+    <descript>Everything else</descript>
+    <last_update>0</last_update>
+    <syslock>0</syslock>
+    <field_pri>0</field_pri>
+    <isactive>1</isactive>
+    <field_name>Other</field_name>
+  </dataRow>
+</dataDump>

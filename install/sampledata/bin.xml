@@ -1,0 +1,38 @@
+<dataDump>
+  <dataRow>
+    <bin_id>1</bin_id>
+    <descript>IT department</descript>
+    <last_update>0</last_update>
+    <syslock>0</syslock>
+    <field_pri>0</field_pri>
+    <isactive>1</isactive>
+    <field_name>IT</field_name>
+  </dataRow>
+  <dataRow>
+    <bin_id>2</bin_id>
+    <descript>Engineering department</descript>
+    <last_update>0</last_update>
+    <syslock>0</syslock>
+    <field_pri>0</field_pri>
+    <isactive>1</isactive>
+    <field_name>Engineering</field_name>
+  </dataRow>
+  <dataRow>
+    <bin_id>3</bin_id>
+    <descript>Marketing department</descript>
+    <last_update>0</last_update>
+    <syslock>0</syslock>
+    <field_pri>0</field_pri>
+    <isactive>1</isactive>
+    <field_name>Marketing</field_name>
+  </dataRow>
+  <dataRow>
+    <bin_id>4</bin_id>
+    <descript>Customer service department</descript>
+    <last_update>0</last_update>
+    <syslock>0</syslock>
+    <field_pri>0</field_pri>
+    <isactive>1</isactive>
+    <field_name>Customer Service</field_name>
+  </dataRow>
+</dataDump>

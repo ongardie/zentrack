@@ -1,0 +1,47 @@
+<dataDump>
+  <dataRow>
+    <stage_id>0</stage_id>
+    <descript>This item has no stage</descript>
+    <last_update>0</last_update>
+    <syslock>0</syslock>
+    <field_pri>0</field_pri>
+    <isactive>1</isactive>
+    <field_name>None</field_name>
+  </dataRow>
+  <dataRow>
+    <stage_id>1</stage_id>
+    <descript>This item is open</descript>
+    <last_update>0</last_update>
+    <syslock>0</syslock>
+    <field_pri>0</field_pri>
+    <isactive>1</isactive>
+    <field_name>Open</field_name>
+  </dataRow>
+  <dataRow>
+    <stage_id>2</stage_id>
+    <descript>This item is ready for closure</descript>
+    <last_update>0</last_update>
+    <syslock>0</syslock>
+    <field_pri>0</field_pri>
+    <isactive>1</isactive>
+    <field_name>Pending</field_name>
+  </dataRow>
+  <dataRow>
+    <stage_id>3</stage_id>
+    <descript>This item is completed</descript>
+    <last_update>0</last_update>
+    <syslock>0</syslock>
+    <field_pri>0</field_pri>
+    <isactive>1</isactive>
+    <field_name>Closed</field_name>
+  </dataRow>
+  <dataRow>
+    <stage_id>4</stage_id>
+    <descript>This item has been archived</descript>
+    <last_update>0</last_update>
+    <syslock>0</syslock>
+    <field_pri>0</field_pri>
+    <isactive>1</isactive>
+    <field_name>Archived</field_name>
+  </dataRow>
+</dataDump>

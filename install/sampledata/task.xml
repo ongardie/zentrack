@@ -1,0 +1,38 @@
+<dataDump>
+  <dataRow>
+    <task_id>1</task_id>
+    <descript>A note or comment</descript>
+    <last_update>0</last_update>
+    <syslock>0</syslock>
+    <field_pri>0</field_pri>
+    <isactive>1</isactive>
+    <field_name>Note</field_name>
+  </dataRow>
+  <dataRow>
+    <task_id>2</task_id>
+    <descript>Work done on issue</descript>
+    <last_update>0</last_update>
+    <syslock>0</syslock>
+    <field_pri>0</field_pri>
+    <isactive>1</isactive>
+    <field_name>Labor</field_name>
+  </dataRow>
+  <dataRow>
+    <task_id>3</task_id>
+    <descript>Question about issue</descript>
+    <last_update>0</last_update>
+    <syslock>0</syslock>
+    <field_pri>0</field_pri>
+    <isactive>1</isactive>
+    <field_name>Question</field_name>
+  </dataRow>
+  <dataRow>
+    <task_id>4</task_id>
+    <descript>How the ticket was resolved</descript>
+    <last_update>0</last_update>
+    <syslock>0</syslock>
+    <field_pri>0</field_pri>
+    <isactive>1</isactive>
+    <field_name>Solution</field_name>
+  </dataRow>
+</dataDump>
