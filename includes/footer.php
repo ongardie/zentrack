@@ -41,12 +41,10 @@
      print "HTTP_COOKIE: $HTTP_COOKIE<br>\n";
      print "SERVER_SOFTWARE: {$_SERVER['SERVER_SOFTWARE']}<br>\n";
      print "SERVER_NAME: $SERVER_NAME<br>\n";
-     print "rootUrl: $rootUrl<br>\n";
-     print "page_browser: $page_browser<br>\n";
+     print "PHP Version: ".phpversion()."<br>\n";
      print "zenTrack Version: ".$zen->settings["version_xx"]."<br>\n";
+     print "rootUrl: $rootUrl<br>\n";
      print "database: ".$zen->database_type."/".$zen->database_host."<br>\n";
-     print "Attachments types: ".$zen->settings["attachment_types_allowed"]."<br>\n";
-     print "databaseConnection: ".$zen->db_link."<br>\n";
      print "settings count: ".count($zen->settings)."<br>\n";
      print "bins: ".join(",",$zen->bins)."<br>\n";
      print "types: ".join(",",$zen->types)."<br>\n";
@@ -61,6 +59,11 @@
      } else {
        print "Not logged in<br>\n";
      }
+     print "GD Info:<ul>\n";
+     foreach(gd_info() as $k=>$v) {
+       print "<li>$k: $v</li>\n";
+     }
+     print "</ul>\n";
      print "<p>&nbsp;------/DEBUG OVERVIEW-------&nbsp;</p>\n";
      print "</span>\n";
      $zen->printDebugMessages();

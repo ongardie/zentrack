@@ -322,13 +322,12 @@ class zenTrack extends zen {
     if( count($outs) ) {
       $query .= " AND user_id NOT IN(".join(",",$outs).")";
     }
-    $query .= " GROUP BY user_id";
     // set the ordering
     $query .= " ORDER BY lname,fname";
     // query
     $vals = $this->db_queryIndexed($query);
     // debug
-    $this->addDebug("get_user","results: ".count($vals)."/$query",3);
+    $this->addDebug("get_users","results: ".count($vals)."/$query",3);
     // return
     return $vals;
   }

@@ -18,15 +18,15 @@ CREATE SEQUENCE "types_type_id_seq" start 1001 increment 1 maxvalue 2147483647 m
 CREATE SEQUENCE "users_user_id_seq" start 1001 increment 1 maxvalue 2147483647 minvalue 1  cache 1;
 CREATE SEQUENCE "reports_id_seq" start 1001 increment 1 maxvalue 2147483647 minvalue 1  cache 1;
 CREATE SEQUENCE "reports_temp_id_seq" start 1001 increment 1 maxvalue 2147483647 minvalue 1  cache 1;
-CREATE SEQUENCE "notify_id_seq" start 1001 increment 1 maxvalue 2147483647 minvalue 1 cache 1;
+CREATE SEQUENCE "notify_list_id_seq" start 1001 increment 1 maxvalue 2147483647 minvalue 1 cache 1;
 
 CREATE TABLE ZENTRACK_NOTIFY_LIST (
    notify_id int8 default nextval('"notify_id_seq"') NOT NULL PRIMARY KEY,
-   ticket_id int(12) NOT NULL,
-   user_id int(12) default NULL,
+   ticket_id int8 NOT NULL,
+   user_id int8 default NULL,
    name varchar(100) default NULL,
    email varchar(150) default NULL,
-   priority int(12) default NULL,
+   priority int8 default NULL,
    notes varchar(255) default NULL
 );
 
@@ -262,6 +262,5 @@ CREATE TABLE ZENTRACK_REPORTS_TEMP (
    created timestamp default NULL,
    chart_combine int2 default NULL, 
    text_output int2 default NULL, 
-   show_data_vals int2 default NULL, 
+   show_data_vals int2 default NULL
 );
-

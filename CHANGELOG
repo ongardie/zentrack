@@ -7,6 +7,78 @@
 
 ----- V2.4 (development, see CVS) ----
 
+2003-03-24, Kato
+  Fixed parse error
+
+  PostgresSQL Testing/Cleanup
+
+  Fixed misnamed directories
+
+
+2003-03-23, Kato
+  Text correction in UPGRADE instructions
+    - zentrack/UPGRADE.readme 1.7
+  Text corrections in email templates
+    - zentrack/includes/templates/email/form_help.template 1.4
+  Minor correction to ptrans() utility
+    - zentrack/includes/translator.class 1.4
+  Added a wrapper utility uptr() to create upper case
+  strings from translations
+    - zentrack/includes/headerInc.php 1.25
+  Integrated tr() function in templates/ directory
+    - zentrack/install/configVars.php.default 1.3
+    - zentrack/includes/leftAdmin.php 1.4
+    - zentrack/includes/templates/accessForm.php 1.5
+    - zentrack/includes/templates/adminMenu.php 1.3
+    - zentrack/includes/templates/configForm.php 1.2
+    - zentrack/includes/templates/configSettingsForm.php 1.7
+    - zentrack/includes/templates/editTicketForm.php 1.4
+    - zentrack/includes/templates/homebinForm.php 1.5
+    - zentrack/includes/templates/listTickets_workFormat.php 1.12
+    - zentrack/includes/templates/newProjectForm.php 1.18
+    - zentrack/includes/templates/newTicketForm.php 1.22
+    - zentrack/includes/templates/optionsMenu.php 1.2
+    - zentrack/includes/templates/pwcForm.php 1.5
+    - zentrack/includes/templates/reportMenu.php 1.4
+    - zentrack/includes/templates/reportsDataMenu.php 1.5
+    - zentrack/includes/templates/reportsDateMenu.php 1.5
+    - zentrack/includes/templates/reportsMenu.php 1.2
+    - zentrack/includes/templates/reportsOptionsMenu.php 1.7
+    - zentrack/includes/templates/reportsSubmit.php 1.6
+    - zentrack/includes/templates/reportsTypeMenu.php 1.3
+    - zentrack/includes/templates/searchList.php 1.8
+    - zentrack/includes/templates/searchLogForm.php 1.5
+    - zentrack/includes/templates/searchLogList.php 1.8
+    - zentrack/includes/templates/searchLogResults.php 1.2
+    - zentrack/includes/templates/searchResults.php 1.3
+    - zentrack/includes/templates/ticket_actionBar.php 1.5
+    - zentrack/includes/templates/ticket_attachmentsBox.php 1.6
+    - zentrack/includes/templates/ticket_box.php 1.8
+    - zentrack/includes/templates/ticket_detailsBox.php 1.6
+    - zentrack/includes/templates/ticket_logBox.php 1.10
+    - zentrack/includes/templates/ticket_notifyBox.php 1.3
+    - zentrack/includes/templates/ticket_relatedBox.php 1.4
+    - zentrack/includes/templates/ticket_systemBox.php 1.5
+    - zentrack/includes/templates/ticket_tasksBox.php 1.5
+    - zentrack/includes/templates/ticket_titleBox.php 1.6
+    - zentrack/includes/templates/userAdd.php 1.7
+    - zentrack/includes/templates/userSearchForm.php 1.5
+    - zentrack/includes/templates/userSearchList.php 1.6
+    - zentrack/includes/templates/actions/assign.php 1.6
+    - zentrack/includes/templates/actions/close.php 1.3
+    - zentrack/includes/templates/actions/email.php 1.5
+    - zentrack/includes/templates/actions/estimate.php 1.2
+    - zentrack/includes/templates/actions/log.php 1.4
+    - zentrack/includes/templates/actions/move.php 1.3
+    - zentrack/includes/templates/actions/notify.php 1.2
+    - zentrack/includes/templates/actions/reject.php 1.2
+    - zentrack/includes/templates/actions/relate.php 1.4
+    - zentrack/includes/templates/actions/reopen.php 1.2
+    - zentrack/includes/templates/actions/test.php 1.2
+    - zentrack/includes/templates/actions/upload.php 1.4
+    - zentrack/includes/templates/actions/yank.php 1.2
+    - zentrack/www/admin/config.php 1.8
+
 2003-03-21, MLively (with much help from Kato: he actually did most of the work :P)
   Changed Translation engine interface [tr()] to work with the ptrans() function
     - includes/headerInc.php 1.3

@@ -46,6 +46,10 @@ UPGRADE FROM 2.2.2
   Locate and run the appropriate UPGRADE_[database].sql and 
     UPGRADE_SEED_[database].sql files.
 
+  If you recieve an error describing a duplicate key, then update the
+  user_id for the INSERT INTO ZENTRACK_USERS statement to an id that hasn't
+  been used, or add this entry by hand.
+
   If you intend to use the email gateway, please read the online docs
       which give a thorough overview of how to set this up:
       http://zendocs.phpzen.net/bin/view/Zentrack/ManualInstallation#Setting_Up_Email_Gateway
@@ -54,5 +58,6 @@ UPGRADE FROM 2.2.2
       send an email, log into irc.sourceforge.net #zentrack, 
       or visit our forum and tell us what platform your install
       was successful on.  We can also add your company/url to our user list.  
+
 
 

@@ -9,7 +9,6 @@
         use setup_from_cvs.cmd for windows
 
   REQUIREMENTS
-
     PHP: 4.2.0 or greater 
     GD: [optional] 2.0 or higher needed to use reports
     Freetype libraray required to view reports
@@ -19,6 +18,10 @@
     Supported DBs: Mysql, Oracle 8i/9i
        Other Possible DBs: Postgres, DB2, SQLServer
 
+  PHP.INI CONFIGURATION NOTES (for newbies)
+    - Make sure you turn off notices in your php.ini file: 
+        error_reporting = E_ALL & ~E_NOTICE
+    - Insure that you have set session.save_path to a valid directory
 
   QUICK AND DIRTY INSTALL INSTRUCTIONS:
      -if installing from cvs, run setup_from_cvs from the install directory

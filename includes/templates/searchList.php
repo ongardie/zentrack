@@ -53,7 +53,7 @@ if( is_array($tickets) && count($tickets) ) {
    </tr>
       <?      
 
-   $td_ttl = "title='<?=tr("Click here to view the ticket")?>'";
+   $td_ttl = "title='".tr("Click here to view the ticket")."'";
    foreach($tickets as $t) {
       unset($txt);
       unset($tx);

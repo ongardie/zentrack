@@ -31,11 +31,11 @@ class zen extends zenDate {
        $text = ucwords(strtolower($text));
        $text = ereg_replace(" $lu\b", " $l", $text);
        // fix lower case words
-       foreach($this->getLcWords as $l) {
+       foreach($this->getLcWords() as $l) {
          $text = preg_replace("/\b".ucfirst($l)."\b/", $l, $text);
        }
        // fix acronyms
-       foreach($this->getUcWords as $u) {
+       foreach($this->getUcWords() as $u) {
           $text = preg_replace("/\b".ucfirst(strtolower($u))."\b/", "$u", $text);
        }
        // fix funny first characters
@@ -54,7 +54,7 @@ class zen extends zenDate {
    function getLcWords() {
      if( !is_array($this->_lcwords) ) {
         $this->_lcwords = array();
-        foreach($this->getFileArray($this->listDir."/lists/lcwords") as $l) {
+        foreach($this->getFileArray($this->listDir."/lcwords") as $l) {
           $this->_lcwords[] = trim($l);
         }
      }
@@ -67,10 +67,10 @@ class zen extends zenDate {
    function getUcWords() {
      if( !is_array($this->_ucwords) ) {
         $this->_ucwords = array();
-        foreach($this->getFileArray($this->listDir."/lists/ucwords") as $u) {
+        foreach($this->getFileArray($this->listDir."/ucwords") as $u) {
           $this->_ucwords[] = trim($u);
         }
-        foreach($this->getFileArray($this->listDir."/lists/stateAcronyms") as $u) {
+        foreach($this->getFileArray($this->listDir."/stateAcronyms") as $u) {
           list(,$u) = explode(",",$u);
           $this->_ucwords[] = trim($u);
         }
@@ -621,6 +621,7 @@ class zen extends zenDate {
    var $html_allowed;
    var $debugMessages;
    var $defaultHighlight;
+   var $listDir;
    var $_ucwords;
    var $_lcwords;
    //var $_translator;
