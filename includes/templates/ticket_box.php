@@ -55,7 +55,7 @@
   $counts = $zen->get_ticket_stats($ticket);
   foreach( $tabs as $t ) {
     $lt = strtolower($t);
-    if( $page_mode == $tt ) {
+    if( $page_mode == $lt ) {
       $class = 'tabOn';
       $lclass = "tabsOn";
     } else {
