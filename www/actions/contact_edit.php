@@ -3,7 +3,7 @@
   **  Action: edit ticket
   */
   include_once("../header.php");
-  $page_title = tr("Contact #?", $id);
+  $page_title = tr("Contact #?", array($id));
   $expand_contact = 1;
   
   
