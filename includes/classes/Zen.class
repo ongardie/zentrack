@@ -26,6 +26,17 @@ class Zen {
    */
   function Zen( $ini ) { }
 
+  /* STATIC METHODS (prevent multiple objects when possible, rely on static page array $loaded_data) */
+
+  /**
+   * returns a db connection / database object
+   *
+   * THIS SHOULD BE STATIC, only one db connection is necessary
+   *
+   * @return object databaseObject
+   */
+  function getDbConnection() { }
+
   /**
    * returns a ZenMessageList of system messages matching criteria
    *
@@ -42,12 +53,31 @@ class Zen {
   /**
    * stores a message in the ZenMessageList
    *
-   * @param string $class the class/page producing message
+   * @param mixed $class the class object ($this) or a string representing the class/script name
    * @param string $method the method/section producing message
    * @param string $message the message to store
    * @param integer $level the level of the message
    */
   function debug( $class, $method, $message, $level ) { }
+
+  /**
+   * retrieves a ticket object, these are cached for life of the page
+   *
+   * @param integer $ticket_id
+   * @return ZenTicket object or false
+   */
+  function getTicket( $ticket_id ) { }
+
+  /**
+   * retrieves a user object, these are cached for life of the page
+   *
+   * @param integer $user_id
+   * @return ZenUser object or false
+   */
+  function getUser( $user_id ) { }
+
+
+  /* COMMON METHODS */
   
   /**
    * tells whether this object refers to a valid database entry
@@ -58,14 +88,6 @@ class Zen {
    */
   function isValid() { return $this->_id > 0 }
   
-  /**
-   * returns a db connection / database object
-   *
-   * THIS SHOULD BE STATIC, only one db connection is necessary
-   *
-   * @return object databaseObject
-   */
-  function getDbConnection() { }
 
   /* SETTINGS METHODS */
 

@@ -45,6 +45,14 @@ class ZenDatabase extends Zen {
   /* UTILITIES */
 
   /**
+   * returns an incremental insert id for use as primary table keys
+   *
+   * @param string $table the table name the key will be used for
+   * @return integer key: this is guaranteed to be unique
+   */
+  function _insertID( $table ) { }
+
+  /**
    * quotes a string for insertion into db, escaping needed characters
    *
    * this method can deal with nulls, blank strings, dates, and integer values
@@ -97,6 +105,8 @@ class ZenDatabase extends Zen {
   /** @var string $_dbuser the database username */
 
   /** @var string $_dbpass the database password */
+
+  /** @var string $_dbo the db specific object */
 
   /** @var string $_adodb the adodb object */
 

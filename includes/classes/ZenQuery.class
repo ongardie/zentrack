@@ -148,6 +148,13 @@ class ZenQuery extends Zen {
   function replace() { }
 
   /**
+   * shows the sql syntax that would be run if this an execute method was called
+   *
+   * @return string query
+   */
+  function showQuery() { }
+
+  /**
    * sends the query to the ZenDatabase object and executes query
    *
    * @return mixed results from query
