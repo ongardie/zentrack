@@ -12,6 +12,8 @@
     - zentrack/includes/templates/ticket_logBox.php 1.11/1.12
   Fix bug where UNC paths are not displayed properly in logs
 	- zentrack/includes/templates/ticket_logBox.php 1.13
+  Footer not included on Support page
+    - zentrack/zentrack/www/help/support.php 1.4
 	
 2003-04-15, Kato
   Added two new egate utilities to allow for simpler email ingestion

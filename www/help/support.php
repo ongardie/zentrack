@@ -64,3 +64,6 @@
   and your Server,</b> so that we can re-create the error.</p>
 
   </blockquote>
+<?
+  include("$libDir/footer.php");
+?>
