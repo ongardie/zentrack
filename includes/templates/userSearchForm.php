@@ -16,8 +16,7 @@
 
 <tr>
   <td class="bars" colspan="2">
-   <input type="submit" class="submit" value="<?=tr("List All Users")?>" 
-     onClick='return confirm("<?=tr("This could be a long list! Proceed anyways?")?>")'>
+   <input type="submit" class="submit" value="<?=tr("List All Users")?>">
   </td>
 </tr>
 
