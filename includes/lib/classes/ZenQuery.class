@@ -688,7 +688,7 @@ class ZenQuery extends Zen {
    * @since 1.0
    * @var array
    */
-  var $_tables;
+  var $_tables = array();
 
   /** 
    * The tables joined to the query.
@@ -697,7 +697,7 @@ class ZenQuery extends Zen {
    * @since 1.0
    * @var array
    */
-  var $_joins;
+  var $_joins = array();
 
   /** 
    * The fields associated with the query.
@@ -706,7 +706,7 @@ class ZenQuery extends Zen {
    * @since 1.0
    * @var array
    */
-  var $_fields;
+  var $_fields = array();
 
   /** 
    * The values to use with each field. Field names are used as the index.
@@ -715,7 +715,7 @@ class ZenQuery extends Zen {
    * @since 1.0
    * @var array
    */
-  var $_vals;
+  var $_vals = array();
 
   /** 
    * The fields to use when sorting.
@@ -724,7 +724,7 @@ class ZenQuery extends Zen {
    * @since 1.0
    * @var array
    */
-  var $_sorts;
+  var $_sorts = array();
 
   /** 
    * The conditions to include in the where clauses.
@@ -733,7 +733,7 @@ class ZenQuery extends Zen {
    * @since 1.0
    * @var array
    */
-  var $_wheres;
+  var $_wheres = array();
 
   /** 
    * The maximum number of records to return

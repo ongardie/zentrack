@@ -1,4 +1,4 @@
-<debug settings>
+<debug_settings>
 
   <!-- show errors for all classes -->
   <root level="1" />
@@ -12,4 +12,4 @@
     <method name="getSetting" level="2" />
   </class>
 
-</debug settings>
+</debug_settings>
