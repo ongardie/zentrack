@@ -83,11 +83,11 @@ class Zen {
    *
    * @param mixed $class the class object ($this) or a string representing the class/script name
    * @param string $method the method/section producing message
-   * @param intege $errnum the error number associated with message
    * @param string $message the message to store
    * @param integer $level the level of the message
+   * @param intege $errnum the error number associated with message
    */
-  function debug( $class, $method, $errnum, $message, $level = 3 ) { }
+  function debug( $class, $method, $message, $level = 3, $errnum = null ) { }
 
   /**
    * retrieves a ticket object, these are cached for life of the page

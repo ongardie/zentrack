@@ -126,7 +126,7 @@ class ZenList extends Zen {
    */
   function _find( $id ) {
     if( !is_array($this->_rawdata) ) {
-      $this->debug($this, "_find", 121, "Return data is empty, cannot fetch ID $id", 2);
+      $this->debug($this, "_find", "Return data is empty, cannot fetch ID $id", 2, 121);
       return false;
     }
     while( $vals = array_shift($this->_rawdata) ) {
@@ -136,7 +136,7 @@ class ZenList extends Zen {
       if( $n == $id )
         return makeObject($vals);
     }
-    $this->debug($this, "_find", 122, "ID $id was expected but not found in the list data", 2);
+    $this->debug($this, "_find", "ID $id was expected but not found in the list data", 2, 122);
     return false;
   }
 
