@@ -12,6 +12,9 @@
     - zentrack/www/misc/homebin.php 1.5
     - zentrack/includes/templates/homebinForm.php 1.6
     - zentrack/includes/leftBins.php 1.7
+  Rename mis-spelt LISCENCE-GPL-2.0 in install/ directory
+    - zentrack/install/LISCENCE-GPL-2.0 <del>
+    - zentrack/install/LICENSE-GPL-2.0 1.1
 
 2003-04-19, Rob Hillis
   More work for sorting of bins: create and search menus

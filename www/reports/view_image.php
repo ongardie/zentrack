@@ -8,7 +8,7 @@
   */
   
   include_once("./reports_header.php");
-
+  include_once("$libDir/jpgraph/jpgraph.php");
   include_once("$libDir/zen.class");
   include_once("$libDir/zenGraph.class");
 
@@ -20,39 +20,69 @@
   include_once("$libDir/reportDataParser.php");
   $chart_options = $params["chart_options"];
 
-  $graph = new zenGraph( "$libDir/reportConfig.php" );
-  $graph->debug = 0; // set this only if viewing the image directly
+  $g = new Graph($zen->reportImageWidth ,$zen->reportImageHeight ,"auto");
+
+  		include_once("$libDir/jpgraph/jpgraph_line.php");
+      $g->SetScale("textlin");
+/**
+ *   switch($params["chart_type"]) {
+ *   	case "line":
+ *       break;
+ *   	case "column":
+ *   		
+ *   		break;
+ *   	case "stack":
+ *   		
+ *       break;
+ *    case "scatter":
+ *   } // switch
+ * 
+ */
+//  $graph = new zenGraph( "$libDir/reportConfig.php" );
+//  $graph->debug = 0; // set this only if viewing the image directly
 
   // create headings and labels
-  $graph->graphTitle = $params["chart_title"];
-  $graph->graphSubtitle = $params["chart_subtitle"];
-  $graph->xHeading = ucwords($params["date_range"]);
-  $graph->xSubHeading = "";
+  $g->title->Set($params["chart_title"]);
+  $g->subtitle->Set($params["chart_subtitle"]);
+  $g->xaxis->title->Set(ucwords($params["date_range"]));
+//  $graph->graphTitle = $params["chart_title"];
+//  $graph->graphSubtitle = $params["chart_subtitle"];
+//  $graph->xHeading = ucwords($params["date_range"]);
+//  $graph->xSubHeading = "";
   //  $graph->yLabels = '';
 
   // set system params
-  $graph->colorBackground = $zen->settings["color_bars"];
+  $g->SetColor($zen->settings["color_background"]);
+  $g->SetMarginColor($zen->settings["color_bars"]);
+  
+//  $graph->colorBackground = $zen->settings["color_bars"];
   $graph->colorForeground = $zen->settings["color_bar_text"];
-  $graph->colorGraphBackground = $zen->settings["color_background"];
+//  $graph->colorGraphBackground = $zen->settings["color_background"];
   $graph->colorGraphForeground = $zen->settings["color_text"];
   $graph->colorXGuidelines = $zen->settings["color_text"]."-FB";
   $graph->colorYGuidelines = $zen->settings["color_text"]."-FB";
-  $graph->titleColor = $zen->settings["color_text"];
-  $graph->headingColor = $zen->settings["color_bar_text"];
-  $graph->subHeadingColor = $zen->settings["color_bar_text"];
+  $g->xaxis->title->SetColor($zen->settings["color_text"]);
+//  $graph->titleColor = $zen->settings["color_text"];
+  $g->subtitle->SetColor($zen->settings["color_bar_text"]);
+//  $graph->headingColor = $zen->settings["color_bar_text"];
+  $g->subtitle->SetColor($zen->settings["color_bar_text"]);
+//  $graph->subHeadingColor = $zen->settings["color_bar_text"];
   $graph->labelColor = $zen->settings["color_text"];
-  $graph->imageHeight = $zen->reportImageHeight;
-  $graph->imageWidth = $zen->reportImageWidth;
+//  $graph->imageHeight = $zen->reportImageHeight;
+//  $graph->imageWidth = $zen->reportImageWidth;
   $graph->valueFontColor = $zen->settings["color_text"];
   $graph->yMin = 0;
   if( $params["show_data_vals"] > 0 ) {
     $graph->showValueOnGraph = 1;
   }
 
-  $graph->yHeading = $y_heading;
+  $g->yaxis->title->Set($y_heading);
+//  $graph->yHeading = $y_heading;
   if( $y_2_set && count($y_2_set) ) {
-    $graph->ySubHeading = "($y2_set_type on right axis)";
-    $graph->y2Labels = $y_2_set;
+    $g->yaxis->title->Set("($y2_set_type on right axis)");
+    $g->yaxis->subtitle->Set($y_2_set);
+//    $graph->ySubHeading = "($y2_set_type on right axis)";
+//    $graph->y2Labels = $y_2_set;
   }
 
   // change the font angle if we have a lot
@@ -176,9 +206,15 @@
 			"BackgroundColor" => $zen->settings["color_title_background"],
 			"ForegroundColor" => $zen->settings["color_title_txt"]);
     $graph->addLegend($legendData);
+    
   }
-
+  
+  //add test data
+  $d = new LineGraph(array(1,5,2,3,8,4,6,2,6,8,3,5));
+  $g->AddPlot($d);
+  
   // draw the image
-  $graph->drawGraph();
+//  $graph->drawGraph();
+  $g->Stroke();
 
 }?>
