@@ -14,6 +14,8 @@ abstraction, and endless possibilities for project expansion.
 ----- VERSION 2.5.0.3 (development) -----
 
 2005-03-09, cfalonso
+  Improved log for edits
+    - zentrack_2/includes/zenTrack.class 1.176
   Enabled menu.template to display the current value as "selected" (TK 103)
     - zentrack_2/includes/zenTemplate.class 1.6
     - zentrack_2/includes/zenTemplate.class 1.5
