@@ -8,6 +8,8 @@
 ----- V2.4.2 (Development, See CVS) ----
 
 2003-05-28, Rob Hillis
+  Fix minor syntax error
+    - zentrack/includes/templates/binForm.php 1.5
   Correct ticket sort order when searching for tickets.
     - zentrack/includes/zenTrack.class 1.10
   Show correct details in notification email when a ticket is assigned
