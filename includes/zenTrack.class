@@ -690,7 +690,7 @@ class zenTrack extends zen {
      if( !$sender["bin_id"] && $sender["user_id"] )
        $res = $this->assign_ticket($id,$sender["user_id"],$user_id);
      else if( $sender["bin_id"] )
-       $res = $this->move_ticket( $id, $sender["bin_id"], $sender["user_id"] );
+       $res = $this->move_ticket( $id, $sender["bin_id"], $user_id );
      $t = $this->get_ticket($id);
      if( $res && $this->settings["log_reject"] == "on" ) {
        $logParams["action"] = "REJECTED";
@@ -711,60 +711,62 @@ class zenTrack extends zen {
 	 $eParams["body"] = $comments;
        $eParams["tid"] = $id;
        $message = $this->formatEmailMessage($eParams);
-       $this->sendEmail($senderID,$subject,$message,$user_id);
+       //todo: update this to use $this->get_bin_roles(); and create
+       //      a list of recipients
+       $this->sendEmail($sender["user_id"],$subject,$message,$user_id);
      }      
      return($res);
    }
    
    function relate_ticket( $id, $relations, $user_id = '', $comments = '' ) {
-      // takes either a comma delimited string
-      // or an array of ticket ids
-      // checks to insure they exist before performing
-      // relations
-      // 
-      // THIS FUNCTION IS VERY INEFFICIENT AND NEEDS TO BE REVISED
-      // IT'S A HORRIBLE HACK FIX NOW, AND PROBABLY REQUIRES
-      // THE CREATION OF A NEW DB TABLE AND SOME EDITS
-      // TO THIS FUNCTION (possibly the addition of an addRelation()
-      // and dropRelation() method to encompass non-global updates)
-      
-      $t = $this->get_ticket($id);      
-      if( !is_array($relations) ) {
-    $relations = trim($relations);
-    $relations = split(" *, *", $relations);
-      }
-      $relations = $this->checkRelations($relations,$id);
-  
-      $rel = (is_array($relations))? join(",",$relations) : "";
-      $res = $this->update_ticket($id, array("relations"=>$rel));
-      if( is_array($relations) ) {      
-    //
-    // 
-    // 
-    // 
-    // need to add some methodology here to update the tickets
-    // which this one is related to to reflect that relation as
-    // well, and to remove relations from tickets which used to
-    // be related to this one which aren't anymore
-    // 
-    // see the comments at the top of this method for more gripes
-    // about this bug
-    // 
-    // 
-    // 
-      }
-
-      if( $res && $this->settings["log_relate"] == "on" && $user_id ) {
-    $logParams["action"] = "RELATED";
-    $logParams["bin_id"] = $t["bin_id"];
-    $logParams["user_id"] = $user_id;
-    $logParams["ticket_id"] = $t["ticket_id"];
-    $logParams["entry"] = join(",",$relations);
-    if( $comments )
-      $logParams["entry"] .= "\n\n".$comments;
-    $this->add_log($id,$logParams);
-      }
-      return( $res );
+     // takes either a comma delimited string
+     // or an array of ticket ids
+     // checks to insure they exist before performing
+     // relations
+     // 
+     // THIS FUNCTION IS VERY INEFFICIENT AND NEEDS TO BE REVISED
+     // IT'S A HORRIBLE HACK FIX NOW, AND PROBABLY REQUIRES
+     // THE CREATION OF A NEW DB TABLE AND SOME EDITS
+     // TO THIS FUNCTION (possibly the addition of an addRelation()
+     // and dropRelation() method to encompass non-global updates)
+     
+     $t = $this->get_ticket($id);      
+     if( !is_array($relations) ) {
+       $relations = trim($relations);
+       $relations = split(" *, *", $relations);
+     }
+     $relations = $this->checkRelations($relations,$id);
+     
+     $rel = (is_array($relations))? join(",",$relations) : "";
+     $res = $this->update_ticket($id, array("relations"=>$rel));
+     if( is_array($relations) ) {      
+       //
+       // 
+       // 
+       // 
+       // need to add some methodology here to update the tickets
+       // which this one is related to to reflect that relation as
+       // well, and to remove relations from tickets which used to
+       // be related to this one which aren't anymore
+       // 
+       // see the comments at the top of this method for more gripes
+       // about this bug
+       // 
+       // 
+       // 
+     }
+     
+     if( $res && $this->settings["log_relate"] == "on" && $user_id ) {
+       $logParams["action"] = "RELATED";
+       $logParams["bin_id"] = $t["bin_id"];
+       $logParams["user_id"] = $user_id;
+       $logParams["ticket_id"] = $t["ticket_id"];
+       $logParams["entry"] = join(",",$relations);
+       if( $comments )
+	 $logParams["entry"] .= "\n\n".$comments;
+       $this->add_log($id,$logParams);
+     }
+     return( $res );
    }
    
    function reopen_ticket( $id, $user_id = 'NULL', $comments = '' ) {
@@ -816,9 +818,9 @@ class zenTrack extends zen {
    }
       
    function test_ticket( $id, $user_id, $hours = '', $comments = '' ) {
-      // updates the testing parameter to reflect
-      // a status of 'testing completed' for the ticket
-      
+     // updates the testing parameter to reflect
+     // a status of 'testing completed' for the ticket
+     
      $t = $this->get_ticket($id);
      $res = $this->update_ticket($id, array("tested"=>2));
      if( $res && $this->settings["log_test"] ) {
@@ -1981,7 +1983,8 @@ class zenTrack extends zen {
        }
        $this->lastUsersBins = $vars;
      }
-     $adp = (is_array($this->lastUsersBins))? join(",",$this->lastUsersBins) : "-none-";
+     $adp = (is_array($this->lastUsersBins))? 
+       join(",",$this->lastUsersBins) : "-none-";
      $this->addDebug("getUsersBins()results",$adp,3);
      return $this->lastUsersBins;
    }
@@ -1992,136 +1995,272 @@ class zenTrack extends zen {
      if( !$this->settings["allow_cview"] )
        return false;
      $ticket = $this->get_ticket($ticket_id);
-     return( $user_id == $ticket["creator_id"] );       
+     return( $user_id == $ticket["creator_id"] );
    }
    
    function checkAccess( $user_id, $bin_id, $action = '' ) {
-      // takes the user_id, the bin_id and the action in
-      // question, and determines whether the logged in
-      // user can perform it
-      
-      $actions = array(
-             "create"  =>  $this->settings["level_create"],
-             "move"    =>  $this->settings["level_move"],
-             "log"     =>  $this->settings["level_user"],
-             "accept"  =>  $this->settings["level_accept"],
-             "assign"  =>  $this->settings["level_assign"],
-             "yank"    =>  $this->settings["level_yank"],
-             "test"    =>  $this->settings["level_test"],
-             "approve" =>  $this->settings["level_approve"],
-             "reject"  =>  $this->settings["level_sup"],
-             "reopen"  =>  $this->settings["level_sup"],
-             "edit"    =>  $this->settings["level_edit"],
-             "upload"  =>  $this->settings["level_user"],
-             "print"   =>  $this->settings["level_view"],
-             "email"   =>  $this->settings["level_view"]
-             );
-      $level = $actions["$action"];
-      if( !strlen($level) ) {
-	$level = ($this->settings["$action"])? 
-	  $this->settings["$action"] : $this->settings["level_view"];
-      }
-      $access = $this->getAccess($user_id);
-      if( strlen($access["$bin_id"]) ) {
-	return( $access["$bin_id"] >= $level );
-      } else {
-	$user = $this->getUser($user_id);
-	return( $user["access_level"] >= $level );
-      }
+     // takes the user_id, the bin_id and the action in
+     // question, and determines whether the logged in
+     // user can perform it
+     
+     // get a list of actions
+     $actions = $this->getActions();
+     // make sure our action is in the list
+     if( isset($actions["$action"]) ) {
+       $level = $actions["$action"]["level"];
+     }
+     else {
+       // return the default level
+       $level = (preg_match("@^level_@", $action) && $this->settings["$action"])? 
+	 $this->settings["$action"] : $this->settings["level_view"];
+     }
+     // find out what access our user has
+     $access = $this->getAccess($user_id);
+     // if they have a bin specific access check that
+     if( strlen($access["$bin_id"]) ) {
+       return( $access["$bin_id"] >= $level );
+     } 
+     // otherwise just check against their default access
+     else {
+       $user = $this->getUser($user_id);
+       return( $user["access_level"] >= $level );
+     }
    }
    
-   function actionApplicable( $id, $action, $user_id = '' ) {
-      // check to see if an action is applicable to
-      // the current ticket, based on it's status, the
-      // logged in users access, and the actions requirements
-      // if an array is sent in place of the ticket id, it will
-      // be used as the tickets parameters (saving a db lookup)
-      
-      // actions array contains the following params
-      //    0 - must be owner of ticket
-      //               0 - false
-      //               1 - true
-      //               2 - must NOT be owner
-      //               3 - must not be owned by anyone
-      //               4 - must be owned, and must not be owner
-      //    1 - must meet checkAccess
-      //    2 - ticket status
-      //    3 - supervisor override?
-      
-      $action = strtolower($action);
-      $actions = array(          
-             "move"    => array( 1, 1, array('OPEN','PENDING'), 0 ),
-             "log"     => array( 1, 1, array('OPEN','PENDING'), 1 ),
-             "accept"  => array( 3, 1, array('OPEN'),           0 ), 
-             "assign"  => array( 3, 1, array('OPEN'),           0 ),
-             "yank"    => array( 4, 1, 0,                       0 ),
-             "test"    => array( 0, 1, array('PENDING'),        0 ),
-             "approve" => array( 0, 1, array('PENDING'),        0 ),
-             "reject"  => array( 1, 1, array('OPEN','PENDING'), 0 ),
-             "close"   => array( 1, 1, array('OPEN'),           0 ),
-             "relate"  => array( 1, 1, 0,                       0 ),
-             "reopen"  => array( 0, 1, array('PENDING','CLOSED'), 0 ),
-             "edit"    => array( 0, 1, array('OPEN','PENDING'), 0 ),
-             "upload"  => array( 1, 1, 0,                       1 ),
-             "print"   => array( 0, 1, 0,                       0 ),
-             "email"   => array( 0, 1, 0,                       0 )
-             );
-      $n = "allow_$action";
-      if( $this->settings["$n"] && $this->settings["$n"] != "on" )
-	return false;
-      $c = $actions["$action"];
-      if( is_array($id) ) {
-	$ticket = $id;
-	$id = $ticket["id"];
-	$bin_id = $ticket["bin_id"];
-      } else { 
-	$ticket = $this->get_ticket($id);
-	$bin_id = $ticket["bin_id"];
-      }
-      
-      if( $c[0] == 2 ) {
-	if( $ticket["user_id"] == $user_id )
-	  return false;
-      } else if( $c[0] == 3 ) {
-	if( $ticket["user_id"] )
-	  return false;
-      } else if( $c[0] == 4 ) {
-	if( !$ticket["user_id"] || $ticket["user_id"] == $user_id )
-	  return false;
-      } else if( $c[0] ) {
-	if( $c[3] ) {
-	  $user = $this->get_user($user_id);
-	  $access = $this->getAccess($user_id);
-	}  
-	if( $ticket["user_id"] != $user_id ) {
-	  if( !$c[3] 
-	      || ( strlen($access["$bin_id"]) 
-		   && $access["bin_id"] < $this->settings["level_super"] )
-	      || ( !strlen($access["$bin_id"]) 
-		   && $user["access_level"] < $this->settings["level_super"])
-	      )
-	    return false;
-	}
-      }
-      if( $c[1] ) {
-	if( !$this->checkAccess($user_id, $bin_id, $action) ) 
-	  return false;
-      }
-      if( $c[2] ) {
-	if( !is_array($c[2]) )
-	  $c[2] = array($c[2]);
-	if( !in_array($ticket["status"],$c[2]) )
-	  return false;
-      }
-      if( $action == "approve" && ($ticket["tested"] == 1 || $ticket["approved"] != 1) )
-	return false;
-      else if( $action == "reject" && !$this->getTicketSender($id) ) 
-	return false;
-      else if( $action == "test" && $ticket["tested"] != 1 )
-	return false;
-      
-      return true;
+   function actionApplicable( $id, $action, $user_id = '', $noaccess = 0 ) {
+     // check to see if an action is applicable to
+     // the current ticket, based on it's status, the
+     // logged in users access, and the actions requirements
+     // if an array is sent in place of the ticket id, it will
+     // be used as the tickets parameters (saving a db lookup)
+     // $noaccess can be used to override the access requirements
+     // for the action (in the case of email interface)
+     
+     // get a list of actions
+     $actions = $this->getActions();
+     $action = strtolower($action);
+     
+     // look at the settings to make sure
+     // this action is on
+     //todo: when we move to action sets
+     // this should check the enabled field
+     // for the action instead
+     $n = "allow_$action";
+     if( $this->settings["$n"] && $this->settings["$n"] != "on" )
+       return false;
+
+     // get the action's properties
+     $c = $actions["$action"];
+     // return an error if this fails
+     if( !$c ) {
+       $this->addDebug("actionApplicable","The action $action doesn't exist!",1);
+       return false;
+     }
+     // check for an access override
+     if( $noaccess )
+       $c["access"] = 0;
+
+     // get the ticket's properties
+     if( is_array($id) ) {
+       // if it's already an array, we must
+       // have passed the whole thing instead of
+       // the array, so don't fetch it
+       $ticket = $id;
+       $id = $ticket["id"];
+       $bin_id = $ticket["bin_id"];
+     } else { 
+       // query for properties
+       $ticket = $this->get_ticket($id);
+       $bin_id = $ticket["bin_id"];
+     }
+     
+     // check to see if we meet ownership requirements
+     if( $c["owner"] == 2 ) {
+       // here we must not be the owner
+       if( $ticket["user_id"] == $user_id )
+	 return false;
+     } else if( $c["owner"] == 3 ) {
+       // here there must be no owner
+       if( $ticket["user_id"] )
+	 return false;
+     } else if( $c["owner"] == 4 ) {
+       // here it must be owned and we must not be
+       // the owner
+       if( !$ticket["user_id"] || $ticket["user_id"] == $user_id )
+	 return false;
+     } else if( $c["owner"] > 0 ) {
+       // here we must be the owner (or there is an override)
+       // see if we can override this
+       // if so, we need to find out if we are a super
+       if( $c["override"] ) {
+	 $user = $this->get_user($user_id);
+	 $access = $this->getAccess($user_id);
+       }
+       // if we aren't the owner, check special conditions
+       // then return false if not met
+       if( $ticket["user_id"] != $user_id ) {
+	 if( !$c["override"] 
+	     || ( strlen($access["$bin_id"]) 
+		  && $access["bin_id"] < $this->settings["level_super"] )
+	     || ( !strlen($access["$bin_id"]) 
+		  && $user["access_level"] < $this->settings["level_super"])
+	     )
+	   return false;
+       }
+     }
+     // check to see if there is an access requirement
+     if( $c["access"] > 0 ) {
+       if( !$this->checkAccess($user_id, $bin_id, $action) ) 
+	 return false;
+     }
+     // check to see if there is a status requirement
+     if( is_array($c["status"]) ) {
+       if( !in_array($ticket["status"],$c["status"]) )
+	 return false;
+     }
+     // special conditions if it's an approval
+     if( $action == "approve" 
+	 && ($ticket["tested"] == 1 || $ticket["approved"] != 1) )
+       return false;  // it needs testing first
+     else if( $action == "reject" && !$this->getTicketSender($id) ) 
+       return false;  // there's no one to reject to
+     else if( $action == "test" && $ticket["tested"] != 1 )
+       return false;  // ticket doesn't require testing
+     
+     // all checks passed, return true
+     return true;
    }
+   
+   function getActions() {
+     // actions array contains the following params
+     //   "level"   - required access level to perform action 
+     //   "owner"   - must be owner of ticket
+     //                0 - false
+     //                1 - true
+     //                2 - must NOT be owner
+     //                3 - must not be owned by anyone
+     //                4 - must be owned, and must not be owner
+     //   "access"   - must meet checkAccess
+     //   "status"   - ticket status
+     //   "override" - supervisor override?     
+     if( !$this->actions ) {
+       $actions = array();
+       $actions["accept"] = array( 
+				    "owner"    => 3, 
+				    "access"   => 1, 
+				    "status"   => array('OPEN'),
+				    "override" => 0,
+				    "level"    => $this->settings["level_accept"]
+				    );
+       $actions["approve"] = array( 
+				     "owner"    => 0, 
+				     "access"   => 1, 
+				     "status"   => array('PENDING'),
+				     "override" => 0,
+				     "level"    => $this->settings["level_approve"]
+				     );
+       $actions["assign"] = array(
+				    "owner"    => 3,
+				    "access"   => 1,
+				    "status"   => array('OPEN'),
+				    "override" => 0,
+				    "level"    => $this->settings["level_assign"]
+				    );
+       $actions["close"] = array(
+				   "owner"    => 1,
+				   "access"   => 1,
+				   "status"   => array('OPEN','PENDING'),
+				  "override" => 0,
+				   "level"    => $this->settings["level_user"]
+				   );
+       $actions["create"] = array(
+				    "owner"    => 0,
+				    "access"   => 1,
+				    "status"   => null,
+				    "override" => 0,
+				    "level"    => $this->settings["level_create"]
+				    );
+       $actions["edit"] = array(
+				  "owner"    => 0,
+				  "access"   => 1,
+				  "status"   => array('OPEN','PENDING'),
+				  "override" => 0,
+				  "level"    => $this->settings["level_edit"]
+				  );
+       $actions["email"] = array(
+				   "owner"    => 0,
+				   "access"   => 1,
+				   "status"   => null,
+				   "override" => 0,
+				   "level"    => $this->settings["level_view"]
+				   );
+       $actions["log"] = array(
+				 "owner"    => 0,
+				 "access"   => 1,
+				 "status"   => array('OPEN','PENDING'),
+				 "override" => 1,
+				 "level"    => $this->settings["level_user"]
+				 );
+       $actions["move"] = array(
+				  "owner"    => 1,
+				  "access"   => 1,
+				  "status"   => array('OPEN','PENDING'),
+				  "override" => 1,
+				  "level"    => $this->settings["level_move"]
+				);
+       $actions["print"] = array(
+				   "owner"    => 0,
+				   "access"   => 1,
+				   "status"   => null,
+				   "override" => 0,
+				   "level"    => $this->settings["level_view"]
+				   );
+       $actions["reject"] = array(
+				    "owner"    => 1,
+				    "access"   => 1,
+				    "status"   => array('OPEN','PENDING'),
+				    "override" => 0,
+				    "level"    => $this->settings["level_user"]
+				    );
+       $actions["test"] = array(
+				  "owner"    => 0,
+				  "access"   => 1,
+				  "status"   => array('PENDING'),
+				  "override" => 0,
+				  "level"    => $this->settings["level_test"]
+				  );
+       $actions["relate"] = array(
+				    "owner"    => 0,
+				    "access"   => 1,
+				    "status"   => null,
+				    "override" => 0,
+				    "level"    => $this->settings["level_user"]
+				    );
+       $actions["reopen"] = array(
+				    "owner"    => 0,
+				    "access"   => 1,
+				    "status"   => array('PENDING','CLOSED'),
+				    "override" => 0,
+				    "level"    => $this->settings["level_user"]
+				    );
+       $actions["upload"] = array(
+				    "owner"    => 1,
+				    "access"   => 1,
+				    "status"   => null,
+				    "override" => 1,
+				    "level"    => $this->settings["level_user"]
+				    );
+       $actions["yank"] = array(
+				  "owner"    => 4,
+				  "access"   => 1,
+				  "status"   => null,
+				  "override" => 0,
+				  "level"    => $this->settings["level_yank"]
+				  );
+       $this->actions = $actions;
+     }
+     return $this->actions;
+   }   
    
    function getBinName($id) {
      // returns the name of a bin
@@ -2311,19 +2450,22 @@ class zenTrack extends zen {
        $order = "";
      $query = "SELECT $fields FROM ".$this->table_settings." $order";
      $vars = $this->db_queryIndexed($query);
-     foreach($vars as $v) {
-       if( preg_match("@^url_@",$v["name"]) ) {
-	 if(preg_match("@/$@", $rootUrl) && preg_match("@^/@", $v["value"]) ) {
-	   preg_replace("@/$@", $rootUrl) . $v["value"];
-	 } else if( !preg_match("@/$@", $rootUrl) && !preg_match("@^/@", $v["value"]) ) {
-	   $v["value"] = $rootUrl ."/".$v["value"];    
-	 } else {
-	   $v["value"] = $rootUrl . $v["value"];
+     if( isset($rootUrl) && $rootUrl != "" ) {
+       foreach($vars as $v) {
+	 if( preg_match("@^url_@",$v["name"]) ) {
+	   if(preg_match("@/$@", $rootUrl) && preg_match("@^/@", $v["value"]) ) {
+	     preg_replace("@/$@", $rootUrl) . $v["value"];
+	   } else if( !preg_match("@/$@", $rootUrl) 
+		      && !preg_match("@^/@", $v["value"]) ) {
+	     $v["value"] = $rootUrl ."/".$v["value"];    
+	   } else {
+	     $v["value"] = $rootUrl . $v["value"];
+	   }
 	 }
+	 $vals["{$v['name']}"] = ($flag)? $v : $v["value"];
        }
-       $vals["{$v['name']}"] = ($flag)? $v : $v["value"];
+       return($vals);
      }
-     return($vals);
    }
    
    function getTypeName($id) {
@@ -2785,6 +2927,7 @@ class zenTrack extends zen {
    
    var $table_access;
    var $table_attachments;
+   var $actions;
    var $table_bins;
    var $table_logs;   
    var $table_logs_archived;
