@@ -1531,3 +1531,1331 @@ msgid "yes"
 msgstr "ja"
 
 
+msgid "%"
+msgstr ""
+
+
+msgid "* = required"
+msgstr ""
+
+
+msgid "A large number of elements will appear better in a line chart, bar charts tend to be more pleasing with smaller numbers."
+msgstr ""
+
+
+msgid "About"
+msgstr ""
+
+
+msgid "Accept"
+msgstr ""
+
+
+msgid "Access"
+msgstr ""
+
+
+msgid "Account Options"
+msgstr ""
+
+
+msgid "Account Settings"
+msgstr ""
+
+
+msgid "Account is Active"
+msgstr ""
+
+
+msgid "Action Taken"
+msgstr ""
+
+
+msgid "Action"
+msgstr ""
+
+
+msgid "Active"
+msgstr ""
+
+
+msgid "Add Attachment"
+msgstr ""
+
+
+msgid "Add Notify Recipient"
+msgstr ""
+
+
+msgid "Add Recipient"
+msgstr ""
+
+
+msgid "Add a total figure"
+msgstr ""
+
+
+msgid "Add an average figure"
+msgstr ""
+
+
+msgid "Add recipients to the notify list for this ticket"
+msgstr ""
+
+
+msgid "Add"
+msgstr ""
+
+
+msgid "Admin"
+msgstr ""
+
+
+msgid "Administrative Options"
+msgstr ""
+
+
+msgid "All entries must contain a value."
+msgstr ""
+
+
+msgid "Amount of time worked"
+msgstr ""
+
+
+msgid "Any valid date format"
+msgstr ""
+
+
+msgid "Approval Required"
+msgstr ""
+
+
+msgid "Approve"
+msgstr ""
+
+
+msgid "Archive Tickets"
+msgstr ""
+
+
+msgid "Are you sure you want to permanently delete this template?"
+msgstr ""
+
+
+msgid "Assign Ticket"
+msgstr ""
+
+
+msgid "Assign the ticket to a new user"
+msgstr ""
+
+
+msgid "Assign"
+msgstr ""
+
+
+msgid "Assigned to"
+msgstr ""
+
+
+msgid "Associate this ticket with others"
+msgstr ""
+
+
+msgid "Attach"
+msgstr ""
+
+
+msgid "Attachment"
+msgstr ""
+
+
+msgid "Attachments on ? #?"
+msgstr ""
+
+
+msgid "Bar Chart"
+msgstr ""
+
+
+msgid "Bin Name"
+msgstr ""
+
+
+msgid "Bin ticket is located in"
+msgstr ""
+
+
+msgid "Bins cannot be destroyed, to maintain data integrity."
+msgstr ""
+
+
+msgid "By Date"
+msgstr ""
+
+
+msgid "By Parameters"
+msgstr ""
+
+
+msgid "By Text Match"
+msgstr ""
+
+
+msgid "By Text"
+msgstr ""
+
+
+msgid "Change Language"
+msgstr ""
+
+
+msgid "Change User Password"
+msgstr ""
+
+
+msgid "Change Your Default Bin"
+msgstr ""
+
+
+msgid "Change Your Language"
+msgstr ""
+
+
+msgid "Change"
+msgstr ""
+
+
+msgid "Changing the Bin Configuration has a large system impact."
+msgstr ""
+
+
+msgid "Changing these settings can have a severe impact on the system.  Please consider this before making modifications."
+msgstr ""
+
+
+msgid "Changing this configuration list has a large system impact."
+msgstr ""
+
+
+msgid "Chart Options"
+msgstr ""
+
+
+msgid "Choose one of the following options"
+msgstr ""
+
+
+msgid "Click 'Search' to execute the search"
+msgstr ""
+
+
+msgid "Click 'Update' to change your default bin"
+msgstr ""
+
+
+msgid "Click 'Update' to change your language"
+msgstr ""
+
+
+msgid "Click ? to ?"
+msgstr ""
+
+
+msgid "Click Here"
+msgstr ""
+
+
+msgid "Click button to add recipients"
+msgstr ""
+
+
+msgid "Click button to assign relations"
+msgstr ""
+
+
+msgid "Click button to assign"
+msgstr ""
+
+
+msgid "Click button to close"
+msgstr ""
+
+
+msgid "Click button to create log"
+msgstr ""
+
+
+msgid "Click button to move ticket"
+msgstr ""
+
+
+msgid "Click button to open"
+msgstr ""
+
+
+msgid "Click button to reject"
+msgstr ""
+
+
+msgid "Click button to send email"
+msgstr ""
+
+
+msgid "Click button to set estimated hours to completion"
+msgstr ""
+
+
+msgid "Click button to upload file and attach to ticket"
+msgstr ""
+
+
+msgid "Click button to yank ticket"
+msgstr ""
+
+
+msgid "Click button to"
+msgstr ""
+
+
+msgid "Close Ticket"
+msgstr ""
+
+
+msgid "Close"
+msgstr ""
+
+
+msgid "Closed"
+msgstr ""
+
+
+msgid "Combine selected ?s"
+msgstr ""
+
+
+msgid "Comments or Instructions"
+msgstr ""
+
+
+msgid "Comments"
+msgstr ""
+
+
+msgid "Containing"
+msgstr ""
+
+
+msgid "Create New"
+msgstr ""
+
+
+msgid "Create Reports"
+msgstr ""
+
+
+msgid "Create Sub-Project"
+msgstr ""
+
+
+msgid "Create a log entry, or log hours worked"
+msgstr ""
+
+
+msgid "Create a new user account"
+msgstr ""
+
+
+msgid "Create"
+msgstr ""
+
+
+msgid "Current Bin"
+msgstr ""
+
+
+msgid "Current status of the ticket"
+msgstr ""
+
+
+msgid "Data Options"
+msgstr ""
+
+
+msgid "Data Selection"
+msgstr ""
+
+
+msgid "Date Range"
+msgstr ""
+
+
+msgid "Date log was created"
+msgstr ""
+
+
+msgid "Date"
+msgstr ""
+
+
+msgid "Days"
+msgstr ""
+
+
+msgid "Default Access Level"
+msgstr ""
+
+
+msgid "Delete Reports"
+msgstr ""
+
+
+msgid "Delete"
+msgstr ""
+
+
+msgid "Description of Attachment"
+msgstr ""
+
+
+msgid "Details"
+msgstr ""
+
+
+msgid "Disabled"
+msgstr ""
+
+
+msgid "Display Values"
+msgstr ""
+
+
+msgid "Drop Recipients"
+msgstr ""
+
+
+msgid "Edit Bins"
+msgstr ""
+
+
+msgid "Edit Priorities"
+msgstr ""
+
+
+msgid "Edit Settings"
+msgstr ""
+
+
+msgid "Edit Systems"
+msgstr ""
+
+
+msgid "Edit Tasks"
+msgstr ""
+
+
+msgid "Edit Tickets"
+msgstr ""
+
+
+msgid "Edit Types"
+msgstr ""
+
+
+msgid "Edit Users"
+msgstr ""
+
+
+msgid "Edit Users/Access"
+msgstr ""
+
+
+msgid "Edit the Active ?s"
+msgstr ""
+
+
+msgid "Edit the current bins"
+msgstr ""
+
+
+msgid "Edit the priorities list"
+msgstr ""
+
+
+msgid "Edit the systems list"
+msgstr ""
+
+
+msgid "Edit the tasks list"
+msgstr ""
+
+
+msgid "Edit the types list"
+msgstr ""
+
+
+msgid "Edit the zenTrack settings.  Consult the documentation before using this feature."
+msgstr ""
+
+
+msgid "Edit ticket information"
+msgstr ""
+
+
+msgid "Edit"
+msgstr ""
+
+
+msgid "Elapsed"
+msgstr ""
+
+
+msgid "Email Ticket"
+msgstr ""
+
+
+msgid "Email"
+msgstr ""
+
+
+msgid "Enter Project Information"
+msgstr ""
+
+
+msgid "Enter Ticket IDs"
+msgstr ""
+
+
+msgid "Enter a ticket ID and press enter"
+msgstr ""
+
+
+msgid "Enter any hours worked not previously accounted for"
+msgstr ""
+
+
+msgid "Enter hours worked"
+msgstr ""
+
+
+msgid "Enter multiple ids, separated by a comma"
+msgstr ""
+
+
+msgid "Enter registered users"
+msgstr ""
+
+
+msgid "Enter the hours worked for this entry"
+msgstr ""
+
+
+msgid "Enter the number of hours (can contain up to 2 decimal places)"
+msgstr ""
+
+
+msgid "Enter ticket ids, separated by commas"
+msgstr ""
+
+
+msgid "Equals"
+msgstr ""
+
+
+msgid "Est Hrs"
+msgstr ""
+
+
+msgid "Estimate Ticket Hours"
+msgstr ""
+
+
+msgid "Estimated Hours to Complete"
+msgstr ""
+
+
+msgid "Estimated Hours"
+msgstr ""
+
+
+msgid "Estimated time to complete"
+msgstr ""
+
+
+msgid "Greater Than"
+msgstr ""
+
+
+msgid "Help"
+msgstr ""
+
+
+msgid "Home"
+msgstr ""
+
+
+msgid "Hours Worked"
+msgstr ""
+
+
+msgid "Hours"
+msgstr ""
+
+
+msgid "ID of the ?"
+msgstr ""
+
+
+msgid "ID of the ticket"
+msgstr ""
+
+
+msgid "Image Type"
+msgstr ""
+
+
+msgid "Image"
+msgstr ""
+
+
+msgid "Importance of the ?"
+msgstr ""
+
+
+msgid "Initials"
+msgstr ""
+
+
+msgid "Items in this list cannot be destroyed, to maintain data integrity."
+msgstr ""
+
+
+msgid "Less Than"
+msgstr ""
+
+
+msgid "Less"
+msgstr ""
+
+
+msgid "Level"
+msgstr ""
+
+
+msgid "License"
+msgstr ""
+
+
+msgid "Line Chart"
+msgstr ""
+
+
+msgid "List All Users"
+msgstr ""
+
+
+msgid "Log ID"
+msgstr ""
+
+
+msgid "Log Off"
+msgstr ""
+
+
+msgid "Log On"
+msgstr ""
+
+
+msgid "Log"
+msgstr ""
+
+
+msgid "Login Name"
+msgstr ""
+
+
+msgid "Login and passphrase are case sensitive"
+msgstr ""
+
+
+msgid "Manage Reports"
+msgstr ""
+
+
+msgid "Master Project"
+msgstr ""
+
+
+msgid "Maximum Age"
+msgstr ""
+
+
+msgid "Modify Reports"
+msgstr ""
+
+
+msgid "Modify"
+msgstr ""
+
+
+msgid "Months"
+msgstr ""
+
+
+msgid "More"
+msgstr ""
+
+
+msgid "Most Current"
+msgstr ""
+
+
+msgid "Move Ticket"
+msgstr ""
+
+
+msgid "Move"
+msgstr ""
+
+
+msgid "Name of the ?"
+msgstr ""
+
+
+msgid "New Default Bin"
+msgstr ""
+
+
+msgid "New Language"
+msgstr ""
+
+
+msgid "New Password"
+msgstr ""
+
+
+msgid "New Search"
+msgstr ""
+
+
+msgid "Note"
+msgstr ""
+
+
+msgid "Notes"
+msgstr ""
+
+
+msgid "Notify List"
+msgstr ""
+
+
+msgid "Notify"
+msgstr ""
+
+
+msgid "OR manually enter email addresses, seperated by commas"
+msgstr ""
+
+
+msgid "Open ticket closed in error"
+msgstr ""
+
+
+msgid "Opened"
+msgstr ""
+
+
+msgid "Options"
+msgstr ""
+
+
+msgid "Or add an unregistered user"
+msgstr ""
+
+
+msgid "Order"
+msgstr ""
+
+
+msgid "Percent completed"
+msgstr ""
+
+
+msgid "Permanently remove user ??"
+msgstr ""
+
+
+msgid "Person ticket is assigned to"
+msgstr ""
+
+
+msgid "Pick a type"
+msgstr ""
+
+
+msgid "Pie Chart"
+msgstr ""
+
+
+msgid "Please consider this before making modifications."
+msgstr ""
+
+
+msgid "Please enter a ticket ID"
+msgstr ""
+
+
+msgid "Please keep track of your new passphrase."
+msgstr ""
+
+
+msgid "Press 'Reset' to restore the original values."
+msgstr ""
+
+
+msgid "Press 'Save' when you are sure that the values are correct."
+msgstr ""
+
+
+msgid "Press LESS to remove blank fields"
+msgstr ""
+
+
+msgid "Press LESS to remove blank rows"
+msgstr ""
+
+
+msgid "Press MORE to add more custom fields"
+msgstr ""
+
+
+msgid "Press MORE to create new rows"
+msgstr ""
+
+
+msgid "Press Reset to return to original values"
+msgstr ""
+
+
+msgid "Press Reset to return to users existing values"
+msgstr ""
+
+
+msgid "Press Save to save changes"
+msgstr ""
+
+
+msgid "Press Update to save changes"
+msgstr ""
+
+
+msgid "Pri"
+msgstr ""
+
+
+msgid "Print"
+msgstr ""
+
+
+msgid "Pull ticket from the current owner"
+msgstr ""
+
+
+msgid "Range"
+msgstr ""
+
+
+msgid "Really log out of zenTrack?"
+msgstr ""
+
+
+msgid "Reason"
+msgstr ""
+
+
+msgid "Reject Ticket"
+msgstr ""
+
+
+msgid "Reject"
+msgstr ""
+
+
+msgid "Relate Ticket"
+msgstr ""
+
+
+msgid "Relate"
+msgstr ""
+
+
+msgid "Related ?s"
+msgstr ""
+
+
+msgid "Related Tickets"
+msgstr ""
+
+
+msgid "Related"
+msgstr ""
+
+
+msgid "Remember My Password"
+msgstr ""
+
+
+msgid "Reopen Ticket"
+msgstr ""
+
+
+msgid "Reopen"
+msgstr ""
+
+
+msgid "Report Type"
+msgstr ""
+
+
+msgid "Reports"
+msgstr ""
+
+
+msgid "Requirements"
+msgstr ""
+
+
+msgid "Reset"
+msgstr ""
+
+
+msgid "Return ticket to sender"
+msgstr ""
+
+
+msgid "Retype New Password"
+msgstr ""
+
+
+msgid "Role"
+msgstr ""
+
+
+msgid "Scatter Chart"
+msgstr ""
+
+
+msgid "Search For Logs"
+msgstr ""
+
+
+msgid "Search For Users"
+msgstr ""
+
+
+msgid "Select ?s"
+msgstr ""
+
+
+msgid "Select a Recipient"
+msgstr ""
+
+
+msgid "Select a User"
+msgstr ""
+
+
+msgid "Select a file to upload"
+msgstr ""
+
+
+msgid "Select an activity"
+msgstr ""
+
+
+msgid "Send a link to this ticket only"
+msgstr ""
+
+
+msgid "Send a summary of the ticket"
+msgstr ""
+
+
+msgid "Send a summary, and the ticket's log"
+msgstr ""
+
+
+msgid "Send ticket to another bin"
+msgstr ""
+
+
+msgid "Send ticket to specified recipients"
+msgstr ""
+
+
+msgid "Set Access for ?"
+msgstr ""
+
+
+msgid "Set Password"
+msgstr ""
+
+
+msgid "Set status to closed/pending"
+msgstr ""
+
+
+msgid "Set testing to completed on ticket"
+msgstr ""
+
+
+msgid "Set the expected hours this ticket will take to complete"
+msgstr ""
+
+
+msgid "Set"
+msgstr ""
+
+
+msgid "Settings Administration"
+msgstr ""
+
+
+msgid "Settings"
+msgstr ""
+
+
+msgid "Show All Users"
+msgstr ""
+
+
+msgid "Show Both"
+msgstr ""
+
+
+msgid "Show Graph"
+msgstr ""
+
+
+msgid "Show Tables"
+msgstr ""
+
+
+msgid "Stack Chart"
+msgstr ""
+
+
+msgid "Start Date"
+msgstr ""
+
+
+msgid "Start From Date"
+msgstr ""
+
+
+msgid "Submit Results"
+msgstr ""
+
+
+msgid "Subtitle"
+msgstr ""
+
+
+msgid "Support"
+msgstr ""
+
+
+msgid "System History"
+msgstr ""
+
+
+msgid "System error: Ticket ? could not be emailed."
+msgstr ""
+
+
+msgid "System error: Ticket ? hours could not be set"
+msgstr ""
+
+
+msgid "System involved in ticket"
+msgstr ""
+
+
+msgid "Tasks for this project"
+msgstr ""
+
+
+msgid "Tasks"
+msgstr ""
+
+
+msgid "Test Ticket"
+msgstr ""
+
+
+msgid "Test"
+msgstr ""
+
+
+msgid "Tested"
+msgstr ""
+
+
+msgid "Testing Required"
+msgstr ""
+
+
+msgid "Text"
+msgstr ""
+
+
+msgid "The importance of the ticket"
+msgstr ""
+
+
+msgid "The language could not be changed to ?"
+msgstr ""
+
+
+msgid "The language file chosen was not valid"
+msgstr ""
+
+
+msgid "The name of the ticket"
+msgstr ""
+
+
+msgid "The name of the user"
+msgstr ""
+
+
+msgid "The type of ticket"
+msgstr ""
+
+
+msgid "There is already an entry with that value."
+msgstr ""
+
+
+msgid "This could be a long list! Proceed anyways?"
+msgstr ""
+
+
+msgid "This grants the user the specified level of access to all bins not otherwise indicated by 'user access'."
+msgstr ""
+
+
+msgid "Ticket ? has been reopened."
+msgstr ""
+
+
+msgid "Ticket Administration"
+msgstr ""
+
+
+msgid "Ticket Information"
+msgstr ""
+
+
+msgid "Tickets assigned"
+msgstr ""
+
+
+msgid "Tickets"
+msgstr ""
+
+
+msgid "Time"
+msgstr ""
+
+
+msgid "To remove a ? from use, uncheck the 'active' box."
+msgstr ""
+
+
+msgid "To remove a bin from use, uncheck the 'active' box."
+msgstr ""
+
+
+msgid "Tracker"
+msgstr ""
+
+
+msgid "Try using Combine Selected with a very large number of elements, if you intend to view a graphical image."
+msgstr ""
+
+
+msgid "Type of ticket"
+msgstr ""
+
+
+msgid "Uncheck to disable this account."
+msgstr ""
+
+
+msgid "Update"
+msgstr ""
+
+
+msgid "Upload Attachment"
+msgstr ""
+
+
+msgid "Use zero if unsure."
+msgstr ""
+
+
+msgid "User Administration"
+msgstr ""
+
+
+msgid "User Information"
+msgstr ""
+
+
+msgid "User"
+msgstr ""
+
+
+msgid "Users Default Bin"
+msgstr ""
+
+
+msgid "Users Initials"
+msgstr ""
+
+
+msgid "Users System ID"
+msgstr ""
+
+
+msgid "Users email address"
+msgstr ""
+
+
+msgid "Value"
+msgstr ""
+
+
+msgid "View Chart"
+msgstr ""
+
+
+msgid "View Reports"
+msgstr ""
+
+
+msgid "Visit the zenTrack development site"
+msgstr ""
+
+
+msgid "Weeks"
+msgstr ""
+
+
+msgid "Welcome"
+msgstr ""
+
+
+msgid "What to Graph"
+msgstr ""
+
+
+msgid "Who the ? belongs to"
+msgstr ""
+
+
+msgid "Worked"
+msgstr ""
+
+
+msgid "Yank Ticket"
+msgstr ""
+
+
+msgid "Yank"
+msgstr ""
+
+
+msgid "Years"
+msgstr ""
+
+
+msgid "Your language has been changed to ?"
+msgstr ""
+
+
+msgid "Your passphrase must be at least 6 characters long and contain at least 1 non-letter character."
+msgstr ""
+
+
+msgid "accepts up to 2 decimal places"
+msgstr ""
+
+
+msgid "access"
+msgstr ""
+
+
+msgid "create an attachment for this ticket"
+msgstr ""
+
+
+msgid "delete"
+msgstr ""
+
+
+msgid "edit"
+msgstr ""
+
+
+msgid "edit,delete,change access"
+msgstr ""
+
+
+msgid "enter a number"
+msgstr ""
+
+
+msgid "hold control or shift to select multiple users"
+msgstr ""
+
+
+msgid "less"
+msgstr ""
+
+
+msgid "none"
+msgstr ""
+
+
+msgid "optional"
+msgstr ""
+
+
+msgid "password"
+msgstr ""
+
+
+msgid "required"
+msgstr ""
+
+
+msgid "up to two decimal places, optional"
+msgstr ""
+
+
+msgid "use 4 digit year, time is optional"
+msgstr ""
+
+
+msgid "user ID"
+msgstr ""
+
+
+msgid "version"
+msgstr ""
+
+

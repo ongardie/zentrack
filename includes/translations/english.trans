@@ -553,7 +553,7 @@ msgid "Click Here to search for users"
 msgstr ""
 
 
-#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/translations/english.trans"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/translations/french.trans"
 #args ""
 msgid "Click Here"
 msgstr ""
@@ -868,6 +868,12 @@ msgstr ""
 #file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/newProjectForm.php"
 #args ""
 msgid "Details"
+msgstr ""
+
+
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/headerInc.php"
+#args ""
+msgid "Details"),       "Log" => tr("Log"),       "Related" => tr("Related"),       "Attachments" => tr("Attachments"),       "Notify" => tr("Notify"),       "System" => tr("System")
 msgstr ""
 
 
@@ -1573,12 +1579,6 @@ msgid "Notify List"
 msgstr ""
 
 
-#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/ticket_box.php"
-#args ""
-msgid "Notify"
-msgstr ""
-
-
 #file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/actions/email.php"
 #args ""
 msgid "OR manually enter email addresses, seperated by commas"
@@ -1960,12 +1960,6 @@ msgstr ""
 #file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/newTicketForm.php"
 #args ""
 msgid "Related Tickets"
-msgstr ""
-
-
-#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/ticket_box.php"
-#args ""
-msgid "Related"
 msgstr ""
 
 
@@ -2512,12 +2506,6 @@ msgstr ""
 #file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/ticket_tasksBox.php"
 #args ""
 msgid "Tasks for this project"
-msgstr ""
-
-
-#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/ticket_box.php"
-#args ""
-msgid "Tasks"
 msgstr ""
 
 

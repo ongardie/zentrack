@@ -3440,3 +3440,115 @@ msgid "Your passphrase must be at least 6 characters long and
 msgstr ""
 
 
+msgid "Accept"
+msgstr ""
+
+
+msgid "Approve"
+msgstr ""
+
+
+msgid "Assign"
+msgstr ""
+
+
+msgid "Bins cannot be destroyed, to maintain data integrity."
+msgstr ""
+
+
+msgid "Changing the Bin Configuration has a large system impact."
+msgstr ""
+
+
+msgid "Create"
+msgstr ""
+
+
+msgid "Edit"
+msgstr ""
+
+
+msgid "License"
+msgstr ""
+
+
+msgid "Login and passphrase are case sensitive"
+msgstr ""
+
+
+msgid "Notify"
+msgstr ""
+
+
+msgid "Print"
+msgstr ""
+
+
+msgid "Related"
+msgstr ""
+
+
+msgid "Settings Administration"
+msgstr ""
+
+
+msgid "Support"
+msgstr ""
+
+
+msgid "System error: Ticket ? could not be emailed."
+msgstr ""
+
+
+msgid "System error: Ticket ? hours could not be set"
+msgstr ""
+
+
+msgid "Tasks"
+msgstr ""
+
+
+msgid "Test"
+msgstr ""
+
+
+msgid "The language could not be changed to ?"
+msgstr ""
+
+
+msgid "This could be a long list! Proceed anyways?"
+msgstr ""
+
+
+msgid "This grants the user the specified level of access to all bins not otherwise indicated by 'user access'."
+msgstr ""
+
+
+msgid "Ticket #? cannot be edited in its current status"
+msgstr ""
+
+
+msgid "Ticket ? has been reopened."
+msgstr ""
+
+
+msgid "To remove a bin from use, uncheck the 'active' box."
+msgstr ""
+
+
+msgid "Visit the zenTrack development site"
+msgstr ""
+
+
+msgid "Welcome"
+msgstr ""
+
+
+msgid "Your language has been changed to ?"
+msgstr ""
+
+
+msgid "Your passphrase must be at least 6 characters long and contain at least 1 non-letter character."
+msgstr ""
+
+
