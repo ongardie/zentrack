@@ -29,6 +29,10 @@
   **  GET TICKET INFORMATION
   */
   $page_title = tr("Ticket") . " #$id";
+  $varfields = $zen->getVarfieldVals($id);
+  if ( !is_array($varfields) ) {
+    $varfields=array();
+  }
 
   /*
   **  GET PARAMS FOR A PROJECT

@@ -7,6 +7,14 @@
 
 ----- V2.5 (in development) ----
 
+2004-07-30, cfalonso
+Fixed an error in admin panel for custom fields definition and
+added custom fields in detail page for tickets and for projects.
+    -zentrack_2/includes/templates/ticket_detailsBox.php
+    -zentrack_2/includes/templates/editCustomsForm.php
+    -zentrack_2/includes/zenTrack.class
+    -zentrack_2/www/ticket.php
+
 2004-07-29, cfalonso
   Included detail rules for behaviors
     -zentrack_2/includes/zenTrack.class 1.133

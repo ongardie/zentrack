@@ -60,10 +60,10 @@
 	     print "$t<input type='checkbox' name='newIsRequired[$j]' value='1'";
 	     print ($v["is_required"])? " checked" : "";
 	     print ">$te";
-	     print "$t<input type='checkbox' name='newForProject[$j]' value='1'";
+	     print "$t<input type='checkbox' name='newUseForProject[$j]' value='1'";
 	     print ($v["use_for_project"])? " checked" : "";
 	     print ">$te";
-	     print "$t<input type='checkbox' name='newForTicket[$j]' value='1'";
+	     print "$t<input type='checkbox' name='newUseForTicket[$j]' value='1'";
 	     print ($v["use_for_ticket"])? " checked" : "";
 	     print ">$te";
 	     print "$t<input type='checkbox' name='newShowInSearch[$j]' value='1'";
