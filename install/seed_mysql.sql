@@ -21,7 +21,7 @@ INSERT INTO ZENTRACK_BINS (bid, name, priority, active) VALUES (5,'Tech Support'
 INSERT INTO ZENTRACK_BINS (bid, name, priority, active) VALUES (6,'Human Resources',0,1);
 INSERT INTO ZENTRACK_BINS (bid, name, priority, active) VALUES (7,'Test Bin',0,0);
 
-INSERT INTO ZENTRACK_INSERT INTO ZENTRACK_FIELD_MAP (field_map_id, which_view, is_visible, sort_order, num_cols, num_rows, is_required, field_type, field_name, field_label, default_val ) VALUES
+INSERT INTO ZENTRACK_FIELD_MAP (field_map_id, which_view, is_visible, sort_order, num_cols, num_rows, is_required, field_type, field_name, field_label, default_val ) VALUES
   (  1, 'ticket_create', 0,   1,   8,  1, 0, 'label'   , 'id'         , 'ID'       , null        );
 INSERT INTO ZENTRACK_FIELD_MAP(field_map_id, which_view, is_visible, sort_order, num_cols, num_rows, is_required, field_type, field_name, field_label, default_val ) VALUES
   (  2, 'ticket_create', 1,  20, 200,  1, 1, 'text'    , 'title'      , 'Title'    , null        );
