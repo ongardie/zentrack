@@ -15,6 +15,9 @@ abstraction, and endless possibilities for project expansion.
 
 2005-02-09, cfalonso
   Default groups in field_map page didn't show the selected field in the pulldown, just added the $sel variable
+    - includes/templates/fieldMapForm.php (not sure about the version)
+  Fixed syntax error in table create script:
+    - zentrack_2/install/UPGRADE_mysql.sql 1.39
 
 2005-02-08, kato
   Fixed section flags for various views (sections can be added/deleted)
