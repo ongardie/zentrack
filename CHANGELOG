@@ -7,6 +7,11 @@
 
 ----- V2.4 (development, see CVS) ----
 
+2003-04-14, Rob Hillis
+  Fixed broken link to GPL License in Help section
+    - zentrack/www/help/gpl.php
+    - zentrack/includes/misc/LICENSE-GPL-2.0
+
 2003-04-10, Kato
   Removed extra shebang (causing stdout message) from included file
     - zentrack/install/egate_config.php.default 1.9

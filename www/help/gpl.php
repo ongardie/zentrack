@@ -1,7 +1,7 @@
 <?
   include("help_header.php");
 
-  $page_title = "GPL 2.0 Liscence";
+  $page_title = "GPL 2.0 License";
   include("$libDir/nav.php");
 ?>
 <br>
@@ -9,7 +9,7 @@
 <tr>
 <td>
 
-<? print nl2br(join("\n",file("$libDir/misc/LISCENCE-GPL-2.0"))); ?>
+<? print nl2br(join("\n",file("$libDir/misc/LICENSE-GPL-2.0"))); ?>
 
 </td>
 </tr>
