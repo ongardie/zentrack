@@ -23,17 +23,31 @@ class ZenSystemAction extends Zen {
    * CONSTRUCTOR: no need to call this (methods are static)
    */
   function ZenSystemAction() {
-    ZenUtils::safeDebug("ZenSystemAction", "init", "There is no need to instantiate this class"
+    ZenUtils::safeDebug("ZenSystemAction", "init", "There is no need to instantiate this class",
                         160, LVL_WARN);    
   }
   
   /**
    * Load a new page (redirect user) and send parms as url arguments
    *
-   * @param string $newUrl is the page to load (this should be relative, $ini['paths']['url_www'] will be added)
+   * @param string $newURL is the page to load (this should be relative, $ini['paths']['url_www'] will be added)
    * @param array $args contains key/value pairs that will be suffixed ( url.php?key1=value1&key2=value2... )
    */
-  function loadUrl( $newUrl, $args ) { }
+  function loadUrl( $newURL, $args ) {
+  	global $ini;
+  	//Make URL relative to the root.
+  	$newURL = rtrim($ini['paths']['url_www'], '/') . '/' . $newURL;
+  	
+  	if (is_array($args) && count($args) > 0) {
+  		$nameValuePairs = array();
+	  	foreach ($args as $name => $value) {
+	  		$nameValuePairs = urlencode($name) . '=' . $urlencode($value);
+	  	}
+	  	$newURL .= '?' . implode('&', $nameValuePairs);
+  	}
+  	header("Location: $newURL");
+  	exit;
+  }
 
   /**
    * STATIC: Create an entry into a standard data type table 
@@ -46,7 +60,26 @@ class ZenSystemAction extends Zen {
    * @param string $table the database table to insert to
    * @param array $args the values to be inserted
    */
-  function newData( $table, $args ) { }
+  function newData( $table, $args ) {
+  	$query = Zen::getNewQuery();
+  	$query->table($table);
+  	//retrieve the valid field names for this table;
+	$zenDbSchema =& Zen::getZenDbSchema();
+	$dbTableInfo = $zenDbSchema->getTableArray($table);
+	$validFieldNames = array();
+	foreach($dbTableInfo['fields'] as $fieldInfo) {
+		$validFieldNames[$fieldInfo['name']] = true;
+	}
+	
+	//Loop through the given arguments
+  	foreach ($args as $name=>$value) {
+  		//check for valid field
+  		if ($validFieldNames[$name]) {
+			$query->field($name, $value);
+  		}
+  	}
+  	return $query->insert()?true:false;
+  }
 
   /**
    * STATIC: Edit the values of a row of data in the database.
@@ -63,17 +96,28 @@ class ZenSystemAction extends Zen {
    * @return boolean true if row edited successfully
    */
   function editData( $vals, $table, $id, $keyname = null ) {
-    // set the row id
-    if( $keyname == null ) {
-      $keyname = $this->_dbo->getPrimaryKey($table);      
-    }
-    // set up query
+    //set up valid field names
+	$zenDbSchema =& Zen::getZenDbSchema();
+	$dbTableInfo = $zenDbSchema->getTableArray($table);
+	$validFieldNames = array();
+	foreach($dbTableInfo['fields'] as $fieldInfo) {
+		$validFieldNames[$fieldInfo['name']] = true;
+	}
+
+	// set up query
     $query = Zen::getNewQuery();
     $query->table($table);
     foreach($vals as $key=>$val) {
-      $query->field($key, $val);
+      //check for valid field
+  	  if ($validFieldNames[$key]) {
+		$query->field($key, $val);
+  	  }
     }
-    $query->match($keyname, $id);
+    if (isset($keyname)) {
+	  $query->match($keyname, $id);
+    } else {
+      $query->matchId($id);
+    }
 
     // run and return
     return $query->update()? true : false;
@@ -85,7 +129,11 @@ class ZenSystemAction extends Zen {
    * @param string $table the database table to insert to
    * @param int $rowid the primary key for this table
    */
-  function deleteData( $table, $rowid ) { }
+  function deleteData( $table, $rowid ) {
+    $query = Zen::getNewQuery();
+    $query->table($table);
+    $query->matchId($rowid);
+  }
 
   /**
    * STATIC: Send a notification for a ticket.  This occurs whenever an event
@@ -99,11 +147,8 @@ class ZenSystemAction extends Zen {
    * @param integer $comments user comments about the event
    */
   function sendNotification( $ticket_id, $action_id, $user_id, $priority, $comments ) { 
-
-    //todo
-    //todo ideally this will create an instance of ZenNotifyList and call the method there to send notifications
-    //todo
-
+  	$zenNotifyList = new ZenNotifyList($ticket_id);
+  	$zenNotifyList->sendNotification($action_id, $user_id, $priority, $comments);
   }
 
   /**
@@ -112,21 +157,27 @@ class ZenSystemAction extends Zen {
    * @param array $to contains valid email addresses for recipients of email
    * @param string $subject contains the subject of the email
    * @param string $from contains the sender
-   * @param string $replyto contains the address replies will be sent to
+   * @param string $message contains the message to send
+   * @param string $replyto contains the address replies will be sent to defaults to the address used for $from
    * @param array $cc contains valid email addresses for CC recipients
    * @param array $bcc contains valid email addresses for BCC recipients
    * @return boolean true if email sent correctly
    */
-  function sendEmail($to, $subject, $from, $replyto, $cc = null, $bcc = null) { 
+  function sendEmail($to, $subject, $from, $message, $replyto = null, $cc = null, $bcc = null) {
+	$zenEmail = new ZenEmail($from, $subject, $message);
+	
+	if (isset($replyto) && $replyto != '') {
+		$zenEmail->addHeader("Reply-To: $replyto");
+	}
+	if (isset($cc) && $cc != '') {
+		$zenEmail->addHeader("Cc: $cc");
+	}
+	if (isset($bcc) && $bcc != '') {
+		$zenEmail->addHeader("Bcc: $bcc");
+	}
+	$zenEmail->setRecipients($to);
+	return $zenEmail->send();
 
-    //todo: maybe some of these could be combined into an array called $args
-    //todo: and we could use them if they exist, perhaps default them, etc...
-    //todo: play with the params here as you see fit
-    //todo:
-    //todo: also, check out ZenEmail, which is what we should use to generate
-    //todo: email messages... eventually ZenEmail will use templates to set
-    //todo: up and send messages (for maximum flexibility)
-  
   }
   
   /**
@@ -168,7 +219,7 @@ class ZenSystemAction extends Zen {
    * @param ZenActionList $list if provided, will be used to create action (for db efficiency)
    * @return the return value of the action
    */
-  function runAction( $action_id, $list = null ) {
+  function runAction( $action_id, $args, $list = null ) {
     $act = new ZenAction($action_id);
     $act->activate($args);
   }

@@ -128,7 +128,7 @@ class ZenAction extends ZenDataType {
       if( !isset($args['cc']) ) { $args['cc'] = null; }
       if( !isset($args['bcc']) ) { $args['bcc'] = null; }
       $result = ZenSystemAction::sendEmail($args['to'], $args['subject'],
-                                           $args['from'], $args['replyto'],
+                                           $args['from'], $args['message'], $args['replyto'],
                                            $args['cc'], $args['bcc']);
       break;
     case "helper":

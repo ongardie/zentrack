@@ -1,5 +1,9 @@
 
 --- V3.0 RC1 (beta,in CVS) ---	
+2004-03-11, MikeL
+  Began implementation of ZenSystemAction
+    - zentrack/includes/lib/classes/ZenAction.php 1.4
+    - zentrack/includes/lib/classes/ZenSystemAction.php 1.10
 
 2004-03-11, Kato
   Implemented ZenAction class, cleaned up ZenSystemAction
