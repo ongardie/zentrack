@@ -5,6 +5,24 @@
  100 percent object oriented and database abstracted. 
 
 ----- V2.2.3 (development, see CVS) ----
+2003-02-14, Altman
+  Added schema changes to support Notify List feature addition.
+    - install/UPGRADE_postgres.sql v1.5
+    - install/UPGRADE_mysql.sql v1.4
+    - install/UPGRADE_oracle.sql v1.4
+    - install/UPGRADE_SEED_postgres.sql v1.1
+    - install/UPGRADE_SEED_mysql.sql v1.2
+    - install/UPGRADE_SEED_oracle.sql v1.1
+    - install/build_postgres.sql v1.5
+    - install/build_mysql.sql v1.4
+    - install/build_oracle.sql v1.5
+    - install/seed_postgres.sql v1.5
+    - install/seed_mysql.sql v1.9
+    - install/seed_oracle.sql v1.6
+    - install/previous/2.2.2.1.UPGRADE_postgres.sql v1.1
+    - install/previous/2.2.2.1.UPGRADE_mysql.sql v1.1
+    - install/previous/2.2.2.1.UPGRADE_oracle.sql v1.1
+
 2003-02-15, Kato
   Fixed problem displaying bins with quotes in name
     - includes/templates/binForm.php v1.3
