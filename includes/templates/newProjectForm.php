@@ -68,8 +68,9 @@ value="<?=strip_tags($title)?>">
   <td class="bars">
     <select name="system_id">
 <?
-    if( is_array($zen->systems) ) {
-    	foreach($zen->getSystems(1) as $v) {
+    $systems = $zen->getSystems(1);
+    if( is_array($systems) ) {
+    	foreach($systems as $v) {
 	   $k = $v["sid"];
 	   $v = $v["name"];
 	   $check = ( $k == $system_id )? "selected" : "";	   

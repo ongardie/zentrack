@@ -5,6 +5,12 @@
  100 percent object oriented and database abstracted. 
 
 ----- V2.2.3 (development, see CVS) ----
+2003-02-17, Darktroll
+  Fixed sorting of systems by replacing $zen->systems with $zen->getSystems(1)
+  Thanks to efeldhaus ( Erwin Feldhaus ) for reporting this anomaly, and suggestions on the improvement
+    - includes/templates/newTicketForm.php
+    - includes/templates/newProjectForm.php
+
 2003-02-15, Altman
   Completed the get_notify_recipients($ticket_id) method of the zenTrack
   class.  It has been tested and fits the give requirements.

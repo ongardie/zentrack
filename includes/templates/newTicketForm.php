@@ -96,10 +96,13 @@ value="<?=strip_tags($title)?>">
   <td class="bars">
     <select name="system_id">
 <?
-    if( is_array($zen->systems) ) {
-    	foreach($zen->systems as $k=>$v) {
-	   $check = ( $k == $system_id )? "selected" : "";	   
-	   print "<option $check value='$k'>$v</option>\n";
+    $systems = $zen->getSystems(1);
+    if( is_array($systems) ) {
+    	foreach($systems as $v) {
+	  $k = $v["sid"];
+	  $v = $v["name"];
+	  $sel = ( $k == $system_id )? " selected" : "";	   
+	  print "<option value='$k'$sel>$v</option>\n";
 	}
     } else {
       print "<option value=''>--no systems--</option>\n";
