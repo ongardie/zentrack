@@ -100,10 +100,10 @@ CREATE TABLE ZENTRACK_FIELD_MAP (
    num_cols     INT(4) default 0,
    num_rows     INT(2) default 0,
    is_required  INT(1) default 0,
-   PRIMARY KEY (field_map_id)
-   INDEX fldmap_sort (sort_order);
-   INDEX fldmap_label (label);
-   INDEX fldmap_both (sort_order,label);
+   PRIMARY KEY (field_map_id),
+   INDEX fldmap_sort (sort_order),
+   INDEX fldmap_label (field_label),
+   INDEX fldmap_both (sort_order,field_label)
 );
 
 --

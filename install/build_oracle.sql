@@ -472,8 +472,8 @@ create sequence related_contacts_id_seq    start with 1001 nocache;
 
 
 CREATE INDEX fldmap_sort ON ZENTRACK_FIELD_MAP(sort_order);
-CREATE INDEX fldmap_label ON ZENTRACK_FIELD_MAP(label);
-CREATE INDEX fldmap_both ON ZENTRACK_FIELD_MAP(sort_order,label);
+CREATE INDEX fldmap_label ON ZENTRACK_FIELD_MAP(field_label);
+CREATE INDEX fldmap_both ON ZENTRACK_FIELD_MAP(sort_order,field_label);
 CREATE INDEX REPINDEX_COMB ON ZENTRACK_REPORTS_INDEX (user_id,bid);
 CREATE INDEX USERPREF_USER ON ZENTRACK_PREFERENCES (user_id);
 CREATE INDEX group_idx ON ZENTRACK_GROUP (group_name);
