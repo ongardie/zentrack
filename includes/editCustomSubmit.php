@@ -4,7 +4,7 @@
 //} else if( !$zen->actionApplicable($id,"edit_custom",$login_id) ) {
 //  $errs[] = $zen->ptrans("Ticket #? cannot be edited in its current status",array($id));
 //}
-  $page_tile = tr("Ticket #$id: Save Custom Fields");
+  $page_tile = tr("Ticket #?: Save Custom Fields", array($id));
   $fields = array();
   $required = array();
   // the TODO is saved, even if the save failed
