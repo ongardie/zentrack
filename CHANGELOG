@@ -4,15 +4,24 @@
  Clean, simple interface, fully adaptable administration,
  100 percent object oriented and database abstracted. 
 
+----- next version -----
+
+Fixed issue with the "first login" so that it will make users
+change their password from the default before they can continue
+
+Comments added to configVars.php section to indicate
+better use of Oracle/adodb methods
+
+setenv() functions added for locale related issues, and for oracle
+fixes
+
+
 ----- v2.0.1c beta (05-01-02) ------
 
 All upper case column names changed to lower case 
 entries for oracle/adodb compatibility
 
 Fixed bug in new project form concerning the start date.
-
-Comments added to configVars.php section to indicate
-better use of Oracle/adodb methods
 
 ----- v2.0.1 Beta (04-27-02) ------
   
