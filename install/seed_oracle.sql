@@ -5,8 +5,6 @@
 INSERT INTO ZENTRACK_ACCESS (access_id, user_id, bin_id, lvl, notes) VALUES (1,2,2,1,NULL);
 INSERT INTO ZENTRACK_ACCESS (access_id, user_id, bin_id, lvl, notes) VALUES (2,2,3,1,NULL);
 INSERT INTO ZENTRACK_ACCESS (access_id, user_id, bin_id, lvl, notes) VALUES (3,2,3,2,NULL);
-INSERT INTO ZENTRACK_ACCESS (access_id, user_id, bin_id, lvl, notes) VALUES (4,2,4,1,NULL);
-INSERT INTO ZENTRACK_ACCESS (access_id, user_id, bin_id, lvl, notes) VALUES (5,2,3,1,NULL);
 
 --
 -- Dumping data for table 'ZENTRACK_BINS'
@@ -56,7 +54,7 @@ INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (13,
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (14,'color_background','#FFFFFF','Color of normal bg');
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (15,'color_text','#000000','Color of normal text');
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (16,'color_alt_background','#99CCCC','Color of alternate bg');
-INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (17,'color_alt_text','#006666','Color of alternate text');
+INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (17,'color_alt_text','#000066','Color of alternate text');
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (18,'color_title_background','#669999','Color of title cell bg');
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (19,'color_title_text','#FFFFFF','Color of title cell text');
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (20,'color_bars','#EAEAEA','Color of background in rows of data');
@@ -112,6 +110,13 @@ INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (69,
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (70,'url_view_ticket','ticket.php','Link to script which displays ticket information, no leading slash');
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (71,'allow_pwd_save','off','Allows users to save passphrase in a cookie(fairly secure/not available until v2.1)');
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (72,'check_pwd_simple','on','System will refuse lazy passwords');
+INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (73,'level_reports','1','Level required to access and view reports'); 
+INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (74,'version_xx','2.2','The version of zentrack, this cannot be edited'); 
+INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (75,'date_fmt_long','%A %d, %b %Y','Long date format'); 
+INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (76,'date_fmt_short','%x','Short Date Format'); 
+INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (77,'date_fmt_time','%R','Time Format'); 
+INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (78,'time_elapsed_unit','hours','Use hours, days, months, years, seconds, or weeks'); 
+INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (79,'language_default','english','This will be used in an upcoming version'); 
 
 --
 -- Dumping data for table 'ZENTRACK_SYSTEMS'
@@ -263,6 +268,7 @@ INSERT INTO ZENTRACK_TYPES (type_id, name, priority, active) VALUES (6,'Feature 
 INSERT INTO ZENTRACK_TYPES (type_id, name, priority, active) VALUES (7,'Service',0,1);
 INSERT INTO ZENTRACK_TYPES (type_id, name, priority, active) VALUES (8,'Task',0,1);
 INSERT INTO ZENTRACK_TYPES (type_id, name, priority, active) VALUES (9,'Note',0,1);
+
 --
 -- Dumping data for table 'ZENTRACK_USERS'
 --

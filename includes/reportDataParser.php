@@ -10,7 +10,6 @@ if( is_array($params) ) {
   $report_type = $params["report_type"];
   if( !is_array($params["data_set"]) )
     $params["data_set"] = explode(",",$params["data_set"]);
-  print_r($params["data_set"]);
   $params["chart_options"] = explode(",",$params["chart_options"]);
 
   $zen->addDebug("reportDataParser",

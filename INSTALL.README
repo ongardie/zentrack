@@ -25,9 +25,53 @@
 
      -chmod 777 includes/attachments (if using attachments)
 
+
+
    
   TROUBLESHOOTING
+
+    SUPPORT
+      -You may recieve support for any install or usage troubles... please
+       please please please please please please....
+       Try opening www/header.php and setting $Debug_Mode = 1,2,or 3
+       If this doesn't give you enough clues to fix your problem, please
+       set this to 3 and copy the debug information to the base of your
+       request for support.
+
+      -Via Sourceforge (recommended): 
+	http://www.sourceforge.net/projects/zentrack
+      -Via Email (registered testers and emergencies only please)
+	phpzen@users.sourceforge.net
+      -Via Instant Messenger (registered testers only please)
+	MSN: havenshade@hotmail.com
+ 	ICQ: 100360657
+
+    LOGIN PROBLEMS
+      -Logins are case sensitive
+
+      -Check your database and insure there are entries in the ZENTRACK_USERS
+       table.
+
+      -The Administrator password is admin, User password is User, Guest
+       password is Guest.
+
+    REPORT IMAGE PROBLEMS
       -Problems viewing png images
 	You can manually set the image type to "jpeg" if you have
 	trouble with pngs by opening includes/reportConfig.php
 	and finding the line called image_type.
+
+    POSTGRES USERS
+      -A patch for postgres hasn't been created yet... 
+	this shouldn't be much of an effort.
+        Just grab a copy of the UPGRADE_mysql.sql file
+        and edit the three tables and 5 inserts presented
+        there.
+
+      -Please provide us with your patch, if you do, so that
+       we may pass it on to other users.
+
+    OTHER DATABASE USERS
+      -We can support, upon request, DB2, Sybase, or other
+       install scripts, with some assistance, and access to
+       a database to work with for a temporary time.

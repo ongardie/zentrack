@@ -22,11 +22,7 @@
   It is now maintained by Kato and an small, experienced of developers through the 
   source forge foundry.</p>
 
-  <ul>
-    <li><a href='<?=$helpUrl?>/features.php'>Overiew, Capabilities and Limitations</a>
-    <li><a href='<?=$helpUrl?>/future.php'>Future Plans for zenTrack Project</a>
-  </ul>
-
+  <p>Much more information about zenTrack can be found at: <a href='http://zendocs.phpzen.net/bin/view/Zentrack/IndexPage'>http://zendocs.phpzen.net/bin/view/Zentrack/IndexPage</a>.</p>
 
   </blockquote>
 <?

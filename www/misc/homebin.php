@@ -12,19 +12,13 @@
 
   $page_tile = "Change Default Bin";
   $expand_options = 1;
-
-  if( $TODO == 'BIN' ) {
+  if( isset($TODO) && $TODO == 'BIN' ) {
+    $params = "";
     $homebin = ereg_replace("[^0-9]", "", $homebin);
-    if( strlen($homebin) && !$zen->bins["$homebin"] ) {
+    if( !isset($homebin) || !$zen->bins["$homebin"] ) {
       $errs[] = "That bin doesn't exist";
     } else {
-      if( !$homebin ) {
-	$params = array( "homebin"=>"NULL" );
-      } else {
-	$params = array( "homebin"=>$homebin );
-      }
-    }
-    if( !$errs ) {
+      $params = array( "homebin"=>$homebin );
       $res = $zen->update_user($login_id, $params);
       if( !$res ) {
 	$errs[] = "System Error: Unable to update bin.";
@@ -42,8 +36,10 @@
   <table width="600" align="center">
   <tr><td>
 <?
-  $zen->printErrors($errs);
-  if( $skip ) {
+  if( is_array($errs) ) {
+    $zen->printErrors($errs);
+  }
+  if( isset($skip) && $skip ) {
     include("$templateDir/optionsMenu.php");
   } else {
     include("$templateDir/homebinForm.php");

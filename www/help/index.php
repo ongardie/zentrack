@@ -24,24 +24,8 @@
     <ul>
       <a href='<?=$helpUrl?>/about.php'>About <?=$zen->settings["system_name"]?></a>
       <br><a href='<?=$helpUrl?>/gpl.php'>GPL License Agreement</a>
-      <br>Overview, Capabilities and Limitations
-      <br><a href='<?=$helpUrl?>/future.php'>Future Plans</a>
       <br><a href='http://sourceforge.net/projects/zentrack'>The zenTrack Project</a>
-    </ul>
-    <b>User Help:</b>
-    <ul>
-      Beginners Tutorial
-      <br>Creating Tickets
-      <br>Ticket Features
-      <br>Generating Reports
-    </ul>
-
-    <b>Administrator Help</b>
-    <ul>
-      Administrating Users
-      <br>Configuring the System
       <br><a href='<?=$helpUrl?>/install.php'>Installation</a>
-      <br><a href='<?=$helpUrl?>/api.php'>API (documentation of the class objects)</a>
     </ul>
   </ul>
   </blockquote>

@@ -21,17 +21,21 @@
 	    It's probably a good idea to move the existing install
 	    to a .old directory and keep it for a bit.. then place the
 	    new code in the vacant directory
+    - Configuring zenTrack
 	* Modify the www/header.php file to reflect your database and system 
 	    settings.  Many of the things you found previously in configVars are	         either here, or moved into the database.	
     - Modifying your database
 	It's a good idea to make a dump of your data first... although you 
 	    will most likely be just fine
+	Create a filespace(instance) on your database and create/assign a 
+	    user access permissions to this DB
 	Find the script called installs/Upgrade.your_db_type and load this
 	    script into your SQL interface
 	Open your web browser, browse to admin->Configuration Settings, and 
 	    configure the new settings to your taste.
-    - Troubleshooting
-	See the INSTALL.readme for troubleshooting notes
+     - Chmod 777 includes/attachments
 
+  TROUBLESHOOTING/SUPPORT
 
+    - See the INSTALL.readme file
 

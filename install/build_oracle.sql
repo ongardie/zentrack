@@ -55,20 +55,6 @@ CREATE TABLE ZENTRACK_LOGS (
 ) ;
 
 --
--- Table structure for table 'ZENTRACK_LOGS_ARCHIVED'
---
-
-CREATE TABLE ZENTRACK_LOGS_ARCHIVED (
-  lid number(12) default NULL,
-  ticket_id number(12) default NULL,
-  user_id number(12) default NULL,
-  bin_id number(12) default NULL,
-  created number(12) default NULL,
-  action varchar2(25) default NULL,
-  entry varchar2(2000)
-) ;
-
---
 -- Table structure for table 'ZENTRACK_PREFERENCES'
 --
 
@@ -159,25 +145,6 @@ CREATE TABLE ZENTRACK_TICKETS (
 ) ;
 
 --
--- Table structure for table 'ZENTRACK_TICKETS_ARCHIVED'
---
-
-CREATE TABLE ZENTRACK_TICKETS_ARCHIVED (
-  id number(12) default NULL,
-  title varchar2(50) default NULL,
-  priority number(2) default NULL,
-  description varchar2(4000),
-  otime number(12) default NULL,
-  ctime number(12) default NULL,
-  type_id varchar2(25) default NULL,
-  system_id number(12) default NULL,
-  relations varchar2(255) default NULL,
-  project_id number(12) default NULL,
-  est_hours decimal(10,2) default NULL,
-  wkd_hours decimal(10,2) default NULL
-) ;
-
---
 -- Table structure for table 'ZENTRACK_TRANSLATION_STRINGS'
 --
 
@@ -233,10 +200,70 @@ CREATE TABLE ZENTRACK_USERS (
   CONSTRAINT users_pk PRIMARY KEY (user_id)
 ) ;
 
+-- 
+-- Table structure for table 'ZENTRACK_REPORTS' 
+-- 
 
-/*
-**  CREATE SEQUENCES
-*/
+CREATE TABLE ZENTRACK_REPORTS ( 
+   report_id number(12) CONSTRAINT reports_id_not_null NOT NULL,
+   report_name varchar2(100) default NULL, 
+   report_type varchar2(25) default NULL, 
+   date_selector varchar2(25) default NULL, 
+   date_value number(3) default NULL, 
+   date_range varchar2(12) default NULL, 
+   date_low number(12) default NULL, 
+   chart_title varchar2(255) default NULL, 
+   chart_subtitle varchar2(255) default NULL, 
+   chart_add_ttl number(1) default NULL, 
+   chart_add_avg number(1) default NULL, 
+   chart_type varchar2(25) default NULL, 
+   chart_options varchar2(2000), 
+   data_set varchar2(2000), 
+   chart_combine number(1) default NULL, 
+   text_output number(1) default NULL, 
+   show_data_vals number(1) default NULL, 
+  CONSTRAINT reports_pk PRIMARY KEY (report_id)
+);
+
+-- 
+-- Table structure for table 'ZENTRACK_REPORTS_INDEX' 
+-- 
+
+CREATE TABLE ZENTRACK_REPORTS_INDEX ( 
+   report_id number(12) default NULL, 
+   bid number(12) default NULL, 
+   user_id number(12) default NULL 
+);
+
+-- 
+-- Table structure for table 'ZENTRACK_REPORTS_TEMP' 
+-- 
+
+CREATE TABLE ZENTRACK_REPORTS_TEMP ( 
+   report_id number(12) CONSTRAINT reptemp_id_not_null NOT NULL, 
+   report_name varchar2(100) default NULL, 
+   report_type varchar2(25) default NULL, 
+   date_selector varchar2(25) default NULL, 
+   date_value number(3) default NULL, 
+   date_range varchar2(12) default NULL, 
+   date_low number(12) default NULL, 
+   chart_title varchar2(255) default NULL, 
+   chart_subtitle varchar2(255) default NULL, 
+   chart_add_ttl number(1) default NULL, 
+   chart_add_avg number(1) default NULL, 
+   chart_type varchar2(25) default NULL, 
+   chart_options varchar2(2000), 
+   data_set varchar2(2000), 
+   created datetime NOT NULL default '0000-00-00 00:00:00', 
+   chart_combine number(1) default NULL, 
+   text_output number(1) default NULL, 
+   show_data_vals number(1) default NULL, 
+   CONSTRAINT reptemp_pk PRIMARY KEY (report_id)
+);
+
+--
+--  CREATE SEQUENCES
+--
 
 create sequence access_id_seq              start with 1001 nocache;
 create sequence attachments_id_seq         start with 1001 nocache;
@@ -252,9 +279,13 @@ create sequence translation_strings_id_seq start with 1001 nocache;
 create sequence translation_words_id_seq   start with 1001 nocache;
 create sequence types_id_seq               start with 1001 nocache;
 create sequence users_id_seq               start with 1001 nocache;
+create sequence reports_id_seq             start with 1001 nocache;
+create sequence reports_temp_id_seq        start with 1001 nocache;
 
-/*
-**  CREATE INDICES
-*/
+--
+--  CREATE INDICES
+--
+
 CREATE INDEX TRANSLATION_LANGUAGE ON ZENTRACK_TRANSLATION_WORDS (language);
 CREATE INDEX TRANSLATION_IDENTIFIER ON ZENTRACK_TRANSLATION_WORDS (identifier);
+CREATE INDEX REPINDEX_COMB ON ZENTRACK_REPORTS_INDEX (user_id,bid);
