@@ -10,7 +10,6 @@
   
   include("../header.php");
 
-  $page_tile = tr("Change Language");
   $expand_options = 1;
   $skip = 0;
   if( isset($TODO) && $TODO == 'LANG' ) {
@@ -22,6 +21,13 @@
       $params = array("language"=>$newlang);
       $res = $zen->update_prefs($login_id, array($params), "language");
       if( $res > 0 ) {
+	$translator_init = array(
+				 'domain' => 'translator',
+				 'path' => "$libDir/translations",
+				 'locale' => $login_language
+				 );
+	$translator_init['zen'] =& $zen;
+	tr($translator_init);
 	$msg[] = tr("Your language has been changed to $newlang");
 	$skip = 1;
       }
@@ -32,6 +38,8 @@
       $errs[] = tr("The language file chosen was not valid");
     }
   }
+
+  $page_tile = tr("Change Language");
 
   include("$libDir/nav.php");
 ?>
