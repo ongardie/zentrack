@@ -1335,7 +1335,7 @@ class zenGraph extends Zen {
 	for($j=0; $j<$this->xMax; $j++) {	  
 	  if( strlen($data[$row][$j]) ) {
 	    // check to insure we are on the graph
-	    if( $xzero + $step * $j <= $this->xEnd + $coffset ) {
+	    if( $xzero + $step * $j <= $this->xEnd + $coffset ) {	      
 	      $points[] = $this->checkRange($xzero + $step*$j, 'x', $coffset);
 	      $points[] = $this->checkRange($yzero - 
 					    $this->scaleY($data[$row][$j]), 'y', $cdepth);
@@ -1430,10 +1430,11 @@ class zenGraph extends Zen {
 	    // set the color
 	    $color = array($row,$j);
 	    // draw the column if we are on the chart
-	    if( $this->checkRange($x2,'x!',0) ) {	     
+	    if( $this->checkRange($x2,'x!',0) ) {	     	      
 	      $this->drawColumn($x1+$xoff,$y1-$yoff,
 				$x2+$xoff,$y2-$yoff,
 				$color,$depth,$hide_top);
+	      $this->drawValue($x1+$xoff,$y1-$yoff,$v,$color);
 	    }
 	  } else if( $config[$row]["type"] == "column" ) {
 	    $x1 += $barWidth;
@@ -1488,6 +1489,7 @@ class zenGraph extends Zen {
 	if( $t1 || $t2 ) {
 	  $this->drawLine( $x1+$xoff, $y1-$yoff, $x2+$xoff, $y2-$yoff, 
 			   array($row,$i), $depth );
+	  $this->drawValue($x1+$xoff,$y1-$yoff,$v,array($row,$i));
 	}
       }
     }
@@ -1566,6 +1568,11 @@ class zenGraph extends Zen {
 	    $x = $xc;
 	    $y = $yc;
 	  }
+	  // todo
+	  // 
+	  //
+	  // add drawValue() 
+	  // somehow
 	  $this->drawSlice( $x, $y, 
 			    $width, $height, 
 			    $v1["angle"], $v2["angle"], 
@@ -1585,6 +1592,11 @@ class zenGraph extends Zen {
 	    $x = $xc;
 	    $y = $yc;
 	  }
+	  // todo
+	  // 
+	  //
+	  // add drawValue() 
+	  // somehow
 	  $this->drawSlice( $x, $y, 
 			    $width, $height, 
 			    $v2["angle"], $v1["angle"], 
@@ -1890,8 +1902,10 @@ class zenGraph extends Zen {
 	$x = $i * $step + $this->xZero + $xoff;
 	$y = $this->yZero - $this->scaleY( $data[$i] ) - $yoff;
 	$col = $this->getDataColor( $row, $i );
-	if( $this->checkRange($x,'x!',$depth) && $this->checkRange($y,'y!',$depth) )
+	if( $this->checkRange($x,'x!',$depth) && $this->checkRange($y,'y!',$depth) ) {
 	  $this->drawPoint($x, $y, $col, $type);
+	  $this->drawValue($x,$y,$data[$i],array($row,$i));
+	}
       }
     }
   }
@@ -2764,10 +2778,57 @@ class zenGraph extends Zen {
     }
   }
   
-  function drawValue( $x, $y, $value, $color ) {
+  function drawValue( $x, $y, $value, $color, $horizontal=0 ) {
     // draws a data value on the graph at
     // the specified point
+    // the color passed here is the non-allocated
+    // color for this data element, if $this->valueFontColor
+    // exists, it will override the color passed here
+    $xv = $x;
+    $yv = $y;
+    if( $this->showValueOnGraph < 1 ) {
+      return;
+    }
+    $valueFormatted = $this->formatData($value);
 
+    // make determinations about where to put it
+    list($xspan,$yspan,$lenght,$height,$xo,$yo) = 
+      $this->textParams(
+			$valueFormatted,
+			$this->valueFontSize,
+			$this->valueFontAngle,
+			$this->font
+			);
+    if( $value < 0 ) {
+      // less than zero, put it on zero axis
+      if( $horizontal ) {
+	$x = $this->xZero + $this->space + $this->depth;
+      } 
+      else {
+	$y = $this->yZero - $this->space - $this->depth;
+      }
+    }
+    else {
+      // greater than zero, put it on the top of the element
+      if( $horizontal ) {
+	$x += $this->space + $this->depth;
+	// if it's too far, then move it behind the element
+	if( $x + $xspan >= $this->xEndOffset )
+	  $x = $xv - $this->space - $xspan;
+      }
+      else {
+	$y -= $this->space + $this->yspan + $this->depth;
+	// if its too high, then move it down below the element
+	if( $y <=  $this->yBaseOffset )
+	  $y = $yv + $this->space;
+      }
+    }
+    // allocate the color
+    $col = ($this->valueFontColor != null)?
+      $this->getColor($this->valueFontColor) : $this->getColor($color);
+    // graph it already
+    $this->printString( $valueFormatted, $x, $y, $this->valueFontSize,
+			$col, $this->valueFontAngle, $this->font );    
   }  
 
   function shadeBar( $x1, $y1, $x2, $y2, $color, $depth ) {
@@ -2957,12 +3018,10 @@ class zenGraph extends Zen {
     // (flag=1) use in functions
     
     if( strlen($value) ) {
-      $value = preg_replace("[^0-9.]", "", $value);
-      if( $flag )
-        return $value;
-      if( $this->dataFormat ) {
+      $value = preg_replace("[^0-9.-]", "", $value);
+      if( !$flag && $this->dataFormat ) {
         preg_match("@^([A-Za-z]),([0-9])@$", $this->dataFormat,$matches);    
-        $rnd = ($matches[2])? $matches[2] : 0;
+        $rnd = (strlen($matches[2]))? $matches[2] : 0;
         switch(strtoupper($matches[1])) {
           case "T":
             $value = numberFormat( $value/10, $rnd );
@@ -2982,8 +3041,8 @@ class zenGraph extends Zen {
           case "A":
             $value = numberFormat( $value, $rnd );
         }
-        return $value;
       }
+      return $value;
     }
   }
 
@@ -4077,9 +4136,10 @@ class zenGraph extends Zen {
     if( !$this->schemes["$name"] ) {
       $this->addDebug("getColorScheme($nm,$flag)","loading scheme into memory",3);
       $vals = file($this->libDir."/colors/$nm");
+      $vars = array();
       $bgcd = (is_array($this->colorGraphBackground))? 
 	$this->colorGraphBackground : $this->hex2dec($this->colorGraphBackground);
-      $bgch = "#".dechex($bgcd);
+      $bgch = strtoupper("#".dechex($bgcd[0]).dechex($bgcd[1]).dechex($bgcd[2]));
       foreach($vals as $v) {
 	// remove comments
 	if( strlen(trim($v)) && !preg_match("@^#@", trim($v)) ) {
@@ -4095,9 +4155,13 @@ class zenGraph extends Zen {
 	      // add the transparency
 	      if( $transparency )
 		$val[3] = $transparency;
-	    }
-	    if( $val == $bgch || $val == $bgcd ) {
-	      // skip this one
+	    } 
+	    $valh = (is_array($val))? 
+	      strtoupper("#".dechex($val[0]).dechex($val[1]).dechex($val[2]))
+	      : $val;
+	    if( $valh == $bgch ) {
+	      $this->addDebug("getColorScheme",((is_array($val))?join(",",$val):$val)
+			      ." skipped... same as graph background",1);
 	    } else if( $flag || !$key ) {
 	      $vars[] = $val;
 	    } else {
@@ -4404,7 +4468,6 @@ class zenGraph extends Zen {
   var $currentYOffset;     // the current y offset due to layer depth
 
   // dimensions
-  
   var $frameThickness; // thickness for frame elements
   var $ticLength;      // tick mark length
   var $gap;             // space between bars/columns
@@ -4489,6 +4552,12 @@ class zenGraph extends Zen {
   var $xZeroOffset;     // the xZero offset for depth
   var $yZeroOffset;     // the yZero offset for depth
 
+
+  // graphed values
+  var $showValueOnGraph;  // whether we display a value on the graph
+  var $valueFontSize;     // size of plotted values
+  var $valueFontAngle;    // angle of plotted values
+  var $valueFontColor;    // color of plotted values
 
   // data table properties
   var $dataTableWidth;       // determined by system

@@ -261,14 +261,17 @@ class DB {
       // format ready for use in a WHERE statement
       // the format is ["column_name"] = array("operator","value")
       // where operator is a comparitor like =,>,>=,LIKE,etc
+     $text = "";
       foreach($params as $k=>$v) {
+	if( $text != "" ) {
+	  $text .= " $andor ";
+	}
 	if( is_array($v[1]) && $v[0] == "AND" || $v[0] == "OR" ) {
-	  if( $text )
-	    $text .= " $andor ";
 	  $text .= " (".$this->complexWhere($v[1], $v[0]).") ";
 	} else {
-	  $v[1] = $this->checkSlashes($v[1]);
-	  $text .= "$k $v[0] $v[1]";
+	  if( !ereg("^(NULL|FALSE|TRUE|[0-9]+)$", $v[2]) )
+	    $v[2] = $this->checkSlashes($v[2]);
+	  $text .= " $v[0] $v[1] $v[2] ";
 	}
       }
       return($text);

@@ -219,6 +219,20 @@
   $this->subHeadingFont = "courier_italic.ttf";
 
   /*
+  **  PLOTTED VALUES
+  */
+  // 0-off 1-on, shows values on graph
+  $this->showValueOnGraph = 0;  
+  // size of plotted values
+  $this->valueFontSize = $this->fontSize-2;
+  // angle of plotted values
+  $this->valueFontAngle = 0;
+  // this can be a color value (#hhhhhh or array(rr,gg,bb))
+  // or null which will set it to the color
+  // of the plotted element
+  $this->valueFontColor = null;        
+
+  /*
   **  LABELS
   */
 
@@ -254,7 +268,7 @@
     
   // if using TTF, this is the angle to display the x axis labels at
   // otherwise, this is 0 or 90
-  $this->xLabelsAngle = 0;
+  $this->xLabelsAngle = 45;
   
   // if using TTF, this is the angle to display the y axis labels at
   // otherwise, this is 0 or 90
@@ -267,7 +281,7 @@
   
   // if using TTF, this is the angle to display the y2 axis labels at  
   // otherwise, this is 0 or 90
-  $this->y2LabelsAngle = 0;
+  $this->y2LabelsAngle = 320;
 
   /*
   **  TEXT SETTINGS
@@ -314,7 +328,7 @@
   */
   
   // the intensity of shadows and highlights, 20 is good
-  $this->lightIntensity = 50;
+  $this->lightIntensity = 40;
 
   // ratio of width:height for 3d effects
   // for example: to make the ratio 2:1 enter .5, 1:2 enter 2
@@ -430,7 +444,7 @@
   $this->xMin;    
 
   // the angle of the layer names
-  $this->layerLabelAngle = 270;
+  $this->layerLabelAngle = 320;
 
   // spacing buffer
   $this->space = ceil($this->margin / 2);

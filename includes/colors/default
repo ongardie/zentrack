@@ -3,8 +3,8 @@ blue     =   0,   0, 255
 red      = 255,   0,   0
 yellow   = 255, 255,   0
 white    = 255, 255, 255
-grey     = 150, 150, 150
-charcoal =  80,  80,  80
+grey     = 180, 180, 180
+charcoal = 100, 100, 100
 black    =   0,   0,   0
 #secondary
 green  =   0, 255,   0

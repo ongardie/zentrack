@@ -18,7 +18,6 @@
 			 "date_selector"  => "string",
 			 "date_value"     => "int",
 			 "date_range"     => "string",
-			 "date_high"      => "int",
 			 "date_low"       => "int",
 			 "chart_title"    => "text",
 			 "chart_subtitle" => "text",
@@ -26,7 +25,16 @@
 			 "chart_add_avg"  => "int",
 			 "chart_type"     => "string",
 			 "chart_options"  => "array",
+			 "chart_combine"  => "int",
 			 "data_set"       => "array"
 			 );
-  $required_report_params = array("report_type","date_selector","chart_title","chart_type");
+  $required_report_params = array("report_type","date_selector","date_range","date_value","chart_title","chart_type");
+
+  $option_names = array(
+			"activity" => "Log Activity",
+			"count" => "Ticket Count",
+			"hours_actual" => "Hours Worked",
+			"hours_estimated" => "Hours Estimated",
+			"time" => "Time Elapsed"
+			);
 ?>

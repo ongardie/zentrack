@@ -7,30 +7,16 @@
   if( $date_start ) {
     $date_low = $zen->dateParse($date_start);
   }
-  if( $date_end ) {
-    $date_high = $zen->dateParse($date_end);
-  }
-  if( $date_high < $date_low ) {
-    $tmp = $date_low;
-    $date_low = $date_high;
-    $date_high = $tmp;
-  }
-  if( $date_high == $date_low ) {
-    $date_high = $zen->dateAdjust(1,"day",$date_high);
-  }
   if( $date_low ) {
     $date_start = strftime($zen->date_fmt_short,$date_low);
-  }
-  if( $date_high ) {
-    $date_end = strftime($zen->date_fmt_short,$date_high);
   }
   if( $date_range ) {
     $date_range = $zen->checkAlphaNum($date_range);  // just chars
   }
   // set a toggle for date info entered
-  $tf_date = (($date_selector=="range"
-	       && $date_value && $date_range)
-	      || ($date_selector=="value"&&strlen($date_low)&&strlen($date_high)));
+  $tf_date = ($date_value&&$date_range
+	      &&($date_selector=="range"||$date_low > 0));
+
 
 ?>
 <tr>
@@ -56,12 +42,17 @@
 ?>
 <tr>
   <td class="bars">
-    <? $chkd = (!strlen($date_selector)||$date_selector == "range")? " checked" : ""; ?>
-    <input type='radio' name='date_selector' value='range'<?=$chkd?>>&nbsp;By Range
+    Range    
   </td>
   <td class="bars">
-    The last
-    <input type='text' name='date_value' maxlength='3' size='4' value='<?=$zen->ffv($date_value)?>'>
+    <select name='date_value'>
+    <?
+      for($i=1; $i<21; $i++) {
+	$sel = ($date_value == $i)? " selected" : "";
+	print "\t<option$sel>$i</option>\n";
+      }
+    ?>
+    </select>
     &nbsp;
     <select name='date_range'>
        <option value='hours'<?=($date_range == "hours")?" selected":""?>>Hours</option>
@@ -71,7 +62,7 @@
        <option value='years'<?=($date_range == "years")?" selected":""?>>Years</option>
     </select>
   </td>
-  <td rowspan='2' class='bars'>
+  <td rowspan='3' class='bars'>
    <? if( $tf_date ) { ?>
     <input type='submit' value=' Change '>
    <? } else { ?>
@@ -80,19 +71,30 @@
   </td>
 </tr>
 <tr>
+  <td class="bars" colspan='2'>
+    <? $chkd = (!strlen($date_selector)||$date_selector == "range")? " checked" : ""; ?>
+    <input type='radio' name='date_selector' value='range'<?=$chkd?>>&nbsp; Most Current
+  </td>
+</tr>
+<tr>
   <td class="bars">
     <? $chkd = ($date_selector == "value")? " checked" : ""; ?>
-    <input type='radio' name='date_selector' value='value'<?=$chkd?>>&nbsp;Specify Dates
+    <input type='radio' name='date_selector' value='value'<?=$chkd?>>&nbsp;Start From Date
   </td>
   <td class="bars">
     <input type='text' name='date_start' maxlength='12' size='14' value='<?=$zen->ffv($date_start)?>'>
-    &nbsp;Start Date
-    <br>
-    <input type='text' name='date_end' maxlength='12' size='14' value='<?=$zen->ffv($date_end)?>'>
-    &nbsp;End Date
-    <br><span class='note'>(dates should be in yyyy-mm-dd or mm/dd/yy format)</span>
+    <span class='note'>&nbsp;mm/dd/yyyy hh:mm (time optional)</note>
   </td>
 </tr>
 </form>
 
 <? } ?>
+
+
+
+
+
+
+
+
+

@@ -10,19 +10,17 @@
     print "<form method='post' action='$rootUrl/reports/view.php' name='reportSubmitForm'>\n";
     $zen->hiddenField("report_type",$report_type);
     $zen->hiddenField("data_set",$data_set);
-    if( $date_selector == "range" ) {
-      $zen->hiddenField( array("date_selector" => "range",
-			       "date_value"    => $date_value,
-			       "date_range"    => $date_range) );
-    } else {
-      $zen->hiddenField( array("date_selector" => "range",
-			       "date_low"      => $date_low,
-			       "date_high"     => $date_high) );
+    if( $date_selector == "value" ) {
+	$zen->hiddenField( "date_low", $date_low );
     }
+    $zen->hiddenField( array("date_selector" => $date_selector,
+			       "date_value"  => $date_value,
+			       "date_range"  => $date_range) );
     $zen->hiddenField("chart_title", $chart_title);
     $zen->hiddenField("chart_subtitle", $chart_subtitle);
     $zen->hiddenField("chart_add_ttl", $chart_add_ttl );
     $zen->hiddenField("chart_add_avg", $chart_add_avg );
+    $zen->hiddenField("text_output",$text_output);
     if( $chart_type == "Pie Chart" ) {
       $zen->hiddenField("chart_type", "pie" );			     
     }
@@ -35,18 +33,11 @@
     if( is_array($chart_options) ) {
       $zen->hiddenField("chart_options",$chart_options);
     }
+    $zen->hiddenField($chart_view);
 ?>
 <tr>
   <td class='bars' colspan='3'><input type='submit' class='submit' value=' View Chart '></td>
 </tr>  
-<? if( $zen->debug ) { ?>
-<tr>
-  <td class='bars' colspan='3'>
-   <input type='checkbox' name='debug_output' value='1'>&nbsp;Show debug output
-   <br><span class='small'>(to get rid of this box, disable debugging in configVars.php)</span>
-  </td>
-</tr>  
-<? } ?>
 </form>
 <?
   } else {
@@ -58,3 +49,4 @@
 <?					 
   }
 ?>
+

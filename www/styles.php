@@ -275,7 +275,6 @@
 .note {
    color:  <?=$zen->settings["color_grey"]?>;
    font-size: 10px;
-   font-style: Italic;
 }
 
 .smallHighlight {

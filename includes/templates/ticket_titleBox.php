@@ -19,7 +19,7 @@
 	   <td class="smallTitleCell" width="100">DEADLINE</td>
 	  </tr>
 	  <tr>
-	   <td class="small"><?=round($zen->dateDiff($ctime,$otime,'hours'),1)?> hours</td>  
+	   <td class="small"><?=$zen->showTimeElapsed($otime,$ctime)?></td>  
 	   <td class="small"><?=$zen->showDate($otime)?></td>
 	   <td class="small"><?=($deadline)?$zen->showDateTime($deadline):"n/a"?></td>
 	  </tr>

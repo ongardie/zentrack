@@ -1560,7 +1560,24 @@ class zenTrack extends zen {
    /*
     *  TRANSLATION UTILITIES
    */
-   
+
+   function showTimeElapsed($start,$end,$round=1,$units=1) {
+     // shows the elapsed time rounded to $round decimals
+     // and the units abbreviated to $substr length
+     // if $units is 0, shows whole name
+     // if $units is null, skips unit name
+     // if $units is > 0, abbreviate units
+     $num = round($this->dateDiff($end,$start,$this->elapsed_unit),$round);
+     $abr = "";
+     if( $units > 0 ) {
+       $abr = " "
+	 .substr(preg_replace("@[aeiou]@", "", $this->elapsed_unit),0,2)
+	 ."s.";
+     } else if( strlen($units) ) {
+       $abr = " ".$this->elapsed_unit;
+     }
+     return "$num$abr";    
+   }
    
    function prnString( $identifier, $language = '', $flag = 0 ) {
       // return a language string for printing
@@ -1718,7 +1735,8 @@ class zenTrack extends zen {
      $n = strtolower($n);
      $n = preg_replace("@s$@", "", $n);
      $n = preg_replace("@^zentrack@", "", $n);
-     $names = array( "ticket"     => "id",
+     $names = array( "project"    => "id",
+		     "ticket"     => "id",
 		     "system"     => "sid",
 		     "type"       => "type_id",
 		     "user"       => "user_id",
@@ -2143,11 +2161,14 @@ class zenTrack extends zen {
       return( $this->db_quickIndexed($query) );
    }
    
-   function projectTypeID( ) {
-     // returns the bin id associated with projects
+   function projectTypeID() {
+     // returns the type id associated with projects
      // this function prevents multiple calls for this
      // id by storing it the first time it is called
+     // if $val is provided, returns true/false whether
+     // $val is a project type id
      if( !strlen($this->projectTypeID) ) {
+       $this->projectTypeID = -1;
        foreach( $this->types as $k=>$b ) {
 	 if( preg_match("@project@i",$b) ) {
 	   $this->projectTypeID = $k;
@@ -2156,6 +2177,23 @@ class zenTrack extends zen {
        }
      }
      return $this->projectTypeID;
+   }
+
+   function projectTypeIDs() {
+     // returns the type id associated with projects
+     // this function prevents multiple calls for this
+     // id by storing it the first time it is called
+     // if $val is provided, returns true/false whether
+     // $val is a project type id
+     if( !is_array($this->projectTypeIDs) ) {
+       $this->projectTypeIDs = array();
+       foreach( $this->types as $k=>$b ) {
+	 if( preg_match("@project@i",$b) ) {
+	   $this->projectTypeIDs[] = $k;
+	 }
+       }
+     }
+     return $this->projectTypeIDs;
    }
 
    function noteTypeID( ) {
@@ -2223,90 +2261,209 @@ class zenTrack extends zen {
     *  REPORTING FUNCTIONS (incomplete... add later)
    */     
 
+   /**
+    * retrieves a list of report templates, bin_id and user_id are
+    * both optional, and can be arrays.
+    */
    function getReportTemplates( $bin_id = '', $user_id = '' ) {
      $query = "SELECT id,name FROM ".$this->table_reports_index
        ." WHERE ((bin_id IS 'NULL OR bin_id == '')AND(user_id IS 'null' or user_id == '') ";
      if( $bin_id ) {
-       $query .= " OR bin_id = $bin_id";
+       $query .= (is_array($bin_id))? 
+	 " OR bin_id IN(".join(",",$bin_id).")" : " OR bin_id = $bin_id";
      } else if( $user_id ) {
-       $query .= " OR user_id = $user_id";
+       $query .= (is_array($user_id))? 
+	 " OR user_id IN(".join(",",$user_id).")" : " OR user_id = $user_id";
      }
      $query .= " ORDER BY name";
      return $this->db_listIndexed($query);
    }
    
+   /**
+    * saves a report format
+    * to the permanent database
+    */
    function saveReport( $params ) {
      return $this->db_insert($table_reports,$params);
    }
    
+   /**
+    * drops a report template from the permanent database
+    */
    function deleteReport( $rid ) {
      $query = "DELETE FROM ".$this->table_reports." WHERE report_id = $rid";
      return $this->db_result($query);
    }
 
+   /**
+    * adds a report format to the
+    * temporary database
+    */
    function addTempReport( $params ) {
      $params["created"] = $this->dateSQL();
      $this->cleanTempReports($this->cleanTempReports);
      return $this->db_insert($this->table_reports_temp,$params);
    }
    
+   /**
+    * removes old temporary reports from 
+    * the database
+    */
    function cleanTempReports( $days ) {
      $date = $this->dateSQL(strtotime("-$days days"));
      $query = "DELETE FROM ".$this->table_reports_temp." WHERE created < '$date'";
      return $this->db_result($query);
    }
 
+   /**
+    * retrieves all properties for a temporary
+    * report by the id
+    */
    function getTempReport( $rid ) {
      $query = "SELECT * FROM ".$this->table_reports_temp." WHERE report_id = $rid";
      return $this->db_quickIndexed($query);
    }
 
+   /**
+    * retrieves all properties for a permanent
+    * report by the id
+    */
    function getReportParams( $rid ) {
      $query = "SELECT * FROM ".$this->table_reports." WHERE report_id = $rid";
      return $this->db_quickIndexed($query);
    }
 
-   function reportActivity($type, $id, $start_date, $end_date, $params) {
+   function reportActivity($params) {
      // returns a set of data to be graphed on the report
+     // will be a count of entries matching given criteria
      // $params is a complex array (see db.class->complexWhere)     
-     // this will be a report of ticket activity (all log entries)
-     if( !is_array($id) && $id == 'all' ) {
-       $where = "";
-     } else {
-       if( !is_array($id) )
-	 $id = array($id);
-       $where = "WHERE $type IN(".join(",",$id).") ";
-     }
-     $start = $this->dateSQL($start_date);
-     $end = $this->dateSQL($end_date);
-     $where .= ($where == "")? "WHERE " : " AND ";
-     $where .= " (created >= '$start' AND created < '$end') ";
-     if( is_array($params) )
-       $where .= " AND (".$this->complexWhere($params,"AND").")";
-     $query = "SELECT * FROM ".$this->table_logs." $where ORDER BY created";
-     return $this->db_queryIndexed($query);
+     // any field from ZENTRACK_LOGS table may be used in the params
+     // clause.. if not given, matches all activity between start and end
+     // you will need to provide a date range or it will probably be a massive and
+     // hardly useful report
+     list($tables,$where) = $this->reportLogQuery($params);
+     $query = "SELECT count(*) FROM $tables $where ORDER BY created";
+     $val = $this->db_get($query);
+     if( !strlen($val) )
+       $val = 0;
+     $this->addDebug("reportActivity","result: $val/params:"
+		     .count($params)."/$query",3);
+     return $val;
    }
 
-   function reportCount($type,$id,$start_date,$end_date,$params) {
-     // returns a set of data to be graphed on the report
+   function reportTickets($params) {
+     // returns a set of data to be graphed on a report
+     // the return will be a count of tickets matching criteria
      // $params is a complex array (see db.class->complexWhere)   
-     // this will be a report of tickets assigned to this bin/user
-     if( !is_array($id) && $id == 'all' ) {
-       $where = "";
-     } else {
-       if( !is_array($id) )
-	 $id = array($id);
-       $where = "WHERE $type IN(".join(",",$id).") ";
-     }
-     $start = $this->dateSQL($start_date);
-     $end = $this->dateSQL($end_date);
-     $where .= ($where == "")? "WHERE " : " AND ";
-     $where .= " (ctime >= '$start' AND ctime < '$end') ";
-     if( is_array($params) )
-       $where .= " AND (".$this->complexWhere($params,"AND").")";
-     $query = "SELECT count(*) FROM ".$this->table_tickets." $where";
-     return $this->db_queryIndexed($query);
+     // any field from ZENTRACK_TICKETS may be used in $params
+     // note that it is probably important to include some sort
+     // of date range on either the otime or ctime or use 
+     // ctime >= $start and otime <= $end... otherwise
+     // this could be a massive report
+     list($tables,$where) = $this->reportTicketQuery($params);
+     $query = "SELECT count(*) FROM $tables $where";
+     $val = $this->db_get($query);
+     if( !strlen($val) )
+       $val = 0;
+     $this->addDebug("reportTickets","result: $val/params:"
+		     .count($params)."/$query",3);
+     return $val;
    }
+
+   function reportElapsed($params) {
+     // returns a set of data to be graphed on a report
+     // the return will be a sum of hours for the given criteria
+     // $params is a complex array (see db.class->complexWhere)   
+     // any field from ZENTRACK_TICKETS may be used in $params
+     // you will need to provide a date range or it will probably 
+     // be an unwieldy report
+     $tte = 0;
+     list($tables,$where) = $this->reportTicketQuery($params);
+     $query = "SELECT otime,ctime FROM $tables $where";
+     $vals = $this->db_queryIndexed($query);
+     for($i=0; $i<count($vals); $i++) {
+       $v = $vals[$i];
+       if( $v["ctime"] < 1 ) {
+       	 $v["ctime"] = $this->currTime;
+       }
+       $diff = $this->dateDiff($v["otime"],$v["ctime"],$this->elapsed_unit);
+       $tte += $diff;
+     }
+     $this->addDebug("reportElapsed","result: $tte/params:".count($params)."/$query",2);
+     return $tte;
+   }
+
+   function reportHours($params) {
+     // returns a set of data to be graphed on a report
+     // the return will be a sum of hours for the given criteria
+     // $params is a complex array (see db.class->complexWhere)   
+     // any field from ZENTRACK_LOGS may be used in $params
+     // you will probably need a date range, or it will be an
+     // unwieldy report
+     list($tables,$where) = $this->reportLogQuery($params);
+     $query = "SELECT sum(hours) FROM $tables $where";
+     $val = $this->db_get($query);
+     if( !strlen($val) )
+       $val = "0.00";
+     $this->addDebug("reportHours","result: $val/params:"
+		     .count($params)."/$query",3);
+     return $val;
+   }
+
+   function reportEstimated($params) {
+     // returns a set of data to be graphed on a report
+     // the return will be a sum of hours for the given criteria
+     // $params is a complex array (see db.class->complexWhere)   
+     // any field from ZENTRACK_TICKETS may be used in $params
+     // you will probably need a date range, or it will be an
+     // unwieldy report
+     list($tables,$where) = $this->reportTicketQuery($params);
+     $query = "SELECT sum(est_hours) FROM $tables $where";
+     $val = $this->db_get($query);
+     if( !strlen($val) )
+       $val = "0.00";
+     $this->addDebug("reportEstimated","result: $val/params:"
+		     .count($params)."/$query",3);
+     return $val;
+   }
+
+   function reportLogQuery($params) {
+     // internal use only!!
+     // returns array(tables,where_clause) for
+     // use by log table report functions
+     $where = "WHERE ";
+     $ttr = false;      // ticket table required
+     $ticket_table_id = $this->get_table_id("ticket");
+     $system_table_id = $this->get_table_id("system");
+     $type_table_id = $this->get_table_id("type");
+     $bin_table_id = $this->get_table_id("bin");
+     if( $params["system_id"] ) {
+       $ttr = true;
+       $params["system_id"][0] = "t.system_id";
+     }
+     if( $params["type_id"] ) {
+       $ttr = true;
+       $params["type_id"][0] = "t.type_id";
+     }
+     $tables = $this->table_logs." l";
+     if( $ttr ) {
+       $where .= " t.id = l.ticket_id AND ";
+       $tables .= ", ".$this->table_tickets." t";
+     }
+     $where .= $this->complexWhere($params,"AND");
+     return array($tables,$where);
+   }
+
+   function reportTicketQuery($params) {
+     // internal use only!!
+     // returns array(tables,where_clause) for
+     // use by ticket table report functions
+     $where = "WHERE ";
+     $tables = $this->table_tickets." l";
+     $where .= $this->complexWhere($params,"AND");
+     return array($tables,$where);
+   }
+
    
    /*
    **  VARIABLES TO CONFIGURE (in config file)
@@ -2380,6 +2537,7 @@ class zenTrack extends zen {
    // others
 
    var $projectTypeID; 
+   var $projectTypeIDs;
    var $demo_mode;
 }
  

@@ -57,17 +57,18 @@ if( !is_array($errs) ) {
 <tr>
   <td class='bars' colspan='3'>
 <? 
- if( $zen->debug && $debug_output > 0 ) {
+ if( $text_output > 0 ) {
    include("./view_text.php");
- } else {
+ }
+ if( $text_output != 1 ) {
 ?>
   <img 
 	src='view_image.php?tempid=<?=$tempid?>' 
 	width='<?=$zen->reportImageWidth?>' 
 	height='<?=$zen->reportImageHeight?>' alt='generated chart'>
-<? } ?>
   </td>
 </tr>
+<? } ?>
 </table>
 <?
 
@@ -77,3 +78,6 @@ if( !is_array($errs) ) {
 
   include("$libDir/footer.php");
 ?>
+
+
+

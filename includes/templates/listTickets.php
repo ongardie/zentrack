@@ -83,7 +83,7 @@ if( is_array($tickets) ) {
 	<?=$zen->bins["$t[bin_id]"]?>
 	</td>
 	<td height="25" valign="middle" align="right">
-	<?=round($zen->dateDiff(time(),$t["otime"],'hours'),1)?> hrs.
+	<?=$zen->showTimeElapsed($t["otime"],$t["ctime"])?>
 	</td>
 	</tr>	 	   
 	<?

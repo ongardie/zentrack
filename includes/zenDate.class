@@ -1,30 +1,25 @@
 <?
-  /* 
+
+  /*
   **
   **  zenDate Class
   **
   **  Author: phpZEN (Michael Richardson)
   **  Contact: postmaster@phpzen.net
-  **  Version: 1.3
-  **  
-  **  USAGE NOTE:  On all methods where the $utime field is optional, the function 
-  **  will use the current time instead, if not specified
+  **  Version: 1.2
+  **  Updated: 12/05/01
   **
-  **  This class works with dates by converting them to unix timestamps.  It can
-  **  accurately parse an sql date (or create one), add, subtract, and track a given
-  **  time, as well as find starting period for days, months, weeks, years and determine
-  **  time elapsed over any of these ranges
   */
 
-  include_once("$libDir/db.class");
-  
+include_once("$libDir/db.class");
+
 class zenDate extends DB {
 
    var $nowParts;
    var $now;
    var $currTime;
 
-   var $dayOfWeek = array(   //indexed as 1-7 for retrieving day names
+   var $dayOfWeek = array(
       "",
       "Sunday",
       "Monday",
@@ -35,7 +30,7 @@ class zenDate extends DB {
       "Saturday"
    );
 
-   var $monthNames = array(   //indexed as 1-12 for retrieving month names
+   var $monthNames = array(
       "",
       "January",
       "February",
@@ -51,7 +46,7 @@ class zenDate extends DB {
       "December"
    );
 
-   var $daysInMonth = array(  //indexed as 1-12 for retrieving days in each month
+   var $daysInMonth = array(
       0,
       31,
       28,
@@ -67,21 +62,26 @@ class zenDate extends DB {
       31
    );
 
-   function showDay( $utime = '' ) {
-      // displays the day of the month
-      // from a unix timestamp
-      
+   function zenDate( $currTime = '' ) {
+      $this->nowParts = getdate(time());
+      $this->now = time();
+      if( $currTime )
+         $this->currTime = $currTime;
+      else
+         $this->currTime = $this->now;
+   }
+
+   function showDay( $utime = '', $flag = '' ) {
       if( !$utime )
          $utime = $this->currTime;
       $dateParts = $this->dateSplit( $utime );
-      return( $dateParts["mday"] );
+      $day = $dateParts["mday"];
+
+      $mday = (ereg("^[0-9]+$", $flag))? substr($day, 0, $flag) : $day;
+      return($mday);
    }
 
    function showWeekday( $utime = '', $flag = '' ) {
-      // displays the day of the week from a unix timestamp
-      // if $flag is an integer, truncates the weekday to the length
-      // given by $flag
-      
       if( !$utime )
          $utime = $this->currTime;
       $dateParts = $this->dateSplit( $utime );
@@ -92,38 +92,27 @@ class zenDate extends DB {
    }
 	
    function showWeekdayNum( $utime = '' ) {
-      // returns the number (1-7) for the weekday
-      // given by the unix timestamp $utime
-      
       if( !$utime )
 	$utime = $this->currTime;
       $dateParts = $this->dateSplit( $utime );
       return( $dateParts["wday"]+1 );
    }
 	
-   function showDayOfYear( $utime = '' ) {
-      // returns day of the year (1-366)
-
+   function showDayOfYear( $utime = '', $flag = '' ) {
       if( !$utime )
 	$utime = $this->currTime;
       $dateParts = $this->dateSplit( $utime );
       $day = $dateParts["yday"];
-      
+
       return($day);
    }
 	
    function showWeekNum( $utime = '' ) {
-      // returns the week of the year (1-53)
-      
       $day = $this->showDayOfYear( $utime );
       return( intval($day / 7) );
    }
    
    function showMonth( $utime = '', $flag = '' ) {
-      // displays the name of the month
-      // if $flag, then truncates the length to that specified
-      // by $flag
-      
       if( !$utime )
 	$utime = $this->currTime;
       $dateParts = $this->dateSplit( $utime );
@@ -134,8 +123,6 @@ class zenDate extends DB {
    }
 	
    function showMonthNum( $utime = '' ) {
-      // returns the number of the month (1-12)
-      
       if( !$utime )
 	$utime = $this->currTime;
       $dateParts = $this->dateSplit( $utime );
@@ -143,9 +130,6 @@ class zenDate extends DB {
    }
 
    function showYear( $utime = '', $flag = '' ) {
-      // returns the year
-      // if $flag, truncates to length of $flag (from the right)
-      
       if( !$utime )
          $utime = $this->currTime;
       $dateParts = $this->dateSplit( $utime );
@@ -156,9 +140,6 @@ class zenDate extends DB {
    }
 
    function showDate( $utime = '', $flag = '' ) {
-      // displays the date, either as mm/dd/yy (flag != 4)
-      // or as mm/dd/YYYY (flag = 4)
-      
       if( !$utime )
          $utime = $this->currTime;
       $newtime = (ereg("4",$flag))? strftime("%m/%d/%Y", $utime) : strftime("%D", $utime);
@@ -166,9 +147,6 @@ class zenDate extends DB {
    }
 
    function showTime( $utime = '', $flag = '' ) {
-      // displays the time either as military time (flag contains an M)
-      // or am/pm format (flag does not contain an M)
-      
       if( !$utime )
          $utime = $this->currTime;
       $newtime = (ereg("M",$flag))? strftime("%H:%M", $utime) : strftime("%I:%M %p", $utime);
@@ -176,8 +154,6 @@ class zenDate extends DB {
    }
    
    function showHour( $utime = '', $flag = '' ) {
-      // displays the hour only either as 0-23 (flag contains an M)
-      // or 1-12 (flag not contain an M)
       if( !$utime )
 	$utime = $this->currTime;
       $newtime = (eregi("M",$flag))? date("H", $utime) : date("I p", $utime);
@@ -185,26 +161,16 @@ class zenDate extends DB {
    }
    
    function showDateTime( $utime = '', $flag = '' ) {
-      // display the date and time with the same options as both
-      // showDate() and showTime()... i.e. if the flag were set 
-      // to 'M4' it would show a 4 digit year, and 24 hour notation
-      // if flag set to M, it would show 24 hour notation and
-      // 2 digit year
-      
       if( !$utime )
 	$utime = $this->currTime;
       if( ereg("4", $flag ) )
-	$newtime = (ereg("M",$flag))? strftime("%m/%d/%Y %H:%M", $utime) : strftime("%m/%d/%y %I:%M %p", $utime);
+	$newtime = (ereg("M",$flag))? strftime("%m/%d/%Y %R", $utime) : strftime("%m/%d/%y %r", $utime);
       else
-	$newtime = (ereg("M", $flag))? strftime("%D %H:%M", $utime) : strftime("%D %I:%M %p", $utime);
+	$newtime = (ereg("M", $flag))? strftime("%D %R", $utime) : strftime("%D %r", $utime);
       return( $newtime );
    }
 
    function showLongDate( $utime = '', $flag = '' ) {
-      // displays the full text date
-      // if $flag contains an integer, 
-      // month and weekday are abbreviated
-      
       if( !$utime )
 	$utime = $this->currTime;
       $newtime = ($flag)? strftime("%a, %b %e, %Y", $utime) : strftime("%A, %B %e, %Y", $utime);
@@ -212,9 +178,6 @@ class zenDate extends DB {
    }
    
    function showLongTime( $utime = '', $flag = '' ) {
-      // displays the time with seconds and time zone formatting
-      // if $flag contains 'M' then the time returned will be in 24 hour notation
-      
       if( !$utime )
 	$utime = $this->currTime;
       $newtime = (ereg("M",$flag))? strftime("%H:%M:%S %Z", $utime) : strftime("%I:%M:%S %p %Z", $utime);
@@ -222,8 +185,6 @@ class zenDate extends DB {
    }
    
    function showLongDateTime( $utime = '', $flag = '' ) {
-      // uses the same options as showLongDate() and showLongTime()
-    
       if( !$utime )
 	$utime = $this->currTime;
       if( ereg("M", $flag) )
@@ -233,45 +194,28 @@ class zenDate extends DB {
       return( $newtime );
    }
    
-   function get_monthName( $num ) {
-      // returns the name of the specified
-      // month number
-      
-      while( $num > 12 ) { $num -= 12; }
-      while( $num < 1 ) { $num += 12; }
-      return( $this->monthNames[$num] );
+   function get_monthName( $num ) {   
+     while( $num > 12 ) { $num -= 12; }
+     while( $num < 1 ) { $num += 12; }
+     return( $this->monthNames[$num] );
    }
    
    function get_dayOfWeek( $num ) {
-      // returns the name of the specified
-      // weekday
-      
-      while( $num > 7 ) { $num -= 7; }
-      while( $num < 1 ) { $num += 7; }
-      return( $this->dayOfWeek[$num] );
+     while( $num > 7 ) { $num -= 7; }
+     while( $num < 1 ) { $num += 7; }
+     return( $this->dayOfWeek[$num] );
    }
    
    function get_daysInMonth( $num, $flag = '' ) {
-      // returns the number of days in the given month
-      // $flag indicates that the year is divible by 4
-      // (i.e. it's a leap year) and there are 29 days
-      // in February
-      
      while( $num > 12 ) { $num -= 12; }
      while( $num < 1 ) { $num += 12; }
-     if( $flag && $num == 2 )
+     if( $num == 2 && $flag )
 	return(29);
      else
 	return( $this->daysInMonth[$num] );     
    }
    
    function daysInMonth($utime) {
-      // returns the number of days in the month
-      // of the given unix timestamp (as opposed to the month
-      // number, as with get_daysInMonth() )
-      // this will determine the year, and account for
-      // leap year as well
-      
       if( !$utime )
 	$utime = $this->currTime;
       $flag = ($this->showYear($utime)%4 == 0);
@@ -280,9 +224,6 @@ class zenDate extends DB {
    }
    
    function get_WeekdaysInMonth( $weekday, $utime = '' ) {
-      // returns an array containing the days of the 
-      // month that $weekday (integer 1-7) falls on
-
       if( !$utime )
 	$utime = $this->currTime;
       $curr = $this->dateAnchor('month', $utime);
@@ -304,11 +245,6 @@ class zenDate extends DB {
    }
    
    function secondsIn( $measure, $num = 1 ) {
-      // returns the number of seconds
-      // (for unix timestamp conversions) in
-      // another measure of time (such as minutes
-      // or hours)
-      
       switch( strtolower(substr($measure,0,3)) ) {
 	case "min":
 	 $conv = 60 * $num;
@@ -336,15 +272,6 @@ class zenDate extends DB {
    }
    
    function dateDiff( $end = '', $start = '', $measure = 'seconds', $marker = '' ) {
-      // returns the difference in time between two dates
-      // where:
-      //    $end - end date
-      //    $start - starting date
-      //    $measure - units to return diff in (seconds, minutes, hours, etc)
-      //    $marker - a variable name to store this difference in
-      //              this is a variable on the calling page (globalized)
-      //              and is used for marking times during script execution
-      
       if( !$end )
 	$end = $this->currTime;
       if( !$start )
@@ -358,18 +285,6 @@ class zenDate extends DB {
    }
    
    function dateMake( $vals ) {
-      // takes an array of date values and returns 
-      // a unix time from them
-      // incoming array values are:
-      // int hour, int minute, int second, int month, int day, int year [, int is_dst])
-      //   [0] - hour
-      //   [1] - minute
-      //   [2] - second
-      //   [3] - month
-      //   [4] - day
-      //   [5] - year
-      //   [6] - is daylight savings time? [optional]
-      
       if( $vals[6] && eregi("p", $vals[6]) )
 	$vals[3] += 12;
       
@@ -378,96 +293,35 @@ class zenDate extends DB {
    }
    
    function dateParse( $ctime = '' ) {
-     // takes almost any date format and returns
-     // a unix timestamp
+     // takes almost any date format
+     // and returns the unix timestamp for
+     // that date
      if( !$ctime )
        $ctime = $this->currTime;
      return strtotime($ctime);
    }
    
    function dateSplit($utime = '') {
-      // returns an indexed array of values 
-      // from utime as follows:
-      //   "seconds" - seconds	       
-      //   "minutes" - minutes 			 
-      //   "hours" - hours 				 
-      //   "mday" - day of the month 				  
-      //   "wday" - day of the week, numeric : from 0 as Sunday up to 6 as Saturday
-      //   "mon" - month, numeric 					       
-      //   "year" - year, numeric 						      
-      //   "yday" - day of the year, numeric; i.e. "299"
-      //   "weekday" - day of the week, textual, full; i.e. "Friday"
-      //   "month" - month, textual, full; i.e. "January"
-      
       if( !$utime )
 	$utime = $this->currTime;
       return( getdate($utime) );
    }
 
    function dateAdjust( $adj, $period = '', $date = '' ) {
-      // takes a unix timestamp and adds
-      // $adj (integer) units of $period
-      // (which will be 'seconds', 'minutes', 'hours', etc)
-      // to it
-      
+     // adjusts a date by a given interval(period)
+     // valid $adj values are a positive or negative integer
+     // valid periods are things like: "hours", "seconds", "minutes", "days", etc
+     // see php.net function: strtotime for more info
+     // $date can be any valid date format
       if( $date == '' )
 	$date = $this->currTime;
-
-      $dateParts = $this->dateSplit($date);
-      $year = $dateParts["year"];
-      $month = $dateParts["mon"];
-      $day = $dateParts["mday"];
-      $hour = $dateParts["hours"];
-      $min = $dateParts["minutes"];
-      $sec = $dateParts["seconds"];
-      
-      $period = strtolower(substr($period, 0, 2));
-      switch( $period ) {
-       case "da":
-	 $day += $adj;
-	 break;
-       case "we":
-	 $day += $adj * 7;
-	 break;
-       case "mo":
-	 $month += $adj;
-	 break;
-       case "ye":
-	 $year += $adj;
-	 break;
-       case "de":
-	 $year += $adj * 10;
-	 break;
-       case "ce":
-	 $year += $adj * 100;
-	 break;
-       case "qu":
-	 $month += $adj * 3;
-	 break;
-       case "ho":
-	 $hour += $adj;
-	 break;
-       case "mi":
-	 $min += $adj;
-	 break;
-       default:
-	 $sec += $adj;
-	 break;
-      }
-      
-      $dateParts = array( $year, $month, $day, $hour, $min, $sec );
-      $newtime = $this->dateMake($dateParts);
+      else if( preg_match("@[^0-9]@", $date) )
+	$date = $this->dateParse($date);      
+      $newtime = strtotime("$adj $period",$date);
       return($newtime);
    }
    
    function dateAnchor( $period = 'month', $date = '', $end = '' ) {
-      // looks at the current date and determines
-      // the timestamp representing the start of the
-      // current period (month, day, year, hour, etc)
-      // if $end is given, then it anchors this item to 
-      // the first instance of the next period (hour, month, day, etc)
-      // after the current one (i.e. just greater than the end!)
-      
       if( !$date )
 	$date = $this->currTime;
       
@@ -479,9 +333,9 @@ class zenDate extends DB {
       $min = $dateParts["minutes"];
       $sec = $dateParts["seconds"];
       
-      $period = (eregi("^(m|d)", $period))? strtolower(substr($period, 0, 2)) : strtolower(substr($period, 0, 1));
+      $period = strtolower(substr($period, 0, 2));
       switch($period) {
-       case "c":
+       case "ce":
 	 if( $end )
 	   $year += 100;
 	 $year = $year - substr($year, 2, 2);
@@ -495,13 +349,13 @@ class zenDate extends DB {
 	 $month = $day = 1;
 	 $hour = $min = $sec = 0;
 	 break;
-       case "y":
+       case "ye":
 	 if( $end )
 	   $year++;
 	 $month = $day = 1;
 	 $hour = $min = $sec = 0;
 	 break;
-       case "q":
+       case "qu":
 	 if( $end )
 	   $month += 3;
 	 $month = $month - floor( $month / 4 ) + 1 ;
@@ -514,7 +368,7 @@ class zenDate extends DB {
 	 $day = 1;
 	 $hour = $min = $sec = 0;
 	 break;
-       case "w":
+       case "we":
 	 if( $end )
 	   $week++;
 	 $wday = $dateParts["wday"];
@@ -526,7 +380,7 @@ class zenDate extends DB {
 	   $day++;
 	 $hour = $min = $sec = 0;
 	 break;
-       case "h":
+       case "ho":
 	 if( $end )
 	   $hour++;
 	 $min = $sec = 0;
@@ -542,105 +396,105 @@ class zenDate extends DB {
    }
    
    function dateSQL( $date = '' ) {
-      // creates an SQL date for insertion 
-      // into an SQL database as yyyy-mm-dd format
-      
+     // creates a SQL formatted date field (currently only does yyyy-mm-dd hh:ii:ss)
+     // for mysql db insertion, it sets the time to the beginning of 
+     // the day for the given date before formatting
+     // incoming date can be any valid date format
       if( !$date )
 	$date = $this->currTime;
+      else if( preg_match("@[^0-9]@", $date) )
+	$date = $this->dateParse($date);
+      $date = $this->dateAnchor("day",$date);
+      //return $this->dateTimeSQL($date);
       $dateParts = $this->dateSplit( $date );
       extract($dateParts);
+      $mon = str_pad($mon,2,"0",STR_PAD_LEFT);
+      $day = str_pad($day,2,"0",STR_PAD_LEFT);
       $date = "$year-$mon-$mday";
       return($date);
    }
    
    function dateTimeSQL( $date = '' ) {
-      // constructs an SQL date and time for use
-      // in SQL database as yyyy-mm-dd hh:mm:ss
-      // using 4 digit year and military time(24 hour notation)
-      
+     // creates a SQL formatted date field (currently only does yyyy-mm-dd hh:ii:ss)
+     // for mysql db insertion
+     // incoming date can be any valid date format
       if( !$date )
 	$date = $this->currTime;
+      else if( preg_match("@[^0-9]@", $date) )
+	$date = $this->dateParse($date);
       $dateParts = $this->dateSplit( $date );
       extract($dateParts);
+      $mon = str_pad($mon,2,"0",STR_PAD_LEFT);
+      $day = str_pad($day,2,"0",STR_PAD_LEFT);
+      $hours = str_pad($hours,2,"0",STR_PAD_LEFT);
+      $minutes = str_pad($minutes,2,"0",STR_PAD_LEFT);
+      $seconds = str_pad($seconds,2,"0",STR_PAD_LEFT);
       $date = "$year-$mon-$mday $hours:$minutes:$seconds";
       return($date);
    }
    
-   function dateIsMultiple( $frequency, $start, $date = '', $range = "day" ) {
-      // THIS FUNCTION IS STILL EXPERIMENTAL AND HAS NOT BEEN
-      // THOROUGHLY TESTED YET
-      // 
-      // this function checks to see if
-      // $date is a multiple of $start
-      // using the frequency given (i.e. every "2 months")
-      // matching anything that falls within 
-      // $range (i.e. a day of $date)
-      // $frequency is a number followed by a space followed
-      // by an interval ("x [months|days|years|hours]")
-      // and $range is the lenght of allowed variance (1 hour, 1 day, 1 week, etc)
-     
+   function dateIsMultiple( $frequency, $start, $date = '', $range = '' ) {
+     // STILL EXPERIMENTAL... UNTESTED AS OF YET
+     // determines if a date is on the same interval as the $start, over $range
+     // $frequency is a string "n xxxx" where n is integer and xxxx is an
+     //   interval such as minutes, hours, days, weeks, months, etc
+     // $start is the date that the interval will be tested against
+     // $date is the date to be tested whether it falls on $frequency interval
+     //   of $start
+     // $range is an optional override that specifies 
+     //   
+     // example:  dateIsMultiple( "2 days", "188245", "298454" )
+     //   this would test whether or not $date ("298454") falls on an interval
+     //   of every 2 days from $start ("188245")
+      list($int,$period) = explode(" ", $frequency);
       if( !$start )
 	$start = $this->currTime;
       if( $range ) {
-	 $date = $this->dateAnchor($range, $date);
-	 $start = $this->dateAnchor($range, $start);
+	$date = $this->dateAnchor($range, $date);
+	$start = $this->dateAnchor($range, $start);
       }
-      $parts = explode(" ", $frequency);
       $startParts = $this->dateSplit( $start );
       $dateParts = $this->dateSplit( $date );		
-      switch( strtolower(substr($parts[1], 0, 2)) ) {
+      switch( strtolower(substr($period, 0, 2)) ) {
        case "se":
-	 $res = ($dateParts["seconds"] - $startParts["seconds"]) % $parts[0];
+	 $res = ($dateParts["seconds"] - $startParts["seconds"]) % $int;
 	 break;
        case "mi":
-	 $res = ($dateParts["minutes"] - $startParts["minutes"]) % $parts[0];
+	 $res = ($dateParts["minutes"] - $startParts["minutes"]) % $int;
 	 break;
        case "ho":
-	 $res = ($dateParts["hours"] - $startParts["hours"]) % $parts[0];
+	 $res = ($dateParts["hours"] - $startParts["hours"]) % $int;
 	 break;
        case "da":
 	 $ydiff = $dateParts["year"] - $startParts["year"];
-	 $res = ($dateParts["yday"] - $startParts["yday"] + 365 * $ydiff) % $parts[0];
+	 $res = ($dateParts["yday"] - $startParts["yday"] + 365 * $ydiff) % $int;
 	 break;
        case "we":
 	 $ydiff = $dateParts["year"] = $startParts["year"];
-	 $res = ($dateParts["yday"] - $startParts["yday"] + 365 * $ydiff) % ($parts[0] * 7);
+	 $res = ($dateParts["yday"] - $startParts["yday"] + 365 * $ydiff) % ($int * 7);
 	 break;
        case "mo":
-	 $res = ($dateParts["mon"] - $startParts["mon"]) % $parts[0];
+	 $res = ($dateParts["mon"] - $startParts["mon"]) % $int;
 	 break;
        case "qu":
-	 $res = ($dateParts["mon"] - $startParts["mon"]) % ($parts[0] * 3);
+	 $res = ($dateParts["mon"] - $startParts["mon"]) % ($int * 3);
 	 break;
        case "ye":
-	 $res = ($dateParts["year"] - $startParts["year"]) % $parts[0];
+	 $res = ($dateParts["year"] - $startParts["year"]) % $int;
 	 break;
        case "de":
-	 $res = ($dateParts["year"] - $startParts["year"]) % ($parts[0] * 10);
+	 $res = ($dateParts["year"] - $startParts["year"]) % ($int * 10);
 	 break;
        case "ce":
-	 $res = ($dateParts["year"] - $startParts["year"]) % ($parts[0] * 100);
+	 $res = ($dateParts["year"] - $startParts["year"]) % ($int * 100);
 	 break;
       }
       if( $res ) {
-	 return;
+	 return false;
       } else {
-	 return(1);
+	 return true;
       }
    }
-   
-   function zenDate( $currTime = '' ) {
-      // invokes the zenDate class
-      // prepares some default values
-      
-      $this->nowParts = getdate(time());
-      $this->now = time();
-      if( $currTime )
-         $this->currTime = $currTime;
-      else
-         $this->currTime = $this->now;
-   }
-     
 }
 
 ?>
