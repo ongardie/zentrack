@@ -325,7 +325,7 @@ class ZenFieldMap {
    * @return string containing html to render
    */
   function renderTicketField( $view, $form_name, $field_name, $value = null, $override_name = null ) {
-    //$this->_zen->addDebug("renderTicketField", "rendering $view, $form_name, $field_name, $value, $override_name", 1);//debug
+//    $this->_zen->addDebug("renderTicketField", "rendering $view, $form_name, $field_name, $value, $override_name", 1);//debug
     global $templateDir;
     global $rootUrl;
     
@@ -659,9 +659,8 @@ class ZenFieldMap {
     $this->_zen->addDebug('_getChoices', "Generated ".count($vals)." choices for {$view}->{$field_name}", 3);
     
     if( $view == 'search_form' && $field['num_rows'] == 1 ) {
-      $vals = array_merge( array(''=>'-any-'), $vals );
+      $vals = array(''=>'-any-') + $vals ;
     }
-    
     if( !isset($this->_fieldVals[$view]) ) { $this->_fieldVals[$view] = array(); }
     $this->_fieldVals[$view][$field_name] = $vals;
     return $vals;
