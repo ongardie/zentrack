@@ -7,6 +7,10 @@
 
 ----- V2.5 (in development) ----
 
+2004-08-13, cfalonso
+  Function $zen->getDataGroups raised an error when no data groups exists. Fixed.
+    - zentrack_2/includes/zenTrack.class 1.138
+
 2004-08-12, Kato
   Improved logging (egate and editing fxns)
   Added eval methods to upgrade scripts and build scripts
