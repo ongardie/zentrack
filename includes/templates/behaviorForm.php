@@ -89,6 +89,24 @@
 </tr>
 <tr>
   <td class="bars">
+    <?=tr("Field State")?>*
+  </td>
+    <?
+             $t = "\t<td class='bars'>";
+             $te = "</td>\n";
+             print "$t<select name='NewFieldEnabled'>\n";
+             print "<option value='1'";
+             print (!$td || $behavior['field_enabled']!=0)?" selected" : "";
+             print ">".tr("Normal")."</option>\n";
+             print "<option value='0'";
+             print (!$td || $behavior['field_enabled']!=0)?"" : " selected";
+             print ">".tr("Protected")."</option>\n";
+             print "$te";
+    ?>
+  </td>
+</tr>
+<tr>
+  <td class="bars">
     <?=tr("Is Enabled")?>*
   </td>
     <?

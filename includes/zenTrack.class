@@ -703,6 +703,7 @@ class zenTrack extends zen {
    * @return integer representing the query result
    */
   function removeBehavior( $behavior_id ) { 
+    $this->db_delete($this->table_behavior_detail, "behavior_id", $behavior_id);
     return $this->db_delete( $this->table_behavior, "behavior_id", $behavior_id );
   }
 

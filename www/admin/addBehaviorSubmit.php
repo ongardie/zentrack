@@ -19,7 +19,8 @@
                              "NewIsEnabled"          => "int",
                              "NewSortOrder"          => "int",
                              "NewFieldName"          => "alphanum",
-                             "NewMatchAll"           => "int"
+                             "NewMatchAll"           => "int",
+                             "NewFieldEnabled"       => "int"
                              );
 
   $behavior_required = array("NewBehaviorName",
@@ -27,8 +28,8 @@
                              "NewIsEnabled",
                              "NewSortOrder",
                              "NewFieldName",
+                             "NewFieldEnabled",
                              "NewMatchAll");
-
 
   $zen->cleanInput($behavior_fields);
   foreach($behavior_required as $d) {
@@ -48,6 +49,7 @@
                   "is_enabled"    => $NewIsEnabled,
                   "sort_order"    => $NewSortOrder,
                   "field_name"    => $NewFieldName,
+                  "field_enabled" => $NewFieldEnabled,
                   "match_all"     => $NewMatchAll
                        );
       $res = $zen->addBehavior($updflds,array());

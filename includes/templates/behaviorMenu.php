@@ -1,6 +1,7 @@
 <?
          $elnk="$rootUrl/admin/editBehavior.php";
          $llnk="$rootUrl/admin/editBehaviorDetails.php";
+         $dlnk="$rootUrl/admin/deleteBehavior.php";
 ?>
       <br>
       <p class='error'><?=tr("Edit existing behaviors or create a new one.")?></p>
@@ -9,7 +10,7 @@
       <input type='hidden' name='TODO' value=''>
       <table cellpadding="4" cellspacing="1" class='cell'>
 	 <tr>
-	 <td class='titleCell' align='center' colspan='8'>
+	 <td class='titleCell' align='center' colspan='9'>
 	   <b><?=tr("Edit the Behaviors")?></b>
 	 </td>
 	 </tr>
@@ -21,6 +22,7 @@
           <td class='cell' align='center'><b><?=tr("Match Type")?></b></td>
           <td class='cell' align='center'><b><?=tr("Field Name")?></b></td>
           <td class='cell' align='center'><b><?=tr("Group to apply")?></b></td>
+          <td class='cell' align='center'><b><?=tr("Field State")?></b></td>
           <td class='cell' align='center'><b><?=tr("Actions")?></b></td>
 	 </tr>
     <? 
@@ -40,13 +42,19 @@
 	     print "$t".$zen->ffv(($v['match_all'])?tr("All rules") : tr("Any rule"))."$te";
 	     print "$t".$zen->ffv($v['field_name'])."$te";
              print "$t".$groups[$v['group_id']]."$te";
+	     print "$t".$zen->ffv(($v['field_enabled'])?tr("Normal") : tr("Protected"))."$te";
              print "$t";
 
-             print "<span class='small'>"
-                 . "[<a href='".$elnk."?behavior_id=".$v['behavior_id']."'>".uptr('properties')."</a>]";
+             print "\n<span class='small'>"
+                 . "[<a href='".$elnk."?behavior_id=".$v['behavior_id']."'>".uptr('properties')."</a>]</span>";
              print "<br>";
-             print "<span class='small'>"
-                 . "[<a href='".$llnk."?behavior_id=".$v['behavior_id']."'>".uptr('matches')."</a>]";
+             print "\n<span class='small'>"
+                 . "[<a href='".$llnk."?behavior_id=".$v['behavior_id']."'>".uptr('matches')."</a>]</span>";
+             print "<br>";
+             print "\n<span class='small'><span class='error'>"
+                 . "[<a href='".$dlnk."?behavior_id=".$v['behavior_id']."'"
+                 . "onClick='return confirm(\"".tr("Permanently remove behavior ??",array($v['behavior_id']))."\");'>"
+                 . uptr("delete")."</a>]</span></span>";
 
              print "$te";
 
@@ -56,7 +64,7 @@
 	 }
     ?>
 <tr>
-  <td class="titleCell" colspan="8">
+  <td class="titleCell" colspan="9">
     <?=tr('Press NEW to create new behaviors')?>
     <br>
     <?=tr('Press DONE when you have finished with the edition')?>
