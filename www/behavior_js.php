@@ -474,6 +474,7 @@ function addBehaviorFlag( fieldName ) {
 function clearBehaviorFlags() {
   behaviorDebug(3, "(clearBehaviorFlags)all clear");
   behaviorFlags = new Array();
+  behaviorHistoryMap = new Array();
 }
 
 /**
