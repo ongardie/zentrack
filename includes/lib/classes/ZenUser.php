@@ -40,6 +40,12 @@ class ZenUser extends ZenDataType {
    */
   function checkAccess( $bin_id, $action_id ) { }
 
+  /**
+   * Get roles
+   *
+   * @return ZenRoleList for this user
+   */
+  function getRoles() { }
 
   /* VARIABLES */
 

@@ -85,6 +85,7 @@ class ZenDbSchema extends Zen {
    *    <li>required - if set, is required on form entries
    *    <li>criteria - used to create pulldowns or defaults
    *    <li>reference - the foriegn key for field (if any)
+   *    <li>namefield - the field containing name/label in reference table(optional, defaults to field_name)
    *    <li>default - default value
    *    <li>description - a detailed description of this field and its use
    *    <li>custom - tells if this is a custom field
@@ -509,7 +510,8 @@ class ZenDbSchema extends Zen {
    */
   var $_columnTags = array('size','unique','notnull',
 			   'required','default','description',
-			   'version','order','criteria','reference');
+			   'version','order','criteria','reference',
+                           'namefield');
 
   /** 
    * @var array $_tables is a mapped array of (string)table_name -> (array)table_info

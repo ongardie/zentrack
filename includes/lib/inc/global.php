@@ -34,5 +34,8 @@
   // include all global variables
   require_once("$dir_lib/inc/variables.php");
 
+  // include standard criteria
+  require_once("$dir_lib/inc/standard_criteria.php");
+
   endPTime( 'global.php' );
 }?>

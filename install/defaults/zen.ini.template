@@ -39,7 +39,12 @@ path_includes = "{path_includes="/web/zentrack/includes"}"
 path_www = "{path_www="/web/zentrack/www"}"  
 
 ;browser path to zentrack www directory (this should include the domain name)
-url_www = "{url_www="http&#58;//mysite.com/zentrack"}"    
+url_www = "{url_www="http&#58;//mysite.com/zentrack"}"
+
+;path to the php CLI executable (i.e. C:/php/cli/php.exe or /usr/bin/php)
+;if the CLI binary is in the system path, a blank is ok here
+;this variable is usually needed on windows platforms
+path_cli = "{path_cli=""}"
 
 
 ;;;;;;;;;;;;;;; DATABASE SETTINGS ;;;;;;;;;;;;;;;;;;;;;;
@@ -115,16 +120,17 @@ develop_mode = {develop_mode="false"}
 [directories]
 dir_cache         = "{dir_cache="%path_includes%/cache"}"
 dir_lib           = "{dir_lib="%path_includes%/lib"}"
+dir_backups       = "{dir_backups="%path_includes%/backups"}"
+dir_config        = "{dir_config="%path_includes%/config"}"
+dir_logs          = "{dir_logs="%path_includes%/logs"}"
+dir_user          = "{dir_user="%path_includes%/user"}"
 
 dir_dbcache       = "{dir_dbcache="%dir_cache%/db"}"
 dir_attachments   = "{dir_attachments="%dir_cache%/attachments"}"
 
-dir_backups       = "{dir_backups="%path_includes%/backups"}"
 dir_classes       = "{dir_classes="%dir_lib%/classes"}"
-dir_config        = "{dir_config="%path_includes%/config"}"
-dir_logs          = "{dir_logs="%path_includes%/logs"}"
 dir_templates     = "{dir_templates="%dir_lib%/templates"}"
-dir_user          = "{dir_user="%path_includes%/user"}"
+dir_helpers       = "{dir_helpers="%dir_lib%/helpers"}"
 
 [login requirements]
 ; any directories or files entered here will be excluded from login requirements

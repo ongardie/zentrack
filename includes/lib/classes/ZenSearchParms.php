@@ -23,7 +23,14 @@ class ZenSearchParms {
    * Creates a match condition.  The format of this method is the same as {@link ZenQuery::match()}
    */
   function match( $field, $operator, $value, $table = null ) {
-    $this->_parms[] = array($field, $operator, $value, $table);
+    $this->_parms[] = array($field, $operator, $value, $table, 'match');
+  }
+
+  /**
+   * Creates an exclude condition.  The format of this method is the same as {@link ZenQuery::exclude()}
+   */
+  function exclude( $field, $operator, $value, $table = null ) {
+    $this->_parms[] = array($field, $operator, $value, $table, 'exclude');
   }
 
   /**

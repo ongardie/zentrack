@@ -844,6 +844,22 @@ class ZenTargets {
       $vals = ZenUtils::flatten_array($this->_ini);
     }
 
+    if( basename($dest) == "zen.ini" ) {
+      // for our zen.ini file
+      // this will parse the directories and substitue %varname% for any values which
+      // correspond with another variable for scalability
+      foreach($vals as $k1=>$v1) {
+        foreach($vals as $k2=>$v2) {
+          // we only want to do directories, and we
+          // don't want to replace a var with its own val
+          if( $k1 == $k2 || !preg_match("/^(path|url|dir)/", $k1)
+              || !preg_match("/^dir/", $k2) ) { continue; }
+          $v1 = $vals[$k1];
+          $vals[$k2] = preg_replace("|^$v1|", "%$k1%", $vals[$k2]);
+        }
+      }
+    }    
+
     $template = new ZenTemplate( $tmplt );
     $template->values($vals);
     $newtext = $template->process();

@@ -25,11 +25,15 @@
    *
    * <b>Valid template entries are:</b>
    *<code>
+   * 
    * {varname} // insert varname, if array, iterate each value, null if not found
    * {varname="default"} // inserts val of varname, or default if not found
-   * {varname[key]} // inserts value of array varname indexed by key (varname[key]),
+   * {varname[key]} // inserts value of array varname indexed by key ($varname[key]),
    *                // varname must be an associative array or null will be returned
+   * {varname[key1][key2]} // inserts value of complex array indexed by key1 and key2 ($varname[key][key2]),
+   *                       // varname must be an associative array containing an array at key1 or null is returned
    * {varname[key]="string"} // as above, but default returned instead of null if key not found
+   * {var:"var1":"var2"} // evaluates var1 and var2(optional) and returns value of variable named var1 (or var1[var2] if included) (see {@link _getVar2()})
    * {zen:"category":"varname"} // inserts value from database settings using {@link Zen::getSetting()}
    * {ini:"category":"varname"} // inserts value from ini settings using {@link Zen::getIniVal()}
    * {foreach:varname:"text"+index+"more text"+value} // loops through key/value pairs, pritns string, vars index/value represent current iteration
@@ -42,7 +46,7 @@
    * {function:function_name:"param1","param2",...} //run a global function, parse params and pass them to the function (any number)
    * {helper:"file_name":param1="value",param2="value",...} // run helper script (includes/lib/helpers), pass params, insert return result
    * {script:"file_name"} // runs script (includes/users/code) and insert return value
-   * {form:"table":"template":field1="ftype",field2="ftype",...} // create form from database, types changed by final param(optional)
+   * {form:"table":"template":"rowid":params} // create form from database, see {@link _parseForm()}
    * {modifier:"command"} // special condition for template parser, see below.
    * {tr:"string":vars} // translate a string of text to the selected language, vars is an optional variable or list of vars to pass to the string
    *</code>
@@ -65,6 +69,7 @@
    * Sub-templates recieve the special varaibles pkey and pval.  If this is a 
    * 
    *<code>
+   * 
    * // assume the following are entered into our
    * // template values: 
    * //   color    => 'blue'
@@ -91,6 +96,7 @@
    *
    * Using the {modifier:command} option, the template parser behavior can be altered. The valid commands are:
    *<code>
+   * 
    * {modifier:"stripEmptyLines"} // remove empty lines (extra carriage returns)
    * {modifier:"stripAllReturns"} // remove all carriage returns
    *</code>
@@ -114,6 +120,7 @@ class ZenTemplate {
         +"/"+ZenUtils::getIni('layout','template_set');
     }
     $this->_template = $template;
+    $this->_modifiers = array();
     $this->_get();
   }
 
@@ -224,6 +231,12 @@ class ZenTemplate {
     }    
     else {
       switch($index) {
+      {
+        // {var:array:key}
+        ZenUtils::safeDebug($this, "_insert", 
+                            "using {var:array:key} for '$text'", 0, LVL_DEBUG);
+        return $this->_getVar2($parts[1],$parts[2]);
+      }
       case "modifier":
       {
         // {modifier:some_command}
@@ -322,14 +335,26 @@ class ZenTemplate {
   /**
    * Parse a {form} call in a template
    *
+   * The format is: {form:table:template:rowid:types}, where:
+   * <ul>
+   *  <li><b>table</b> - (string)db table to load form info from
+   *  <li><b>template</b> - (string)template to display form
+   *  <li><b>rowid</b> - (string,optional) if provided, this row of data will be loaded into the form
+   *  <li><b>types</b> - (comma delimited,optional) provides a means to override the form field type for each field
+   *               <br>the types formatted like param1="select",param2="text",...etc...
+   * </ul>
+   *
    * @access private
    * @return string the parsed text
    */
   function _parseForm( $parts ) {
     $form = new ZenFormGenerator($this->_parseString($parts[1]), 
                                  $this->_parseString($parts[2]));
-    if( $parts[3] ) {
-      $set = explode(",",$parts[3]);
+    if( isset($parts[3]) ) {
+      $form->loadData($this->_parseString($parts[3]));
+    }
+    if( isset($parts[4]) ) {
+      $set = explode(",",$parts[4]);
       foreach( $set as $entry ) {
         list($key,$val) = explode("=",$entry);
         $form->modifyField( $key, array("ftype"=>$this->_parseString($val)) );
@@ -352,9 +377,7 @@ class ZenTemplate {
       // loop the list and make output text
       foreach($vars as $k=>$v) {
         // make the string to show
-        if( $this->_isSub($parts[2]) ) {
-          $str = $this->_parseString($parts[2], $v, $k);
-        }
+        $str = $this->_parseString($parts[2], $v, $k);
       }
       return $txt;
     }
@@ -378,11 +401,7 @@ class ZenTemplate {
       // create the output text
       foreach($vars as $v) {
         // parse the string
-        if( $this->_isSub($parts[2]) ) {
-          $str = $this->_parseString($parts[2], $v);
-        }
-        //return the text
-        $txt .= str_replace("{value}", $v, $str);
+        $str = $this->_parseString($parts[2], $v);
       }
       return $txt;
     }
@@ -506,7 +525,7 @@ class ZenTemplate {
   function _parseString( $text, $value = null, $key = '' ) {
     $text = str_replace('\\"', '"', $text);
     // deal with subtemplates
-    if (preg_match('/^%(.+)%$/', $parts[2], $matches)) {
+    if (preg_match('/^%(.+)%$/', $text, $matches)) {
       // if the whole entry is a template, then return it
       // parse values and try to create special pkey and pval params 
       $vals = $this->_vars;
@@ -590,6 +609,40 @@ class ZenTemplate {
     else {
       return $default;
     }
+  }
+  
+  /**
+   * Parses complex array requirements and returns value. The parameters for this are
+   * evaluated as strings expected to represent variables, then the value is retrieved.
+   *
+   * Examples:
+   * <code>
+   *
+   * $A = "happy";
+   * $letter = "A";
+   * $vals = array( "A" => "Apple", "B" => "Boy", "C" => "Cake" );
+   * $morevals = array( "vals" => $vals, "happy" => "yep, sure am" );
+   * 
+   * {var:"letter"} // "$letter" = 'A' 
+   * {var:letter}   // $$letter = $A = 'happy'
+   * {var:"vals["+letter+"]"} // $vals[$letter] = $vals['A'] = 'Apple'
+   * {var:"morevals["+letter+"]"} // $morevals[$$letter] = $morevals[$A] = 'yep, sure am'
+   * {var:"vals":"B"} // $vals['B'] = 'Boy'
+   * {var:"morevals[vals]":letter} // $morevals['vals'][$letter] = $morevals['vals']['A'] = 'Apple'
+   * {var:"morevals[vals]":"A" // $morevals['vals']['A'] -> 'Apple'
+   * {var:"vals[letter]"} // $vals["letter"] = null!
+   * {var:"vals":B}   // $vals[$B] = null!
+   * {var:vals[C]}  // ${"$vals['C']"} = $Cake = null!
+   * </code>
+   *
+   * @param string $var1 evaluates to name of a variable
+   * @param string $var2 if provided, evaluates to key in array specified by var1
+   * @return mixed value
+   */
+  function _getVar2($var1, $var2) {
+    $val1 = $this->_parseString($var1);
+    $val2 = $this->_parseString($var2);
+    return $this->_getVar("{$val1}[{$val2}]");
   }
 
   /**

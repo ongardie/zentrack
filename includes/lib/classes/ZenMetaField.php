@@ -229,9 +229,10 @@ class ZenMetaField extends Zen {
    */
   function immutable( $property ) {
     switch( $property ) {
-    case 'form_type':
+    case 'ftype':
     case 'criteria':
     case 'reference':
+    case 'namefield':
     case 'required':
       return $this->isCustom()? false : true;
     case 'label':

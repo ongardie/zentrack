@@ -149,6 +149,20 @@ class Zen {
   }
 
   /**
+   * STATIC: Returns a single db row from database
+   *
+   * @param string $table the table to query
+   * @param integer $id the row id
+   * @return array containing the db row
+   */
+  function getDataRow($table, $id) {
+    $query = Zen::getNewQuery();
+    $query->table($table);
+    $query->matchId($id);
+    return $query->selectRow(Zen::getCacheTime(), true);
+  }
+
+  /**
    * STATIC:: Performs a simple delete from table
    *
    * @param string $table
@@ -423,11 +437,47 @@ class Zen {
   /**
    * Loads a data type set into an array
    *
-   * Note that this is only applicable for standard types: bin, priority, stage, system, task, type
+   * Note that this is only applicable for the standard types: bin, priority, stage, system, task, type
    *
+   * @param string $type represents the type, as listed in the description above
    * @return array contains the data type list indexed by id and sorted by priority and name
    */
-  function loadDataTypeArray( $type ) {}
+  function loadDataTypeArray( $type ) {
+    if( in_array($type, array("bin","priority","stage","system","task","type")) ) {
+      $vars = ZenUtils::getGlobal('cache','data_types');
+      if( !isset($vars[$type]) ) {
+        $vals = array();
+        $name = $this->_mapTypeToClass($type)."List";
+        $list = new $name();
+        $list->sort('field_pri');
+        $list->sort('field_name');
+        $list->load();
+        while( $list->hasNext() ) {
+          $val = $list->next();
+          $vals[ $val->id() ] = $val->getField('field_name');
+        }
+        if( isset($_SESSION) ) {
+          $_SESSION['cache']['data_types'][$type] = $vals;
+        }
+        else {
+          $GLOBALS['cache']['data_types'][$type] = $vals;
+        }
+        return $vals;
+      }
+      return $vars[$type];
+    }
+    return false;
+  }
+
+  /**
+   * PRIVATE: Maps standard data types from their primitive name to a class name
+   * 
+   * @access private
+   * @param string $type is one of: bin, priority, stage, system, task, type
+   */
+  function _mapTypeToClass( $type ) {
+    return "Zen"+ucfirst(strtolower($type));
+  }
 
   /********************************
    * VARIABLES 

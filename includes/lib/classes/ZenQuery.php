@@ -191,6 +191,17 @@ class ZenQuery extends Zen {
       return false;
     }
   }
+  
+  /**
+   * Matches a row on the primary key for this table
+   *
+   * This method assumes that {@link table()} has already been called, and contains only one table.
+   *
+   * @param integer $rowid
+   */
+  function matchId( $rowid ) {
+    $this->match( $this->_key, ZEN_EQ, $rowid );
+  }
 
   /**
    * Pass a ZenSearchParms object here to perform complex searches.
@@ -662,6 +673,7 @@ class ZenQuery extends Zen {
           // this is a match set
           if( $s[3] ) { $s[0] = $this->_fixName($s[3],$s[0]); }
           if( $where = $this->_basicWhere($s[0], $s[2], $s[1]) ) {
+            if( $s[4] && $s[4] == 'exclude' ) { $where = "!($where)";
             $clause .= $add? "$andor " : '';
             $clause .= $where.' ';
           }

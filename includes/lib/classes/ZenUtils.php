@@ -215,6 +215,9 @@ class ZenUtils {
   /**
    * STATIC: safely check for equality of two values when type is unsure
    *
+   * This method can accurately compare nulls, values which are not set,
+   * Objects and most other things accurately.
+   *
    * @param mixed $val1
    * @param mixed $val2
    * @return boolean
@@ -263,7 +266,14 @@ class ZenUtils {
    * @param String $text
    * @return String containing formatted text for use in <input..> and <textarea> fields
    */
-  function ffv( $text ) { }
+  function ffv( $text ) { 
+    // converts special characters to ascii codes
+    // to be used in <input> fields
+    if( strlen($text) ) {
+      return htmlspecialchars($text,ENT_QUOTES);
+    }
+    return $text;
+  }
 
   /**
    * STATIC: Cleans a block of pre-formatted text entered by user
@@ -329,7 +339,7 @@ class ZenUtils {
    *
    * @param integer $utime the unix timestamp to compare
    * @param integer $step the increment of our interval (every $step periods)
-   * @param string $period is the period traversed (days,hours,weeks,months,years)
+   * @param string $period is the period traversed (seconds,minutes,hours,days,weeks,months,quarters,years)
    * @param integer $base is any unix timestamp occuring on the desired interval
    * @return boolean is on the interval of the range given
    */
@@ -348,7 +358,7 @@ class ZenUtils {
     *
     * @param $start is one of the dates
     * @param $end is the other date
-    * @param $period is the time period (days,hours,weeks,months,quarters,years)
+    * @param $period is the time period (seconds,minutes,days,hours,weeks,months,quarters,years)
     * @return integer the result or false if invalid period
     */
    function dateDiff( $start, $end, $period ) {
@@ -566,7 +576,8 @@ class ZenUtils {
   }
 
   /**
-   * STATIC: Provides a safe method for checking for object types
+   * STATIC: Provides a safe method for checking for object types.  This
+   * will match extending classes as well.
    *
    * @static
    * @param string $expected
@@ -574,7 +585,7 @@ class ZenUtils {
    * @return boolean
    */
   function isInstanceOf( $expected, $obj ) {
-    return is_object($obj) && strtolower(get_class($obj)) == strtolower($expected);
+    return is_object($obj) && is_a($obj, strtolower($expected));
   }
 
   /**
@@ -665,6 +676,65 @@ class ZenUtils {
     }
     return $text;
   }
+
+  /**
+   * STATIC: Reads a helper script and returns the results
+   *
+   * The helper script is a file in includes/lib/helpers
+   * which is similar to a 'plugin', providing specific
+   * functionality for the zentrack system.
+   *
+   * The helper script must contain a function with the
+   * same name as the file (minus the extension) which will
+   * accept an array as an argument (which contains all params
+   * the helper will need) and returns whatever the calling
+   * script needs to process (usually a string).
+   *
+   * The following params are always expected to appear in the argument list,
+   * others may appear as warranted by the criteria for the db field:
+   * <ul>
+   *   <li><b>template</b> - name of the template file being generated
+   *   <li><b>field</b> - array containing all the form field properties
+   * </ul>
+   *
+   * @param string $helper name of helper script (minus extension)
+   * @param array $args associative array containing arguments to pass to helper script
+   * @return mixed the return value of the helper function
+   */
+  function runHelper($helper, $args) {
+    $dir = ZenUtils::getIni('directories','dir_helpers');
+    if( !$dir || !file_exists("$dir/$helper.php") ) {
+      return null;
+    }
+    include("$dir/$helper");
+    return $helper($args);    
+  }
+
+  /**
+   * STATIC: Reads an external shell script or program and returns results
+   *
+   * The external script must be located in the dir_user (includes/user)
+   *
+   * If the script is a php script, the path_cli info will be prefixed to
+   * facilitate proper execution.  Other scripts will need to be capable
+   * of running from the command line simply by calling the file name 
+   * followed by arguments to pass.
+   *
+   * If you wish to run system commands or external programs, you can call 
+   * them from a shell or cmd script run by this command.
+   *
+   * @param string $script the script to run in dir_user folder
+   * @param array $args arguments for script (must be properly escaped and quoted)
+   * @return string any output produced by script
+   */
+  function runScript($script, $args) {
+    $cmd = "$script ".join(" ",$args);
+    if( preg_match("/\.php$/", $script) ) {
+      $cmd = ZenUtils::getIni('paths', 'path_cli').$cmd;
+    }
+    return `$cmd`;
+  }
+  
 
 }
 

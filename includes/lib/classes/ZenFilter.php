@@ -7,6 +7,8 @@
  */
 class ZenFilter extends Zen {
 
+  // todo: create search parms method
+
 }
 
 ?>

@@ -35,6 +35,8 @@ class ZenDataType extends Zen {
       $this->_load($id);
       $this->debug($this, "ZenDataType", "Constructed object with id {$this->_id} from database", 0, LVL_DEBUG);
     }
+    $this->_id = $id;
+    $this->_changed = false;
   }
 
   /**
@@ -48,6 +50,13 @@ class ZenDataType extends Zen {
   /*****************************
    * COMMON METHODS
    ****************************/
+
+  /**
+   * Get the id of this data type row
+   *
+   * @return integer
+   */
+  function id() { return $this->_id; }
   
   /**
    * tells whether a valid database entry is loaded in this object
@@ -80,9 +89,19 @@ class ZenDataType extends Zen {
       $this->_debug($this,"setField","The field $field does not exist",122,LVL_ERROR);
       return false;
     }
+    //todo
+    //todo
+    //todo validate new value
+    //todo
     $this->_changed = true;
-    return $this->_fields[$field] = $value;
+    $this->_fields[$field] = $value;
+    return true;
   }
+
+  /**
+   * Returns true if data has been modified since loading this data object
+   */
+  function isChanged() { return $this->_changed; }
 
   /**
    * Saves changes to database
@@ -106,6 +125,7 @@ class ZenDataType extends Zen {
     $query = $this->getNewQuery();
     // add the table
     $query->table( $this->_table );
+
     // add fields/values
     foreach($this->_fields as $k=>$v) {
       $query->field($k, $v);
@@ -132,15 +152,6 @@ class ZenDataType extends Zen {
       }        
     }
     return $result;
-  }
-
-  /**
-   * Fetches all triggers associated with this action
-   *
-   * @return ZenTriggerList containing all triggers associated with this action
-   */
-  function getTriggers() { 
-    //todo
   }
 
   /**
