@@ -9,7 +9,7 @@ The {zen:system_name} email gateway provides an interface for users to perform a
 
 Actions are performed by replying to any email post with the following text format in the subject:
 
-#nnnn action
+#nnnn: action
 
 where nnnn is the ticket to modify, and action is the task to peform. (see below for more info on actions)
 
