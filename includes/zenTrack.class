@@ -1038,8 +1038,12 @@ class zenTrack extends zen {
     if( !$flag ) {
       $query = "SELECT group_id, group_name FROM ".$this->table_group." ORDER BY group_name";
       $vars = $this->db_query($query);
-      foreach($vars as $v) {
-        $vals["$v[0]"] = $v[1];
+      if (is_array($vars)) {
+        foreach($vars as $v) {
+          $vals["$v[0]"] = $v[1];
+        }
+      } else {
+        $vals=array();
       }
       return($vals);
     } else {
