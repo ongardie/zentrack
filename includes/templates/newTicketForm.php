@@ -21,7 +21,7 @@
   }
 ?>     
 
-<form method="post" action="<?=($TODO=='EDIT')? "$rootUrl/editSubmit.php" : "$rootUrl/addSubmit.php"?>">
+<form method="post" action="<?=($TODO=='EDIT')? "$rootUrl/actions/editSubmit.php" : "$rootUrl/addSubmit.php"?>">
 <input type="hidden" name="id" value="<?=strip_tags($id)?>">
 
   
@@ -166,7 +166,7 @@ value="<?=strip_tags($relations)?>">
   </td>
   <td class="bars">
     <input type="text" name="deadline" size="12" maxlength="10"
-value="<?=strip_tags($deadline)?>">&nbsp;(mm/dd/yyyy)
+value="<?=$zen->showDate(strip_tags($deadline))?>">&nbsp;(mm/dd/yyyy)
   </td>
 </tr>				   
 <tr>
@@ -189,7 +189,7 @@ value="<?=strip_tags($deadline)?>">&nbsp;(mm/dd/yyyy)
   <td class="bars">
     <input type="checkbox" name="approved" value="1" 
     <?
-    if( $approved || (!strlen($approved) && $zen->settings["default_test_approved"] == "on") ) {
+    if( $approved || (!strlen($approved) && $zen->settings["default_approve_checked"] == "on") ) {
        print "checked";
     }  
   ?>>
@@ -211,12 +211,12 @@ value="<?=strip_tags($deadline)?>">&nbsp;(mm/dd/yyyy)
 </tr>
 <tr>
   <td class="titleCell" colspan="2" align="center">
-     Click Send to create your ticket.
+  Click button to <?=($TODO=='EDIT')? "save your changes":"create your ticket."?>
   </td>
 </tr>
 <tr>
   <td colspan="2" class="bars">
-   <input type="submit" value=" Send " class="submit">
+   <input type="submit" value=" <?=($TODO=='EDIT')?"Save":"Create"?> " class="submit">
   </td>
 </tr>
 </table>
