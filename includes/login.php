@@ -30,6 +30,7 @@
       // set to the default
       $login_level = 'first_login';
       $login_name  = $zen->user["fname"]." ".$zen->user["lname"];
+      setcookie("zentrackUsername", $username, time()+2592000);
       $login_inits = $zen->user["initials"];
       $login_bin   = $zen->user["homebin"];
       include("$libDir/nav.php");
@@ -46,12 +47,11 @@
       $login_name  = $zen->user["fname"]." ".$zen->user["lname"];
       $login_inits = $zen->user["initials"];
       $login_bin   = $zen->user["homebin"];
-      $zentrackUsername = $username;
-      //setcookie("zentrackUsername", $username, time()+2592000, "/", ".$HTTP_HOST");
+      setcookie("zentrackUsername", $username, time()+2592000);
       $skip = 1;
       unset($TODO);
       $zen->addDebug("login.php:userLogin",
-        "User logged in: $login_id,$login_name,$login_level",3);
+        "User logged in: $login_id,$login_name,$login_level",2);
    } else {
       // generate an error message and let them try again
       $msg = "<p>&nbsp;</p><ul><b>That passphrase didn't work.</b></ul>";

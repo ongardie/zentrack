@@ -23,6 +23,9 @@ if( isset($_POST) ) {
 if( isset($_GET) ) {
   extract($_GET);
 }
+if( isset($_COOKIE) ) {
+  extract($_COOKIE);
+}
 
 // initialize values we need
 $session_vars = array("login_name",
