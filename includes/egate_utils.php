@@ -475,7 +475,7 @@
   function create_new_ticket($user_id, $name, $email, $body) {
     global $zen;
     global $egate_user;
-    $vals = array("creator_id"=>$user_id);
+    $vals = array("creator_id"=>$user_id,"otime"=>time());
     $fullname = ($name)? "\"$name\" <$email>" : $email;
     // here we run through all the body elements
     // and prepare the results
