@@ -17,7 +17,7 @@ CREATE TABLE zentrack_agreement (
   creator_id NUMERIC(12) default NULL,
   change_id NUMERIC(12) default NULL,
   PRIMARY KEY (agree_id)
-)
+);
 
 --
 -- Table structure for `zentrack_agreement_item`
@@ -34,7 +34,7 @@ CREATE TABLE zentrack_agreement_item (
   creator_id NUMERIC(12) default NULL,
   change_id NUMERIC(12) default NULL,
   PRIMARY KEY (item_id)
-)
+);
 
 --
 -- Table structure for `zentrack_company`
@@ -62,7 +62,7 @@ CREATE TABLE zentrack_company (
   creator_id NUMERIC(12) default NULL,
   change_id NUMERIC(12) default NULL,
   PRIMARY KEY (company_id)
-)
+);
 
 --
 -- Table structure for `zentrack_employee`
@@ -86,7 +86,7 @@ CREATE TABLE zentrack_employee (
   creator_id NUMERIC(12) default NULL,
   change_id NUMERIC(12) default NULL,
   PRIMARY KEY (person_id)
-)
+);
 
 --
 -- Table structure for `zentrack_related_contacts`
@@ -98,7 +98,7 @@ CREATE TABLE zentrack_related_contacts (
   cp_id NUMERIC(12) default NULL,
   type NUMERIC(12) default NULL,
   PRIMARY KEY  (clist_id)
-)
+);
 
 --
 -- Table structure for behaviors

@@ -1,24 +1,24 @@
-CREATE SEQUENCE "access_access_id_seq"    start 1001 increment 1 maxvalue 2147483647 minvalue 1  cache 1;
-CREATE SEQUENCE "attachments_attachment_id_seq" start 1001 increment 1 maxvalue 2147483647 minvalue 1  cache 1;
-CREATE SEQUENCE "bins_bid_seq"            start 1001 increment 1 maxvalue 2147483647 minvalue 1  cache 1;
-CREATE SEQUENCE "logs_lid_seq"            start 1001 increment 1 maxvalue 2147483647 minvalue 1  cache 1;
-CREATE SEQUENCE "priorities_pid_seq"      start 1001 increment 1 maxvalue 2147483647 minvalue 1  cache 1;
-CREATE SEQUENCE "settings_setting_id_seq" start 1001 increment 1 maxvalue 2147483647 minvalue 1  cache 1;
-CREATE SEQUENCE "systems_sid_seq"         start 1001 increment 1 maxvalue 2147483647 minvalue 1  cache 1;
-CREATE SEQUENCE "tasks_task_id_seq"       start 1001 increment 1 maxvalue 2147483647 minvalue 1  cache 1;
-CREATE SEQUENCE "tickets_id_seq"          start 1001 increment 1 maxvalue 2147483647 minvalue 1  cache 1;
-CREATE SEQUENCE "types_type_id_seq"       start 1001 increment 1 maxvalue 2147483647 minvalue 1  cache 1;
-CREATE SEQUENCE "users_user_id_seq"       start 1001 increment 1 maxvalue 2147483647 minvalue 1  cache 1;
-CREATE SEQUENCE "reports_id_seq"          start 1001 increment 1 maxvalue 2147483647 minvalue 1  cache 1;
-CREATE SEQUENCE "reports_temp_id_seq"     start 1001 increment 1 maxvalue 2147483647 minvalue 1  cache 1;
+CREATE SEQUENCE "access_access_id_seq"    start 1001 increment 1 maxvalue 2147483647 minvalue 1 cache 1;
+CREATE SEQUENCE "attachments_attachment_id_seq" start 1001 increment 1 maxvalue 2147483647 minvalue 1 cache 1;
+CREATE SEQUENCE "bins_bid_seq"            start 1001 increment 1 maxvalue 2147483647 minvalue 1 cache 1;
+CREATE SEQUENCE "logs_lid_seq"            start 1001 increment 1 maxvalue 2147483647 minvalue 1 cache 1;
+CREATE SEQUENCE "priorities_pid_seq"      start 1001 increment 1 maxvalue 2147483647 minvalue 1 cache 1;
+CREATE SEQUENCE "settings_setting_id_seq" start 1001 increment 1 maxvalue 2147483647 minvalue 1 cache 1;
+CREATE SEQUENCE "systems_sid_seq"         start 1001 increment 1 maxvalue 2147483647 minvalue 1 cache 1;
+CREATE SEQUENCE "tasks_task_id_seq"       start 1001 increment 1 maxvalue 2147483647 minvalue 1 cache 1;
+CREATE SEQUENCE "tickets_id_seq"          start 1001 increment 1 maxvalue 2147483647 minvalue 1 cache 1;
+CREATE SEQUENCE "types_type_id_seq"       start 1001 increment 1 maxvalue 2147483647 minvalue 1 cache 1;
+CREATE SEQUENCE "users_user_id_seq"       start 1001 increment 1 maxvalue 2147483647 minvalue 1 cache 1;
+CREATE SEQUENCE "reports_id_seq"          start 1001 increment 1 maxvalue 2147483647 minvalue 1 cache 1;
+CREATE SEQUENCE "reports_temp_id_seq"     start 1001 increment 1 maxvalue 2147483647 minvalue 1 cache 1;
 CREATE SEQUENCE "notify_list_id_seq"      start 1001 increment 1 maxvalue 2147483647 minvalue 1 cache 1;
-CREATE SEQUENCE "behavior_id_seq"         start 1001 increment 1 maxvalue 214783647 minvalue 1 cache 1;
-CREATE SEQUENCE "group_id_seq"            start 1001 increment 1 maxvalue 214783647 minvalue 1 cache 1;
-CREATE SEQUENCE "agreement_id_seq"        start 1001 increment 1 maxvalue 214783647 minvalue 1 cache 1;
-CREATE SEQUENCE "agreement_item_id_seq"   start 1001 increment 1 maxvalue 214783647 minvalue 1 cache 1;
-CREATE SEQUENCE "company_id_seq"          start 1001 increment 1 maxvalue 214783647 minvalue 1 cache 1;
-CREATE SEQUENCE "employee_id_seq"         start 1001 increment 1 maxvalue 214783647 minvalue 1 cache 1;
-CREATE SEQUENCE "related_contacts_id_seq" start 1001 increment 1 maxvalue 214783647 minvalue 1 cache 1;
+CREATE SEQUENCE "behavior_id_seq"         start 1001 increment 1 maxvalue 2147483647 minvalue 1 cache 1;
+CREATE SEQUENCE "group_id_seq"            start 1001 increment 1 maxvalue 2147483647 minvalue 1 cache 1;
+CREATE SEQUENCE "agreement_id_seq"        start 1001 increment 1 maxvalue 2147483647 minvalue 1 cache 1;
+CREATE SEQUENCE "agreement_item_id_seq"   start 1001 increment 1 maxvalue 2147483647 minvalue 1 cache 1;
+CREATE SEQUENCE "company_id_seq"          start 1001 increment 1 maxvalue 2147483647 minvalue 1 cache 1;
+CREATE SEQUENCE "employee_id_seq"         start 1001 increment 1 maxvalue 2147483647 minvalue 1 cache 1;
+CREATE SEQUENCE "related_contacts_id_seq" start 1001 increment 1 maxvalue 2147483647 minvalue 1 cache 1;
 
 --
 -- Table structure for `zentrack_agreement`
@@ -37,7 +37,7 @@ CREATE TABLE zentrack_agreement (
   change_time NUMBER(12) default NULL,
   creator_id NUMBER(12) default NULL,
   change_id NUMBER(12) default NULL
-)
+);
 
 --
 -- Table structure for `zentrack_agreement_item`
@@ -53,7 +53,7 @@ CREATE TABLE zentrack_agreement_item (
   change_time NUMBER(12) default NULL,
   creator_id NUMBER(12) default NULL,
   change_id NUMBER(12) default NULL
-)
+);
 
 --
 -- Table structure for `zentrack_company`
@@ -80,7 +80,7 @@ CREATE TABLE zentrack_company (
   change_time NUMBER(12) default NULL,
   creator_id NUMBER(12) default NULL,
   change_id NUMBER(12) default NULL
-)
+);
 
 --
 -- Table structure for `zentrack_employee`
@@ -103,7 +103,7 @@ CREATE TABLE zentrack_employee (
   change_time NUMBER(12) default NULL,
   creator_id NUMBER(12) default NULL,
   change_id NUMBER(12) default NULL
-)
+);
 
 --
 -- Table structure for `zentrack_related_contacts`
@@ -114,7 +114,7 @@ CREATE TABLE zentrack_related_contacts (
   ticket_id NUMBER(12) NOT NULL,
   cp_id NUMBER(12) default NULL,
   type NUMBER(12) default NULL
-)
+);
 
 --
 -- Table structure for table 'ZENTRACK_ACCESS'

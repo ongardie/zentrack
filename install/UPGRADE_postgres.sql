@@ -1,11 +1,11 @@
 
-create sequence "behavior_id_seq"         start 1001 increment 1 maxvalue 214783647 minvalue 1 cache 1;
-create sequence "group_id_seq"            start 1001 increment 1 maxvalue 214783647 minvalue 1 cache 1;
-CREATE sequence "agreement_id_seq"        start 1001 increment 1 maxvalue 214783647 minvalue 1 cache 1;
-CREATE sequence "agreement_item_id_seq"   start 1001 increment 1 maxvalue 214783647 minvalue 1 cache 1;
-CREATE sequence "company_id_seq"          start 1001 increment 1 maxvalue 214783647 minvalue 1 cache 1;
-CREATE sequence "employee_id_seq"         start 1001 increment 1 maxvalue 214783647 minvalue 1 cache 1;
-CREATE sequence "related_contacts_id_seq" start 1001 increment 1 maxvalue 214783647 minvalue 1 cache 1;
+create sequence "behavior_id_seq"         start 1001 increment 1 maxvalue 2147483647 minvalue 1 cache 1;
+create sequence "group_id_seq"            start 1001 increment 1 maxvalue 2147483647 minvalue 1 cache 1;
+CREATE sequence "agreement_id_seq"        start 1001 increment 1 maxvalue 2147483647 minvalue 1 cache 1;
+CREATE sequence "agreement_item_id_seq"   start 1001 increment 1 maxvalue 2147483647 minvalue 1 cache 1;
+CREATE sequence "company_id_seq"          start 1001 increment 1 maxvalue 2147483647 minvalue 1 cache 1;
+CREATE sequence "employee_id_seq"         start 1001 increment 1 maxvalue 2147483647 minvalue 1 cache 1;
+CREATE sequence "related_contacts_id_seq" start 1001 increment 1 maxvalue 2147483647 minvalue 1 cache 1;
 
 --
 -- Table structure for `zentrack_agreement`
@@ -24,7 +24,7 @@ CREATE TABLE zentrack_agreement (
   change_time NUMBER(12) default NULL,
   creator_id NUMBER(12) default NULL,
   change_id NUMBER(12) default NULL
-)
+);
 
 --
 -- Table structure for `zentrack_agreement_item`

@@ -97,7 +97,7 @@ CREATE TABLE zentrack_agreement (
   creator_id int(12) default NULL,
   change_id int(12) default NULL,
   PRIMARY KEY  (agree_id)
-)
+);
 
 #
 # Table structure for `zentrack_agreement_item`
@@ -114,7 +114,7 @@ CREATE TABLE zentrack_agreement_item (
   creator_id int(12) default NULL,
   change_id int(12) default NULL,
   PRIMARY KEY  (item_id)
-)
+);
 
 #
 # Table structure for `zentrack_company`
@@ -142,7 +142,7 @@ CREATE TABLE zentrack_company (
   creator_id int(12) default NULL,
   change_id int(12) default NULL,
   PRIMARY KEY  (company_id)
-)
+);
 
 #
 # Table structure for `zentrack_employee`
@@ -166,7 +166,7 @@ CREATE TABLE zentrack_employee (
   creator_id int(12) default NULL,
   change_id int(12) default NULL,
   PRIMARY KEY  (person_id)
-)
+);
 
 #
 # Table structure for `zentrack_related_contacts`
@@ -178,7 +178,7 @@ CREATE TABLE zentrack_related_contacts (
   cp_id int(12) default NULL,
   type int(12) default NULL,
   PRIMARY KEY  (clist_id)
-)
+);
 
 INSERT INTO ZENTRACK_VARFIELD_IDX (field_name,       field_label,       sort_order) 
                            VALUES ('custom_menu2', 'Custom Menu 2', 1         );
