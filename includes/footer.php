@@ -60,16 +60,17 @@
      } else {
        print "Not logged in<br>\n";
      }
-     print "GD Info:<ul>\n";
+     print "GD Info:\n";
      if( function_exists("gd_info") ) {
+       print "<ul>\n";
        foreach(gd_info() as $k=>$v) {
 	 print "<li>$k: $v</li>\n";
        }
+       print "</ul>\n";
      }
      else {
-       print "PHP < 4.3, gd_info not available<br>\n";
+       print "gd_info not available<br>\n";
      }
-     print "</ul>\n";
      print "<p>&nbsp;------/DEBUG OVERVIEW-------&nbsp;</p>\n";
      print "</span>\n";
      $zen->printDebugMessages();

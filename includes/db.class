@@ -123,8 +123,11 @@ class DB {
     // performs an insert, update, delete
     // or other query which does not retrieve
     // data
-      
-    return( $this->db_link->Execute($query) );
+    $res = $this->db_link->Execute($query);
+    if( $this->_returnsResult )
+      return $res;
+    else
+      return true;
   }
 
   function db_list( $query ) {
@@ -434,8 +437,13 @@ class DB {
     $ADODB_FETCH_MODE = ADODB_FETCH_ASSOC;      
     if( $this->sql_debug == "on" )
       $this->db_link->debug = true;
+    if( preg_match("/postgr/", $this->db_type) ) {
+      $this->_returnsResult = false;
+    }
     $this->db_connect($host, $user, $passphrase, $database);
   }
+
+  var $_returnsResult = true;
       
 }
 

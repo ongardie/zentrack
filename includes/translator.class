@@ -197,7 +197,8 @@ class Translator {
 	$translatedString = $this->_translationCache[$translationFile][$string];
 	if ($translatedString == '') {
 	  //Translated string exists, but isn't filled out, so send a notice
-	  $this->_zenObj->addDebug("Translator->trans", "Translation string was empty: '$string'\n", 3);
+	  if( $this->_locale != "english" )
+	    $this->_zenObj->addDebug("Translator->trans", "Translation string was empty: '$string'\n", 3);
 	  $error = true;	  
 	}
       }

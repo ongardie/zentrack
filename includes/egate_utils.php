@@ -10,7 +10,7 @@
   include_once("egate_config.php");
 
   // just a list of valid template forms I have created
-  $form_template_list = array("create","help");
+  $form_template_list = array("create","help","log","move");
 
   // initialize log
   $egate_log = array();
@@ -160,18 +160,22 @@
     }
   }
 
-  // include the zen objects
+  //initialize zen base object
   include_once("$libDir/zenTrack.class");
+  $zen = new zenTrack( $configFile );
+
+  // include the zen objects
   include_once("$libDir/zenTemplate.class");
   include_once("$libDir/translator.class");
+
   //Create the initialization array for the translator object
   $translator_init = array(
      'domain' => 'translator',
      'path' => "$libDir/translations",
      'locale' => $login_language
   );
+  $translator_init['zen'] =& $zen;
   tr($translator_init);
-  $zen = new zenTrack( $configFile );
 
   // include the mail decoding functions
   include_once('Mail/mimeDecode.php');
@@ -1296,6 +1300,11 @@
       $success = perform_ticket_action($name,$email,$action,$ticket,$body,$params);
     }
 
+    if( strtolower(trim($action)) == "create" ) {
+      $id = $success;
+      $ticket = $zen->get_ticket($id);
+    }
+
     // todo: send a reply email
     $rec = array(array("name"=>$name,"email"=>$email));
     $rep = send_reply_mail( $rec, $ticket["id"], $success, $action );
@@ -1360,17 +1369,19 @@
 	$temp = new zenTemplate("$libDir/templates/email/reply.template");
 	$temp->values($vals);
 	$txt .= $temp->process();
-	$subject = "[".$zen->settings["bot_name"]."] Ticket #$id: results";
+	$subject = "Ticket #$id: results";
 	$subject .= ($success)? " (successful)" : " (failed)";
       }
       else if( $action == "template" ) {
-	$subject = "[".$zen->settings["bot_name"]."] ".egate_get_subject();
+	$subject = egate_get_subject();
 	// get ticket fields we may need
 	$vals = fetch_template_vals($vals);
       }
       else if( $action ) {
-	$subject = "[".$zen->settings["bot_name"]."]Re: $action ";
+	$subject = "Re: $action ";
 	$subject .= ($success)? " (successful)" : " (failed)";
+      } else {
+	$subject = "request ".($success? "(successful)":"(failed)");
       }
       
       // include extra footer templates
@@ -1390,11 +1401,13 @@
 	$txt .= $temp->process();
       }
 
+      $subject = "[".$zen->settings["bot_name"]."] ".$subject;
+
       // send messages
       $i=0;
       $from = $egate_user["email"];
       foreach($recipients as $r) {
-	if( strlen($r) ) {
+	if( is_array($r) && count($r) && $r["email"] != $egate_user["email"] ) {
 	  $to = ($r["name"])? "\"{$r['name']}\" <{$r['email']}>" : $r['email'];
 	  $res = mail($to,$subject,$txt,"From:$from\r\nReply-to:$from\r\n");
 	  if( $res )

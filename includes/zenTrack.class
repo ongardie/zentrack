@@ -244,7 +244,6 @@ class zenTrack extends zen {
     // the login account
     $login = $this->checkSlashes($login);
     $query = "SELECT * FROM ".$this->table_users." WHERE login = $login";
-    egate_log("query: $query",2);//debug
     return( $this->db_quickIndexed($query) );
   }
 
@@ -2247,6 +2246,13 @@ class zenTrack extends zen {
     // than a user_id value (to send to non-zentrack users)
     // $recipients, $sender, and $cc can all be an array
 
+    // grab the egate account
+    $egate_email = "";
+    $egate_user = $this->get_user_by_login("egate");
+    if( is_array($egate_user) ) {
+      $egate_email = $egate_user["email"];
+    }
+
     // add the obligatory email stuff
     $subject = "[".$this->settings["bot_name"]."] ".$subject;
 
@@ -2276,11 +2282,12 @@ class zenTrack extends zen {
           $recipient_address .= ", ";
         if( eregi("^[0-9]+$", $r) ) {
           $s = $this->get_user($r);
-          if( $s["email"] ) {
+          if( $s["email"] && $s["email"] != $egate_email ) {
             $recipient_address .= $s["email"];
           }
         } else {
-          $recipient_address .= $r;
+          if( $r != $egate_email )
+            $recipient_address .= $r;
         }
       }
     }
@@ -2306,7 +2313,7 @@ class zenTrack extends zen {
       
       if( $this->settings["email_interface_enabled"] == "on" ) {
         // set reply address to egate user        
-        $s = $this->get_user_by_login["egate"];
+        $s = $egate_user;
         if( !is_array($s) ) {
           $this->addDebug("sendEmail", "Egate login not found!",1);
           $message = (get_magic_quotes_gpc())? $message : addslashes($message);
