@@ -1,6 +1,47 @@
 
 --- V3.0 RC1 (beta,in CVS) ---	
 
+2004-03-27, Kato
+  Updated smarty templates
+  Added overlib capabilities to ZenFormGenerator
+    - zentrack/includes/lib/classes/ZenFormGenerator.php 1.15
+    - zentrack/includes/lib/templates/default/simpleForm.tpl 1.4
+    - zentrack/includes/lib/templates/default/simpleForm/colorbox.tpl 1.1
+    - zentrack/includes/lib/templates/default/simpleForm/datebox.tpl 1.1
+    - zentrack/includes/lib/templates/default/simpleForm/helper.tpl 1.2
+    - zentrack/includes/lib/templates/default/simpleForm/popselect.tpl 1.3
+    - zentrack/includes/lib/templates/default/simpleForm/searchbox.tpl 1.1
+    - zentrack/includes/lib/templates/default/simpleForm/select.tpl 1.3
+    - zentrack/includes/lib/templates/default/simpleForm/text.tpl 1.3
+    - zentrack/includes/lib/templates/default/simpleForm/textarea.tpl 1.3
+    - zentrack/www/js/common.js 1.2
+    - zentrack/www/js/overlib.js 1.1
+    - zentrack/www/js/validation.js 1.1
+    - zentrack/www/styles/default.css 1.6
+  Updated the structure for user provided code (plugins)
+    - zentrack/install/defaults/plugin.example.php 1.1
+    - zentrack/install/defaults/user_functions.php 1.2
+    - zentrack/install/setup/ZenTargets.php 1.26
+    - zentrack/install/setup/configFiles 1.7
+    - zentrack/install/setup/directories 1.5
+    - zentrack/install/setup/securedirs 1.4
+    - zentrack/install/install.php 1.13
+  Stubs for preparing ZenEmail and ZenNotifyList objects
+    - zentrack/includes/lib/classes/ZenList.php 1.15
+    - zentrack/includes/lib/classes/ZenNotifyList.php 1.5
+    - zentrack/includes/lib/classes/ZenUser.php 1.7
+  Class libs cleanup and phpdoc fixes
+    - zentrack/includes/lib/classes/ZenAction.php 1.6
+    - zentrack/includes/lib/classes/ZenDataType.php 1.14
+    - zentrack/includes/lib/classes/ZenQuery.php 1.23
+    - zentrack/includes/lib/classes/ZenTemplate.php 1.32
+    - zentrack/includes/lib/classes/ZenUtils.php 1.32
+  Db updates for actions and class cleanup  
+    - zentrack/includes/lib/inc/variables.php 1.15
+    - zentrack/install/sampledata/database.xml 1.13
+  Minor updates to instructions/docs
+    - zentrack/README.txt 1.3
+
 2004-03-25
   Began implementation of ZenEMail
     - zentrack/includes/lib/classes/ZenEmail.php 1.3
