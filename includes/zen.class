@@ -242,18 +242,19 @@ class zen extends zenDate {
      **
      **  There are several values for the indexed array 'fields' which can be used
      **
-     **     case "alpha":     letters only
+     **    case "alpha":     letters only
      **    case "alphanum":  letters and numbers only
-     **    case "string":    letters, numbers and spaces only
+     **    case "string":    [a-zA-Z0-9_ '-]
+     **    case "filename":  [a-zA-Z0-9_.-]
      **    case "num":       numbers and decimal symbols only
      **    case "int":       numbers only
-     **     case "date":      date chars format only
-     **     case "html":      all but php tags allowed
-     **     case "text":      strip all html
-     **     case "ignore":    leave this fields alone
+     **    case "date":      date chars format only
+     **    case "html":      all but php tags allowed
+     **    case "text":      strip all html
+     **    case "ignore":    leave this fields alone
      **    case "email":     email format
      **    case "array":     also ignored
-     **     case "":          strip all html excepting $mda->html_allowed (determined by lists/okhtmltags)
+     **    case "":          strip all html excepting $mda->html_allowed (determined by lists/okhtmltags)
      **
      */
 
@@ -304,6 +305,9 @@ class zen extends zenDate {
            case "string":
              $vals["$k"] = $this->checkAlphaNum($v," '_-");
              break;
+           case "filename":
+             $vals["$k"] = $this->checkAlphaNum($v,"_.-");
+             break;
            case "text":
              $vals["$k"] = htmlspecialchars("$v");
              break;
@@ -344,7 +348,10 @@ class zen extends zenDate {
            $$k = $this->checkNum($$k,true);
            break;
          case "string":
-           $$k = $this->checkAlphaNum($$k," _-");
+           $$k = $this->checkAlphaNum($$k, " _-");
+           break;
+         case "filename":
+           $$k = $this->checkAlphaNum($$k, "_.-");
            break;
          case "text":
            $$k = htmlspecialchars($$k);
@@ -570,13 +577,44 @@ class zen extends zenDate {
            else {
              print $v[1];
            }
-           print "\"\n";
          }
        }      
        print "</ul>------<b>MESSAGES</b>------</p>\n";
      }
    }
    
+   /**
+    * Prints the debug output collected by addDebug() in javascript code
+    *
+    * <p>This will be printed in a javascript friendly format, with each
+    * line commented.
+    */
+   function printJsFriendlyDebug() {  
+     if( is_array($this->debugMessages) ) {
+       $styles = array("","error","warning","note");
+       print "// --------MESSAGES--------\n";
+       print "// To disable this output, set \$Debug_Mode in header.php to 0.\n";
+       if( is_array($this->debugMessages) ) {   
+         foreach($this->debugMessages as $v) {
+           $n = $v[2];
+           $style = $styles[$n];
+           print "//   [$style] - $v[0]: ";
+           if( is_array($v[1]) ) {
+             print "\n/** (array output)\n";
+             print_r($v[1]);
+             print "**/\n";
+           }
+           else {
+             print '"';
+             print $v[1];
+             print '"'."\n";
+           }
+         }
+       }
+       print "// ------MESSAGES------\n";
+     }
+   }
+
   /**
    * STATIC: Prints an array out as formatted text (debug utility)
    *

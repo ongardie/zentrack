@@ -33,11 +33,11 @@
     <?=tr("Active")?>*
   </td>
     <?
-             $t = "\t<td class='bars'>";
-             $te = "</td>\n";
-             $sel = $behavior['is_enabled']? ' checked' : '';
-             print "$t<input type='checkbox' name='NewIsEnabled' value='1'$sel>\n";
-             print "$te";
+         $t = "\t<td class='bars'>";
+         $te = "</td>\n";
+         $sel = $behavior['is_enabled']? ' checked' : '';
+         print "$t<input type='checkbox' name='NewIsEnabled' value='1'$sel>\n";
+         print "$te";
     ?>
   </td>
 </tr>
@@ -46,15 +46,15 @@
     <?=tr("Data Group")?>*
   </td>
     <?
-             $t = "\t<td class='bars'>";
-             $te = "</td>\n";
-             $groups=$zen->getDataGroups(0);
-             print "$t<select name='NewGroupId'>\n";
-             foreach($groups as $grp_k=>$grp_v) {
-               $sel=($behavior['group_id']==$grp_k)? " selected" : "";
-               print "<option value='$grp_k'$sel>$grp_v</option>\n";
-             }
-             print "$te";
+       $t = "\t<td class='bars'>";
+       $te = "</td>\n";
+       $groups=$zen->getDataGroups(0);
+       print "$t<select name='NewGroupId'>\n";
+       foreach($groups as $grp_k=>$grp_v) {
+         $sel=($behavior['group_id']==$grp_k)? " selected" : "";
+         print "<option value='$grp_k'$sel>$grp_v</option>\n";
+       }
+       print "$te";
     ?>
   </td>
 </tr>
@@ -71,14 +71,14 @@
     <?=tr("Field to change")?>*
   </td>
     <?
-             $t = "\t<td class='bars'>";
-             $te = "</td>\n";
-             print "$t<select name='NewFieldName'>\n";
-             foreach($field_list as $fl=>$fn) {
-               $sel=($behavior['field_name']==$fn)? " selected" : "";
-               print "<option value='$fn'$sel>$fl</option>\n";
-             }
-             print "$te";
+         $t = "\t<td class='bars'>";
+         $te = "</td>\n";
+         print "$t<select name='NewFieldName'>\n";
+         foreach($field_list as $fl=>$fn) {
+           $sel=($behavior['field_name']==$fn)? " selected" : "";
+           print "<option value='$fn'$sel>$fl</option>\n";
+         }
+         print "$te";
     ?>
   </td>
 </tr>
@@ -100,16 +100,16 @@
     <?=tr("Match Type")?>*
   </td>
     <?
-             $t = "\t<td class='bars'>";
-             $te = "</td>\n";
-             print "$t<select name='NewMatchAll'>\n";
-             print "<option value='0'";
-             print ($behavior['match_all']==1)?"" : " selected";
-             print ">".tr("Match Any Rule")."</option>\n";
-             print "<option value='1'";
-             print ($behavior['match_all']==1)?" selected" : "";
-             print ">".tr("Match All Rules")."</option>\n";
-             print "$te";
+         $t = "\t<td class='bars'>";
+         $te = "</td>\n";
+         print "$t<select name='NewMatchAll'>\n";
+         print "<option value='0'";
+         print ($behavior['match_all']==1)?"" : " selected";
+         print ">".tr("Match Any Rule")."</option>\n";
+         print "<option value='1'";
+         print ($behavior['match_all']==1)?" selected" : "";
+         print ">".tr("Match All Rules")."</option>\n";
+         print "$te";
     ?>
   </td>
 </tr>

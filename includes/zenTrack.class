@@ -955,7 +955,7 @@ class zenTrack extends zen {
   /**
    * DATA GROUP FUNCTIONS
    */
-
+   
   /**
    * Return info about data groups, including the field values and the
    * generated labels for each field.
@@ -995,21 +995,25 @@ class zenTrack extends zen {
       $t = $v['table_name'];
       $v['fields'] = array();
       $groups["$k"] = $v;
-      if( $t ) {
-        // if this is a custom group, there will be no
-        // table reference, so we will custom generate the
-        // labels
-        if( !$tables["$t"] ) { $tables["$t"] = array(); }
-        $tables["$t"][] = $k;
-      } else {
-        $query = "SELECT field_value FROM ".$this->table_group_detail
-           ." WHERE group_id = {$k} ORDER BY sort_order, field_value";
-        $this->addDebug('generateDataGroupInfo', "custom: {$query}", 3);
-        $vals = $this->db_queryIndexed($query);
-        if( is_array($vals) ) {
-          foreach($vals as $v) {
-            $g = $v['field_value'];
-            $groups[$k]['fields'][]=array('field_value'=>$g, 'label'=>$g);
+      if( $v['eval_type'] == 'Matches' ) {
+        // get values from database
+        if( $t ) {
+          // if this is a custom group, there will be no
+          // table reference, so we will custom generate the
+          // labels
+          if( !$tables["$t"] ) { $tables["$t"] = array(); }
+          $tables["$t"][] = $k;
+        } 
+        else {
+          $query = "SELECT field_value FROM ".$this->table_group_detail
+             ." WHERE group_id = {$k} ORDER BY sort_order, field_value";
+          $this->addDebug('generateDataGroupInfo', "custom: {$query}", 3);
+          $vals = $this->db_queryIndexed($query);
+          if( is_array($vals) ) {
+            foreach($vals as $v) {
+              $g = $v['field_value'];
+              $groups[$k]['fields'][]=array('field_value'=>$g, 'label'=>$g);
+            }
           }
         }
       }
@@ -1045,24 +1049,127 @@ class zenTrack extends zen {
     }
     return $groups;
   }
-
-
+  
+  /**
+   * Returns a set of data for behaviors and groups. The format as follows:
+   * <pre>
+   *   array(
+   *       [set_id] => array( matches, values ),
+   *       [1] => array( matches, values )
+   *       ....
+   *   );
+   * </pre>
+   *
+   * <p>Where the <i>setid</i> is the name of the set of matches/values
+   * <p>the <i>matches</i> array contains match fields in the format:
+   * <br><code>array( 'field_name', 'operator', 'column_number')</code>
+   * <p>And the <i>values</i> array contains the group values to be used.
+   *
+   * @param array $behavior array containing the behavior's properties
+   * @param array $group array containing the group properties
+   */
+   function getBehaviorFileSet( $behavior, $group ) {
+     // generate file contents
+     $fn = $this->libDir."/user_data/{$group['name_of_file']}";
+     $vals = array();
+     if( !@file_exists($fn) ) {
+        $this->addDebug('getBehaviorFileSet',"Invalid filename: $fn",1);
+        return $vals;
+     }
+     $contents = file($fn);
+     
+     // determine which column contains the value so that we don't have
+     // to do this during each iteration
+     $valueColumnIndex = null;
+     foreach($behavior['fields'] as $f) {
+       if( $f['field_name'] == 'value_column' ) {
+          $valueColumnIndex = $f['field_value'];
+          break;
+       }
+     }
+     
+     // blow up and burn in fiery death
+     if( !strlen($valueColumnIndex) ) {
+       $this->addDebug('getBehaviorFileSet', 
+          "Value column index not specified for behavior "
+          ."'{$behavior['behavior_name']}'", 1);
+       return $vals;
+     }
+     
+     // get the index for columns to be read
+     foreach($contents as $lineOfData) {
+       $dataRow = explode("\t",trim($lineOfData));
+       $key = $this->_genMatchesKey($behavior, $group, $dataRow);
+       
+       if( !array_key_exists($key, $vals) ) {
+         // this is a new set, so generate everything we need
+         // start by initializing the array
+         $vals[$key] = array( 'matches'=>array(), 'values'=>array() );
+  
+         // generate the matches needed for this set
+         foreach($behavior['fields'] as $field) {
+           $i = $field['field_value'];
+           $n = $field['field_name'];
+           if( $i >= count($dataRow) ) {
+             $this->addDebug('getBehaviorFileSet',"Column requested by '$n' does not exist",1);
+             continue;
+           }
+           if( $field['field_name'] != 'value_column' ) {
+             $vals[$key]['matches'][] = array('field_name'     => $n, 
+                                              'field_operator' => 'eq',
+                                              'field_value'    => $dataRow[$i]);
+           }
+         }
+       }
+       
+       // add the value to our data set
+       $vals[$key]['values'][] = $dataRow[$valueColumnIndex];
+     }
+     
+     return $vals;
+   }
+   
+  /**
+   * Create a unique identifier for a data set used by behaviors
+   *
+   * @param array $behavior
+   * @param array $group
+   */
+   function _genMatchesKey( $behavior, $group, $dataRow ) {
+      $key = 'B'.$behavior['behavior_id'];
+      $key .= 'G'.$behavior['group_id'];
+      for($i=0; $i<count($behavior['fields']); $i++) {
+        if( $behavior['fields'][$i]['field_name'] != 'value_column' ) {
+          $k = $behavior['fields'][$i]['field_value'];
+          $key .= ":$i-".$dataRow[ $k ];
+        }
+      }
+      return $key;
+   }
+   
   /**
    * Return the information of the data group specified by $group_id
    *
    * @param integer $group_id
    * @return mixed array containin data or false if not found
    */
+   function getDataGroup($group_id) {
+      return $this->get_data_group($group_id); 
+   }
+   
   function get_data_group( $group_id ) {
     $group_id = $this->checkNum($group_id);
     $query = "SELECT * FROM ".$this->table_group
       ." WHERE group_id = ".$group_id;
     $vals = $this->db_quickIndexed($query);
     if( !is_array($vals) || !count($vals) ) { return false; }
-    $vals['details'] = $this->get_data_group_details($group_id);
+    if( $vals['eval_type'] == 'File' ) { $vals['details'] = array(); }
+    else {
+      $vals['details'] = $this->get_data_group_details($group_id);      
+    }
     return $vals;
   }
-
+  
   /**
    * Return a data group's id using the name (which must be unique)
    *
@@ -1170,14 +1277,16 @@ class zenTrack extends zen {
    * @param string $evalText javascript text for evals
    * @return integer
    */
-  function addDataGroup( $name, $table, $descript, $evalType, $evalText, $vals = null ) { 
+  function addDataGroup( $name, $table, $descript, $evalType, $evalText, 
+                         $name_of_file, $vals = null ) { 
     // create the group first
     $id = $this->db_insert( $this->table_group, 
                             array("table_name"=>$table, 
                                   "group_name"=>$name, 
                                   "descript"=>$descript,
                                   "eval_type"=>$evalType,
-                                  "eval_text"=>$evalText) );
+                                  "eval_text"=>$evalText,
+                                  "name_of_file"=>$name_of_file));
     if( $id && $vals ) {
       $this->_insertGroupDetails($id, $vals);
     }
@@ -1209,7 +1318,8 @@ class zenTrack extends zen {
    * @param string $evalType 'Javascript' or 'Matches'
    * @param string $evalText javascript text for evals
    */
-  function updateDataGroup( $group_id, $name, $table, $evalType, $evalText, $descript ) {     
+  function updateDataGroup( $group_id, $name, $table, $evalType, $evalText, 
+                            $descript, $name_of_file ) {     
     $group = $this->get_data_group($group_id);
     if( $group['table_name'] != $table ) {
       $this->db_delete($table_group_detail, "group_id", $group_id);
@@ -1219,7 +1329,8 @@ class zenTrack extends zen {
                                   "table_name"=>$table,
                                   "descript"=>$descript,
                                   "eval_type"=>$evalType,
-                                  "eval_text"=>$evalText) );
+                                  "eval_text"=>$evalText,
+                                  "name_of_file"=>$name_of_file) );
   }
 
   /**

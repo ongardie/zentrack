@@ -33,38 +33,53 @@
           <td class='cell' align='center'><b><?=tr("Actions")?></b></td>
 	 </tr>
     <? 
-         $behaviors = $zen->getBehaviorList(0);
-         $groups=$zen->getDataGroups(0);
-         $num = count($behaviors);
+   $behaviors = $zen->getBehaviorList(0);
+   $groups=$zen->getDataGroups(0);
+   $num = count($behaviors);
 	 if( is_array($behaviors) ) {
 	   $j = 0;
 	   $t = "\t<td class='bars'>";
 	   $te = "</td>\n";
 	   foreach($behaviors as $k => $v) {
 	     print "<tr>\n";
-	     print "$t".$k."$te";
-	     print "$t".$zen->ffv(($v['is_enabled'])?tr("Yes") : tr("No"))."$te";
-	     print "$t".$v['sort_order']."$te";
-	     print "$t".$zen->ffv($v['behavior_name'])."$te";
-	     print "$t".$zen->ffv(($v['match_all'])?tr("All rules") : tr("Any rule"))."$te";
-	     print "$t".$zen->ffv($v['field_name'])."$te";
-             print "$t".$groups[$v['group_id']]."$te";
-	     print "$t".$zen->ffv(($v['field_enabled'])?tr("Normal") : tr("Read-only"))."$te";
-             print "$t";
-
-             print "\n<span class='small'>"
-                 . "[<a href='".$elnk."?behavior_id=".$v['behavior_id']."'>".uptr('properties')."</a>]</span>";
-             print "<br>";
-             print "\n<span class='small'>"
-                 . "[<a href='".$llnk."?behavior_id=".$v['behavior_id']."'>".uptr('rules')."</a>]</span>";
-             print "<br>";
-             print "\n<span class='small'><span class='error'>"
-                 . "[<a href='".$dlnk."?behavior_id=".$v['behavior_id']."'"
-                 . "onClick='return confirm(\"".tr("Permanently remove behavior ??",array($v['behavior_id']))."\");'>"
-                 . uptr("delete")."</a>]</span></span>";
-
-             print "$te";
-
+	     print $t.$k.$te;
+	     print $t.$zen->ffv(($v['is_enabled'])?tr("Yes") : tr("No")).$te;
+	     print $t.$v['sort_order'].$te;
+	     print $t.$zen->ffv($v['behavior_name']).$te;
+	     print $t.$zen->ffv(($v['match_all'])?
+          tr("All rules") : tr("Any rule")).$te;
+	     print $t.$zen->ffv($v['field_name']).$te;
+       if( $tf_file ) {
+         print $t."<b>".$groups[$v['group_id']]."</b>".$te;
+       }
+       else {
+         print $t.$groups[$v['group_id']].$te;    
+       }
+	     print $t.$zen->ffv(($v['field_enabled'])?
+          tr("Normal") : tr("Read-only")).$te;
+       print $t;
+       
+       print "\n<span class='small'>"
+          . "[<a href='".$elnk."?behavior_id=".$v['behavior_id']."'>"
+          . uptr('properties')."</a>]</span>";
+       print "<br>";
+       //if( !$tf_file ) {
+         print "\n<span class='small'>"
+            . "[<a href='".$llnk."?behavior_id=".$v['behavior_id']."'>"
+            . uptr('rules')."</a>]</span>";
+       //}
+       //else {
+       //  print "\n<span class='smallGrey'>[".uptr('rules')."]</a></span>"; 
+       //}
+       print "<br>";
+       print "\n<span class='small'><span class='error'>"
+           . "[<a href='".$dlnk."?behavior_id=".$v['behavior_id']."'"
+           . "onClick='return confirm(\""
+           . tr("Permanently remove behavior ??",array($v['behavior_id']))."\");'>"
+           . uptr("delete")."</a>]</span></span>";
+       
+       print $te;
+       
 	     print "</tr>\n";
 	     $j++;
 	   }
@@ -74,7 +89,7 @@
   <td class="titleCell" colspan="9">
     <?=tr('Press NEW to create new behaviors')?>
     <br>
-    <?=tr('Press DONE when you have finished with the edition')?>
+    <?=tr('Press DONE when you are finished')?>
   </td>
 </tr>
       <tr>

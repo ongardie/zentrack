@@ -1,5 +1,5 @@
 <?{
-
+  
   /*
   **  CHANGE PASSWORD
   **  
@@ -8,7 +8,7 @@
   */
   
   include_once("../header.php");
-
+  
   $page_tile = tr("Change Password");
   $expand_options = 1;
   
@@ -19,9 +19,9 @@
       $errs[] = tr("Your passwords did not match");
     } else {
       if( $zen->settings["check_pwd_simple"] == "on" && strlen($newPass1) < 6 ) 
-	$errs[] = tr("Your passphrase must be at least 6 digits long");
+      $errs[] = tr("Your passphrase must be at least 6 digits long");
       if( $zen->settings["check_pwd_simple"] == "on" && !ereg("[^a-zA-Z]", $newPass1) )
-	$errs[] = tr("Your new passphrase must contain at least 1 non-letter character");
+      $errs[] = tr("Your new passphrase must contain at least 1 non-letter character");
     }
     $user = $zen->getUser($login_id);
     if( $user["initials"] == "GUEST" ) {
@@ -32,38 +32,38 @@
       $params = array();
       $params["passphrase"] = $newPass1;
       if( $zen->demo_mode == "on" ) {
-	$msg = tr("Your request was successful, but this is a demo site, so the passphrase was not altered");
-	$skip = 1;
+        $msg = tr("Your request was successful, but this is a demo site, so the passphrase was not altered");
+        $skip = 1;
       } else {
-	$res = $zen->update_user($login_id,$params);
-	if( !$res ) {
-	  $errs[] = tr("System Error: Unable to change user passphrase.");
-	} else {
-	  $skip = 1;
-	  $msg = tr("Password successfully changed");
-	}
+        $res = $zen->update_user($login_id,$params);
+        if( !$res ) {
+          $errs[] = tr("System Error: Unable to change user passphrase.");
+        } else {
+          $skip = 1;
+          $msg = tr("Password successfully changed");
+        }
       }
       if( $skip ) {
-	$login_level = $user["access_level"];
+        $login_level = $user["access_level"];
       }
     }
   }
   
   include("$libDir/nav.php");
-?>
-<table width="600" align="center">
-<tr><td>
-<?
+  ?>
+  <table width="600" align="center">
+  <tr><td>
+  <?
   $zen->printErrors($errs);
   if( $skip ) {
     include("$templateDir/optionsMenu.php");
   } else {
     include("$templateDir/pwcForm.php");
   }
-?>
+  ?>
   </td></tr>
   </table>
-<?
+  <?
   include("$libDir/footer.php");
 }?>
 

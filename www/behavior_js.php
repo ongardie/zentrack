@@ -9,6 +9,72 @@
 
   include_once(dirname(__FILE__)."/header.php");  
   $behaviors = $zen->getBehaviorList();
+  $groups = $_SESSION['data_groups'];
+  
+  /**
+   * Generate field info for behaviors
+   *
+   * @param integer $bid behavior id
+   * @param array $fields the fields to generate
+   * @param array $fieldMap the map of fields to behaviors
+   * @param string $setid identifier used to retrieve these later (defaults to 'default')
+   */
+   function genBehaviorFields($bid, $fields, &$fieldMap, $setid = 'default') {
+     global $zen;
+     // create a new set of matches
+     foreach($fields as $f) {
+       $fkey = $f['field_name'];
+       // store the field to behavior mappings for use later
+       if( !is_array($fieldMap["$fkey"]) ) { $fieldMap["$fkey"] = array(); }
+       if( !in_array($bid, $fieldMap["$fkey"]) ) {
+         $fieldMap["$fkey"][] = $bid;
+       }
+       
+       // here we are going to try to parse the field values into
+       // a simple integer date that can be used for comparisons
+       $val = $f['field_value'];
+       if( strpos($f['field_name'], '_date') > 0 ) {
+         // can't be the first character, so 0 is not a concern
+         $val = $zen->dateParse($val);
+       }
+       
+       // create the behavior fields objects
+       print "  behaviorMap['$bid'].addField(";
+       print $zen->fixJsVal($f['field_name']);
+       print ','.$zen->fixJsVal($f['field_operator']);
+       print ','.$zen->fixJsVal($val);
+       print ','.$zen->fixJsVal($setid);
+       print ");\n";
+     }
+   }
+   
+   /**
+    * Generate fields for groups
+    *
+    * @param integer $group_id
+    * @param array $values
+    * @param string $setid identifier used to retrieve these later (defaults to 'default')
+    */
+    function genGroupFields( $group_id, $values, $setid = 'default' ) {
+      global $zen;
+      for($i=0; $i < count($values); $i++) {
+        // add all fields used for matching to the group map entry
+        $f = $values[$i];
+        if( is_array($f) ) {
+          $v = $f['field_value'];
+          $l = $f['label'];
+        }
+        else {
+          $v = $l = $f;
+        }
+        print "  groupMap['$group_id'].addField(";
+        print $zen->fixJsVal($v);
+        print ','.$zen->fixJsVal($l);
+        print ','.$zen->fixJsVal($setid);
+        print ");\n";
+      }      
+    }
+  
 ?>
 //<pre>
 
@@ -24,8 +90,15 @@ function BehaviorMapEntry(group_id, name, matchall, field, disabled) {
   this.disabled = disabled;
 }
 
-BehaviorMapEntry.prototype.addField = function(name, operator, value) {
-  this.fields[ this.fields.length ] = new BehaviorMapField( name, operator, value );    
+BehaviorMapEntry.prototype.addField = function(name, operator, value, setid) {
+  if( !setid ) { setid = 'default'; }
+  if( !this.fields[setid] ) { this.fields[setid] = new Array(); }
+  this.fields[setid][ this.fields[setid].length ] = new BehaviorMapField( name, operator, value );    
+}
+
+BehaviorMapEntry.prototype.getFields = function( setid ) {
+  if( !setid ) { setid = 'default'; }
+  return this.fields[setid]? this.fields[setid] : new Array();
 }
 
 /**
@@ -50,9 +123,17 @@ function GroupMapEntry(id, name, table, evalType, evalText) {
   this.fields = new Array();
 }
 
-GroupMapEntry.prototype.addField = function(value, label) {
+GroupMapEntry.prototype.addField = function(value, label, setid) {
+  if( !setid ) { setid = 'default'; }
+  if( !this.fields[setid] ) { this.fields[setid] = new Array(); }
   if( !label ) { label = value; }
-  this.fields[ this.fields.length ] = new GroupMapField( value, label );    
+  this.fields[setid][ this.fields[setid].length ] = new GroupMapField( value, label );    
+}
+
+GroupMapEntry.prototype.getFields = function( setid ) {
+  if( !setid ) { setid = 'default'; }
+  behaviorDebug(3, "(GroupMapEntry.getFields("+setid+"): "+this.fields[setid]);
+  return this.fields[setid]? this.fields[setid] : new Array();
 }
 
 function GroupMapField(value, label) {
@@ -60,16 +141,22 @@ function GroupMapField(value, label) {
   this.label = label;
 }
 
-/**
- * Behavior map stores all behavior info.
- */
+var groupMap = new Array();
 var behaviorMap = new Array();
 <?
-$fields = array();
+$fieldMap = array();
+$groupsLoadedMap = array();
 if( is_array($behaviors) ) {
   foreach($behaviors as $b) {
     $bid = $b['behavior_id'];
-
+    
+    $group = $_SESSION['data_groups']["{$b['group_id']}"];
+    if( !$group ) {
+      // ignore behaviors which do not have a valid group specified
+      $zen->addDebug('behavior_js.php',"Behavior $bid specified an invalid group ({$b['group_id']}), ignored", 1); 
+      continue;
+    }
+    
     // generate the behaviorMap entry
     print "behaviorMap['$bid'] = new BehaviorMapEntry(";
     print $zen->fixJsVal($b['group_id']);
@@ -77,31 +164,38 @@ if( is_array($behaviors) ) {
     print ",".($b['match_all']? 'true' : 'false');
     print ",".$zen->fixJsVal($b['field_name']);
     print ",".($b['field_enabled']? 'false' : 'true');
-    print ");\n";
+    print ");\n";        
+    
+    // create the groupMap entry for this element if it has
+    // not been loaded yet
+    $k = $group['group_id'];
+    if( !array_key_exists($k, $groupsLoadedMap) ) {
+      print "groupMap['$k'] = new GroupMapEntry($k";
+      print ','.$zen->fixJsVal($group['group_name']);
+      print ','.$zen->fixJsVal($group['table_name']);
+      print ','.$zen->fixJsVal($group['eval_type']);
+      // encode the eval text to prevent corrupting
+      // the javascript syntax
+      print ", '".rawurlencode($g['eval_text'])."'";
+      print ");\n";
+    }
 
     if( is_array($b['fields']) ) {
-      foreach($b['fields'] as $f) {
-	$fkey = $f['field_name'];
-	// store the field to behavior mappings for use later
-	if( !is_array($fields["$fkey"]) ) { $fields["$fkey"] = array(); }
-	if( !in_array($bid, $fields["$fkey"]) ) {
-	  $fields["$fkey"][] = $bid;
-	}
-
-	// here we are going to try to parse the field values into
-	// a simple integer date that can be used for comparisons
-	$val = $f['field_value'];
-	if( strpos($f['field_name'], '_date') > 0 ) {
-	  // can't be the first character, so 0 is not a concern
-	  $val = $zen->dateParse($val);
-	}
-	
-	// create the behavior fields objects
-	print "  behaviorMap['$bid'].addField(";
-	print $zen->fixJsVal($f['field_name']);
-	print ",".$zen->fixJsVal($f['field_operator']);
-	print ",".$zen->fixJsVal($val);
-	print ");\n";
+      if( $group && $group['eval_type'] == 'File' ) {
+        // this is a file group, we have a more complex match here, since
+        // one behavior can map to many sets of matches.
+        $sets = $zen->getBehaviorFileSet( $b, $group );
+        if( $sets && count($sets) ) {
+          foreach($sets as $setid=>$vals) {
+            genBehaviorFields($bid, $vals['matches'], &$fieldMap, $setid); 
+            genGroupFields($group['group_id'], $vals['values'], $setid);
+          }
+        }
+      }
+      else {
+        // if this is not a file group, then we have a simple match pattern here
+        genBehaviorFields($bid, $b['fields'], &$fieldMap);
+        genGroupFields($group['group_id'], $group['fields']);
       }
     }
   }
@@ -115,39 +209,8 @@ if( is_array($behaviors) ) {
  */
 var fieldMap = new Array();
 <?
-foreach($fields as $k=>$v) {
+foreach($fieldMap as $k=>$v) {
   print "fieldMap['{$k}'] = [".join(",",$v)."];\n";
-}
-?>
-
-/**
- * Group map stores the group values which will be used by behaviors
- * to repopulate field values.
- */
-var groupMap = new Array();
-<?
-$groups = $_SESSION['data_groups'];
-if( is_array($groups) ) {
-  foreach($groups as $g) {
-    $k = $g['group_id'];
-    // create the groupMap entry for this element
-    print "groupMap['$k'] = new GroupMapEntry($k";
-    print ','.$zen->fixJsVal($g['group_name']);
-    print ','.$zen->fixJsVal($g['table_name']);
-    print ','.$zen->fixJsVal($g['eval_type']);
-    // encode the eval text to prevent corrupting
-    // the javascript syntax
-    print ", '".rawurlencode($g['eval_text'])."'";
-    print ");\n";
-    for($i=0; $i < count($g['fields']); $i++) {
-      // add all fields used for matching to the group map entry
-      $f = $g['fields'][$i];
-      print "  groupMap['$k'].addField(";
-      print $zen->fixJsVal($f['field_value']);
-      print ','.$zen->fixJsVal($f['label']);
-      print ");\n";
-    }
-  }
 }
 ?>
 
@@ -158,7 +221,7 @@ var behaviorFlags = new Array();
 // used for debugging this javascript set
 var behaviorDebugMessages = new Array();
 
-// set this to 1 to enable debuggins
+// loads debugging mode from header
 var useBehaviorDebug = <?= $Debug_Mode ?>;
 
 // stores a list of the most recently entered values for a given field
@@ -195,37 +258,37 @@ function fieldChangedBehavior( fieldObject ) {
  * after completion, since this method doesn't know at what point
  * it is ok to clear them.
  */
-function runFieldBehaviors( fieldObject ) {
-  // generate a useful name for debugging
-  var formName = fieldObject? fieldObject.form.name : "-null-";
-  var fieldName = fieldObject? formName+"."+fieldObject.name : "-null-";
-
-  // insure that this is a valid field and that it has
-  // associated behaviors mapped in the fieldMap
-  if( fieldObject && fieldObject.name && fieldMap[ fieldObject.name ] ) {
-    behaviorDebug(3, "(runFieldBehaviors)reviewing behaviors for "+fieldName);
-
-    // extract the associated behaviors and check each one
-    // to see if it should be triggered.
-    // We also count on the checkBehaviorStatus() method to
-    // prevent infinite recursion.
-    var behaviors = fieldMap[ fieldObject.name ];
-    for(var i=0; i < behaviors.length; i++) {
-      var behavior_id = behaviors[i];
-      if( checkBehaviorStatus(fieldObject.form, behavior_id) ) {
-	// when the method is triggered, the field it changed
-	// may trigger a behavior in turn, so we will
-	// use recursion to check that field as well
-	var fieldAffected = executeBehavior(fieldObject.form, behavior_id);	
-	var newFieldName = formName+"."+fieldAffected;
-	behaviorDebug(3, "(runFieldBehaviors)updated field: ["+behavior_id+"]"+newFieldName);
-
-	// fieldObject.form is a reference to the form object (Read Only)
-	// which contains this field
-	runFieldBehaviors( fieldObject.form[fieldAffected] );
-      }
-    }
-    return true;
+ function runFieldBehaviors( fieldObject ) {
+   // generate a useful name for debugging
+   var formName = fieldObject? fieldObject.form.getAttribute('name') : "-null-";
+   var fieldName = fieldObject? formName+"."+fieldObject.name : "-null-";
+   
+   // insure that this is a valid field and that it has
+   // associated behaviors mapped in the fieldMap
+   if( fieldObject && fieldObject.name && fieldMap[ fieldObject.name ] ) {
+     // extract the associated behaviors and check each one
+     // to see if it should be triggered.
+     // We also count on the checkBehaviorStatus() method to
+     // prevent infinite recursion.
+     var behaviors = fieldMap[ fieldObject.name ];
+     behaviorDebug(3, "(runFieldBehaviors)reviewing "+behaviors.length+" behaviors for "+fieldName);
+     for(var i=0; i < behaviors.length; i++) {
+       var behavior_id = behaviors[i];
+       var setid = checkBehaviorStatus(fieldObject.form, behavior_id); 
+       if( setid ) {
+         // when the method is triggered, the field it changed
+         // may trigger a behavior in turn, so we will
+         // use recursion to check that field as well
+         var fieldAffected = executeBehavior(fieldObject.form, behavior_id, setid);	
+         var newFieldName = formName+"."+fieldAffected;
+         behaviorDebug(3, "(runFieldBehaviors)updated field: ["+behavior_id+"]"+newFieldName);
+         
+         // fieldObject.form is a reference to the form object (Read Only)
+         // which contains this field
+         runFieldBehaviors( fieldObject.form[fieldAffected] );
+       }
+     }
+     return true;
   }
   else {
     // just for debugging
@@ -241,8 +304,9 @@ function runFieldBehaviors( fieldObject ) {
  *
  * This method returns the field affected by the behavior.
  */
-function executeBehavior( formObj, behaviorId ) {
-  behaviorDebug(3, "(executeBehavior)executing behavior "+behaviorId+"->"+formObj.name);
+function executeBehavior( formObj, behaviorId, setid ) {
+  if( !setid ) { setid = 'default'; }
+  behaviorDebug(3, "(executeBehavior)executing behavior "+behaviorId+"->"+formObj.getAttribute('name')+"[setid="+setid+"]");
   var behavior = behaviorMap[ behaviorId ];
   var group = groupMap[ behavior.group_id ];
   
@@ -268,7 +332,7 @@ function executeBehavior( formObj, behaviorId ) {
   var fieldModified = false;
 
   // only return field if it exists and was changed
-  if( setFormValsUsingGroup(fieldObj, group) ) {
+  if( setFormValsUsingGroup(fieldObj, group, setid) ) {
     fieldModified = behavior.field;
   }
 
@@ -287,11 +351,17 @@ function executeBehavior( formObj, behaviorId ) {
 
 /**
  * Set the values of a form field to the list provided
+ *
+ * The setid is only meaningful to file groups, all other
+ * groups can simply ignore this (it passes undefined) and
+ * use the defaults.
  */
-function setFormValsUsingGroup( fieldObj, group ) {
+function setFormValsUsingGroup( fieldObj, group, setid ) {
+  if( !setid ) { setid = 'default'; }
+  
   // we keep a history to avoid redundantly setting the values if they
   // already are and to prevent infinite loops
-  if( behaviorHistoryMap[ fieldObj.name ] == group.id && group.evalType != 'Javascript' ) {
+  if( behaviorHistoryMap[ fieldObj.name ] == group.id && group.evalType == 'Matches' ) {
     behaviorDebug(3, "(setFormValsUsingGroup)field "+fieldObj.name
 		  +" is already set to "+group.name+" (skipping)");
     return false;
@@ -328,12 +398,18 @@ function setFormValsUsingGroup( fieldObj, group ) {
     }
   }
   
+  var fields = group.getFields(setid);
+  
   // set the field values
+  var v = '';
+  for(var i=0; i < fields.length; i++) {
+    v += fields[i].label+",";
+  }
   behaviorDebug(3, "(setFormValsUsingGroup)updating "+fieldObj.name
-		+" using "+group.name+"["+fieldObj.type+"]");
+		+" using "+group.name+"["+fieldObj.type+"] with setid="+setid+" and values=["+v+"]");
   switch( fieldObj.type ) {
     case "checkbox":
-      if( group.fields[0].value ) {
+      if( fields[0].value ) {
         fieldObj.checked = true;
       }
       break;
@@ -341,7 +417,7 @@ function setFormValsUsingGroup( fieldObj, group ) {
     case "submit":
     case "text":
     case "textarea":
-      fieldObj.value = group.fields[0].value;
+      fieldObj.value = fields[0].value;
       break;
     case "select":
     case "select-one":
@@ -351,15 +427,15 @@ function setFormValsUsingGroup( fieldObj, group ) {
         var oldValue = fieldObj.options[ fieldObj.selectedIndex ].value;
       }
       fieldObj.length = 0;
-      for(var i=0; i < group.fields.length; i++) {
-        var f = group.fields[i];
+      for(var i=0; i < fields.length; i++) {
+        var f = fields[i];
         behaviorDebug(3, "(setFormValsUsingGroup)Setting option "+i+" to ["+f.label+"]"+f.value);
         fieldObj.options[i] = new Option();
         fieldObj.options[i].text = f.label;
         fieldObj.options[i].value = f.value;
         // try to set to the same value if possible
         if( f.value == oldValue ) {
-    fieldObj.options[i].selected = true;
+          fieldObj.options[i].selected = true;
         }
       }
       break;
@@ -397,6 +473,8 @@ function clearBehaviorFlags() {
 
 /**
  * Checks to see if conditions have been met to trigger a behavior
+ *
+ * Returns the setid matched or false
  */
 function checkBehaviorStatus( formObject, behaviorId ) {
   // retrieve the behavior info
@@ -408,7 +486,7 @@ function checkBehaviorStatus( formObject, behaviorId ) {
   }
 
   // debugging
-  var formName = formObject.name? formObject.name : "-anonymous form-";
+  var formName = formObject? formObject.getAttribute('name') : "-null-";
   behaviorDebug(3, "(checkBehaviorStatus)Checking status: ["
 		+formName+"]"+behavior.name);
 
@@ -421,35 +499,53 @@ function checkBehaviorStatus( formObject, behaviorId ) {
     return false; 
   }
 
+  // otherwise, we will check the fields and their 
+  // match conditions, insuring that we monitor the 
+  // "and" or "or" behavior specified.
+  // we must iterate over each setid and evaluate it
+  // independantly, taking the first successful result
+  // that we receive.
+  var numSets = 0;
+  for( var setid in behavior.fields ) {
+    numSets++;
+    behaviorDebug(3,"(checkBehaviorStatus)checking setid="+setid);
+    var matchedAll = true;
+    for(var i=0; i < behavior.fields[setid].length; i++) {
+      var f = behavior.fields[setid][i];
+      var matched = matchBehaviorCriteria( formObject, f );
+      behaviorDebug(3, "(checkBehaviorStatus)"+f.name+" "+f.operator+" '"+f.value+"' ["+matched+"]");
+  
+      // if matchall is set, then we must match every field
+      // to succeed
+      if( behavior.matchall && !matched ) {
+        matchedAll = false;
+        break; 
+      }
+      // otherwise, any match is a success
+      if( behavior.matchall == false && matched ) {
+        behaviorDebug(3, "(checkBehaviorStatus)setid="+setid+": matched on 'or' clause");
+        return setid; 
+      }
+    }
+    // in the event that we are looking for a matchAll and the flag is still
+    // true then we have a match
+    if( behavior.matchall && matchedAll ) {
+      behaviorDebug(3, "(checkBehaviorStatus)setid="+setid+": all behaviors matched");
+      return setid; 
+    }
+  }
+  
   // if there are no fields to match, then the behavior always runs.
-  if( behavior.fields.length < 1 ) {
+  // we cannot simply look at fields.length here, because it returns
+  // zero when we have null values in the array!
+  if( numSets < 1 ) {
     behaviorDebug(3, "(checkBehaviorStatus)Always true -- no fields: "+behavior.name);
     return true;
   }
 
-  // otherwise, we will check the fields and their 
-  // match conditions, insuring that we monitor the 
-  // "and" or "or" behavior specified.
-  for(var i=0; i < behavior.fields.length; i++) {
-    var f = behavior.fields[i];
-    var matched = matchBehaviorCriteria( formObject, f );
-    behaviorDebug(3, "(checkBehaviorStatus)"+f.name+" "+f.operator+" '"+f.value+"' ["+matched+"]");
-
-    // if matchall is set, then we must match every field
-    // to succeed
-    if( behavior.matchall && !matched ) { 
-      return false; 
-    }
-    // otherwise, any match is a success
-    if( !behavior.matchall && matched ) { 
-      return true; 
-    }
-  }
-
-  // in the event that we fall through, the return value
-  // is true for matchall cases (all were matched) and false
-  // otherwise (because none matched)
-  return behavior.matchall? true : false;
+  // in the point that we arrive here, nothing has matched so we return false
+  behaviorDebug(3, "(checkBehaviorStatus)behavior="+behavior.name+": no matches");  
+  return false;
 }
 
 /**
@@ -607,10 +703,10 @@ function pageLoadedBehavior() {
   // iterate over form elements and check for behaviors
   for( var x=0; x < behaviorFormSet.length; x++ ) {
     if( !behaviorFormSet[x] || !behaviorFormSet[x].elements ) {
-      behaviorDebug(1, "(pageLoadedBehavior)invalid form: "+(behaviorFormSet[x]? behaviorFormSet[x].name : 'undefined'));
+      behaviorDebug(1, "(pageLoadedBehavior)invalid form: "+(behaviorFormSet[x]? behaviorFormSet[x].getAttribute('name') : 'undefined'));
       continue;
     }
-    behaviorDebug(3, "(pageLoadedBehavior)loading form: "+behaviorFormSet[x].name);
+    behaviorDebug(3, "(pageLoadedBehavior)loading form: "+behaviorFormSet[x].getAttribute('name'));
     for( var i=0; i < behaviorFormSet[x].elements.length; i++ ) {
       if( fieldMap[ behaviorFormSet[x].elements[i].name ] ) {
 	setBehaviorOnChange( behaviorFormSet[x].elements[i] );
@@ -661,7 +757,7 @@ function getFormFieldValue( formField, behaviorMapField ) {
   case "select":
   case "select-one":
   case "select-multiple":
-    if( formField.selectedIndex < 0 ) { return null; }
+    if( formField.selectedIndex < 0 ) { return ''; }
     if( probablyNumericComparator(behaviorMapField) ) {
       return formField[ formField.selectedIndex ].value;
     }
@@ -678,7 +774,7 @@ function getFormFieldValue( formField, behaviorMapField ) {
         if( val > 0 ) { return val; }
       }
     }
-    return formField.value;
+    return formField.value? formField.value : '';
   }
 }
 
@@ -710,5 +806,14 @@ function evalJsString( s ) {
 }
 
 window.onload = mergeFunctions( window.onload, pageLoadedBehavior );
+
+<?
+  // print out debugging info if specified as such
+  if( array_key_exists('behavior_debug', $_GET) ) {
+    print "//  ------ DEBUG OUTPUT FOR BEHAVIOR_JS ------- \n";
+    $zen->printJsFriendlyDebug();
+    print "//  ------ END DEBUG OUTPUT FOR BEHAVIOR_JS ------- \n";
+  }
+?>
 
 //</pre>

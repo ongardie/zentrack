@@ -4,6 +4,7 @@ mkdir includes/attachments
 mkdir includes/logs
 mkdir includes/cache
 mkdir includes/users
+mkdir includes/user_data
 
 cp -ib install/configVars.php.default includes/configVars.php
 cp -ib install/header.php.default www/header.php

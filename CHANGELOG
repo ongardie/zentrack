@@ -7,6 +7,13 @@
 
 ----- V2.5 LIVE (in testing) -----
 
+2004-09-22, Kato
+  Corrected bug causing help language to default to english.
+  
+2004-09-27, Kato
+  Added ability to generate behaviors from file using File Groups
+  
+
 ----- V2.5 RC3 [Pre 3] (2004-09-10) -----
 
 2004-09-09, Kato

@@ -11,23 +11,35 @@
   $page_tile = tr("New Group Submit");
 
   if( !$active )
-    $active = 0;
-
+  $active = 0;
+  
   $data_group_fields = array(
-                             "NewTableName"       => "alphanum",
-                             "NewGroupName"       => "html",
-                             "NewDescript"        => "html",
-			     "NewEvalType"        => "alphanum",
-			     "NewEvalText"        => "html"
-                             );
-
-  $data_group_required = array("NewGroupName");
-
-
+                            "NewTableName"       => "alphanum",
+                            "NewGroupName"       => "html",
+                            "NewDescript"        => "html",
+                            "NewEvalType"        => "alphanum",
+                            "NewEvalText"        => "html",
+                            "name_of_file"       => "filename"
+                            );
+  
+  $data_group_required = array("NewGroupName", "NewTableName", "NewEvalType");
+  
   $zen->cleanInput($data_group_fields);
+  
+  if( $NewEvalType == 'Javascript' ) {
+    $data_group_required[] = 'NewEvalText';
+  }
+  else if( $NewEvalType == 'File' ) {
+    $data_group_required[] = 'name_of_file';
+  }
+  
   foreach($data_group_required as $d) {
     if( !strlen($$d) ) {
-      $errs[] = tr("Table Name and Group Name are required");
+      $d = preg_replace('/^New/', '', $d);
+      $d = preg_replace('/([A-Z])/', ' \\1', $d);
+      $d = str_replace('_', ' ', $d);
+      $d = ucwords($d);
+      $errs[] = tr("$d is required");
     }
   }
 
@@ -45,15 +57,15 @@
       $msg = tr("Process successful.  Group was not added, because this is a demo site.");
     } else {
       $group_id = $zen->addDataGroup( $NewGroupName, $NewTableName, $NewDescript, 
-				      $NewEvalType, $NewEvalText, array() );
+      $NewEvalType, $NewEvalText, $name_of_file, array() );
       if( $group_id ) {
-	$vars = $zen->generateDataGroupInfo( array($group_id) );
-	$_SESSION['data_groups'][$group_id] = $vars[$group_id];
-	$msg = tr("Group '?' (ID=?) was added successfully. ? to edit this group's entries.",
-		  array($NewGroupName, $group_id, "--link--" . tr("Click Here") . "</a>", $NewGroupName));
-	$msg = str_replace("--link--", "<br><a href='$rootUrl/admin/editGroupDetails.php?group_id=$group_id'>", $msg);
+        $vars = $zen->generateDataGroupInfo( array($group_id) );
+        $_SESSION['data_groups'][$group_id] = $vars[$group_id];
+        $msg = tr("Group '?' (ID=?) was added successfully. ? to edit this group's entries.",
+        array($NewGroupName, $group_id, "--link--" . tr("Click Here") . "</a>", $NewGroupName));
+        $msg = str_replace("--link--", "<br><a href='$rootUrl/admin/editGroupDetails.php?group_id=$group_id'>", $msg);
       } else {
-	$errs[] = tr("System Error: Could not add ? to the system", array($NewGroupName));
+        $errs[] = tr("System Error: Could not add ? to the system", array($NewGroupName));
       }
     }
   }
@@ -61,6 +73,9 @@
   include("$libDir/nav.php");
   if( $errs ) {
     $zen->printErrors($errs);
+    $group = array( 'table_name'=>$NewTableName, 'group_name'=>$NewGroupName,
+                    'descript'=>$NewDescript, 'eval_type'=>$NewEvalType,
+                    'eval_text'=>$NewEvalText, 'name_of_file'=>$name_of_file);
     include("$templateDir/groupAdd.php");
   } else {
     include("$templateDir/groupForm.php");

@@ -25,15 +25,15 @@
     <?=tr("Table Name")?>*
   </td>
     <?
-             $t = "\t<td class='bars'>";
-             $te = "</td>\n";
-             $tables=$zen->getDataGroupTablesArray();
-             print "$t<select name='NewTableName'>\n";
-             foreach($tables as $tbl_k=>$tbl_v) {
-               $sel=($group['table_name']==$tbl_v)? " selected" : "";
-               print "<option value='$tbl_v'$sel>$tbl_k</option>\n";
-             }
-             print "$te";
+    $t = "\t<td class='bars'>";
+    $te = "</td>\n";
+    $tables=$zen->getDataGroupTablesArray();
+    print "$t<select name='NewTableName'>\n";
+    foreach($tables as $tbl_k=>$tbl_v) {
+      $sel=($group['table_name']==$tbl_v)? " selected" : "";
+      print "<option value='$tbl_v'$sel>$tbl_k</option>\n";
+    }
+    print "$te";
     ?>
   </td>
 </tr>
@@ -58,10 +58,30 @@
     <?=tr("Eval Type")?>
   </td>
   <td class="bars">
-    <select name='NewEvalType' onChange='toggleEvalText(this)'>
+    <select name='NewEvalType' onChange='toggleFields(this)'>
       <option<?=$group['eval_type'] == 'Matches'? ' selected':''?>>Matches</option>
       <option<?=$group['eval_type'] == 'Javascript'? ' selected':''?>>Javascript</option>
+      <option<?=$group['eval_type'] == 'File'? ' selected':''?>>File</option>
     </select>
+  </td>
+</tr>
+<tr>
+  <td class='bars'>
+    <?=tr('File Name')?>
+  </td>
+  <td class='bars'>
+    <input
+       <? 
+       if( $group && $group['eval_type'] == 'File' ) { print "class='input'"; }
+       else { print "class='inputDisabled' disabled='disabled'"; }
+       ?>
+       type='text' name='name_of_file' 
+       maxlength='100' value='<?=$zen->ffv($group['name_of_file'])?>'>
+       <span class='note'>
+       <br>Place file in <?=$libDir?>/user_data
+       <br>Valid characters: letters, numbers, symbols (_.-)
+       <br>Samples: myfile.txt, a_file_name.data, some-file
+       </span>
   </td>
 </tr>
 <tr>
@@ -69,9 +89,17 @@
     <?=tr("Eval Script")?>
   </td>
   <td class="bars">
-    <textarea name='NewEvalText' cols='50' rows='4'<?=
-	       $group['eval_type'] != 'Javascript'? ' disabled=true class="greytext"' : ' class="fieldtext"'
-     ?>><?=$zen->ffv($group['eval_text'])?></textarea>
+    <textarea name='NewEvalText' cols='50' rows='4'
+      <? 
+       if( $group && $group['eval_type'] == 'Javascript' ) { print "class='input'"; }
+       else { print "class='inputDisabled' disabled='disabled'"; }
+      ?>><?=$zen->ffv($group['eval_text'])?></textarea>
+      <span class='note'>
+      <br>Enter valid javascript only, comments are fine.
+      <br>Do not enter &lt;script&gt; tags.  The following variables are valid:
+      <br>&nbsp;&nbsp;{form} - evaluates to window.document.CurrentFormName
+      
+      </span>
   </td>
 </tr>
 <tr>
@@ -88,15 +116,9 @@
 
 </form>
 <script language='javascript'>
-   function toggleEvalText( selectObj ) {
-     var fld = window.document.groupAddForm.NewEvalText;
-     if( selectObj.options[ selectObj.selectedIndex ].text == 'Javascript' ) {
-       fld.disabled = false;
-       fld.style.color = '<?=$zen->settings['color_bar_text']?>';
-     }
-     else {       
-       window.document.groupAddForm.NewEvalText.disabled = true;
-       fld.style.color = '<?=$zen->settings['color_grey']?>';
-     }
+   function toggleFields( selectObj ) {
+     var selectedText = selectObj.options[ selectObj.selectedIndex ].text; 
+     toggleField( window.document.groupAddForm.NewEvalText, selectedText != 'Javascript' );
+     toggleField( window.document.groupAddForm.name_of_file, selectedText != 'File' );
    }
 </script>

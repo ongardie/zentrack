@@ -36,7 +36,7 @@
   </tr>  
   <tr>
   <td <?=$nav_rollover_text?>>
-    <a class="subMenuLink" href="<?=$rootUrl?>/admin/editCustom.php"><?=tr("Edit Custom Fields")?></a>
+    <a class="subMenuLink" href="<?=$rootUrl?>/admin/editCustom.php"><?=tr("Edit Variable Fields")?></a>
   </td>
   </tr>  
   <tr>

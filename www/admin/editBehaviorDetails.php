@@ -16,6 +16,17 @@
     $more = 0;
   }
 
+  $behavior_id = $zen->checkNum($behavior_id);
+  $behavior = $zen->getBehavior( $behavior_id );
+  if( !$behavior ) {
+    $zen->addDebug('editBehaviorDetails.php', "Behavior id '$behavior_id' could"
+        ." not be found, redirecting to menu",1);
+    $skip = 1;
+    unset($TODO);
+  }
+  else {
+    $group = $zen->getDataGroup($behavior['group_id']);
+  }
   $elements=array();
 
 //When the action is MORE or LESS, we fill the elements array with the values from the Form
@@ -54,10 +65,9 @@
       $skip = 1;
     }
   } else {
-    $behavior         = $zen->getBehavior( $behavior_id );
     $behavior_details = $behavior['fields'];
     if ( !is_array($behavior_details) ) {
-      $behavior_details=array();
+      $behavior_details = array();
     }
     $TODO = 'EDIT';
     foreach ($behavior_details as $v) {

@@ -13,6 +13,10 @@
 // start the session
 session_start();     
 
+if( $_GET['clear_session_cache'] ) {
+  $_SESSION = array(); 
+}
+
 // ... except the following list
 $reservedList = array("libDir", "rootUrl", 
 		      "Db_Type", "Db_Instance", "Db_Login", "Db_Pass", "Db_Host", 

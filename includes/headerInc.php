@@ -244,8 +244,10 @@
     if( isset($_SESSION['data_groups']["$group_id"]) ) {
       // get the fields for our group
       $group = $_SESSION['data_groups']["$group_id"];
-      if( count($group['fields']) ) {
-        return $group['fields'];
+      if( $group['eval_type'] == 'Matches' ) {
+        if( count($group['fields']) ) {
+          return $group['fields'];
+        }
       }
     }
     
@@ -359,8 +361,14 @@
   * This array is reset when a logoff occurs, so make sure this
   * is after the login include
   */
-  if( is_array($_SESSION) && !$_SESSION['data_groups'] ) {
+  if( !array_key_exists('data_groups', $_SESSION) ) {
     $_SESSION['data_groups'] = $zen->generateDataGroupInfo();
+  }
+  
+  // this is used to store parsed information about file groups
+  // so that we don't have to load and read the file each time.
+  if( !array_key_exists('filegroups', $_SESSION) ) {
+    $_SESSION['filegroups'] = array(); 
   }
   
   /**
@@ -373,7 +381,7 @@
   // our current translation (if one exists)
   $helpBase = $rootUrl."/help";
   $helpLang = $_SESSION['login_language'];
-  if( !@is_dir("$rootWWW/$helpLang") ) {
+  if( !@is_dir("$rootWWW/help/$helpLang") ) {
     // it may be that we have languages which are not
     // translated to the help section yet, so switch
     // these back to english, which is better than nothing

@@ -16,27 +16,27 @@
            <td class='cell' align='center'><b><?=tr("Order")?></b></td>
 	 </tr>
     <? 
-	 if( is_array($elements) ) {
-	   $j = 0;
-	   $t = "\t<td class='bars'>";
-	   $te = "</td>\n";
-           for($i=0; $i<count($elements); $i++) {
-	     print "<tr>\n";
-             print "$t"."<input type='checkbox' name='NewUseInGroup[".$j."]' value='".$elements[$i][0]."'";
-             $so=0;
-             for($k=0; $k<count($group_details); $k++) {
-               if($group_details[$k]['field_value'] == $elements[$i][0]) {
-                 print " checked ";
-                 $so=$group_details[$k]['sort_order'];
-               }
-             }
-             print "><input type='hidden' name='NewValue[".$j."]' value='".$elements[$i][0]."'>"."$te";
-	     print "$t".$zen->ffv($elements[$i][1])."$te";
-             print "$t"."<input type='text' name='NewSortOrder[".$j."]' value='".$so."' size='3' maxlength='3'>"."$te";
-	     print "</tr>\n";
-	     $j++;
-	   }
-	 }
+    if( is_array($elements) ) {
+      $j = 0;
+      $t = "\t<td class='bars'>";
+      $te = "</td>\n";
+      for($i=0; $i<count($elements); $i++) {
+        print "<tr>\n";
+        print "$t"."<input type='checkbox' name='NewUseInGroup[".$j."]' value='".$elements[$i][0]."'";
+        $so=0;
+        for($k=0; $k<count($group_details); $k++) {
+          if($group_details[$k]['field_value'] == $elements[$i][0]) {
+            print " checked ";
+            $so=$group_details[$k]['sort_order'];
+          }
+        }
+        print "><input type='hidden' name='NewValue[".$j."]' value='".$elements[$i][0]."'>"."$te";
+        print "$t".$zen->ffv($elements[$i][1])."$te";
+        print "$t"."<input type='text' name='NewSortOrder[".$j."]' value='".$so."' size='3' maxlength='3'>"."$te";
+        print "</tr>\n";
+        $j++;
+      }
+    }
     ?>
 <tr>
   <td class="titleCell" colspan="3">

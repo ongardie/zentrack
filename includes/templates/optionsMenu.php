@@ -11,3 +11,12 @@
     <br><b><a href="<?=$rootUrl?>/misc/language.php"><?=tr("Change Language")?></a></b>
   </ul>
 </ul>
+
+<? 
+  if( $page_tile == tr("Change Password") ) {
+    $link = "<a href='$helpUrl/tutorial.php'>".tr('Tutorial')."</a>";
+    print "<p><span class='error'>";
+    print tr("If this is your first time logging in, please read the ?!", array($link));
+    print "</span></p>\n";  
+  } 
+?>

@@ -14,59 +14,72 @@
     $active = 0;
 
   $data_group_fields = array(
-                             "NewTableName"       => "alphanum",
-                             "NewGroupName"       => "html",
-                             "NewDescript"        => "html",
-			     "NewEvalType"        => "alphanum",
-			     "NewEvalText"        => "html"
-                             );
-
-  $data_group_required = array("NewGroupName");
-
-
+                            "NewTableName"       => "alphanum",
+                            "NewGroupName"       => "html",
+                            "NewDescript"        => "html",
+                            "NewEvalType"        => "alphanum",
+                            "NewEvalText"        => "html",
+                            "name_of_file"       => "filename"
+                            );
+  
+  $data_group_required = array("NewGroupName", "NewTableName", "NewEvalType");
+  
   $zen->cleanInput($data_group_fields);
+  
+  if( $NewEvalType == 'Javascript' ) {
+    $data_group_required[] = 'NewEvalText';
+  }
+  else if( $NewEvalType == 'File' ) {
+    $data_group_required[] = 'name_of_file';
+  }
+  
   foreach($data_group_required as $d) {
     if( !strlen($$d) ) {
-      $errs[] = tr("Table Name and Group Name are required");
+      $d = preg_replace('/^New/', '', $d);
+      $d = preg_replace('/([A-Z])/', ' \\1', $d);
+      $d = str_replace('_', ' ', $d);
+      $d = ucwords($d);
+      $errs[] = tr("$d is required");
     }
   }
-
+  
   // insure group name is unique
   if( !$errs ) {
     $oldGroup = $zen->get_data_group($group_id);
     if( $oldGroup['group_name'] != $NewGroupName ) {
       if( $zen->getDataGroupId($NewGroupName) ) {
-	$errs[] = "The group '{$NewGroupName}' already exists.  The group name must be unique.";	
+        $errs[] = "The group '{$NewGroupName}' already exists.  The group name must be unique.";	
       }
     }
   }
-
+  
   // add to database (or show demo mode message)
   if( !$errs ) {
     if( $zen->demo_mode == "on" ) {
       $msg = tr("Process successful.  Group was not updated, because this is a demo site.");
     } else {
       $res = $zen->updateDataGroup($group_id,$NewGroupName,$NewTableName,
-				   $NewEvalType,$NewEvalText,
-				   ( strlen($NewDescript) )?$NewDescript : "NULL");
+      $NewEvalType,$NewEvalText,
+      ( strlen($NewDescript) )?$NewDescript : "NULL", $name_of_file);
       if( $res ) {
-	// update session info with changes
-	$vars = $zen->generateDataGroupInfo( array($group_id) );
-	$_SESSION['data_groups'][$group_id] = $vars[$group_id];
-
-	// print useful messages for user
-	$msg = tr("Group '?' was updated successfully. ? to customize this group's entries.",
-		  array($NewGroupName,
-			"--link--",
-			$NewGroupName));
-	$msg = str_replace("--link--","<br><a href='$rootUrl/admin/editGroupDetails.php?group_id=$group_id'>"
-			   .tr("Click Here")."</a>",$msg);
+        // update session info with changes
+        $vars = $zen->generateDataGroupInfo( array($group_id) );
+        $_SESSION['data_groups'][$group_id] = $vars[$group_id];
+        
+        // print useful messages for user
+        $msg = tr("Group '?' was updated successfully.", array($NewGroupName));
+        if( $NewEvalType == 'Matches' ) {
+          $msg .= tr("? to customize this group's entries.",array("--link--"));
+          $msg = str_replace("--link--",
+            "<br><a href='$rootUrl/admin/editGroupDetails.php?group_id=$group_id'>"
+            .tr("Click Here")."</a>",$msg);
+        }
       } else {
-	$errs[] = tr("System Error: Could not update ?", array($NewGroupName));
+        $errs[] = tr("System Error: Could not update ?", array($NewGroupName));
       }
     }
   }
-
+  
   include("$libDir/nav.php");
   if( $errs ) {
     $zen->printErrors($errs);

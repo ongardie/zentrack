@@ -25,18 +25,18 @@ CREATE SEQUENCE "related_contacts_id_seq" start 1001 increment 1 maxvalue 214748
 --
 
 CREATE TABLE zentrack_agreement (
-  agree_id NUMBER(12) default nextval('"agreement_id_seq"') NOT NULL PRIMARY KEY,
-  company_id NUMBER(12) default NULL,
-  contractnr VARCHAR2(50) default NULL,
-  title VARCHAR2(50) default NULL,
-  description VARCHAR2(4000),
-  stime NUMBER(12) default NULL,
-  dtime NUMBER(12) default NULL,
-  status NUMBER(2) default 1,
-  create_time NUMBER(12) default NULL,
-  change_time NUMBER(12) default NULL,
-  creator_id NUMBER(12) default NULL,
-  change_id NUMBER(12) default NULL
+  agree_id int8 default nextval('"agreement_id_seq"') NOT NULL PRIMARY KEY,
+  company_id int8 default NULL,
+  contractnr VARCHAR(50) default NULL,
+  title VARCHAR(50) default NULL,
+  description TEXT,
+  stime int8 default NULL,
+  dtime int8 default NULL,
+  status int2 default 1,
+  create_time int8 default NULL,
+  change_time int8 default NULL,
+  creator_id int8 default NULL,
+  change_id int8 default NULL
 );
 
 --
@@ -44,15 +44,15 @@ CREATE TABLE zentrack_agreement (
 --
 
 CREATE TABLE zentrack_agreement_item (
-  item_id NUMBER(12) default nextval('"agreement_item_id_seq"') NOT NULL PRIMARY KEY,
-  agree_id NUMBER(12) default NULL,
-  name1 VARCHAR2(50) default NULL,
-  description1 VARCHAR2(50) default NULL,
-  odate NUMBER(12) default NULL,
-  create_time NUMBER(12) default NULL,
-  change_time NUMBER(12) default NULL,
-  creator_id NUMBER(12) default NULL,
-  change_id NUMBER(12) default NULL
+  item_id int8 default nextval('"agreement_item_id_seq"') NOT NULL PRIMARY KEY,
+  agree_id int8 default NULL,
+  name1 VARCHAR(50) default NULL,
+  description1 VARCHAR(50) default NULL,
+  odate int8 default NULL,
+  create_time int8 default NULL,
+  change_time int8 default NULL,
+  creator_id int8 default NULL,
+  change_id int8 default NULL
 );
 
 --
@@ -60,26 +60,26 @@ CREATE TABLE zentrack_agreement_item (
 --
 
 CREATE TABLE zentrack_company (
-  company_id NUMBER(12) default nextval('"company_id_seq"') NOT NULL PRIMARY KEY,
-  title VARCHAR2(50) default NULL,
-  office VARCHAR2(50) default NULL,
-  address1 VARCHAR2(50) default NULL,
-  address2 VARCHAR2(50) default NULL,
-  address3 VARCHAR2(50) default NULL,
-  postcode VARCHAR2(50) default NULL,
-  postcode2 VARCHAR2(50) default NULL,
-  pobox VARCHAR2(50) default NULL,
-  place VARCHAR2(50) default NULL,
-  telephone VARCHAR2(20) default NULL,
-  fax VARCHAR2(20) default NULL,
-  country VARCHAR2(100) default NULL,
-  email VARCHAR2(100) default NULL,
-  website VARCHAR2(100) default NULL,
-  description VARCHAR2(4000) default NULL,
-  create_time NUMBER(12) default NULL,
-  change_time NUMBER(12) default NULL,
-  creator_id NUMBER(12) default NULL,
-  change_id NUMBER(12) default NULL
+  company_id int8 default nextval('"company_id_seq"') NOT NULL PRIMARY KEY,
+  title VARCHAR(50) default NULL,
+  office VARCHAR(50) default NULL,
+  address1 VARCHAR(50) default NULL,
+  address2 VARCHAR(50) default NULL,
+  address3 VARCHAR(50) default NULL,
+  postcode VARCHAR(50) default NULL,
+  postcode2 VARCHAR(50) default NULL,
+  pobox VARCHAR(50) default NULL,
+  place VARCHAR(50) default NULL,
+  telephone VARCHAR(20) default NULL,
+  fax VARCHAR(20) default NULL,
+  country VARCHAR(100) default NULL,
+  email VARCHAR(100) default NULL,
+  website VARCHAR(100) default NULL,
+  description text default NULL,
+  create_time int8 default NULL,
+  change_time INT8 default NULL,
+  creator_id INT8 default NULL,
+  change_id INT8 default NULL
 );
 
 --
@@ -87,22 +87,22 @@ CREATE TABLE zentrack_company (
 --
 
 CREATE TABLE zentrack_employee (
-  person_id NUMBER(12) default nextval('"employee_id_seq"') NOT NULL PRIMARY KEY,
-  company_id NUMBER(12) default NULL,
-  fname VARCHAR2(50) default NULL,
-  lname VARCHAR2(50) default NULL,
-  initials VARCHAR2(15) default NULL,
-  jobtitle VARCHAR2(50) default NULL,
-  department VARCHAR2(50) default NULL,
-  email VARCHAR2(100) default NULL,
-  telephone VARCHAR2(20) default NULL,
-  mobiel VARCHAR2(20) default NULL,
-  inextern NUMBER(2) default NULL,
-  description VARCHAR2(4000) default NULL,
-  create_time NUMBER(12) default NULL,
-  change_time NUMBER(12) default NULL,
-  creator_id NUMBER(12) default NULL,
-  change_id NUMBER(12) default NULL
+  person_id INT8 default nextval('"employee_id_seq"') NOT NULL PRIMARY KEY,
+  company_id INT8 default NULL,
+  fname VARCHAR(50) default NULL,
+  lname VARCHAR(50) default NULL,
+  initials VARCHAR(15) default NULL,
+  jobtitle VARCHAR(50) default NULL,
+  department VARCHAR(50) default NULL,
+  email VARCHAR(100) default NULL,
+  telephone VARCHAR(20) default NULL,
+  mobiel VARCHAR(20) default NULL,
+  inextern INT2 default NULL,
+  description TEXT default NULL,
+  create_time INT8 default NULL,
+  change_time INT8 default NULL,
+  creator_id INT8 default NULL,
+  change_id INT8 default NULL
 );
 
 --
@@ -110,10 +110,10 @@ CREATE TABLE zentrack_employee (
 --
 
 CREATE TABLE zentrack_related_contacts (
-  clist_id NUMBER(12) default nextval('"related_contacts_id_seq"') NOT NULL PRIMARY KEY,
-  ticket_id NUMBER(12) NOT NULL,
-  cp_id NUMBER(12) default NULL,
-  type NUMBER(12) default NULL
+  clist_id INT8 default nextval('"related_contacts_id_seq"') NOT NULL PRIMARY KEY,
+  ticket_id INT8 NOT NULL,
+  cp_id INT8 default NULL,
+  type INT8 default NULL
 );
 
 --
@@ -398,7 +398,8 @@ CREATE TABLE ZENTRACK_GROUP (
   group_name varchar(100) default NULL,
   descript varchar(255) default NULL,
   eval_type VARCHAR(10) default NULL,
-  eval_text TEXT default NULL
+  eval_text TEXT default NULL,
+  name_of_file VARCHAR(100)  
 );
 
 CREATE TABLE ZENTRACK_GROUP_DETAIL (

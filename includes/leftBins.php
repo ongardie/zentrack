@@ -5,7 +5,13 @@
   </td>
   </tr>
   <tr>
-  <form name="newbin" action="<?=$SCRIPT_NAME?>">
+  <form name="newbin" action="<?
+    
+    print $rootUrl.'/';
+    print $expand_projects? 'projects' : 'index';
+    print '.php';
+      
+  ?>">
   <td>
     <select name="newbin" onChange="document.newbin.submit()">
       <option <?=($login_bin == -1)?"selected ":"" ?>value='all'>-<?=tr("All")?>-</option>
@@ -17,10 +23,10 @@
     $zen->getAccess($login_id);
     if( $zen->checkAccess($login_id,$k,"level_view") ) {
       if( strlen($v["name"]) > 18 )
-	$v["name"] = substr($v["name"],0,16)."...";
+      $v["name"] = substr($v["name"],0,16)."...";
       print ($k == $login_bin)? 
-	"<option selected value='$k'>{$v['name']}</option>" 
-	: "<option value='$k'>{$v['name']}</option>\n";
+      "<option selected value='$k'>{$v['name']}</option>" 
+      : "<option value='$k'>{$v['name']}</option>\n";
     }
   }
   ?>

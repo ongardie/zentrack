@@ -1,12 +1,12 @@
 <!--
-  
+
 function placeFocus(newFocalPoint) {
 	eval(newFocalPoint.focus());
 }
 
 function eLink(address, domain) {
-   var full = address + "@" + domain;
-   document.write("<a href='mailto:"+full+"'>"+full+"</a>");
+  var full = address + "@" + domain;
+  document.write("<a href='mailto:"+full+"'>"+full+"</a>");
 }
 
 //
@@ -32,7 +32,7 @@ function popupWindowCentered(loadpos, theName, w, h, scroll) {
   var winl = (screen.width - w) / 2;
   var wint = (screen.height - h) / 2;
   winprops = 'height='+h+',width='+w+',top='+wint+',left='+winl+',scrollbars='+scroll+',resizab\
-le'
+  le'
   win = window.open(loadpos, theName, winprops)
   if (parseInt(navigator.appVersion) >= 4) { win.window.focus(); }
   return(false);
@@ -53,13 +53,13 @@ function mOvr(src,clrOver,txtOver) {
 }
 
 function mOut(src,clrIn,txtIn) {
-    src.style.cursor = 'default'; 
-    src.style.backgroundColor = clrIn; 
-    if( txtIn != null && txtIn != "" ){
-      if( src.children ) {
-	src.children.tags('A')[0].style.color = txtIn;
-      }
-   }
+  src.style.cursor = 'default'; 
+  src.style.backgroundColor = clrIn; 
+  if( txtIn != null && txtIn != "" ){
+    if( src.children ) {
+      src.children.tags('A')[0].style.color = txtIn;
+    }
+  }
 }
 
 function mClk(src) {
@@ -78,10 +78,10 @@ function ticketClk( url ) {
 
 function mClassX( obj, classname, hand ) {
   if( hand ) { 
-     obj.style.cursor = 'hand'; 
+    obj.style.cursor = 'hand'; 
   }
   else {
-     obj.style.cursor = 'default';
+    obj.style.cursor = 'default';
   }
   
   if( !classname && obj.oldStyle ) { classname = obj.oldStyle; }
@@ -113,19 +113,31 @@ function mergeFunctions(fxn1, fxn2) {
   }
 }
 
-  function checkMyBox(fieldName, event) {
-    if( !event ) { event = window.event; }
-    if( document.getElementById ) {
-      var elem = document.getElementById(fieldName);
-      if( elem ) {
-        if( !event || !event.target || event.target.type != 'checkbox' ) {
-          elem.checked = elem.checked? false : true;
-        }
+function checkMyBox(fieldName, event) {
+  if( !event ) { event = window.event; }
+  if( document.getElementById ) {
+    var elem = document.getElementById(fieldName);
+    if( elem ) {
+      if( !event || !event.target || event.target.type != 'checkbox' ) {
+        elem.checked = elem.checked? false : true;
       }
-      if( elem.parentNode ) { 
-        elem.parentNode.parentNode.oldStyle = elem.checked? 'invalidCell' : 'cell'; 
-      }    
     }
+    if( elem.parentNode ) { 
+      elem.parentNode.parentNode.oldStyle = elem.checked? 'invalidCell' : 'cell'; 
+    }    
   }
+}
+
+function toggleField( fieldObj, disabledBoolean ) {
+  fieldObj.disabled = disabledBoolean;
+  if( !disabledBoolean ) {
+    fieldObj.setAttribute('class', 'input');
+    fieldObj.className = 'input';
+  }
+  else {       
+    fieldObj.setAttribute('class', 'inputDisabled');
+    fieldObj.className = 'inputDisabled';
+  }       
+}
 
 //-->

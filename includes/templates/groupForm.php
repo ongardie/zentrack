@@ -57,7 +57,7 @@
 
 	     // the number of details for this row
              print "$te\n";
-	     if( $v['eval_type'] == 'Javascript' ) {
+	     if( $v['eval_type'] != 'Matches' ) {
 	       $c = 'n/a';
 	     }
 	     else {
@@ -74,7 +74,7 @@
 	       . "[<a href='".$elnk."?group_id=".$v['group_id']."'>"
 	       .uptr('properties')."</a>]";
              print "<br>";
-	     if( $v['eval_type'] == 'Javascript' ) {
+	     if( $v['eval_type'] != 'Matches' ) {
 	       print "<span class='smallGrey'>[".uptr("entries")."]</span>\n";
 	     }
 	     else {

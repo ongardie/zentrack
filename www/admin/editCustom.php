@@ -57,7 +57,7 @@
           }
         }
       }
-      $msg = tr("? custom field definitions were saved to the database. Updates complete", array($j));
+      $msg = tr("? variable field definitions were saved to the database. Updates complete", array($j));
       $skip = 1;
     }
   } else {
@@ -70,7 +70,7 @@
     $more = 0;
   }
   
-  $page_title = ($skip)? tr("Admin Section") : tr("Update Custom Fields Definition");
+  $page_title = ($skip)? tr("Admin Section") : tr("Update Variable Fields");
   include("$libDir/nav.php");
   $zen->printErrors($errs);
   if( !$skip ) {    

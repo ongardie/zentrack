@@ -36,6 +36,7 @@
      $debug_text .= "<p>&nbsp;------DEBUG OVERVIEW-------&nbsp;</p>\n";
      $debug_text .= "<i>To disable this output, set \$Debug_Overview in header.php to 0.</i><br>\n";
      $debug_text .= "<a href='$rootUrl/phpinfo.php'>click here to view phpinfo</a><br>\n";
+     $debug_text .= "<a href='$SCRIPT_NAME?clear_session_cache=1'>click here to clear session cache</a><br>\n";
      $debug_text .= "HTTP_USER_AGENT: $HTTP_USER_AGENT<br>\n";
      $debug_text .= "SCRIPT_NAME: $SCRIPT_NAME<br>\n";
      $debug_text .= "HTTP_HOST: $HTTP_HOST<br>\n";

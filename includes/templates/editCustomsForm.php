@@ -1,4 +1,7 @@
-      <br>
+
+
+      <p class='bigBold'><?=tr('Edit Variable Fields')?></p>
+      
       <p class='error'><?
          $str = "<a href='$rootUrl/help/find.php?s=admin&p=varfields'>".tr('Documentation')."</a>";
          print tr("Please refer to the ? before using this feature", array($str));
@@ -55,19 +58,22 @@
 	     print "<td class='bars'>$i$te";
 	     print "<input type='hidden' name='newFieldName[$j]' value='".$zen->ffv($v['field_name'])."'>\n";
 	     print "$t<input type='text' name='newFieldLabel[$j]' "
-	       ." value='".$zen->ffv($v['field_label'])."' size='20' maxlength='50'>$te";
+       ." value='".$zen->ffv($v['field_label'])."' size='20' maxlength='50'>$te";
 	     print "$t<input type='text' name='newSortOrder[$j]' "
-	       ." value='".$zen->ffv($v['sort_order'])."' size='5' maxlength='5'>$te";
+       ." value='".$zen->ffv($v['sort_order'])."' size='5' maxlength='5'>$te";
 	     if( strpos($i, 'menu') > 0 ) {
 	       print "$t<select name='newFieldValue[$j]'>\n";
 	       if( isset($_SESSION['data_groups']) && count($_SESSION['data_groups']) ) {
-		 foreach( $_SESSION['data_groups'] as $g ) {
-                   $sel_item=($v['field_value']==$g['group_id'])?" selected" : "";
-		   print "<option value='{$g['group_id']}'$sel_item>{$g['group_name']}</option>\n";
-		 }
+           print "<option value=''>-none-</option>\n";
+           foreach( $_SESSION['data_groups'] as $g ) {
+             if( $g['eval_type'] == 'Matches' ) {
+               $sel_item=($v['field_value']==$g['group_id'])?" selected" : "";
+               print "<option value='{$g['group_id']}'$sel_item>{$g['group_name']}</option>\n";
+             }
+           }
 	       }
 	       else {
-		 print "<option value=''>-no groups-</option>\n";
+           print "<option value=''>-no groups-</option>\n";
 	       }
 	       print "</select>$te\n";
 	     }
@@ -117,17 +123,21 @@
 	 <input type='submit' class='submit' value='<?=tr('Save')?>' onClick="return setTodo('Save')">
 	 &nbsp;
 	 <input type='submit' class='submitPlain' value='<?=tr('Reset')?>' onClick="return setTodo('Reset')">
-         </td>
-      </tr>
-      </table>
-      </ul>
+   </td>
+</tr>
+</table>
+</ul>
 
-      <input type='hidden' name='more' value='<?=$more?>'>
-      </form>
-      <script language='javascript'>
-         function setTodo( val ) {
-           document.editCustomsForm.TODO.value = val;
-         }
-      </script>
+<p class='note'>The default value for menus can only be a group which is
+evaluated from 'Matches'.</p>
+<p class='note'>'Javascript' and 'File' menus cannot be loaded as the default.</p>
+
+<input type='hidden' name='more' value='<?=$more?>'>
+</form>
+<script language='javascript'>
+   function setTodo( val ) {
+     document.editCustomsForm.TODO.value = val;
+   }
+</script>
                                                                                                                              
 
