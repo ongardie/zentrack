@@ -13,6 +13,20 @@ abstraction, and endless possibilities for project expansion.
 
 ----- VERSION 2.5.0.3 (development) -----
 
+2005-03-14, cfalonso
+  Some bugfixes
+    - zentrack_2/includes/zenTemplate.class 1.8
+    - zentrack_2/includes/templates/listTickets.php 1.25
+    - zentrack_2/includes/templates/searchResults.php 1.12
+    - zentrack_2/install/UPGRADE_mssqlserver.sql 1.34
+    - zentrack_2/install/UPGRADE_mysql.sql 1.44
+    - zentrack_2/install/UPGRADE_oracle.sql 1.40
+    - zentrack_2/install/UPGRADE_postgres.sql 1.32
+    - zentrack_2/install/seed_mssqlserver.sql 1.35
+    - zentrack_2/install/seed_mysql.sql 1.48
+    - zentrack_2/install/seed_oracle.sql 1.41
+    - zentrack_2/install/seed_postgres.sql 1.37
+
 2005-03-11, kato
   UI fixed to allow clicking anywhere in nav menus.
     - zentrack_2/includes/headerInc.php 1.57
