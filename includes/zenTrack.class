@@ -1008,13 +1008,39 @@ class zenTrack extends zen {
     $ticket_id = $this->checkNum($ticket_id);
     $user_id = $this->checkNum($user_id);
     $a = $this->settings['varfield_tab_name'];
-    $log_entry = $a? 'Updated '.ucfirst(strtolower($a)).' fields' : 'Update Custom Fields';
+    $log_entry = $a? "Updated ".ucfirst(strtolower($a))." fields\n" : "Updated Custom Fields";
     $oldVals = $this->getVarfieldVals($ticket_id);
     foreach($field_values as $key=>$val) {
-      if( strpos($key, 'date') > 0 && $val == 0 ) { $val = 'NULL'; }
-      else if( strpos($key, 'number') > 0 && is_null($val) ) { $val = 'NULL'; }
+      $v1=$oldVals["$key"];
+      $v2=$val;
+      $fm =& new ZenFieldMap($this);
+      $label = $fm->getLabel("ticket_edit",$key);
+      if( strpos($key, 'date') > 0 ) {
+        if ( is_null($oldVals["$key"]) || $oldVals["$key"] == 0 ) {
+          $v1 = 'NULL';
+        } else { 
+          $v1 = $this->showDateTime($oldVals["$key"]);
+        }
+        if ( is_null($val) || $val == 0 ) {
+          $v2 = 'NULL';
+        } else { 
+          $v2 = $this->showDateTime($val);
+        }
+      }
+      else if( strpos($key, 'number') > 0 ) {
+        if( is_null($oldVals["$key"]) ) {
+          $v1 = 0;
+        } else {
+          $v1 = $oldVals["$key"];
+        }
+        if( is_null($val) ) {
+          $v2 = 0;
+        } else {
+          $v2 = $val;
+        }
+      }
       // find out if value was updated, check strlen so that 0 != '', and so forth
-      if( $val != $oldVals["$key"] ) { $log_entry .= "$key updated: "+$val+"\n"; }
+      if( $v1 != $v2 ) { $log_entry .= "{$label} changed from [$v1] to [$v2]\n"; }
     }
     $res = $this->db_update( $this->table_varfield, "ticket_id", $ticket_id, $field_values );
     if( $res && $this->settings['log_edit'] == 'on' ) {
@@ -2765,13 +2791,46 @@ class zenTrack extends zen {
     $id = $this->checkNum($id);
     $res = $this->update_ticket($id, $params);
     if( $res && $this->settings['log_edit'] == 'on' ) {
-      $log_entry = 'Ticket edited:\n\n';
+      $log_entry = "Ticket edited:\n\n";
       foreach($params as $key=>$val) {
         // check each field to see if it was updated
         if( $t["$key"] && $t["$key"] != $val ) {
           $v1 = strlen($t["$key"]) > 50? substr($t["$key"], 0, 50)."..." : $t["$key"];
           $v2 = strlen($val) > 50? substr($val, 0, 50)."..." : $val;
-          $log_entry .= "{$key} changed from [$v1] to [$v2]\n";
+          switch ("$key") {
+            case "bin_id":     $d1 = $this->getBinName($v1);
+                               $d2 = $this->getBinName($v2);
+                               break;
+            case "system_id":  $d1 = $this->getSystemName($v1);
+                               $d2 = $this->getSystemName($v2);
+                               break;
+            case "type_id":    $d1 = $this->getTypeName($v1);
+                               $d2 = $this->getTypeName($v2);
+                               break;
+            case "priority":   $d1 = $this->getPriorityName($v1);
+                               $d2 = $this->getPriorityName($v2);
+                               break;
+            case "user_id":
+            case "creator_id": $d1 = $this->formatName($v1);
+                               $d2 = $this->formatName($v2);
+                               break;
+            case "otime":
+            case "ctime":
+            case "start_date": $v1=$this->showDateTime($v1);
+                               $v2=$this->showDateTime($v2);
+            default:           $d1 = "";
+                               $d2 = "";
+                               if (strpos($key,"custom_date")===0) {
+                                 $v1=$this->showDateTime($v1);
+                                 $v2=$this->showDateTime($v2);
+                               }
+                               break;
+          }
+          if (strlen($d1)>0) $d1="-".$d1;
+          if (strlen($d2)>0) $d2="-".$d2;
+          $fm =& new ZenFieldMap($this);
+          $label = $fm->getLabel("ticket_edit",$key);
+          $log_entry .= "{$label} changed from [$v1$d1] to [$v2$d2]\n";
         }
       }
       if(strlen($reason)) {
@@ -4570,6 +4629,20 @@ class zenTrack extends zen {
     // from the given bin id
     $bins = $this->getBins(0,0);
     return( isset($bins["$id"])? $bins["$id"] : "" );
+  }
+  
+  function getSystemName($id) {
+    // returns the name of a system
+    // from the given system id
+    $systems = $this->getSystems(0,0);
+    return( isset($systems["$id"])? $systems["$id"] : "" );
+  }
+  
+  function getPriorityName($id) {
+    // returns the name of a priority
+    // from the given priority id
+    $priorities = $this->getPriorities(0,0);
+    return( isset($priorities["$id"])? $priorities["$id"] : "" );
   }
   
   /**
