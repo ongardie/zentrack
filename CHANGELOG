@@ -7,6 +7,10 @@
 
 ----- V2.4.2 (Development, See CVS) ----
 
+2003-05-18, William L. Terry
+  Priority color fix for results from searching
+    - zentrack/includes/templates/serachList.php 1.10
+
 2003-05-10, Rob Hillis
   Add ability to log when a ticket is emailed.
     - zentrack/install/UPGRADE_SEED_mssqlserver.sql 1.7

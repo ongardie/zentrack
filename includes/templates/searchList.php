@@ -53,117 +53,114 @@ if( is_array($tickets) && count($tickets) ) {
    </tr>
       <?      
 
-   $td_ttl = "title='".tr("Click here to view the ticket")."'";
+   $td_ttl = "title='Click here to view the $page_type.'";
    foreach($tickets as $t) {
-      unset($txt);
-      unset($tx);
-      unset($est);
-
-      if( $t["status"] == 'CLOSED' ) {
-   $row = $zen->settings["color_bars"];
-   $txt = $rollover_greytext;
-   $tx = "";
-   $text = $zen->settings["color_bar_text"];
-      } else if( $t["priority"] <= $zen->settings["level_hot"] ) {
-   $row = $zen->settings["color_background"];
-   $tx = "style='background:".$zen->settings["color_highlight"]."'";
-   $txt = $hotrollover_text;
-   $text = $zen->settings["color_hot"];
-      } else if( $t["priority"] <= $zen->settings["level_highlight"] ) {
-   $row = $zen->settings["color_background"];
-   $txt = $rollover_text;
-   $tx = "";
-   $text = $zen->settings["color_hot"];    
+      $row = $zen->settings["color_background"];
+      if( $zen->inProjectTypeIDs($t["type_id"]) ) {
+         $link = $projectUrl;
       } else {
-   $row = $zen->settings["color_background"];
-   $txt = $rollover_text;
-   $tx = "";
-   $text = $zen->settings["color_text"];   
+         $link = $ticketUrl;   
       }
-
+      
+      if( $t["status"] == 'CLOSED' ) {
+        $classxText = "class='bars' onclick='ticketClk(\"{$link}?id={$t['id']}\")' $rollover_greytext";
+      }
+      else if( $zen->settings["priority_medium"] ) {
+        $classxText = "class='priority{$t['priority']}' "
+         ."onclick='ticketClk(\"{$link}?id={$t['id']}\")' "
+         ."onMouseOver='mClassX(this, \"priority{$t['priority']}Over\", true)' "
+         ."onMouseOut='mClassX(this, \"priority{$t['priority']}\", false)'";
+      }
+      else {
+        $classxText = "class='cell' onclick='ticketClk(\"{$link}?id={$t['id']}\")' $rollover_text";
+      }
+      
       if( $search_text && $search_fields["title"] ) {
-   $t["title"] = $zen->highlight($t["title"],$search_text);
+          $t["title"] = $zen->highlight($t["title"],$search_text);
       }
       
       ?>
 
-   <tr style="background:<?=$row?>;color:<?=$text?>">
-   <td height="25" valign="middle" <?=$td_ttl?> <?=$txt?>>
-    <a class="rowLink" style="color:<?=$text?>" href="<?=$link?>?id=<?=$t["id"]?>"><?=$t["id"]?></a>
-   </td>
-   <td height="25" valign="middle" <?=$txt?> <?=$td_ttl?>>
-    <a class="rowLink" style="color:<?=$text?>" href="<?=$link?>?id=<?=$t["id"]?>"><?=$t["title"]?></a>
-   </td>
-   <? if( !$search_params["priority"] || is_array($search_params["priority"]) ) { ?>
-   <td height="25" <?=$tx?> valign="middle">
-     <?=$zen->priorities["$t[priority]"]?>
-   </td>
-   <? } ?>
-   <? if( !$search_params["status"] || is_array($search_params["status"]) ) { ?>
-   <td height="25" valign="middle">
-     <?=$t["status"]?>
-   </td>
-   <? } ?>
-   <? if( !$search_params["user_id"] || is_array($search_params["user_id"]) ) { ?>
-   <td height="25" valign="middle">
-     <?=$zen->formatName($t["user_id"],2)?>
-   </td>
-   <? } ?>
-   <? if( !$search_params["type_id"] || is_array($search_params["type_id"]) ) { ?>
-   <td height="25" valign="middle">
-     <?=$zen->types["$t[type_id]"]?>
-   </td>
-   <? } ?>
-   <? if( !$search_params["system_id"] || is_array($search_params["system_id"]) ) { ?>
-   <td height="25" valign="middle">
-     <?=$zen->systems["$t[system_id]"]?>
-   </td>
-   <? } ?>
-   <? if( !$search_params["bin_id"] || is_array($search_params["bin_id"]) ) { ?>
-   <td height="25" valign="middle">
-     <?=$zen->bins["$t[bin_id]"]?>
-   </td>
-   <? } ?>
+   <tr <?=$classxText?>>
+      <td height="25" valign="middle" <?=$td_ttl?>>
+        <a class="rowLink" href="<?=$link?>?id=<?=$t["id"]?>"><?=$t["id"]?></a>
+      </td>
+      
+      <td height="25" valign="middle" <?=$td_ttl?>>
+        <a class="rowLink" href="<?=$link?>?id=<?=$t["id"]?>"><?=$t["title"]?></a>
+      </td>
+      
+    <? if( !$search_params["priority"] || is_array($search_params["priority"]) ) { ?>
+      <td height="25" <?=$tx?> valign="middle">
+         <?=$zen->priorities["$t[priority]"]?>
+      </td>
+    <? } ?>
+    <? if( !$search_params["status"] || is_array($search_params["status"]) ) { ?>
+      <td height="25" valign="middle">
+         <?=$t["status"]?>
+      </td>
+    <? } ?>
+    <? if( !$search_params["user_id"] || is_array($search_params["user_id"]) ) { ?>
+      <td height="25" valign="middle">
+         <?=$zen->formatName($t["user_id"],2)?>
+      </td>
+    <? } ?>
+    <? if( !$search_params["type_id"] || is_array($search_params["type_id"]) ) { ?>
+       <td height="25" valign="middle">
+         <?=$zen->types["$t[type_id]"]?>
+       </td>
+    <? } ?>
+    <? if( !$search_params["system_id"] || is_array($search_params["system_id"]) ) { ?>
+       <td height="25" valign="middle">
+          <?=$zen->systems["$t[system_id]"]?>
+       </td>
+    <? } ?>
+    <? if( !$search_params["bin_id"] || is_array($search_params["bin_id"]) ) { ?>
+       <td height="25" valign="middle">
+          <?=$zen->bins["$t[bin_id]"]?>
+       </td>
+    <? } ?>
    </tr>       
+   
    <? if( $search_text && $search_fields["description"] && $t["description"] ) { ?>
    <tr style="background:<?=$row?>;color:<?=$text?>">
      <td height="25" colspan="8">   
-      <?
-        $t["description"] = ereg_replace("<br />", "<br>", $t["description"]);
-        $parts = explode("<br>", $t["description"]);
-        unset($pt);
-        for($i=0; $i<count($parts); $i++) {
-          $p = $parts[$i];
-          if( eregi($search_text, stripslashes($p)) ) {
-       $pt .= ($pt)? "<br>\n" : ""; 
-       $pt .= $zen->highlight(stripslashes($p),$search_text);
-          }
-             }
-        print $pt;
-      ?>
-          </td>
-        </tr>
-   <? 
-      } 
-   
-   }
-   ?>
-    <tr>
-     <form method="post" action="<?=$SCRIPT_NAME?>">
-     <td colspan="8" class="titleCell">
-   <input type="submit" class="smallSubmit" value="<?=tr("Modify Search")?>">
-   <input type="hidden" name="search_text" value="<?=strip_tags($search_text)?>">
-   <input type="hidden" name="search_fields[title]" value="<?=strip_tags($search_fields["title"])?>">
-   <input type="hidden" name="search_fields[description]" value="<?=strip_tags($search_fields["description"])?>">
-        <?
-     foreach($search_params as $k=>$v) {
-       print "<input type='hidden' name='search_params[$k]' value='".strip_tags($v)."'>\n";
-          }
-        ?>
+       <?
+       $t["description"] = ereg_replace("<br />", "<br>", $t["description"]);
+       $parts = explode("<br>", $t["description"]);
+       unset($pt);
+       for($i=0; $i<count($parts); $i++) {
+           $p = $parts[$i];
+           if( eregi($search_text, stripslashes($p)) ) {
+               $pt .= ($pt)? "<br>\n" : "";
+               $pt .= $zen->highlight(stripslashes($p),$search_text);
+           }
+       }
+       print $pt;
+       ?>
      </td>
+   </tr>
+   <? 
+    } 
+   }  // End forech ticket loop
+   ?>
+
+   <tr>
+     <form method="post" action="<?=$SCRIPT_NAME?>">
+       <td colspan="8" class="titleCell">
+          <input type="submit" class="smallSubmit" value="<?=tr("Modify Search")?>">
+          <input type="hidden" name="search_text" value="<?=strip_tags($search_text)?>">
+          <input type="hidden" name="search_fields[title]" value="<?=strip_tags($search_fields["title"])?>">
+          <input type="hidden" name="search_fields[description]" value="<?=strip_tags($search_fields["description"])?>">
+          <?
+           foreach($search_params as $k=>$v) {
+               print "<input type='hidden' name='search_params[$k]' value='".strip_tags($v)."'>\n";
+           }
+           ?>
+       </td>
      </form>
-    </tr>
-    </table>
+   </tr>
+  </table>
    <?   
 }
 ?>
