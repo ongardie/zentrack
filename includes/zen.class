@@ -588,7 +588,7 @@ class zen extends zenDate {
     *
     * This function will call an instance of the translate class, if one doesn't exist
     * @param string $string the string to translate
-    * @param array $init the indexed array of init params
+    * @param array $vals the vals to replace any ? chars with
     * @return string the translated text
     */
     function trans( $string, $vals = '' ) {

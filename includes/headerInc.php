@@ -75,7 +75,7 @@
       return true;
     }
     if( is_array($vals) ) {
-      return $translator->ptrans($string);
+      return $translator->ptrans($string,$vals);
     }
     else {
       return $translator->trans($string);
@@ -94,7 +94,7 @@
      'locale' => $lang
   );
   $translator_init['zen'] =& $zen;
-  tr('', $translator_init);
+  tr($translator_init);
   //save a bit on memory
   unset($translator_init);
 

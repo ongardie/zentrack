@@ -263,6 +263,5 @@ CREATE TABLE ZENTRACK_REPORTS_TEMP (
    chart_combine int2 default NULL, 
    text_output int2 default NULL, 
    show_data_vals int2 default NULL, 
-   PRIMARY KEY (report_id)
 );
 

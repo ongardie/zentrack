@@ -8,6 +8,7 @@ class DB {
   var $db_name;
   var $db_errnum;
   var $db_error;
+  var $db_type;
   var $sql_debug;
 
   /*
@@ -427,6 +428,7 @@ class DB {
   function DB( $host = '', $user = '', $passphrase = '', $database = '' ) {
     // call the zenDatabase class
       
+    $this->db_type = $this->database_type;
     // create the object
     $this->db_link = &ADONewConnection($this->database_type);
     $ADODB_FETCH_MODE = ADODB_FETCH_ASSOC;      
