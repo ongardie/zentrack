@@ -90,6 +90,49 @@
    * "I am a "+%"template_name"%  // causes an error!
    *</code>
    *
+   * <b>Special values index, value, pkey, pval</b>
+   * 
+   * When iterating over a list or foreach, the special values 'index' and 'value' contain the key/value pair.  The
+   * key is only used in foreach pairs, and the value can be a string or an array.  If a subtemplate is included
+   * then the values are passed as pkey and pval (to avoid any confusion with iterations in the subtemplate.
+   *
+   * Example:
+   * <code>
+   * // iteration of key/value pairs
+   * $values["colors"] = array( "white"=>"white", "black"=>"green", "red"=>"yellow" );
+   * // iteration of arrays (each pass, 'value' will be an array)
+   * $values["menus"] = array( array("he","was","large","cat"), array("she","was","small","dog") );
+   *
+   * // put values into template
+   * $template->values( $values );
+   *
+   * // inside the template:
+   * 
+   * {list:colors:"I have a "+index+" rabbit with "+value+" ears"}
+   *
+   * // result is:
+   * //    I have a white rabbit with white ears
+   * //    I have a black rabbit with green ears
+   * //    I have a red rabit with yellow ears
+   *
+   * {list:menus:"I said '"+value+" "+value+" a "+value+", "+colors[red]+" "+value}
+   *
+   * // result is:
+   * //    I said 'he was a large yellow cat'
+   * //    I said 'she was a small yellow dog'
+   *
+   * {foreach:colors:%"another_template"%}
+   *
+   * // in our other template, let's say we have:
+   * 
+   * {foreach:menus:"When "+value+" was "+pkey+", "+value+" was "+pval}
+   *
+   * // result is:
+   * //    When he was white, she was white
+   * //    When he was black, she was green
+   * //    When he was red, she was yellow
+   * </code>
+   *
    * <b>Comments in templates:</b>
    * 
    * Comments can be provided using normal html <!--    --> tags.  These tags cannot be nested!  All html comments
@@ -550,6 +593,9 @@ class ZenTemplate {
     }
     // parse the string to print
     $vals = explode("+",trim($text));
+    // if $value is an array, we may iterate through the values
+    $it = 0;
+
     $str = "";
     foreach($vals as $v) {
       $v = trim($v);
@@ -563,7 +609,17 @@ class ZenTemplate {
       }
       // this is the foreach value
       else if( $v == "value" ) {
-	$str .= $value;
+        // include the array index or variable (if not an array)
+	$str .= is_array($value)? $value[$it++] : $value;
+        if( is_array($value) && $it == count($value) ) {
+          // reset the iterator
+          $it = 0;
+        }
+      }
+      // this is the foreach value with a key (assumed to be an array)
+      else if( is_array($value) && preg_match('/^value\[([a-zA-Z0-9_]+)]$/', $v, $matches) ) {
+        $key = $matches[1];
+        $str = isset($value[$key])? $value[$key] : '';
       }
       // this is another variable
       else {        

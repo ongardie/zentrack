@@ -1013,10 +1013,11 @@ class ZenTargets {
     print "   C nav.html\n";
 
     // generate menu page
-    $vals = array('title'  => $titleText,
-                  'source' => $source,
+    $vals = array('title'   => $titleText,
+                  'source'  => $source,
                   'count'   => count($tables),
-                  'gentime' => $gentime);
+                  'gentime' => $gentime,
+                  'tables'  => $tableData);
     $template = new ZenTemplate("schema/menu.template");
     $template->values($vals);
     $fp = fopen("$dest/menu.html", 'w');

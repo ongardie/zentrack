@@ -8,7 +8,12 @@
 
 <p><b>{count} tables found</b></p>
 
-<p>Choose a table from the left to view schema info for this table</b>
+<table border='1'>
+  <tr>
+    <th>Table</th><th>Version</th><th>Description</th>
+  </tr>
+{list:tables:"<tr><td><a href='"+value[name]+".html'>"+value[name]+"</a></td><td>"+value[version]+"</td><td>"+value[description]+"</td></tr>\n"}
+</table>
 
 <p style='font-size:60%'>
   Generated from {source} schema data at {gentime}.
