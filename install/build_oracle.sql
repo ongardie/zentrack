@@ -88,6 +88,21 @@ CREATE TABLE ZENTRACK_EMPLOYEE (
   CONSTRAINT employee_pk1 PRIMARY KEY (person_id)
 );
 
+CREATE TABLE ZENTRACK_FIELD_MAP (
+   field_map_id NUMBER(12) CONSTRAINT fldmap_notnull NOT NULL,
+   field_name   VARCHAR2(25) CONSTRAINT fldmap_nm_notnull NOT NULL,
+   field_label  VARCHAR2(255) default '',
+   is_visible   NUMBER(1) default 0,
+   which_view   VARCHAR2(50) default 0,
+   default_val  VARCHAR2(255),
+   sort_order   NUMBER(4) default 0,
+   field_type   VARCHAR2(50),
+   num_cols     NUMBER(4) default 0,
+   num_rows     NUMBER(2) default 0,
+   is_required  NUMBER(1) default 0,
+   CONSTRAINT field_map_pk PRIMARY KEY (field_map_id)
+);
+
 --
 -- Table structure for `zentrack_related_contacts`
 --
@@ -430,6 +445,7 @@ CREATE TABLE ZENTRACK_VARFIELD_IDX (
 create sequence access_id_seq              start with 1001 nocache;
 create sequence attachments_id_seq         start with 1001 nocache;
 create sequence bins_id_seq                start with 1001 nocache;
+create sequence field_map_id_seq           start with 1001 nocache;
 create sequence logs_id_seq                start with 1001 nocache;
 create sequence preferences_id_seq         start with 1001 nocache;
 create sequence priorities_id_seq          start with 1001 nocache;
@@ -454,6 +470,10 @@ create sequence related_contacts_id_seq    start with 1001 nocache;
 --  CREATE INDICES
 --
 
+
+CREATE INDEX fldmap_sort ON ZENTRACK_FIELD_MAP(sort_order);
+CREATE INDEX fldmap_label ON ZENTRACK_FIELD_MAP(label);
+CREATE INDEX fldmap_both ON ZENTRACK_FIELD_MAP(sort_order,label);
 CREATE INDEX REPINDEX_COMB ON ZENTRACK_REPORTS_INDEX (user_id,bid);
 CREATE INDEX USERPREF_USER ON ZENTRACK_PREFERENCES (user_id);
 CREATE INDEX group_idx ON ZENTRACK_GROUP (group_name);

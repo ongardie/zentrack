@@ -2,6 +2,7 @@
   include("header.php");
   
   //print "<pre>\n";  //debug
+  $nolimit = 1;
   include("$templateDir/searchResults.php");
   
   // some data for testing
@@ -12,7 +13,7 @@
   //);
 
   // creates the csv file header, comment out for debugging
-  header("Content-type: application/vnd.ms-excel");
+  //header("Content-type: application/vnd.ms-excel");
   header("Content-disposition:  attachment; filename=".date("Y-m-d").".csv");
   
   // creates readable column names

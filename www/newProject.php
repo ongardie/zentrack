@@ -9,7 +9,7 @@
   
   include("header.php");
 
-  $page_tile = tr("Create a New Project");
+  $page_title = tr("Create a New Project");
   $expand_projects = 1;
   $onLoad[] = "behavior_js.php?formset=newProjectForm&mode=create";
 

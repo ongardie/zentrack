@@ -8,7 +8,7 @@
   */
   
   include("admin_header.php");
-  $page_tile = tr("Edit Group Submit");
+  $page_title = tr("Edit Group Submit");
 
   if( !$active )
     $active = 0;

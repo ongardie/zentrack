@@ -7,8 +7,8 @@
     <td colspan="3" class='titleCell'><?=uptr("Project")?></td>
    <? } else { ?>
     <td colspan="3" rowspan="2"><span class="bigBold"><?=
-	strtoupper($zen->systems["$system_id"]." ".$zen->types["$type_id"]);
-	?></span></td>
+    strtoupper($zen->systems["$system_id"]." ".$zen->types["$type_id"]);
+    ?></span></td>
    <? } ?>
     <td width="30">&nbsp;</td>
     <td class="smallTitleCell"><?=uptr("Start Date")?></td>
@@ -41,31 +41,31 @@
     <td><?=($system_id)?$zen->systems["$system_id"]:tr("n/a")?></td>
     <td>&nbsp;</td>  
     <?
-         $set = ($page_browser == 'ns')? 
-            "  ".uptr("Set")."  " : str_pad(uptr("Set"),18," ",STR_PAD_RIGHT);
-         if( $type_id == $zen->projectTypeID() ) {
+    $set = ($page_browser == 'ns')? 
+    "  ".uptr("Set")."  " : str_pad(uptr("Set"),18," ",STR_PAD_RIGHT);
+    if( $type_id == $zen->projectTypeID() ) {
 	    list($est_hours,$wkd_hours) = $zen->getProjectHours($id);
 	    if( $est_hours <= 0 )
-	      $est_hours = tr("n/a");
+      $est_hours = tr("n/a");
 	    print "<td>$est_hours</td>\n";
-	 } else if($est_hours > 0) {
-            print "<td>$est_hours</td>\n";
-	 } else if( $user_id == $login_id ) {
+    } else if($est_hours > 0) {
+      print "<td>$est_hours</td>\n";
+    } else if( $user_id == $login_id ) {
 	    echo('
-		 <form method="post" action="'.$rootUrl.'/actions/estimate.php">
+      <form method="post" action="'.$rootUrl.'/actions/estimate.php">
 		  <input type="hidden" name="id" value="'.$id.'">
 		  <td><input type="submit" class="actionButton" value="'.$set.'"></td>
-	         </form>');
-	 } else {
+      </form>');
+    } else {
 	    echo('
-		 <form method="post" action="'.$rootUrl.'/actions/estimate.php">
+      <form method="post" action="'.$rootUrl.'/actions/estimate.php">
 		  <input type="hidden" name="id" value="'.$id.'">
 		  <td><input type="button" class="actionButton"
-		     style="color:'.$zen->settings["color_alt_background"].'"
-                     value="'.$set.'"></td>
-	         </form>');
-	 }
-        ?>
+      style="color:'.$zen->settings["color_alt_background"].'"
+      value="'.$set.'"></td>
+      </form>');
+    }
+    ?>
   </tr>
   <tr>
     <td class="smallTitleCell" height="<?=$height_num?>"><?=uptr("Closed")?></td>
@@ -79,25 +79,25 @@
     <td><? 
       switch($tested){
         case 1: 
-	 print "<b>".tr("required")."</b>";
-	 break; 
-	case 2:
-	 print tr("completed");
-	 break; 
-	default:
-	 print tr("n/a");
+         print "<b>".tr("required")."</b>";
+         break; 
+        case 2:
+         print tr("completed");
+         break; 
+        default:
+         print tr("n/a");
       } 
      ?></td>
     <td><? 
       switch($approved){
         case 1: 
-	 print "<b>".tr("required")."</b>";
-	 break; 
-	case 2:
-	 print tr("completed");
-	 break; 
-	default:
-	 print tr("n/a");
+         print "<b>".tr("required")."</b>";
+         break; 
+        case 2:
+         print tr("completed");
+         break; 
+        default:
+         print tr("n/a");
       } 
      ?></td>  
     <td>&nbsp;</td>    

@@ -12,13 +12,16 @@
   "type_id"  => $zen->projectTypeIDs(),
   "status"  => array("OPEN","PENDING")
   );
-  $page_tile = tr("Projects");
+  $page_title = tr("Projects");
   $page_section = "Projects";
   if( $login_bin ) {
     $page_section .= " - ".$zen->bins["$login_bin"];
   }
   $expand_projects = 1;
   $page_type = 'project';
+  $view = 'project_list';
+  $map = new ZenFieldMap($zen);
+  $fields = $map->getFieldMap($view);
   include("$libDir/nav.php");
   
   $userBins = $zen->getUsersBins($login_id);
@@ -32,7 +35,8 @@
 	$params["bin_id"] = $userBins;
      }
     if( is_array($params) ) 
-    $tickets = $zen->get_tickets($params);
+    include("$libDir/sorting.php");
+    $tickets = $zen->get_tickets($params, $orderby);
     include("$templateDir/listTickets.php");
     if( count($tickets) ) {
       include("$libDir/paging.php"); //Addition for paging

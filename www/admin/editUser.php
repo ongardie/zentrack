@@ -9,7 +9,7 @@
   
   include("admin_header.php");
 
-  $page_tile = "Edit User";
+  $page_title = "Edit User";
   include("$libDir/nav.php");
 
   $user = $zen->get_user($user_id);

@@ -65,7 +65,7 @@
   }
 
   // show the page
-  $page_tile = tr("Admin Section");
+  $page_title = tr("Admin Section");
   include("$libDir/nav.php");
   $zen->printErrors($errs);
   if( $user_id && !$skip ) {

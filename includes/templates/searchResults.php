@@ -75,6 +75,9 @@
   if ($orderby == "") {
     $orderby="status DESC, priority DESC";
   }
+  else {
+    $orderby = preg_replace("/[^_0-9a-zA-Z ,]/", "", $orderby);
+  }
   
   // determine which bins user can view
   $userBins = $zen->getUsersBins($login_id);
@@ -146,7 +149,8 @@
     }
     $zen->addDebug("searchResults.php-params[]",join("|",$dp),3);
     
-    $tickets = $zen->search_tickets($params, "AND", "0", $orderby);//"status DESC, priority DESC"
+    $limit = $nolimit? 0 : false;
+    $tickets = $zen->search_tickets($params, "AND", "0", $orderby, $limit);//"status DESC, priority DESC"
   }
   
 }?>

@@ -8,7 +8,7 @@
   
   
   include("reports_header.php");
-  $page_tile = tr("Admin Section");
+  $page_title = tr("Admin Section");
   include("$libDir/nav.php");
 
    if( is_array($_POST) ) {

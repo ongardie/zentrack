@@ -417,6 +417,7 @@ function setFormValsUsingGroup( fieldObj, group, setid ) {
         fieldObj.checked = true;
       }
       break;
+    case "hidden":
     case "button":
     case "submit":
     case "text":

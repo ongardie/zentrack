@@ -14,7 +14,7 @@
     exit;
   }
 
-  $page_tile = tr("Commit New Project");
+  $page_title = tr("Commit New Project");
   $expand_contacts = 1;
 
   // initiate default values

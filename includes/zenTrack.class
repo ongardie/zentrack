@@ -965,6 +965,35 @@ class zenTrack extends zen {
     $query = "SELECT * FROM ".$this->table_varfield." WHERE ticket_id = $ticket_id";
     return $this->db_quickIndexed($query);
   }
+  
+  /**
+   * Collect variable field information for several tickets
+   *
+   * @param array $ids contains ticket ids
+   * @param array $columns contains (string)column_name, if only some columns are desired
+   * @return array containg ticket_id => array( fields... )
+   */
+   function getVarfieldsForTickets( $ids, $columns = false ) {
+     $ids = $this->cleanInput("int", $ids);
+     $skip_id = $columns && !in_array('ticket_id',$columns);
+     if( $columns ) {
+       $cols = !$skip_id? '' : 'ticket_id';
+       foreach($columns as $c) {
+         if( $cols ) { $cols .= ','; }
+         $cols .= $c;
+       }
+     }
+     else { $cols = "*"; }
+     $query = "SELECT $cols FROM ".$this->table_varfield." WHERE ticket_id in (".join(",",$ids).")";
+     $vals = $this->db_queryIndexed($query);
+     $vars = array();
+     for($i=0; $i < count($vals); $i++) {
+       $k = $vals[$i]['ticket_id'];
+       if( $skip_id ) { unset($vals[$i]['ticket_id']); }
+       $vars["$k"] = $vals[$i];
+     }
+     return $vars;
+   }
 
 
   /**
@@ -1612,7 +1641,8 @@ class zenTrack extends zen {
   }
 
   function search_tickets( $params, $andor = 'AND', 
-                           $archive_flag = 0, $order_by = 'status DESC, priority DESC' ) {
+                           $archive_flag = 0, $order_by = 'status DESC, priority DESC',
+                           $limit = false ) {
     // search through tickets for given text
     // acceptable params are:
     // params is an indexed array with two elements:
@@ -1664,10 +1694,15 @@ class zenTrack extends zen {
     $this->addDebug("search_ticketsQuery:",$query,3);
     // return(  $this->db_queryIndexed($query) );      
     //paging feature
-    $numtoshow = $this->settings['paging_max_rows'];
+    $numtoshow = $limit? $limit : $this->settings['paging_max_rows'];
     $start = $pageNumber * $numtoshow;
     $this->total_records = $this->db_getrowcount($tables, $where);
-    return($this->db_getlimitedIndex($query,$numtoshow,$start));
+    if( $limit === 0 ) {
+      return $this->db_queryIndexed($query);
+    }
+    else {
+      return($this->db_getlimitedIndex($query,$numtoshow,$start));
+    }
   }
 
   function _hasCustomFields($params) {
@@ -5681,6 +5716,7 @@ class zenTrack extends zen {
   var $table_attachments;
   var $actions;
   var $table_bins;
+  var $table_feild_map;
   var $table_logs;   
   var $table_logs_archived;
   var $table_preferences;
@@ -5695,11 +5731,14 @@ class zenTrack extends zen {
   var $table_tickets_archived;
   var $table_types;
   var $table_users;
-  var $table_translation_strings;
-  var $table_translation_words;
   var $table_notify_list;
+  var $table_behavior;
+  var $table_behavior_detail;
+  var $table_group;
+  var $table_group_detail;
+  var $table_varfield;
   var $table_varfield_idx;
-
+   
   var $cleanTempReports;
   var $reportImageWidth;
   var $reportImageHeight;

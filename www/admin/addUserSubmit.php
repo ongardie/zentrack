@@ -8,7 +8,7 @@
   */
   
   include("admin_header.php");
-  $page_tile = "New User Submit";
+  $page_title = "New User Submit";
 
   if( !$active )
     $active = 0;

@@ -9,7 +9,7 @@
   
   include_once("../header.php");
   
-  $page_tile = tr("Change Password");
+  $page_title = tr("Change Password");
   $expand_options = 1;
   
   if( $TODO == 'SET' ) {

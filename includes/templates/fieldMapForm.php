@@ -1,3 +1,11 @@
+<?
+  /**
+    PREREQUISITES:
+      $map - (ZenFieldMap) map object which can be used to retrieve default values
+      $fields - (array) values from $map->getFieldMap($view);
+      $zen - (ZenTrack)
+  **/
+?>
 <br>
 <p class='error'><?
    $str = "<a href='$rootUrl/help/find.php?s=admin&p=fieldmap'>".tr('Documentation')."</a>";
@@ -5,7 +13,8 @@
  ?></p>
  
 <form method='post' action='<?=$SCRIPT_NAME?>' name='fieldMapForm'>
-<input type='hidden' name='TODO' value=''>
+<input type='hidden' name='TODO' value='save'>
+<input type='hidden' name='view' value='<?=$zen->ffv($view)?>'>
 
 <p>
 <nobr>
@@ -27,7 +36,7 @@ foreach( getFmViewProps() as $k=>$v ) {
 <br><span class='note'><?=tr("Do not switch views without saving changes!")?></span>
 </p>
 
-<table cellpadding="4" cellspacing="1" class='cell'>
+<table cellpadding="4" cellspacing="1" class='cell' border=0>
 <tr toofar="toofar">
   <td class='titleCell' align='center' colspan='10'>
     <b><?=tr("Edit field map for ?", $view)?></b>
@@ -98,7 +107,10 @@ foreach($fields as $f=>$field) {
     print "<td class='altBars' colspan='5'>&nbsp;</td>";
   }
   else {
-    if( $fprops['always_required'] ) {
+    if( $vprops['view_only'] ) {
+      fmfRow(tr('n/a'),$class);
+    }
+    else if( $fprops['always_required'] ) {
       fmfRow(tr('yes'),$class);
     }
     else {
@@ -106,11 +118,32 @@ foreach($fields as $f=>$field) {
       fmfRow("<input type='checkbox' ".fmfName($f, 'is_required')." value='1'$sel>",$class);
     }
     // default value (text)
-    if( $fprops['default'] ) {
-      fmfRow("<input type='text' ".fmfName($f, 'default_val')
-             ."value='".$zen->ffv($field['default_val'])."' size=10 maxlength=200>",$class);
+    $txt = "n/a";
+    if( $fprops['default'] && !$vprops['view_only'] ) {
+      if( strpos($f,'custom_menu')===0 ) {
+        // custom menus use the data groups as a selector, not a list of values
+        $choices = $zen->getDataGroups();
+      }
+      else {
+        $choices = $map->getChoices($view, $f);
+      }
+      //if( $f == 'custom_menu1' ) { Zen::printArray($choices); }
+      if( is_array($choices) && count($choices) ) {
+        $txt = "<select ".fmfName($f,'default_val').">";
+        $txt .= "<option value=''>--</option>";
+        foreach($choices as $k=>$v) {
+          $sel = $field['default_val'] == $k? " selected" : "";
+          $txt .= "<option value='$k'>$v</option>";
+        }
+        $txt .= "</select>";
+      }
+      else {
+        $txt = "<input type='text' ".fmfName($f, 'default_val')
+               ."value='".$zen->ffv($field['default_val'])."' size=10 maxlength=200>";
+      }
     }
-    else { fmfRow('n/a',$class); }
+    fmfRow($txt,$class);
+    
     // field type, not useful for fields which only have label as type
     // or for sections
     if( count($fprops['types']) == 1 && $fprops['types'][0] == 'label' ) {
@@ -155,7 +188,7 @@ foreach($fields as $f=>$field) {
     // control sort ordering by tracking what order these hidden fields arrive
     $txt .= "<input type='hidden' name='orderset[$f]' value='$fcount'>";
   if( $vprops['sections'] ) {
-    if( $field['field_type'] == 'section' ) {
+    if( $field['field_type'] == 'section' && $field['field_name'] != 'elapsed' ) {
       // remove sections
       $txt .= "<a href='#' onClick='removeRow(this);return false;'";
       $txt .= " border='0' alt='Remove Section' title='Remove Section'><img src='/images/icon_trash.gif'";
@@ -253,6 +286,7 @@ function removeRow( obj ) {
 function moveRowUp( tdCell ) {
   var v1, v2;
   var thisRow = tdCell.parentNode;
+  quickHighlightRow( thisRow, 'subTitle' );  
   var previousRow = thisRow.previousSibling;
   var parentNode = thisRow.parentNode;
   while( previousRow && previousRow.nodeName != "TR" ) {
@@ -275,12 +309,31 @@ function moveRowUp( tdCell ) {
   v1=parseFloat(document.fieldMapForm[ "orderset[" + thisRow.id + "]" ].value);
   v2=parseFloat(document.fieldMapForm[ "orderset[" + previousRow.id + "]" ].value);
   document.fieldMapForm[ "orderset[" + thisRow.id + "]" ].value=v2;
-  document.fieldMapForm[ "orderset[" + previousRow.id + "]" ].value=v1;
+  document.fieldMapForm[ "orderset[" + previousRow.id + "]" ].value=v1;  
+}
+
+function quickHighlightRow( parentObj, s ) {
+  for(var i=0; i < parentObj.childNodes.length; i++) {
+    var obj = parentObj.childNodes[i];
+    obj.id = parentObj.id + '-'+i;
+    if( obj.nodeName != "TD" ) { continue; }
+    objName = obj.id;
+    if( obj.className ) {
+      obj.className = obj.className + ' ' + s;
+      setTimeout("var x = document.getElementById('"+objName+"'); x.className = x.className.substr(0,x.className.indexOf(' "+s+"'));",500);
+    }
+    else {
+      obj.setAttribute('class', obj.getAttribute('class') + ' ' + s);
+      setTimeout("var x = document.getElementById('"+objName+"'); x.setAttribute('class', x.getAttribute('class').substr(0,x.getAttribute('class').indexOf(' "+s+"')));",500);
+    }
+    
+  }
 }
 
 function moveRowDown( tdCell ) {
   var v1, v2;
   var thisRow = tdCell.parentNode;
+  quickHighlightRow( thisRow, 'subTitle' );  
   var nextRow = thisRow.nextSibling;
   var parentNode = thisRow.parentNode;
   //while( nextRow && nextRow.nodeName != "TR" ) {

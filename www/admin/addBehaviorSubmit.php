@@ -8,7 +8,7 @@
   */
   
   include("admin_header.php");
-  $page_tile = tr("Add Behavior Submit");
+  $page_title = tr("Add Behavior Submit");
 
   if( !$active )
     $active = 0;

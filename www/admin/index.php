@@ -8,7 +8,7 @@
   
   
   include("admin_header.php");
-  $page_tile = tr("Admin Section");
+  $page_title = tr("Admin Section");
   include("$libDir/nav.php");
   include("$templateDir/adminMenu.php");
   include("$libDir/footer.php");

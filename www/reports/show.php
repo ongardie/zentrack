@@ -6,7 +6,7 @@
   */
   
   include("reports_header.php");
-  $page_tile = tr("Show Report");
+  $page_title = tr("Show Report");
   include_once("$libDir/nav.php");
 
 //security

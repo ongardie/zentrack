@@ -73,7 +73,7 @@ function getFmFieldProps( $view, $field = null ) {
   $vals = $GLOBALS['zt_field_dependencies']['fields'][$field];
   if( !is_array($vals) ) { return false; }
   $vars = array();
-  $indices = array("searchable", "types", "multiple", "admin_view", "always_required", "default");
+  $indices = array("searchable", "types", "admin_view", "multiple", "always_required", "default");
   for($i=0; $i < count($indices); $i++) {
     if( $indices[$i] == 'admin_view' ) { continue; }
     else if( $indices[$i] == 'types' ) {
@@ -160,10 +160,10 @@ $ztf = array(
   ),
   
   "views" => array(//           disabled, view_only, has_behaviors, admin_view, multiple, sections
-    "ticket_create"   => array(    false,    false,      true, false, false, true  ), 
-    "project_create"  => array(    false,    false,      true, false, false, true  ),
-    "ticket_edit"     => array(    false,    false,      true, false, false, true  ), 
-    "project_edit"    => array(    false,    false,      true, false, false, true  ),
+    "ticket_create"   => array(    false,    false,      true, false, false, false  ), 
+    "project_create"  => array(    false,    false,      true, false, false, false  ),
+    "ticket_edit"     => array(    false,    false,      true, false, false, false  ), 
+    "project_edit"    => array(    false,    false,      true, false, false, false  ),
     "ticket_list"     => array(    false,     true,     false, false, false, false ),
     "project_list"    => array(    false,     true,     false, false, false, false ),
     "ticket_search"   => array(     true,    false,      true, false, true , true  ),
@@ -185,7 +185,7 @@ $ztf = array(
     "checkbox" => array(  false, false ),
     "radio"    => array(  true , false ),
     "date"     => array(  false, false ),
-    "section"  => array(  false, false )
+    "section"  => array(   true, false )
   )
 
 );
@@ -253,7 +253,7 @@ class ZenFieldMap {
    * @return string of text to display
    */
   function getTextValue( $view, $field_name, $value ) {
-    $this->_zen->addDebug("getTextValue", "rendering $view, $field_name, $value", 1);//debug
+    $this->_zen->addDebug("getTextValue", "rendering $view, $field_name, $value", 3);
     $field = $this->getFieldFromMap($view,$field_name);
     if( strlen($value) && $field['is_visible'] && $field['field_type'] != 'hidden' ) {
       switch($this->fieldName($field_name)) {
@@ -270,27 +270,30 @@ class ZenFieldMap {
           }
         case "user_id":
         case "creator_id":
-          return $this->_zen->formatName($value,1);
+          $name = $this->_zen->formatName($value,1);
+          return $this->_zen->ffv($name,$field['num_cols']);
         case "tested":
         case "approved":
-          return $value == 1? tr('No') : $value == 2? tr('Yes') : tr('n/a');
+          $val = $value == 1? tr('No') : $value == 2? tr('Yes') : tr('n/a');
+          return $this->_zen->ffv($val,$field['num_cols']);
         case "otime":
         case "ctime":
         case "deadline":
         case "start_date":
         case "custom_date":
           if( preg_match('/[^0-9]/', $value) ) {
-            return $this->_zen->ffv($value);
+            return $this->_zen->ffv($value,$field['num_cols']);
           }
           if( $value == 'NULL' ) { $value = ''; }
           if( $value == 0 ) { $value = ""; }
           return strlen($value)? $this->_zen->showDateTime($value) : '';
         case "custom_boolean":
-          return $value == 1? tr('Yes') : tr('No');
+          $val = $value == 1? tr('Yes') : tr('No');
+          return $this->_zen->ffv($val,$field['num_cols']);
         default:
-          return $this->_zen->ffv(
-            strlen($value)>$field['num_cols']? substr($value,0,$field['num_cols']) : $value
-          );
+          $val = $this->_zen->ffv($value, $field['num_cols']);
+          $this->_zen->addDebug("getTextValue", "rendering default: $val", 3);
+          return $this->_zen->ffv($value, $field['num_cols']);
       }
     }
     // it's hidden, return nothing
@@ -383,7 +386,8 @@ class ZenFieldMap {
     
     // deal with fields by checking 
     // the row count to make sure it is reasonable
-    $vals['field_cols'] = ( $field['num_cols'] > 50 ) ? 50:$field['num_cols'];
+    if( $field['num_rows'] == 1 ) { $vals['field_cols'] = $field['num_cols'] > 30? 30 : $field['num_cols']+2; }
+    else { $vals['field_cols'] = $field['num_cols'] > 50? 50 : $field['num_cols']; }
     $vals['field_rows'] = $field['num_rows'];
     
     // deal with special custom field problems
@@ -414,7 +418,7 @@ class ZenFieldMap {
       if( $field['is_required'] && !strlen($value) ) {
         $value = $this->getDefaultValue($view, $field_name);
         if( !strlen($value) ) {
-          $this->_zen->addDebug("renderTicketField", "Required field is hidden and has no default: $view, $field_name", 1);
+          $this->_zen->addDebug("renderTicketField", "Required field is hidden and has no value: $view, $field_name", 1);
         }
       }
     }
@@ -442,15 +446,13 @@ class ZenFieldMap {
    *
    * <p>This information is cached in the session.
    *
-   * @param boolean $nocache if true, clears cache and loads from database
+   * @param string $view if provided, only fields in this view will be returned,
+   *        otherwise an array of all views will be returned.
    */
-  function getFieldMap($flag = false) {
-
+  function getFieldMap($view = false) {
     // try to retrieve from session
-    if( !$flag ) {
-      $map = $this->_session->getDataType('fieldmap');
-      if( $map && count($map) ) { return $map; }
-    }
+    $map = $this->_session->getDataType('fieldmap');
+    if( $map && count($map) ) { return $view? $map[$view] : $map; }
     
     // retrieve from database
     $query = "SELECT * FROM ".$this->_zen->table_field_map." ORDER BY sort_order, field_label";
@@ -466,7 +468,7 @@ class ZenFieldMap {
     // store in session
     $this->_session->storeDataType('fieldmap',$set);
     
-    return $set;
+    return $view? $set[$view] : $set;
   }
   
   /**
@@ -605,7 +607,11 @@ class ZenFieldMap {
       case "custom_menu":
         $pts = explode("_", $view, 2);
         $vars = $this->_zen->getCustomField($field_name);
-        $vals = genDataGroupChoices($vars['field_value']);
+        $set = genDataGroupChoices($vars['field_value']);
+        $vals = array();
+        foreach($set as $s) {
+          $vals[ $s['field_value'] ] = $s['label'];
+        }
         break;
       default:
         $vals = array();

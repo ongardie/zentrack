@@ -26,7 +26,7 @@
     $errs[] = tr("No user id was recieved");
   }
 
-  $page_tile = tr("Reset Password");
+  $page_title = tr("Reset Password");
   include("$libDir/nav.php");
   $zen->printErrors($errs);
   include("$templateDir/adminMenu.php");

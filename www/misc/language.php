@@ -39,7 +39,7 @@
     }
   }
 
-  $page_tile = tr("Change Language");
+  $page_title = tr("Change Language");
 
   include("$libDir/nav.php");
 ?>

@@ -88,6 +88,24 @@ CREATE TABLE ZENTRACK_EMPLOYEE (
   PRIMARY KEY  (person_id)
 );
 
+CREATE TABLE ZENTRACK_FIELD_MAP (
+   field_map_id INT(12) NOT NULL auto_increment,
+   field_name   VARCHAR(25) NOT NULL,
+   field_label  VARCHAR(255) default '',
+   is_visible   INT(1) default 0,
+   which_view   VARCHAR(50) default 0,
+   default_val  VARCHAR(255),
+   sort_order   INT(4) default 0,
+   field_type   VARCHAR(50),
+   num_cols     INT(4) default 0,
+   num_rows     INT(2) default 0,
+   is_required  INT(1) default 0,
+   PRIMARY KEY (field_map_id)
+   INDEX fldmap_sort (sort_order);
+   INDEX fldmap_label (label);
+   INDEX fldmap_both (sort_order,label);
+);
+
 --
 -- Table structure for `zentrack_related_contacts`
 --

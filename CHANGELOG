@@ -13,6 +13,12 @@ abstraction, and endless possibilities for project expansion.
 
 ----- VERSION 2.5.0.3 (development) -----
 
+2005-02-05, kato
+  Replaced mispelled page_tile variables with page_title
+  
+  Added pulldowns for default values and fixed several small
+  field_map bugs
+
 2005-02-02, cfalonso
   The field_type value wasn't evaluated in the field map form. Fixed (TK 68)
     - includes/templates/fieldMapForm.php 1.3

@@ -6,7 +6,7 @@
     $errs[] = $zen->ptrans("Ticket #? cannot be edited in its current status",array($id));
   }
 
-  $page_tile = tr("Commit Edited Ticket");
+  $page_title = tr("Commit Edited Ticket");
   $expand_admin = 1;
 
   // initiate default values

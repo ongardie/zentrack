@@ -9,14 +9,14 @@
   include("header.php");
   
   if( !$zen->checkAccess($login_id,$bin_id,"create") ) {
-    $page_tile = "Access Error";
+    $page_title = "Access Error";
     $msg = "<p class='hot'>" . tr("You do not have permission to create tickets in this bin.") . "</p>\n"; 
     include("$libDir/nav.php");     
     include("$libDir/footer.php");
     exit;
   }
   
-  $page_tile = tr("Commit New Project");
+  $page_title = tr("Commit New Project");
   $expand_projects = 1;
   
   // initiate default values

@@ -14,7 +14,7 @@
     exit;
   }
 
-  $page_tile = tr("Commit New Agreement");
+  $page_title = tr("Commit New Agreement");
   $expand_agreements = 1;
 
   // initiate default values

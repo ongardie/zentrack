@@ -9,7 +9,7 @@
   
   include("header.php");
 
-  $page_tile = tr("Create a New Ticket");
+  $page_title = tr("Create a New Ticket");
   $expand_tickets = 1;
   $onLoad[] = "behavior_js.php?formset=ticketForm&mode=create";
 

@@ -8,7 +8,7 @@
   
   include("action_header.php");
 
-  $page_tile = tr("Commit Edited Ticket");
+  $page_title = tr("Commit Edited Ticket");
   $expand_tickets = 1;
 
   // initiate default values

@@ -1,48 +1,89 @@
 <?
 
+  /**
+   PREREQUISITES:
+     (ZenFieldMap)$map - contains properties for fields
+     (string)$view - the current view (probably project_list or ticket_list)
+     (array)$fields - properties for fields to be rendered, obtained from ZenFieldMap::getFieldMap( view )
+     (string)$page_type - (optional) either 'ticket' or 'project'
+     (array)$tickets - list of tickets to be displayed, as retrieved from zenTrack::get_tickets()
+  **/
+  
 if( !$page_type )
   $page_type = "ticket";
   
 if( is_array($tickets) && count($tickets) ) {
-      ?>
-        <table width="100%" cellspacing='1' cellpadding='2' bgcolor='<?=$zen->settings["color_alt_background"]?>'>
+?>
+<table width="100%" cellspacing='1' cellpadding='2' bgcolor='<?=$zen->settings["color_alt_background"]?>'>
    <tr bgcolor="<?=$zen->settings["color_title_background"]?>">
-   <td width="32" height="25" valign="middle" title="Tracking ID for the <?=$page_type?>">
-   <div align="center"><span style="color:<?=$zen->settings["color_title_txt"]?>"><b><span class="small"><?=tr("ID")?></span></b></span></div>
-   </td>
-   <td height="25" valign="middle" title="The name of the <?=$page_type?>">
-   <div align="center"><span style="color:<?=$zen->settings["color_title_txt"]?>"><b><span class="small"><?=tr("Title")?></span></b></span></div>
-   </td>
-   <td width="32" height="25" valign="middle" title="The importance of the <?=$page_type?>">
-   <div align="center"><span style="color:<?=$zen->settings["color_title_txt"]?>"><b><span class="small"><?=tr("Pri")?></span></b></span></div>
-   </td>
-   <td width="32" height="25" valign="middle" title="The type of task to complete">
-   <div align="center"><span style="color:<?=$zen->settings["color_title_txt"]?>"><b><span class="small"><?=tr("Type")?></span></b></span></div>
-   </td>
-   <td width="60" height="25" valign="middle" title="When the <?=$page_type?> was created">
-   <div align="center"><span style="color:<?=$zen->settings["color_title_txt"]?>"><b><span class="small"><?=tr("Opened")?></span></b></span></div>
-   </td>
-   <td width="40" height="25" valign="middle" title="Who the <?=$page_type?> belongs to">
-   <div align="center"><span style="color:<?=$zen->settings["color_title_txt"]?>"><b><span class="small"><?=tr("Owner")?></span></b></span></div>
-   </td>
-   <td width="60" height="25" valign="middle" title="The location of the <?=$page_type?>">
-   <div align="center"><span style="color:<?=$zen->settings["color_title_txt"]?>"><b><span class="small"><?=tr("Bin")?></span></b></span></div>
-   </td>
-   <td width="80" height="25" valign="middle" title="The length of time the <?=$page_type?> has been open">
-   <div align="center"><span style="color:<?=$zen->settings["color_title_txt"]?>"><b><span class="small"><?=tr("Time")?></span></b></span></div>
-   </td>
-   </tr>
-      <?      
+<?
+  // print some table headings
+  $custom_field_list = array(); //store these for later
+  foreach($fields as $f=>$field) {
+    // skip hidden fields
+    if( !$field['is_visible'] ) { continue; }
+
+    $tf = tr($map->getLabel($view,$f));
+    print "<td width='32' height='25' valign='middle' title='".$zen->ffv($tf)."' class='titleCell'><span class='small'>$tf</span></td>\n";
+    
+    // store information about field types
+    if( strpos($f, 'custom_') === 0 && $field['is_visible'] ) {
+      $custom_field_list[] = $f;
+    }
+  }
+  
+  // close the row
+  print "</tr>\n";
+
+  // we will now cache a list of users, if needed, to prevent multiple database
+  // lookups from being performed
+  $user_ids = array();
+  $has_user_ids = array_key_exists('user_id', $fields) && $fields['user_id']['is_visible'];
+  $has_creator_ids = array_key_exists('creator_id', $fields) && $fields['creator_id']['is_visible'];
+  $ticket_ids = array();
+  $custom_fields = array();
+  if( $has_user_ids or $has_creator_ids || count($custom_field_list) ) {
+    foreach($tickets as $t) {
+      if( count($custom_field_list) ) { $ticket_ids[] = $t['id']; }
+      if( $has_user_ids && $t['user_id'] ) { $user_ids[] = $t['user_id']; }
+      if( $has_creator_ids && $t['creator_id'] ) { $user_ids[] = $t['creator_id']; }
+    }
+    
+    // now query for the user ids and map them to keys which we will store
+    // for use while rendering all of the rows
+    if( count($user_ids) ) {
+      $query = "SELECT user_id, initials FROM ".$zen->table_users." WHERE user_id in (".join(',', array_unique($user_ids)).")";
+      $vals = $zen->db_query($query);
+      if( $vals && count($vals) ) {
+        $user_ids = array();
+        foreach($vals as $v) {
+          $user_ids["{$v[0]}"] = $v[1];
+        }
+      }
+      else {
+        // default to no entries
+        $user_ids = array();
+      }
+    }
+    
+    // now query for variable field content as needed
+    if( count($custom_field_list) && count($ticket_ids) ) {
+      $custom_fields = $zen->getVarfieldsForTickets($ticket_ids, $custom_field_list);
+    }
+  }
 
    $td_ttl = "title='".tr("Click here to view the ?", array($page_type))."'";
    foreach($tickets as $t) {
       $row = $zen->settings["color_background"];
+      
+      // create special url for projects
       if( $zen->inProjectTypeIDs($t["type_id"]) ) {
          $link = $projectUrl;
       } else {
          $link = $ticketUrl;   
       }
       
+      // determine the color of the row based on priority or status
       if( $t["status"] == 'CLOSED' ) {
         $classxText = "class='bars' onclick='ticketClk(\"{$link}?id={$t['id']}\"); return false;' $rollover_greytext";
       }
@@ -55,46 +96,35 @@ if( is_array($tickets) && count($tickets) ) {
       else {
         $classxText = "class='cell' onclick='ticketClk(\"{$link}?id={$t['id']}\"); return false;' $rollover_text";
       }
-
-      ?>
-   <tr <?=$classxText?>>
-   <td height="25" valign="middle" <?=$td_ttl?>>
-    <a class="rowLink" href="<?=$link?>?id=<?=$t["id"]?>"><?=$t["id"]?></a>
-   </td>
-   <td height="25" valign="middle" <?=$td_ttl?>>
-    <a class="rowLink" href="<?=$link?>?id=<?=$t["id"]?>"><?=$t["title"]?></a>
-   </td>
-   <td height="25" valign="middle">
-   <?=$zen->priorities["$t[priority]"]?>
-   </td>
-   <td height="25" valign="middle">
-   <?=$zen->types["$t[type_id]"]?>
-   </td>
-   <td height="25" valign="middle">
-   <?=($t["otime"])? $zen->showDate($t["otime"]) : "n/a";?>
-   </td>
-   <td width="40" height="25" valign="middle">
-   <? 
-     $user = $zen->get_user($t["user_id"]);
-          if( $user ) {
-        print ($t["user_id"] == $login_id)? 
-          "<b>".$user["initials"]."</b>" :
-          $user["initials"];
-     } else {
-        print "n/a";
-     }
-        ?>
-   </td>
-   <td height="25" valign="middle">
-   <?=$zen->bins["$t[bin_id]"]?>
-   </td>
-   <td height="25" valign="middle" align="right">
-   <?=$zen->showTimeElapsed($t["otime"],$t["ctime"],1,1)?>
-   </td>
-   </tr>       
-   <?
-   }      
-     
+      
+      // render the row properties
+      print "<tr $classxText>\n";
+      
+      // render each field in the row
+      foreach($fields as $f=>$field) {
+        // skip hidden fields
+        if( !$field['is_visible'] ) { continue; }
+        $align = $f == 'elapsed'? 'align="right"' : '';
+        print "<td height='25' valign='middle' $align $td_ttl>";
+        print "<a class='rowLink' href='$link?id={$t['id']}'>";
+        if( $f == 'user_id' || $f == 'creator_id' ) {
+          $uid = $t["$f"];
+          $name = $zen->ffv($user_ids["$uid"], $field['num_cols']);
+          print $name? $name : '&nbsp;';
+        }
+        else if( $f == 'elapsed' ) {
+          print $zen->showTimeElapsed($t["otime"],$t["ctime"],1,1);
+        }
+        else {
+          $value = strpos($f, 'custom_')===0? $custom_fields[$f] : $t[$f];
+          print $map->getTextValue($view, $f, $value);
+        }
+        print "</a></td>\n";
+      }
+      
+      // close the row
+      print "</tr>";
+   }
    print "</table>\n";
    
 } else {

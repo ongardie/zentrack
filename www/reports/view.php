@@ -7,7 +7,7 @@
   */
   
   include("reports_header.php");
-  $page_tile = tr("Admin Section");
+  $page_title = tr("Admin Section");
   include_once("$libDir/nav.php");
 
 // if we have a qry=xxxxx variable

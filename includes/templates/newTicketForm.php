@@ -6,6 +6,9 @@
   }
   else {
     $userBins = $zen->getUsersBins($login_id,"level_create");
+    $id = 0;
+    $creator_id = $login_id;
+    $status = 'OPEN';
   }
   if( !is_array($userBins) || !count($userBins) ) {
     print "<span class='error'>";
@@ -88,49 +91,40 @@ foreach($visible_fields as $f) {
 
 <script language='Javascript' type='text/javascript'>
 
+ function validateField( obj ) {
+    switch( obj.type ) {
+      case "checkbox":
+        return obj.checked;
+      case "text":
+      case "textarea":
+      case "file":
+        return obj.value != null && obj.value.length;
+      case "select":
+      case "select-one":
+      case "select-multiple":
+      case "radio":
+        return true;
+      case "button":
+      case "submit":
+      case "hidden":
+      case "password":
+      case "reset":
+      default:
+        return false;
+    }
+ }
+
  function validateTicketForm() {
    var errs = new Array();
-   if( !document.ticketForm.title.value ) {
-     errs[ errs.length ] = "<?=tr("? is required",array( tr("Title") ))?>";
-   }
-   
 <?
-$varfields = $zen->getCustomFields(0,'Ticket', 'New');
-if( is_array($varfields) && count($varfields) ) {
-  foreach($varfields as $v) {
-    $k = $v['field_name'];
-    $l = $v['field_label'];
-    if( $v['js_validation'] ) {
-      print preg_replace('/\{form\}/', 'document.ticketForm', $v['js_validation']);
-    }
-    else {
-      $f = "document.ticketForm.{$k}";
-      $e = 'errs[ errs.length ]';
-      switch( getVarfieldDataType($k) ) {
-        case "menu":
-        // if the value of the menu selection is '', then
-        // the required status is significant
-        if( $v['is_required'] ) {
-          print "if( {$f}.options[ {$f}.selectedIndex ].value == '' )"
-          . " { {$e} = '{$l} is required'; }\n";
-        }
-        case "boolean":
-        // no validation for checkboxes
-        break;
-        case "number":
-        // make sure it is a valid number
-        print "if( {$f}.value.match( /[^0-9.]/ ) ) { {$e} = '"
-        .tr('? is not a valid number',array(tr($l)))."'; }\n";
-        default:
-        // nothing to do for dates or strings, just
-        // check the required status
-        // numbers fall through to here also
-        if( $v['is_required'] ) {
-          print "if( !{$f}.value ) { {$e} = '"
-          .tr('? is required',array(tr($l)))."'; }\n";
-        }
-      }
-    }
+foreach($fields as $f) {
+  $field = $map->getFieldFromMap($view,$f);
+  // we don't want to validate any hidden fields using javascript, this is
+  // a potential problem.
+  if( $field['is_required'] && $field['is_visible'] && $field['field_type'] != 'label' ) {
+    $label = $map->getLabel($view,$f);
+    $tr = $zen->fixJSVal(tr("? is required",array(tr($label))));
+    print "\tif( !validateField(document.ticketForm.$f) ) { errs[errs.length] = $tr; }\n";
   }
 }
 ?>

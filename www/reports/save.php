@@ -8,7 +8,7 @@
   
   
   include("reports_header.php");
-  $page_tile = tr("Save Template");
+  $page_title = tr("Save Template");
   include("$libDir/nav.php");
 
   // get bins this user can access, then all templates available

@@ -140,9 +140,20 @@ CREATE TABLE ZENTRACK_BINS (
  PRIMARY KEY (bid)
 );
 
---
--- Table structure for table 'ZENTRACK_LOGS'
---
+CREATE TABLE ZENTRACK_FIELD_MAP (
+   field_map_id NUMERIC(12) NOT NULL,
+   field_name   VARCHAR(25) NOT NULL,
+   field_label  VARCHAR(255) default '',
+   is_visible   NUMERIC(1) default 0,
+   which_view   VARCHAR(50) default 0,
+   default_val  VARCHAR(255),
+   sort_order   NUMERIC(4) default 0,
+   field_type   VARCHAR(50),
+   num_cols     NUMERIC(4) default 0,
+   num_rows     NUMERIC(2) default 0,
+   is_required  NUMERIC(1) default 0,
+   PRIMARY KEY (field_map_id)
+);
 
 CREATE TABLE ZENTRACK_LOGS (
  lid NUMERIC(12) NOT NULL ,
@@ -424,6 +435,9 @@ CREATE TABLE ZENTRACK_VARFIELD_IDX (
   js_validation TEXT
 );
 
+CREATE INDEX fldmap_sort ON ZENTRACK_FIELD_MAP(sort_order);
+CREATE INDEX fldmap_label ON ZENTRACK_FIELD_MAP(field_label);
+CREATE INDEX fldmap_both ON ZENTRACK_FIELD_MAP(sort_order,field_label);
 CREATE NONCLUSTERED INDEX tempreports_created ON ZENTRACK_REPORTS_TEMP(created) ;
 CREATE NONCLUSTERED INDEX userprefs_user ON ZENTRACK_PREFERENCES(user_id);
 CREATE NONCLUSTERED INDEX group_idx ON ZENTRACK_GROUP (group_name);

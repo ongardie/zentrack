@@ -10,7 +10,7 @@
   
   include("../header.php");
 
-  $page_tile = tr("Change Default Bin");
+  $page_title = tr("Change Default Bin");
   $expand_options = 1;
   if( isset($TODO) && $TODO == 'BIN' ) {
     $params = "";

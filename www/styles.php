@@ -118,17 +118,19 @@
   .altCell {
      color:       <?=$zen->settings["color_alt_background"]?>;
      background:  <?=$zen->settings["color_alt_text"]?>;
+     padding: 2px;
   }
 
   .altCellInv {
      color:       <?=$zen->settings["color_alt_text"]?>;
      background:  <?=$zen->settings["color_alt_background"]?>;
+     padding: 2px;
   }
 
   .cell, .invalidCell, .content, .labelCell {
      color:       <?=$zen->settings["color_alt_text"]?>;
      background:  <?=$zen->settings["color_background"]?>;
-     padding: 4px;     
+     padding: 2px;     
   }
   
   .labelCell {
@@ -145,12 +147,14 @@
 
   .bars {
      color:       <?=$zen->settings["color_bar_text"]?>;
-     background:  <?=$zen->settings["color_bars"]?>;     
+     background:  <?=$zen->settings["color_bars"]?>;
+     padding: 2px;
   }
 
   .altBars {
      color:       <?=$zen->settings["color_bars"]?>;
      background:  <?=$zen->settings["color_bar_text"]?>;
+     padding: 2px;
   }
 
   .titleCell {

@@ -7,7 +7,7 @@
   */
   
   include("reports_header.php");
-  $page_tile = tr("Drop Template");
+  $page_title = tr("Drop Template");
   include("$libDir/nav.php");
 
 if( $repid ) {

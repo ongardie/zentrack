@@ -8,7 +8,7 @@
   
   
   include("admin_header.php");
-  $page_tile = tr("Search for Users");
+  $page_title = tr("Search for Users");
   include("$libDir/nav.php");
 
   if( !$TODO ) {

@@ -1,6 +1,7 @@
 CREATE SEQUENCE "access_access_id_seq"    start 1001 increment 1 maxvalue 2147483647 minvalue 1 cache 1;
 CREATE SEQUENCE "attachments_attachment_id_seq" start 1001 increment 1 maxvalue 2147483647 minvalue 1 cache 1;
 CREATE SEQUENCE "bins_bid_seq"            start 1001 increment 1 maxvalue 2147483647 minvalue 1 cache 1;
+CREATE SEQUENCE "field_map_id_seq"        start 1001 increment 1 maxvalue 2147483647 minvalue 1 cache 1;
 CREATE SEQUENCE "logs_lid_seq"            start 1001 increment 1 maxvalue 2147483647 minvalue 1 cache 1;
 CREATE SEQUENCE "priorities_pid_seq"      start 1001 increment 1 maxvalue 2147483647 minvalue 1 cache 1;
 CREATE SEQUENCE "settings_setting_id_seq" start 1001 increment 1 maxvalue 2147483647 minvalue 1 cache 1;
@@ -103,6 +104,20 @@ CREATE TABLE zentrack_employee (
   change_time INT8 default NULL,
   creator_id INT8 default NULL,
   change_id INT8 default NULL
+);
+
+CREATE TABLE ZENTRACK_FIELD_MAP (
+   field_map_id default nextval('"field_map_seq_id"') NOT NULL PRIMARY KEY,
+   field_name   VARCHAR2(25) NOT NULL default '',
+   field_label  VARCHAR2(255) default '',
+   is_visible   NUMBER(1) default 0,
+   which_view   VARCHAR2(50) default 0,
+   default_val  VARCHAR2(255),
+   sort_order   NUMBER(4) default 0,
+   field_type   VARCHAR2(50),
+   num_cols     NUMBER(4) default 0,
+   num_rows     NUMBER(2) default 0,
+   is_required  NUMBER(1) default 0,
 );
 
 --

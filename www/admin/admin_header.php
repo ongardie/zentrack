@@ -8,7 +8,7 @@
 
   $system_name = $zen->settings["system_name"];
   if( $login_level < $zen->settings["level_settings"] ) {
-     $page_tile = "Access Error";    
+     $page_title = "Access Error";    
      $msg = "<p class='hot'>" . tr("You do not have access to administrate zenTrack.") . "</p>\n"; 
      include("$libDir/nav.php");     
      include("$libDir/footer.php");

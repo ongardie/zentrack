@@ -75,7 +75,7 @@
       fmGetSet($f, 'num_cols', 'int');
       
       // num_rows
-      if( $_POST[$f]['num_rows'] > 1 && !$tprops['multiple'] ) {
+      if( !$tprops['multiple'] ) {
         $updates[$f]['num_rows'] = 1;
       }
       else { fmGetSet($f, 'num_rows', 'int'); }
@@ -101,17 +101,20 @@
         { fmGetSet($f, 'field_type'); }
       
       // is_required
-      if( $fprops['always_required'] ) { $updates[$f]['is_required'] = true; }
+      if( $vprops['view_only'] ) { $updates[$f]['is_required'] = false; }
+      else if( $fprops['always_required'] ) { $updates[$f]['is_required'] = true; }
       else { fmGetSet($f, 'is_required', 'boolean'); }
       
       // default_val has some special considerations
-      if( $fprops['default'] && !$updates[$f]['is_visible'] 
-          && $updates[$f]['is_required'] && !$_POST[$f]['default_val'] ) {
-        // here is a problem, we have hidden the field, but required the user
-        // to enter a value... this will be problematic
-        $errs[] = "'$f' is required and not visible and must have a default value";
+      if( !$vprops['view_only'] ) {
+        if( $fprops['default'] && !$updates[$f]['is_visible'] 
+            && $updates[$f]['is_required'] && !$_POST[$f]['default_val'] ) {
+          // here is a problem, we have hidden the field, but required the user
+          // to enter a value... this will be problematic
+          $errs[] = "'$f' is required and not visible and must have a default value";
+        }
+        else if( $fprops['default'] ) { fmGetSet($f, 'default_val'); }
       }
-      else if( $fprops['default'] ) { fmGetSet($f, 'default_val'); }
     }
     
     foreach($_POST as $k=>$v) {
@@ -152,9 +155,7 @@
     
     //cfalonso changed the following line with the next 3 because it didn't work properly:
     //$fields = $updates;
-    $fullMap = $map->getFieldMap();
-    $fields = $fullMap[$view];
-    unset($fullMap);
+    $fields = $map->getFieldMap($view);
     //Zen::printArray($orderset,'RECEIVED ORDERSET');
     //Zen::printArray($updates,'UPDATES');
     //Zen::printArray($inserts,'INSERTS');
@@ -162,10 +163,11 @@
     
   }
   else {
-    $fullMap = $map->getFieldMap();
-    $fields = $fullMap[$view];
-    unset($fullMap);
+    $fields = $map->getFieldMap($view);
   }
+  
+  //Zen::printArray($fields);
+  
   $zen->printErrors($errs);
 
   include("$templateDir/fieldMapForm.php");

@@ -78,10 +78,11 @@ class zen extends zenDate {
      return $this->_ucwords;
    }
 
-   function ffv( $val = '' ) {
+   function ffv( $val = '', $strlen = 0 ) {
      // converts special characters to ascii codes
      // to be used in <input> fields
      if( strlen($val) ) {
+       if( $strlen && strlen($val) > $strlen ) { $val = substr($val,0,$strlen); }
        $val = htmlspecialchars(stripslashes($val),ENT_QUOTES,$this->settings["character_set"]);
        $val = str_replace('&amp;', '&', $val);
      }
@@ -580,6 +581,7 @@ class zen extends zenDate {
            else {
              print $v[1];
            }
+           print "\"";
          }
        }      
        print "</ul>------<b>MESSAGES</b>------</p>\n";
