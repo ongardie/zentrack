@@ -17,7 +17,7 @@
 	       //
 	       // the details
 	       print "<tr>\n";
-	       print "<td class='$style'>";
+	       print "<td class='$style' style='color:".$zen->settings["color_text"]."'>";
 	       print $zen->showDateTime($l["created"],'M');
 	       print $sep.str_pad($l["action"],8,"-",STR_PAD_LEFT);
 	       print $sep.str_pad($zen->formatName($l["userID"],2),6,"-",STR_PAD_LEFT);
@@ -26,7 +26,11 @@
 	       // the log and attachments
 	       if( $l["entry"] ) {
 	         print "<br>\n";
-	         print nl2br(htmlentities($l["entry"]));
+	         $l["entry"] = nl2br(htmlentities($l["entry"]));
+		 $l["entry"] = preg_replace("#(https?://[a-zA-Z_/.-]+[a-zA-Z])#", "<a href='\\1' target='_blank'>\\1</a>", $l["entry"]);
+		 $l["entry"] = preg_replace("#([^/])(www\.)([a-zA-Z_/.-]+[a-zA-Z])#", "\\1<a href='http://www.\\3' target='_blank'>www.\\3</a>", $l["entry"]);
+		 $l["entry"] = preg_replace("#^(www\.)([a-zA-Z_/.-]+[a-zA-Z])#", "<a href='http://www.\\2' target='_blank'>www.\\2</a>", $l["entry"]);
+	         print $l["entry"];
 	       }
 	       if( is_array($att["$id"]["$lid"]) ) {
 	          print "<p><b>ATTACHMENT(s):</b><br>";

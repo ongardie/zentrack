@@ -18,7 +18,7 @@
 	     (!isset($zen->access["$k"]) && $login_level >= $zen->settings["level_view"])
 	    ) {
 	    if( strlen($v["name"]) > 18 )
-	      $v = substr($v,0,15)."...";
+	      $v["name"] = substr($v["name"],0,16)."...";
 	    print ($k == $login_bin)? 
 	      "<option selected value='$k'>$v[name]</option>" 
 	      : "<option value='$k'>$v[name]</option>\n";

@@ -17,7 +17,7 @@
 		    "comments" => "html"
 		    );
      $required = array_keys($input);
-     $input["hours"] = "int";
+     $input["hours"] = "num";
      $zen->cleanInput($input);
      foreach($required as $r) {
 	if( !$$r ) {

@@ -250,12 +250,12 @@
      print "No Log Entries";	  
   } else {
      foreach( $logs as $l ) {
-	print ($log["entry"])? 
+	print ($l["entry"])? 
 	  $zen->showDateTime($l["created"])."  "
 	  .$l["action"]."-"
 	  .$zen->formatName($l["userID"])
 	  ."-".$zen->bins["$l[binID]"]
-	  .":<br>".nl2br(htmlentities(stripslashes($l["entry"])))."<P>"
+	  .":<br><i>".nl2br(htmlentities(stripslashes($l["entry"])))."</i><P>"
 	  : 
 	  $zen->showDateTime($l["created"])."  "
 	  .$l["action"]."-"

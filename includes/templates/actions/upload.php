@@ -32,7 +32,7 @@
 <tr>
   <td>
     <textarea cols="50" rows="4" name="comments"><?=
-      strip_tags($comments)?></textarea>
+      strip_tags(stripslashes($comments))?></textarea>
   </td>
 </tr>
 <tr>

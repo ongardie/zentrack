@@ -1,0 +1,40 @@
+
+Still to come:
+
+  Next Version
+     Language Translations (making zenTrack completely convertable to any language, with ease)
+     Graphical Reports (user, ticket, bin, and usage reports in graphical chart format)     
+
+  Features To Add/Fixes (date undetermined)
+     Preferences (ability to:)
+	Sort ticket lists by user preferred method
+	View zenTrack in a custom language
+	Change Home Bin
+	Set number of tickets to view per page
+     More links - limit number of tickets per page, show more links
+     Multiple Selects on Search - allow multiple choices in drop downs for search
+     Click Sort - ability to click on column headings and sort
+	          results accordingly
+     Debugging - a variable which can be set to various levels to show
+	         detailed or general debugging statements (partially installed)
+     Store User Cookie - set a cookie for logged in users if setting is checked
+	                 in the admin screen that will auto-log users into system
+	                 when they open their browser
+
+  Bugs to Fix
+     Related Tickets	
+	Tickets related to eachother work ok, but
+	once related, any changes cause problems,
+	and tickets which are the relatee
+	don't reflect this... this is an involved 
+	improvement for the near future
+
+
+
+  Thoughts for the Future (not planned yet)
+     Inline Attachments View - view various mime types as insets in the body of the ticket
+	                       (instead of a link to a custom window)
+     Calendar Integration - include tickets in planner, showing them on calendar
+                            give timeline charting of users and projects
+
+

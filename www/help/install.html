@@ -1,0 +1,58 @@
+<html>
+<head>
+<title>Installation</title>
+</head>
+<body>
+
+
+  <br>
+  <blockquote>
+
+  <span class="bigBold">The Quick Install Procedure:</span>
+
+  <p><b>Obtain and Install zenTrack Files</b></p>
+  <ul>
+    <li><a href="http://www.sourceforge.net/projects/zentrack/">Download</a> the latest
+  version of zenTrack from source forge.
+    <li>Untar the files.
+    <ul>
+      <li>On windows: Use winzip and extract them to a folder</li>
+      <li>On Unix:  use tar -zxvf [zentrack filename].tar.gz from the command prompt</li>
+    </ul>
+    <li>Move the files to the directory where they will be used.
+    <ul>
+      <li><b>The www/ directory belongs in the public_html tree.</b>  This folder can be renamed and moved as you desire.
+      <li><b>THE INCLUDES/ DIRECTORY BELONGS OUTSIDE OF THE PUBLIC_HTML TREE</b>
+        <br>(where these pages cannot be called directly, this folder can be renamed and moved as you desire)
+      <li>The includes/misc folder contains all of the install/build/setup instructions you will need.</li>      
+    </ul>
+    <li>Chmod the www/ and includes/ directories, and all of their contents to 755.
+    <li>Set the owner of these directories and files to a secure user
+    <li>Chmod the includes/attachments directory to 666 (or 766 if you're religious)
+
+  <p><b>Configure zenTrack</b></p>
+    <li>Open the www/header.php file and change the $rootUrl and $libDir to match your system.  Change any other variables here to match your preferences.
+    <li>Open the includes/configVars.php file and change the parameters to match your database and preferences.
+  </ul>
+
+  <p><b>Build an Seed Database</b></p>  
+  <ul>
+    <li>Create a new database instance to be used by zenTrack and create a user login with 
+        appropriate permissions.
+    <li>In includes/misc, run the build.sql file that matches your database type as a database administrator. <i>This will create the tables and indexes</i>
+    <li>In includes/misc, run the seed.sql file that matches your database type.  <i>This will generate the Admin and Guest login, as well as some default system settings</i> 
+  </ul>
+
+  <p><span class="bigBold">zenTrack should now Run!</span></p>
+
+  <p><b>Login and Change Admin Password</b></p>
+  <ul>
+    <li>Log into zenTrack as Administrator/Administrator.  Immediately change the password by choosing "options" from the menu on the left, and "change password" from the subsequent screen.
+    <li>Afterwards, visit the Admin section and configure zenTrack to your specific needs.
+    <li>Feel free to visit the <a href="http://www.sourceforge.net/projects/zentrack">Project Support Center</a> if you need any further assistance!
+  </ul>
+
+  </blockquote>
+
+</body>
+</html>

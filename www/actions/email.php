@@ -33,13 +33,13 @@
      $required = array("id","emethod","method");
      $required[] = ($emethod == 1)? "users_to_email" : "custom_email_addresses";
      foreach($required as $r) {
-	if( !strlen($$r) ) {
+	if( !strlen($$r) && !is_array($$r) ) {
 	   $r = ucwords(ereg_replace("_", " ", $r));
 	   $errs[] = "$r is required";
 	}
      }
      if( $emethod == 1 ) {
-	$recipients = $zen_user_ids;
+	$recipients = $users_to_email;
      } else {
 	$recipients = explode(",", $custom_email_addresses);
      }  
@@ -56,6 +56,8 @@
 	$params["tid"] = $id;
 	$params["log"] = $id;
      }
+     if( !is_array($recipients) )
+	$errs[] = "There were no recipients";
      $message = $zen->formatEmailMessage($params);
      if( !$errs ) {
 	$res = $zen->sendEmail($recipients, $subject, $message, $login_id);

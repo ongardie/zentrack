@@ -23,9 +23,9 @@
 </p>
 
 <?
-  if( $zen->debug == 'on' ) {
+  if( $zen->debug > 0 ) {
      print "<span color='#666666'>\n";
-     print "<p>&nbsp;------DEBUG-------&nbsp;</p>\n";
+     print "<p>&nbsp;------DEBUG OVERVIEW-------&nbsp;</p>\n";
      print "<p>".$zen->settings["attachment_types_allowed"]."</p>\n";
      print "<a href='$rootUrl/phpinfo.php'>phpinfo</a><br>\n";
      print "$HTTP_USER_AGENT<br>\n";
@@ -46,8 +46,9 @@
 	print "login_bin: $login_bin<br>\n";     
 	print "userBins: ".join(",",$zen->getUsersBins($login_id))."<br>\n";
      }
-     print "<p>&nbsp;------DEBUG-------&nbsp;</p>\n";
+     print "<p>&nbsp;------DEBUG OVERVIEW-------&nbsp;</p>\n";
      print "</span>\n";
+     $zen->printDebugMessages();
   }
 ?>
 

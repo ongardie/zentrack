@@ -31,7 +31,7 @@
 </tr>
 <tr>
  <td>
-<select name="users_to_email" multiple size=4
+<select name="users_to_email[]" multiple size=4
   onFocus="checkAbox(document.emailForm.emethod[0])"
   >
 <?

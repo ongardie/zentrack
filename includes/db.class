@@ -159,7 +159,14 @@ class DB {
    function checkSlashes( $val = '' ) {
       // checks incoming data for proper escaped ' marks
       // to insure insertion integrity
-      $val = $this->db_link->qstr($val,get_magic_quotes_gpc());
+      if( is_array($val) ) {
+	foreach($val as $v) {
+	  $text .= ($text)? ",".$this->checkSlashes($v) : $this->checkSlashes($v);
+	}
+	$val = "(".$text.")";
+      } else {
+	$val = $this->db_link->qstr($val,get_magic_quotes_gpc());
+      }
       return $val;
    }   
    
@@ -185,7 +192,7 @@ class DB {
 	    if( ereg("^(NULL|FALSE|TRUE|[0-9]+)$", $v) ) {
 	       $vals .= ($vals)? ", $k = $v" : "$k = $v"; 
 	    } else {
-	       $vals .= ($vals)? ", $k = $v" : "$k = ".$this->checkSlashes($v);
+	       $vals .= ($vals)? ", $k = ".$this->checkSlashes($v) : "$k = ".$this->checkSlashes($v);
 	    }
 	 }
 	 return( $vals );
@@ -236,7 +243,7 @@ class DB {
       }
       return($text);
    }            
-   
+      
    function db_get_fields( $table, $flag = 0 ) {
       // returns the names of the columns
       // in $table of the current database
@@ -257,7 +264,101 @@ class DB {
       $ADODB_FETCH_MODE = ($mode)? ADODB_FETCH_ASSOC : ADODB_FETCH_NUM;
       return $ADODB_FETCH_MODE;
    }
-   
+
+   function build_search_clause($params, $andor = "AND") {
+       /* 
+       ** This function accepts a complex array containing the following format:
+       **   "index_name" => array( field_name, condition, value[, flag] )
+       ** where:
+       **   index_name is a reference for this search parameter (must be unique, can be [])
+       **       the index name is used primarily after search completion to check if search
+       **       was performed using a certain field (for displaying results)
+       **   field_name is the column name in the database
+       **   condition is one of the following:
+       **      =        !=
+       **      contains !contains
+       **      like     !like
+       **      >        <
+       **      >=       <=
+       **      in
+       **   value is the value to be matched against
+       **   value is the value to be matched against
+       **      or a comma seperated list of values in
+       **      the case that the condition is "in"
+       **   flag is an optional parameter which, if set
+       **      to 1, would make the match case sensetive
+       **
+       **   optionally, any of the sets of data in the incoming
+       **   params clause could also be an array of data sets with
+       **   an and/or modifier to start them (modifier must be in all caps)
+       **
+       **   EXAMPLE USAGE:
+       **
+       **  $colorSet           = array();
+       **  $colorSet["index2"] = array("field2", "like", "red%");  // begins with red
+       **  $colorSet["index3"] = array("field3", ">", "2" );       // greater than 2
+       **
+       **  $dataSet             = array();
+       **  $dataSet["index"1"]  = array("field1", "=","apples",1);    //case sensitive
+       **  $dataSet["index2_3"] = array("OR", $colorSet );
+       **  $dataSet["index4"]   = array("field4", "in","Fall,Autumn,Winter");
+       */
+       return $this->recursiveSearchClause($params,$andor);
+   }
+
+   function recursiveSearchClause($params, $andor) {
+     // INTERNAL USE ONLY
+     // see the build_search_clause() method for more details
+     // recursively prepare a search clause
+
+     foreach($params as $p) {
+       $list = 0;
+       if( $text )
+         $text .= " $andor ";
+       if( $p[0] == "AND" or $p[0] == "OR" ) {
+     	 $t = $this->recursiveSearchClause( $p[1], $p[0] );
+         $text .= "($t)";
+       } else {
+         $not = ereg("^!",$p[1]);
+         $p[1] = ereg_replace("^!", "", $p[1]);
+         switch(strtolower(substr($p[1],0,1))) {
+         case "c":
+           $p[1] = "LIKE";
+           $p[2] = "%$p[2]%";
+           break;
+         case "b":
+           $p[1] = "LIKE";
+           $p[2] = "$p[2]%";
+           break;
+         case "e":
+           $p[1] = "LIKE";
+           $p[2] = "%$p[2]";
+           break;
+         case "i":
+           $p[1] = "IN";
+	   $p[2] = (is_array($p[2]))? $p[2] : explode(",",$p[2]);
+           break;
+         case "=":
+           break;
+	 default:
+	   $p[3] = 1;
+	   break;
+         }
+         if( !$p[3] && ereg("[a-zA-Z]",$p[2]) ) {
+           $p[0] = "lower($p[0])";
+	   $p[2] = strtolower($p[2]);
+	 }
+         $p[2] = $this->checkSlashes($p[2]);
+         if( ereg("^NULL$",$p[2]) ) {
+           $p[1] = ($not)? "IS NOT" : "IS";
+         } else if($not) {
+           $p[1] = (ereg("[A-Z]",$p[1]))? "NOT " : "!";
+         }
+         $text .= "$p[0] $p[1] $p[2]";
+       }
+     }
+     return($text);
+   }
    
    /*
    **  DB RELATED

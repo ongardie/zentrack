@@ -35,14 +35,15 @@ class zenTrack extends zen {
       // with a value of the level for that bin
       //  ( ["binID"] = $bin_level )
       
-      $query = "SELECT * FROM ".$this->table_access." WHERE user = $user";
-      $vars = $this->db_result($query);
+      $query = "SELECT * FROM ".$this->table_access." WHERE userID = $uid";
+      $this->addDebug("get_access()Query",$query,3); //debug
+      $vars = $this->db_queryIndexed($query);
       if( $flag ) {
 	 return $vars;
       } else {
 	 if( is_array($vars) ) {
 	    foreach($vars as $v) {
-	       $vals["$v[binID]"] = $v["level"];
+	       $vals["$v[binID]"] = $v["lvl"];
 	    }
 	 }
 	 return( $vals );
@@ -187,38 +188,39 @@ class zenTrack extends zen {
       return( $this->db_quickIndexed($query) );
    }
 
-   function get_users( $bins, $params = '', $sort = 'lname, fname' ) {
-      // creates a list of users
-      // if $bins (array/string) is given
-      // then list will be only for users
-      // of given bins
+   function get_users( $bins = '', $level = 'level_view', $active = 1, $sort = 'lname, fname' ) {
+     // creates a list of users
+     // $bins is an optional array/string of binIDs
+     // to which the users returned will have access
+     // $level is the level of access required ("level_view","level_user",etc)
+     // which defaults to "level_view" if unspecified
+     // if $active is set to 1, then only retrieves 
+     // accounts which are currently activated
 
-      $columns = array(
-		       "uid",         "lname",
-		       "fname",       "access",
-		       "initials",    "email"
-		       );
-
-      if( !is_array($bins) ) {
+      if( !is_array($bins) && strlen($bins) ) {
 	if( ereg(",",$bins) ) 
 	  $bins = explode(",",$bins);
 	else
 	  $bins = array($bins);
       }
-      $query = "SELECT DISTINCT userID FROM ".$this->table_access." WHERE binID IN(".join(",",$bins).") AND level >= ".$this->settings["level_user"];
-      $ids = $this->db_list($query);
-      if( is_array($ids) ) {
-	 $where = " (uid IN(".join(",",$ids).") OR access >= ".$this->settings["level_user"].") ";
-      } else {
-	 $where = " access >= ".$this->settings["level_user"];
+      $level = ($this->settings["$level"])? $this->settings["$level"] : 0;
+      if( $bins ) {
+	$query = "SELECT DISTINCT userID FROM ".$this->table_access." WHERE binID IN(".join(",",$bins).") AND lvl >= $level";
+	$ids = $this->db_list($query);
       }
-      if( $params )
-	$where = ($where)? " AND ".$this->simpleWhere($params) : $this->simpleWhere($params);
+      if( is_array($ids) ) {
+	 $where = " (uid IN(".join(",",$ids).") OR access >= $level) ";
+      } else {
+	 $where = " access >= $level ";
+      }
+      if( $active )
+	$where .= " AND active = 1 ";
       if( $where )
 	$where = "WHERE $where";
       if( $sort )
 	$sort = "ORDER BY $sort";
-      $query = "SELECT ".join(",",$columns)." FROM ".$this->table_users." $where $sort";
+      $query = "SELECT * FROM ".$this->table_users." $where $sort";
+      $this->addDebug("get_users()Query",$query,2);
       return( $this->db_queryIndexed($query) );
    }
    
@@ -230,62 +232,81 @@ class zenTrack extends zen {
    
    
    
-   function search_logs( $params, $archive_flag = 0 ) {
-      // search through log entries for given text
-      // params is an indexed array with two elements:
-      //   $params[key][0] = LIKE, =, >, <, >=, etc..
-      //   $params[key][1] = '%value', '%value%', lower('value'), etc
-      // this function requires the values to be provided with single
-      // quotes and escape chars in place, they will not be added!
-      // if archive_flag = 1, then searches ticket archives as well
-      // if archive_flag = 2, then searches archives only
-      
+   function search_logs( $params, $offset = 0, $archive_flag = 0 ) {
+     // search through log entries for given text
+     // params is an indexed array with two elements:
+     //   $params[key][0] = LIKE, =, >, <, >=, etc..
+     //   $params[key][1] = '%value', '%value%', lower('value'), etc
+     // see db.class complexWhere() for more details concerning
+     // the params array
+     // this function requires the values to be provided with single
+     // quotes and escape chars in place, they will not be added!
+     // if archive_flag = 1, then searches ticket archives as well
+     // if archive_flag = 2, then searches archives only
+     
       $columns = array(
 		       "lid",     "ticketID", 
-		       "userID",  "action"
+		       "userID",  "action",
+	               "entry",   "binID"
 		       );
       
-      $where = $this->complexWhere($params);
+      $where = $this->build_search_clause($params, "AND");
       if( $archive_flag )
-	$tables = ($archive_flag == 2)? $this->table_logs_archived : $this->table_logs_archived.", ".$this->table_logs;
+	$tables = ($archive_flag == 2)? 
+	   $this->table_logs_archived : 
+	   $this->table_logs_archived.", ".$this->table_logs;
       else
 	$tables = $this->table_logs;
-      $query = "SELECT ".join(",",$columns)." FROM $tables WHERE $where";
+      $query = "SELECT ".join(",",$columns)." FROM $tables WHERE $where ORDER BY created DESC";
+      $this->addDebug("search_logsQuery",$query,2);
       return(  $this->db_queryIndexed($query) );
    }
    
-   function search_tickets( $params, $archive_flag = 0 ) {
+   function search_tickets( $params, $andor = 'AND', $archive_flag = 0 ) {
       // search through tickets for given text
       // acceptable params are:
       // params is an indexed array with two elements:
       //   $params[key][0] = LIKE, =, >, <, >=, etc..
       //   $params[key][1] = '%value', '%value%', lower('value'), etc
-      // this function requires the values to be provided with single
-      // quotes and escape chars in place, they will not be added!
+      // see db.class->build_search_clause() for details concerning
+      // the params array
       // if archive_flag = 1, then searches ticket archives as well
       // if archive_flag = 2, then searches archives only
       
-      $columns = array(
-		       "id",        "title", 
-		       "status",    "otime", 
-		       "ctime",     "binID", 
-		       "typeID",    "userID"
-		       );      
-      $where = $this->complexWhere($params);
+      $where = $this->build_search_clause($params, $andor);
       if( $archive_flag )
-	$tables = ($archive_flag == 2)? $this->table_tickets_archived : $this->table_tickets_archived.", ".$this->table_tickets;
+	$tables = ($archive_flag == 2)? 
+	     $this->table_tickets_archived : 
+	     $this->table_tickets_archived.", ".$this->table_tickets;
       else
 	$tables = $this->table_tickets;
-      $query = "SELECT ".join(",",$columns)." FROM $tables WHERE $where ORDER BY status, ctime desc, otime desc";
+      $query = "SELECT * "
+	." FROM $tables WHERE $where"
+        ." ORDER BY status DESC, priority";
+      $this->addDebug("search_ticketsQuery:",$query,2); //debug
       return(  $this->db_queryIndexed($query) );      
-   }         
+   }
+
+   function search_users( $params, $andor = "AND" ) {
+     // search for users and return a detailed list
+     // of users who match the criteria given
+     // see db.class->build_search_clause() for details about
+     // constructing a $params array
+
+     $table = $this->table_users;
+     $where = $this->build_search_clause($params,$andor);
+     $query = "SELECT * FROM $table WHERE $where"
+       ." ORDER BY lname, fname";
+     $this->addDebug("search_users()Query",$query,2);//debug
+     return( $this->db_queryIndexed($query) );
+   }
    
    
    /*
     *  PROJECT ADMINISTRATION 
    */         
    
-   
+
    function add_project( $params ) {
       // create a new project with the given params
       // (abstracted from add_ticket() to allow
@@ -652,7 +673,7 @@ class zenTrack extends zen {
 	 $relations = trim($relations);
 	 $relations = split(" *, *", $relations);
       }
-      $relations = $this->checkRelations($relations);
+      $relations = $this->checkRelations($relations,$id);
   
       $rel = (is_array($relations))? join(",",$relations) : "";
       $res = $this->update_ticket($id, array("relations"=>$rel));
@@ -1002,8 +1023,8 @@ class zenTrack extends zen {
 	 $access = $params["access"];
 	 unset($params["access"]);
       }
-      $params["password"] = ($params["password"])?
-	md5($params["password"]) : $params["lname"];
+      $params["passwd"] = ($params["passwd"])?
+	$this->encval($params["passwd"]) : $this->encval($params["lname"]);
       $table = $this->table_users;
       $id = $this->db_insert($table, $params);
       if( $id ) {
@@ -1021,15 +1042,21 @@ class zenTrack extends zen {
       
       $where = (is_array($uid))? " uid IN(".join(",",$uid).")" : " uid = $uid";
       $query = "DELETE FROM ".$this->table_users." WHERE $where";
+      $this->addDebug("delete_user()Query",$query,2);
       $this->delete_access($uid);
       return( $this->db_result($query) );
    }
    
    function update_user( $uid, $params ) {
-      // updates user settings by uid
+     // updates user settings by uid
+     // do not encrypt the password, this is done
+     // automatically
       
+      if( $params["passwd"] )
+	$params["passwd"] = $this->encval($params["passwd"]);
       $set = $this->makeInsertVals($params,1);
       $query = "UPDATE ".$this->table_users." SET $set WHERE uid = $uid";
+      $this->addDebug("update_user()Query",$query,2);
       return( $this->db_result($query) );
    }
    
@@ -1041,7 +1068,7 @@ class zenTrack extends zen {
       //   "binID" => level (integer)
 
       foreach($params as $k=>$v) {
-	 $query = "INSERT INTO ".$this->table_access." (userID,binID,level) VALUES($uid,$k,$v)";
+	 $query = "INSERT INTO ".$this->table_access." (userID,binID,lvl) VALUES($uid,$k,$v)";
 	 $res = $this->db_result($query);
 	 if( $res )
 	   $i++;
@@ -1075,7 +1102,8 @@ class zenTrack extends zen {
 	" $field IN(".join(",",$id).")" :
         " $field = $id";      
       $query = "DELETE FROM ".$this->table_access." WHERE $where";
-      return( $this->db_query($id) );
+      $this->addDebug("delete_access()Query",$query,2); //debug
+      return( $this->db_result($query) );
    }
    
    function add_prefs( $uid, $params ) {
@@ -1089,10 +1117,19 @@ class zenTrack extends zen {
       
    function delete_prefs( $uid ) {
       // deletes prefs entries by uid
-      // uid can be an array
-      
+      // uid can be an array      
+
       $query = "DELETE FROM ".$this->table_preferences." WHERE userID = $uid";
       return( $this->db_result($query) );
+   }
+
+   function reset_password( $uid ) {
+     // resets the users password to the default value
+     // for a user.  This will probably be the users last name
+
+     $user = $this->get_user($uid);
+     $params["passwd"] = $user["lname"];
+     return $this->update_user($uid, $params);
    }
    
    
@@ -1101,19 +1138,57 @@ class zenTrack extends zen {
    */
    
    
+   function add_bin( $params ) {
+      // add a new bin to the bins table
+      
+      return( $this->db_insert( $this->table_bins, $params ) );
+   }
+
+   function add_priority( $params ) {
+      // add a new priorty
+      
+      return( $this->db_insert( $this->table_priorities, $params ) );
+   }
+
    function add_setting( $params ) {
       // add a new setting into the db
       
       return( $this->db_insert($this->table_settings, $params) );
    }
    
-   function delete_setting( $setID ) {
-      // remove a setting based on it's setID
-      // setID can be an array      
+   function add_system( $params ) {
+      // add a new system to the db
       
-      $where = (is_array($setID))?
-	" setID IN(".join(",",$setID).")" : " setID = $setID";
-      $query = "DELETE FROM ".$this->table_settings." WHERE $where";
+      return( $this->db_insert( $this->table_systems, $params ) );      
+   }
+
+   function add_task( $params ) {
+     // add a new task to the system
+     
+     return( $this->db_insert( $this->table_tasks, $params) );
+   }
+   
+   function add_type( $params ) {
+      // add a new ticket type
+      
+      return( $this->db_insert($this->table_types, $params) );
+   }
+   
+   function update_bin( $bid, $params ) {
+      // update properties for a given bid (bin id)
+      
+      $set = $this->makeInsertVals($params,1);
+      $query = "UPDATE ".$this->table_bins." SET $set WHERE bid = $bid";
+      $this->addDebug("update_bin()Query",$query,2);
+      return( $this->db_result($query) );
+   }
+
+   function update_priority( $pid, $params ) {
+      // update properties for a given priority
+      
+      $set = $this->makeInsertVals($params,1);
+      $query = "UPDATE ".$this->table_priorities." SET $set WHERE pid = $pid";
+      $this->addDebug("update_priority()Query",$query,2);
       return( $this->db_result($query) );
    }
    
@@ -1122,45 +1197,7 @@ class zenTrack extends zen {
       
       $set = $this->makeInsertVals($params,1);
       $query = "UPDATE ".$this->table_settings." SET $set WHERE setID = $setID";
-      return( $this->db_result($query) );
-   }
-   
-   function add_bin( $params ) {
-      // add a new bin to the bins table
-      
-      return( $this->db_insert( $this->table_bins, $params ) );
-   }
-   
-   function delete_bin( $bid ) {
-      // remove a bin by the bid (bin ID)
-      // bid can be an array
-      
-      $where = (is_array($bid))? " bid IN(".join(",",$bid).")" : " bid = $bid";
-      $query = "DELETE FROM ".$this->table_bins." WHERE $where";
-      return( $this->db_result($query) );
-   }
-   
-   function update_bin( $bid, $params ) {
-      // update properties for a given bid (bin id)
-      
-      $set = $this->makeInsertVals($params,1);
-      $query = "UPDATE ".$this->table_bins." SET $set WHERE bid = $bid";
-      return( $this->db_result($query) );
-   }
-   
-   function add_system( $params ) {
-      // add a new system to the db
-      
-      return( $this->db_insert( $this->table_systems, $params ) );      
-   }
-   
-   function delete_system( $sid ) {
-      // delete a system from the db via the
-      // sid (systemID)
-      // $sid can be an array
-      
-      $where = (is_array($sid))? " sid IN(".join(",",$sid).")" : " sid = $sid ";
-      $query = "DELETE FROM ".$this->table_systems." WHERE $where";
+      $this->addDebug("update_setting()Query",$query,2);
       return( $this->db_result($query) );
    }
    
@@ -1170,29 +1207,25 @@ class zenTrack extends zen {
       
       $set = $this->makeInsertVals($params,1);
       $query = "UPDATE ".$this->table_systems." SET $set WHERE sid = $sid";
+      $this->addDebug("update_system()Query",$query,2);
       return( $this->db_result($query) );      
    }
-   
-   function add_type( $params ) {
-      // add a new ticket type
+
+   function update_task( $taskID, $params ) {
+      // update a ticket task by taskID
       
-      return( $this->db_insert($this->table_types, $params) );
-   }
-   
-   function delete_type( $typeID ) {
-      // delete a ticket type by
-      // the typeID (can be an array)
-      
-      $where = (is_array($typeID))?  " typeID IN(".join(",",$typeID).")" : "typeID = $typeID";
-      $query = "DELETE FROM ".$this->table_types." WHERE $where";
-      return( $this->db_result($query) );
+      $set = $this->makeInsertVals($params,1);
+      $query = "UPDATE ".$this->table_tasks." SET $set WHERE taskID = $taskID";
+      $this->addDebug("update_task()Query",$query,2);
+      return( $this->db_result($query) );            
    }
    
    function update_type( $typeID, $params ) {
       // update a ticket type by the typeID
       
       $set = $this->makeInsertVals($params,1);
-      $query = "UPDATE ".$this->table_systems." SET $set WHERE typeID = $typeID";
+      $query = "UPDATE ".$this->table_types." SET $set WHERE typeID = $typeID";
+      $this->addDebug("update_type()Query",$query,2);
       return( $this->db_result($query) );            
    }
    
@@ -1207,20 +1240,20 @@ class zenTrack extends zen {
       // returns the user's uid
       
       $query = "select uid from ".$this->table_users
-	." where login = '$username' and passwd = '".md5($password)."'";
+	." where login = '$username' and passwd = '".$this->encval($password)."' and active > 0";
       $uid = $this->db_get($query);
       if( $uid )
 	$this->getUser($uid);
       return($uid);
    }
-   
+
    function check_bin_access( $uid, $binID, $level = 1 ) {
-      // check the user's access priviledges for the given binID
-      // based on the users uid. and $level (returns true
-      // if equal to or greater than this)
-      
-      $access =  $this->getAccess( $uid );
-      return( ($access["$binID"] >= $level) );
+     // check the user's access priviledges for the given binID
+     // based on the users uid. and $level (returns true
+     // if equal to or greater than this)
+     
+     $access =  $this->getAccess( $uid );
+     return( ($access["$binID"] >= $level) );
    }
    
    
@@ -1692,25 +1725,32 @@ class zenTrack extends zen {
      // (i.e. could be set to level_user to only
      // retrieve bins this uid is a "user" for,
      // defaults to level_view)
+     // this function caches results for efficiency, so repeating
+     // calls for the same user will not result slow the system
 
-     $access = $this->getAccess($uid);
-     $user   = $this->getUser($uid);
-     if( is_array($this->bins) ) {
-       foreach($this->bins as $k=>$v) {
-	 if( $k ) {
-	   if( strlen($access["$k"]) ) {
-	     if( $access["$k"] >= $this->settings["$level"] ) {
-	       $vars[] = $k;
-	     }
-	   } else {
-	     if( $user["access"] >= $this->settings["$level"] ) {
-	       $vars[] = $k;
+     if( $uid != $this->lastUsersID || !is_array($this->lastUsersBins) ) {
+       $access = $this->getAccess($uid);
+       $user   = $this->getUser($uid);
+       if( is_array($this->bins) ) {
+	 foreach($this->bins as $k=>$v) {
+	   if( $k ) {
+	     if( strlen($access["$k"]) ) {
+	       if( $access["$k"] >= $this->settings["$level"] ) {
+		 $vars[] = $k;
+	       }
+	     } else {
+	       if( $user["access"] >= $this->settings["$level"] ) {
+		 $vars[] = $k;
+	       }
 	     }
 	   }
 	 }
        }
+       $this->lastUsersBins = $vars;
      }
-     return( $vars );
+     $adp = (is_array($this->lastUsersBins))? join(",",$this->lastUsersBins) : "-none-";
+     $this->addDebug("getUsersBins()results",$adp,3);
+     return $this->lastUsersBins;
    }
    
    function checkAccess( $uid, $binID, $action = '' ) {
@@ -1831,28 +1871,33 @@ class zenTrack extends zen {
       return true;
    }
    
-   function getBins($flag = 0) {
-      // if flag is set, retrieves a full
-      // indexed array, otherwise, just
-      // a list of names, indexed by bid,
-      // ordered by priority and alphebetized 
+   function getBins($flag = 0,$active = 1) {
+     // if flag is set, retrieves a full
+     // indexed array, otherwise, just
+     // a list of names, indexed by bid,
+     // ordered by priority and alphebetized 
+     // set $active to zero to retrieve 
+     // the bins which are disabled as well
       
-      if( !$flag ) {
-	 $query = "SELECT bid, name FROM ".$this->table_bins
-	   ." WHERE active = 1 ";
-	 $vars = $this->db_query($query);
-	 foreach($vars as $v) {
-	    $vals["$v[0]"] = $v[1];
-	 }
-	 return($vals);
-      } else {
-	 $query = "SELECT * FROM ".$this->table_bins
-	   ." WHERE active = 1 ORDER BY priority, name";
-	 return( $this->db_queryIndexed($query) );
-      }
+     if( !$flag ) {
+       $query = "SELECT bid, name FROM ".$this->table_bins;
+       if( $active )
+	 $query .= " WHERE active = $active";       
+       $vars = $this->db_query($query);
+       foreach($vars as $v) {
+	 $vals["$v[0]"] = $v[1];
+       }
+       return($vals);
+     } else {
+       $query = "SELECT * FROM ".$this->table_bins;
+       if( $active )
+	 $query .= " WHERE active = $active";
+       $query .= " ORDER BY priority DESC, name";
+       return( $this->db_queryIndexed($query) );
+     }
    }
 
-   function checkRelations( $relations ) {
+   function checkRelations( $relations, $id = '' ) {
       // takes either an array or comma delimited
       // string.  insures that the tickets to be 
       // related actually exist and returns only
@@ -1864,8 +1909,10 @@ class zenTrack extends zen {
 	 $relations = explode(",",$relations);
       }
       foreach($relations as $r) {
-	 if( $this->get_ticket($r) ) {
-	    $vals[] = $r;
+	 if( !$id || ($id && $r != $id) ) {
+	   if( $this->get_ticket($r) ) {
+	     $vals[] = $r;
+	   }
 	 }
       }
       if( $join ) {
@@ -1875,7 +1922,7 @@ class zenTrack extends zen {
       }
    }   
    
-   function getTasks($flag = 0) {
+   function getTasks($flag = 0,$active = 1) {
       // if flag is set, retrieves an
       // indexed array, otherwise, just
       // a list of names ordered by priority
@@ -1883,6 +1930,8 @@ class zenTrack extends zen {
 
       if( !$flag ) {
 	 $query = "SELECT taskID, name, priority FROM ".$this->table_tasks;
+	 if( $active )
+	   $query .= " WHERE active = $active";
 	 $vars = $this->db_query($query);
 	 if( is_array($vars) ) {
 	    foreach($vars as $v) {
@@ -1891,12 +1940,13 @@ class zenTrack extends zen {
 	 }
 	 return $vals;
       } else {
-	 $query = "SELECT * FROM ".$this->table_tasks." ORDER BY priority, name";
-	 return( $this->db_queryIndexed($query) );
-      }            
+	$where = ($active)? " WHERE active = $active" : "";
+	$query = "SELECT * FROM ".$this->table_tasks." $where ORDER BY priority DESC, name";
+	return( $this->db_queryIndexed($query) );
+      }
    }
    
-   function getSystems($flag = 0) {
+   function getSystems($flag = 0,$active = 1) {
       // if flag is set, retrieves an
       // indexed array, otherwise, just
       // a list of names ordered by priority
@@ -1904,6 +1954,8 @@ class zenTrack extends zen {
       
       if( !$flag ) {
 	 $query = "SELECT sid, name FROM ".$this->table_systems;
+         if( $active )
+           $query .= " WHERE active = $active";
 	 $vars = $this->db_query($query);
 	 if( is_array($vars) ) {
 	    foreach($vars as $v) {
@@ -1912,12 +1964,13 @@ class zenTrack extends zen {
 	 }
 	 return($vals);
       } else {
-	 $query = "SELECT * FROM ".$this->table_systems." ORDER BY priority, name";
-	 return( $this->db_queryIndexed($query) );
+	$where = ($active)? " WHERE active = $active" : "";
+	$query = "SELECT * FROM ".$this->table_systems." $where ORDER BY priority DESC, name";
+	return( $this->db_queryIndexed($query) );
       }            
    }
    
-   function getPriorities( $flag = 0 ) {
+   function getPriorities( $flag = 0, $active = 1 ) {
       // if flag is set, retrieves all
       // details in an unordered list
       // otherwise, retrieves an indexed
@@ -1925,6 +1978,8 @@ class zenTrack extends zen {
       
       if( !$flag ) {
 	 $query = "SELECT pid,priority,name FROM ".$this->table_priorities;
+         if( $active )
+           $query .= " WHERE active = $active";
 	 $vars = $this->db_query($query);
 	 for($i=0; $i<count($vars); $i++) {
 	    $p = $vars[$i][0];
@@ -1932,8 +1987,9 @@ class zenTrack extends zen {
 	 }
 	 return($vals);
       } else {
-	 $query = "SELECT * FROM ".$this->table_priorities." ORDER BY priority, name";
-	 return( $this->db_queryIndexed($query) );
+	$where = ($active)? " WHERE active = $active" : "";
+	$query = "SELECT * FROM ".$this->table_priorities." $where ORDER BY priority DESC, name";
+	return( $this->db_queryIndexed($query) );
       }            
    }
    
@@ -1969,7 +2025,7 @@ class zenTrack extends zen {
       return($vals);
    }
    
-   function getTypes($flag = 0) {
+   function getTypes($flag = 0, $active = 1) {
       // if flag is set, retrieves an
       // indexed array, otherwise, just
       // a list of names ordered by priority
@@ -1977,6 +2033,8 @@ class zenTrack extends zen {
       
       if( !$flag ) {
 	 $query = "SELECT typeID,name FROM ".$this->table_types;
+         if( $active )
+           $query .= " WHERE active = $active";
 	 $vars = $this->db_query($query);
 	 if( is_array($vars) ) {
 	    foreach($vars as $v) {
@@ -1985,8 +2043,9 @@ class zenTrack extends zen {
 	 }
 	 return($vals);
       } else {
-	 $query = "SELECT * FROM ".$this->table_types." ORDER BY priority, name";
-	 return( $this->db_queryIndexed($query) );
+	$where = ($active)? " WHERE active = $active" : "";
+	$query = "SELECT * FROM ".$this->table_types." $where ORDER BY priority DESC, name";
+	return( $this->db_queryIndexed($query) );
       }            
    }
 
@@ -2162,6 +2221,8 @@ class zenTrack extends zen {
    var $language;
    var $strings;
    var $words;
+   var $lastUsersBins;
+   var $lastUsersID;
    
    
    // db vars   
@@ -2198,6 +2259,7 @@ class zenTrack extends zen {
    // others
 
    var $projectTypeID; 
+   var $demo_mode;
 }
  
 ?>

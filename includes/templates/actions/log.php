@@ -21,14 +21,7 @@
  <td>
 <select name="action">
   <?
-    $actions = array(
-		     "ACTION",
-		     "LABOR",
-		     "NOTE",
-		     "QUESTION",
-		     "SOLUTION"
-		     );
-    foreach( $actions as $a ) {
+    foreach( $log_actions as $a ) {
        print ($a == $action || (!$action && $a == 'LOG') )?
 	 "<option selected>$a</option>\n" :
          "<option>$a</opton>\n";
@@ -55,7 +48,7 @@
 <tr>
   <td>
     <textarea cols="50" rows="4" name="comments"><?=
-      strip_tags($comments)?></textarea>
+      htmlentities(stripslashes($comments))?></textarea>
   </td>
 </tr>
 <tr>

@@ -60,6 +60,7 @@ class zen extends zenDate {
      **	   case "html":      all but php tags allowed
      **	   case "text":      strip all html
      **	   case "ignore":    leave this fields alone
+     **    case "email":     email format
      **    case "array":     also ignored
      **	   case "":          strip all html excepting $mda->html_allowed (determined by lists/okhtmltags)
      **
@@ -67,7 +68,6 @@ class zen extends zenDate {
 
       if( is_array($vals) ) {
 	 foreach($vals as $k=>$v ) {
-	    $f = ($fields["$k"] == 'array')? 'ignore' : $fields["$k"];
 	    if( !$k || !$f ) {
 	       $vals["$k"] = strip_tags( $v, $this->html_allowed );
 	    } else {
@@ -78,27 +78,32 @@ class zen extends zenDate {
 		 case "alphanum":
 		  $vals["$k"] = ereg_replace("[^a-zA-Z0-9]", "", $v);
 		  break;	   
+		 case "array":
+		  $vals["$k"] = (is_array($v))? $v : null;
+		  break;		  
+		 case "date":
+		  $vals["$k"] = ereg_replace("[^0-9/: -]", "", $v);
+		  break;
+		 case "email":
+		  $vals["$k"] = ereg_replace("[^0-9a-zA-Z@._-]", "", $v);
+		  break;		  		  
+		 case "html": 
+		  $vals["$k"] = $this->stripPHP( $v );
+		  break;
+		 case "int":
+		  $vals["$k"] = ereg_replace("[^0-9]", "", $v);
+		  break;		  
+		 case "ignore":
+		  $vals["$k"] = $v;
+		  break;
 		 case "num":
 		  $vals["$k"] = ereg_replace("[^0-9.]", "", $v);
 		  break;
 		 case "string":
 		  $vals["$k"] = ereg_relace("[^0-9a-zA-Z _-]", "", $v);
 		  break;
-		 case "int":
-		  $vals["$k"] = ereg_replace("[^0-9]", "", $v);
-		  break;
-		 case "date":
-		  $vals["$k"] = ereg_replace("[^0-9/: -]", "", $v);
-		  break;
-		 case "html": 
-		  $vals["$k"] = $this->stripPHP( $v );
-		  break;
 		 case "text":
 		  $vals["$k"] = htmlspecialchars($v);
-		  break;
-		 case "ignore":
-		  break;
-		 case "array":
 		  break;
 		 default:
 		  $vals["$k"] = strip_tags($v, $this->html_allowed);
@@ -116,21 +121,32 @@ class zen extends zenDate {
 	      case "alphanum":
 	       $$k = ereg_replace("[^a-zA-Z0-9]", "", $$k);
 	       break;	   
-	      case "int":
-	       $$k = ereg_replace("[^0-9]", "", $$k);
-	       break;
+	      case "array":
+	       $$k = (is_array($$k))? $$k : null;
+	       break;		  
 	      case "date":
 	       $$k = ereg_replace("[^0-9/: -]", "", $$k);
 	       break;
+	      case "email":
+	       $$k = ereg_replace("[^0-9a-zA-Z@._-]", "", $$k);
+	       break;		  		  
 	      case "html": 
 	       $$k = $this->stripPHP( $$k );
 	       break;
-	      case "text":
-	       $$k = strip_tags($$k);
-	       break;
+	      case "int":
+	       $$k = ereg_replace("[^0-9]", "", $$k);
+	       break;		  
 	      case "ignore":
+	       $$k = $$k;
 	       break;
-	      case "array":
+	      case "num":
+	       $$k = ereg_replace("[^0-9.]", "", $$k);
+	       break;
+	      case "string":
+	       $$k = ereg_relace("[^0-9a-zA-Z _-]", "", $$k);
+	       break;
+	      case "text":
+	       $$k = htmlspecialchars($$k);
 	       break;
 	      default:
 	       $$k = strip_tags($$k, $this->html_allowed);
@@ -140,7 +156,7 @@ class zen extends zenDate {
    }
    
    function stripPHP( $val = '' ) {
-      if( $val )
+      if( strlen($val) )
 	return ereg_replace("<\?", "&lt;?", ereg_replace("\?>", "?&gt;", $val));
    }
    
@@ -194,34 +210,170 @@ class zen extends zenDate {
       }
       return $contents;
    }
+
+   function highlight( $text, $match, $h = '' ) {
+     /*
+     ** The highlight function searches for matches and highlights them
+     ** using the two values of array $h as opening and closing tags
+     **    Example:
+     **       $text = 'some goats ran';
+     **       $match = 'goats';
+     **       $h = array('<b>','</b>');
+     **    Result:
+     **       'some <b>goats</b> ran'
+     **
+     **  text  - full text
+     **  match - words/expressions to highlight
+     **  h     - [optional,default is <b></b>] array containing the pre 
+     **          and post tags to use for highlighting
+     */
+
+     if( !is_array($h) )
+        $h = $this->defaultHighlight;
+     if( !is_array($text) ) {
+       $join = 1;
+       $text = array($text);
+     }
+     if( !is_array($match) )
+        $match = array($match);
+     for( $i=0; $i<count($text); $i++ ) {
+       foreach($match as $m) {
+	 $text[$i] = ereg_replace('#','\#',$text[$i]);
+         $text[$i] = preg_replace("#($m)#i", "$h[0]\\1$h[1]", $text[$i]);
+       }
+     }
+     if( $join ) {
+       return($text[0]);
+     } else {
+       return($text);
+     }
+   }
    
    /*
    **  UTILITIES
    */   
    
-   
+   function encval( $text ) {
+      // creates an encrypted value suitable
+      // for password use
+      // abstracted to prevent problems
+      // with future versions
+      return( md5($text) );
+   }
+
+   function setOffsetImages( $left, $right ) {
+     // replaces the images used for createOffsetLinks()
+     // method.  These should be arrays containing the following:
+     // ( "valid url", "image width", "image height" )
+
+     $this->leftOffsetImage = $left;
+     $this->rightOffsetImage = $right;
+   }
+
+   function createOffsetLinks( $current, $step, $total, $more = '' ) {
+     // return 4 links for offsetting
+     // they are: ( start, left, text, right )
+     // corresponding to "<<<<", "<<previous", "x of n", and "next>>"
+     // if $more is given, then it will be added onto the query string
+     // for the links (i.e. "id=20&name=ralph" will add &id=20&name=ralph to the url)
+     // example: 10-30 of 50
+     // $current corresponds to the offset number, i.e. 10
+     // $step corresponds to the number per page, i.e. 20
+     // $total corresponds to the total number, i.e. 50
+
+     // find out where we are (for links)
+     global $SCRIPT_NAME;
+     // make sure links are applicable
+     if( $total > $step ) {
+       if( $more )
+         $more_link = "&$more";
+       // set image properties
+       $pts = $this->leftOffsetImage;
+       $lt = "<img src='$pts[0]' width='$pts[1]' height='$pts[2]' alt='$pts[3]' border='0' hspace='6'>";
+       $llt = "<img src='$pts[0]' width='$pts[1]' height='$pts[2]' alt='$pts[3]' border='0'>";
+       $prev = $pts[3];
+       $pts = $this->rightOffsetImage;
+       $gt = "<img src='$pts[0]' width='$pts[1]' height='$pts[2]' alt='$pts[3]' border='0' hspace='6'>";
+       $next = $pts[3];
+       // determine starting and end points for links
+       $next_to = ($current + $step > $total)?
+         $total : $current + $step;
+       $next_curr = $current + 1;
+       // if current > 0, then there is a previous
+       if( $current > 0 ) {
+         $next_down = ($current - $step > 0)?
+           $current - $step : 0;
+       }
+       // if next_to < total, then there is a next
+       if( $next_to < $total ) {
+         $next_up = $next_to;
+       }
+       // if last > 0, then make the 'start' link
+       if( $next_down ) {
+         $pplink = "<a href='$SCRIPT_NAME?offset=0$more_link'>$llt$llt</a>";
+       }
+       // if last exists, then make the 'last' link
+       if( strlen($next_down) ) {
+         $diff = $current - $next_down;
+         $plink = "<a href='$SCRIPT_NAME?offset=$next_down$more_link'>$lt$prev $diff</a>";
+       }
+       // create the text
+       $text = "$next_curr-$next_to of $total";
+       // if next_up then create the next link
+       if( $next_up ) {
+         $diff = ($next_up + $step > $total)?
+           ($total - $next_up) : $step;
+         $nlink = "<a href='$SCRIPT_NAME?offset=$next_up$more_link'>$next $diff$gt</a>";
+       }
+       // return the links
+       return( array($pplink,$plink,$text,$nlink) );
+     }
+   }
    
    /*
    **  ERROR REPORTING
    */      
    
-   function printErrors( $errs ) {
+   function printErrors( $errs = '' ) {
       // prints an array of errors
       // in red, as a formatted list
-      
-      print "<span class='red'><b>Errors Detected</b><ul>\n";
-      foreach($errs as $e)
-	print "<li>$e</li>\n";
-      print "</ul></span>";
+      if( is_array($errs) ) {
+	 print "<span class='red'><b>Errors Detected</b>";
+	 print "<br>If problems persist, contact your "
+	   ."<a href='{$this->settings['admin_email']}'>Administrator</a>\n<ul>\n";
+	 foreach($errs as $e)
+	   print "<li>$e</li>\n";
+	 print "</ul></span>";
+      }
    }
    
-   function print_errors( $errs ) {
+   function print_errors( $errs = '' ) {
       // alias to printErrors()
       
       return($this->printErrors($errs));
    }
    
    
+   /*
+   **  DEBUGGING
+   */
+
+   function addDebug( $title, $msg, $lvl = 3 ) {
+     if( $lvl <= $this->debug )
+       $this->debugMessages[] = array($title,$msg);
+   }
+
+   function printDebugMessages() {
+     if( is_array($this->debugMessages) ) {
+       print "<p>--------<b>DEBUG</b>--------<ul>\n";
+       if( is_array($this->debugMessages) ) {
+	 foreach($this->debugMessages as $v) {
+	   print "$v[0]: \"$v[1]\"<br>\n";
+	 }
+       }
+       print "</ul>------<b>END DEBUG</b>------</p>\n";
+     }
+   }
    
    /*
    **  SYSTEM METHODS
@@ -237,7 +389,8 @@ class zen extends zenDate {
    */ 
    
    var $html_allowed;
-   
+   var $debugMessages;
+   var $defaultHighlight;
 } 
   
 ?>

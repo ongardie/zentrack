@@ -38,7 +38,7 @@
   <tr>
   <td valign="top" height="400" style="background:<?=$zen->settings["color_bars"]?>;">
   
-  <? if( $msg ) { print $msg; unset($msg); } ?>
+  <? if( $msg ) { print "&nbsp;<p><b>$msg</b></p>"; unset($msg); } ?>
   
   <!-- END OF NAVIGATION -->
   

@@ -23,9 +23,11 @@
   </td>
   </tr>  
   <tr>
+  <!--
   <td <?=$nav_rollover_text?>>
     <a class="subMenuLink" href="<?=$rootUrl?>/admin/archive.php">Archive Tickets</a>
   </td>
+  -->
   </tr>  
   <tr>
   <td <?=$nav_rollover_text?>>

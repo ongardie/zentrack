@@ -64,7 +64,7 @@
 	}
 	
 	if( !$errs ) {
-	   chmod($zen->attachmentsDir."/$file_name",0600);
+	   @chmod($zen->attachmentsDir."/$file_name",0644);
 	   $params = array(
 			   "name"     => $userfile_name,
 			   "filename" => $file_name,

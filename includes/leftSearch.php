@@ -8,18 +8,13 @@
   <? if( $expand_search ) { ?>
   <tr>
   <td <?=$nav_rollover_text?>>
-  <a class='subMenuLink' href="<?=$rootUrl?>/search.php">&nbsp;&nbsp;<?=$zen->prn("Advanced Search")?></a>
+  <a class='subMenuLink' href="<?=$rootUrl?>/search.php">&nbsp;&nbsp;<?=$zen->prn("New Search")?>
   </td>
-  </tr>  
+  </tr>
   <tr>
   <td <?=$nav_rollover_text?>>
-  <a class='subMenuLink' href="<?=$rootUrl?>/search.php">&nbsp;&nbsp;<?=$zen->prn("Search Logs")?></a>
+  <a class='subMenuLink' href="<?=$rootUrl?>/searchLogs.php">&nbsp;&nbsp;<?=$zen->prn("Search Logs")?></a>
   </td>
   </tr>  
-  <tr>
-  <td <?=$nav_rollover_text?>>
-  <a class='subMenuLink' href="<?=$rootUrl?>/search.php">&nbsp;&nbsp;<?=$zen->prn("Search Archives")?></a>
-  </td>
-  </tr>         
        
   <? } ?>

@@ -48,18 +48,23 @@ if( is_array($tickets) ) {
       unset($wkd);
       unset($per);
       
-      $row = ($t["status"] == 'CLOSED')? 
-	$zen->settings["color_bars"] : $zen->settings["color_background"];      
-      if( $t["priority"] <= $zen->settings["level_hot"] ) {
-	 $tx = "style='background:".$zen->settings["color_highlight"]."'";
-	 $txt = $hotrollover_text;
-	 $text = $zen->settings["color_hot"];
+      if( $t["status"] == 'CLOSED' ) {
+	$row = $zen->settings["color_bars"];
+	$txt = $rollover_greytext;
+	$text = $zen->settings["color_bar_text"];
+      } else if( $t["priority"] <= $zen->settings["level_hot"] ) {
+	$row = $zen->settings["color_background"];      
+	$tx = "style='background:".$zen->settings["color_highlight"]."'";
+	$txt = $hotrollover_text;
+	$text = $zen->settings["color_hot"];
       } else if( $t["priority"] <= $zen->settings["level_highlight"] ) {
-	 $txt = $rollover_text;
-	 $text = $zen->settings["color_hot"];	 
+	$row = $zen->settings["color_background"];
+	$txt = $rollover_text;
+	$text = $zen->settings["color_hot"];	 
       } else {
-	 $txt = $rollover_text;
-	 $text = $zen->settings["color_text"];	 
+	$row = $zen->settings["color_background"];
+	$txt = $rollover_text;
+	$text = $zen->settings["color_text"];	 
       }     
       
       if( $t["typeID"] == $zen->projectTypeID() ) {

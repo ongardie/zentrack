@@ -219,6 +219,9 @@
 
   /*** TEXT PROPERTIES ***/
 
+.alttext {
+   color:       <?=$zen->settings["color_alt_text"]?>;
+}
 
 .bigBold {
    color:        <?=$zen->settings["color_title_background"]?>;   
@@ -226,12 +229,13 @@
    font-weight:  bold;
 }
 
-.alttext {
-   color:       <?=$zen->settings["color_alt_text"]?>;
-}
-
 .big {
    font-size:   <?=$zen->settings["font_size_large"]?>px;  
+}
+
+.error {
+   color:       <?=$zen->settings["color_hot"]?>;
+   font-weight: Bold;
 }
 
 .highlight {
@@ -257,6 +261,7 @@
 .smallError {
    color:       <?=$zen->settings["color_hot"]?>;
    font-weight: bold;
+   font-size:   <?=$zen->settings["font_size_small"]?>px;
 }
 
 .smallBold {
@@ -286,6 +291,17 @@
      color:      <?=$zen->settings["color_highlight"]?>;
      background: <?=$zen->settings["color_alt_text"]?>;
   }  
+  .submitPlain {
+     color:      <?=$zen->settings["color_background"]?>;
+     background: <?=$zen->settings["color_alt_text"]?>;
+  }  
+
+  .smallSubmit {
+     color:      <?=$zen->settings["color_highlight"]?>;
+     background: <?=$zen->settings["color_alt_text"]?>;
+     font-face:  Courier;
+     font-size:  <?=$zen->settings["font_size_small"]?>px;
+  }
 
   .actionButton {
      /* font-face:      <?=$zen->settings["font_face"]?>; */

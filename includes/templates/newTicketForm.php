@@ -1,36 +1,22 @@
 <?	
-  unset($userBins);
   unset($users);
-  foreach($zen->bins as $k=>$v) {
-     $zen->getAccess($login_id);
-     if( (isset($zen->access["$k"]) && $zen->access["$k"] >= $zen->settings["level_view"])
-	||
-	(!isset($zen->access["$k"]) && $login_level >= $zen->settings["level_view"])
-	) {
-	$userBins["$k"] = $v;
-    }
-  }
+  $userBins = $zen->getUsersBins($login_id);
   if( is_array($userBins) ) {
-     foreach($userBins as $k=>$b) {
-	$vars = $zen->get_users($k);
-	for( $i=0;$i<count($vars);$i++ ) {
-	   $n = $vars[$i]["uid"];
-	   $users["$n"] = $vars[$i];
-	}
-     }  
+    $users = $zen->get_users( $userBins, "level_user" );
   }
-  if( !$deadline )
+  $td = ($TODO == 'EDIT');
+  if( !$deadline && !$td )
      $deadline = $zen->dateAdjust(1,"month",time());
 ?>     
 
-<form method="post" action="<?=($TODO=='EDIT')? "$rootUrl/actions/editSubmit.php" : "$rootUrl/addSubmit.php"?>">
+<form method="post" action="<?=($td)? "$rootUrl/admin/editTicketSubmit.php" : "$rootUrl/addSubmit.php"?>">
 <input type="hidden" name="id" value="<?=strip_tags($id)?>">
 
   
 <table width="640" align="left" cellpadding="2" cellspacing="2" bgcolor="<?=$zen->settings["color_background"]?>">
 <tr>
   <td colspan="2" width="640" class="titleCell" align="center">
-     Enter Ticket Information
+     Ticket Information
   </td>
 </tr>
   
@@ -64,7 +50,6 @@
     </select>
   </td>
 </tr>
-  
 <tr>
   <td class="bars">
     Title
@@ -129,15 +114,10 @@ value="<?=strip_tags($title)?>">
     <select name="userID">
       <option value=''>--not assigned--</option>
 <?
-   $userBins = $zen->getUsersBins($login_id);
-   if( is_array($userBins) && $zen->settings["allow_assign"] == "on" ) {
-     $users = $zen->get_users($userBins);
-     if( is_array($users) ) {
-       asort($users);
-       foreach($users as $k=>$v) {
-	 $check = ( $k == $userID )? "selected" : "";
-	 print "<option $check value='$k'>$v[lname], $v[fname]</option>\n";
-       }
+   if( is_array($users) && $zen->settings["allow_assign"] == "on" ) {
+     foreach($users as $v) {
+       $check = ( $v["uid"] == $userID )? "selected" : "";
+       print "<option $check value='$v[uid]'>$v[lname], $v[fname]</option>\n";
      }
    }
 ?>
@@ -152,15 +132,15 @@ value="<?=strip_tags($title)?>">
     <select name="binID">
 <?
     if( is_array($userBins) ) {
-    	foreach($userBins as $k=>$v) {
+    	foreach($userBins as $k) {
 	  if( $k ) {
-	    $check = ( $k == $binID )? "selected" : "";
+	    $check = ( $k == $binID || (!$binID && !$td && $k == $login_bin) )? "selected" : "";
 	    $n = $zen->bins["$k"];
 	    print "<option $check value='$k'>$n</option>\n";
 	  }
 	}
     } else {
-      print "<option value=''>--no bins--</option>\n";
+	print "<option value=''>--no bins--</option>\n";
     }
 ?>
     </select>
@@ -209,7 +189,7 @@ value="<?=strip_tags($relations)?>">
   </td>
   <td class="bars">
     <input type="text" name="start_date" size="12" maxlength="10"
-value="<?=$zen->showDate(strip_tags($start_date))?>">&nbsp;(mm/dd/yyyy, optional)
+value="<?=($start_date)?$zen->showDate(strip_tags($start_date)):""?>">&nbsp;(mm/dd/yyyy, optional)
   </td>
 </tr>
 <tr>
@@ -227,7 +207,7 @@ value="<?=strip_tags($est_hours)?>">&nbsp;(up to two decimal places, optional)
   </td>
   <td class="bars">
     <input type="text" name="deadline" size="12" maxlength="10"
-value="<?=$zen->showDate(strip_tags($deadline))?>">&nbsp;(mm/dd/yyyy, optional)
+value="<?=($deadline)?$zen->showDate(strip_tags($deadline)):""?>">&nbsp;(mm/dd/yyyy, optional)
   </td>
 </tr>				   
 <tr>
@@ -272,12 +252,12 @@ value="<?=$zen->showDate(strip_tags($deadline))?>">&nbsp;(mm/dd/yyyy, optional)
 </tr>
 <tr>
   <td class="titleCell" colspan="2" align="center">
-  Click button to <?=($TODO=='EDIT')? "save your changes":"create your ticket."?>
+  Click button to <?=($td)? "save your changes":"create your ticket."?>
   </td>
 </tr>
 <tr>
   <td colspan="2" class="bars">
-   <input type="submit" value=" <?=($TODO=='EDIT')?"Save":"Create"?> " class="submit">
+   <input type="submit" value=" <?=($td)?"Save":"Create"?> " class="submit">
   </td>
 </tr>
 </table>

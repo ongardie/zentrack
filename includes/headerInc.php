@@ -214,6 +214,16 @@
      .$zen->settings["color_background"]."', '');\" "
      ."onmouseover=\"mOvr(this,'"
      .$zen->settings["color_bars"]."', '');\"";
+
+   $rollover_greytext = " onclick=\"mClk(this);\" onmouseout=\"mOut(this,'"
+     .$zen->settings["color_bars"]."', '');\" "
+     ."onmouseover=\"mOvr(this,'"
+     .$zen->settings["color_background"]."', '');\"";
+
+   $hotrollover_greytext = " onclick=\"mClk(this);\" onmouseout=\"mOut(this,'"
+     .$zen->settings["color_bars"]."', '');\" "
+     ."onmouseover=\"mOvr(this,'"
+     .$zen->settings["color_highlight"]."', '');\"";
    
    $hotrollover_text = "onclick=\"mClk(this);\" onmouseout=\"mOut(this,'"
      .$zen->settings["color_background"]."', '');\" "
@@ -225,5 +235,19 @@
      .$zen->settings["color_title_txt"]."');\" onmouseover=\"mOvr(this,'"
      .$zen->settings["color_alt_background"]."','"
      .$zen->settings["color_alt_text"]."');\"";
+
+
+  /*
+  **  LISTS THAT SHOULD PROBABLY BE DYNAMIC, BUT AREN'T
+  */
+
+  $log_actions = array(
+		       "ACTION",
+		       "LABOR",
+		       "NOTE",
+		       "QUESTION",
+		       "SOLUTION"
+		     );
+
 
 ?>

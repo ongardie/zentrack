@@ -1,0 +1,34 @@
+
+  Welcome to zenTrack!
+
+  The installation instructions can be found:
+	locally - zentrack_diretory/www/help/install.html
+        online  - http://zentrack.phpzen.net/help/install.php
+
+  Help with any aspect of zenTrack is available:
+      
+	 Documentation
+	   local - zentrack_diretory/www/help/index.php
+	   online - http://zentrack.phpzen.net/help/
+	
+	 Support
+	   online - http://www.sourceforge.net/projects/zentrack (see the support pages)
+              This will get you a response, almost guaranteed
+	   email  - phpzen@users.sourceforge.net
+	      you may get a response if I'm bored
+
+
+  Quick and Dirty Install Instructions:
+
+     -place www/ in the httpd directory tree
+     -place includes/ in a non-httpd directory
+     
+     -configure the following files:
+	includes/configVars.php
+   	www/header.php
+
+        (you must configure $includesDir and $rootUrl or nothing will work)
+
+     -build the database
+	you must run both the build.sql and seed.sql file
+	they are in includes/misc

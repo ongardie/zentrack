@@ -23,7 +23,7 @@
   }
 ?>     
 
-<form method="post" action="<?=($TODO=='EDIT')? "$rootUrl/actions/editProjectSubmit.php" : "$rootUrl/addProjectSubmit.php"?>">
+<form method="post" action="<?=($TODO=='EDIT')? "$rootUrl/admin/editProjectSubmit.php" : "$rootUrl/addProjectSubmit.php"?>">
 <input type="hidden" name="id" value="<?=strip_tags($id)?>">
   
 <table width="640" align="left" cellpadding="2" cellspacing="2" bgcolor="<?=$zen->settings["color_background"]?>">
@@ -165,9 +165,18 @@ value="<?=strip_tags($title)?>">
   </td>
   <td class="bars">
     <input type="text" name="deadline" size="12" maxlength="10"
-value="<?=$zen->showDate(strip_tags($deadline))?>">&nbsp;(mm/dd/yyyy)
+value="<?=($deadline)?$zen->showDate(strip_tags($deadline)):""?>">&nbsp;(mm/dd/yyyy)
   </td>
 </tr>				   
+<tr>
+  <td class="bars">
+    Deadline
+  </td>
+  <td class="bars">
+    <input type="text" name="start_date" size="12" maxlength="10"
+value="<?=($start_date)?$zen->showDate(strip_tags($start_date)):""?>">&nbsp;(mm/dd/yyyy)
+  </td>
+</tr>
 <tr>
   <td class="bars">
     Testing Required
