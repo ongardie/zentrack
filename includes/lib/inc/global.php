@@ -18,11 +18,13 @@
   // include all global functions
   require_once("$dir_lib/inc/functions.php");
 
-  // start the session information
-  require_once("$dir_lib/inc/session.php");
-
   // include all the object classes
   require_once("$dir_lib/inc/classes.php");
+  load_classes( $classes_standard, $dir_classes );
+  load_classes( $classes_data_types, $dir_classes );
+
+  // start the session information
+  require_once("$dir_lib/inc/session.php");
 
   // check the php environment settings
   require_once("$dir_lib/inc/environment.php");

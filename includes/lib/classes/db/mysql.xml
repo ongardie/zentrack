@@ -35,7 +35,7 @@
     <tablecolumn uniquelabel="" notnull="NOT NULL">%name% %datatype% %attr% </tablecolumn>
     <addcolumn>ALTER TABLE %table% ADD COLUMN %def% %after%</addcolumn>
     <dropcolumn>ALTER TABLE %table% DROP COLUMN %name%</dropcolumn>
-    <delete><format>DELETE FROM %table% %where%</delete>
+    <delete>DELETE FROM %table% %where%</delete>
     <insert>INSERT INTO %table% COLUMNS(%columns%) VALUES(%values%)</insert>
     <update>UPDATE %table% SET %set% %where%</update>
   </sqlInfo>

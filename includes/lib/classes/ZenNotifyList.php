@@ -1,7 +1,7 @@
 <?
 
 /** @package Zen */
-class ZenNotifyList {
+class ZenNotifyList extends ZenList {
 
 }
 

@@ -39,6 +39,9 @@
       return $_SESSION['zen'][$section][$name];
     }
     else if( $_SESSION['zen']['debug']['develop_mode'] > 0 ) {
+      print "<pre>\n";
+      print_r($_SESSION);
+      print "</pre>\n";
       die("ini setting $section:$name doesn't exist!");        
     }
     else { return null; }

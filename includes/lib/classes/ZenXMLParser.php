@@ -338,7 +338,7 @@ class ZenXNode {
    */
   function getChild( $child, $index = null ) { 
     if( isset($this->_children["$child"]) ) {
-      return ($index)? $this->_children[$child][$index] : $this->_children[$child]; 
+      return strlen($index)? $this->_children[$child][$index] : $this->_children[$child]; 
     }
     else { return null; }
   }

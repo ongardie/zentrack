@@ -52,10 +52,10 @@
   // setup develop mode params
   if( getIni('debug','develop_mode') > 0 ) {    
     // turn on on-screen error printing
-    ini_set("display_errors", true);
+    @ini_set("display_errors", true);
 
     // turn on most restrictive error_reporting (E_ALL)
-    error_reporting(E_ALL);
+    @error_reporting(E_ALL);
 
     // always reload debug.xml
     $_SESSION['cache']['messageListConfig'] = null;

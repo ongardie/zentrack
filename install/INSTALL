@@ -25,7 +25,7 @@ Then run installer Install or installer Upgrade as appropriate.
 
   To return them to a relaxed state, run
 
-     zen.php -check_permissions
+     install.php -check_permissions
 
   Note that you must run the extra_secure_mode after each upgrade to ensure compliance
 

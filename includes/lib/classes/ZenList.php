@@ -29,7 +29,12 @@ class ZenList extends Zen {
    *
    * @param ZenMetaTable $metainfo a ZenMetaTable object corresponding to this data type
    */
-  function ZenList( $metainfo ) { }
+  function ZenList( $metainfo ) { 
+    // get validation info
+
+    // call Zen()
+
+  }
 
   /**
    * Limits the results to the set of ids provided (a wrapper for doing criteria() for ticket ids)
@@ -130,7 +135,7 @@ class ZenList extends Zen {
       return false;
     }
     if( !$this->_data["$id"] ) {
-      $key = $this->getPrimaryKey( $this );
+      $key = ZenUtils::getPrimaryKey( ZenUtils::tableNameFromClass($this) );
       while( $vals = array_shift($this->_rawdata) ) {
         $n = $vals[$key];
         $this->_data["$n"] = $vals;

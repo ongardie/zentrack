@@ -14,6 +14,7 @@ class ZenMessage extends Zen {
    * @param integer $level the level of the message
    */
   function ZenMessage( $class, $method, $message, $errnum = 0, $level = 3 ) { 
+    $this->Zen();
     $this->_class = $class;
     $this->_method = $method;
     $this->_message = $message;

@@ -62,6 +62,7 @@ class ZenQuery extends Zen {
    * @param object ZenDatabase The database object to bind this query object to.
    */
   function ZenQuery( &$dbobject ) {
+    $this->Zen();
     $this->_dbobject =& $dbobject;
   }
 
@@ -453,19 +454,30 @@ class ZenQuery extends Zen {
    * @return mixed
    */
   function _execute($cacheTime = 0) {
+    // if this is an insert, generate an id
+    if( $this->_queryType == 'INSERT' ) {
+      $key = ZenUtils::getPrimaryKey($this->_tables[0]);
+      $this->_fields[$key] = $this->_dbobject->generateID($this->_tables[0]);
+    }
+
+    // generate query
     $query = $this->_buildQuery();
-    
     if ($query === false) {
       $this->debug($this, '_execute', '_buildQuery() failed', 1);
       return false;
     }
-    //todo
-    //todo implement and make this run a different query for inserts
-    //todo we want to be able to get back the generated id whenever
-    //todo we run an insert, which will require a different setup here
-    //todo
-    //todo
-    return $this->_dbobject->execute($query, $cacheTime, $this->_limit, $this->_offset);
+
+    // get the results
+    $result = $this->_dbobject->execute($query, $cacheTime, $this->_limit, $this->_offset);
+
+    // if this is an insert, then return the id
+    if( $this->_queryType == 'INSERT' ) {
+      if( !$result ) { return false; }
+      return $this->_fields[$key];
+    }
+
+    // otherwise just return results
+    return $result;
   }
   
   /**

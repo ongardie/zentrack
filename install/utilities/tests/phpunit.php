@@ -139,7 +139,7 @@ class Test {
 	    $val = $valset[0];
 	    $children = $val->getChild('param');
 	    $parms = ZenXMLParser::getParmSet( $children );
-	    $this->_openRow( "{$method}->$testname" );
+	    $this->_openRow( "$method [$testname]" );
 	    $this->$method( $parms );
 	    if( !$ERROR_FOUND ) { $TESTS_COMPLETED++; }
 	    $this->_closeRow( $ERROR_FOUND );	    

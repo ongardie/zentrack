@@ -17,8 +17,8 @@ class ZenMessageList extends Zen {
    * @return ZenMessageList the static instance of the message list class
    */
   function &getInstance() {
-    if( !isset($GLOBALS['messageList']) || $GLOBALS['messageList'] == null ) {
-      $file = $_SESSION['zen']['directories']['dir_config']."/".$_SESSION['zen']['debug']['debug_configfile'];
+    if( !isset($GLOBALS['messageList']) || !is_array($GLOBALS['messageList']) ) {
+      $file = Zen::getIniVal('directories','dir_config')."/".Zen::getIniVal('debug','debug_configfile');
       $GLOBALS['messageList'] = new ZenMessageList( $file );
     }
     return $GLOBALS['messageList'];
@@ -38,6 +38,7 @@ class ZenMessageList extends Zen {
    * @param string $config is the xml file which holds the debug config info
    */
   function ZenMessageList( $config ) {
+    $this->Zen();
     $this->_messages = array();    
 
     $this->_counts = array();

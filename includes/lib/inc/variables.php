@@ -23,7 +23,7 @@
   /**
    * @var string $GLOBALS['templateDir'] is the directory location of the template directory to use for this build
    */
-  $GLOBALS['templateDir'] =& $templateDir;
+  $GLOBALS['templateDir'] = $templateDir;
 
   /**
    * @var array $GLOBALS['tcache'] temporary cache to store ZenDataTypes for life of page

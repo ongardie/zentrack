@@ -12,7 +12,7 @@ class ZenDBXML {
    *
    * @param string $dbobject is a ZenDatabase instance
    */
-  function ZenDBXML( &$dbobject ) { 
+  function ZenDBXML( &$dbobject ) {     
     $this->_dbobj =& $dbobject;
     $this->_dbtype = $this->_db->getDbType();
     $this->_dbTypeInfo = new DbTypeInf( &$dbobject );

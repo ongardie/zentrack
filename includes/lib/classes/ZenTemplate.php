@@ -35,6 +35,7 @@
    *  <li>{if:field=something:"text to print"+field+"more text"} - inserts text if field = something
    *  <li>{if:field=something:%sub-template%} - inserts sub-template if field = something
    *  <li>{function:function_name:param1,param2,param3} - runs a global function and inserts the return value
+   *  <li>{toggle} - prints a value which alternates for each row
    * </ul>
    *
    * @package Utils
@@ -47,6 +48,9 @@ class zenTemplate {
    * @param string $template is the path to the template file to load
    */
   function zenTemplate( $template ) {
+    if( $GLOBALS && $GLOBALS['templateDir'] ) {
+      $this->_templateDir = $GLOBALS['templateDir'];
+    }
     $this->_template = $template;
     $this->_get();
   }
@@ -63,6 +67,15 @@ class zenTemplate {
   }
 
   /**
+   * Set a list of values to use for the toggle (alternates each line of foreach or list)
+   *
+   * @var array $value the list of values to be used by the alternating toggle
+   */
+  function setToggleVal( $value ) {
+    $this->_toggle = value;
+  }
+
+  /**
    * return a text string representing the parsed contents of the template
    *
    * @return string parsed template data, ready for use
@@ -75,11 +88,14 @@ class zenTemplate {
    * <b>private</b>: get the template file and convert it to a text string
    */
   function _get() {
+    if( !file_exists($this->_template) && file_exists($this->_templateDir."/".$this->_template) ) {
+      $this->_template = $this->_templateDir."/".$this->_template;
+    }
     if( file_exists($this->_template) ) {
       $this->_text = file($this->_template);
     }
     else {
-      $this->_text = array("Template file $template could not be found.");
+      $this->_text = array("Template file {$this->_template} could not be found.");
     }
   }
 
@@ -137,7 +153,7 @@ class zenTemplate {
         // {foreach:varname:"text"+index+"more text"+value}
         // {foreach:varname:%sub-template%}
         
-        return _parseForeach($parts);
+        return $this->_parseForeach($parts);
       }
       break;
       case  "list":
@@ -145,7 +161,7 @@ class zenTemplate {
         // {list:varname:"text"+value+"text"}
         // {list:varname:%sub-template%}
         
-        return _parseList($parts);
+        return $this->_parseList($parts);
       }
       break;
       case  "include":
@@ -163,7 +179,7 @@ class zenTemplate {
         // {if:field:%sub-template%}
         // {if:field=something:%sub-template%}
         
-        return _parseIf($parts);
+        return $this->_parseIf($parts);
       }
       break;
       }
@@ -188,7 +204,7 @@ class zenTemplate {
       // loop the list and make output text
       foreach($vars as $k=>$v) {
         // determine if we are to process text or a template
-        if (preg_match('|^%.+%$', $parts[2])) {
+        if (preg_match('/^%.+%$/', $parts[2])) {
           // return the template
           
           $tplname = substr(substr($parts[2], 1), -1);
@@ -269,7 +285,7 @@ class zenTemplate {
         return $this->_parseSubtemplate($tplname, $this->_vars);
         
         /*
-        $tpl = new zenTemplate($this->templateDir."/".$tplname);
+        $tpl = new zenTemplate($this->_templateDir."/".$tplname);
         $tpl->values($this->_vars);
         
         return $tpl->process();
@@ -349,7 +365,7 @@ class zenTemplate {
    ** @return the expanded sub-template
    **/
   function _parseSubtemplates ( $template, $value, $key = '' ) {
-    $tpl = new zenTemplate($this->templateDir."/".$tplname);
+    $tpl = new zenTemplate($this->_templateDir."/".$tplname);
     
     if( is_array($value) ) {
       // $value is an indexed array to be passed to the sub-template
@@ -363,11 +379,29 @@ class zenTemplate {
     
     return $tpl->process();
   }
+
+  /**
+   * Set the default directory for retrieving templates from
+   */
+  function setDefaultTemplateDir( $newdir ) {
+    $this->_templateDir = $newdir;
+  }
   
+  /** @var Default template directory */
+  var $_templateDir;
+
   var $_template; //the file we are using
   var $_zen;
   var $_text;  //the template data loaded and ready for parsing
   var $_vars;  //the variables to use for template parsing
+
+  /** @var a value to use for alternating between rows */
+  var $_toggle;
+
+  /** @var specifies the current value of the alternating toggle */
+  var $_currentToggleValue;
+
+  //todo: implement the toggle
 
 }
 

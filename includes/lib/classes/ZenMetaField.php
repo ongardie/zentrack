@@ -10,6 +10,7 @@ class ZenMetaField extends Zen {
    * @param string $field the name of the field
    */
   function ZenMetaField( $table, $field ) {
+    $this->Zen();
     $this->_load($table,$field);
   }
 

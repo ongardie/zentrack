@@ -3,6 +3,8 @@
 
  <abstractTables>
     <table name="ABSTRACT_DESCRIPTORS">
+      <description>Descriptive columns common to many tables</description>
+      <columns>
         <column name="name" type="string" ftype="text" label="Name">
 	  <size>50</size>
 	  <description>The name or title of the entry</description>
@@ -15,6 +17,7 @@
 	  <default>0</default>
 	  <description>If set to 1, field is locked(restricted access)</description>
 	</column>
+      </columns>
     </table>
 
     <table name="ABSTRACT_DATA_TYPE">
@@ -32,6 +35,7 @@
     </table>
 
     <table name="ABSTRACT_FILTER_TYPE">
+      <description>Filter data is inherited from this abstract</description>
       <columns>
 	<column name="table_name" type="value" ftype="hidden"/>
 	<column name="field_name" type="value" ftype="select">
@@ -67,6 +71,11 @@
 	  <reference>ticket.ticket_id</reference>
 	</column>
       </columns>
+    </table>
+
+    <table name="ABSTRACT_TEST">
+      <description>Testing and development tables inherit from here (only created if develop=true)</description>
+      <columns/>
     </table>
  </abstractTables>
 
@@ -205,6 +214,18 @@
         <index name="bin_ordr">priority,name</index>
 	<index name="bin_actv">isactive</index>
       </indexList>
+    </table>
+
+    <table name="DBTEST">
+      <description>Test data for PHPUnit tests, should only be uploaded if develop=true</description>
+      <inherit>ABSTRACT_TEST</inherit>
+      <columns>
+        <column name="column_primarykey" type='primarykey' ftype='immutable' label='PrimeKey'/>	
+        <column name="column_value" type='value' ftype='text' label='Value'/>
+        <column name="column_string" type='string' ftype='text' label='String'/>
+        <column name="column_integer" type='integer' ftype='text' label='Integer'/>	
+        <column name="column_byte" type='byte' ftype='text' label='Byte'/>	
+      </columns>
     </table>
     
     <table name="FIELD_DEFS">

@@ -23,7 +23,7 @@ class ZenDataType extends Zen {
     // set the params
     $this->_id = $id;
     $this->_table = ZenUtils::tableNameFromClass($this);
-    $this->_primarykey = getPrimaryKey( $this );
+    $this->_primarykey = ZenUtils::getPrimaryKey( $this->_table );
     // load the data
     if( $id && is_object($zenlist) ) {
       if( ZenUtils::tableNameFromClass($zenlist)!=$this->_table || !$this->_loadFromListData($zenlist,$id) ) {

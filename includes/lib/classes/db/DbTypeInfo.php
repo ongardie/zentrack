@@ -5,7 +5,7 @@
  *
  * The db specific information is provided in xml files located in classes/db
  *
- * @package Zen
+ * @package DB
  *
  */
 class DbTypeInfo {
@@ -76,7 +76,7 @@ class DbTypeInfo {
     $uniquetext = ($unique && isset($props['uniquelabel']))? $props['uniquelabel'] : '';
     $attrtext = ($required && isset($props['notnull']))? $props['notnull'] : '';
     $vals = array(
-                  'name'    => $name;
+                  'name'    => $name,
                   'type'    => $this->makeTypeDef($type,$length),
                   'unique'  => $uniquetext,
                   'attr'    => $attrtext );
@@ -141,7 +141,7 @@ class DbTypeInfo {
    */
   function dropIndexSyntax( $table, $name ) { 
     $text = $this->getStatement("dropindex", array('table'=>$table, 'name'=>$name));
-    return $text? $text ; false;
+    return $text? $text : false;
   }
   
   /**
@@ -221,10 +221,10 @@ class DbTypeInfo {
   }
 
   /**
-   * Returns a dbInfo property
+   * Returns a dbInfo property's value
    *
    * @param string $name name of dbInfo attribute to return
-   * @return string value of property or null if not found
+   * @return string value of requested property or null if doesn't exist
    */
   function getDbInfo( $name ) {
     return isset($this->_dbInfo[$name])? $this->_dbInfo[$name]['data'] : null;
@@ -294,7 +294,9 @@ class DbTypeInfo {
 
     // get sqlInfo nodes
     $sql = $root->getChild("sqlInfo",0);
-    foreach($sql->getChildren() as $child) {
+
+    foreach($sql->getChildren() as $childArray) {
+      $child = $childArray[0];
       $n = $child->getName();
       $d = $child->getData();
       $p = $child->getProps();
@@ -361,4 +363,8 @@ class DbTypeInfo {
     
 
 
+}
+
 ?>
+
+

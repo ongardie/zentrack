@@ -27,8 +27,11 @@ class Zen {
    *    <li>Db_Instance
    * </ul>
    */
-  function Zen() { }
+  function Zen() { $this->randomNumber = mt_rand(1,1000)."-".mt_rand(1,1000); }
 
+  /** Used for debugging (to check references) */
+  var $randomNumber;
+  
   /**********************************
    * STATIC METHODS (prevent multiple objects when possible, rely on static page array $loaded_data) 
    *
@@ -125,13 +128,12 @@ class Zen {
       if( isset($_SESSION['zen']) ) {
         $db = $_SESSION['zen']['db'];
         $dir_cache = $_SESSION['zen']['directories']['dir_dbcache'];
-        $prefix = $_SESSION['zen']['db']['table_prefix'];
+        $prefix = $_SESSION['zen']['db']['db_prefix'];
       }
       else {
         $db = $GLOBALS['zen']['db'];
-        $dir_cache = isset($GLOBALS['zen']['directories']['dir_dbcache'])? 
-          $GLOBALS['zen']['directories']['dir_dbcache'] : null;
-        $prefix = $GLOBALS['zen']['db']['table_prefix'];
+        $dir_cache = $GLOBALS['zen']['directories']['dir_dbcache'];
+        $prefix = $GLOBALS['zen']['db']['db_prefix'];
       }
       $GLOBALS['dbConnection'] = new ZenDatabase($db['db_type'], 
                                                   $db['db_host'],
@@ -139,7 +141,7 @@ class Zen {
                                                   $db['db_pass'],
                                                   $db['db_instance'],
                                                   $db['db_persistent']);
-      if( $dir_cache ) { $GLOBALS['dbConnection']->setCacheDirectory( $dir_cache ); }
+      $GLOBALS['dbConnection']->setCacheDirectory( $dir_cache );
       $GLOBALS['dbConnection']->setPrefix( $prefix );
     }
     return $GLOBALS['dbConnection'];

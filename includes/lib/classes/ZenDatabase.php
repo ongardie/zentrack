@@ -24,20 +24,19 @@ class ZenDatabase extends Zen {
    * @param string $dbinst database instance to connect to
    */
   function ZenDatabase( $dbtype, $dbhost, $dbuser, $dbpass, $dbinst, $persistent = false ) {
+    $this->Zen();
     $this->_dbtype = $dbtype;
     $this->_dbhost = $dbhost;
     $this->_dbinst = $dbinst;
     $this->_dbuser = $dbuser;
     $this->_dbpass = $dbpass;
     $this->_persist = $persistent;
-    $this->debug( "ZenDatabase", "ZenDatabase", 
-                  "Initializing db: [host]".$dbhost.", [inst]".$dbinst
-                  .", [user]".$dbuser.", [pass hidden]", 0, 3);
-    $this->randomNumber = mt_rand(1,1000)."-".mt_rand(1,1000);
+    Zen::debug("ZenDatabase", "ZenDatabase", 
+               "Initializing db: [host]".$dbhost.", [inst]".$dbinst
+               .", [user]".$dbuser.", [pass hidden]", 0, 3);
     ZenDatabase::_getDbConnection();
   }
-  var $randomNumber;
-  
+
   /**
    * Sets the Cache directory.
    *
@@ -46,7 +45,14 @@ class ZenDatabase extends Zen {
    * @param string $directory The directory where cache files will be stored.
    */
   function setCacheDirectory($directory) {
-    $GLOBALS['ADODB_CACHE_DIR'] = $directory;
+    if( @is_dir($directory) && @is_writable($directory) ) {
+      $GLOBALS['ADODB_CACHE_DIR'] = $directory;
+      return true;
+    }
+    else {
+      Zen::debug("ZenDatabase", "setCacheDirectory", "$directory is not writable", 40, 1);
+      return false;
+    }
   }
 
   /**
@@ -71,9 +77,22 @@ class ZenDatabase extends Zen {
    * This should be expanded to use the DbTypeInfo object
    */
   function getPreferredCase() {
-    //todo: make this use the DbTypeInfo object
-    return "upper";
+    $dbi = $this->getDbTypeInfo();
+    return $dbi->getDbInfo('preferredCase');
   }  
+
+  /**
+   * Returns the DbTypeInfo associated with this database
+   * @return Object DbTypeInfo
+   */
+  function getDbTypeInfo() {
+    if( !$this->_dbTypeInfo ) {
+      $this->_dbTypeInfo = new DbTypeInfo( $this );
+    }
+    return $this->_dbTypeInfo;
+  }
+
+  var $_dbTypeInfo;
   
   /**
    * Returns a new query object that the user can manipulate and execute. 
@@ -102,7 +121,7 @@ class ZenDatabase extends Zen {
    */
   function execute( $query, $cacheTime = 0, $limit = 0, $offset = 0 ) {
     $this->debug($this, "execute", "[cachetime:$cacheTime]$query", 0, 3);
-    if ($cacheTime === false || !isset($GLOBALS['ADODB_CACHE_DIR'] || !strlen($GLOBALS['ADODB_CACHE_DIR'])) {
+    if ($cacheTime === false || !isset($GLOBALS['ADODB_CACHE_DIR']) || !strlen($GLOBALS['ADODB_CACHE_DIR'])) {
       if( $limit )
         $result = &$this->_adodb->SelectLimit($query, $limit, $offset);
       else
@@ -115,8 +134,7 @@ class ZenDatabase extends Zen {
         $result = &$this->_adodb->cacheExecute($cacheTime, $query);
     }
     if (!$result) {
-      $this->debug($this, 'execute', "There was an error in the query ($query): " 
-                   . $this->_adodb->ErrorMsg(), 200, 1);
+      $this->_genDbError( 'execute', "There was an error in the query ($query)" );
       return false;
     }
     return $result;
@@ -128,13 +146,14 @@ class ZenDatabase extends Zen {
    * @access public
    * @since 1.0
    * @param boolean $indexed whether results are returned in an associative (true) or plain array (false)
+   * @return the old value of fetchMode
    */
   function setFetchMode( $indexed = false ) {
     if ($indexed) {
-      $this->_adodb->SetFetchMode(ADODB_FETCH_ASSOC);
+      return $this->_adodb->SetFetchMode(ADODB_FETCH_ASSOC);
     }
     else {
-      $this->_adodb->SetFetchMode(ADODB_FETCH_NUM);
+      return $this->_adodb->SetFetchMode(ADODB_FETCH_NUM);
     }
   }
 
@@ -181,7 +200,8 @@ class ZenDatabase extends Zen {
   /**
    * Quotes a string for insertion into db, escaping needed characters. The quoted string is returned.
    *
-   * This method wraps the quoting method derived by the adodb library.
+   * This method wraps the quoting method derived by the adodb library.  Note that ZenQuery should
+   * quote strings automatigically, and it should not be necessary to call this manually.
    *
    * @access public
    * @since 1.0
@@ -289,8 +309,36 @@ class ZenDatabase extends Zen {
    */
   function getDbType() { return $this->_dbtype; }
 
+  /**
+   * Generates a debug message and stores error
+   *
+   * @access private
+   * @return true if debug message was stored
+   * @param string $method the method which produced the error
+   * @param string $message the message to print [optional]
+   * @param int $errnum the error number
+   * @param int $level the error level
+   */
+  function _genDbError( $method, $message = 'Database error', $errnum = 200, $level = 1 ) {
+    $this->_errmsg = $this->_adodb->ErrorMsg();
+    $this->_errnum = $this->_adodb->ErrorNo();
+    return $this->debug($this, $method, $message.":[".$this->_adodb->ErrorNo()."]".$this->_adodb->ErrorMsg(), $errnum, $level);      
+  }
+
 
   /* VARIABLES */
+
+  /**
+   * @var integer Stores the database error number
+   * @access private
+   */
+  var $_errno;
+
+  /**
+   * @var string Stores the database error messgae
+   * @access private
+   */
+  var $_errmsg;
 
   /**
    * The type of database to use.

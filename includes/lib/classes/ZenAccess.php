@@ -11,7 +11,18 @@ class ZenAccess extends ZenDataType {
    * @param Object $group_user_or_list is one of the following:
    *   A ZenUserGroup object, a ZenUserGroupList, a ZenUser object, a ZenUserList, or a ZenAccessList.  This will be the basis for making determinations.
    */
-  function ZenAccess( $group_user_or_list ) { }
+  function ZenAccess( $group_user_or_list ) { 
+    // call ZenDataType()
+
+    // create access from group list
+
+    // create access from user list
+
+    // create access from access list
+
+    // creaet access from user
+
+  }
 
   /**
    * Checks a specific action and bin to see if this group/user qualifies
