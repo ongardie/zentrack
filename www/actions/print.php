@@ -116,7 +116,6 @@
      </td>
      </tr>	  
 <? } ?>
-
 <tr>
   <td  width=50>
     <b>Status:</b>

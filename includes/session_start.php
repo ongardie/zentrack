@@ -22,15 +22,19 @@ if( isset($_SERVER) ) {
 $reservedList = array("Db_Type", "Db_Instance", "Db_Login", "Db_Pass", "Db_Host", "Debug_Mode",
                       "Demo_Mode", "page_prefix", "page_title", "configFile", "system_message_limit");
 
-foreach ($_POST as $k=>$v) {
-  if (!in_array($k, $reservedList)) {
-    $$k = $v;
+if (isset($_POST)) {
+  foreach ($_POST as $k=>$v) {
+    if (!in_array($k, $reservedList)) {
+      $$k = $v;
+    }
   }
 }
 
-foreach ($_GET as $k=>$v) {
-  if (!in_array($k, $reservedList)) {
-    $$k = $v;
+if (isset($_GET)) {
+  foreach ($_GET as $k=>$v) {
+    if (!in_array($k, $reservedList)) {
+      $$k = $v;
+    }
   }
 }
 
