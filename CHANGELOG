@@ -8,6 +8,9 @@
 ----- V2.4 (development, see CVS) ----
 
 2003-04-02, Kato
+  Fixed buttons and tabs to translate properly
+    - zentrack/includes/templates/ticket_actionBar.php 1.7
+    - zentrack/includes/templates/ticket_box.php 1.10
   Enhanced Debugging Output
     - zentrack/includes/footer.php 1.18
     - zentrack/includes/zen.class 1.18
