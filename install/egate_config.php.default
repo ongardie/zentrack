@@ -14,7 +14,7 @@
   //    1 - on high level errors only
   //    2 - on any warning
   //    3 - on any information
-  $egate_notify_level = 3;
+  $egate_notify_level = 2;
 
   // the log level determines what we will
   // place within the log

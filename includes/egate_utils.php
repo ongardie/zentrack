@@ -52,7 +52,7 @@
     // check for this fatal error, which isn't really an error
     if( preg_match("@mailbox is empty@i", $text) ) {
       $text = "Mailbox was empty";
-      $egate_log[] = array($text,$lvl);
+      $egate_log[] = array($text,3);
     }
     else {
       $egate_log[] = array($text,$lvl);
@@ -532,15 +532,38 @@
       case "owner":
 	{
 	  if( strtolower($v) == "me" || strtolower($v) == "myself" ) {
-	    $vals["user_id"] = find_user_id($name,$email);
+	    $vals["user_id"] = $user_id;
 	  }
 	  else if( preg_match("/^[0-9]+$/", $v) ) {
 	    $user = $zen->get_user($v);
-	    $vals["user_id"] = $id;
+	    if( $user ) {
+	      egate_log("created owner from id '$v': ".($user?$user['user_id']:'<null>'), 3);
+	      $vals["user_id"] = $user['user_id'];
+	    }
+	    else {
+	      egate_log("could not locate owner by id '$v', skipped",2);
+	    }
+	  }
+	  else if( strpos('@', $v) > 0 ) {
+	    $user = find_user_id('',$v);
+	    if( $user ) {
+	      $vals['user_id'] = $user['user_id'];
+	      egate_log("created owner from email '$v': ".($vals['user_id']?$vals['user_id']:'<null>'), 3);
+	    }
+	    else {
+	      egate_log("could not create owner from email '$email', skipped",2);
+	    }
 	  }
 	  else if( strlen($v) ) {
-	    $vals["user_id"] = find_user_id('',$email);
-	  }	  
+	    $user = find_user_id('','',$v);
+	    if( $user ) {
+	      $vals['user_id'] = $user['user_id'];
+	      egate_log("created owner by login '$v': ".($vals['user_id']?$vals['user_id']:'<null>'), 3);
+	    }
+	    else {
+	      egate_log("could not create owner from login '$login', skipped", 3);
+	    }
+	  }
 	}
 	break;
       case "bin":
@@ -652,39 +675,55 @@
    * @param string $email is the users email
    * @return integer user_id to use, returns egate_user id if no id found
    */
-  function find_user_id($name,$email) {
+  function find_user_id($name,$email,$login = '') {
     global $zen;
     global $egate_user;
     // find out what user_id to apply
     // by trying to find this user in
-    // the system    
-    $users_by_email = $zen->get_users_by_email($email);
-    if( is_array($users_by_email) ) {
-      // if we got more than one user for this email address
-      // then try looking at the name
-      if( count($users_by_email) > 1 && strlen($name) ) {
-	$vals = array();
-	$users_by_name = $zen->get_users_by_name($name);
-	if( is_array($users_by_name) ) {
-	  // foreach name found, see if this user_id also
-	  // has the correct email, if so, it's a possible match
-	  foreach($users_by_name as $u) {
-	    if( in_array($u,$users_by_email) ) {
-	      $vals[] = $u;
+    // the system 
+    $users_by_email = '';
+    if( $login ) {
+      $user_id = $zen->get_user_by_login($login);
+      if( $user_id ) {
+	egate_log("found user by login  '$login': $user_id",3);
+      }
+      else {
+	egate_log("invalid login name ignored: $login",2);
+      }
+    }
+    if( !$user_id && $email ) {
+      egate_log("locating user by email '$email'", 3);
+      $users_by_email = $zen->get_users_by_email($email);
+      if( is_array($users_by_email) ) {
+	// if we got more than one user for this email address
+	// then try looking at the name
+	if( count($users_by_email) > 1 && strlen($name) ) {
+	  $vals = array();
+	  $users_by_name = $zen->get_users_by_name($name);
+	  if( is_array($users_by_name) ) {
+	    // foreach name found, see if this user_id also
+	    // has the correct email, if so, it's a possible match
+	    foreach($users_by_name as $u) {
+	      if( in_array($u,$users_by_email) ) {
+		$vals[] = $u;
+	      }
 	    }
 	  }
+	  // if there are more than one, we can't be sure, so skip
+	  if( count($vals) == 1 ) {
+	    $user_id = $vals[0];
+	  }
+	  egate_log("multiple users have address '$email', tried to select by name '$name': $user_id",2);
 	}
-	// if there are more than one, we can't be sure, so skip
-	if( count($vals) == 1 ) {
-	  $user_id = $vals[0];
+	else if( count($users_by_email) == 1 ) {
+	  // we only found one, so that must be it
+	  $user_id = $users_by_email[0];
+	  egate_log("selected user by email '$email': $user_id",3);
 	}
-      }
-      else if( count($users_by_email) == 1 ) {
-	// we only found one, so that must be it
-	$user_id = $users_by_email[0];
       }
     }
     if( !$user_id ) {
+      egate_log("selected default user (egate account): $user_id",3);
       $user_id = $egate_user["user_id"];
     }
     return $user_id;
