@@ -12,6 +12,11 @@
   include_once("$libDir/zen.class");
   include_once("$libDir/zenGraph.class");
 
+  // for now, we need a hack to match all to hours
+  // later, may want to convert everything to $zen->elapsed_unit
+  // instead
+  $zen->elapsed_unit = "hours";
+
   include_once("$libDir/reportDataParser.php");
   $chart_options = $params["chart_options"];
 
@@ -72,6 +77,9 @@
 			"depth"   => 10,
 			"gap"     => 20
 			);
+
+  // set up a method for getting unique colors
+  // to show elements with
   if( $compact > 1 )
     $layer_params["compact"] = $compact;
   $colors = $graph->getColorScheme();
@@ -81,6 +89,18 @@
       $colors = $graph->getColorScheme();
     $color = array_shift($colors);
     return array($color);
+  }
+  // set up a method for getting shapes to show
+  // the items with
+  $point_shapes = array("diamond","square","dot","triangle","plus","strike");
+  $curpoint = 0;
+  function scam_a_shape() {
+    global $curpoint;
+    $shape = $point_shapes[$curpoint];
+    $curpoint++;
+    if( $curpoint == count($point_shapes) )
+      $curpoint = 0;
+    return $shape;
   }
 
   $colors = $graph->getColorScheme("default-30");
@@ -97,6 +117,11 @@
      } else {
        $xoptions = null;
      }
+      if( $params["chart_type"] == "scatter" ) {
+	if( !is_array($xoptions) )
+	  $xoptions = array();
+	$xoptions["pointShape"] = scam_a_shape();
+      }
       if( count($chart_options) > 0 )
 	$layer_params["name"] = $option_names["$o"];
       else
@@ -113,6 +138,7 @@
     foreach($params["data_set"] as $d) {
       $layer_params["name"] = "";//$set_index["$d"];
       $graph->addLayer($layer_params);
+      $ashape = scam_a_shape();
       foreach($chart_options as $o) {
 	if( isset($y2_set_type) && $y2_set_type != "" ) {
 	  if( ($y2_set_type == "Hours" && in_array($o,$rows_hours))
@@ -124,6 +150,11 @@
 	    $xoptions = null;
 	} else {
 	  $xoptions = null;
+	}
+	if( $params["chart_type"] == "scatter" ) {
+	  if( !is_array($xoptions) )
+	    $xoptions = array();
+	  $xoptions["pointShape"] = $ashape;
 	}
 	$data = $data_array["$o"]["$d"];
 	$name = $option_names["$o"];

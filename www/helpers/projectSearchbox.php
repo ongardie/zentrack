@@ -21,7 +21,7 @@
 <body>
 
 <? if( !isset($dosearch) || !is_array($search_param) ) { ?>
-<form method='post' action='<?=$rootUrl?>/helpers/ticketSearchbox.php'>
+<form method='post' action='<?=$rootUrl?>/helpers/projectSearchbox.php'>
 <input type='hidden' name='return_form' value='<?=$zen->ffv($return_form)?>'>
 <input type='hidden' name='return_field' value='<?=$zen->ffv($return_field)?>'>
 <table width='<?=$table_width?>' align='center'>
@@ -180,7 +180,7 @@
    }
 </script>
 
-<form action='<?=$rootUrl?>/helpers/ticketSearchbox.php' method='post' name='helperForm'>
+<form action='<?=$rootUrl?>/helpers/projectSearchbox.php' method='post' name='helperForm'>
 <?
   $zen->hiddenField("return_form",$return_form);
   $zen->hiddenField("return_field",$return_field);
