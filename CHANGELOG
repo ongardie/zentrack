@@ -7,6 +7,10 @@
 
 ----- V2.4 (development, see CVS) ----
 
+2003-04-19, Kato
+  Fixed outdated access checking (displays bins according to proper permissions now)
+    - zentrack/includes/leftBins.php 1.6
+  
 2003-04-19, Rob Hillis
   *Really* fix un-ordered display of bins when creating new ticket or project and when searching.
     - zentrack/includes/templates/newTicketForm.php 1.24
