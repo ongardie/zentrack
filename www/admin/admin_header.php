@@ -29,7 +29,7 @@
 		       "homebin"  =>   "int",
 		       "active"   =>   "int"
 		       );
-  $user_required = array("login","lname","initials","email");
+  $user_required = array("login","lname","initials");
 
   $access_fields = array(
 			 "user_id"  =>  "int",

@@ -25,7 +25,7 @@
   }
   // use the filename to 
   // determine the action
-  $basename = strtolower(basename($SCRIPT_NAME,".php"));
+  $basename = strtolower(preg_replace("@.*/([a-zA-Z0-9_-]+)\.php@", "\\1", $SCRIPT_NAME));
   if( in_array($basename,array_keys($zen->getActions())) ) {
     $action = $basename;
   }

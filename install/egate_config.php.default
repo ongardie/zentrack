@@ -77,4 +77,10 @@
 
   $smtp_string = "{".$smtp_host.":".$smtp_port."/pop3}INBOX";  // note that the { and $ separation is critical!
 
+  // RED HAT USERS!!
+  // you may need to use one of the following strings to get this working on redhat
+  // due to yet another redhat bug
+  // $smtp_string = "{".$smtp_host.":".$smtp_port."/pop3/notls}INBOX";
+  // $smtp_string = "{".$smtp_host.":".$smtp_port."/notls}INBOX";
+
 ?>
