@@ -37,6 +37,7 @@
      print "DOCROOT: $DOCUMENT_ROOT<br>\n";
      print "COOKIE: $HTTP_COOKIE<br>\n";
      print "SERVER: {$_SERVER['SERVER_SOFTWARE']}<br>\n";
+     print "SERVER_NAME: $SERVER_NAME<br>\n";
      print "SYSTEM: ".`uname -a`."<br>\n";
      print "rootUrl: $rootUrl<br>\n";
      print "database: ".$zen->database_type."/".$zen->database_host."<br>\n";

@@ -378,42 +378,11 @@ class zenDate extends DB {
    }
    
    function dateParse( $ctime = '' ) {
-      // takes a date input as "yy-mm-dd[ hh:mm[:ss] [am/pm]]"
-      // or as "mm/dd/yy[ hh:mm[:ss] [am/pm]]"
-      // and returns a unix time for the date
-      // so that it can be used by the zenDate class
-      // for advanced manipulations
-      
-      if( !$ctime )
-	return( $this->currTime );
-      else {
-	 $dt_parts = explode(" ", $ctime);
-	 if( eregi("-", $dt_parts[0]) )
-	   list($date_parts[2], $date_parts[0], $date_parts[1]) = explode("-", $dt_parts[0]);
-	 else
-	   $date_parts = explode("/", $dt_parts[0]);
-	 if( $dt_parts[1] )
-	   $time_parts = explode(":", $dt_parts[1]);
-	 
-	 if( $dt_parts[2] && eregi("p", $dt_parts[2]) && $time_parts[0] != 12 )
-	   $time_parts[0] += 12;
-	 else if( $dt_parts[2] && eregi("a", $dt_parts[2]) && $time_parts[0] == 12 )
-	   $time_parts[0] = 0;
-	 
-	 if( strlen($date_parts[2]) == 2 )
-	   $date_parts[2] += 2000;
-	 
-	 $dateParts = array(
-			    $date_parts[2],
-			    $date_parts[0],
-			    $date_parts[1],
-			    $time_parts[0],
-			    $time_parts[1],
-			    $time_parts[2]
-			    );
-	 $utime = $this->dateMake($dateParts);
-	 return( $utime );
-      }
+     // takes almost any date format and returns
+     // a unix timestamp
+     if( !$ctime )
+       $ctime = $this->currTime;
+     return strtotime($ctime);
    }
    
    function dateSplit($utime = '') {

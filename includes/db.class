@@ -142,6 +142,22 @@ class DB {
 	 }
       }
    }
+
+   function db_listIndexed( $query ) {
+     // retrieves a list from the database indexed
+     // by the [0] column and containing the [1] column
+      $this->switchQueryMode(0);
+      $recordSet = &$this->db_link->Execute($query);
+      if( $recordSet ) {
+	 $vars = $recordSet->getArray();
+	 if( is_array($vars) && count($vars) > 0 ) {
+	    foreach($vars as $v) {
+	       $vals[] = $v[0];
+	    }
+	    return($vals);
+	 }
+      }     
+   }
    
    /*
    ** UTILITIES
@@ -207,14 +223,14 @@ class DB {
       }
    }
    
-   function simpleWhere( $params ) {
+   function simpleWhere( $params, $andor = 'AND' ) {
       // takes an indexed array as a list of columns and
       // their values to match and makes them into an sql
       // format ready for use in a WHERE statement
      
       foreach($params as $k=>$v) {
 	 if( $text )
-	   $text .= " AND ";
+	   $text .= " $andor ";
 	 if( is_array($v) ) {
 	    $text .= "$k IN(";
 	    $i = 0;
@@ -238,7 +254,7 @@ class DB {
       return($text);
    }
    
-   function complexWhere( $params ) {
+   function complexWhere( $params, $andor = 'AND' ) {
       // takes an indexed array as a list of columns and
       // an array containing the operator and value of each
       // to match and makes them into an sql
@@ -246,8 +262,14 @@ class DB {
       // the format is ["column_name"] = array("operator","value")
       // where operator is a comparitor like =,>,>=,LIKE,etc
       foreach($params as $k=>$v) {
-	 $v[1] = $this->checkSlashes($v[1]);
-	 $text .= "$k $v[0] $v[1]";
+	if( is_array($v[1]) && $v[0] == "AND" || $v[0] == "OR" ) {
+	  if( $text )
+	    $text .= " $andor ";
+	  $text .= " (".$this->complexWhere($v[1], $v[0]).") ";
+	} else {
+	  $v[1] = $this->checkSlashes($v[1]);
+	  $text .= "$k $v[0] $v[1]";
+	}
       }
       return($text);
    }            

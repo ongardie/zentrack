@@ -23,10 +23,13 @@
       }
       $k = $s["setting_id"];
       $class = ($class == "bars")? "cell" : "bars";
+      $n = preg_replace("@_xx$@", "", $s["name"]);
       print "<tr><td class='$class'>$k</td>\n";
-      print "<td class='$class'>$s[name]</td>\n";
+      print "<td class='$class'>$n</td>\n";
       print "<td class='$class'>";
-      if( $s["value"] == "on" || $s["value"] == "off" ) {
+      if( preg_match("@_xx$@", $s["name"]) ) {
+	print $s["value"]." [permanent]";
+      } else if( $s["value"] == "on" || $s["value"] == "off" ) {
 	print "<select name='newSettings[$k]'>";
 	print ($s["value"] == "on")? 
 	  "<option selected value='on'>On</option>" : "<option value='on'>On</option>\n";

@@ -32,7 +32,6 @@
   if( !$zen->actionApplicable( $id, $action, $login_id ) )
     header("Location: $rootUrl/ticket.php?id=$id&setmode=details");
 
-
   // set up page paremeters
   $page_title = "Ticket #$id";
   $page_section = "Ticket #$id";

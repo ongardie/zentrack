@@ -1,5 +1,5 @@
 <?
-  include("header.php");  
+  include_once("./header.php");  
 ?>
 <!--
  
@@ -129,7 +129,7 @@
        }
      ?>     
      padding-left:   2px;
-     border:         1px solid #000066;
+     border:         1px solid <?=$zen->settings["color_alt_text"]?>;
      font-weight:    Bold;
   }
 
@@ -254,6 +254,10 @@
    font-size:   <?=$zen->settings["font_size_small"]?>px;
 }
 
+.tiny {
+   font-size:   <?=($zen->settings["font_size_small"]-1)?>px;
+}
+
 .smallGrey {
    color:       <?=$zen->settings["color_grey"]?>;
 }
@@ -266,6 +270,12 @@
 
 .smallBold {
    font-weight: bold;
+}
+
+.note {
+   color:  <?=$zen->settings["color_grey"]?>;
+   font-size: 10px;
+   font-style: Italic;
 }
 
 .smallHighlight {

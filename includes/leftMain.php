@@ -1,4 +1,5 @@
-<div class="alttext" align="center"><b><?=$zen->showLongDate()?></b></div>
+<div class="small" align="center"><b><?=$zen->showLongDate()?></b></div>
+<div class="small" align='center'>version <?=$zen->settings["version_xx"]?></div>
   
 <?
   $num = 0;
@@ -58,8 +59,14 @@
   </td>
   </tr>  
   <? 
+     if( $login_level >= $zen->settings["level_reports"] ) {
+	include("$libDir/leftReports.php");
+      } 
+  ?>
+  <? 
      if( $login_level >= $zen->settings["level_settings"] ) {
 	include("$libDir/leftAdmin.php");
       } 
   ?>
 </table>
+

@@ -17,6 +17,9 @@
       $errs[] = "No settings were recieved";
     } else {
       foreach($settings as $s) {
+	// don't error check, or change things ending in _xx
+	if( preg_match("@_xx$@", $s["name"]) )
+	  continue;
 	$k = $s["setting_id"];
 	$newSettings["$k"] = $zen->stripPHP($newSettings["$k"]);
 	if( strlen($newSettings["$k"]) < 1 ) {

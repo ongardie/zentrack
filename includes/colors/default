@@ -1,0 +1,19 @@
+#primary
+black  =   0,   0,   0
+blue   =   0,   0, 255
+red    = 255,   0,   0
+yellow = 255, 255,   0
+white  = 255, 255, 255
+#secondary
+green  =   0, 255,   0
+purple = 255,   0, 255
+teal   =   0, 255, 255
+#darks
+dkblue  =   0,   0, 140
+dkgreen =   0, 140,   0
+dkred   = 140,   0,   0
+#pastels
+pastel_yellow = 255, 255, 200
+pastel_red    = 255, 200, 200
+pastel_green  = 200, 255, 200
+pastel_blue   = 200, 200, 255 

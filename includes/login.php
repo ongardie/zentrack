@@ -9,7 +9,7 @@
   // if there is no login id then include the form
   // or process the form results
   if( $login_level == 'first_login' && !ereg("pwc\.php",$SCRIPT_NAME) )
-	   header("Location:$rootUrl/misc/pwc.php");
+	   header("Location:$rootUrl/misc/pwc.php?var=2");
 
   if( !$login_id ) {
      if( $username && isset($passphrase) ) {

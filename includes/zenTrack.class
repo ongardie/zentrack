@@ -1709,6 +1709,25 @@ class zenTrack extends zen {
     *  SYSTEM UTILS 
    */
    
+   function get_table_id( $n ) {
+     // this function needs help
+     // needs to be fixed up
+     // and made dynamic... right now
+     // it's just a quick hack to prevent 
+     // a horrible fix later
+     $n = strtolower($n);
+     $n = preg_replace("@s$@", "", $n);
+     $n = preg_replace("@^zentrack@", "", $n);
+     $names = array( "ticket"     => "id",
+		     "system"     => "sid",
+		     "type"       => "type_id",
+		     "user"       => "user_id",
+		     "bin"        => "bid",
+		     "setting"    => "setting_id",
+		     "log"        => "lid",
+		     "attachment" => "attachment_id");
+     return $names["$n"];
+   }
    
    function getUser( $user_id ) {
       // retrieves the user who is logged in 
@@ -1972,10 +1991,10 @@ class zenTrack extends zen {
    }
    
    function getSystems($flag = 0,$active = 1) {
-      // if flag is set, retrieves an
-      // indexed array, otherwise, just
-      // a list of names ordered by priority
-      // and alphebetized
+     // if flag is set, retrieves an
+     // array, ordered by priority and
+     // alphebatized, otherwise, just
+     // an array of names indexed by id
       
       if( !$flag ) {
 	 $query = "SELECT sid, name FROM ".$this->table_systems;
@@ -2017,7 +2036,7 @@ class zenTrack extends zen {
 	return( $this->db_queryIndexed($query) );
       }            
    }
-   
+
    function statusHighlight( $priority ) {
       // prints out status with proper <span>
       // tags to highlight critical status items
@@ -2061,7 +2080,7 @@ class zenTrack extends zen {
    }
    
    function getTypes($flag = 0, $active = 1) {
-      // if flag is set, retrieves an
+      // if flag is not set, retrieves an
       // indexed array, otherwise, just
       // a list of names ordered by priority
       // and alphebetized
@@ -2203,51 +2222,91 @@ class zenTrack extends zen {
    /*
     *  REPORTING FUNCTIONS (incomplete... add later)
    */     
-   
-   
-   function report_user( $user_id, $start = '', $end = '' ) {
-      // will fetch all tickets assigned to this user
-      // all actions conducted by this user, and 
-      // calculate summary report as well
-      // $start is the oldest date to be retrieved (unix timestamp)
-      // $end is the newest date to be retrieved (unix timestamp)
-      
-      
+
+   function getReportTemplates( $bin_id = '', $user_id = '' ) {
+     $query = "SELECT id,name FROM ".$this->table_reports_index
+       ." WHERE ((bin_id IS 'NULL OR bin_id == '')AND(user_id IS 'null' or user_id == '') ";
+     if( $bin_id ) {
+       $query .= " OR bin_id = $bin_id";
+     } else if( $user_id ) {
+       $query .= " OR user_id = $user_id";
+     }
+     $query .= " ORDER BY name";
+     return $this->db_listIndexed($query);
    }
    
-   function report_project( $id, $start = '', $end = '' ) {
-      // will retrieve all tickets associated with project
-      // and actions conducted on project and produce an 
-      // overall summary for the time period
-      // $start is the oldest date to be retrieved (unix timestamp)
-      // $end is the newest date to be retrieved (unix timestamp)
-      
+   function saveReport( $params ) {
+     return $this->db_insert($table_reports,$params);
    }
    
-   function report_ticket( $id, $start = '', $end = '' ) {
-      // will retrieve all actions and logs for this ticket, 
-      // and produce a summary report for the given
-      // time period
-      // $start is the oldest date to be retrieved (unix timestamp)
-      // $end is the newest date to be retrieved (unix timestamp)
-      
+   function deleteReport( $rid ) {
+     $query = "DELETE FROM ".$this->table_reports." WHERE report_id = $rid";
+     return $this->db_result($query);
+   }
+
+   function addTempReport( $params ) {
+     $params["created"] = $this->dateSQL();
+     $this->cleanTempReports($this->cleanTempReports);
+     return $this->db_insert($this->table_reports_temp,$params);
    }
    
-   function report_compare( $type, $start, $end ) {
-      // will retrieve all actions, logs, tickets created, closed, etc
-      // based on one of the following parameters:
-      //    bins
-      //    types
-      //    systems
-      //    priorities
-      //    users
-      //    projects
-      // start and end times are required!
-      // $start is the oldest date to be retrieved (unix timestamp)
-      // $end is the newest date to be retrieved (unix timestamp)
-      
+   function cleanTempReports( $days ) {
+     $date = $this->dateSQL(strtotime("-$days days"));
+     $query = "DELETE FROM ".$this->table_reports_temp." WHERE created < '$date'";
+     return $this->db_result($query);
    }
-   
+
+   function getTempReport( $rid ) {
+     $query = "SELECT * FROM ".$this->table_reports_temp." WHERE report_id = $rid";
+     return $this->db_quickIndexed($query);
+   }
+
+   function getReportParams( $rid ) {
+     $query = "SELECT * FROM ".$this->table_reports." WHERE report_id = $rid";
+     return $this->db_quickIndexed($query);
+   }
+
+   function reportActivity($type, $id, $start_date, $end_date, $params) {
+     // returns a set of data to be graphed on the report
+     // $params is a complex array (see db.class->complexWhere)     
+     // this will be a report of ticket activity (all log entries)
+     if( !is_array($id) && $id == 'all' ) {
+       $where = "";
+     } else {
+       if( !is_array($id) )
+	 $id = array($id);
+       $where = "WHERE $type IN(".join(",",$id).") ";
+     }
+     $start = $this->dateSQL($start_date);
+     $end = $this->dateSQL($end_date);
+     $where .= ($where == "")? "WHERE " : " AND ";
+     $where .= " (created >= '$start' AND created < '$end') ";
+     if( is_array($params) )
+       $where .= " AND (".$this->complexWhere($params,"AND").")";
+     $query = "SELECT * FROM ".$this->table_logs." $where ORDER BY created";
+     return $this->db_queryIndexed($query);
+   }
+
+   function reportCount($type,$id,$start_date,$end_date,$params) {
+     // returns a set of data to be graphed on the report
+     // $params is a complex array (see db.class->complexWhere)   
+     // this will be a report of tickets assigned to this bin/user
+     if( !is_array($id) && $id == 'all' ) {
+       $where = "";
+     } else {
+       if( !is_array($id) )
+	 $id = array($id);
+       $where = "WHERE $type IN(".join(",",$id).") ";
+     }
+     $start = $this->dateSQL($start_date);
+     $end = $this->dateSQL($end_date);
+     $where .= ($where == "")? "WHERE " : " AND ";
+     $where .= " (ctime >= '$start' AND ctime < '$end') ";
+     if( is_array($params) )
+       $where .= " AND (".$this->complexWhere($params,"AND").")";
+     $query = "SELECT count(*) FROM ".$this->table_tickets." $where";
+     return $this->db_queryIndexed($query);
+   }
    
    /*
    **  VARIABLES TO CONFIGURE (in config file)
@@ -2289,6 +2348,9 @@ class zenTrack extends zen {
    var $table_logs_archived;
    var $table_preferences;
    var $table_priorities;
+   var $table_reports;
+   var $table_reports_index;
+   var $table_reports_temp;
    var $table_settings;
    var $table_systems;
    var $table_tasks;
@@ -2298,6 +2360,10 @@ class zenTrack extends zen {
    var $table_users;
    var $table_translation_strings;
    var $table_translation_words;
+
+   var $cleanTempReports;
+   var $reportImageWidth;
+   var $reportImageHeight;
 
    var $database_type;
    var $database_instance;
