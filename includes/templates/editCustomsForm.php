@@ -65,7 +65,8 @@
 	       print "$t<select name='newFieldValue[$j]'>\n";
 	       if( isset($_SESSION['data_groups']) && count($_SESSION['data_groups']) ) {
 		 foreach( $_SESSION['data_groups'] as $g ) {
-		   print "<option value='{$g['group_id']}'>{$g['group_name']}</option>\n";
+                   $sel_item=($v['field_value']==$g['group_id'])?" selected" : "";
+		   print "<option value='{$g['group_id']}'$sel_item>{$g['group_name']}</option>\n";
 		 }
 	       }
 	       else {
