@@ -7,9 +7,11 @@ class ZenTargets {
    * CONSTRUCTOR - loads config data files
    *
    * @param array (associative) $ini_array is the ini file parsed by ZenUtils::read_ini()
+   * @param boolean $supress_config_dialog prevents confirmation messages from appearing (answers yes to all)
    */
-  function ZenTargets( $ini_array ) {
-    $this->_thisdir = dirname(__FILE__);
+  function ZenTargets( $ini_array, $supress_confirm_dialog = false ) {
+    $this->_supress = $supress_confirm_dialog;
+    $this->_installdir = dirname(dirname(__FILE__));
     $this->_printHeading();
     $this->_dirs = $this->_parseConfigData("directories");
     $this->_configFiles = $this->_parseConfigData("configFiles");
@@ -70,8 +72,8 @@ class ZenTargets {
     else if( $arg == "false" ) {
       return false;
     }
-    else if( preg_match("/^[0-9]+$/", $a) ) {
-      return intval($a);
+    else if( preg_match("/^[0-9]+$/", $arg) ) {
+      return intval($arg);
     }
     else if( $arg == "null" ) {
       return null;
@@ -145,7 +147,7 @@ class ZenTargets {
         return $this->_extra_secure_mode( $p, $p2 );
       }
     case "full_install":      return $this->_full_install();
-    case "merge_ini_file":    return $this->_merge_ini_file( $this->_getBooleanParm($target,0,false) );
+    case "merge_template_file":    return $this->_merge_template_file( $p );
     case "prepare_install_files": 
       {
         $p2 = $this->_getParm($target,0);
@@ -212,69 +214,109 @@ class ZenTargets {
     // to cause all of the backups to go to the same
     // directory (for sanity) in case they overlap
     // in minutes/hours
-    $dir = $this->_getBackupLocation();
 
     $success = true;
     // backup config
-    if( !$this->_backup_config($dir) ) { $success = false; }
+    if( !$this->_backup_config() ) { $success = false; }
 
     // backup attachments
-    if( !$this->_backup_attachments($dir) ) { $success = false; }
+    if( !$this->_backup_attachments() ) { $success = false; }
 
     // backup database
-    if( !$this->_backup_database($dir) ) { $success = false; }
+    if( !$this->_backup_database() ) { $success = false; }
 
     // backup user files
-    if( !$this->_backup_userfiles($dir) ) { $success = false; }
+    if( !$this->_backup_userfiles() ) { $success = false; }
 
     return $success;
   }
 
   /**
-   * Back up all configuration files
+   * Back up all configuration files to includes/backup/YYYY-mm-dd-hh-mm/config
+   *
+   * Note that this backup will not fail if source files do not exist.  It will only fail if they
+   * exist and cannot be copied.
    *
    * @return boolean all backups successful
    */
-  function _backup_config($dir = null) {
+  function _backup_config() {
     $success = true;
 
-    // create directory if not done yet
-    if( !$dir ) { $dir = $this->_getBackupLocation(); }
-    $dest = "$dir/config";
-
-    print "- Backing up config files to $dest\n";
+    $dest = "includes/config";
+    print "- Backing up config files to ".$this->_getBackupLocation()."/$dest\n";
     foreach( $this->_configFiles as $c) {
       // split the array
       list($sect,$var,$name,$is_tmplt,$permissions) = $c;
 
-      // set up destination
-      $file = $this->_ini[$sect][$var]."/".$name;
-
-      // check for file
-      if( !file_exists($file) ) {
-        print "   $name not found: skipped\n";
-        continue;
-      }
-
-      // copy file
-      print "   C $name\n";      
-      if( !copy( "$file", "$dest/$name.".date("Y-m-d-h-m") ) ) {
-        $this->_printerr("_backup_config", "Copy of $file failed");
+      // set up source
+      $source = $this->_ini[$sect][$var];
+      
+      // backup and check for errors
+      if( !$this->_backup_file($name, $source, $dest) ) {
         $success = false;
-      }      
+      }
     }
     return $success;
   }
 
   /**
+   * Back up a file.  Will create necessary directories.
+   *
+   * @param string $name the name of file
+   * @param string $source the source directory (without filename)
+   * @param string $dest the backup directory (this is the subdirectory under backup only)
+   * @return boolean returns false only if source exists and copy failed, otherwise true
+   */
+  function _backup_file($name, $source, $dest = '') {
+    // get base backups directory
+    $base = $this->_getBackupLocation();
+
+    // make sure the subdirectory exists
+    // by getting each piece and
+    // creating if necessary
+    $des = preg_split('#[\\\\/]#', $dest);
+    $dir = "";
+    foreach( $des as $d ) {
+      $dir .= $dir? "/$d" : $d;
+      if( $dir && !@is_dir("$base/$dir") ) {
+        mkdir( "$base/$dir", 0700 );
+      }
+    }
+
+    // put it together into complete directory
+    $dest = $dest? $base."/".$dest : $base;
+
+    // create the destination file
+    $dest .= "/$name";
+    
+    // create the source file
+    $source = $source."/$name";
+    
+    // if no source, return gracefully
+    if( !file_exists($source) ) {
+      print "   S $source not found: skipped\n";
+      return true;
+    }
+    
+    // copy file
+    print "   B $dest\n";      
+    if( !copy( $source, $dest ) ) {
+      $this->_printerr("_backup_file", "Backup of $file failed");
+      return false;
+    }
+    @chmod( $dest, 0600 );
+    return true;
+  }
+  
+  /**
    * Back up database files
    */
-  function _backup_database($dir = null) {
+  function _backup_database() {
     //todo
     print "- Backing up database contents\n";
 
     // create directory if not done yet
-    if( !$dir ) { $dir = $this->_getBackupLocation(); }
+    $dir = $this->_getBackupLocation()."/database";
 
     print "   NOT YET FUNCTIONAL\n";
     return true;
@@ -282,39 +324,40 @@ class ZenTargets {
 
   /**
    * Back up attachments
+   *
+   * @return bolean
    */
-  function _backup_attachments($dir = null) {
+  function _backup_attachments() {
     print "- Backing up attachments\n";
 
-    // create directory if not done yet
-    if( !$dir ) { $dir = $this->_getBackupLocation(); }
-
     $src = $this->_ini['directories']['dir_attachments'];
-    $dest = "$dir/attachments";
-    return $this->_backup_directory( $src, $dest, false );
+    return $this->_backup_directory( $src, 'includes/attachments', true );
   }
 
   /**
    * Back up any files contributed by user
    */
-  function _backup_userfiles($dir = null) {
+  function _backup_userfiles() {
     print "- Backing up userfiles\n";
 
-    // create directory if not done yet
-    if( !$dir ) { $dir = $this->_getBackupLocation(); }
-
     $src = $this->_ini['directories']['dir_user'];
-    $dest = "$dir/user";
+    $dest = "includes/user";
     return $this->_backup_directory( $src, $dest, true );
   }
 
   /**
    * Validates backup directory (creates if needed) 
    * and returns correct path for backups
+   *
+   * This is a static var so that multiple directories 
+   * will not be created if our target runs over a minute
    */
   function _getBackupLocation() {
-    $dir = $this->_ini['directories']['dir_backups']."/".date("Y-m-d-h-m");
-    if( !@is_dir($dir) ) { @mkdir($dir, 0700); }
+    static $dir;
+    if( !$dir ) {
+      $dir = $this->_ini['directories']['dir_backups']."/".date("Y-m-d-h-m");
+      if( !@is_dir($dir) ) { @mkdir($dir, 0700); }
+    }
     return $dir;
   }
 
@@ -324,13 +367,14 @@ class ZenTargets {
   function _backup_directory( $src, $dest, $recurse = false ) {
     $success = true;
     $subdirs = array();
-    if( !@is_dir($dest) ) {
-      if( !@mkdir($dest) ) {
-        $this->_printerr("_backup_directory", "Unable to create destination: $dest");
+    $fulldest = $this->_getBackupLocation().'/'.$dest;
+    if( !@is_dir($fulldest) ) {
+      if( !@mkdir($fulldest) ) {
+        $this->_printerr("_backup_directory", "Unable to create destination: $fulldest");
         return false;
       }
-      if( !@chmod( $dest, 0700 ) ) {
-        $this->_printerr("_backup_directory", "Unable to set permissions on destination: $dest");
+      if( !@chmod( $fulldest, 0700 ) ) {
+        $this->_printerr("_backup_directory", "Unable to set permissions on destination: $fulldest");
       }
     }
     // load the files
@@ -342,9 +386,7 @@ class ZenTargets {
     while( ($file = readdir($dh)) == true ) {
       // only backup files which do not start with . and don't try to backup directory names
       if( !(strpos($file, ".") === 0) && !@is_dir($file) ) {
-        print "   copying $file\n";
-        if( !@copy( "$src/$file", "$dest/$file" ) ) {
-          $this->_printerr("_backup_directory", "Failed to copy $file");
+        if( !$this->_backup_file( $file, $src, $dest ) ) {
           $success = false;
         }
       }
@@ -395,9 +437,9 @@ class ZenTargets {
     print "   Creating new header.php file\n";
     $f = $this->_ini['paths']['path_www']."/header.php";
     $res = false;
-    if( !file_exists($f) || $this->_confirm("Replace header.php file?") ) {
+    if( !file_exists($f) || $this->_confirm("Replace header.php file?", null, 'y') == 'y' ) {
       $bulk = ZenUtils::flatten_array($this->_ini);
-      $tpl = new ZenTemplate("defaults/header.php.template");
+      $tpl = new ZenTemplate("defaults/header.php.template", true);
       $tpl->values($bulk);
       $fp = @fopen($f,"w");
       if( $fp ) {
@@ -562,20 +604,20 @@ class ZenTargets {
       return false;
     }
 
-    $thisdir = $this->_thisdir;
+    $installdir = $this->_installdir;
     print "   Copying from $dir to $thisdir\n";
 
     // copy the files specified in data file
     $success = true;
 
     // we don't use _parseConfigData() here because the ZenUtils class may not exist yet(we're copying it)
-    $files = file( "$thisdir/classFiles" );
+    $files = file( "$installdir/setup/classFiles" );
     foreach($files as $f) {
       $fn = trim($f);
       if( !strlen($fn) || strpos($fn, '#') === 0 ) { continue; }
       print "   C $fn\n";
-      if( !@copy("$dir/$fn", "$thisdir/$fn") ) {
-        $this->_printerr("_copy_class_files", "Unable to copy: $dir/$fn -> $thisdir/$fn");
+      if( !@copy("$dir/$fn", "$installdir/setup/$fn") ) {
+        $this->_printerr("_copy_class_files", "Unable to copy: $dir/$fn -> $installdir/$fn");
         return false;
       }
     }
@@ -586,26 +628,89 @@ class ZenTargets {
   /**
    * Merges config files with existing settings.. copies config files for all regular files
    * all template files will be parsed and the existing values substituted where possible
+   *
+   * If replace is set to true, then the current zen.ini file (from this install directory) will
+   * be used to fill values as possible, to reduce the user configuration as much as possible.
+   *
+   * @param string $dest the full path and filename to be created
+   * @param string $fallback if provided and $dest doesn't exist, this will be used instead
+   * @param boolean $replace if true, then the destination will be replaced instead of merged
    */
-  function _merge_config_files() {
-    print "- Merge config files not ready for use\n";
-    return false;
+  function _merge_template_file( $dest, $replace = false ) {
     //todo
-    //todo use the merge_ini_file concept for this
-    //todo rename the merge_ini_file to be merge_template_file and make it take a source and destination
-    //todo the merge_template_file method will then write the template contents into the destination file,
-    //todo keeping any settings in the destination file... add a default= property to template parser
-    //todo so that all of the default values can be provided in the template file, in the case that the destination
-    //todo file doesn't exist, or new settings are added
-    //todo call that method for each config file as in copy_config_files... note that only files with
-    //todo templates get merged, others are assumed to not contain changes we want to keep and simply
-    //todo overwritten
+    //todo
+    //todo
+    //todo change all the templates in defaults/ directory to use default= values
+    $file = basename($dest);
+    $tmplt = $this->_installdir."/defaults/{$file}.template";
+    
+    if( !@file_exists($tmplt) ) {
+      $this->_printerr('_merge_template_file', "Template file ($tmplt) not found, cannot continue");
+      return false;
+    }
+
+    // print out what is taking place
+    // get our variables from the correct source
+    if( file_exists($dest) && !$replace ) {
+      print "   M $dest\n";
+      $vals = $this->_stripConfigVals($dest);
+    }
+    else {
+      if( file_exists($dest) ) { 
+        print "   R $dest\n";
+      }
+      else {
+        print "   C $dest\n";
+      }
+      $vals = ZenUtils::flatten_array($this->_ini);
+    }
+
+    $template = new ZenTemplate( $tmplt, true );
+    $template->values($vals);
+    $newtext = $template->process();
+
+    $fp = fopen($dest, 'w');
+    if( !$fp ) { 
+      $this->_printerr('_merge_template_file', "Unable to write to $dest");
+      return false;
+    }
+    fwrite($fp, $newtext);
+    fclose($fp);
+    @chmod( $dest, 0755 );
+    
+    return true;
   }
 
   /**
-   * Copies config files to the appropriate locations
+   * Strips out the values of a config file
+   * and makes an array from them
    *
-   * @param boolean $overwrite if set to true, overwrites existing config files (backed up)
+   * @param string $file complete path and filename
+   * @return array mapped (String)property->(mixed)value
+   */
+  function _stripConfigVals( $file ) {
+    $contents = file($file);
+    $vals = array();
+    foreach($contents as $c) {
+      if( preg_match("/\\$(a-zA-Z0-9_) *= *[\"']?([^\"';]+)/", $c, $matches) ) {
+        $n = $matches[1];
+        $vals[$n] = trim($matches[2]);
+      }
+    }
+    return $vals;
+  }
+
+  /**
+   * Copies config files to the appropriate locations.
+   *
+   * If copy_config_files finds that the file already exists, one of three options will be presented:
+   * <ul>
+   *    <li>merge - this will extract any existing values from old file into the new file (recommended)
+   *    <li>replace - this will overwrite the old file
+   *    <li>skip - this will leave the old file and ignore any updates (if unsure, do not use this)
+   * </ul>
+   *
+   * @param boolean $overwrite if set to true, will automatically merge existing config files (backed up)
    * @return boolean success
    */
   function _copy_config_files( $overwrite = false ) {    
@@ -620,42 +725,97 @@ class ZenTargets {
       // split up the array
       list($sect,$var,$file,$is_tmplt,$permissions) = $c;
 
-      // set up destination
-      $dest = $this->_ini[$sect][$var]."/".$file;
+      // set up destination directory
+      $dest = $this->_ini[$sect][$var];
 
-      // get file locations
-      $source = $is_tmplt? "defaults/".$file.".template" : "defaults/".$file;
+      // get source directory
+      $source = $this->_installdir."/defaults";
 
-      // check overwrite
-      if( !file_exists($dest) || $overwrite || $this->_confirm("Overwrite config file: $file?") ) {
-        print "   C $file\n";
-        if( !$is_tmplt ) {
-          // copy plain files
-          if( !@copy( $source, $dest ) ) {
-            $this->_printerr("_copy_config_files", "Failed to copy config: $dest");
-            return false;
-          }
-        }
-        else {
-          // parse templates and write
-          $template = new ZenTemplate( $source );
-          $template->values($bulk);
-          $txt = $template->process();
-          $fp = @fopen($dest, "w");
-          if( !@fputs($fp, $txt) ) {
-            $this->_printerr("_copy_config_files", "Failed to copy config: $dest");
-            return false;
-          }
-          @fclose($fp);
-        }
-          
-        // set permissions
-        if( !eval("return chmod( \$dest, $permissions );") ) {
-          $this->_printerr("_copy_config_files", "Set permissions failed: $dest");
-        }
+      // check directory structure
+      if( !@is_dir($source) ) {
+        $this->_printerr('_copy_config_files', "$source directory does not exist, cannot create config file");
+        return false;
+      }
+      if( !@is_dir($dest) ) {
+        $this->_printerr('_copy_config_files', 
+                         "$dest directory does not exist, try running 'install.php -check_directories true'");
+        return false;
+      }
+
+      // set up file names
+      $dest .= "/".$file;
+      $source .= $is_tmplt? "/$file.template" : "/$file";
+
+      if( file_exists($dest) && !$overwrite ) {
+        // if this file exists, we will ask for confirmation
+        // if it is a template, we will try to merge it
+        // if not we either replace or skip
+        $choices = $is_tmplt? array('m','r','s') : array('r','s');
+        $choicetext = $is_tmplt? "merge, replace, or skip" : "replace or skip";
+        $choice = $this->_confirm("   $file exists, $choicetext?", $choices, 'm');
+      }
+      else if( file_exists($dest) && $overwrite ) {
+        // we will automagically merge or replace
+        // if the overwrite flag is set
+        $choice = $is_tmplt? "m" : "r";        
       }
       else {
-          print "   $dest exists: skipping(overwrite = false)\n";
+        // if the file doesn't exist then
+        // we create it
+        $choice = "c";
+      }
+
+      // check overwrite
+      if( !file_exists($dest) || $overwrite || $choice != 's' ) {
+        // create display text
+        $choice = strtoupper($choice);
+        switch($choice) {
+        case 'M':          
+          $ctext = 'Merge';
+          break;
+        case 'R':
+          $ctext = 'Replace';
+          break;
+        default:
+          $ctext = 'Create';
+        }
+        // if the file exists, we back it up
+        if( file_exists($dest) ) {
+          // figure out where to put the backup
+          switch($var) {
+          case 'dir_config':
+            $to = 'includes/config';
+          case 'path_www':
+            $to = 'www';
+          }
+          // perform backup
+          $this->_backup_file( $file, $this->_ini[$sect][$var], $to );
+        }
+        if( !$is_tmplt ) {
+          // get new config file
+          print "   $choice $file\n";
+          // this is a replace or a create
+          // there is no option to merge
+          if( !@copy( $source, $dest ) ) {
+            $this->_printerr("_copy_config_files", "Failed to $ctext config: $dest with $source");
+            $success = false;
+          }
+        }
+        else {          
+          // if this is a merge, we will try to merge template with
+          // the existing config file, then fall back on the default config
+          // file values. If it is not a merge, then we will simply create
+          // using the defaults.
+          // parse templates and write
+          if( !$this->_merge_template_file( $dest, ($choice == 'R'? true : false) ) ) {
+            $success = false;
+          }
+        }
+        // set permissions
+        @chmod( $dest, 0755 );
+      }
+      else {
+        print "   S skipped $file, you must manually update this file!\n";
       }
     }
     // update the last_config_update counter
@@ -675,7 +835,7 @@ class ZenTargets {
     print "- Copying all content files to appropriate destinations\n";
     
     // confirm if replace
-    if( !$this->_confirm("This will replace all existing files, continue?") )
+    if( $this->_confirm("This will replace all existing files, continue?") != 'y' )
       return false;
 
     // directories
@@ -756,7 +916,8 @@ class ZenTargets {
     return true;
 
     // confirm
-    if( !$this->_confirm("This will overwrite existing files at destination and existing database tables, continue?") ) {
+    $str = "This will completely destroy any existing data in the target directory or database, continue?";
+    if( $this->_confirm($str) != 'y') {
       print "   Aborted!\n";
       return false;
     }
@@ -782,67 +943,6 @@ class ZenTargets {
     return $success;
   }
   
-  /**
-   * Merges the values from the setup/zen.ini and the contents setup/zen.ini.template to create a new
-   * ini file.  This prevents the need to modify both the zen.ini and zen.ini.template files for each
-   * new modification.  Any settings without values will be left empty for you to fill in.
-   *
-   * @param boolean $overwrite specifies whether the ini file should be overwritten if one is encountered
-   * @return boolean succeeded
-   */
-  function _merge_ini_file( $overwrite = false ) {
-    print "- Merging ini files\n";
-    // check for develop mode
-    if( $this->_ini['debug']['develop_mode'] < 1 ) {
-      $this->_printerr("_merge_ini_file", "This method is only available during development [develop_mode=true]");
-      return false;
-    }
-
-    // check for overwrite
-    if( $overwrite || !file_exists("zen.ini") ) {
-      // make a backup if file exists
-      if( $overwrite && file_exists("zen.ini") ) {
-        print "   zen.ini found, creating backup\n";
-        copy("zen.ini", "zen.ini.".date("Y-m-d-h-m"));
-      }
-
-      // read the .ini file
-      print "   reading default values from setup/zen.ini\n";
-      $vars = ZenUtils::read_ini( "defaults/zen.ini", false );
-      $bulk = ZenUtils::flatten_array($vars);
-      print "bulk: \n";
-      print_r($bulk);
-      foreach( $this->_parseConfigData("dynamicIniVars") as $dat ) {
-        list($sect,$rep) = $dat;
-        foreach( $vars[$sect] as $key=>$val ) {          
-          if( $key != $rep ) {
-            $match = $bulk[$rep];
-            $bulk[$key] = $vars[$sect][$key] = str_replace($match, "%$rep%", $val);
-          }
-        }
-      }
-      print "post-bulk: \n";
-      print_r($bulk);
-
-      // parse ini.template
-      print "   merging into template file\n";
-      $template = new ZenTemplate( "defaults/zen.ini.template" );
-      $template->values($bulk);
-      $txt = $template->process();
-      $fp = fopen("zen.ini", "w");
-      if( !fputs($fp, $txt) ) {
-        $this->_printerr("_merge_ini_file", "Failed to create merged ini file");
-        $success = false;
-      }
-      fclose($fp);
-      return true;
-    }
-    else {
-      $this->_printerr("_merge_ini_file", "Cannot overwrite existing zen.ini file.  (-merge_ini_file true to override)"); 
-      return false;
-    }
-  }
-
   /**
    * Prepares installation package to upload to sourceforge
    *
@@ -894,9 +994,9 @@ class ZenTargets {
     return true;
 
     // confirm
-    if( !$this->_confirm("This will overwrite existing data with new changes,"
-                         ." config files will be backed up/merged, database will be backed up/merged,"
-                         ." other files will be overwritten... continue?") ) {
+    if( $this->_confirm("This will overwrite existing data with new changes,"
+                        ." config files will be backed up/merged, database will be backed up/merged,"
+                        ." other files will be overwritten... continue?") != 'y' ) {
       print "   Aborted!\n";
       return false;
     }
@@ -1029,7 +1129,7 @@ class ZenTargets {
    *
    */
   function _printHeading() {
-    print join("",file($this->_thisdir."/headingInfo"));
+    print join("",file($this->_installdir."/setup/headingInfo"));
   }
 
   /**
@@ -1059,8 +1159,20 @@ class ZenTargets {
    */
   function _getBooleanParm( $target, $index, $default = false ) {
     $p = $this->_getParm($target,$index);
+    if( !$p ) { return $default; }
     if( is_bool($p) ) { return $p; }
-    else { return $default; }
+    switch( strtolower(substr($p, 0, 1)) ) {
+    case "t":
+    case "y":
+    case 1:
+      return true;
+    case "f":
+    case "n":
+    case 0:
+      return false;
+    default:
+      return $default;
+    }
   }
 
 
@@ -1209,14 +1321,14 @@ class ZenTargets {
    * @return boolean loaded successfully
    */
   function _parseConfigData( $filename ) {
-    $filename = $this->_thisdir."/$filename";
+    $filename = $this->_installdir."/setup/$filename";
     if( !@file_exists($filename) ) {
       print "ERROR: $filename could not be loaded.  Setup will not run correctly!";
       return false;
     }
     if( !class_exists('ZenUtils') ) {
       $this->_copy_class_files();
-      require_once( $this->_thisdir."/ZenUtils.php" );
+      require_once( $this->_installdir."/setup/ZenUtils.php" );
     }
     return ZenUtils::parse_datafile($filename);
   }
@@ -1234,24 +1346,42 @@ class ZenTargets {
   /**
    * Confirms that the user wants to perform an action (y/n)
    *
+   * Note that if the --supress_confirm option was passed, then this function will simply return the default
+   * or the first element in the list.
+   *
    * @param string $msg message to user
-   * @return boolean yes or no
+   * @param array $choices if provided, whatever is here is a valid choice, otherwise y/n
+   * @return string returns char typed
    */
-  function _confirm( $msg ) {
-    $res = false;
-    while( $res != "y" && $res != "n" ) {
-      print "$msg [y/n]:";
+  function _confirm( $msg, $choices = null, $default = null ) {
+    $res = null;
+    // default choices
+    if( !$choices ) { $choices = array('y','n'); }
+    // check for --supress, return first element or default
+    if( $this->_supress ) {
+      return $default? $default : $choices[0];
+    }
+    // get the users reply (keep trying until it is valid
+    while( !in_array($res, $choices) ) {
+      // print an error message if retry
+      if( $res ) { print "Please choose one: ".join(", ",$choices)."\n"; }
+      // print message
+      print "$msg [".join("/",$choices)."]";
+      print ($default)? " <$default>:" : ":";
+      // read from stdin
       $fp = @fopen("php://stdin", "r");
       if( $fp ) {
-        $res = strtolower(substr(fread($fp, 1),0,1));
+        $res = trim(strtolower(substr(fread($fp, 1),0,1)));
         fclose( $fp );
       }
       else {
-        $this->_printerr("_confirm", "Unable to read stdin, is this a CLI version?");
+        $this->_printerr("_confirm", "Unable to read STDIN");
         return false;
       }
+      // set value to default if it is blank and one was provided
+      if( !$res && $default ) { $res = $default; }
     }
-    return ($res == "y")? true : false;
+    return $res;
   }
 
   /**
@@ -1301,7 +1431,7 @@ class ZenTargets {
   var $_ini;
 
   /** @var string the setup directory */
-  var $_thisdir;
+  var $_installdir;
 
 }
 

@@ -32,11 +32,14 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 [paths]
 
-path_includes = "{path_includes}" ;absolute path to includes directory (not web path)
+;absolute path to includes directory (not web path)
+path_includes = "{path_includes="/web/zentrack/includes"}" 
 
-path_www = "{path_www}"  ;absolute path to www directory (not web path)
+;absolute path to www directory (not web path)
+path_www = "{path_www="/web/zentrack/www"}"  
 
-url_www = "{url_www}"       ;browser path to zentrack www directory (this should include the domain name)
+;browser path to zentrack www directory (this should include the domain name)
+url_www = "{url_www="http://mysite.com/zentrack"}"    
 
 
 ;;;;;;;;;;;;;;; DATABASE SETTINGS ;;;;;;;;;;;;;;;;;;;;;;
@@ -48,44 +51,41 @@ url_www = "{url_www}"       ;browser path to zentrack www directory (this should
 
 ; the type of database
 ; mysql, postgres, oci8 (oracle)
-db_type = "{db_type}"
+db_type = "{db_type="mysql"}"
 
 ; domain or ip for database server, sometimes blank is good
-db_host = "{db_host}"
+db_host = "{db_host="localhost"}"
 
 ; the table set or instance to use for zentrack
-db_instance = "{db_instance}" 
+db_instance = "{db_instance="zentrack"}" 
 
 ; username for logging into db
-db_user = "{db_user}" 
+db_user = "{db_user="zentrack"}" 
 
 ; password for logging in, sometimes blank for postgres
-db_pass = "{db_pass}"
-
-; should we use a persistent connection?
-db_persistent = 0;
+db_pass = "{db_pass="zentrack"}"
 
 ; whether we should use persistent connections or not
 ; On improves efficiency, if your db experiences problems
 ; with too many open connections, or not closing connections
 ; when you would like, turn this Off
-db_persistent = "{db_persistent}"
+db_persistent = "{db_persistent="0"}"
 
 ;the prefix for table names, keep in upper case
-db_prefix = "{db_prefix}"
+db_prefix = "{db_prefix="ZENTRACK_"}"
 
 ;;;;;;;;;;;;;;;;; PAGE DISPLAY ;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; The properties concerning how pages are displayed
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 [layout]
 
-system_name = "{system_name}"                 ;system name to display
+system_name = "{system_name="ZenTrack"}"   ;system name to display
 
-page_prefix = "{page_prefix}"              ;the prefix for titles displayed by browser
+page_prefix = "{page_prefix="ZenTrack | "}"              ;the prefix for titles displayed by browser
 
-page_title = "{page_title}"  ;the default title displayed by browser
+page_title = "{page_title="Welcome"}"  ;the default title displayed by browser
 
-template_set = "{template}"                     ;which layout templates to employ
+template_set = "{template="default"}"                     ;which layout templates to employ
 
 ;;;;;;;;;;;;;;;;; DEBUGGING OUTPUT ;;;;;;;;;;;;;;;;;;;;;
 ;;; The debug settings are controlled in an xml file
@@ -96,16 +96,16 @@ template_set = "{template}"                     ;which layout templates to emplo
 [debug]
 
 ; 1=true, 0=false, display messages on screen
-debug_display = {debug_display}
+debug_display = {debug_display="0"}
 
-; location of the debug config file
-debug_configfile = "{debug_configfile}"
+; name of the debug config file (must be located in dir_config)
+debug_configfile = "{debug_configfile="debug.xml"}"
 
-; location of log file, blank disables file output
+; name of log file, blank disables file output (must be located in dir_logs)
 debug_logfile = "{debug_logfile}"
 
 ; set to 1 if you are a developer, otherwise leave this at 0
-develop_mode = {develop_mode}
+develop_mode = {develop_mode="false"}
 
 ;;;;;;;;;;;;;;; ADVANCED SETTINGS ;;;;;;;;;;;;;;;;;;;;;;
 ;;; It's probably best to leave these settings "as is"
@@ -113,18 +113,18 @@ develop_mode = {develop_mode}
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 [directories]
-dir_cache         = "{dir_cache}"
-dir_lib           = "{dir_lib}"
+dir_cache         = "{dir_cache="%path_includes%/cache"}"
+dir_lib           = "{dir_lib="%path_includes%/lib"}"
 
-dir_dbcache       = "{dir_dbcache}"
-dir_attachments   = "{dir_attachments}"
+dir_dbcache       = "{dir_dbcache="%dir_cache%/db"}"
+dir_attachments   = "{dir_attachments="%dir_cache%/attachments"}"
 
-dir_backups       = "{dir_backups}"
-dir_classes       = "{dir_classes}"
-dir_config        = "{dir_config}"
-dir_logs          = "{dir_logs}"
-dir_templates     = "{dir_templates}"
-dir_user          = "{dir_user}"
+dir_backups       = "{dir_backups="%path_includes%/backups"}"
+dir_classes       = "{dir_classes="%dir_lib%/classes"}"
+dir_config        = "{dir_config="%path_includes%/config"}"
+dir_logs          = "{dir_logs="%path_includes%/logs"}"
+dir_templates     = "{dir_templates="%dir_lib%/templates"}"
+dir_user          = "{dir_user="%path_includes%/user"}"
 
 [login requirements]
 ; any directories or files entered here will be excluded from login requirements
@@ -135,7 +135,7 @@ dir_user          = "{dir_user}"
 ;     actions/log.php     the log.php file located in subdirectory actions/
 ;     index.php           the index.php in the root zentrack folder
 ;
-excluded = "{excluded}"
+excluded = "{excluded="help/,styles.php"}"
 
 ; any directories or files entered here will be added to login requirements
 ; this, of course, overrides the excluded directive, so that you can say:

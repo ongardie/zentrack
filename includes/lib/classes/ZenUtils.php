@@ -1,5 +1,35 @@
 <? /* -*- Mode: C; c-basic-indent: 3; indent-tabs-mode: nil -*- ex: set tabstop=3 expandtab: */ 
+
+/**
+ * Includes common utils for processing.  This page should be static
+ * and should not depend on any other files.
+ */
  
+/** 
+ * LVL_NONE for ZenMessage: specifies no output
+ */
+define("LVL_NONE", 0);
+
+/** 
+ * LVL_ERROR for ZenMessage: specifies highest error level (minimal output)
+ */
+define("LVL_ERROR", 1);
+
+/** 
+ * LVL_WARN for ZenMessage: specifies warnings
+ */
+define("LVL_WARN", 2);
+
+/** 
+ * LVL_NOTE for ZenMessage: specifies general notices (good for most stuff)
+ */
+define("LVL_NOTE", 3);
+
+/** 
+ * LVL_DEBUG for ZenMessage: specifies lowest error level (maximum output, very verbose)
+ */
+define("LVL_DEBUG", 4);
+
 /** 
  * Utility functions (all static, call with ZenUtils::method())
  *
@@ -548,15 +578,16 @@ class ZenUtils {
       // we are in install mode, so don't use ZenMessageList
       // determine the level of messages to show, normally this
       // will be 1 (errors), in develop_mode we will relax this to 3(note)
-      $lvl = Zen::getIni('debug','develop_mode')? 3 : 1;
+      $lvl = ZenUtils::getIni('debug','develop_mode')? 3 : 1;
       if( $lvl >= $level ) {
         if( is_object($class) ) { $class = get_class($class); }
         print "  (".ZenUtils::displayDebugLevel($level).") {$class}->{$method}: [$errnum]$message";
+        return true;
       }
     }
-    else {
+    else if( class_exists('Zen') ) {
       // we are not in install mode, so send to ZenMessageList
-      Zen::debug($class, $method, $message, $errnum, $level);
+      return Zen::debug($class, $method, $message, $errnum, $level);
     }
   }
 

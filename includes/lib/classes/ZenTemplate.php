@@ -27,7 +27,7 @@
    * <ul> 
    *  <li>{varname} - inserts value of varname, if the value is an array
    *                  <br>then the values will be iterated each time it is requested
-   *  <li>{varname/"default_value"} - inserts val of varname, or default if not found, default is a string
+   *  <li>{varname="default_value"} - inserts val of varname, or default if not found, default is a string
    *  <li>{zen:category:varname} - inserts value from database settings using {@link Zen::getSetting()}
    *  <li>{ini:category:varname} - inserts value from ini settings using {@link Zen::getIniVal()}
    *  <li>{foreach:varname:"text"+index+"more text"+value} - loops through indexed array and prints name/value
@@ -241,7 +241,6 @@ class ZenTemplate {
       return $txt;
     }
     else {
-      ZenUtils::printArray($this->_vars);//debug
       ZenUtils::safeDebug($this->_install, $this, "_parseForeach", 
                           "The variable requested [{$parts[1]}] was not a valid array", 0, 2);
       return "";
@@ -292,7 +291,7 @@ class ZenTemplate {
     // determine if the if condition is true
     if( strpos($p,"=") > 0 ) {
       // there is an equals clause
-      list($key,$val) = explode("=",$parts[1]);
+      list($key,$val) = explode("=",$parts[1],1);
       $key = trim($key);
       $val = trim($val);
       $tf = ($this->_getVar($key) == $val);
@@ -416,8 +415,8 @@ class ZenTemplate {
    */
   function _getVar($name) {
     // find out if we have a default value
-    if( strpos($name, "/") > 0 ) {
-      list($name,$default) = explode('/',$name);
+    if( strpos($name, "=") > 0 ) {
+      list($name,$default) = explode('=',$name,1);
     }
     else { $default = null; }
     // parse the array or string

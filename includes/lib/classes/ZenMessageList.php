@@ -1,30 +1,5 @@
 <? /* -*- Mode: C; c-basic-indent: 3; indent-tabs-mode: nil -*- ex: set tabstop=3 expandtab: */ 
 
-/** 
- * LVL_NONE for ZenMessage: specifies no output
- */
-define("LVL_NONE", 0);
-
-/** 
- * LVL_ERROR for ZenMessage: specifies highest error level (minimal output)
- */
-define("LVL_ERROR", 1);
-
-/** 
- * LVL_WARN for ZenMessage: specifies warnings
- */
-define("LVL_WARN", 2);
-
-/** 
- * LVL_NOTE for ZenMessage: specifies general notices (good for most stuff)
- */
-define("LVL_NOTE", 3);
-
-/** 
- * LVL_DEBUG for ZenMessage: specifies lowest error level (maximum output, very verbose)
- */
-define("LVL_DEBUG", 4);
-
 /**
  * The ZenMessageList is a utility for error reporting and logging
  *

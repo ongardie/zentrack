@@ -2,7 +2,16 @@
 <?{
 
   /**
-   *  This initializes and runs ZenTargets, providing proper class inclusion and environemnt checks.
+   * This initializes and runs ZenTargets, providing proper class inclusion and environemnt checks.
+   *
+   * The complete list of targets and their parameters is listed in the docs/targets.html.
+   *
+   * The following special configuration options are available:
+   * <ul>
+   *   <li>--ini_file=file:  specify an alternate zen.ini (config) file to use (defaults to ./zen.ini)
+   *   <li>--supress_confirm: supresses confirm dialog (answers yes to all, needed for cron jobs)
+   *   <li>--classdir=dir:  specify location of class files (for development)
+   * </ul>
    *
    * @package Setup
    */
@@ -21,16 +30,23 @@
   // set default locations
   $ini_file = "$thisdir/zen.ini";
   $class_dir = "../includes/lib/classes";
+  $supress = false;
 
-  // strip --ini_file and --classdir if found
+  // strip -- params and set if appropriate
+  // we need two arrays because removing elements
+  // from first array will change count and
+  // cause problems with iterator
+  $newvals = array();
   for( $i=0; $i < count($argv); $i++ ) {
     if( strpos(trim($argv[$i]), '--') === 0 ) {
       $val = explode('=',substr(trim($argv[$i]),2));
-      unset($argv[$i]);      
       if( $val[0] == 'ini_file' ) { $ini_file = $val[1]; }
       else if( $val[0] == 'classdir' ) { $class_dir = $val[1]; }
+      else if( $val[0] == 'supress_confirm' ) { $supress = true; }
     }
+    else { $newvals[] = $argv[$i]; }
   }
+  $argv = $newvals;
 
   /****************************************************
    ***** ENVIRONMENT
@@ -93,7 +109,7 @@
   load_classes($classes_all, $dir_classes);
 
   // run the targets
-  $z = new ZenTargets($ini_set);
+  $z = new ZenTargets($ini_set, $supress);
 
   // make sure we have parameters to work with
   if( count($argv) < 1 || (preg_match("/--ini_file=/",$argv[0]) && count($argv) < 2) ) {
