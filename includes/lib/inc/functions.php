@@ -118,7 +118,13 @@
    * Catch php errors and redirect them to the messageList
    */
   function zenErrorWrapper( $no, $message, $file, $line ) {
-    Zen::debug( $file, $line, "$no: $message", 02, LVL_ERROR );
+    $l = LVL_ERROR;
+    if( (strpos($file, 'adodb') && preg_match('/(fopen|unlink)/', $message))
+        || (strpos($file, 'tpl_compiled') && preg_match('/Undefined index/', $message)) ) {
+      // filter annoying adodb cache messages
+      $l = LVL_DEBUG;
+    }
+    Zen::debug( basename($file), "line_$line", "$no: $message", 02, $l );
   }
 
   endPtime( "functions.php" );

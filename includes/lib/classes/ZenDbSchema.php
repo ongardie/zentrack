@@ -23,11 +23,12 @@ class ZenDbSchema extends Zen {
    * @param boolean $devmode are we in develop mode? (will search for this if not provided)
    */
   function ZenDbSchema( $xmlfile, $use_cache = true, $devmode = null ) {
-    ZenUtils::prep("ZenMetaTable");
-    ZenUtils::prep("ZenMetaField");
     // call Zen()
     $this->Zen();
     ZenUtils::mark("ZenDbSchema[".$this->randomNumber."] constructor");
+
+    ZenUtils::prep("ZenMetaTable");
+    ZenUtils::prep("ZenMetaField");
 
     // develop mode?
     $this->_devmode = !is_null($devmode)? $devmode : ZenUtils::getIni('debug','develop_mode');

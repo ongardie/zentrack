@@ -75,7 +75,7 @@ class ZenList extends Zen {
     $this->_thisid = null;
 
     /** @var string $_primarykey the column used as primary key for this data type */
-    $this->_primarykey = ZenUtils::getPrimaryKey( $this );
+    $this->_primarykey = ZenUtils::getPrimaryKey( $data_type );
   }
 
   /**

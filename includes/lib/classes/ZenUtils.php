@@ -639,14 +639,17 @@ class ZenUtils {
    * @return boolean successful
    */
   function serializeDataToFile( $file, $data ) {
+    ZenUtils::mark("serializeFileToData($file)");
+    $res = false;
     if( is_dir(dirname($file)) ) {
       $serializedData = serialize($data);
       $fp = fopen($file,'w');
       fwrite($fp, $serializedData);
       fclose($fp);
-      return true;
+      $res = true;
     }
-    return false;
+    ZenUtils::unmark("serializeFileToData($file)");
+    return $res;
   }
 
   /**
@@ -656,10 +659,13 @@ class ZenUtils {
    * @return mixed whatever was in the file or false if failed
    */
   function unserializeFileToData( $file ) {
+    ZenUtils::mark("unserializeFileToData($file)");
+    $res = false;
     if( file_exists($file) ) {
       $serializedData = join('',file($file));
-      return unserialize($serializedData);
+      $res = unserialize($serializedData);
     }
+    ZenUtils::unmark("unserializeFileToData($file)");
     return false; 
   }
 

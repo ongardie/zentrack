@@ -1645,7 +1645,7 @@
 	*/
 	function UpdateBlobFile($table,$column,$path,$where,$blobtype='BLOB')
 	{
-		$fd = fopen($path,'rb');
+		$fd = @fopen($path,'rb');
 		if ($fd === false) return false;
 		$val = fread($fd,filesize($path));
 		fclose($fd);
@@ -3565,7 +3565,7 @@
 			$mtime = substr(str_replace(' ','_',microtime()),2); 
 			// getmypid() actually returns 0 on Win98 - never mind!
 			$tmpname = $filename.uniqid($mtime).getmypid();
-			if (!($fd = fopen($tmpname,'a'))) return false;
+			if (!($fd = @fopen($tmpname,'a'))) return false;
 			$ok = ftruncate($fd,0);			
 			if (!fwrite($fd,$contents)) $ok = false;
 			fclose($fd);
@@ -3573,7 +3573,7 @@
 			// the tricky moment
 			@unlink($filename);
 			if (!@rename($tmpname,$filename)) {
-				unlink($tmpname);
+				@unlink($tmpname);
 				$ok = false;
 			}
 			if (!$ok) {
@@ -3581,7 +3581,7 @@
 			}
 			return $ok;
 		}
-		if (!($fd = fopen($filename, 'a'))) return false;
+		if (!($fd = @fopen($filename, 'a'))) return false;
 		if (flock($fd, LOCK_EX) && ftruncate($fd, 0)) {
 			$ok = fwrite( $fd, $contents );
 			fclose($fd);

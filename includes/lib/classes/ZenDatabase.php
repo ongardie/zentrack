@@ -31,8 +31,9 @@ class ZenDatabase extends Zen {
    */
   function ZenDatabase( $dbtype, $dbhost, $dbuser, $dbpass, 
                         $dbinst, $persistent = false, $connect = true ) {
-    ZenUtils::prep("ZenDbTypeInfo");
     $this->Zen();
+    ZenUtils::mark("ZenDatabase[".$this->randomNumber."] init/connect");
+    ZenUtils::prep("ZenDbTypeInfo");
     $this->_dbtype = $dbtype;
     $this->_dbhost = $dbhost;
     $this->_dbinst = $dbinst;
@@ -46,6 +47,7 @@ class ZenDatabase extends Zen {
                         .(strlen($dbpass)? '':'(no password)'), 
                         0, LVL_NOTE);
     ZenDatabase::_getDbConnection($connect);
+    ZenUtils::unmark("ZenDatabase[".$this->randomNumber."] init/connect");
   }
 
   /**

@@ -35,11 +35,12 @@ class ZenFormGenerator extends Zen {
   function ZenFormGenerator($table, $template) {
     ZenUtils::prep("ZenMetaField");
     ZenUtils::prep("ZenTemplate");
-    ZenUtils::printArray($table);//debug
     ZenUtils::safeDebug('ZenFormGenerator', 'constructor', 
                         "template=".$template.", table=".$table->name(),
                         0, LVL_DEBUG);
     $this->_table = $table;
+    $this->setFormProp('title',$table->name());
+    $this->setFormProp('description','');
     $this->_template = $template;
     $this->_name = 'aForm';
     $this->_action = $_SERVER['SCRIPT_NAME'];
@@ -232,6 +233,7 @@ class ZenFormGenerator extends Zen {
    *   <li>fields - the form field info
    *   <li>hiddenfields - the form fields which are hidden from view
    *   <li>settext - dynamically generated text from helpers or scripts
+   *   <li>showdescription - should field descriptions be printed on page (in addition to overlib)
    *   <li>choices - choices available to a select option (see {@link _generateChoices()})
    *   <li>table - name of database table
    *   <li>template - name of template in use
@@ -265,11 +267,9 @@ class ZenFormGenerator extends Zen {
     $vals["choices"] = array();    
     foreach($this->_table->listFields() as $f) {
       $metafield = $this->_table->getMetaField($f);
-      ZenUtils::safeDebug( $this, "render",
-                           "field is: ".$f.", type is: ".$metafield->type()."<br>\n",
-                           0, LVL_DEBUG);//debug
       $field = $metafield->getFieldArray();
       if( !isset($field['default']) ) { $field['default'] = null; }
+      if( !isset($field['description']) ) { $field['description'] = null; }
       //$field['default'] = ZenUtils::ffv($field['default']); //probably not needed (using smarty escape)
       if( isset($this->_props[$f]) ) {
         foreach($this->_props[$f] as $key=>$val) {
@@ -362,7 +362,7 @@ class ZenFormGenerator extends Zen {
     }
     
     //ZenUtils::printArray($vals);//debug
-    
+
     // render the form
     $template = new ZenTemplate();
     $template->assign($vals);

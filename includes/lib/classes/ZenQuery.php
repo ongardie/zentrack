@@ -416,6 +416,7 @@ class ZenQuery extends Zen {
    * @return array (empty array if query fails)
    */
   function selectRow($cacheTime = null, $indexed = false) {
+    $this->limit(1);
     $vals = $this->select( $cacheTime, $indexed );
     if( !count($vals) ) {
       return array();
@@ -439,7 +440,7 @@ class ZenQuery extends Zen {
     $this->_queryType = 'SELECT';
     $result = $this->_execute($cacheTime);
     if ($result) {
-      return $result->GetArray();
+      return $this->getArrayVals( $result );
     }
     else { return array(); }
   }
@@ -871,6 +872,35 @@ class ZenQuery extends Zen {
     $metaField = $metaTable->getMetaField($field);
     return $this->quote( $value, $metaField->dataType() );
   }
+
+  /**
+   * Recursively process and fix array values (moving them
+   * to lower case, since adodb can't seem to do this reliably)
+   *
+   * @access private
+   * @param Object $result the adodb result from the query
+   */
+  function getArrayVals( $result ) {
+    $type = $this->_dbobject->getDbType();
+    if( $type == 'oci8po' || $type == 'oracle' ) {
+      $vals = array();
+      $data = $result->getArray();
+      if( is_array($data) ) {
+        foreach($data as $row) {
+          $newrow = array();
+          foreach($row as $key=>$val) {
+            $newrow[ strtolower($key) ] = $val;
+          }
+          $vals[] = $newrow;
+        }
+      }
+      return $vals;
+    }
+    else {
+      return $result? $result->getArray() : array();
+    }
+  }
+  
 
   /** 
    * The database object to use for connections.

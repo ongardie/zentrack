@@ -1,5 +1,9 @@
 
 <form name='{$name}' method='{$method}' action='{$action}' class='simpleForm'>
+{foreach from=$hiddenfields item=fld}
+  {include file="simpleForm/hidden.tpl" pval=$fld assign="fieldText"}
+  {$fieldText}
+{/foreach}
 <table width='500'>
 {if $title != ""}
   <tr><th colspan='2' class='simpleFormTitle'>{$title|tr}</th></tr>
@@ -11,11 +15,12 @@
 
 {foreach from=$fields item=rowval}
   <tr>
-   <td class='simpleFormLabel'>{$rowval[label]|tr}</td>
+   <td class='simpleFormLabel'>{$rowval.label|tr}</td>
    <td class='simpleFormCell'>
-    {include file="simpleForm/$rowval[type].tpl" pval=$rowval}
-    {if $showDescription == true}
-      <div class="details">{$rowval[description]|tr}</div>
+    {include file="simpleForm/`$rowval.ftype`.tpl" pval=$rowval assign="fieldText"}
+    {$fieldText}
+    {if $showdescription == true && $rowval.description != ""}
+      <div class="details">{$rowval.description|tr}</div>
     {/if}
    </td>
   </tr>

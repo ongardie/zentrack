@@ -1,9 +1,9 @@
 {*
   Special event handlers for form fields
 *}
-{if $pval[onBlur] ne ""} onBlur="{$pval[onBlur]}"{/if}
-{if $pval[onChange] ne ""} onChange="{$pval[onChange]}"{/if}
-{if $pval[onClick] ne ""} onClick="{$pval[onClick]}"{/if}
-{if $pval[onMouseOver] ne ""} onClick="{$pval[onOnMouseOver]}"{/if}
-{if $pval[onMouseOut] ne ""} onClick="{$pval[onOnMouseOut]}"{/if}
-{$pval[other]}
+{if $pval.Blur ne ""} onBlur="{$pval.Blur}"{/if}
+{if $pval.Change ne ""} onChange="{$pval.Change}"{/if}
+{if $pval.Click ne ""} onClick="{$pval.Click}"{/if}
+{if $pval.MouseOver ne ""} onClick="{$pval.OnMouseOver}"{/if}
+{if $pval.MouseOut ne ""} onClick="{$pval.OnMouseOut}"{/if}
+{$pval.other}
