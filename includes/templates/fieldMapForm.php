@@ -119,7 +119,8 @@ foreach($fields as $f=>$field) {
     else {
       $txt = "<select style='width:80px;' ".fmfName($f, 'field_type').">";
       foreach($fprops['types'] as $t) {
-        $txt .= "<option value='$t'>$t</option>\n";
+        $sel = ( $field['field_type'] == $t )? ' selected':'';
+        $txt .= "<option value='$t'$sel>$t</option>\n";
       }
       $txt .= "</select>";
       fmfRow($txt,$class);
