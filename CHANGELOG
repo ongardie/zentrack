@@ -14,6 +14,8 @@ abstraction, and endless possibilities for project expansion.
 ----- VERSION 2.5.0.3 (development) -----
 
 2005-03-01, cfalonso
+  Migrated default values from varfield_idx to field_map
+    - zentrack_2/includes/ZenFieldMap.class 1.8
   Fixed a problem in saving created and edited tickets
     - zentrack_2/includes/ZenFieldMap.class 1.7
     - zentrack_2/includes/editTicketSubmit.php 1.14
