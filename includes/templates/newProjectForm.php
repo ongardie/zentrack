@@ -9,6 +9,11 @@
     include("$libDir/footer.php");
     exit;
   }
+  $td = ($TODO == 'EDIT');
+  if( !$deadline && !$td && $zen->settings["default_deadline"] )
+     $deadline = strtotime($zen->settings["default_deadline"]);
+  if( !$start_date && !$td && $zen->settings["default_start_date"] )
+     $start_date = strtotime($zen->settings["default_start_date"]);
 ?>     
 
 <form method="post" name="newProjectForm" action="<?=($TODO=='EDIT')? "$rootUrl/admin/editProjectSubmit.php" : "$rootUrl/addProjectSubmit.php"?>">

@@ -195,7 +195,7 @@ value="<?=strip_tags($relations)?>">
 </tr>
 <tr>
   <td class="bars">
-    Date of Commencement
+    Start Date
   </td>
   <td class="bars">
     <input type="text" name="start_date" size="12" maxlength="10"
