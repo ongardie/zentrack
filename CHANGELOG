@@ -16,6 +16,8 @@ abstraction, and endless possibilities for project expansion.
 2005-02-10, cfalonso
   Fixed a bug on behaviors when using file groups evaluating on a standard key-value field
     - includes/zenTrack.class 1.169
+  Re-executed behaviors didn't run. Fixed
+    - www/behavior_js.php 1.18
 
 2005-02-09, cfalonso
   Default groups in field_map page didn't show the selected field in the pulldown, just added the $sel variable
