@@ -70,7 +70,8 @@
   $is_creator = $zen->checkCreator($login_id, $id);
   
   // load behavior js if needed
-  if( isset($setmode) && $setmode == 'custom' ) {
+  if( (isset($setmode) && strtolower($setmode) == 'custom') 
+  || (!isset($setmode) && isset($ticket_mode) && strtolower($ticket_mode) == 'custom') ) {
     $onLoad[] = "behavior_js.php?formset=ticket_customForm";
   }
   
