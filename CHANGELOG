@@ -7,6 +7,25 @@
 
 ----- V2.5 (in development) ----
 
+2004-07-29, cfalonso
+  Included detail rules for behaviors
+    -zentrack_2/includes/zenTrack.class 1.133
+    -zentrack_2/www/admin/addBehaviorSubmit.php 1.2
+    -zentrack_2/includes/templates/behaviorDetailForm.php 1.1
+    -zentrack_2/www/admin/editBehaviorDetails.php 1.1
+
+2004-07-28, cfalonso
+  Started work on behaviors admin panel
+    -zentrack_2/includes/zenTrack.class 1.132
+    -zentrack_2/www/admin/addBehaviorSubmit.php 1.1
+    -zentrack_2/includes/templates/behaviorAdd.php 1.1
+    -zentrack_2/includes/templates/behaviorForm.php 1.1
+    -zentrack_2/www/admin/behaviors.php 1.1
+    -zentrack_2/www/admin/editBehavior.php 1.1
+    -zentrack_2/www/admin/editBehaviorSubmit.php 1.1
+    -zentrack_2/includes/leftAdmin.php 1.7
+    -zentrack_2/includes/templates/adminMenu.php 1.9
+
 2004-07-27, Kato
   Added fields to GROUP table
     - zentrack_2/install/UPGRADE_mssqlserver.sql 1.5
@@ -16,15 +35,84 @@
     - zentrack_2/includes/templates/binForm.php 1.7
     - zentrack_2/includes/templates/configForm.php 1.6
 
+2004-07-27, cfalonso
+  More fixes on groups
+    -zentrack_2/includes/zenTrack.class 1.129
+    -zentrack_2/www/admin/editGroupDetails.php 1.4
+    -zentrack_2/www/admin/editCustom.php 1.3
+
+2004-07-26, cfalonso
+  Some fixes on groups
+    -zentrack_2/www/admin/editGroupSubmit.php 1.2
+    -zentrack_2/www/admin/editGroupDetails.php 1.3
+    -zentrack_2/www/admin/addGroupSubmit.php 1.4
+    -zentrack_2/includes/templates/groupDetailsForm.php 1.4
+    -zentrack_2/includes/zenTrack.class 1.128
+
 2004-07-24, Kato
   Added new methods for groups and behaviors
     - zentrack_2/includes/zenTrack.class 1.125	
 	
+2004-07-22, cfalonso
+  Working on the way to store data groups in the database
+    -zentrack_2/www/admin/addGroupSubmit.php 1.1
+    -zentrack_2/www/admin/editGroupSubmit.php 1.1
+    -zentrack_2/www/admin/editGroup.php 1.2
+    -zentrack_2/includes/templates/groupAdd.php 1.2
+    -zentrack_2/includes/templates/groupForm.php 1.4
+    -zentrack_2/includes/leftAdmin.php 1.6
+
+2004-07-21, cfalonso
+  Working on functionality to manage data groups
+    -zentrack_2/includes/zenTrack.class 1.125
+    -zentrack_2/www/admin/editGroupDetails.php 1.1
+    -zentrack_2/www/admin/editGroup.php 1.1
+    -zentrack_2/includes/templates/groupAdd.php 1.1
+    -zentrack_2/includes/templates/groupDetailsForm.php 1.1
+    -zentrack_2/includes/templates/groupForm.php 1.2
+    -zentrack_2/www/admin/editGroupDetails.php 1.2
+    -zentrack_2/includes/templates/groupDetailsForm.php 1.2
+    -zentrack_2/includes/templates/groupForm.php 1.3
+
+2004-07-20, cfalonso
+  Started work on data groups admin panel
+    -zentrack_2/includes/zenTrack.class 1.124
+    -zentrack_2/includes/templates/adminMenu.php 1.6
+    -zentrack_2/includes/templates/groupForm.php 1.1
+    -zentrack_2/www/admin/groups.php 1.1
+
+2004-07-19, cfalonso
+  Improved the custom fields admin panel
+    -zentrack_2/includes/zenTrack.class 1.123
+    -zentrack_2/www/admin/editCustom.php 1.2
+    -zentrack_2/install/configVars.php.default 1.7
+
 2004-07-18, Kato
   Added new methods for groups, variable fields, and behaviors
     - zentrack_2/includes/db.class 1.25
     - zentrack_2/includes/zenTrack.class 1.122
     - zentrack_2/install/configVars.php.default 1.6
+
+2004-07-13, cfalonso
+  Included the search fields in the search result list
+    -zentrack_2/includes/templates/searchList.php 1.12
+
+2004-07-12, cfalonso
+  Included the custom fields in the search form
+    -zentrack_2/install/configVars.php.default 1.4
+    -zentrack_2/includes/zenTrack.class 1.121
+    -zentrack_2/install/configVars.php.default 1.5
+    -zentrack_2/includes/templates/searchForm.php 1.9
+
+2004-07-08, cfalonso
+  Started work on Custom Fields Admin Panel.
+  Created inicial screen and included it in the administrator menu
+    -zentrack_2/includes/zenTrack.class 1.120
+    -zentrack_2/install/UPGRADE.sql 1.2
+    -zentrack_2/includes/templates/adminMenu.php 1.5
+    -zentrack_2/includes/leftAdmin.php 1.5
+    -zentrack_2/www/admin/editCustom.php 1.1
+    -zentrack_2/includes/templates/editCustomsForm.php 1.1
 
 2004-07-01, Kato
   Added search sorting and search by date enhancements
