@@ -1535,8 +1535,7 @@ class zenTrack extends zen {
       // finalize and send the message
       $message = (get_magic_quotes_gpc())? $message : addslashes($message);
       $subject = (get_magic_quotes_gpc())? $subject : addslashes($subject);
-      return( mail( $recipient_address, $subject, $message, $headers ) );
-      //print "mail($recipient_address\n\n$subject\n\n".$message."\n\n$headers)<br>\n";//debug
+      return( mail( $recipient_address, $subject, $message, $headers ) );      
    }
    
    function getTicketCount( $status = '', $bin_id = '' ) {
@@ -1842,6 +1841,9 @@ class zenTrack extends zen {
 		       "edit"    => array( 0, 1, array('OPEN','PENDING'), 0 ),
 		       "upload"  => array( 1, 1, 0,                       1 )		       
 		       );
+      $n = "allow_$action";
+      if( $this->settings["$n"] && $this->settings["$n"] != "on" )
+	return false;
       $c = $actions["$action"];
       if( is_array($id) ) {
 	 $ticket = $id;
@@ -1851,6 +1853,7 @@ class zenTrack extends zen {
 	 $ticket = $this->get_ticket($id);
 	 $bin_id = $ticket["bin_id"];
       }
+
       if( $c[0] == 2 ) {
 	 if( $ticket["user_id"] == $user_id )
 	   return false;
