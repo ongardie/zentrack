@@ -39,10 +39,11 @@ CREATE TABLE ZENTRACK_VARFIELD (
   ticket_id int(12) NOT NULL,
 
   /* CHANGES HERE MUST BE REFLECTED IN the values for ZENTRACK_VARFIELD_IDX */
+  custom_menu1 varchar(255),
+  custom_menu2 varchar(255),
+
   custom_string1 varchar(255),
   custom_string2 varchar(255),
-  custom_string3 varchar(255),
-  custom_string4 varchar(255),
 
   custom_number1 int(20),
   custom_number2 int(20),
@@ -58,6 +59,7 @@ CREATE TABLE ZENTRACK_VARFIELD (
 CREATE TABLE ZENTRACK_VARFIELD_IDX (
   field_name varchar(25) NOT NULL,
   field_label varchar(50),
+  field_value varchar(100),
   sort_order int(3),
   is_required int(1) default 0,
   use_for_project int(1) default 0, 
@@ -66,18 +68,20 @@ CREATE TABLE ZENTRACK_VARFIELD_IDX (
   show_in_list int(1) default 0,
   show_in_custom int(1) default 0,
   show_in_detail int(1) default 0,
+  show_in_new    int(1) default 0,
   js_validation text,
   INDEX (sort_order, field_name)
 );
 
 INSERT INTO ZENTRACK_VARFIELD_IDX (field_name,       field_label,       sort_order) 
+                           VALUES ('custom_menu1', 'Custom Menu 1', 1         );
+INSERT INTO ZENTRACK_VARFIELD_IDX (field_name,       field_label,       sort_order) 
+                           VALUES ('custom_menu2', 'Custom Menu 2', 1         );
+
+INSERT INTO ZENTRACK_VARFIELD_IDX (field_name,       field_label,       sort_order) 
                            VALUES ('custom_string1', 'Custom String 1', 1         );
 INSERT INTO ZENTRACK_VARFIELD_IDX (field_name,       field_label,       sort_order) 
                            VALUES ('custom_string2', 'Custom String 2', 1         );
-INSERT INTO ZENTRACK_VARFIELD_IDX (field_name,       field_label,       sort_order) 
-                           VALUES ('custom_string3', 'Custom String 3', 1         );
-INSERT INTO ZENTRACK_VARFIELD_IDX (field_name,       field_label,       sort_order) 
-                           VALUES ('custom_string4', 'Custom String 4', 1         );
 
 INSERT INTO ZENTRACK_VARFIELD_IDX (field_name,       field_label,       sort_order) 
                            VALUES ('custom_number1', 'Custom Number 1', 1         );

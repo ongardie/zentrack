@@ -37,10 +37,10 @@ CREATE TABLE ZENTRACK_GROUP_DETAIL (
 -- CHANGES HERE MUST BE REFLECTED IN the values for ZENTRACK_VARFIELD_IDX values
 CREATE TABLE ZENTRACK_VARFIELD (
   ticket_id NUMERIC(12) NOT NULL,
+  custom_menu1 VARCHAR(255),
+  custom_menu2 VARCHAR(255),
   custom_string1 VARCHAR(255),
   custom_string2 VARCHAR(255),
-  custom_string3 VARCHAR(255),
-  custom_string4 VARCHAR(255),
   custom_number1 NUMERIC(20),
   custom_number2 NUMERIC(20),
   custom_date1 NUMERIC(12),
@@ -60,6 +60,7 @@ CREATE TABLE ZENTRACK_VARFIELD_IDX (
   show_in_list NUMERIC(1) default 0,
   show_in_custom NUMERIC(1) default 0,
   show_in_detail NUMERIC(1) default 0,
+  show_in_new    NUMERIC(1) default 0,
   js_validation TEXT
 );
 
@@ -71,13 +72,14 @@ CREATE NONCLUSTERED INDEX bdtl_idx ON ZENTRACK_BEHAVIOR_DETAIL (behavior_id);
 CREATE NONCLUSTERED INDEX var_idx_idx ON ZENTRACK_VARFIELD_IDX (sort_order, field_name);
 
 INSERT INTO ZENTRACK_VARFIELD_IDX (field_name,       field_label,       sort_order) 
+                           VALUES ('custom_menu1', 'Custom Menu 1', 1         );
+INSERT INTO ZENTRACK_VARFIELD_IDX (field_name,       field_label,       sort_order) 
+                           VALUES ('custom_menu2', 'Custom Menu 2', 1         );
+
+INSERT INTO ZENTRACK_VARFIELD_IDX (field_name,       field_label,       sort_order) 
                            VALUES ('custom_string1', 'Custom String 1', 1         );
 INSERT INTO ZENTRACK_VARFIELD_IDX (field_name,       field_label,       sort_order) 
                            VALUES ('custom_string2', 'Custom String 2', 1         );
-INSERT INTO ZENTRACK_VARFIELD_IDX (field_name,       field_label,       sort_order) 
-                           VALUES ('custom_string3', 'Custom String 3', 1         );
-INSERT INTO ZENTRACK_VARFIELD_IDX (field_name,       field_label,       sort_order) 
-                           VALUES ('custom_string4', 'Custom String 4', 1         );
 
 INSERT INTO ZENTRACK_VARFIELD_IDX (field_name,       field_label,       sort_order) 
                            VALUES ('custom_number1', 'Custom Number 1', 1         );

@@ -4,7 +4,7 @@
       <p class='smallBold'><?=tr("To remove a ? from use, uncheck the 'active' box.",array($type))?></p>
 
 <? if( $type == "type" ) { ?>
-      <p><?=tr('There are two special types, which can be set by including either the word <span class='error'>project</span> or <span class='error'>note</span> in the bin name.')?></p>
+      <p><?=tr('There are two special types, which can be set by including either the word <span class="error">project</span> or <span class="error">note</span> in the bin name.')?></p>
 
      <p><?=tr('Projects act as containers, which can hold multiple tickets as "tasks" which are part of the projects completion requirements.')?></p>
      <p><?=tr('Notes are special tickets which do not require any actions.').'  '.

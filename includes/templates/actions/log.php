@@ -37,7 +37,7 @@
 </tr>
 <tr>
   <td>
-    <input type="text" name="hours" size="4" maxlength="8" value="<?=strip_tags($hours)?>">
+    <input type="text" name="hours" size="4" maxlength="8" value="<?=$zen->ffv($hours)?>">
   </td>
 </tr>
 <tr>

@@ -11,34 +11,38 @@
       <input type='hidden' name='TODO' value=''>
       <table cellpadding="2" cellspacing="1" class='plainCell'>
 	 <tr>
-	 <td class='titleCell' align='center' colspan='10'>
-	   <b>Edit the Available Custom Fields</b>
+	 <td class='titleCell' align='center' colspan='12'>
+	   <b><?=tr("Edit the Available Custom Fields")?></b>
 	 </td>
 	 </tr>
 	 <tr>
-	 <td width="60" class='subTitle' align='center'><b>Field Name</b></td>
-	 <td class='subTitle' align='center'><b>Field Label</b></td>
-	 <td class='subTitle' align='center'><b>Order</b></td>
-	 <td width="30" class='subTitle' align='center' title="Is this field required?">
-	   <b>Required</b>
+	 <td width="60" class='subTitle' align='center'><b><?=tr("Field Name")?></b></td>
+	 <td class='subTitle' align='center'><b><?=tr("Field Label")?></b></td>
+	 <td class='subTitle' align='center'><b><?=tr("Order")?></b></td>
+	 <td class='subTitle' align='center'><b><?=tr("Default")?></b></td>
+	 <td width="30" class='subTitle' align='center' title="<?=tr("Is this field required?")?>">
+	   <b><?=tr("Required")?></b>
          </td>
-	 <td width="30" class='subTitle' align='center' title="Used for projects?">
-           <b>Projects</b>
+	 <td width="30" class='subTitle' align='center' title="<?=tr("Used for projects?")?>">
+           <b><?=tr("Projects")?></b>
          </td>
-	 <td width="30" class='subTitle' align='center' title="Used for tickets?">
-	   <b>Tickets</b>
+	 <td width="30" class='subTitle' align='center' title="<?=tr("Used for tickets?")?>">
+	   <b><?=tr("Tickets")?></b>
          </td>
-	 <td width="30" class='subTitle' align='center' title="Used for searches?">
-	   <b>Search</b>
+	 <td width="30" class='subTitle' align='center' title="<?=tr("Used for searches?")?>">
+	   <b><?=tr("Searches")?></b>
          </td>
-	 <td width="30" class='subTitle' align='center' title="Ticket lists?">
-	   <b>List</b>
+	 <td width="30" class='subTitle' align='center' title="<?=tr("Ticket lists?")?>">
+	   <b><?=tr("Lists")?></b>
          </td>
-	 <td width="30" class='subTitle' align='center' title="Show in custom tab?">
-	   <b>Custom Tab</b>
+	 <td width="30" class='subTitle' align='center' title="<?=tr("Show in custom tab?")?>">
+	   <b><?=tr("Custom")?></b>
          </td>
-	 <td width="30" class='subTitle' align='center' title="Show in detail tab?">
-	   <b>Detail Tab</b>
+	 <td width="30" class='subTitle' align='center' title="<?=tr("Show in detail tab?")?>">
+	   <b><?=tr("Details")?></b>
+         </td>
+	 <td width="30" class='subTitle' align='center' title="<?=tr("Create new ticket window?")?>">
+	   <b><?=tr("New")?></b>
          </td>
        </tr>
     <?
@@ -51,12 +55,28 @@
 	   foreach($vars as $v) {
 	     print "<tr>\n";
 	     $i = $v["field_name"];
-	     print "$t$i$te";
+	     print "<td class='bars'>$i$te";
 	     print "<input type='hidden' name='newFieldName[$j]' value='".$zen->ffv($v['field_name'])."'>\n";
 	     print "$t<input type='text' name='newFieldLabel[$j]' "
 	       ." value='".$zen->ffv($v['field_label'])."' size='20' maxlength='50'>$te";
 	     print "$t<input type='text' name='newSortOrder[$j]' "
 	       ." value='".$zen->ffv($v['sort_order'])."' size='5' maxlength='5'>$te";
+	     if( strpos($i, 'menu') > 0 ) {
+	       print "$t<select name='newFieldValue[$j]'>\n";
+	       if( isset($_SESSION['data_groups']) && count($_SESSION['data_groups']) ) {
+		 foreach( $_SESSION['data_groups'] as $g ) {
+		   print "<option value='{$g['group_id']}'>{$g['group_name']}</option>\n";
+		 }
+	       }
+	       else {
+		 print "<option value=''>-no groups-</option>\n";
+	       }
+	       print "</select>$te\n";
+	     }
+	     else {
+	       print "$t<input type='text' name='newFieldValue[$j]' "
+		 ." value='".$zen->ffv($v['field_value'])."' size='20' maxlength='250'>$te";
+	     }
 	     print "$t<input type='checkbox' name='newIsRequired[$j]' value='1'";
 	     print ($v["is_required"])? " checked" : "";
 	     print ">$te";
@@ -78,6 +98,9 @@
 	     print "$t<input type='checkbox' name='newShowInDetail[$j]' value='1'";
 	     print ($v["show_in_detail"])? " checked" : "";
 	     print ">$te";
+	     print "$t<input type='checkbox' name='newShowInNew[$j]' value='1'";
+	     print ($v["show_in_new"])? " checked" : "";
+	     print ">$te";
 	     print "</tr>\n";
 	     $js_vals[] = ($v["sort_order"])? $v["sort_order"] : 0;
 	     $j++;
@@ -86,7 +109,7 @@
 
     ?>
 <tr>
-  <td class="titleCell" colspan="10">
+  <td class="titleCell" colspan="12">
     <?=tr('Press Save to save changes')?>
     <br>
     <?=tr('Press Reset to return to original values')?>

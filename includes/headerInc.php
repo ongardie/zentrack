@@ -166,6 +166,74 @@
     unset($login_messages);
   }
 
+function genVarfield( $formName, $varfield, $value = '' ) {
+    // generates html form element to represent
+    // the variable field array
+    global $zen;
+    global $rootUrl;
+
+    // clean data
+    $value = $zen->ffv($value);
+
+    // determine the data type
+    preg_match('/^custom_([a-z]+)[0-9]+$/', $varfield['field_name'], $matches);
+    $type = $matches[1];
+
+    $onblur = "";
+    if( $varfield['js_validation'] ) {
+      $onblur = " onblur='{$varfield['js_validation']}'";
+    }
+
+    switch( $type ) {
+    case "string":
+      $inp = "<input type='text' name='{$varfield['field_name']}' "
+	." value='{$value}' size='20' maxlength='250'{$onblur}>\n";
+      break;
+    case "text":
+      $inp = "<textarea name='{$varfield['field_name']}' cols='50' "
+	." rows='4'{$onblur}>{$value}</textarea>";
+      break;
+    case "date":
+      // format for use in date
+      if( strlen($value) && preg_match("/^[0-9]+$/", $value) ) { 
+	$value = $zen->showDateTime($value); 
+      }
+      // create input field and date picker
+      $inp = "<input type='text' name='{$varfield['field_name']}' "
+	." value='{$value}' size='20' maxlength='250'{$onblur}>\n"
+        ." <img name='date_button' src='{$rootUrl}/images/cal.gif' "
+	."  onClick=\"popUpCalendar(this, document.{$formName}.{$varfield['field_name']}, '"
+	   .$zen->popupDateFormat()." 00:00')\"\n"
+        ."  alt='".tr("Select a Date")."'>\n";
+      break;
+    case "number":
+      $inp = "<input type='text' name='{$varfield['field_name']}' "
+	." value='{$value}' size='10' maxlength='100'{$onblur}>\n";      
+      break;
+    case "menu":
+      $v = $varfield['field_value'];
+      $group = $_SESSION['data_groups'][$v];
+      if( $group ) {
+	// get the fields for our group
+	$opts = $group['fields'];
+      }
+      else {
+	// generate a mock field
+	$opts = array( array('field_value'=>'', 'label'=>'-none-') );
+      }
+      $inp = "<select name='{$varfield['field_name']}'{$onblur}>\n";
+      foreach($opts as $o) {
+	$inp .= "<option value='{$o['field_value']}'>{$o['label']}</option>\n";
+      }
+      $inp .= "</select>\n";
+      break;
+    default:
+      $inp = "-invalid_field_type($type)-";
+      break;
+    }
+    return $inp;
+  }
+
   if( isset($newbin) && $newbin == 'all' ) {
      unset($login_bin);
   } else if( isset($newbin) && $newbin && $zen->bins["$newbin"] && $zen->checkAccess($login_id,$newbin) ) {

@@ -258,6 +258,22 @@ value="<?=($deadline)?$zen->showDate(strip_tags($deadline)):""?>">
     <?= $zen->getDefaultValue("default_aprv_checked") ?>>
   </td>
 </tr>
+
+<?
+ $varfields = $zen->getCustomFields(0,'T');
+ if( is_array($varfields) && count($varfields) ) {
+?>
+<tr>
+  <td colspan="2" class="subtitle">
+    <?=tr("Other Fields")?>
+  </td>
+</tr>
+<?
+
+ }
+?>
+
+
   
 <tr>
   <td colspan="2" class="subtitle">

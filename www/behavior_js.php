@@ -201,7 +201,7 @@ function runFieldBehaviors( fieldObject ) {
 	// when the method is triggered, the field it changed
 	// may trigger a behavior in turn, so we will
 	// use recursion to check that field as well
-	var fieldAffected = executeBehavior(behavior_id);	
+	var fieldAffected = executeBehavior(fieldObject.form, behavior_id);	
 	var newFieldName = formName+"."+fieldAffected;
 	behaviorDebug(3, "(runFieldBehaviors)updated field: ["+behavior_id+"]"+newFieldName);
 
@@ -226,11 +226,65 @@ function runFieldBehaviors( fieldObject ) {
  *
  * This method returns the field affected by the behavior.
  */
-function executeBehavior( behaviorId ) {
+function executeBehavior( formObj, behaviorId ) {
+  alert("running behavior: "+formObj.name+" ][ "+behaviorId);//debug
+  behaviorDebug(3, "(executeBehavior)executing behavior "+behaviorId+"->"+formObj.name);
   var behavior = behaviorMap[ behaviorId ];
   var group = groupMap[ behavior.group_id ];
-  alert("behavior would run here, setting '"+behavior.field+"' using group '"+group.name+"'");  //debug
+  
+  if( !behavior || !group ) {
+    behaviorDebug(1, "(executeBehavior)Behavior/group invalid: ["+behaviorId+"]");
+    return false;
+  }
+
+  var fieldObj = formObj[ behavior.field ];
+  if( !fieldObj ) {
+    behaviorDebug(1, "(executeBehavior)Behavior field invalid: "+formObj.name+"."+behavior.field);
+    return false;
+  }
+
   // only return field if it exists and was changed
+  if( setFormValsUsingGroup(fieldObj, group) ) {
+    return behavior.field;
+  }
+}
+
+/**
+ * Set the values of a form field to the list provided
+ */
+function setFormValsUsingGroup( fieldObj, group ) {
+  behaviorDebug(3, "(setFormValsUsingGroup)updating "+fieldObj.name+" using "+group.name);
+  switch( fieldObj.type ) {
+  case "button":
+  case "checkbox":
+  case "submit":
+  case "text":
+  case "textarea":
+    fieldObj.value = group.fields[0].value;
+    break;
+  case "select":
+  case "select-one":
+  case "select-multiple":
+    alert("running with "+group.fields.length+" entries from group "+group.name);
+    fieldObj.length = group.fields.length;
+    for(var i=0; i < group.fields.length; i++) {
+      var f = group.fields[i];
+      behaviorDebug(3, "(setFormValsUsingGroup)Setting option "+i+" to ["+f.label+"]"+f.value);
+      fieldObj.options[i] = new Option();
+      fieldObj.options[i].text = f.label;
+      fieldObj.options[i].value = f.value;
+    }
+    break;
+  //case "radio":
+  //case "file":
+  //case "hidden":
+  //case "password":
+  //case "reset":
+  default:
+    behaviorDebug(1, "(setFormValsUsingGroup)Invalid field type: "+fieldObj.name+"["+fieldObj.type+"]");
+    return false;
+  }
+  return true;
 }
 
 /**
