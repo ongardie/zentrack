@@ -4,8 +4,19 @@
  Clean, simple interface, fully adaptable administration,
  100 percent object oriented and database abstracted. 
 
------ V2.2.3 (development) ----
+----- V2.2.3 (development, see CVS) ----
+2003-02-15, Kato
+  Fixed problem displaying bins with quotes in name
+    - includes/templates/binForm.php v1.3
 
+2003-02-14, Kato
+  Abstracted actions from actionApplicable and checkAccess
+  This is in preparation for db/administrative tools for these
+  As well as upcoming functions/enhancements
+    - includes/zenTrack.class v1.45
+  Fixed problem with changing bins while viewing ticket
+  (fatal error: zenTrack.class cannot be redefined)
+    - www/index.php v1.7    
 
 ----- V2.2.2.1 (2003-02-12) ----
 2003-02-12, Kato

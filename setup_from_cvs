@@ -1,7 +1,9 @@
 #!/bin/sh
 
 mkdir includes/attachments
+mkdir includes/logs
 chmod 777 includes/attachments
+chmod 777 includes/logs
 chmod -R 755 www/images
 chmod 755 www/javascript.js
 chmod 755 www/styles.php

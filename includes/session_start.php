@@ -51,7 +51,7 @@ foreach($session_vars as $s) {
 }
   
 // this only makes them available for reading.. they still 
-// need to be set in $_SERVER before we close up the page
+// need to be set in $_SESSION before we close up the page
 extract($_SESSION);
 
 

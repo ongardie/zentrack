@@ -15,7 +15,6 @@
   ** DONE WITH SETUP
   */  
 
-
   /*
   ** INITIALIZE THE SYSTEM
   */
@@ -90,7 +89,7 @@
     $errors = true;
     egate_log("ERROR: Subject was blank");
   }
-  
+
   // find out what action we are taking
   preg_match("@#([0-9]+): ([a-zA-Z0-9_-]+)@", $params->headers["subject"], $matches);
   $matches[1] = (count($matches)>2)? preg_replace("@[^0-9]@", "", $matches[1]) : 0;
@@ -117,12 +116,24 @@
     exit;
   }
 
+  //todo: add a remove and add to the actions list, these will
+  // be used by the notify script, these should have some actionApplicable
+  // fields based on the settings for em...._notifylist and em...anonymous
+  
+  //todo: determine whether or not to include a function index, and create this
+  // in the template/email directory
+
+  //todo: create a footer template that details 
+  // the how of add/remove if actionApplicable
+
   // check actionApplicable 
   // (email_interface_anonymous|email_interface_notifylist)? noaccess=1
 
   // take an appropriate action
   // create log entry for action taken
   // add sender to notify list if appropriate
+
+  //todo: add docs for all of this
 
   // close up shop
   egate_log_write();

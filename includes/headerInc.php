@@ -22,7 +22,6 @@
 
   include_once("$libDir/session_start.php");
 
-
   /*
   **  URL DETERMINATIONS
   */
@@ -52,7 +51,6 @@
 
   include_once("$libDir/zenTrack.class");
   $zen = new zenTrack( $configFile, $login_id );
-
 
   /*
   **  SOME FUNCTIONS FOR USE IN
