@@ -1,4 +1,4 @@
-<? /* -*- Mode: C; c-basic-indent: 3; indent-tabs-mode: nil -*- */ 
+<? /* -*- Mode: C; c-basic-indent: 3; indent-tabs-mode: nil -*- ex: set tabstop=3 expandtab: */ 
 
 /* 
 **  zenTrack Class
@@ -2203,21 +2203,31 @@ class zenTrack extends zen {
 	$headers .= "cc: $cc_address\n";
       }
       
-      if( $this->settings["email_interface_enabled"] ) {
-	// load the header and footer
-	$hd_tmp = new zenTemplate($this->templateDir."/email/heading.template");
-	$ft_tmp = new zenTemplate($this->templateDir."/email/footer.template");
-	// try to find the id
-	if( preg_match("/ticket #?([0-9]+)/i",$subject,$mt) ) {
-	  $id = $mt[1];
-	}
-	else {
-	  $id = "nnnn";
-	}
-	$ft_tmp->values(array("id"=>$id));
-	// finalize and send the message
-	$message = (get_magic_quotes_gpc())? $message : addslashes($message);
-	$message = $hd_tmp->process().$message.$ft_tmp->process();
+      if( $this->settings["email_interface_enabled"] == "on" ) {
+        // set reply address to egate user        
+        $s = $this->get_user_by_login["egate"];
+        if( !is_array($s) ) {
+          $this->addDebug("sendEmail", "Egate login not found!",1);
+          $message = (get_magic_quotes_gpc())? $message : addslashes($message);
+        }
+        else {
+          $sender = $s["email"];
+
+          // load the header and footer
+          $hd_tmp = new zenTemplate($this->templateDir."/email/heading.template");
+          $ft_tmp = new zenTemplate($this->templateDir."/email/footer.template");
+          // try to find the id
+          if( preg_match("/ticket #?([0-9]+)/i",$subject,$mt) ) {
+            $id = $mt[1];
+          }
+          else {
+            $id = "nnnn";
+          }
+          $ft_tmp->values(array("id"=>$id));
+          // finalize and send the message
+          $message = (get_magic_quotes_gpc())? $message : addslashes($message);
+          $message = $hd_tmp->process().$message.$ft_tmp->process();
+        }
       }
       else {
 	$message = (get_magic_quotes_gpc())? $message : addslashes($message);

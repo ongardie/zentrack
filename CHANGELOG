@@ -8,8 +8,11 @@
 ----- V2.4 (development, see CVS) ----
 
 2003-04-10, Kato
+  Fixed problem with ticket reply addresses when using egate
+  The reply address will now always point to egate if enabled
+    - zentrack/includes/zenTrack.class 1.88
   Reinstated the auto-close for "note" types
-    - zentrack/www/addSubmit.php 1.15
+    - zentrack/www/addSubmit.php 1.16
 
 2003-04-02, Kato
   Fixed buttons and tabs to translate properly

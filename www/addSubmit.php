@@ -77,7 +77,7 @@
      if( !$id ) {
 	$errs[] = tr("Could not create ticket."). " ".$zen->db_error;
      }
-     else if( in_array($params["type_id"],$zen->noteTypeIDs() ) {
+     else if( in_array($params["type_id"],$zen->noteTypeIDs()) ) {
        $zen->close_ticket($id,null,null,'Notes closed automatically');
      }
   }
