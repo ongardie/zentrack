@@ -8,7 +8,7 @@
 ----- V2.4.2 (Development, See CVS) ----
 
 2003-05-28, Rob Hillis
-  Tweak fix for minor security hole
+  Tweak fix for security update
     - zentrack/includes/session_start.php 1.13
   Fix minor syntax error
     - zentrack/includes/templates/binForm.php 1.5

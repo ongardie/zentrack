@@ -11,40 +11,24 @@ REQUIREMENTS
     Supported DBs: Mysql, Oracle 8i/9i, Postgres
        Other Possible DBs: DB2, SQLServer
 
-UPGRADE FROM 2.4.0 & 2.4.0.1
+UPGRADE FROM 2.4.1
 
-  MAKE A BACKUP OF YOUR www/header.php file
-  
-  MAKE A BACKUP OF YOUR includes/attachments directory
-
-  MAKE A BACKUP OF YOUR includes/egate_config.php file
+  Be sure to BACKUP CONFIG FILES:
+      www/header.php
+      includes/egate_config.php
 
   REPLACE Your entire zentrack directory structure with the
   included files: includes/ should overwrite your existing includes,
   www/ should overwrite your existing www/
 
-  Chmod the directories in accordance with the INSTALL.readme file
+  Set directory permissions (probably only necessary on unix)
+     -chmod 777 includes/attachments (if using attachments)
+     -chmod 777 includes/logs
+     -chmod 777 includes/cache
+     -chmod 777 includes/translations
 
-  RESTORE YOUR www/header.php settings to the new file (do not replace)
-
-  RESTORE YOUR includes/attachments files to the new directory
-  
-  RESTORE YOUR includes/egate_config.php settings to the new file (do not replace)
-
-  Update your database by running the install/UPGRADE_[database].sql and
-  install/UPGRADE_SEED_[database].sql queries on your database.
-
-UPGRADE FROM OLDER VERSIONS:
-
-  Check the install/previous directory for upgrade docs and utilities for previous
-  versions.
- 
-WHEN YOU FINISH:
-
-  Please let us know!  
-      send an email, log into irc.sourceforge.net #zentrack, 
-      or visit our forum and tell us what platform your install
-      was successful on.  We can also add your company/url to our user list.  
+  If you like, you may update your version information with the following sql statement:
+    UPDATE ZENTRACK_SETTINGS SET value = '2.4.2' WHERE name = 'version_xx';
 
 
 
