@@ -4,15 +4,52 @@
   **  YOU MUST CONFIGURE $this->database_type in this file!!
   */
 
+  /*
+   *  GENERAL SETTINGS 
+  */
 
+   $this->language = "english";  // language to show zenTrack in 
+                                 // (rename lists/english and translate to add a new langauage)
+                                 // please pass your translations on to us, so we can add 
+                                 // them to the project for others
+
+   /*
+   **  DATE SETTINGS
+   */
+
+   // see the php manual (http://www.php.net/manual/en/function.strftime.php)
+   // for all of the options available to format 
+
+   $this->date_format_long  = "%b %d, %j - %X";
+   $this->date_format_short = "%x";			     
+   $this->time_format       = "%X";
+   
+   // WINDOWS USERS
+   //
+   // %T and %D will not work on Windows
+   // search http://msdn.microsoft.com/ for strftime().
+   // 
+   // Control Panel->International Settings
+   // You can set your locale and customize it
+   // And locale-related PHP functions work perfectly
+
+   // IF NEEDED, uncomment the following entry
+   // and set it to your location.. use locale -a 
+   // to see a list of possibilities
+   // see the php manual for more info on setlocale()
+   // setlocale(LC_TIME, "C");
+   // setlocale(LC_TIME, "POSIX");
+   // setlocale(LC_TIME, "en_US");  // U.S.
+   // setlocale(LC_TIME, "fr_FR");  // french
+   // setlocale(LC_TIME, "de_DE");  // german
+   // setlocale(LC_TIME, "es_ES");  // spanish
 
    /*
    **  DEBUG / HELP / DEMO
    */
 
    $this->demo_mode = "off";  // on/off  on prevents users from changing passwords or altering
-	                     // system configurations/user accounts (annoying demo stuff)
-   
+	                     // system configurations/user accounts (annoying demo stuff)   
    // not yet fully implemented (upcoming for 2.1)
    $this->debug = 0;         // 0-none, 1-footer debug messages, 2-common debug, 3-all debug
    
@@ -75,20 +112,6 @@
    */   
 
    $this->defaultHighlight = array("<span class='highlight'>","</span>");
-   
-  /*
-   *  GENERAL SETTINGS 
-  */
-
-   $this->language = "english";  // language to show zenTrack in 
-                                 // (rename lists/english and translate to add a new langauage)
-                                 // please pass your translations on to us, so we can add 
-                                 // them to the project for others
-
-   // see the php manual (http://www.php.net/manual/en/function.date.php) for all available date formatting
-   // options [not yet implemented, planned for 2.1]
-   $this->date_format_long = "M d, Y H:i";
-   $this->date_format_short = "m-d-y";			     
    
   /*
    *  DIRECTORY SETTINGS 
