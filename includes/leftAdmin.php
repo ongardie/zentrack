@@ -31,6 +31,11 @@
   </tr>  
   <tr>
   <td <?=$nav_rollover_text?>>
+    <a class="subMenuLink" href="<?=$rootUrl?>/admin/groups.php"><?=tr("Edit Data Groups")?></a>
+  </td>
+  </tr>  
+  <tr>
+  <td <?=$nav_rollover_text?>>
     <a class="subMenuLink" href="<?=$rootUrl?>/admin/editCustom.php"><?=tr("Edit Custom Fields")?></a>
   </td>
   </tr>  

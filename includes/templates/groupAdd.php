@@ -2,7 +2,7 @@
   // generate some text to display based on whether this
   // is an edit page or an add page
   $td = ($TODO == 'EDIT');
-  $blurb = ($td)? "Edit Data Group" : "Create New Data Group";
+  $blurb = ($td)? "Modify Data Group" : "Create New Data Group";
   $button = ($td)? "Save Changes" : "Create Group";
   $url = ($td)? "edit" : "add";
 ?>

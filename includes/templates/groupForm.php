@@ -1,8 +1,12 @@
+<?
+         $elnk="$rootUrl/admin/editGroup.php";
+         $llnk="$rootUrl/admin/editGroupDetails.php";
+?>
       <br>
       <p class='error'><?=tr("This screen will let you list, add, edit and delete data groups.") . '  '
           .tr("Please refer to documentation.")?></p>
       <ul>
-      <form name='groupForm' action='<?=$SCRIPT_NAME?>' method='post'>
+      <form name='groupForm' action='<?=$elnk?>' method='post'>
       <input type='hidden' name='TODO' value=''>
       <table cellpadding="2" cellspacing="1" class='plainCell'>
 	 <tr>
@@ -18,8 +22,6 @@
 	 </tr>
     <? 
          $tables=$zen->getDataGroupTablesArray();
-         $elnk="$rootUrl/admin/editGroup.php";
-         $llnk="$rootUrl/admin/editGroupDetails.php";
          unset($js_vals);
          $num = count($vars);
 	 if( is_array($vars) ) {
@@ -62,11 +64,10 @@
   </td>
 </tr>
       <tr>
-	 <td class='cell' colspan='5'>
-	 <input type='submit' value='<?=uptr('New')?>'>
+         <td class='cell' colspan='3'>
+         <input type='submit' class='submit' value='<?=tr('New')?>' onClick="return setTodo('NEW')">
          &nbsp;
-         <input type='submit' value='<?=uptr('Done')?>'>
-	 &nbsp;
+         <input type='submit' class='submit' value='<?=tr('Done')?>' onClick="return setTodo('DONE')">
          </td>
       </tr>
       </table>
@@ -75,9 +76,10 @@
       </form>
 
 
-
-
-
-
-
+      <script language='javascript'>
+          function setTodo( val ) {
+           document.groupForm.TODO.value = val;
+         }
+      </script>
+                                                                                                                             
 

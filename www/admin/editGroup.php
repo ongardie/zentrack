@@ -8,21 +8,33 @@
   
   
   include("admin_header.php");
-
-  $page_tile = "Edit Data Group";
-  include("$libDir/nav.php");
-
-  $group = $zen->get_data_group($group_id);
-  
-  if( is_array($group) ) {
-    $TODO = 'EDIT';
-    extract($group);
-    include("$templateDir/groupAdd.php");
+  if( $TODO == 'DONE' ) {
+    $skip = 1;
   } else {
-    print "<ul><b>" . tr("That group could not be found") . "</b>";
-    print "<br><a href='$rootUrl/admin/groups.php'>" . tr("Click Here to view available groups") . "</a></ul>\n";
+    $page_title = ( $TODO == "NEW" )? "New Data Group" : "Edit Data Group";
+    if ( $TODO != "NEW" ) {
+      $group = $zen->get_data_group($group_id);
+      if( is_array($group) ) {
+        $TODO = "EDIT";
+        extract($group);
+      } else {
+        $skip=2;
+      }
+    }
   }
 
+
+  include("$libDir/nav.php");
+  $zen->printErrors($errs);
+  if( $skip == 1 ) {
+    include("$templateDir/adminMenu.php");
+  } else if ( $skip == 2 ) {
+    print "<ul><b>" . tr("That group could not be found") . "</b>";
+    print "<br><a href='$rootUrl/admin/groups.php'>" . tr("Click Here to view available groups") . "</a></ul>\n";
+  } else {
+    include("$templateDir/groupAdd.php");
+  }
+                                                                                                                             
   include("$libDir/footer.php");
 
 ?>
