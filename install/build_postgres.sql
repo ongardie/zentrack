@@ -18,6 +18,8 @@
 --DROP SEQUENCE "translation_words_word_id_seq";
 --DROP SEQUENCE "types_type_id_seq";
 --DROP SEQUENCE "users_user_id_seq";
+--DROP SEQUENCE "reports_id_seq";
+--DROP SEQUENCE "reports_temp_id_seq";
 
 --DROP TABLE ZENTRACK_ACCESS;
 --DROP TABLE ZENTRACK_ATTACHMENTS;
@@ -35,6 +37,9 @@
 --DROP TABLE ZENTRACK_TRANSLATION_WORDS;
 --DROP TABLE ZENTRACK_TYPES;
 --DROP TABLE ZENTRACK_USERS;
+--DROP TABLE ZENTRACK_REPORTS;
+--DROP TABLE ZENTRACK_REPORTS_TEMP;
+--DROP TABLE ZENTRACK_REPORTS_INDEX;
 
 CREATE SEQUENCE "access_access_id_seq" start 1001 increment 1 maxvalue 2147483647 minvalue 1  cache 1;
 CREATE SEQUENCE "attachments_attachment_id_seq" start 1001 increment 1 maxvalue 2147483647 minvalue 1  cache 1;
@@ -49,6 +54,8 @@ CREATE SEQUENCE "translation_strings_trans_id_seq" start 1001 increment 1 maxval
 CREATE SEQUENCE "translation_words_word_id_seq" start 1001 increment 1 maxvalue 2147483647 minvalue 1  cache 1;
 CREATE SEQUENCE "types_type_id_seq" start 1001 increment 1 maxvalue 2147483647 minvalue 1  cache 1;
 CREATE SEQUENCE "users_user_id_seq" start 1001 increment 1 maxvalue 2147483647 minvalue 1  cache 1;
+CREATE SEQUENCE "reports_id_seq" start 1001 increment 1 maxvalue 2147483647 minvalue 1  cache 1;
+CREATE SEQUENCE "reports_temp_id_seq" start 1001 increment 1 maxvalue 2147483647 minvalue 1  cache 1;
 
 CREATE TABLE ZENTRACK_ACCESS (
   access_id int8 default nextval('"access_id_seq"') NOT NULL PRIMARY KEY,
@@ -270,18 +277,63 @@ CREATE TABLE ZENTRACK_USERS (
   active int2 default '1'
 );
 
+-- 
+-- Table structure for table 'ZENTRACK_REPORTS' 
+-- 
 
+CREATE TABLE ZENTRACK_REPORTS ( 
+   report_id int8 default nextval('"reports_id_seq"') NOT NULL PRIMARY KEY, 
+   report_name varchar(100) default NULL, 
+   report_type varchar(25) default NULL, 
+   date_selector varchar(25) default NULL, 
+   date_value int(3) default NULL, 
+   date_range varchar(12) default NULL, 
+   date_low int8 default NULL, 
+   chart_title varchar(255) default NULL, 
+   chart_subtitle varchar(255) default NULL, 
+   chart_add_ttl int2 default NULL, 
+   chart_add_avg int2 default NULL, 
+   chart_type varchar(25) default NULL, 
+   chart_options text, 
+   data_set text, 
+   chart_combine int2 default NULL, 
+   text_output int2 default NULL, 
+   show_data_vals int2 default NULL
+);
 
+-- 
+-- Table structure for table 'ZENTRACK_REPORTS_INDEX' 
+-- 
 
+CREATE TABLE ZENTRACK_REPORTS_INDEX ( 
+   report_id int8 default NULL, 
+   bid int8 default NULL, 
+   user_id int8 default NULL 
+);
 
+-- 
+-- Table structure for table 'ZENTRACK_REPORTS_TEMP' 
+-- 
 
-
-
-
-
-
-
-
-
-
+CREATE TABLE ZENTRACK_REPORTS_TEMP ( 
+   report_id int8 default nextval('"reports_temp_id_seq"') NOT NULL PRIMARY KEY,
+   report_name varchar(100) default NULL, 
+   report_type varchar(25) default NULL, 
+   date_selector varchar(25) default NULL, 
+   date_value int(3) default NULL, 
+   date_range varchar(12) default NULL, 
+   date_low int8 default NULL, 
+   chart_title varchar(255) default NULL, 
+   chart_subtitle varchar(255) default NULL, 
+   chart_add_ttl int2 default NULL, 
+   chart_add_avg int2 default NULL, 
+   chart_type varchar(25) default NULL, 
+   chart_options text, 
+   data_set text, 
+   created datetime NOT NULL default '0000-00-00 00:00:00', 
+   chart_combine int2 default NULL, 
+   text_output int2 default NULL, 
+   show_data_vals int2 default NULL, 
+   PRIMARY KEY (report_id)
+);
 
