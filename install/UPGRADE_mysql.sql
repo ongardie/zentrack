@@ -67,7 +67,7 @@ CREATE TABLE ZENTRACK_REPORTS_TEMP (
 
 UPDATE ZENTRACK_SETTINGS SET value = '#000066' WHERE name = 'color_alt_text';
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (73,'level_reports','1','Level required to access and view reports'); 
-INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (74,'version_xx','2.2','The version of zentrack, this cannot be edited'); 
+INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (74,'version_xx','2.2.2','The version of zentrack, this cannot be edited'); 
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (75,'date_fmt_long','%A %d, %b %Y','Long date format'); 
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (76,'date_fmt_short','%m/%d/%Y','Short Date Format'); 
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (77,'date_fmt_time','%H:%M','Time Format'); 
