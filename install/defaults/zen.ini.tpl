@@ -36,12 +36,15 @@
 [paths]
 
 ;absolute path to includes directory (not web path)
+;for installation, this is the target directory (where they should be installed to)
 path_includes = "{$path_includes|default:"/web/zentrack/includes"}" 
 
 ;absolute path to www directory (not web path)
+;for installation, this is the target directory (where they should be installed to)
 path_www = "{$path_www|default:"/web/zentrack/www"}"  
 
 ;browser path to zentrack www directory (this should include the domain name)
+;for installation, this is the target directory (where they should be installed to)
 url_www = "{$url_www|default:"http://mysite.com/zentrack"}"
 
 ;path to the php CLI executable (i.e. C:/php/cli/php.exe or /usr/bin/php)

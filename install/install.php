@@ -129,6 +129,10 @@
     include("$thisdir/setup/$c");
   }
 
+  if( @file_exists("$class_dir/adodb/adodb.inc.php") ) {
+    ZenUtils::prep("ADONewConnection", $class_dir, "adodb".DIRECTORY_SEPARATOR."adodb.inc.php");
+  }
+
   if( $makeini ) {
     if( !@file_exists("$class_dir/smarty/Smarty.class.php") ) {
       die("ERROR: The required class ($class_dir/smarty/Smarty.inc.php) was not found."

@@ -233,15 +233,14 @@ class ZenTargets {
       }
     case "try_db_connection":
       {
-	if( count($this->_targets[$target]) < 5 ) {
+	if( count($this->_targets[$target]) != 4 ) {
           $this->_help($target);
 	  return false;
 	}
 	return $this->_try_db_connection( $p, $this->_getParm($target, 1),
                                           $this->_getParm($target, 2), 
                                           $this->_getParm($target, 3),
-                                          $this->_getParm($target, 4),
-                                          $this->_getBooleanParm($target, 5, false));
+                                          $this->_getBooleanParm($target, 4, false));
       }
     case "update_db_schema":
       {
@@ -356,9 +355,10 @@ class ZenTargets {
       }
     case "try_db_connection":
       {
-        print "   Usage: install.php [modifiers] -$target type host instance user password\n";
+        print "   Usage: install.php [modifiers] -$target type host instance user\n";
         print "   - type: the db type, such as mysql, pgsql, oci8po, etc (see zen.ini for details)\n";
-        print "   - host: can be localhost or possibly '', and instance is the database name, or TNS file for oracle\n";
+        print "   - host: can be localhost or possibly '' for oracle (if using TNS file)\n";
+        print "   - instance: the tablespace to use (name of database) or possibly TNS file for oracle users\n";
         break;
       }
     case "update_db_schema":
@@ -1644,13 +1644,30 @@ class ZenTargets {
    * @param boolean $persist if true, use a persistent connection
    * @return boolean true on success
    */
-  function _try_db_connection( $type, $host, $instance, $user, $passwd, $persist = false) {
+  function _try_db_connection( $type, $host, $instance, $user, $persist = false) {
     $db = $this->_ini['db'];
     // set params
     $this->_ini['db']['db_type'] = $type;
     $this->_ini['db']['db_host'] = $host;
     $this->_ini['db']['db_instance'] = $instance;
     $this->_ini['db']['db_user'] = $user;
+
+    // print message
+    print "Enter password for $user@$host: ";
+
+    // read password from stdin
+    $passwd = null;
+    $fp = @fopen("php://stdin", "r");
+    if( $fp ) {
+      $passwd = trim(fgets($fp, 255));
+      fclose( $fp );
+    }
+    else {
+      $this->_printerr("_confirm", "Unable to read STDIN");
+      return false;
+    }
+    print "\n";
+
     $this->_ini['db']['db_pass'] = $passwd;
     $this->_ini['db']['db_persistent'] = $persist;
     // insure db connection isn't cached

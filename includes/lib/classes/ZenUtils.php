@@ -1008,7 +1008,7 @@ class ZenUtils {
     }
     $count = 0;
     foreach( $classes as $c ) {
-      $f = $files? $files[$i] : "$c.php";
+      $f = $files? $files[$count] : "$c.php";
       if( !class_exists($c) ) {
         ZenUtils::mark("prep $c");
         include("$dir".DIRECTORY_SEPARATOR."$f");

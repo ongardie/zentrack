@@ -9,11 +9,18 @@
  
  INSTALLATION
   
-   1. Open shell/dos prompt, navigate to the install/ directory
-   2. CVS CHECKOUTS ONLY: Run install.php --makeini (if there is no zen.ini file)
-   3. Edit the zen.ini file to meet your system needs
-   4. Run install.php -try_db_connection (if desired)
-   5. Run install.php -full_install
+   1. Insure that your SQL database has a user and tablespace(instance) available
+   2. Open shell/dos prompt, navigate to the install/ directory
+   3. CVS CHECKOUTS ONLY: Run install.php --makeini (if there is no zen.ini file)
+   4. Edit the zen.ini file to meet your system needs (you must edit directories and db settings)
+   5. Run install.php -try_db_connection (if desired)
+   6. Run install.php -full_install
+
+
+ FULL INSTALL DOCUMENTATION
+
+   See the online documentation for the full installation guide:  http://docs.zentrack.net
+
 
  SECURITY (experimental)
 
