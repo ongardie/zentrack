@@ -63,9 +63,12 @@
 	$res = $zen->sendEmail($recipients, $subject, $message, $login_id);
 	if( $res ) {
 	   add_system_messages("Ticket $id emailed to selected recipients");
-	   header("Location:$rootUrl/ticket.php?id=$id&setmode=system");
-	   unset($action);
+	   $setmode = "system";
+	   include("../ticket.php");
 	   exit;
+	   //header("Location:$rootUrl/ticket.php?id=$id&setmode=system");
+	   //unset($action);
+	   //exit;
 	} else {
 	   $errs[] = "System error: Ticket $id could not be emailed".$zen->db_error;
 	}

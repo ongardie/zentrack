@@ -40,7 +40,10 @@
       $res = $zen->close_ticket($id, $login_id, $hours, $comments);
       if( $res ) {
 	add_system_messages("Ticket $id has been closed");
-	header("Location:$rootUrl/ticket.php?id=$id&setmode=details");
+	$setmode = "details";
+	include("../ticket.php");
+	exit;
+	//header("Location:$rootUrl/ticket.php?id=$id&setmode=details");
       } else {
 	$errs[] = "System error: Ticket $id could not be closed".$zen->db_error;
       }

@@ -8,7 +8,7 @@
   */
 
   $action = "yank";  
-  include("./action_header.php");
+  include_once("./action_header.php");
 
   if( $actionComplete == 1 ) {
      $input = array(
@@ -26,8 +26,12 @@
      if( !$errs ) {
 	$res = $zen->yank_ticket($id, $login_id, $comments);
 	if( $res ) {
-	   add_system_messages("Ticket $id yanked from ".$zen->formatName($ticket["user_id"]).".");
-	   header("Location:$rootUrl/ticket.php?id=$id&setmode=details");
+	   add_system_messages("Ticket $id yanked from "
+			       .$zen->formatName($ticket["user_id"]).".");
+	   $setmode = "details";
+	   include("../ticket.php");
+	   exit;
+	   //header("Location:$rootUrl/ticket.php?id=$id&setmode=details");
 	} else {
 	   $errs[] = "System error: Ticket $id could not be yanked.".$zen->db_error;
 	}

@@ -70,7 +70,10 @@
 
   if( !$errs ) {
      add_system_messages("Edited ticket $id.");
-     header("Location:$rootUrl/ticket.php?id=$id&setmode=Details");
+     $setmode = "details";
+     include("../ticket.php");
+     exit;
+     //header("Location:$rootUrl/ticket.php?id=$id&setmode=Details");
   } else {
      add_system_messages($errs);
      include("$libDir/nav.php");

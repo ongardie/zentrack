@@ -20,7 +20,10 @@
 	$res = $zen->test_ticket($id, $login_id, $hours, $comments);
 	if( $res ) {
 	   add_system_messages("Ticket $id tested");
-	   header("Location:$rootUrl/ticket.php?id=$id&setmode=details");
+	   $setmode = "details";
+	   include("../ticket.php");
+	   exit;
+	   //header("Location:$rootUrl/ticket.php?id=$id&setmode=details");
 	} else {
 	   $errs[] = "System error: Ticket $id could not be tested".$zen->db_error;
 	}

@@ -10,7 +10,7 @@
   **  page header
   */
 
-  include("../header.php");
+  include_once("../header.php");
 
   // set the ticket mode to system
   $page_mode = 'system';
@@ -18,8 +18,16 @@
 
   // check to insure a ticket id was passed
   $id = ereg_replace("[^0-9]", "", $id);
-  if( !$id )
-    header("Location: $rootUrl/index.php\n");
+  if( !$id ) {
+    //header("Location: $rootUrl/index.php\n");
+    include("../index.php");
+    exit;
+  }
+  // if no action was provided, then just use the name for the page
+  // which will be the action
+  if( !$action ) {
+    $action = basename($SCRIPT_NAME,".php");
+  }
 
   // check to insure that this user has access
   // and this ticket allows the requested action
@@ -34,9 +42,17 @@
     $page_type = "ticket";
   }
   $page_mode = "system";
+
+  // find out if this is the ticket's creator (special conditions apply)
   $tf_creator = (($action == "print"||$action == "email")&&$zen->checkCreator($login_id,$tid));
-  if( !$zen->actionApplicable( $id, $action, $login_id ) && !$tf_creator )
-    header("Location: $rootUrl/ticket.php?id=$id&setmode=details");
+
+  // find out if user can do this action, if not, redirect them
+  if( !$zen->actionApplicable( $id, $action, $login_id ) && !$tf_creator ) {
+    $setmode = "details";
+    include("../ticket.php");
+    exit;
+    //header("Location: $rootUrl/ticket.php?id=$id&setmode=details");
+  }
 
   // set up page paremeters
   $page_title = "Ticket #$id";

@@ -30,7 +30,10 @@
 	$res = $zen->relate_ticket($id, $relations, $login_id, $comments);
 	if( $res ) {
 	   add_system_messages("Ticket $id related.");
-	   header("Location:$rootUrl/ticket.php?id=$id&setmode=related");
+	   $setmode = "related";
+	   include("../ticket.php");
+	   exit;
+	   //header("Location:$rootUrl/ticket.php?id=$id&setmode=related");
 	} else {
 	   $errs[] = "System error: Ticket $id could not be related, or the entries were the same.".$zen->db_error;
 	}

@@ -14,7 +14,10 @@
    $res = $zen->accept_ticket($id, $login_id);
    if( $res ) {
       add_system_messages("Ticket $id was accepted by $login_name");
-      header("Location:$rootUrl/ticket.php?id=$id&setmode=details");
+      $setmode = "details";
+      include("../ticket.php");
+      exit;	   
+      //header("Location:$rootUrl/ticket.php?id=$id&setmode=details");
    } else {
       $errs[] = "System error: Ticket $id could not be accepted".$zen->db_error;
    }

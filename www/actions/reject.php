@@ -27,7 +27,10 @@
 	$res = $zen->reject_ticket($id, $login_id, $comments);
 	if( $res ) {
 	   add_system_messages("Ticket $id was rejected.");
-	   header("Location:$rootUrl/ticket.php?id=$id&setmode=details");
+	   $setmode = "details";
+	   include("../ticket.php");
+	   exit;
+	   //header("Location:$rootUrl/ticket.php?id=$id&setmode=details");
 	} else {
 	   $errs[] = "System error: Ticket $id could not be rejected".$zen->db_error;
 	}
