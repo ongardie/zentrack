@@ -13,8 +13,6 @@
   <ul>
     <b><a href='<?=$rootUrl?>/admin/editTicket.php'><?=tr("Edit Tickets")?></a></b>
     <br><span class="small">(<?=tr("Edit ticket information")?>)</span>
-    <br><b><a href='<?=$rootUrl?>/admin/editCustom.php'><?=tr("Edit Variable Fields")?></a></b>
-    <br><span class="small">(<?=tr("Custom defined fields for tickets.")?>)</span>
     <br><b><a href="<?=$rootUrl?>/admin/fieldMap.php"><?=tr("Edit Field Map")?></a></b>
     <br><span class="small">(<?=tr("View specific display properties for fields")?></span>
   </ul>

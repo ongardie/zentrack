@@ -1,5 +1,5 @@
 
-UPGRADE INSTRUCTIONS FOR VERSION 2.5.0.3
+UPGRADE INSTRUCTIONS FOR VERSION 2.5.5
 
 --------------------
 REQUIREMENTS
@@ -31,7 +31,7 @@ UPGRADE FROM 2.5.0.2
   !!! VERY IMPORTANT NOTE !!!
   !!!!!!!!!!!!!!!!!!!!!!!!!!!
   
-  As of 2.5.0.2, there are now two ways to upgrade.  There
+  As of 2.5.0.3, there are now two ways to upgrade.  There
   is a patch and a manual upgrade approach.  Please select
   the method that meets your needs.
 
@@ -44,15 +44,15 @@ UPGRADE FROM 2.5.0.2
     
     -> Windows Users:  Unless you have and understand cygwin, use the manual upgrade.
     -> '/web/zentrack' refers to your current ZT installation
-    -> '/tmp/zentrack_2.5.0.3' refers to your newly uncompressed install files. 
+    -> '/tmp/zentrack_2.5.5' refers to your newly uncompressed install files. 
     
     1. Make backups of your files and database by whatever means you see fit:
        (perhaps 'mysqldump zentrack > db_backup.sql' and 'tar -zcvf file_backup.tar.gz /web/zentrack')
 
     2. Apply the patch:
        cd /web/zentrack
-       patch --dry-run -p2 < /tmp/zentrack_2.5.0.3/install/2-5-0-3_upgrade.patch (test it first)
-       patch -p2 < /tmp/zentrack_2.5.0.3/install/2-5-0-3_upgrade.patch
+       patch --dry-run -p2 < /tmp/zentrack_2.5.5/install/2-5-0-2_upgrade.patch (test it first)
+       patch -p2 < /tmp/zentrack_2.5.5/install/2-5-0-2_upgrade.patch
 
     3. Upgrade database:
        Run the sql file install/UPGRADE_[yourdb].sql file using your favorite
