@@ -25,25 +25,25 @@
    *
    * <b>Valid template entries are:</b>
    *<code>
-   *{varname} // insert varname, if array, iterate each value, null if not found
-   *{varname="default"} // inserts val of varname, or default if not found
-   *{varname[key]} // inserts value of array varname indexed by key (varname[key]),
-   *               // varname must be an associative array or null will be returned
-   *{varname[key]="string"} // as above, but default returned instead of null if key not found
-   *{zen:"category":"varname"} // inserts value from database settings using {@link Zen::getSetting()}
-   *{ini:"category":"varname"} // inserts value from ini settings using {@link Zen::getIniVal()}
-   *{foreach:varname:"text"+index+"more text"+value} // loops through key/value pairs, pritns string, vars index/value represent current iteration
-   *{list:varname:"text"+value+"text"} // loops through array and prints string, special variable value represents current iteration
-   *{include:"template_name"} // inserts another template into this one (all values available to this template are passed)
-   *{if:field:"string"} // inserts string if field exists
-   *{if:field="something":"string"} // inserts string if field equals parsed value of "something"
-   *{ifnot:field:"string"} // inserts string if field does not exist
-   *{ifnot:field="something":"string"} // inserts string if field does not equal parsed value of "something"
-   *{function:function_name:"param1","param2",...} //run a global function, parse params and pass them to the function (any number)
-   *{helper:"file_name":param1="value",param2="value",...} // run helper script (includes/lib/helpers), pass params, insert return result
-   *{script:"file_name"} // runs script (includes/users/code) and insert return value
-   *{form:"table":"template":field1="ftype",field2="ftype",...} // create form from database, types changed by final param(optional)
-   *{modifier:"command"} // special condition for template parser, see below.
+   * {varname} // insert varname, if array, iterate each value, null if not found
+   * {varname="default"} // inserts val of varname, or default if not found
+   * {varname[key]} // inserts value of array varname indexed by key (varname[key]),
+   *                // varname must be an associative array or null will be returned
+   * {varname[key]="string"} // as above, but default returned instead of null if key not found
+   * {zen:"category":"varname"} // inserts value from database settings using {@link Zen::getSetting()}
+   * {ini:"category":"varname"} // inserts value from ini settings using {@link Zen::getIniVal()}
+   * {foreach:varname:"text"+index+"more text"+value} // loops through key/value pairs, pritns string, vars index/value represent current iteration
+   * {list:varname:"text"+value+"text"} // loops through array and prints string, special variable value represents current iteration
+   * {include:"template_name"} // inserts another template into this one (all values available to this template are passed)
+   * {if:field:"string"} // inserts string if field exists
+   * {if:field="something":"string"} // inserts string if field equals parsed value of "something"
+   * {ifnot:field:"string"} // inserts string if field does not exist
+   * {ifnot:field="something":"string"} // inserts string if field does not equal parsed value of "something"
+   * {function:function_name:"param1","param2",...} //run a global function, parse params and pass them to the function (any number)
+   * {helper:"file_name":param1="value",param2="value",...} // run helper script (includes/lib/helpers), pass params, insert return result
+   * {script:"file_name"} // runs script (includes/users/code) and insert return value
+   * {form:"table":"template":field1="ftype",field2="ftype",...} // create form from database, types changed by final param(optional)
+   * {modifier:"command"} // special condition for template parser, see below.
    *</code>
    *
    * Note that all the properties listed above in "quotes" are strings. Usage of strings is
@@ -64,21 +64,21 @@
    * Sub-templates recieve the special varaibles pkey and pval.  If this is a 
    * 
    *<code>
-   *// assume the following are entered into our
-   *// template values: 
-   *//   color    => 'blue'
-   *//   fruit    => 'apple'
-   *//   somevals => array('somekey'=>'happy')
+   * // assume the following are entered into our
+   * // template values: 
+   * //   color    => 'blue'
+   * //   fruit    => 'apple'
+   * //   somevals => array('somekey'=>'happy')
    *
-   *"I am "+color+"!"            // produces 'I am blue!'
-   *"I found a "+color+fruit     // produces 'I found a blueapple'
-   *"a "+color+" "+fruit         // produces 'a blue apple'
-   *2.50                         // produces '2.5'
-   *"2.50"                       // produces '2.50'
-   *somevals[somekey]+" day"     // produces 'happy day'
-   *%"some_template.template"%   // parses and returns results of some_template.template
-   *%color+".template"%          // parses and returns results of blue.template
-   *"I am a "+%"template_name"%  // causes an error!
+   * "I am "+color+"!"            // produces 'I am blue!'
+   * "I found a "+color+fruit     // produces 'I found a blueapple'
+   * "a "+color+" "+fruit         // produces 'a blue apple'
+   * 2.50                         // produces '2.5'
+   * "2.50"                       // produces '2.50'
+   * somevals[somekey]+" day"     // produces 'happy day'
+   * %"some_template.template"%   // parses and returns results of some_template.template
+   * %color+".template"%          // parses and returns results of blue.template
+   * "I am a "+%"template_name"%  // causes an error!
    *</code>
    *
    * <b>Comments in templates:</b>
@@ -90,8 +90,8 @@
    *
    * Using the {modifier:command} option, the template parser behavior can be altered. The valid commands are:
    *<code>
-   *{modifier:"stripEmptyLines"} // remove empty lines (extra carriage returns)
-   *{modifier:"stripAllReturns"} // remove all carriage returns
+   * {modifier:"stripEmptyLines"} // remove empty lines (extra carriage returns)
+   * {modifier:"stripAllReturns"} // remove all carriage returns
    *</code>
    *
    * @package Utils
