@@ -1,6 +1,0 @@
- 
- <input type="checkbox" 
-    name="{pval[name]}"
-    value="{pval[checkval]=1}"
-    {if:pval[default]:"checked"}
-    {include:"simpleForm/fieldEvents.template"}>

@@ -1,6 +1,0 @@
-
-  <textarea 
-    rows="{pval[rows]="4"}" 
-    cols="{pval[cols]="30"}"
-    {include:"simpleForm/fieldEvents.template"}
-    >{pval[default]=""}</textarea>

@@ -263,7 +263,7 @@ class ZenFormGenerator extends Zen {
       $metafield = $this->_table->getMetaField($f);
       $field = $metafield->getFieldArray();
       if( !isset($field['default']) ) { $field['default'] = null; }
-      $field['default'] = ZenUtils::ffv($field['default']);
+      //$field['default'] = ZenUtils::ffv($field['default']); //probably not needed (using smarty escape)
       if( isset($this->_props[$f]) ) {
         foreach($this->_props[$f] as $key=>$val) {
           $field[$key] = $val;
@@ -357,9 +357,9 @@ class ZenFormGenerator extends Zen {
     //ZenUtils::printArray($vals);//debug
     
     // render the form
-    $template = new ZenTemplate($this->_template);
-    $template->values($vals);
-    $res = $template->process();
+    $template = new ZenTemplate();
+    $template->assign($vals);
+    $res = $template->fetch($this->_template);
     ZenUtils::unmark($markName);
     return $res;
   }

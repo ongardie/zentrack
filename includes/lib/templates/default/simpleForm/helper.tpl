@@ -3,4 +3,4 @@
   need to do here is just print out whatever the results
   are.
 -->
-{settext}
+{$settext}
