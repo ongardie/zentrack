@@ -28,7 +28,7 @@
    */
   $_GLOBALS['loadstat']['perm'] =& $_SESSION['loadstat'];
   $_GLOBALS['loadstat']['temp'] = array("tickets"  => array(),
-                                        "users"    => array,
+                                        "users"    => array(),
                                         "triggers" => array(),
                                         "actions"  => array()
                                         );

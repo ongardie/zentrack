@@ -6,13 +6,13 @@
   // start the session information
   require_once("$libDir/inc/session.php");
 
+  // include all the object classes
+  require_once("$libDir/inc/classes.php");
+
   // include all global variables
   require_once("$libDir/inc/variables.php");
 
   // include all global functions
   require_once("$libDir/inc/functions.php");
-
-  // include all the object classes
-  require_once("$libDir/inc/classes.php");
 
 }?>

@@ -76,6 +76,16 @@ class Zen {
   }
 
   /**
+   * Returns a ZenQuery object, db connection will be obtained automatically
+   *
+   * @return ZenQuery the query object, ready for use
+   */
+  function getNewQuery() {
+    $db = getDbConnection();
+    return $db->newQuery();
+  }
+
+  /**
    * returns a ZenMessageList of system messages matching criteria
    *
    * this method should use a GLOBAL array to maintain a single list
