@@ -23,7 +23,7 @@ CREATE TABLE ZENTRACK_ATTACHMENTS (
   filename varchar(250) default NULL,
   filetype varchar(250) default NULL,
   description varchar(100) default NULL,
-  CONTRAINT attachment_pk PRIMARY KEY (attachmentID)
+  CONSTRAINT attachment_pk PRIMARY KEY (attachmentID)
 ) ;
 
 --
@@ -35,7 +35,7 @@ CREATE TABLE ZENTRACK_BINS (
   name varchar(25) NOT NULL default '',
   priority int(4) default NULL,
   active int(1) default '1',
-  CONTRAINT bin_pk PRIMARY KEY (bid)
+  CONSTRAINT bin_pk PRIMARY KEY (bid)
 ) ;
 
 --
@@ -51,7 +51,7 @@ CREATE TABLE ZENTRACK_LOGS (
   action varchar(25) default NULL,
   hours decimal(10,2) default NULL,
   entry text,
-  CONTRAINT logs_pk PRIMARY KEY (lid)
+  CONSTRAINT logs_pk PRIMARY KEY (lid)
 ) ;
 
 --
@@ -79,7 +79,7 @@ CREATE TABLE ZENTRACK_PREFERENCES (
   time varchar(255) default NULL,
   close varchar(255) default NULL,
   test varchar(255) default NULL,
-  CONTRAINT preferences_pk PRIMARY KEY (userID)
+  CONSTRAINT preferences_pk PRIMARY KEY (userID)
 ) ;
 
 --
@@ -91,7 +91,7 @@ CREATE TABLE ZENTRACK_PRIORITIES (
   name varchar(25) NOT NULL default '',
   priority int(4) default NULL,
   active int(1) default NULL,
-  CONTRAINT priorities_pk PRIMARY KEY (pid)
+  CONSTRAINT priorities_pk PRIMARY KEY (pid)
 ) ;
 
 --
@@ -103,7 +103,7 @@ CREATE TABLE ZENTRACK_SETTINGS (
   name varchar(25) default NULL,
   value varchar(100) default NULL,
   description varchar(200) default NULL,
-  CONTRAINT settings_pk PRIMARY KEY (setID)
+  CONSTRAINT settings_pk PRIMARY KEY (setID)
 ) ;
 
 --
@@ -155,7 +155,7 @@ CREATE TABLE ZENTRACK_TICKETS (
   deadline int(12) default NULL,
   start_date int(12) default NULL,
   wkd_hours decimal(10,2) default '0.00',
-  CONTRAINT tickets_pk PRIMARY KEY (id)
+  CONSTRAINT tickets_pk PRIMARY KEY (id)
 ) ;
 
 --
