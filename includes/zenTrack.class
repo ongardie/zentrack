@@ -439,6 +439,21 @@ class zenTrack extends zen {
       
       $params = array( "user_id" => $recipient );
       $res = $this->update_ticket($id, $params);
+      if( $res ) {
+	// move the ticket somewhere that the user
+	// will be able to access it, if required
+	$ticket = $this->get_ticket($id);
+	$userBins = $this->getUsersBins($recipient,"level_user");
+	if( is_array($userBins)&&!in_array($ticket["bin_id"],$userBins) ) {
+	  $user = $this->get_user($recipient);
+	  if( $user["homebin"] ) {
+	    $this->move_ticket($id,$user["homebin"]);
+	  }
+	  else {
+	    $this->move_ticket($id,$userBins[0]);
+	  }
+	}
+      }
       if( $res && $this->settings["log_assign"] == 'on' ) {
 	 $logParams = array(
 			    "action"   =>  'ASSIGNED',
@@ -630,14 +645,17 @@ class zenTrack extends zen {
    }
    
    function reject_ticket( $id, $user_id, $comments = '' ) {
-      list($senderID,$bin_id) = $this->getTicketSender($id);
-      $res = $this->move_ticket( $id, $bin_id );
+      $sender = $this->getTicketSender($id);
+      if( !$sender["bin_id"] && $sender["user_id"] )
+	$res = $this->assign_ticket($id,$sender["user_id"],$user_id);
+      else if( $sender["bin_id"] )
+	$res = $this->move_ticket( $id, $sender["bin_id"], $sender["user_id"] );
       $t = $this->get_ticket($id);
       if( $res && $this->settings["log_reject"] == "on" ) {
 	 $logParams["action"] = "REJECTED";
-	 $logParams["bin_id"] = $t["$bin_id"];
+	 $logParams["bin_id"] = $t["bin_id"];
 	 $logParams["user_id"] = $user_id;
-	 $logParams["ticket_id"] = $t["ticket_id"];
+	 $logParams["ticket_id"] = $t["id"];
 	 if( $comments )
 	   $logParams["entry"] = $comments;
 	 $this->add_log($id,$logParams);
@@ -853,7 +871,8 @@ class zenTrack extends zen {
       $table = ($flag)? 
 	$this->table_tickets_archived : $this->table_tickets;
       $where = (is_array($id))? " id IN(".join(",",$id).")" : " id = $id";
-      $query = "DELETE FROM $table WHERE $where";      
+      $query = "DELETE FROM $table WHERE $where";
+      $this->addDebug("delete_ticket",$query,2);
       return( $this->db_result($query) );
    }
    
@@ -862,6 +881,7 @@ class zenTrack extends zen {
       // tickets with given params
       $set = $this->makeInsertVals($params,1);
       $query = "UPDATE ".$this->table_tickets." SET $set WHERE id = $id";
+      $this->addDebug("update_ticket",$query,3);
       return( $this->db_result($query) );
    }
    
@@ -2191,10 +2211,12 @@ class zenTrack extends zen {
 	.$this->table_logs
 	." WHERE ticket_id = $id"
 	." AND (action = 'MOVED' OR action = 'ASSIGNED' OR action = 'CREATED')"
-	." ORDER BY created DESC"
-      $vars = $this->db_quickIndexed($query);
-      if( !count($vars) ) {
-	
+	." ORDER BY created DESC";
+      $vars = $this->db_quickIndexed($query);      
+      if( count($vars) ) {
+	$this->addDebug("getTicketSender",join(",",$vars)."/".$query,3);
+      } else {
+	$this->addDebug("getTicketSender","couldn't find sender/".$query,2);
       }
       return $vars;
    }
@@ -2294,7 +2316,7 @@ class zenTrack extends zen {
       $this->date_fmt_short = $this->settings["date_fmt_short"];
       $this->time_fmt       = $this->settings["date_fmt_time"];
       $this->elapsed_unit   = $this->settings["time_elapsed_unit"];
-
+      $this->date_and_time  = $this->date_fmt_short." ".$this->time_fmt;
       $this->language       = $this->settings["language_default"];
 
       if( $user ) {
@@ -2307,7 +2329,7 @@ class zenTrack extends zen {
    
   
    /*
-    *  REPORTING FUNCTIONS (incomplete... add later)
+    *  REPORTING FUNCTIONS
    */     
 
    /**

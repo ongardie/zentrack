@@ -1,9 +1,12 @@
 <?
   /*
-  ** QUICK FIX TO GET USER 
-  ** TO THE RIGHT PLACE
-  ** FOR EDITING TICKETS
+  **  Action: edit ticket
   */
   include("./action_header.php");
-  header("Location:$rootUrl/admin/editTicket.php?id=$id");
+  $page_tile = "Edit Ticket";
+  include("$libDir/nav.php");
+
+  include("$templateDir/editTicketForm.php");
+
+  include("$libDir/footer.php");
 ?>

@@ -13,7 +13,7 @@
      $deadline = $zen->dateAdjust(1,"month",time());
 ?>     
 
-<form method="post" action="<?=($td)? "$rootUrl/admin/editTicketSubmit.php" : "$rootUrl/addSubmit.php"?>">
+<form method="post" action="<?=($td)? "editTicketSubmit.php" : "$rootUrl/addSubmit.php"?>">
 <input type="hidden" name="id" value="<?=strip_tags($id)?>">
 
   
