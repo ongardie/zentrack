@@ -5,6 +5,8 @@ CREATE TABLE ZENTRACK_BEHAVIOR (
   group_id int(12) NOT NULL,
   is_enabled int(1),
   sort_order int(3),
+  field_name varchar(100),
+  match_all int(1),
   PRIMARY KEY (behavior_id),
   INDEX (is_enabled)
 );

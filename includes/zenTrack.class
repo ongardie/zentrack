@@ -812,10 +812,6 @@ class zenTrack extends zen {
    * @return array with information about the data group detail
    */
   function get_data_group_details( $group_id ) {
-// The function getDataTableParms isn't available, so I comment the following line temporarily:
-//    list($table,$idfield,$showfield) = $this->getDataTableParms($group_id);
-
-// Also, the SQL statement got wrong. I'm correcting it:
     $query = "SELECT * FROM ".$this->table_group_detail." WHERE group_id = $group_id"
       ." ORDER BY sort_order";
     return( $this->db_queryIndexed($query) );

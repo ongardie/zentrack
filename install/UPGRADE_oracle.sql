@@ -5,6 +5,8 @@ CREATE TABLE ZENTRACK_BEHAVIOR (
   group_id NUMBER(12) NOT NULL,
   is_enabled NUMBER(1),
   sort_order NUMBER(3),
+  field_name varchar2(100),
+  match_all NUMBER(1),
   CONSTRAINT behavior_pk PRIMARY KEY (behavior_id)
 );
 
