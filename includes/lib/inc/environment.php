@@ -22,7 +22,7 @@
 
   // see if $zen was found in the session, otherwise initialize
   if( $_SESSION['zen'] == null ) {
-    $_SESSION['zen'] = Zen::read_ini( $ini_file );
+    $_SESSION['zen'] = ZenUtils::read_ini( $ini_file );
   }
 
   // check our cached values and make sure things are up to date

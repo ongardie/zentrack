@@ -221,6 +221,11 @@ class ZenMessageList extends Zen {
   function clearFilters() { $this->_filters = null; }
 
   /**
+   * Clears all messages stored in list
+   */
+  function clearMessages() { $this->_messages = array(); }
+
+  /**
    * Tells if a message should be logged or ignored
    *
    * @return boolean validated against debug config
@@ -336,7 +341,7 @@ class ZenMessageList extends Zen {
    * @return array containing any errors (returns empty array if no errors)
    */
   function _processNodes( $vals ) {
-    //    Zen::printArray($vals);
+    //    ZenUtils::printArray($vals);
     $msgs = array();
     // run through the xml output
     foreach($vals["children"] as $cat=>$vars) {
@@ -416,7 +421,7 @@ class ZenMessageList extends Zen {
   /**
    * Prints out the debug level settings in raw text format
    */
-  function printDebugSettings() { $this->printArray($this->_levels); }
+  function printDebugSettings() { ZenUtils::printArray($this->_levels); }
 
   /* VARIABLES */
 

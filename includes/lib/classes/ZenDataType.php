@@ -21,11 +21,11 @@ class ZenDataType extends Zen {
     $this->Zen();
     // set the params
     $this->_id = $id;
-    $this->_table = Zen::tableNameFromClass($this);
+    $this->_table = ZenUtils::tableNameFromClass($this);
     $this->_primarykey = getPrimaryKey( $this );
     // load the data
     if( $id && is_object($zenlist) ) {
-      if( Zen::tableNameFromClass($zenlist)!=$this->_table || !$this->_loadFromListData($zenlist,$id) ) {
+      if( ZenUtils::tableNameFromClass($zenlist)!=$this->_table || !$this->_loadFromListData($zenlist,$id) ) {
         $this->debug($this,"ZenDataType","Unable to constuct this object from list type ".class_name($zenlist),102,1);
       }
     }

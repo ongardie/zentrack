@@ -3,6 +3,7 @@
 #### Class files used by setup program
 ######################################
 
-Zen.class
-ZenDatabase.class
-ZenTemplate.class
+Zen.php
+ZenDatabase.php
+ZenTemplate.php
+ZenUtils.php

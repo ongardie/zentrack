@@ -66,12 +66,24 @@
    ****** PROCESS
    ************************************************/
 
+  // We include the classes in such a roundabout way because the first time we
+  // call this install prog there may not be any class file, so we will have to
+  // copy them.  This should only ever happen during development.
   $thisdir = dirname(__FILE__);
-  include("$thisdir/setup/Zen.php");
-  include("$thisdir/setup/ZenDatabase.php");
-  include("$thisdir/setup/ZenTemplate.php");
-  include("$thisdir/setup/ZenTargets.php");
+  $class_files = array('Zen.php', 'ZenDatabase.php', 'ZenTemplate.php', 'ZenTargets.php', 'ZenUtils.php');
+  foreach($class_files as $c) {
+    if( !@file_exists("$thisdir/setup/$c") ) {
+      if( $argv[0] != '-copy_class_files' &&
+	  ($argv[1] != '-copy_class_files' || !(strpos($argv[0], '--') === 0)) ) {
+	die("ERROR: The required class file $c was not found, try running 'zen.php -copy_class_files'\n");
+      }
+    }
+    else {
+      include("$thisdir/setup/$c");
+    }
+  }
 
+  // run the targets
   $z = new ZenTargets();
   $z->args( $argv );
   if( $z->run() ) {

@@ -24,10 +24,13 @@
   /**
    * parses the xml string
    *
-   * @param string $xmlstring the xml text to be parsed
+   * @param string $xmlstring the xml text to be parsed or a file reference
    * @return ZenXNode xnode object containing root xml node
    */
   function parse($xmlstring="") {
+    if( @file_exists($xmlstring) ) {
+      $xmlstring = join("",file($xmlstring));
+    }
     // set up a new XML parser to do all the work for us
     $this->_parser = xml_parser_create();
     xml_set_object($this->_parser, $this);
@@ -243,12 +246,12 @@ class ZenXNode {
       foreach($vals['children'] as $k=>$nodes) {
         for($i=0; $i<count($nodes); $i++) {
           // create child and store reference in this node
-          $node->child( &$this->createNodeFromArray(&$node, $nodes[$i]) );
+          $node->child( $this->createNodeFromArray(&$node, $nodes[$i]) );
         }
       }
     }
     // return a reference to this object
-    return &$node;
+    return $node;
   }
 
   /**
@@ -312,11 +315,13 @@ class ZenXNode {
   /** 
    *
    * @param string $prop is name of property to retrieve
-   * @return String value of a node property 
+   * @return String value of a node property or null if not set
    */
   function getProperty( $prop ) {
     if( isset($this->_props["$prop"]) )
       return $this->_props["$prop"];
+    else 
+      return null;
   }
 
   /** @var string $_name the name of this node */

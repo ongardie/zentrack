@@ -25,7 +25,8 @@
    *
    * <ul> 
    *  <li>{varname} - inserts value of varname
-   *  <li>{zen:varname} - inserts value of $zen->settings["varname"]
+   *  <li>{varname/default_value} - inserts value of varname, if not found, default_value is substituted
+   *  <li>{zen:varname} - inserts value from config settings, i.e. Zen::getSetting("varname")
    *  <li>{foreach:varname:"text"+index+"more text"+value} - loops through indexed array and prints name/value
    *  <li>{foreach:varname:%sub-template%} - loops through the indexed array and passes name/value to sub-template
    *  <li>{list:varname:"text"+value+"text"} - loops through array and prints values
@@ -35,6 +36,7 @@
    *  <li>{if:field:%sub-template%} - inserts sub-template if field exists
    *  <li>{if:field=something:"text to print"+field+"more text"} - inserts text if field = something
    *  <li>{if:field=something:%sub-template%} - inserts sub-template if field = something
+   *  <li>{function:function_name:param1,param2,param3} - runs a global function and inserts the return value
    * </ul>
    */
 class zenTemplate {

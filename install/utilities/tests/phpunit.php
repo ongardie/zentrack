@@ -6,122 +6,164 @@ define('PHP_UNIT_INCLUDED', true);
 
 function errorHandler($errno, $errstr, $errfile, $errline) 
 {
-	global $ERROR_FOUND, $ERROR_CRITICAL;
-	switch($errno) 
-	{
-    	case E_USER_ERROR:
-			echo "Fatal error: $errstr<br>";
-            echo "Skipping remaining tests for this unit...";
-			$ERROR_FOUND    = true;
-            $ERROR_CRITICAL = true;
-			break;
-		case E_USER_WARNING:
-			echo $errstr . '<br>';
-			$ERROR_FOUND = true;
-			break;
-		case E_WARNING:
-			echo "PHP WARNING on line <b>$errline</b> of file <b>$errfile</b>:";
-            echo "$errstr<br>";
-			break;
-		case E_NOTICE:
-			echo "PHP NOTICE on line <b>$errline</b> of file <b>$errfile</b>:";
-            echo "$errstr<br>";
-			break;
-		case E_ERROR:
-			echo "PHP ERROR on line <b>$errline</b> of file <b>$errfile</b>";
-			echo "<br><b>Aborting...</b>";
-			exit -1;
-			break;
-		default:
-			echo "PHP Unkown error $errno: $errstr<br>\n";
-			break;
-	}
-}
-
-class Assert 
-{
-	function assert($bool, $message = '') 
-	{
-		if (!$bool) 
-		{
-			if ($message == '') 
-			{
-				$message = "Assertion failed.";
-			}
-			trigger_error($message, E_USER_ERROR);
-		}
-	}
-
-	function equals($value1, $value2, $message = '') 
-	{
-		if ($value1 != $value2) 
-		{
-			if ($message == '') 
-			{
-				$message = "Assertion failed: <b>'$value1' != '$value2'</b>";
-			}
-			trigger_error($message, E_USER_WARNING);
-		}
-	}
-    
-    function equalsTrue($bool, $message = '') 
-	{
-    	Assert::equals($bool, true, $message);
-    }
-    
-    function equalsFalse($bool, $message = '') 
-	{
-    	Assert::equals($bool, false, $message);
+  global $ERROR_FOUND, $ERROR_CRITICAL;
+  switch($errno) 
+    {
+    case E_USER_ERROR:
+      echo "Fatal error: $errstr<br>";
+      echo "Skipping remaining tests for this unit...";
+      $ERROR_FOUND    = true;
+      $ERROR_CRITICAL = true;
+      break;
+    case E_USER_WARNING:
+      echo $errstr . '<br>';
+      $ERROR_FOUND = true;
+      break;
+    case E_WARNING:
+      echo "PHP WARNING on line <b>$errline</b> of file <b>$errfile</b>:";
+      echo "$errstr<br>";
+      break;
+    case E_NOTICE:
+      echo "PHP NOTICE on line <b>$errline</b> of file <b>$errfile</b>:";
+      echo "$errstr<br>";
+      break;
+    case E_ERROR:
+      echo "PHP ERROR on line <b>$errline</b> of file <b>$errfile</b>";
+      echo "<br><b>Aborting...</b>";
+      exit -1;
+      break;
+    default:
+      echo "PHP Unkown error $errno: $errstr<br>\n";
+      break;
     }
 }
+ 
+class Assert {
+  function assert($bool, $message = '') {
+    if (!$bool) {
+      if ($message == '') {
+	$message = "Assertion failed.";
+      }
+      trigger_error($message, E_USER_ERROR);
+    }
+  }
+  
+  function equals($value1, $value2, $message = '') {
+    if ($value1 != $value2) {
+      if ($message == '') {
+	$message = "Assertion failed: <b>'$value1' != '$value2'</b>";
+      }
+      trigger_error($message, E_USER_WARNING);
+    }
+  }
+  
+  function equalsTrue($bool, $message = '') {
+    Assert::equals($bool, true, $message);
+  }
+  
+  function equalsFalse($bool, $message = '') {
+    Assert::equals($bool, false, $message);
+  }
+}
 
-class Test 
-{
-    /***
-	 * Call all methods starting with 'test'. $class is the name of the class.
-     * Although not strictly necessary, it makes the output look better 
-	 * (properly capitalized).
-	 ***/
-	function run($class) 
-	{
-		global $ERROR_FOUND, $ERROR_CRITICAL, $TESTS_COMPLETED,
-        	$TESTS_SKIPPED, $TESTS_TOTAL; // Yikes!
-        if (strlen($class) > 4 && strtolower(substr($class, -4)) == 'test')
-        {
-            $class = substr($class, 0, strlen($class) - 4);
-        }
-		echo "      <tr>\n";
-		echo "        <th colspan=2><b>$class</b></th>\n";
-		echo "      </tr>\n";
-        $ERROR_CRITICAL = false;
-        $flipCss        = false;
-		$methods        = get_class_methods($this);
-        foreach ($methods as $method) {
-        	// Don't continue running tests if something really bad happened.
-            // That is, if Assert::assert evaluated to true.
-        	if ($ERROR_CRITICAL) {
-            	break;
-            }
-            // Run a test if this method applies
-			if (strlen($method) > 4 && substr($method, 0, 4) == 'test') {
-				$TESTS_TOTAL++;
-				$ERROR_FOUND = false;
-            	$css         = $flipCss ? 'dark' : 'light';
-                $flipCss     = !$flipCss;
-				echo "      <tr>\n";
-				echo "        <td class=$css width=50 nowrap valign=top>";
-                echo substr($method, 4), "</td>\n";
-				echo "        <td class=$css valign=top>";
-				$this->$method();
-				if (!$ERROR_FOUND) {
-					$TESTS_COMPLETED++;
-					echo "<b>OK</b>";
-				}
-				echo "</td>\n";
-				echo "      </tr>\n";
-			}
-		}
+class Test {
+  /**
+   * Call all methods starting with 'test'. $class is the name of the class.
+   * Although not strictly necessary, it makes the output look better 
+   * (properly capitalized).
+   *
+   * @param string $class is a reference to the class name
+   * @param string $xml is an xml data file to get test data from
+   */
+  function run($class, $xml = false) {
+    global $ERROR_FOUND, $ERROR_CRITICAL, $TESTS_COMPLETED,
+      $TESTS_SKIPPED, $TESTS_TOTAL; // Yikes!
+    if (strlen($class) > 4 && strtolower(substr($class, -4)) == 'test')
+      {
+	$class = substr($class, 0, strlen($class) - 4);
+      }
+    echo "\t<tr>\n";
+    echo "\t  <th colspan=2><b>$class</b></th>\n";
+    echo "\t</tr>\n";
+    $ERROR_CRITICAL = false;
+    $flipCss        = false;
+    $methods        = get_class_methods($this);
+
+    $xmlnode = null;
+    if( $xml ) {
+      $parser = new ZenXMLParser();
+      $xmlnode =& $parser->parse($xml);
+    }    
+    $node = null;    
+
+    foreach ($methods as $method) {
+      // Don't continue running tests if something really bad happened.
+      // That is, if Assert::assert evaluated to true.
+      if ($ERROR_CRITICAL) {
+	break;
+      }
+      // Run a test if this method applies
+      if (strlen($method) > 4 && substr($method, 0, 4) == 'test') {
+	$ERROR_FOUND = false;
+	if( $xmlnode ) {
+	  $n = $xmlnode->getChild($method); 
+	  if( $n ) {
+	    $node = $n[0];
+	  }
 	}
+	if( $node ) {
+	  $sets = $node->getChildren();
+	  foreach( $sets as $testname=>$valset ) {
+	    $ERROR_FOUND = false;
+	    $TESTS_TOTAL++;
+	    $parms = array();
+	    $children = $valset[0]->getChild('param');
+	    if( is_array($children) ) {
+	      foreach($children as $parm) {
+		$key = $parm->getProperty('name');
+		if( $parm->getProperty('eval') == 'true' ) {
+		  $val = $parm->getData();
+		  eval("\$parms[\$key] = $val;"); 
+		}
+		else {
+		  $parms[$key] = $parm->getData();
+		}
+	      }
+	    }
+	    $this->_openRow( "{$method}->$testname" );
+	    $this->$method( $parms );
+	    if( !$ERROR_FOUND ) { $TESTS_COMPLETED++; }
+	    $this->_closeRow( $ERROR_FOUND );	    
+	  }
+	}
+	else {
+	  $TESTS_TOTAL++;
+	  $this->_openRow( substr($method, 4) );
+	  $this->$method();
+	  if( !$ERROR_FOUND ) { $TESTS_COMPLETED++; }
+	  $this->_closeRow( $ERROR_FOUND );
+	}
+      }
+    }
+  }
+
+  function _openRow( $name ) {
+    static $css;
+    $css = ($css=='light')? 'dark' : 'light';
+    echo "\t<tr>\n";
+    echo "\t  <td class=$css width=50 nowrap valign=top>";
+    echo "$name</td>\n";
+    echo "\t  <td class=$css valign=top>";
+  }
+
+  function _closeRow( $err ) {
+    if (!$err) {
+      echo "<b>OK</b>";
+    }
+    echo "\t  </td>\n";
+    echo "\t</tr>\n";
+  }
+
 }
 
 $directory  = isset($_GET['directory']) ? $_GET['directory'] : '';
@@ -129,11 +171,11 @@ $dirValid   = ($directory != '' && is_dir($directory));
 
 if ($dirValid) 
 {
-	$title = ': Results';
+  $title = ': Results';
 }
 else 
 {
-	$title = ': Configuration'; 
+  $title = ': Configuration'; 
 }
 ?>
 <html>
@@ -197,34 +239,36 @@ else
 <?php
 if ($dirValid) 
 {
-	$errorHandler = set_error_handler("errorHandler");
-	error_reporting (E_ALL);
-	echo "    <table align=center border=0 cellpadding=0 cellspacing=0 ";
-    echo "width=100%>\n";
-    $TESTS_TOTAL     = 0;
-	$TESTS_COMPLETED = 0;
-    $handle          = opendir($directory);
-    while (($file = readdir($handle)) !== false) 
-	{
-        if (strlen($file) > 5 && substr($file, -3) == 'php') 
-		{
-        	include_once($directory . '/' . $file);
-        	$class = substr($file, 0, strlen($file) - 4);
-            if (class_exists($class)) 
-			{
-				$test = new $class;
-                if (is_subclass_of($test, 'Test')) 
-				{
-					$test->run($class);
-                }
-        	}
-        }
+  $errorHandler = set_error_handler("errorHandler");
+  error_reporting (E_ALL);
+  echo "    <table align=center border=0 cellpadding=0 cellspacing=0 ";
+  echo "width=100%>\n";
+  $TESTS_TOTAL     = 0;
+  $TESTS_COMPLETED = 0;
+  $handle          = opendir($directory);
+  while (($file = readdir($handle)) !== false) {
+    if (strlen($file) > 5 && substr($file, -3) == 'php') {
+      include_once($directory . '/' . $file);
+      $class = substr($file, 0, strlen($file) - 4);
+      if (class_exists($class)) {
+	$test = new $class;
+	if (is_subclass_of($test, 'Test')) {
+	  if( file_exists("$directory/$class.xml") ) {
+	    $test->run($class,"$directory/$class.xml");
+	  }
+	  else {
+	    $test->run($class);
+	  }
+	}
+      }
     }
-    closedir($handle);
-	set_error_handler($errorHandler);
-    echo "    </table>\n";
-    echo "    <p>Successfully executed <b>$TESTS_COMPLETED</b> of ";
-    echo "<b>$TESTS_TOTAL</b> tests</p>\n";
+  }
+  closedir($handle);
+  if( strlen($errorHandler) )
+    set_error_handler($errorHandler);
+  echo "    </table>\n";
+  echo "    <p>Successfully executed <b>$TESTS_COMPLETED</b> of ";
+  echo "<b>$TESTS_TOTAL</b> tests</p>\n";
 }
 else 
 {

@@ -1,16 +1,26 @@
 
 ;;;;;;;;;;;;;;;;; !!!VERY IMPORTANT!!! ;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;;  When you edit this file for any reason other than the
-;;;  initial installation, you must run "install.php updateConfig"
-;;;  to properly configure the system
+;;;  USER NOTES:
+;;;    When you edit this file for any reason other than the
+;;;    initial installation, you must run "install/zen.php updateConfig"
+;;;    to properly configure the system
 ;;;
-;;;  You may use any property which has been defined in this file
-;;;  previously as a variable in another property's value 
-;;;  by using %property_name%
+;;;    You may use any property which has been defined in this file
+;;;    previously as a variable in another property's value 
+;;;    by using %property_name%
 ;;;
-;;;  Note that all settings in this file must appear under a section
-;;;  heading, or there will be problems parsing.
+;;;    Note that all settings in this file must appear under a section
+;;;    heading, or there will be problems parsing.
+;;;
+;;;  DEVELOPER NOTES:
+;;;    Do not parse this file with parse_ini_file(), use Zen::read_ini()
+;;;
+;;;    To add/edit the zen.ini file structure, edit 
+;;;    install/defaults/zen.ini.template
+;;;
+;;;    Then run the merge utility to merge in your existing settings 
+;;;    with the template structure
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
