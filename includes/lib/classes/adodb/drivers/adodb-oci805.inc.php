@@ -46,11 +46,11 @@ class ADODB_oci805 extends ADODB_oci8 {
 	}
 }
 
-class ADORecordset_oci805 extends ADORecordset_oci8 {	
+class ADORecordSet_oci805 extends ADORecordSet_oci8 {	
 	var $databaseType = "oci805";
-	function ADORecordset_oci805($id,$mode=false)
+	function ADORecordSet_oci805($id,$mode=false)
 	{
-		$this->ADORecordset_oci8($id,$mode);
+		$this->ADORecordSet_oci8($id,$mode);
 	}
 }
 ?>

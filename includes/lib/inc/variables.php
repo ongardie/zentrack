@@ -1,9 +1,9 @@
 <?{ /* -*- Mode: C; c-basic-indent: 3; indent-tabs-mode: nil -*- ex: set tabstop=3 expandtab: */ 
 
   /**
-   * @package Libs
-   *
    * Prepares and initializes sitewide variables, global and session arrays
+   *
+   * @package Libs
    */
 
   // benchmarking

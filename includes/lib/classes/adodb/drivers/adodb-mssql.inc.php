@@ -440,13 +440,13 @@ class ADODB_mssql extends ADOConnection {
 	 Class Name: Recordset
 --------------------------------------------------------------------------------------*/
 
-class ADORecordset_mssql extends ADORecordSet {	
+class ADORecordSet_mssql extends ADORecordSet {	
 
 	var $databaseType = "mssql";
 	var $canSeek = true;
 	// _mths works only in non-localised system
 		
-	function ADORecordset_mssql($id,$mode=false)
+	function ADORecordSet_mssql($id,$mode=false)
 	{
 		if ($mode === false) { 
 			global $ADODB_FETCH_MODE;

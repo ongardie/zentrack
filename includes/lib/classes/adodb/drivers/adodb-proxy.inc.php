@@ -17,12 +17,12 @@ if (! defined("_ADODB_PROXY_LAYER")) {
 		var $databaseType = 'proxy';
 		var $databaseProvider = 'csv';
 	}
-	class ADORecordset_proxy extends ADORecordset_csv {
+	class ADORecordSet_proxy extends ADORecordSet_csv {
 	var $databaseType = "proxy";		
 	
-		function ADORecordset_proxy($id,$mode=false) 
+		function ADORecordSet_proxy($id,$mode=false) 
 		{
-			$this->ADORecordset($id,$mode);
+			$this->ADORecordSet($id,$mode);
 		}
 	};
 } // define

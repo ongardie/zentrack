@@ -1,12 +1,12 @@
 <?{ /* -*- Mode: C; c-basic-indent: 3; indent-tabs-mode: nil -*- ex: set tabstop=3 expandtab: */ 
 
   /**
-   * @package Libs
-   *
    * Print debugging information to the screen in a user friendly format.  
    *
    * This page will print all items in ZenMessageList as well as environment settings, php settings,
    * and any pertinent information for use
+   *
+   * @package Libs
    */
 
   print "<p>-------- DEBUG OUTPUT ---------</P>\n";

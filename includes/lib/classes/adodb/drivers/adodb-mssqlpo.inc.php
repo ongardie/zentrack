@@ -32,11 +32,11 @@ class ADODB_mssqlpo extends ADODB_mssql {
 	}
 }
 
-class ADORecordset_mssqlpo extends ADORecordset_mssql {
+class ADORecordSet_mssqlpo extends ADORecordSet_mssql {
 	var $databaseType = "mssqlpo";
-	function ADORecordset_mssqlpo($id,$mode=false)
+	function ADORecordSet_mssqlpo($id,$mode=false)
 	{
-		$this->ADORecordset_mssql($id,$mode);
+		$this->ADORecordSet_mssql($id,$mode);
 	}
 	
 	function MoveNext() 

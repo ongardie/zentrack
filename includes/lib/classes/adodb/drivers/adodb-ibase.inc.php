@@ -405,14 +405,14 @@ class ADODB_ibase extends ADOConnection {
 		 Class Name: Recordset
 --------------------------------------------------------------------------------------*/
 
-class ADORecordset_ibase extends ADORecordSet 
+class ADORecordSet_ibase extends ADORecordSet 
 {
 
 	var $databaseType = "ibase";
 	var $bind=false;
 	var $_cacheType;
 	
-	function ADORecordset_ibase($id,$mode=false)
+	function ADORecordSet_ibase($id,$mode=false)
 	{
 	global $ADODB_FETCH_MODE;
 	

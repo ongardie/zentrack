@@ -1,6 +1,33 @@
 
 --- V3.0 RC1 (beta,in CVS) ---	
 
+2003-10-01, CFAlonso
+  Modified the following files to start fixing some of the errors reported by phpDocumentor:
+    - zentrack/includes/lib/classes/adodb/adodb-connection.inc.php
+    - zentrack/includes/lib/classes/adodb/drivers/adodb-csv.inc.php
+    - zentrack/includes/lib/classes/adodb/drivers/adodb-ibase.inc.php
+    - zentrack/includes/lib/classes/adodb/drivers/adodb-informix.inc.php
+    - zentrack/includes/lib/classes/adodb/drivers/adodb-informix72.inc.php
+    - zentrack/includes/lib/classes/adodb/drivers/adodb-mssql.inc.php
+    - zentrack/includes/lib/classes/adodb/drivers/adodb-mssqlpo.inc.php
+    - zentrack/includes/lib/classes/adodb/drivers/adodb-oci8.inc.php
+    - zentrack/includes/lib/classes/adodb/drivers/adodb-oci805.inc.php
+    - zentrack/includes/lib/classes/adodb/drivers/adodb-oci8po.inc.php
+    - zentrack/includes/lib/classes/adodb/drivers/adodb-oracle.inc.php
+    - zentrack/includes/lib/classes/adodb/drivers/adodb-proxy.inc.php
+    - zentrack/includes/lib/classes/adodb/drivers/adodb-sybase.inc.php
+    - zentrack/includes/lib/classes/db/DbTypeInfo.php
+    - zentrack/includes/lib/classes/ZenTranslator.php
+    - zentrack/includes/lib/classes/ZenXMLParser.php
+    - zentrack/includes/lib/inc/classes.php
+    - zentrack/includes/lib/inc/debug.php
+    - zentrack/includes/lib/inc/functions.php
+    - zentrack/includes/lib/inc/global.php
+    - zentrack/includes/lib/inc/session.php
+    - zentrack/includes/lib/inc/variables.php
+    - zentrack/install/utilities/tests/phpunit.php
+
+
 2003-09-01, Kato
   Created test cases, most libraries implemented, utilities underway
     - zentrack/install/zen.php 1.7

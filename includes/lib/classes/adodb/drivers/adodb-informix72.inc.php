@@ -195,13 +195,13 @@ class ADODB_informix72 extends ADOConnection {
 	 Class Name: Recordset
 --------------------------------------------------------------------------------------*/
 
-class ADORecordset_informix72 extends ADORecordSet {
+class ADORecordSet_informix72 extends ADORecordSet {
 
 	var $databaseType = "informix72";
 	var $canSeek = true;
 	var $_fieldprops = false;
 
-	function ADORecordset_informix72($id,$mode=false)
+	function ADORecordSet_informix72($id,$mode=false)
 	{
 		if ($mode === false) { 
 			global $ADODB_FETCH_MODE;

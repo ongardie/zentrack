@@ -8,10 +8,14 @@
   */
  class ZenXMLParser {
 
-  /** @var object $_parser holds the xml parser object */
+  /** 
+   * @var object $_parser holds the xml parser object 
+   */
   var $_parser;
 
-  /** @var object $_current holds the current ZenXNode object */ 
+  /** 
+   * @var object $_current holds the current ZenXNode object
+   */ 
   var $_current;
 
   /**
@@ -242,7 +246,7 @@ class ZenXNode {
   }
 
   /**
-   * Creates a ZenXNode object from an array (this is a recursive call, sub-elements are created as children
+   * Creates a ZenXNode object from an array (this is a recursive call, sub-elements are created as children)
    *
    * This is how to create xml or schema data from an array.  The input array should be structured as follows:
    *

@@ -59,13 +59,13 @@ class ADODB_oci8po extends ADODB_oci8 {
 		 Class Name: Recordset
 --------------------------------------------------------------------------------------*/
 
-class ADORecordset_oci8po extends ADORecordset_oci8 {
+class ADORecordSet_oci8po extends ADORecordSet_oci8 {
 
 	var $databaseType = 'oci8po';
 	
-		function ADORecordset_oci8po($queryID,$mode=false)
+		function ADORecordSet_oci8po($queryID,$mode=false)
 		{
-			$this->ADORecordset_oci8($queryID,$mode);
+			$this->ADORecordSet_oci8($queryID,$mode);
 		}
 
 		function Fields($colname)

@@ -56,7 +56,6 @@ class DbTypeInfo {
    * @param string $table
    * @param string $column
    * @return array of sql statements
-   * @return array of sql statements
    */
   function dropColumnSyntax( $table, $column ) { 
     return $this->getStatement('dropcolumn', array('table'=>$table, 'name'=>$column));

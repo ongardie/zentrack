@@ -2,7 +2,9 @@
 
 /**
  * @package Zen 
- *
+ */
+
+/**
  * The translation function wrapper
  *
  * SPECIAL NOTE:
@@ -51,9 +53,6 @@ function tr($string, $vals = '') {
 }   
  
 /**
- * @package Zen 
- * @subpackage Utils
- *
  * This class manages the translation of static strings. It uses translation
  * files that are located in directories specified in the bindDomain() function.
  * The format of these files is forthcoming.
@@ -64,6 +63,10 @@ function tr($string, $vals = '') {
  * $trans->textDomain('messages');
  * $trans->setLocale('es') //Spanish
  * $trans->trans('Hello World'); //outputs 'Hola Mundo'
+ *
+ * @package Zen 
+ * @subpackage Utils
+ *
  */
 class ZenTranslator {
 /**

@@ -2,6 +2,7 @@
 
 /**
  * Drop this file in the web directory to run PHPUnit tests
+ *
  * @package PHPUnit
  */
 

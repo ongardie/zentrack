@@ -801,14 +801,14 @@ SELECT /*+ RULE */ distinct b.column_name
 		 Class Name: Recordset
 --------------------------------------------------------------------------------------*/
 
-class ADORecordset_oci8 extends ADORecordSet {
+class ADORecordSet_oci8 extends ADORecordSet {
 
 	var $databaseType = 'oci8';
 	var $bind=false;
 	var $_fieldobjs;
 	//var $_arr = false;
 		
-	function ADORecordset_oci8($queryID,$mode=false)
+	function ADORecordSet_oci8($queryID,$mode=false)
 	{
 		if ($mode === false) { 
 			global $ADODB_FETCH_MODE;

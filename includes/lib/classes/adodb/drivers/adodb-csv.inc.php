@@ -184,10 +184,10 @@ class ADODB_csv extends ADOConnection {
 	}
 } // class
 
-class ADORecordset_csv extends ADORecordset {
-	function ADORecordset_csv($id,$mode=false)
+class ADORecordSet_csv extends ADORecordSet {
+	function ADORecordSet_csv($id,$mode=false)
 	{
-		$this->ADORecordset($id,$mode);
+		$this->ADORecordSet($id,$mode);
 	}
 	
 	function _close()

@@ -1,14 +1,14 @@
 <?php
 /** 
- * @version V3.00 6 Jan 2003 (c) 2000-2003 John Lim (jlim@natsoft.com.my). All rights reserved.
+ * Latest version is available at http://php.weblogs.com
+ * 
  * Released under both BSD license and Lesser GPL library license. 
  * Whenever there is any discrepancy between the two licenses, 
  * the BSD license will take precedence. 
  *
  * Set tabs to 4 for best viewing.
- * 
- * Latest version is available at http://php.weblogs.com
  *
+ * @version V3.00 6 Jan 2003 (c) 2000-2003 John Lim (jlim@natsoft.com.my). All rights reserved.
  */
 
     /**
@@ -93,10 +93,9 @@
 	}
 	
 	/**
-		Get server version info...
-		
-		@returns An array with 2 elements: $arr['string'] is the description string, 
-			and $arr[version] is the version (also a string).
+        *  Get server version info...
+	*	
+	*  @return array $arr['string'] is the description string, and $arr['version'] is the version (also a string).
 	*/
 	function ServerInfo()
 	{
@@ -133,11 +132,11 @@
 	/**
 	 * Connect to database
 	 *
-	 * @param [argHostname]		Host to connect to
-	 * @param [argUsername]		Userid to login
-	 * @param [argPassword]		Associated password
-	 * @param [argDatabaseName]	database
-	 * @param [forceNew]        force new connection
+	 * @param string $argHostname		Host to connect to
+	 * @param string $argUsername		Userid to login
+	 * @param string $argPassword		Associated password
+	 * @param string $argDatabaseName	database
+	 * @param bool $forceNew                force new connection
 	 *
 	 * @return true or false
 	 */	  
@@ -179,10 +178,10 @@
 	/**
 	 * Always force a new connection to database - currently only works with oracle
 	 *
-	 * @param [argHostname]		Host to connect to
-	 * @param [argUsername]		Userid to login
-	 * @param [argPassword]		Associated password
-	 * @param [argDatabaseName]	database
+	 * @param string $argHostname		Host to connect to
+	 * @param string $argUsername		Userid to login
+	 * @param string $argPassword		Associated password
+	 * @param string $argDatabaseName	database
 	 *
 	 * @return true or false
 	 */	  
@@ -194,12 +193,12 @@
 	/**
 	 * Establish persistent connect to database
 	 *
-	 * @param [argHostname]		Host to connect to
-	 * @param [argUsername]		Userid to login
-	 * @param [argPassword]		Associated password
-	 * @param [argDatabaseName]	database
+         * @param string $argHostname           Host to connect to
+         * @param string $argUsername           Userid to login
+         * @param string $argPassword           Associated password
+         * @param string $argDatabaseName       database
 	 *
-	 * @return return true or false
+	 * @return true or false
 	 */	
 	function PConnect($argHostname = "", $argUsername = "", $argPassword = "", $argDatabaseName = "")
 	{
@@ -239,9 +238,9 @@
 	 *   $db->Execute($stmt,array(1,'Jill')) or die('insert failed');
 	 *   $db->Execute($stmt,array(2,'Joe')) or die('insert failed');
 	 *
-	 * @param sql	SQL to send to database
+	 * @param string $sql	SQL to send to database
 	 *
-	 * @return return FALSE, or the prepared statement, or the original sql if
+	 * @return FALSE, or the prepared statement, or the original sql if
 	 * 			if the database does not support prepare.
 	 *
 	 */	
@@ -299,8 +298,8 @@
 	*	 Lock a row, will escalate and lock the table if row locking not supported
 	*	will normally free the lock at the end of the transaction
 	*
-	*  @param $table	name of table to lock
-	*  @param $where	where clause to use, eg: "WHERE row=12". If left empty, will escalate to table lock
+	*  @param string $table	      name of table to lock
+	*  @param string $where	      where clause to use, eg: "WHERE row=12". If left empty, will escalate to table lock
 	*/
 	function RowLock($table,$where)
 	{
@@ -323,7 +322,7 @@
 	* The fetch modes for NUMERIC and ASSOC for PEAR DB and ADODB are identical
 	* 	for easy porting :-)
 	*
-	* @param mode	The fetchmode ADODB_FETCH_ASSOC or ADODB_FETCH_NUM
+	* @param $mode	The fetchmode ADODB_FETCH_ASSOC or ADODB_FETCH_NUM
 	* @returns		The previous fetch mode
 	*/
 	function SetFetchMode($mode)
@@ -370,19 +369,19 @@
 	}
 
 	/* 
-	Usage in oracle
-		$stmt = $db->Prepare('select * from table where id =:myid and group=:group');
-		$db->Parameter($stmt,$id,'myid');
-		$db->Parameter($stmt,$group,'group',64);
-		$db->Execute();
-		
-		@param $stmt Statement returned by Prepare() or PrepareSP().
-		@param $var PHP variable to bind to
-		@param $name Name of stored procedure variable name to bind to.
-		@param [$isOutput] Indicates direction of parameter 0/false=IN  1=OUT  2= IN/OUT. This is ignored in oci8.
-		@param [$maxLen] Holds an maximum length of the variable.
-		@param [$type] The data type of $var. Legal values depend on driver.
-
+	* Usage in oracle
+	*	$stmt = $db->Prepare('select * from table where id =:myid and group=:group');
+	*	$db->Parameter($stmt,$id,'myid');
+	*	$db->Parameter($stmt,$group,'group',64);
+	*	$db->Execute();
+	*	
+	*	@param $stmt Statement returned by Prepare() or PrepareSP().
+	*	@param $var PHP variable to bind to
+	*	@param $name Name of stored procedure variable name to bind to.
+	*	@param $isOutput Indicates direction of parameter 0/false=IN  1=OUT  2= IN/OUT. This is ignored in oci8.
+	*	@param $maxLen Holds an maximum length of the variable.
+	*	@param $type The data type of $var. Legal values depend on driver.
+        *
 	*/
 	function Parameter(&$stmt,&$var,$name,$isOutput=false,$maxLen=4000,$type=false)
 	{
@@ -392,9 +391,9 @@
 	/**
 	 * Execute SQL 
 	 *
-	 * @param sql		SQL statement to execute, or possibly an array holding prepared statement ($sql[0] will hold sql text)
-	 * @param [inputarr]	holds the input data to bind to. Null elements will be set to null.
-	 * @param [arg3]	reserved for john lim for future use
+	 * @param string $sql		SQL statement to execute, or possibly an array holding prepared statement ($sql[0] will hold sql text)
+	 * @param $inputarr	holds the input data to bind to. Null elements will be set to null.
+	 * @param $arg3 	reserved for john lim for future use
 	 * @return 		RecordSet or false
 	 */
 	function &Execute($sql,$inputarr=false,$arg3=false) 
@@ -523,8 +522,8 @@
 	 * Generates a sequence id and stores it in $this->genID;
 	 * GenID is only available if $this->hasGenID = true;
 	 *
-	 * @param seqname		name of sequence to use
-	 * @param startID		if sequence does not exist, start at this ID
+	 * @param $seqname		name of sequence to use
+	 * @param $startID		if sequence does not exist, start at this ID
 	 * @return		0 if not supported, otherwise a sequence id
 	 */
 
@@ -561,9 +560,9 @@
 	
 	/**
 	 * Portable Insert ID. Pablo Roca <pabloroca@mvps.org>
+	 * problems in multiuser environments. Heavy test this before deploying.
 	 *
 	 * @return  the last inserted ID. All databases support this. But aware possible
-	 * problems in multiuser environments. Heavy test this before deploying.
 	 */ 
 		function PO_Insert_ID($table="", $id="") 
 		{
@@ -609,7 +608,7 @@
 	
 	
 	/**
-	 * @returns an array with the primary key columns in it.
+	 * @return an array with the primary key columns in it.
 	 */
 	function MetaPrimaryKeys($table, $owner=false)
 	{
@@ -630,7 +629,7 @@
 	/**
 	 * Choose a database to connect to. Many databases do not support this.
 	 *
-	 * @param dbName 	is the name of the database to select
+	 * @param $dbName 	is the name of the database to select
 	 * @return 		true or false
 	 */
 	function SelectDB($dbName) 
@@ -649,12 +648,12 @@
 	* Uses SELECT TOP for Microsoft databases (when $this->hasTop is set)
 	* BUG: Currently SelectLimit fails with $sql with LIMIT or TOP clause already set
 	*
-	* @param sql
-	* @param [offset]	is the row to start calculations from (1-based)
-	* @param [nrows]		is the number of rows to get
-	* @param [inputarr]	array of bind variables
-	* @param [arg3]		is a private parameter only used by jlim
-	* @param [secs2cache]		is a private parameter only used by jlim
+	* @param $sql
+	* @param $offset	is the row to start calculations from (1-based)
+	* @param $nrows		is the number of rows to get
+	* @param $inputarr	array of bind variables
+	* @param $arg3		is a private parameter only used by jlim
+	* @param $secs2cache		is a private parameter only used by jlim
 	* @return		the recordset ($rs->databaseType == 'array')
  	*/
 	function &SelectLimit($sql,$nrows=-1,$offset=-1, $inputarr=false,$arg3=false,$secs2cache=0)
@@ -723,9 +722,9 @@
 	* input recordset's cursor should be at beginning, and
 	* old $rs will be closed.
 	*
-	* @param rs			the recordset to copy
-	* @param [nrows]  	number of rows to retrieve (optional)
-	* @param [offset] 	offset by number of rows (optional)
+	* @param $rs			the recordset to copy
+	* @param $nrows  	number of rows to retrieve (optional)
+	* @param $offset 	offset by number of rows (optional)
 	* @return 			the new recordset
 	*/
 	function &_rs2rs(&$rs,$nrows=-1,$offset=-1)
@@ -757,8 +756,8 @@
 	* Return first element of first row of sql statement. Recordset is disposed
 	* for you.
 	*
-	* @param sql			SQL statement
-	* @param [inputarr]		input bind array
+	* @param $sql			SQL statement
+	* @param $inputarr		input bind array
 	*/
 	function GetOne($sql,$inputarr=false)
 	{
@@ -829,8 +828,8 @@
 	/**
 	* Return all rows. Compat with PEAR DB
 	*
-	* @param sql			SQL statement
-	* @param [inputarr]		input bind array
+	* @param $sql			SQL statement
+	* @param $inputarr		input bind array
 	*/
 	function GetAll($sql,$inputarr=false)
 	{
@@ -859,8 +858,8 @@
 	/**
 	* Return one row of sql statement. Recordset is disposed for you.
 	*
-	* @param sql			SQL statement
-	* @param [inputarr]		input bind array
+	* @param $sql			SQL statement
+	* @param $inputarr		input bind array
 	*/
 	function GetRow($sql,$inputarr=false)
 	{
@@ -981,12 +980,12 @@
 	*
 	* BUG: Currently CacheSelectLimit fails with $sql with LIMIT or TOP clause already set
 	*
-	* @param [secs2cache]	seconds to cache data, set to 0 to force query. This is optional
-	* @param sql
-	* @param [offset]	is the row to start calculations from (1-based)
-	* @param [nrows]	is the number of rows to get
-	* @param [inputarr]	array of bind variables
-	* @param [arg3]		is a private parameter only used by jlim
+	* @param $secs2cache	seconds to cache data, set to 0 to force query. This is optional
+	* @param $sql
+	* @param $offset	is the row to start calculations from (1-based)
+	* @param $nrows 	is the number of rows to get
+	* @param $inputarr	array of bind variables
+	* @param $arg3		is a private parameter only used by jlim
 	* @return		the recordset ($rs->databaseType == 'array')
  	*/
 	function &CacheSelectLimit($secs2cache,$sql,$nrows=-1,$offset=-1,$inputarr=false, $arg3=false)
@@ -1061,11 +1060,11 @@
 	/**
 	 * Execute SQL, caching recordsets.
 	 *
-	 * @param [secs2cache]	seconds to cache data, set to 0 to force query. 
+	 * @param $secs2cache	seconds to cache data, set to 0 to force query. 
 	 *					  This is an optional parameter.
-	 * @param sql		SQL statement to execute
-	 * @param [inputarr]	holds the input data  to bind to
-	 * @param [arg3]	reserved for john lim for future use
+	 * @param $sql		SQL statement to execute
+	 * @param $inputarr	holds the input data  to bind to
+	 * @param $arg3 	reserved for john lim for future use
 	 * @return 		RecordSet or false
 	 */
 	function &CacheExecute($secs2cache,$sql=false,$inputarr=false,$arg3=false)
@@ -1238,11 +1237,11 @@
 	
 	
 	/**
-	 *  $meta	contains the desired type, which could be...
+	 * @param $meta	contains the desired type, which could be...
 	 *	C for character. You will have to define the precision yourself.
 	 *	X for teXt. For unlimited character lengths.
 	 *	B for Binary
-	 *  F for floating point, with no need to define scale and precision
+	 *	F for floating point, with no need to define scale and precision
 	 * 	N for decimal numbers, you will have to define the (scale, precision) yourself
 	 *	D for date
 	 *	T for timestamp
@@ -1251,7 +1250,6 @@
 	 *	R for autoincrement counter/integer
 	 *  and if you want to use double-byte, add a 2 to the end, like C2 or X2.
 	 * 
-	 *
 	 * @return the actual type of the data or false if no such type available
 	*/
  	function ActualType($meta)
@@ -1376,8 +1374,8 @@
 	 * List columns in a database as an array of ADOFieldObjects. 
 	 * See top of file for definition of object.
 	 *
-	 * @param table	table name to query
-	 * @param upper	uppercase table name (required by some databases)
+	 * @param $table	table name to query
+	 * @param $upper	uppercase table name (required by some databases)
 	 *
 	 * @return  array of ADOFieldObjects for current table.
 	 */ 
@@ -1412,7 +1410,7 @@
 	
 	/**
 	 * List columns names in a table as an array. 
-	 * @param table	table name to query
+	 * @param $table	table name to query
 	 *
 	 * @return  array of column names for current table.
 	 */ 
@@ -1431,11 +1429,11 @@
 	/**
 	 * Different SQL databases used different methods to combine strings together.
 	 * This function provides a wrapper. 
-	 * 
-	 * param s	variable number of string parameters
-	 *
 	 * Usage: $db->Concat($str1,$str2);
 	 * 
+	 * 
+	 * param $s	variable number of string parameters
+	 *
 	 * @return concatenated string
 	 */ 	 
 	function Concat()
@@ -1448,7 +1446,7 @@
 	/**
 	 * Converts a date "d" to a string that the database can understand.
 	 *
-	 * @param d	a date in Unix date time format.
+	 * @param $d	a date in Unix date time format.
 	 *
 	 * @return  date string in database date format
 	 */
@@ -1467,7 +1465,7 @@
 	/**
 	 * Converts a timestamp "ts" to a string that the database can understand.
 	 *
-	 * @param ts	a timestamp in Unix date time format.
+	 * @param $ts	a timestamp in Unix date time format.
 	 *
 	 * @return  timestamp string in database timestamp format
 	 */
@@ -1520,8 +1518,8 @@
 	 *
 	 * Format database date based on user defined format.
 	 *
-	 * @param v  	is the character date in YYYY-MM-DD format, returned by database
-	 * @param fmt 	is the format to apply to it, using date()
+	 * @param $v  	is the character date in YYYY-MM-DD format, returned by database
+	 * @param $fmt 	is the format to apply to it, using date()
 	 *
 	 * @return a date formated as user desires
 	 */
@@ -1544,8 +1542,8 @@
 	 * to the string single-quotes.
 	 * An example is  $db->qstr("Don't bother",magic_quotes_runtime());
 	 * 
-	 * @param s			the string to quote
-	 * @param [magic_quotes]	if $s is GET/POST var, set to get_magic_quotes_gpc().
+	 * @param $s			the string to quote
+	 * @param $magic_quotes 	if $s is GET/POST var, set to get_magic_quotes_gpc().
 	 *				This undoes the stupidity of magic quotes for GPC.
 	 *
 	 * @return  quoted string to be sent back to database
@@ -1581,12 +1579,12 @@
 	*
 	* See readme.htm#ex8 for an example of usage.
 	*
-	* @param sql
-	* @param nrows		is the number of rows per page to get
-	* @param page		is the page number to get (1-based)
-	* @param [inputarr]	array of bind variables
-	* @param [arg3]		is a private parameter only used by jlim
-	* @param [secs2cache]		is a private parameter only used by jlim
+	* @param $sql
+	* @param $nrows		is the number of rows per page to get
+	* @param $page		is the page number to get (1-based)
+	* @param $inputarr	array of bind variables
+	* @param $arg3		is a private parameter only used by jlim
+	* @param $secs2cache		is a private parameter only used by jlim
 	* @return		the recordset ($rs->databaseType == 'array')
 	*
 	* NOTE: phpLens uses a different algorithm and does not use PageExecute().
@@ -1606,12 +1604,12 @@
 	* $nrows rows per page. It also saves two boolean values saying if the given page is the first 
 	* and/or last one of the recordset. Added by Iván Oliva to provide recordset pagination.
 	*
-	* @param secs2cache	seconds to cache data, set to 0 to force query
-	* @param sql
-	* @param nrows		is the number of rows per page to get
-	* @param page		is the page number to get (1-based)
-	* @param [inputarr]	array of bind variables
-	* @param [arg3]		is a private parameter only used by jlim
+	* @param $secs2cache	seconds to cache data, set to 0 to force query
+	* @param $sql
+	* @param $nrows		is the number of rows per page to get
+	* @param $page		is the page number to get (1-based)
+	* @param $inputarr	array of bind variables
+	* @param $arg3		is a private parameter only used by jlim
 	* @return		the recordset ($rs->databaseType == 'array')
 	*/
 	function &CachePageExecute($secs2cache, $sql, $nrows, $page,$inputarr=false, $arg3=false) 

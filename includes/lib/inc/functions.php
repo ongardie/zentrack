@@ -1,9 +1,9 @@
 <?{ /* -*- Mode: C; c-basic-indent: 3; indent-tabs-mode: nil -*- ex: set tabstop=3 expandtab: */ 
 
   /**
-   * @package Libs
-   *
    * Provides global functions used by all pages
+   *
+   * @package Libs
    */
 
   // performance tracking

@@ -20,11 +20,11 @@ class ADODB_informix extends ADODB_informix72 {
 	var $ansiOuter = true;
 }
 
-class ADORecordset_informix extends ADORecordset_informix72 {
+class ADORecordSet_informix extends ADORecordSet_informix72 {
 	var $databaseType = "informix";
-	function ADORecordset_informix($id,$mode=false)
+	function ADORecordSet_informix($id,$mode=false)
 	{
-		$this->ADORecordset_informix72($id,$mode);
+		$this->ADORecordSet_informix72($id,$mode);
 	}
 }
 ?>
