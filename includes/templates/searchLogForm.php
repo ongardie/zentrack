@@ -1,7 +1,7 @@
 <?
   // create a default date
   if( !$search_date )
-    $search_date = 30;
+    $search_date = 0;
 
   // create a list of possible actions
   $query = "SELECT DISTINCT action FROM ".$zen->table_logs." ORDER BY action";

@@ -4,6 +4,13 @@
    * ticket notify list
    */
 }?>
+<script type="text/javascript">
+function printpopup(variable)
+{
+  location.href ="<?=$zen->ffv($SCRIPT_NAME)."?id=".$id ?>&company_id="+variable
+}
+</script>
+
 <form method='post' action='<?=$zen->ffv($SCRIPT_NAME)?>' name='notifyAddForm'>
 <input type='hidden' name='id' value='<?=$zen->ffv($id)?>'>
 <input type='hidden' name='actionComplete' value='1'>
@@ -65,6 +72,63 @@
     <input type='text' name='unreg_email' size='20' maxlength='255' 
            value='<?=$zen->ffv($unreg_email)?>'>
   </td>
+</tr>
+  <? if( $zen->settings['allow_contacts'] == 'on' ) { ?>
+<tr>
+  <td class="titleCell">
+     <?=tr("Or add a contact")?>
+  </td>
+</tr>
+<tr>
+<td class='subTitle'>
+<br>
+<?
+  print tr("Company:");
+  $company = $zen->get_contact_all();
+  if (is_array($company)||count($company)) {
+?>
+
+  <select name="company_id" onChange="printpopup(document.forms['notifyAddForm'].company_id.value)">
+    <option value=''>--<?=tr("none")?>--</option>
+<?
+   foreach($company as $p) {
+      $sel = ($p["company_id"] == $company_id)? " selected" : "";
+      $val =($p['office'])? strtoupper($p['title']) . " ," 
+            . $p['office'] : strtoupper($p['title']);
+      print "<option value='$p[company_id]' $sel>".$val."</option>\n";
+    }
+?>
+  </select>
+<?
+  }
+  if (empty($company_id)) {
+    $parms = array(1 => array(1 => "company_id", 2 => "=", 3 => "0"));
+  } else {
+    $parms = array(1 => array(1 => "company_id", 2 => "=", 3 => $company_id));
+  }
+	
+  $sort = "lname asc";
+  $company = $zen->get_contacts($parms,"ZENTRACK_EMPLOYEE",$sort);
+	
+  if (is_array($company)||count($company)) {
+    echo tr("Or Person:");
+?>
+    <select name="person_id">
+      <option value=''>--<?=tr("none")?>--</option>
+	<?
+	  foreach($company as $p) {
+            $val =($p['fname'])?ucfirst($p[lname])." ,".ucfirst($p[fname]):ucfirst($p[lname]);
+	    print "<option value='$p[person_id]' >".$val."</option>\n";
+          }
+	?>
+    </select>
+    <br><br>
+<?
+  } //if( is_array($company).. )
+  } //if( $zen->settings['allow_contacts']... )
+?>
+	
+</td>
 </tr>
 <tr>
   <td class="titleCell">

@@ -8,8 +8,13 @@
 ----- V2.5 LIVE (in testing) -----
 
 ----- V2.5 RC2 [Pre 2] (2004-08-30) -----
+
+2004-09-02, Kato
+  Added contacts feature
 	
 2004-08-29, Kato
+  Implemented the 'tasks' table to replace hard coded log choices
+    - zentrack_2/includes/zenTrack.class 1.142
   Fixed behavior bugs, minor tweaks
     - zentrack_2/www/behavior_js.php 1.8
     - zentrack_2/includes/headerInc.php 1.42

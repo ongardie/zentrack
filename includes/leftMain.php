@@ -32,6 +32,23 @@
   </tr>
   <? include("$libDir/leftTickets.php"); ?>
   <? include("$libDir/leftSearch.php"); ?>
+  <?
+
+  if ($login_level=="first_login" ) $err = 1;
+	  
+  if ($login_level != 'first_login' &&
+      $login_level >= $zen->settings["level_contacts"] &&
+      $zen->settings['allow_contacts'] == 'on' ) {
+  ?>
+    <tr>
+      <td class="altCell" align=center>
+        <b><?=tr("Contacts")?></b>
+      </td>
+    </tr>
+  <? 
+    include("$libDir/leftContacts.php"); 
+  }
+  ?>
   <tr>
   <td class="altCell" align=center>
   <b><?=tr("System")?></b>

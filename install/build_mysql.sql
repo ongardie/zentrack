@@ -1,5 +1,106 @@
 
 #
+# Table structure for `zentrack_agreement`
+#
+
+CREATE TABLE zentrack_agreement (
+  agree_id int(12) NOT NULL auto_increment,
+  company_id int(12) default NULL,
+  contractnr varchar(50) default NULL,
+  title varchar(50) default NULL,
+  description text,
+  stime int(12) default NULL,
+  dtime int(12) default NULL,
+  status int(2) default '1',
+  create_time int(12) default NULL,
+  change_time int(12) default NULL,
+  creator_id int(12) default NULL,
+  change_id int(12) default NULL,
+  PRIMARY KEY  (agree_id)
+)
+
+#
+# Table structure for `zentrack_agreement_item`
+#
+
+CREATE TABLE zentrack_agreement_item (
+  item_id int(12) NOT NULL auto_increment,
+  agree_id int(12) default NULL,
+  name1 varchar(50) default NULL,
+  description1 varchar(50) default NULL,
+  odate int(12) default NULL,
+  create_time int(12) default NULL,
+  change_time int(12) default NULL,
+  creator_id int(12) default NULL,
+  change_id int(12) default NULL,
+  PRIMARY KEY  (item_id)
+)
+
+#
+# Table structure for `zentrack_company`
+#
+
+CREATE TABLE zentrack_company (
+  company_id int(12) NOT NULL auto_increment,
+  title varchar(50) default NULL,
+  office varchar(50) default NULL,
+  address1 varchar(50) default NULL,
+  address2 varchar(50) default NULL,
+  address3 varchar(50) default NULL,
+  postcode varchar(50) default NULL,
+  postcode2 varchar(50) default NULL,
+  pobox varchar(50) default NULL,
+  place varchar(50) default NULL,
+  telephone varchar(20) default NULL,
+  fax varchar(20) default NULL,
+  country varchar(100) default NULL,
+  email varchar(100) default NULL,
+  website varchar(100) default NULL,
+  description text,
+  create_time int(12) default NULL,
+  change_time int(12) default NULL,
+  creator_id int(12) default NULL,
+  change_id int(12) default NULL,
+  PRIMARY KEY  (company_id)
+)
+
+#
+# Table structure for `zentrack_employee`
+#
+
+CREATE TABLE zentrack_employee (
+  person_id int(12) NOT NULL auto_increment,
+  company_id int(12) default NULL,
+  fname varchar(50) default NULL,
+  lname varchar(50) default NULL,
+  initials varchar(15) default NULL,
+  jobtitle varchar(50) default NULL,
+  department varchar(50) default NULL,
+  email varchar(100) default NULL,
+  telephone varchar(20) default NULL,
+  mobiel varchar(20) default NULL,
+  inextern int(2) default NULL,
+  description text,
+  create_time int(12) default NULL,
+  change_time int(12) default NULL,
+  creator_id int(12) default NULL,
+  change_id int(12) default NULL,
+  PRIMARY KEY  (person_id)
+)
+
+#
+# Table structure for `zentrack_related_contacts`
+#
+
+CREATE TABLE zentrack_related_contacts (
+  clist_id int(12) NOT NULL auto_increment,
+  ticket_id int(12) NOT NULL default '0',
+  cp_id int(12) default NULL,
+  type int(12) default NULL,
+  PRIMARY KEY  (clist_id)
+)
+
+#
 # Table structure for table 'ZENTRACK_NOTIFY_LIST'
 #
 CREATE TABLE ZENTRACK_NOTIFY_LIST (

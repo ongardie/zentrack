@@ -302,10 +302,11 @@
 		"details"     => tr("Details"),
 		"custom"      => tr($zen->settings['varfield_tab_name']),
 		"log"         => tr("Log"),
+		"notify"      => tr("Notify"),
+		"contacts"    => tr("Contacts")
 		"related"     => tr("Related"),     
 		"attachments" => tr("Attachments"),
-		"notify"      => tr("Notify"),
-		"system"      => tr("System")
+		"system"      => tr("System"),
 		);
         
   /*

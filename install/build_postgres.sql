@@ -1,36 +1,127 @@
+CREATE SEQUENCE "access_access_id_seq"    start 1001 increment 1 maxvalue 2147483647 minvalue 1  cache 1;
+CREATE SEQUENCE "attachments_attachment_id_seq" start 1001 increment 1 maxvalue 2147483647 minvalue 1  cache 1;
+CREATE SEQUENCE "bins_bid_seq"            start 1001 increment 1 maxvalue 2147483647 minvalue 1  cache 1;
+CREATE SEQUENCE "logs_lid_seq"            start 1001 increment 1 maxvalue 2147483647 minvalue 1  cache 1;
+CREATE SEQUENCE "priorities_pid_seq"      start 1001 increment 1 maxvalue 2147483647 minvalue 1  cache 1;
+CREATE SEQUENCE "settings_setting_id_seq" start 1001 increment 1 maxvalue 2147483647 minvalue 1  cache 1;
+CREATE SEQUENCE "systems_sid_seq"         start 1001 increment 1 maxvalue 2147483647 minvalue 1  cache 1;
+CREATE SEQUENCE "tasks_task_id_seq"       start 1001 increment 1 maxvalue 2147483647 minvalue 1  cache 1;
+CREATE SEQUENCE "tickets_id_seq"          start 1001 increment 1 maxvalue 2147483647 minvalue 1  cache 1;
+CREATE SEQUENCE "types_type_id_seq"       start 1001 increment 1 maxvalue 2147483647 minvalue 1  cache 1;
+CREATE SEQUENCE "users_user_id_seq"       start 1001 increment 1 maxvalue 2147483647 minvalue 1  cache 1;
+CREATE SEQUENCE "reports_id_seq"          start 1001 increment 1 maxvalue 2147483647 minvalue 1  cache 1;
+CREATE SEQUENCE "reports_temp_id_seq"     start 1001 increment 1 maxvalue 2147483647 minvalue 1  cache 1;
+CREATE SEQUENCE "notify_list_id_seq"      start 1001 increment 1 maxvalue 2147483647 minvalue 1 cache 1;
+CREATE SEQUENCE "behavior_id_seq"         start 1001 increment 1 maxvalue 214783647 minvalue 1 cache 1;
+CREATE SEQUENCE "group_id_seq"            start 1001 increment 1 maxvalue 214783647 minvalue 1 cache 1;
+CREATE SEQUENCE "agreement_id_seq"        start 1001 increment 1 maxvalue 214783647 minvalue 1 cache 1;
+CREATE SEQUENCE "agreement_item_id_seq"   start 1001 increment 1 maxvalue 214783647 minvalue 1 cache 1;
+CREATE SEQUENCE "company_id_seq"          start 1001 increment 1 maxvalue 214783647 minvalue 1 cache 1;
+CREATE SEQUENCE "employee_id_seq"         start 1001 increment 1 maxvalue 214783647 minvalue 1 cache 1;
+CREATE SEQUENCE "related_contacts_id_seq" start 1001 increment 1 maxvalue 214783647 minvalue 1 cache 1;
+
+--
+-- Table structure for `zentrack_agreement`
+--
+
+CREATE TABLE zentrack_agreement (
+  agree_id NUMBER(12) default nextval('"agreement_id_seq"') NOT NULL PRIMARY KEY,
+  company_id NUMBER(12) default NULL,
+  contractnr VARCHAR2(50) default NULL,
+  title VARCHAR2(50) default NULL,
+  description VARCHAR2(4000),
+  stime NUMBER(12) default NULL,
+  dtime NUMBER(12) default NULL,
+  status NUMBER(2) default 1,
+  create_time NUMBER(12) default NULL,
+  change_time NUMBER(12) default NULL,
+  creator_id NUMBER(12) default NULL,
+  change_id NUMBER(12) default NULL
+)
+
+--
+-- Table structure for `zentrack_agreement_item`
+--
+
+CREATE TABLE zentrack_agreement_item (
+  item_id NUMBER(12) default nextval('"agreement_item_id_seq"') NOT NULL PRIMARY KEY,
+  agree_id NUMBER(12) default NULL,
+  name1 VARCHAR2(50) default NULL,
+  description1 VARCHAR2(50) default NULL,
+  odate NUMBER(12) default NULL,
+  create_time NUMBER(12) default NULL,
+  change_time NUMBER(12) default NULL,
+  creator_id NUMBER(12) default NULL,
+  change_id NUMBER(12) default NULL
+)
+
+--
+-- Table structure for `zentrack_company`
+--
+
+CREATE TABLE zentrack_company (
+  company_id NUMBER(12) default nextval('"company_id_seq"') NOT NULL PRIMARY KEY,
+  title VARCHAR2(50) default NULL,
+  office VARCHAR2(50) default NULL,
+  address1 VARCHAR2(50) default NULL,
+  address2 VARCHAR2(50) default NULL,
+  address3 VARCHAR2(50) default NULL,
+  postcode VARCHAR2(50) default NULL,
+  postcode2 VARCHAR2(50) default NULL,
+  pobox VARCHAR2(50) default NULL,
+  place VARCHAR2(50) default NULL,
+  telephone VARCHAR2(20) default NULL,
+  fax VARCHAR2(20) default NULL,
+  country VARCHAR2(100) default NULL,
+  email VARCHAR2(100) default NULL,
+  website VARCHAR2(100) default NULL,
+  description VARCHAR2(4000) default NULL,
+  create_time NUMBER(12) default NULL,
+  change_time NUMBER(12) default NULL,
+  creator_id NUMBER(12) default NULL,
+  change_id NUMBER(12) default NULL
+)
+
+--
+-- Table structure for `zentrack_employee`
+--
+
+CREATE TABLE zentrack_employee (
+  person_id NUMBER(12) default nextval('"employee_id_seq"') NOT NULL PRIMARY KEY,
+  company_id NUMBER(12) default NULL,
+  fname VARCHAR2(50) default NULL,
+  lname VARCHAR2(50) default NULL,
+  initials VARCHAR2(15) default NULL,
+  jobtitle VARCHAR2(50) default NULL,
+  department VARCHAR2(50) default NULL,
+  email VARCHAR2(100) default NULL,
+  telephone VARCHAR2(20) default NULL,
+  mobiel VARCHAR2(20) default NULL,
+  inextern NUMBER(2) default NULL,
+  description VARCHAR2(4000) default NULL,
+  create_time NUMBER(12) default NULL,
+  change_time NUMBER(12) default NULL,
+  creator_id NUMBER(12) default NULL,
+  change_id NUMBER(12) default NULL
+)
+
+--
+-- Table structure for `zentrack_related_contacts`
+--
+
+CREATE TABLE zentrack_related_contacts (
+  clist_id NUMBER(12) default nextval('"related_contacts_id_seq"') NOT NULL PRIMARY KEY,
+  ticket_id NUMBER(12) NOT NULL,
+  cp_id NUMBER(12) default NULL,
+  type NUMBER(12) default NULL
+)
+
 --
 -- Table structure for table 'ZENTRACK_ACCESS'
 --
 -- converted to postgreSQL by jofry@users.sourceforge.net
 -- 05/03/02
 --
-
-CREATE SEQUENCE "access_access_id_seq" start 1001 increment 1 maxvalue 2147483647 minvalue 1  cache 1;
-CREATE SEQUENCE "attachments_attachment_id_seq" start 1001 increment 1 maxvalue 2147483647 minvalue 1  cache 1;
-CREATE SEQUENCE "bins_bid_seq" start 1001 increment 1 maxvalue 2147483647 minvalue 1  cache 1;
-CREATE SEQUENCE "logs_lid_seq" start 1001 increment 1 maxvalue 2147483647 minvalue 1  cache 1;
-CREATE SEQUENCE "priorities_pid_seq" start 1001 increment 1 maxvalue 2147483647 minvalue 1  cache 1;
-CREATE SEQUENCE "settings_setting_id_seq" start 1001 increment 1 maxvalue 2147483647 minvalue 1  cache 1;
-CREATE SEQUENCE "systems_sid_seq" start 1001 increment 1 maxvalue 2147483647 minvalue 1  cache 1;
-CREATE SEQUENCE "tasks_task_id_seq" start 1001 increment 1 maxvalue 2147483647 minvalue 1  cache 1;
-CREATE SEQUENCE "tickets_id_seq" start 1001 increment 1 maxvalue 2147483647 minvalue 1  cache 1;
-CREATE SEQUENCE "types_type_id_seq" start 1001 increment 1 maxvalue 2147483647 minvalue 1  cache 1;
-CREATE SEQUENCE "users_user_id_seq" start 1001 increment 1 maxvalue 2147483647 minvalue 1  cache 1;
-CREATE SEQUENCE "reports_id_seq" start 1001 increment 1 maxvalue 2147483647 minvalue 1  cache 1;
-CREATE SEQUENCE "reports_temp_id_seq" start 1001 increment 1 maxvalue 2147483647 minvalue 1  cache 1;
-CREATE SEQUENCE "notify_list_id_seq" start 1001 increment 1 maxvalue 2147483647 minvalue 1 cache 1;
-create sequence "behavior_id_seq" start 1001 increment 1 maxvalue 214783647 minvalue 1 cache 1;
-create sequence "group_id_seq" start 1001 increment 1 maxvalue 214783647 minvalue 1 cache 1;
-
-CREATE TABLE ZENTRACK_NOTIFY_LIST (
-   notify_id int8 default nextval('"notify_id_seq"') NOT NULL PRIMARY KEY,
-   ticket_id int8 NOT NULL,
-   user_id int8 default NULL,
-   name varchar(100) default NULL,
-   email varchar(150) default NULL,
-   priority int8 default NULL,
-   notes varchar(255) default NULL
-);
 
 CREATE TABLE ZENTRACK_ACCESS (
   access_id int8 default nextval('"access_id_seq"') NOT NULL PRIMARY KEY,
@@ -92,6 +183,20 @@ CREATE TABLE ZENTRACK_LOGS_ARCHIVED (
   created int8 default NULL,
   action varchar(25) default NULL,
   entry text
+);
+
+--
+-- Table structure for 'ZENTRACK_NOTIFY_LIST'
+--
+
+CREATE TABLE ZENTRACK_NOTIFY_LIST (
+   notify_id int8 default nextval('"notify_id_seq"') NOT NULL PRIMARY KEY,
+   ticket_id int8 NOT NULL,
+   user_id int8 default NULL,
+   name varchar(100) default NULL,
+   email varchar(150) default NULL,
+   priority int8 default NULL,
+   notes varchar(255) default NULL
 );
 
 --

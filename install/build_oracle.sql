@@ -1,3 +1,106 @@
+
+--
+-- Table structure for `zentrack_agreement`
+--
+
+CREATE TABLE zentrack_agreement (
+  agree_id NUMBER(12) CONSTRAINT agree_id_notnull NOT NULL,
+  company_id NUMBER(12) default NULL,
+  contractnr VARCHAR2(50) default NULL,
+  title VARCHAR2(50) default NULL,
+  description VARCHAR2(4000) default NULL,
+  stime NUMBER(12) default NULL,
+  dtime NUMBER(12) default NULL,
+  status NUMBER(2) default 1,
+  create_time NUMBER(12) default NULL,
+  change_time NUMBER(12) default NULL,
+  creator_id NUMBER(12) default NULL,
+  change_id NUMBER(12) default NULL,
+  CONSTRAINT agree_pk1 PRIMARY KEY (agree_id)
+)
+
+--
+-- Table structure for `zentrack_agreement_item`
+--
+
+CREATE TABLE zentrack_agreement_item (
+  item_id NUMBER(12) CONSTRAINT agree_item_pk_notnull NOT NULL ,
+  agree_id NUMBER(12) default NULL,
+  name1 VARCHAR2(50) default NULL,
+  description1 VARCHAR2(50) default NULL,
+  odate NUMBER(12) default NULL,
+  create_time NUMBER(12) default NULL,
+  change_time NUMBER(12) default NULL,
+  creator_id NUMBER(12) default NULL,
+  change_id NUMBER(12) default NULL,
+  CONSTRAINT agree_item_pk1 PRIMARY KEY (item_id)
+)
+
+--
+-- Table structure for `zentrack_company`
+--
+
+CREATE TABLE zentrack_company (
+  company_id NUMBER(12) CONSTRAINT company_pk_notnull NOT NULL,
+  title VARCHAR2(50) default NULL,
+  office VARCHAR2(50) default NULL,
+  address1 VARCHAR2(50) default NULL,
+  address2 VARCHAR2(50) default NULL,
+  address3 VARCHAR2(50) default NULL,
+  postcode VARCHAR2(50) default NULL,
+  postcode2 VARCHAR2(50) default NULL,
+  pobox VARCHAR2(50) default NULL,
+  place VARCHAR2(50) default NULL,
+  telephone VARCHAR2(20) default NULL,
+  fax VARCHAR2(20) default NULL,
+  country VARCHAR2(100) default NULL,
+  email VARCHAR2(100) default NULL,
+  website VARCHAR2(100) default NULL,
+  description VARCHAR2(4000) default NULL,
+  create_time NUMBER(12) default NULL,
+  change_time NUMBER(12) default NULL,
+  creator_id NUMBER(12) default NULL,
+  change_id NUMBER(12) default NULL,
+  CONSTRAINT company_pk1 PRIMARY KEY (company_id)
+)
+
+--
+-- Table structure for `zentrack_employee`
+--
+
+CREATE TABLE zentrack_employee (
+  person_id NUMBER(12) CONSTRAINT employee_pk_notnull NOT NULL,
+  company_id NUMBER(12) default NULL,
+  fname VARCHAR2(50) default NULL,
+  lname VARCHAR2(50) default NULL,
+  initials VARCHAR2(15) default NULL,
+  jobtitle VARCHAR2(50) default NULL,
+  department VARCHAR2(50) default NULL,
+  email VARCHAR2(100) default NULL,
+  telephone VARCHAR2(20) default NULL,
+  mobiel VARCHAR2(20) default NULL,
+  inextern NUMBER(2) default NULL,
+  description VARCHAR2(4000) default NULL,
+  create_time NUMBER(12) default NULL,
+  change_time NUMBER(12) default NULL,
+  creator_id NUMBER(12) default NULL,
+  change_id NUMBER(12) default NULL,
+  CONSTRAINT employee_pk1 PRIMARY KEY (person_id)
+)
+
+--
+-- Table structure for `zentrack_related_contacts`
+--
+
+CREATE TABLE zentrack_related_contacts (
+  clist_id NUMBER(12) CONSTRAINT relatedcont_pk_notnull NOT NULL,
+  ticket_id NUMBER(12) CONSTRAINT relatedcont_tid_notnull NOT NULL,
+  cp_id NUMBER(12) default NULL,
+  type NUMBER(12) default NULL,
+  CONSTRAINT relatedcontr_pk1 PRIMARY KEY  (clist_id)
+)
+
+
 --
 -- Table structure for table 'ZENTRACK_SETTINGS'
 --
@@ -338,6 +441,12 @@ create sequence reports_id_seq             start with 1001 nocache;
 create sequence reports_temp_id_seq        start with 1001 nocache;
 create sequence behavior_id_seq            start with 1001 nocache;
 create sequence group_id_seq               start with 1001 nocache;
+create sequence agreement_id_seq           start with 1001 nocache;
+create sequence agreement_item_id_seq      start with 1001 nocache;
+create sequence company_id_seq             start with 1001 nocache;
+create sequence employee_id_seq            start with 1001 nocache;
+create sequence related_contacts_id_seq    start with 1001 nocache;
+
 
 --
 --  CREATE INDICES

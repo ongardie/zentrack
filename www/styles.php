@@ -342,7 +342,6 @@ else {
   }
 
   .actionButton {
-     /* font-face:      <?=$zen->settings["font_face"]?>; */
      font-face:      Courier;
      color:          <?=$zen->settings["color_highlight"]?>;
      background:     <?=$zen->settings["color_bar_text"]?>;
@@ -350,6 +349,16 @@ else {
      padding-left:   8px;
      text-align:     left;
      width:          80px;
+  }
+
+  .actionButtonContact {
+     font-face:      Courier;
+     color:          <?=$zen->settings["color_highlight"]?>;
+     background:     <?=$zen->settings["color_bar_text"]?>;
+     font-size:      <?=$zen->settings["font_size_small"]?>px;
+     padding-left:   8px;
+     text-align:     left;
+     width:          122px;
   }
 
   .searchbox {

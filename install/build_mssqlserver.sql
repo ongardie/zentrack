@@ -1,5 +1,106 @@
 
 --
+-- Table structure for `zentrack_agreement`
+--
+
+CREATE TABLE zentrack_agreement (
+  agree_id NUMERIC(12) IDENTITY(1,1) NOT NULL,
+  company_id NUMERIC(12) default NULL,
+  contractnr VARCHAR(50) default NULL,
+  title VARCHAR(50) default NULL,
+  description TEXT,
+  stime NUMERIC(12) default NULL,
+  dtime NUMERIC(12) default NULL,
+  status NUMERIC(2) default 1,
+  create_time NUMERIC(12) default NULL,
+  change_time NUMERIC(12) default NULL,
+  creator_id NUMERIC(12) default NULL,
+  change_id NUMERIC(12) default NULL,
+  PRIMARY KEY (agree_id)
+)
+
+--
+-- Table structure for `zentrack_agreement_item`
+--
+
+CREATE TABLE zentrack_agreement_item (
+  item_id NUMERIC(12) IDENTITY(1,1) NOT NULL ,
+  agree_id NUMERIC(12) default NULL,
+  name1 VARCHAR(50) default NULL,
+  description1 VARCHAR(50) default NULL,
+  odate NUMERIC(12) default NULL,
+  create_time NUMERIC(12) default NULL,
+  change_time NUMERIC(12) default NULL,
+  creator_id NUMERIC(12) default NULL,
+  change_id NUMERIC(12) default NULL,
+  PRIMARY KEY (item_id)
+)
+
+--
+-- Table structure for `zentrack_company`
+--
+
+CREATE TABLE zentrack_company (
+  company_id NUMERIC(12) IDENTITY(1,1) NOT NULL,
+  title VARCHAR(50) default NULL,
+  office VARCHAR(50) default NULL,
+  address1 VARCHAR(50) default NULL,
+  address2 VARCHAR(50) default NULL,
+  address3 VARCHAR(50) default NULL,
+  postcode VARCHAR(50) default NULL,
+  postcode2 VARCHAR(50) default NULL,
+  pobox VARCHAR(50) default NULL,
+  place VARCHAR(50) default NULL,
+  telephone VARCHAR(20) default NULL,
+  fax VARCHAR(20) default NULL,
+  country VARCHAR(100) default NULL,
+  email VARCHAR(100) default NULL,
+  website VARCHAR(100) default NULL,
+  description TEXT,
+  create_time NUMERIC(12) default NULL,
+  change_time NUMERIC(12) default NULL,
+  creator_id NUMERIC(12) default NULL,
+  change_id NUMERIC(12) default NULL,
+  PRIMARY KEY (company_id)
+)
+
+--
+-- Table structure for `zentrack_employee`
+--
+
+CREATE TABLE zentrack_employee (
+  person_id NUMERIC(12) IDENTITY(1,1) NOT NULL,
+  company_id NUMERIC(12) default NULL,
+  fname VARCHAR(50) default NULL,
+  lname VARCHAR(50) default NULL,
+  initials VARCHAR(15) default NULL,
+  jobtitle VARCHAR(50) default NULL,
+  department VARCHAR(50) default NULL,
+  email VARCHAR(100) default NULL,
+  telephone VARCHAR(20) default NULL,
+  mobiel VARCHAR(20) default NULL,
+  inextern NUMERIC(2) default NULL,
+  description TEXT,
+  create_time NUMERIC(12) default NULL,
+  change_time NUMERIC(12) default NULL,
+  creator_id NUMERIC(12) default NULL,
+  change_id NUMERIC(12) default NULL,
+  PRIMARY KEY (person_id)
+)
+
+--
+-- Table structure for `zentrack_related_contacts`
+--
+
+CREATE TABLE zentrack_related_contacts (
+  clist_id NUMERIC(12) IDENTITY(1,1) NOT NULL,
+  ticket_id NUMERIC(12) NOT NULL,
+  cp_id NUMERIC(12) default NULL,
+  type NUMERIC(12) default NULL,
+  PRIMARY KEY  (clist_id)
+)
+
+--
 -- Table structure for table 'ZENTRACK_ACCESS'
 --
 

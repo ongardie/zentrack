@@ -59,6 +59,12 @@
       // only display the custom tab if there are fields on it
       continue;
     }
+    if( $key == 'contacts' && 
+	($zen->settings['allow_contacts'] != 'on' ||
+	 !$zen->checkAccess($login_id, $bin_id, 'level_contacts') ) {
+      // do not show contacts if this is off
+      continue;
+    }
     if( $page_mode == $key ) {
       $class = 'tabOn';
       $lclass = "tabsOn";

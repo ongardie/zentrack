@@ -211,20 +211,29 @@ class zenTrack extends zen {
     }
     $id = $this->checkNum($id);
     $vals = array();
+
     // get attachments
     $query = "SELECT count(*) FROM ".$this->table_attachments
       ." WHERE ticket_id = $id";
     $vals["attachments"] = $this->db_get($query);
+
     // get log entries
     $query = "SELECT count(*) FROM ".$this->table_logs." WHERE ticket_id = $id";
     $vals["log"] = $this->db_get($query);
+
     // get related
     $vals["related"] = strlen($t["relations"])? count(explode(",",$t["relations"])) : 0;
     $this->addDebug("get_ticket_stats","returning counts: ".implode(",",$vals),3);
+
     // get notify
     $query = "SELECT count(*) FROM ".$this->table_notify_list
       ." WHERE ticket_id = $id";
     $vals["notify"] = $this->db_get($query);
+
+    //get contacts
+    $query = "SELECT count(*) FROM ZENTRACK_RELATED_CONTACTS WHERE ticket_id = $id";
+    $vals["contacts"] = $this->db_get($query);
+
     return $vals;
   }
 
@@ -1282,7 +1291,7 @@ class zenTrack extends zen {
   }
 
   function search_tickets( $params, $andor = 'AND', 
-                           $archive_flag=0,$order_by='status DESC, priority DESC' ) {
+                           $archive_flag = 0, $order_by = 'status DESC, priority DESC' ) {
     // search through tickets for given text
     // acceptable params are:
     // params is an indexed array with two elements:
@@ -4674,6 +4683,130 @@ class zenTrack extends zen {
     return array($tables,$where);
   }
 
+  //#####################################################
+  //##  CONTACTS
+  //#####################################################
+  function search_Contacts( $params, $andor, $order_by, $tables) {
+    //search a contact
+    $where = $this->build_search_clause($params, $andor);
+    
+    $query = "SELECT * "
+      ." FROM $tables WHERE $where"
+      ." ORDER BY $order_by";
+    $this->addDebug("search_Contacts","query:".$query,2);
+    return(  $this->db_queryIndexed($query) );      
+  } 
+  
+  function add_contact( $params,$tabel) {
+    //insert a contact
+    $id = $this->db_insert($tabel,$params);
+    return $id;
+  }
+  
+  function get_open_tickets($id,$type) {
+    // get open tickets of a contact
+    
+    $ids2 = array(); //arry for person ids
+    $tickets = array();//array where the tickets will be stored
+    $check = array();
+    
+    if ($type=="2"){
+      $query = "SELECT ticket_id FROM ZENTRACK_RELATED_CONTACTS WHERE cp_id = '".$id."' AND type ='2'";
+      $this->addDebug("get_open_tickets_engine",$query,3);
+      $ids = $this->db_queryIndexed($query);
+    }
+    
+    if ($type=="1") { 
+      //********get persons ids that are releated with this company
+        $query = "SELECT person_id FROM ZENTRACK_EMPLOYEE WHERE company_id = '".$id."'";
+      $this->addDebug("get_open_tickets_engine",$query,3);
+      $idemp = $this->db_queryIndexed($query);
+      
+      if ($idemp) {
+     	foreach($idemp as $a) {
+          $query = "SELECT ticket_id FROM ZENTRACK_RELATED_CONTACTS WHERE cp_id = '".$a['person_id']."' AND type ='2'";
+          $this->addDebug("get_open_tickets_engine",$query,3);
+          $buffer = $this->db_queryIndexed($query); 
+          if(!empty($buffer)) $ids2 = array_merge($buffer,$ids2);
+        }
+      }
+      
+      //get releated tickets ids
+      $query = "SELECT ticket_id FROM ZENTRACK_RELATED_CONTACTS WHERE cp_id = '".$id."' AND type ='1' ";
+      $this->addDebug("get_open_tickets_engine",$query,3);
+      $ids1 = $this->db_queryIndexed($query);
+      
+      $ids = array_merge($ids2,$ids1);//make 1 array of 2 arrays
+    }
+ 	
+    if ($ids) rsort ($ids);//sort the ids
+    
+     //get tickets of the ids
+    if($ids) {
+      foreach($ids as $a) {
+        if (!in_array($a,$check)) {  
+          $query = "SELECT * FROM ZENTRACK_TICKETS WHERE id ='".$a['ticket_id']."' AND status = 'OPEN'";
+          $this->addDebug("get_open_tickets_engine",$query,3);
+          $buffer = $this->db_quickIndexed($query); 
+          if(!empty($buffer)) $tickets[] = $buffer;//ignore empty returns
+          $check[] = $a; //set for duble check 
+        }
+      }
+    }
+    
+    return($tickets);
+  }
+   
+  function get_contact_all() {
+    // get all companys for the droplists
+    $query = "SELECT company_id,title,office FROM ZENTRACK_COMPANY ORDER BY title asc";
+    $this->addDebug("get_contact_all",$query,3);
+    return( $this->db_queryIndexed($query) );
+  }  
+  
+  function get_contact($id,$t,$c) {
+    //get a single contact
+    $query = "SELECT * FROM $t WHERE $c = $id";
+    $this->addDebug("get_contact",$query,3);
+    return( $this->db_quickIndexed($query) );
+  }
+  
+  function update_contact( $id, $params,$table,$c ) {
+    //save changes    
+    $set = $this->makeInsertVals($params,1);
+    $query = "UPDATE $table SET $set WHERE $c = $id";
+    $this->addDebug("update_contact",$query,3);
+    return( $this->db_result($query) );
+  }
+  
+  function delete_contact( $id,$table,$c) {
+    //delete contact
+    $where = " $c = $id";
+    $query = "DELETE FROM $table WHERE $where";
+    $this->addDebug("delete_contact",$query,2);
+    return( $this->db_result($query) );
+  }
+  
+  function get_contacts( $params,$tabel ,$sort, $columns = '') {
+    //get contacts
+    $columns =  array("*");
+    
+    if(count($params)&&!empty($params)){
+      foreach($params as $a) {
+        if(!isset($where)) {
+          $where = "WHERE lower(".$a[1].")".$a[2]."'".$a[3]."'";  
+        } else {
+          $where.= " AND lower(".$a[1].")".$a[2]."'".$a[3]."'";    
+        }  
+      }
+    }
+    $query = "SELECT ".join(",",$columns)." FROM $tabel $where";
+    if( $sort )
+      $query .= " ORDER BY $sort";
+    $this->addDebug("get_contacts",$query,3);
+    return( $this->db_queryIndexed($query) );
+  }
+  
   
   //#####################################################
   //create link for the search 
