@@ -5,6 +5,12 @@
  100 percent object oriented and database abstracted. 
 
 ----- V2.2.2 (not released) -----
+2003-02-07, Altman
+  Fixed misspellings found by Jeremy Griffith (atlantisal)
+  - includes/leftTickets.php v1.6
+  - includes/templates/searchList.php v1.6
+  - includes/templates/searchLogList.php v1.5
+
 2003-02-06, Kato
   Added error message enhancements
   Thanks to Jeremy G for this tip
