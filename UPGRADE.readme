@@ -12,6 +12,23 @@ REQUIREMENTS
        Other Possible DBs: Postgres, DB2, SQLServer
 
 
+UPGRADE FROM 2.3.0
+
+  MAKE A BACKUP OF YOUR www/header.php file
+  
+  MAKE A BACKUP OF YOUR includes/attachments directory
+
+  REPLACE Your entire zentrack directory structure with the
+  included files: includes/ should overwrite your existing includes,
+  www/ should overwrite your existing www/
+
+  RESTORE YOUR www/header.php settings to the new file
+
+  RESTORE YOUR includes/attachments files to the new directory
+
+  RUN the following SQL command:  UPDATE ZENTRACK_SETTINGS SET version_xx = '2.3.1';
+  
+
 UPGRADE FROM 2.2.2
 
   MAKE A BACKUP OF YOUR www/header.php file
