@@ -1,4 +1,4 @@
-<?{ /* -*- Mode: C; c-basic-indent: 3; indent-tabs-mode: nil -*- ex: set tabstop=3 expandtab: */ 
+<?{ /* -*- Mode: C; c-basic-indent: 2; indent-tabs-mode: nil -*- ex: set tabstop=2 expandtab: */ 
 
   /**
    * Test the ZenDataType.php class
@@ -45,6 +45,16 @@
       // load the new test data into a ZenList for use
       $this->_list = new ZenDataType_testList();
       $this->_list->load();
+    }
+
+    function testLoadAbstract() {
+      //todo add $vals!
+      Assert::equalsTrue(false, "Need to add this");
+    }
+
+    function loadAbstractDataType() {
+      //todo add $vals!
+      Assert::equalsTrue(false, "Need to add this");
     }
 
     function testGetField( $vals ) {

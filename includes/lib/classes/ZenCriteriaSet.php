@@ -132,7 +132,7 @@ class ZenCriteriaSet {
   }
 
   /**
-   * Evaluate the criteria for this set, see if conditions are met
+   * Evaluate the criteria for this set, see if all conditions are met
    *
    * @param integer $criteria_id it null, all criteria are evaluated, otherwise, just this one
    * @return boolean true if criteria passes
@@ -144,28 +144,41 @@ class ZenCriteriaSet {
       $res = false;
       $p1 = $this->getParm($elem['criteria_id'],1);
       $p2 = $this->getParm($elem['criteria_id'],2);
+      $v1 = $p1->value();
+      $v2 = $p2->value();
       switch( $val['field_comp'] ) {
       case ZEN_EQ:
-        $res = $p1 == $p2;
+        $res = $v1 == $v2;
       case ZEN_GT:
-        $res = $p1 > $p2;
+        $res = $p1->compare($p2) > 0;
       case ZEN_GE:
-        $res = $p1 >= $p2;
+        $res = $p1->compare($p2) >= 0;
       case ZEN_LT:
-        $res = $p1 < $p2;
+        $res = $p1->compare($p2) < 0;
       case ZEN_LE:
-        $res = $p1 <= $p2;
+        $res = $p1->compare($p2) <= 0;
       case ZEN_IN:
-        $res = is_array($p2) && in_array($p1, $p2);
+        $res = is_array($v2) && in_array($v1, $v2);
       case ZEN_CONTAINS:
-        $res = !(strpos($p1, $p2) === false);
+        $res = !(strpos($v1, $v2) === false);
       case ZEN_BEGINS:
-        $res = strpos($p1, $p2) === 0;
+        $res = strpos($v1, $v2) === 0;
       case ZEN_ENDS:
-        $res = strpos($p1, $p2) == (strlen($p1)-strlen($p2));
+        $res = strpos($v1, $v2) == (strlen($v1)-strlen($v2));
       }
+
       // invert results if we are looking for exclude
       if( $elem['field_exclude'] ) { $res = !$res; }
+
+      //todo
+      //todo
+      //todo
+      //todo make this use $elem['andor'] values somehow
+      //todo
+      //todo
+      //todo
+      //todo
+
       // return false if it doesn't pass
       if( !$res ) { return false; }      
     }

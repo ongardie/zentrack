@@ -71,7 +71,7 @@ class ZenUtils {
    * or ZenBase child (extends one of these)
    *
    * @static
-   * @param mixed $class is class object ($this reference) or string containing classname
+   * @param mixed $class is class object ($this reference) or string containing classname or the table name
    * @return string the name of the primary key column
    */
   function getPrimaryKey( $class ) {
@@ -199,16 +199,19 @@ class ZenUtils {
     // remove Zen from beginning of name
     if( strpos( $cname, "zen" ) === 0 ) {
       $cname = substr($cname, 3);
+      // remove List from end if necessary
+      // we don't remove list from end unless
+      // it begins with Zen (since it isn't a data type
+      // if this isn't true)
+      if( strpos( $cname, 'list' ) == strlen($cname)-4 ) {
+        $cname = substr($cname, 0, -4);
+      }
     }
     // remove .class or .php from end if necessary
     if( strpos( $cname, "." ) ) {
       $cname = substr($cname, 0, strpos($cname, '.') );
     }
     
-    // remove List from end if necessary
-    if( strpos( $cname, 'list' ) == strlen($cname)-4 ) {
-      $cname = substr($cname, 0, -4);
-    }
     return $cname;
   }
 
@@ -660,9 +663,9 @@ class ZenUtils {
    * @return boolean successful
    */
   function serializeDataToFile( $file, $data ) {
-    if( file_exists($file) ) {
+    if( is_dir(dirname($file)) ) {
       $serializedData = serialize($data);
-      $fp = fopen($file);
+      $fp = fopen($file,'w');
       fwrite($fp, $serializedData);
       fclose($fp);
       return true;
@@ -731,7 +734,7 @@ class ZenUtils {
    * @param integer $level the level of the message
    * @return boolean true if message was valid and added successfully
    */
-  function safeDebug( $class, $method, $message, $errnum, $level ) {    
+  function safeDebug( $class, $method, $message, $errnum, $level ) {   
     if( isset($GLOBALS) && isset($GLOBALS['installMode']) && $GLOBALS['installMode'] ) {
       // check installMode level vs $level
       if( $GLOBALS['installMode'] < $level ) { return false; }
@@ -862,14 +865,13 @@ class ZenUtils {
    * @param array $args associative array containing arguments to pass to helper
    * @return mixed the return value of the helper function
    */
-  function runHelper($helper, $template, $field, $args) {
-    
+  function runHelper($helper, $args) {
     includeHelper($helper);
     if( !function_exists($helper) ) {
       ZenUtils::safeDebug("ZenUtils","runHelper","Helper $helper not found!",105,LVL_ERROR);
       return null;
     }
-    return $helper($args);   
+    return $helper($args);
   }
 
   /**
@@ -1010,25 +1012,22 @@ class ZenUtils {
    * @return integer representing number of classes loaded
    */
   function prep( $class, $dir = '' ) {
-    ZenUtils::mark("prep: loading $class");
-    if( !is_array($class) ) {
-      $class = array($class);
-    }
+    $classes = is_array($class)? $class : array($class);
     if( !$dir ) {
       $dir = ZenUtils::getIni('directories','dir_classes');
     }
     $count = 0;
-    foreach( $class as $c ) {
+    foreach( $classes as $c ) {
       if( !class_exists($c) ) {
-        ZenUtils::safeDebug("ZenUtils","prep","loading $c from $dir",0,LVL_DEBUG);
+        ZenUtils::mark("prep $c");
         include("$dir/$c.php");
         $count++;
+        ZenUtils::unmark("prep $c");
       }
     }
-    ZenUtils::unmark("prep: loading $class");
     return $count;
   }
-
+  
 }
 
 ?>

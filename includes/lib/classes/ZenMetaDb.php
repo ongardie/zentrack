@@ -50,7 +50,7 @@ class ZenMetaDb extends Zen {
       }
     }
     if( !$use_cache || !$this->_tables ) {
-      Zen::debug($this, 'ZenMetaDb', 'metaDbInfo loaded from database(cache file not found)', 00, LVL_NOTE);      
+      Zen::debug($this, 'ZenMetaDb', "metaDbInfo loaded from database(cache file not found)[$use_cache]", 00, LVL_NOTE);      
       $this->_load();
       if( $use_cache ) {
         ZenUtils::serializeDataToFile( ZenUtils::getIni('directories','dir_cache').'/metaDbInfo', 

@@ -173,8 +173,9 @@
 	  <description>Leave blank to disable icon</description>
 	</column>
         <column name="criteria_set_id" type="integer" ftype="select" label="Criteria Set">
-          <description>Criteria used to decide if this action is available
-                       for use</description>
+          <reference>CRITERIA_SET.criteria_set_id</reference>
+          <showfield>field_name</showfield>
+          <description>Criteria used to decide if this action runs or not</description>
         </column>
         <column name="notify_priority" type="integer" ftype="select" label="Notify Priority">
           <criteria type="list">[1]none,2[low],3[normal],4[high],5[all]</criteria>
@@ -881,6 +882,16 @@
 	  <reference>ACTION.action_id</reference>
 	  <criteria type="zenlist">actions</criteria>
 	</column>      
+        <column name="ticket_view_criteria" type="integer" ftype="select" label="Criteria For Ticket View">
+          <reference>CRITERIA_SET.criteria_set_id</reference>
+          <showfield>field_name</showfield>
+          <description>Criteria used to determine when this is displayed in the ticket view</description>
+        </column>
+        <column name="mass_edit_criteria" type="integer" ftype="select" label="Criteria For Mass Edit">
+          <reference>CRITERIA_SET.criteria_set_id</reference>
+          <showfield>field_name</showfield>
+          <description>Criteria used to determine when this is displayed in the mass edit view</description>
+        </column>
       </columns>
     </table>
 

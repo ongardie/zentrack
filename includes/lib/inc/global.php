@@ -14,7 +14,6 @@
    */
 
   $GLOBALS['ptimes'] = array('total'=>array(microtime(), null), 'global.php'=>array(microtime(),null));
-
   // include all global functions
   require("$dir_lib/inc/functions.php");
 

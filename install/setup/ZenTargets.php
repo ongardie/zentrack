@@ -181,6 +181,19 @@ class ZenTargets {
         }
         return $this->_gen_schema_docs($p, $p2);
       }
+    case "gen_testunit":
+      {
+        if( !$this->_ini['debug']['develop_mode'] ) {
+          $this->_printerr("target", "The gen_schema_docs method is only available in develop_mode");
+          return false;
+        }
+        $p2 = $this->_getParm($target, 1);
+        if( !$p || !$p2 ) {
+          $this->_help($target);
+          return false;
+        }
+        return $this->_gen_testunit($p, $p2);
+      }
     case "load_data":
       {
         if( !$p ) {
@@ -307,6 +320,13 @@ class ZenTargets {
         print "   - source_file: the xml file containing db schema\n";
         print "   - output_dir: where the html files will be created\n";
         print "   - this will create html docs describing the db schema\n";
+      }
+    case "gen_testunit":
+      {
+        print "   Usage: install.php [modifiers] -$target classname dir\n";
+        print "   - classname: the class to generate a php test unit for\n";
+        print "   - package: the subdirectory (in install/utilities/tests) to place output file in\n";
+        print "   - this will create a test unit framework for a given class (a developers tool)\n";
       }
     case "load_data":
       {
@@ -1061,6 +1081,68 @@ class ZenTargets {
   }
 
   /**
+   * Generate a test unit framework for a given class (for developers).  This will
+   * use reflection to generate test methods for each public method in the class, as
+   * well as preparing as much of the class text as possible before hand coding begins.
+   *
+   * @param string $classname the name of the class to generate a test unit for
+   * @return boolean
+   */
+  function _gen_testunit( $classname, $package ) {
+    print "- Generating Test Unit for $package/$classname\n";
+
+    // prepare a list of method names for use
+    // in rendering the test unit file
+    $vals = array();
+    $vars = array('class' => $classname,
+                  'methods' => get_class_methods($classname));
+    for($i=0; $i<count($vars); $i++) {
+      // skip private methods and constructor
+      if( strpos($vars[$i], '_') === 0 || strtolower($classname) == strtolower($vars[$i]) ) { continue; }
+      $vals[$i] = ucfirst($vars[$i]);
+    }
+    // validate
+    if( !count($vals) ) {
+      $this->_printerr('_gen_testunit', "Target class ($classname) not found or no public methods exist");
+      return false;
+    }
+    // parse the template, inserting data
+    $template = new ZenTemplate($this->_installdir.'/defaults/testunit.template');
+    $template->values();
+    $text = $template->process();
+    
+    // generate file info
+    $dir = $this->_installdir."/utilities/tests/$package";
+    $file = "$dir/{$classname}Test.php";
+    $xfile = "$dir/{$classname}Test.xml";
+    if( !is_dir($dir) ) {
+      print "   C $dir\n";
+      mkdir($dir, '0744');
+    }
+    else if( file_exists($file) ) {
+      $this->_printerr('_gen_testunit', "File exists! ($file)");
+      return false;
+    }
+
+    // write results to file    
+    print "   C $file\n";
+    $fp = fopen($file,'w');
+    if( !$fp ) {
+      $this->_printerr('_gen_testunit', "Unable to open output file ($file)");
+      return false;
+    }
+    fputs($fp, $text);
+    fclose($fp);
+
+    // copy xml helper
+    print "   C $xfile\n";
+    copy($this->_installdir.'/defaults/testunit_xml.template', $xfile);
+
+    print "!!!IMPORTANT!!! remember to add the new test units to CVS!\n";
+    return true;
+  }
+
+  /**
    * Merges config files with existing settings.. copies config files for all regular files
    * all template files will be parsed and the existing values substituted where possible
    *
@@ -1068,7 +1150,7 @@ class ZenTargets {
    * be used to fill values as possible, to reduce the user configuration as much as possible.
    *
    * @param string $file is the filename (without .template extension)
-   * @param string $source is the path for the source file ($filename.template will be appended)
+   * @param string $source is the path for the source file ($file.template will be appended)
    * @param string $dest the full path for output file ($filename will be appended)
    * @param boolean $replace if true, then the destination will be replaced instead of merged
    */

@@ -28,18 +28,6 @@ class ZenSystemAction extends Zen {
   }
   
   /**
-   * STATIC: A generic call to a system action which takes a parm set id, loads the parms from
-   * database and runs the associated method
-   *
-   * @static
-   * @param integer $parmSetId the parm set to pass as args to the method
-   * @return mixed the result of the method called
-   */
-   function callMethod( $parmSetId ) {
-     
-   }
-
-  /**
    * Load a new page (redirect user) and send parms as url arguments
    */
 

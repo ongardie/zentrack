@@ -226,6 +226,7 @@ class ZenFormGenerator extends Zen {
    *   <li>action - action property of the &lt;form&gt; element
    *   <li>method - method property of the &lt;form&gt; element
    *   <li>fields - the form field info
+   *   <li>hiddenfields - the form fields which are hidden from view
    *   <li>settext - dynamically generated text from helpers or scripts
    *   <li>choices - choices available to a select option (see {@link _generateChoices()})
    *   <li>table - name of database table
@@ -245,7 +246,7 @@ class ZenFormGenerator extends Zen {
    * @return string containing html output
    */
   function render() {
-    $markName = "Render ".$this->_table->name()." form(ZenFormGenerator)";
+    $markName = "ZenFormGenerator->Render(".$this->_table->name().")";
     // store performance times if possible
     ZenUtils::mark($markName);
 
@@ -255,6 +256,7 @@ class ZenFormGenerator extends Zen {
     $vals["action"] = $this->_action;
     $vals["method"] = $this->_method;
     $vals["fields"] = array();
+    $vals["hiddenfields"] = array();
     $vals["settext"] = array();
     $vals["choices"] = array();    
     foreach($this->_table->listFields() as $f) {
@@ -267,7 +269,7 @@ class ZenFormGenerator extends Zen {
           $field[$key] = $val;
         }
       }
-      switch( $field['type'] ) {
+      switch( $field['ftype'] ) {
       case 'skip':
         continue; // do not process these
       case 'checkbox':
@@ -304,7 +306,7 @@ class ZenFormGenerator extends Zen {
         //todo
         break;
       case 'yesno':
-        $field['type'] = 'select';
+        $field['ftype'] = 'select';
         $vals['choices'][$f] = array('1'=>'Yes','0'=>'No');
         break;
       case 'datebox':
@@ -340,7 +342,12 @@ class ZenFormGenerator extends Zen {
         //todo
         break;        
       }
-      $vals["fields"][] = $field;
+      if( $field['ftype'] == 'hidden' ) {
+        $vals['hiddenfields'][] = $field;
+      }
+      else {
+        $vals["fields"][] = $field;
+      }
       //todo
       //todo set up js validation array
       //todo have special php for creating this

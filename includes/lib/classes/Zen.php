@@ -356,7 +356,7 @@ class Zen {
     // if our metaDb hasn't been cached, then we will create it now
     if( !isset($GLOBALS['tcache']['metaDb']) ) {
       $xmlfile = ZenUtils::getIni('directories','dir_config')."/database.xml";
-      $GLOBALS['tcache']['metaDb'] = new ZenMetaDb( $xmlfile );
+      $GLOBALS['tcache']['metaDb'] = new ZenMetaDb( true, $xmlfile );
     }
     // get the value from the cache
     return $GLOBALS['tcache']['metaDb'];

@@ -17,17 +17,66 @@
 class ZenDataType extends Zen {
 
   /**
-   * CONSTRUCTOR - initialize Zen class and load data if appropriate
+   * CONSTRUCTOR - initialize Zen class and load data if appropriate.
    *
-   * @param integer $id the id to load (use null for an empty object)
+   * It is only appropriate to pass an id here if this is called from
+   * a child class (a class which extends ZenDataType).  If this is simply
+   * being called as an abstract data type (without any inherited subclass)
+   * then it should be called with an empty constructor.
+   *
+   * <b>Examples:</b>
+   * <code>
+   * // creating an instance in an inherited child class
+   * class SomeDataType extends ZenDataType {
+   *   function SomeDataType( $id, $list ) {
+   *     // here we use the loaded constructor
+   *     $this->ZenDataType($id, $list);
+   *   }
+   * }
+   * $data = new SomeDataType( 25, null );
+   *
+   * // creating an abstract data type instance
+   * // note this is not a ZenTicket object, and
+   * // cannot access any of its methods
+   * $data = new ZenDataType;
+   * $data->loadAbstract( 'TICKET', 28, null );
+   * </code>
+   *
+   * @access protected
+   * @param integer $id the id to load, used only for child methods (use null to create an empty object)
    * @param ZenList $zenlist (optional) passing this avoids a database call to load the object
    */
-  function ZenDataType( $id, $zenlist = null ) { 
+  function ZenDataType( $id = null, $zenlist = null ) { 
     $this->Zen();
+    if( $id ) {
+      $this->loadAbstract(ZenUtils::tableNameFromClass($this), $id, $zenlist);
+    }
+    else {
+      $this->_table = null;
+      $this->_id = null;
+      $this->_primarykey = null;
+    }
+  }
+
+  /**
+   * Load a row of data without specifying a specific data type.
+   * 
+   * This is used when we are loading data, but we don't really care what table/type
+   * it really is.  We just want the basic ability to edit/save/add/delete from the
+   * appropriate table and run super methods.
+   *
+   * This is not needed when extending the ZenDataType class, as the appropriate
+   * information can be loaded just by passing the row id to the constructor.
+   *
+   * @param string $table the database table to use
+   * @param integer $id the row id
+   * @param ZenList $list if 
+   */
+  function loadAbstract( $table, $id, $list = null ) {
     // set the params
     $this->_id = $id;
-    $this->_table = ZenUtils::tableNameFromClass($this);
-    $this->_primaryKey = ZenUtils::getPrimaryKey( $this );
+    $this->_table = $table;
+    $this->_primarykey = ZenUtils::getPrimaryKey($table);
     // load the data
     if( $id && is_object($zenlist) ) {
       if( ZenUtils::tableNameFromClass($zenlist)!=$this->_table || !$this->_loadFromListData($zenlist,$id) ) {
@@ -238,7 +287,19 @@ class ZenDataType extends Zen {
   }
 
   /**
-   * STATIC: Loads a ZenDataType object of the appropriate type for the table provided
+   * STATIC: Loads a ZenDataType child for the table provided.  This object will contain all the
+   * type specific enhancements, if any exist, otherwise it will simply be a ZenDataType abstract
+   * instance.
+   *
+   * Some examples:
+   * <code>
+   *   // loads a ZenTicket instance for this data row
+   *   $ticket = ZenDataType::abstractDataType( 'TICKET', 25 );
+   *
+   *   // loads a ZenDataType abstract instance (since there
+   *   // isn't a ZenSystem class to inherit from)
+   *   $system = ZenDataType::abstractDataType( 'SYSTEM', 28 );
+   * </code>
    *
    * @static
    * @param string $table the db table it will be loaded from, MUST INHERIT ABSTRACT_DATA_TYPE!
@@ -247,7 +308,14 @@ class ZenDataType extends Zen {
    */
   function abstractDataType( $table, $id ) {
     $class = ZenUtils::classNameFromTable($table);
-    return new $class($id);
+    if( class_exists($class) ) {
+      return new $class($id);
+    }
+    else {
+      $d = new ZenDataType;
+      $d->loadAbstract($table, $id);
+      return $d;
+    }
   }
 
   /****************

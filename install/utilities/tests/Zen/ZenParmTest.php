@@ -12,7 +12,7 @@
   include_once( realpath(dirname(__FILE__)."/../")."/phpunit_config.php");
 
   /**
-   * Test the Zen.php class methods
+   * Test the ZenParm.php class methods
    *
    * This test relies on the ZenParmTest.xml 
    * file to provide test data
