@@ -14,19 +14,73 @@ abstraction, and endless possibilities for project expansion.
 ----- VERSION 2.5.0.3 (development) -----
 
 2005-01-31, Kato
+  Added logic to determine owner by email or login
+  for egate scripts
+    - zentrack_2/includes/egate_utils.php 1.41
+    - zentrack_2/install/egate_config.php.default 1.15
+
   Fixed SQL Server sequence id problem by adding an auto-increment feature
   to catch up with the max id.
+    - zentrack_2/includes/db.class 1.35
+
+  Removed $Debug_Overview variable, this just seems to confuse people,
+  added overview capabilities as part of $Debug_Mode
+    - zentrack_2/install/header.php.default 1.15
   
   Created administrative screen for the field map policies
+    - zentrack_2/includes/zenTrack.class 1.167
+    - zentrack_2/includes/ZenSessionManager.class 1.1
+    - zentrack_2/install/UPGRADE_mssqlserver.sql 1.28
+    - zentrack_2/install/UPGRADE_mysql.sql 1.36
+    - zentrack_2/install/build_mysql.sql 1.17
+    - zentrack_2/install/seed_mysql.sql 1.41
+    - zentrack_2/install/UPGRADE_mysql.sql 1.37
+    - zentrack_2/install/configVars.php.default 1.10
+    - zentrack_2/www/admin/fieldMap.php 1.1
+    - zentrack_2/www/images/icon_trash.gif 1.1
+    - zentrack_2/www/images/icon_folder.gif 1.1
+    - zentrack_2/www/images/icon_arrow_up.gif 1.1
+    - zentrack_2/www/images/icon_arrow_down.gif 1.1
+    - zentrack_2/www/images/icon_add.gif 1.1
+
+  Minor updates to debugging panel
+    - zentrack_2/includes/footer.php 1.30
+    - zentrack_2/includes/templates/adminMenu.php 1.10
   
   Added field map implementation to the create screen
+    - zentrack_2/includes/zenTemplate.class 1.4
+    - zentrack_2/includes/headerInc.php 1.52
+    - zentrack_2/includes/zenTrack.class 1.167
+    - zentrack_2/includes/templates/fieldMapForm.php 1.1
+    - zentrack_2/includes/templates/fields/checkbox.template 1.1
+    - zentrack_2/includes/templates/fields/date.template 1.1
+    - zentrack_2/includes/templates/fields/hidden.template 1.1
+    - zentrack_2/includes/templates/fields/label.template 1.1
+    - zentrack_2/includes/templates/fields/menu.template 1.1
+    - zentrack_2/includes/templates/fields/radio.template 1.1
+    - zentrack_2/includes/templates/fields/searchbox.template 1.1
+    - zentrack_2/includes/templates/fields/section.template 1.1
+    - zentrack_2/includes/templates/fields/text.template 1.1
+    - zentrack_2/includes/templates/fields/textarea.template 1.1
+    - zentrack_2/includes/templates/behaviorMenu.php 1.6
+    - zentrack_2/includes/templates/newTicketForm.php 1.37
+    - zentrack_2/www/popcalendar.js 1.6
+    - zentrack_2/www/helpers/projectSearchbox.php 1.10
+    - zentrack_2/www/helpers/ticketSearchbox.php 1.8
+    - zentrack_2/www/helpers/userSearchbox.php 1.9
 
 2005-01-29, Kato
   Added caching of system properties and data types to reduce
   database lookups
+    - zentrack_2/includes/headerInc.php 1.52
+    - zentrack_2/includes/session_start.php 1.23
+    - zentrack_2/includes/zenTrack.class 1.167
+    - zentrack_2/includes/ZenSessionManager.class 1.1
   
   Installed methods for reading and updating the field map (for new
   configurable fields in views)
+    - zentrack_2/includes/zenTrack.class 1.167
+    - zentrack_2/includes/ZenFieldMap.class 1.1
 
 2005-01-23, KATO
   Added more configurability to the set properties
