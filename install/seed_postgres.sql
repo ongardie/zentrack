@@ -169,7 +169,7 @@ INSERT INTO ZENTRACK_TRANSLATION_STRINGS (trans_id, language, identifier, string
 INSERT INTO ZENTRACK_TRANSLATION_STRINGS (trans_id, language, identifier, string) VALUES (18,'english','phrase 3','enter id\'s seperated by commas or carriage returns');
 INSERT INTO ZENTRACK_TRANSLATION_STRINGS (trans_id, language, identifier, string) VALUES (19,'english','phrase 4','please read the administrator\'s manual before attempting to alter any settings.  altering these settings can result in severe consequences, without proper understanding.');
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (73,'level_reports','1','Level required to access and view reports'); 
-INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (74,'version_xx','2.2','The version of zentrack, this cannot be edited'); 
+INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (74,'version_xx','2.2.2','The version of zentrack, this cannot be edited'); 
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (75,'date_fmt_long','%A %d, %b %Y','Long date format'); 
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (76,'date_fmt_short','%m/%d/%Y','Short Date Format'); 
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (77,'date_fmt_time','%h:%M','Time Format'); 

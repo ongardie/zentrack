@@ -1,5 +1,6 @@
 #!/bin/sh
 
+mkdir includes/attachments
 chmod 777 includes/attachments
 chmod -R 755 www/images
 chmod 755 www/javascript.js
