@@ -11,6 +11,24 @@ REQUIREMENTS
     Supported DBs: Mysql, Oracle 8i/9i, Postgres
        Other Possible DBs: DB2, SQLServer
 
+UPGRADE FROM 2.4.3
+
+  Be sure to BACKUP CONFIG FILES:
+      www/header.php
+      includes/egate_config.php
+
+  REPLACE Your entire zentrack directory structure with the
+  included files: includes/ should overwrite your existing includes,
+  www/ should overwrite your existing www/
+
+  Set directory permissions (probably only necessary on unix)
+     -chmod 777 includes/attachments (if using attachments)
+     -chmod 777 includes/logs
+     -chmod 777 includes/cache
+     -chmod 777 includes/translations
+
+  This new does not contain any database changes from 2.4.3 (there is no update sql to run)
+
 UPGRADE FROM 2.4.2
 
   IMPORTANT USAGE NOTE:
@@ -32,7 +50,7 @@ UPGRADE FROM 2.4.2
      -chmod 777 includes/cache
      -chmod 777 includes/translations
 
-  Run the sql file install/upgrade_[yourdb].sql file using your favorite
+  Run the sql file install/previous/2.4.3.UPGRADE_[yourdb].sql file using your favorite
   sql interface (you can open the file and run the statements directly if
   this is easier for you)
 
