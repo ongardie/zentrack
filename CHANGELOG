@@ -8,10 +8,12 @@
 ----- V2.4 (development, see CVS) ----
 
 2003-04-19, Rob Hillis
-  *Really* ix un-ordered display of bins when creating new ticket or project and when searching.
+  *Really* fix un-ordered display of bins when creating new ticket or project and when searching.
     - zentrack/includes/templates/newTicketForm.php 1.24
     - zentrack/includes/templates/newProjectForm.php 1.20
     - zentrack/includes/templates/searchForm.php 1.6
+  Fix bins.php to remove crash
+    - zentrack/www/admin/bins.php 1.5
 
 2003-04-18, MLively
   Added new diff utility for translations
