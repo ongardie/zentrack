@@ -2699,7 +2699,7 @@ class zenTrack extends zen {
         // check each field to see if it was updated
         if( $t["$key"] && $t["$key"] != $val ) {
           $v1 = strlen($val) > 50? substr($val, 0, 50)."..." : $val;
-          $v2 = strlen($t["$key"]) > 50? substr($t["$key"], 0, 50)."..." : $val;
+          $v2 = strlen($t["$key"]) > 50? substr($t["$key"], 0, 50)."..." : $t["$key"];
           $log_entry .= "{$key} changed from [$v1] to [$v2]\n";
         }
       }
