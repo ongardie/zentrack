@@ -34,6 +34,7 @@
   // set default locations
   $ini_file = "$thisdir/zen.ini";
   $class_dir = "../includes/lib/classes";
+  $lib_dir = "../includes/lib";
   $suppress = false;
   $verbose = false;
   $compress = null;
@@ -149,9 +150,11 @@
 
   // include all appropriate libraries
   if( $verbose ) { print "Including libraries\n"; }
-  $dir_classes = $GLOBALS['zen']['directories']['dir_classes'];
-  include_once($GLOBALS['zen']['directories']['dir_lib']."/inc/classes.php");
-  load_classes($classes_all, $dir_classes);
+  if( !@is_dir($lib_dir) ) {
+    $lib_dir = $GLOBALS['zen']['directories']['dir_lib'];
+  }
+  include_once($lib_dir."/inc/classes.php");
+  load_classes($classes_all, $class_dir);
 
   // run the targets
   if( $verbose ) { print "Compression set to ".($compress? $compress : "none"); }

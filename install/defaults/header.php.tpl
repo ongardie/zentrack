@@ -10,16 +10,16 @@
  *   install.php -config_updated
  */
 
-  // this variable must match the full file path location of your zen.ini file
+  /** Ini file location: this variable must match full file path in zen.ini file */
   $ini_file = "{$ini_file|default:"$dir_config/zen.ini"}";
 
-  // lib directory, must match the path to includes/lib
+  /** lib directory, must match the path to includes/lib */
   $dir_lib = "{$dir_lib}";
 
-  // class directory, must match path to includes/lib/classes
+  /** class directory, must match path to includes/lib/classes */
   $dir_classes = "{$dir_classes}";
 
-  // these lines do not need to be edited
+  /* these lines do not need to be edited */
   include("$dir_lib/inc/global.php");
 
 ?>

@@ -2,6 +2,7 @@
 
 /**
  * Contains the ZenUser class
+ * @package Zen
  */
 
 /** 

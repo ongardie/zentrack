@@ -3,7 +3,7 @@
 ;;;
 ;;;  USER NOTES:
 ;;;    When you edit this file for any reason other than the
-;;;    initial installation, you must run "install/zen.php updateConfig"
+;;;    initial installation, you must run "install/zen.php changed_config"
 ;;;    to properly configure the system
 ;;;
 ;;;    You may use any property which has been defined in this file
@@ -29,6 +29,9 @@
 ;;; path settings refer to the location of the zentrack
 ;;; files within the system and the website
 ;;; do not use trailing slashes with path settings
+;;;
+;;; note that during setup these paths refer to the
+;;; TARGET locations, not the current locations
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 [paths]
 

@@ -109,7 +109,7 @@ class ZenDBXML {
     while( ($file = readdir($dh)) == true ) {
       if( $file == "database.xml" ) {
         ZenUtils::safeDebug($this, 'loadDatabaseData', "Schema file: $file, skipping", 
-                            25, LVL_WARN);
+                            25, LVL_NOTE);
         continue;
       }
       if( !(strpos($file, '.') === 0) && preg_match('/\.(zip|gz|xml)$/', $file) ) {
@@ -348,7 +348,7 @@ class ZenDBXML {
   /**
    * Compares existing database schema to new schema and updates as needed
    *
-   * @params string $newxml is the full path and filename of the new xml schema to load
+   * @param string $newxml is the full path and filename of the new xml schema to load
    * @return array [0]number of updates attempted, [1]number successfully completed
    */
   function updateDbSchema( $newxml ) {
@@ -445,7 +445,7 @@ class ZenDBXML {
   /**
    * Reads and executes the sql statements needed to synchronize data in an upgraded schema
    *
-   * @params string $newxml is the new xml schema from which the statements will be retrieved
+   * @param string $newxml is the new xml schema from which the statements will be retrieved
    * @return array [0]attempts, [1]successes
    */
   function synchronizeUpgradedDbData( $newxml ) {

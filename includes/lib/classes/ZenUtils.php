@@ -70,7 +70,6 @@ class ZenUtils {
    * This method will validate the class type using is_a to see if it is a valid ZenList
    * or ZenBase child (extends one of these)
    *
-   * @static
    * @param mixed $class is class object ($this reference) or string containing classname or the table name
    * @return string the name of the primary key column
    */
@@ -81,7 +80,6 @@ class ZenUtils {
   /**
    * STATIC: Attempts to locate a global value either in $_SESSION or $GLOBALS
    *
-   * @static
    * @param string $key is the variable to search for
    * @param string $sub is an element of the $key array (if needed)
    * @return mixed value found or null if none
@@ -124,7 +122,6 @@ class ZenUtils {
    * </ol>
    *
    *
-   * @static
    * @param string $file full directory path to ini file (optional), only used if ini file not found in session or memory
    * @return Array containing parsed zen.ini directives organized by category
    */
@@ -148,7 +145,6 @@ class ZenUtils {
   /**
    * STATIC: Searches the global arrays for zen.ini file data  and returns indexed value
    *
-   * @static
    * @param String $category is the ini file category to look in
    * @param String $property is the ini file property to retrieve (if omitted, returns entire category)
    * @return mixed value
@@ -190,7 +186,6 @@ class ZenUtils {
   /**
    * STATIC: Returns the name of the db table corresponding to this class object
    *
-   * @static
    * @param mixed $class is a $this object reference or a string containing class name
    * @param string name of table or false if none
    */
@@ -218,7 +213,6 @@ class ZenUtils {
   /**
    * STATIC: Returns the name of a class corresponding to a db table
    *
-   * @static
    * @param string $table name of the db table
    * @return string full class name corresponding to table or false if none
    */
@@ -230,7 +224,6 @@ class ZenUtils {
   /**
    * STATIC: returns a ZenDataType object from a table name and an id
    *
-   * @static
    * @param string $table
    * @param integer $id
    */
@@ -246,7 +239,6 @@ class ZenUtils {
   /**
    * STATIC: Takes a simple array and returns an associative array in the form key=>value
    *
-   * @static
    * @param array $vals the simple array to get data from
    * @param string|int $key is the field to use for the key
    * @param string|int $val is the field to use for val, if this is omitted, then whole array goes in val spot
@@ -270,7 +262,6 @@ class ZenUtils {
    *
    * Note that any variables in sub-arrays will overwrite the base values
    *
-   * @static
    * @param array $vals is a multi-dimensional associative array
    * @return array a single dimension associative array
    */
@@ -290,7 +281,6 @@ class ZenUtils {
   /**
    * STATIC: Prints an array out as formatted text (debug utility)
    *
-   * @static
    * @param array $vals can be key/value, multi-level, etc
    * @param string $title printed as title of array
    * @return boolean true if the object was valid and printed
@@ -311,7 +301,6 @@ class ZenUtils {
    * This method can accurately compare nulls, values which are not set,
    * Objects and most other things accurately.
    *
-   * @static
    * @param mixed $val1
    * @param mixed $val2
    * @return boolean
@@ -333,7 +322,6 @@ class ZenUtils {
   /**
    * STATIC: Recursively checks values of two arrays for equality
    *
-   * @static
    * @param array $arr1
    * @param array $arr2
    * @return boolean
@@ -358,7 +346,6 @@ class ZenUtils {
   /**
    * STATIC: Formats a value for display in forms
    *
-   * @static
    * @param String $text
    * @return String containing formatted text for use in <input..> and <textarea> fields
    */
@@ -381,7 +368,6 @@ class ZenUtils {
    * 
    * May also be useful for emails
    *
-   * @static
    * @param String $text is the text to display
    * @return String containing formatted text for display in &lt;pre&gt; tags or emails
    */
@@ -393,7 +379,6 @@ class ZenUtils {
    * This method will parse european date formats if boolean is enabled (note this will interfere with american dates)
    * In general, when calling this method, the config setting for euro dates should be checked and included.
    *
-   * @static
    * @param string $date is the date string to parse
    * @return integer unix timestamp representative of date or false if date was invalid
    */
@@ -435,7 +420,6 @@ class ZenUtils {
    * most likely the event should happen on the same hour, so this method just ignores
    * such details by default, which is probably right 99.9% of the time.
    *
-   * @static
    * @param integer $utime the unix timestamp to compare
    * @param integer $step the increment of our interval (every $step periods)
    * @param string $period is the period traversed (seconds,minutes,hours,days,weeks,months,quarters,years)
@@ -450,7 +434,6 @@ class ZenUtils {
   /**
    * STATIC: Returns the number of specified periods between the requested dates
    *
-   * @static
    * It is possible that dates might run off by an hour due to daylight savings issues,
    * but I think that the unix timestamps may prevent this... in any event, it's accurate
    * enough for for most uses, and takes care of leap year issues, should probably
@@ -530,7 +513,6 @@ class ZenUtils {
    * ZenUtils::convertSecondsTo(1209645, 'weeks'); // 2
    * </code>
    *
-   * @static
    * @param integer $seconds is the unix timestampe
    * @param string $period is the period to use (minutes,hours,days,weeks)
    * @return float or false if $period is invalid
@@ -542,7 +524,6 @@ class ZenUtils {
   /**
    * STATIC: Returns the number of seconds in a measure of time
    *
-   * @static
    * @param $period is the time period (minutes,days,hours,weeks)
    * @param $num is the number of days/hours/weeks to measure [default to 1]
    * @return integer the result or false if invalid period
@@ -577,7 +558,6 @@ class ZenUtils {
    * Additionally, all properties in the ini file must appear under a section heading
    * or this will fail miserably.
    *
-   * @static
    * @param string $ini_file is the absolute path to the file
    * @return array parsed ini file contents
    */
@@ -600,7 +580,6 @@ class ZenUtils {
   /**
    * STATIC: Parses a setup/data file
    *
-   * @static
    * @param string $filename is the path/name of the file
    * @param boolean $explode is the character to expand each row on, if null then return string instead of array
    * @return array containg either string or array elements based on $explode
@@ -633,7 +612,6 @@ class ZenUtils {
   /**
    * STATIC: Display member variables and values from a class object (debug utility)
    *
-   * @static
    * @param Object $obj the <code>$this</code> reference of an object to print out
    * @return boolean true if the object provided was valid
    */
@@ -645,7 +623,6 @@ class ZenUtils {
   /**
    * STATIC: Display member methods of class object (debug utility)
    *
-   * @static
    * @param Object $obj the <code>$this</code> reference of an object to print out
    * @return boolean true if the object provided was valid
    */
@@ -657,7 +634,6 @@ class ZenUtils {
   /**
    * STATIC: Serialize and save data to a file
    *
-   * @static
    * @param string $file is the full path to access the writable file
    * @param mixed $data is whatever data is to be saved
    * @return boolean successful
@@ -676,7 +652,6 @@ class ZenUtils {
   /**
    * STATIC: Unserialize and restore data from file
    *
-   * @static
    * @param string $file is the full path to access the writable file
    * @return mixed whatever was in the file or false if failed
    */
@@ -692,7 +667,6 @@ class ZenUtils {
    * STATIC: Provides a safe method for checking for object types.  This
    * will match extending classes as well.
    *
-   * @static
    * @param string $expected
    * @param Object $obj
    * @return boolean
@@ -704,7 +678,6 @@ class ZenUtils {
   /**
    * STATIC: wrapper for {@link isInstanceOf()}
    *
-   * @static
    * @param string $expected
    * @param Object $obj
    * @return boolean
@@ -726,7 +699,6 @@ class ZenUtils {
    * but may also use {@link ZenMessageList} for debugging output during
    * normal operations.
    *
-   * @static
    * @param mixed $class the class object ($this) or a string representing the class/script name
    * @param string $method the method/section producing message
    * @param string $message the message to store
@@ -783,7 +755,6 @@ class ZenUtils {
    * STATIC: Returns a translation, if the translation engine is available, otherwise
    * parses any variables and returns string 'as-is'
    *
-   * @static
    * @param string $text text to translate
    * @param array $vals key/value set containing any values to substitute for ? chars
    */
@@ -887,7 +858,6 @@ class ZenUtils {
    * If you wish to run system commands or external programs, you can call 
    * them from a shell or cmd script run by this command.
    *
-   * @static
    * @param string $script the script to run in dir_user folder
    * @param array $args arguments for script (must be properly escaped and quoted)
    * @return string any output produced by script

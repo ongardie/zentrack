@@ -1,6 +1,24 @@
 <? /* -*- Mode: C; c-basic-indent: 3; indent-tabs-mode: nil -*- ex: set tabstop=3 expandtab: */ 
 
-/** @package Zen */
+/**
+ * Contains the Zen base class
+ * @package Zen
+ */
+
+
+/** 
+ * Base class to provide common utilties and functions for libraries.
+ *
+ * This class provides basic functions and utilities.  The major difference
+ * between this class and the ZenUtils class is that the methods here are
+ * context specific, and require an object instance (whereas the ZenUtils
+ * methods are static and contect independant).
+ *
+ * The most appropriate way to use this class is to extend it with another
+ * class (i.e. as an abstract base class)
+ *
+ * @package Zen 
+ */
 class Zen {
 
   /**

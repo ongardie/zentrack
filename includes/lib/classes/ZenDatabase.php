@@ -367,7 +367,6 @@ class ZenDatabase extends Zen {
    * STATIC: Generate the primary key for a table from the table name
    * (do not pass table with database prefix before name)
    *
-   * @access static
    * @param string $table
    * @return string
    */

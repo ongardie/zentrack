@@ -5,7 +5,7 @@
  * @package Actions
  */
 
-/*
+/**
  * Store parameters used for criteria, arguments, etc.
  *
  * The parm can get its data from several sources (see {@link source()}):

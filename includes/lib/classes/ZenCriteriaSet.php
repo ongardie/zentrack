@@ -5,7 +5,7 @@
  * @package Actions
  */
 
-/*
+/**
  * Store criteria which can be used for searching data, setting up parameters, etc
  *
  * @package Actions
@@ -188,7 +188,7 @@ class ZenCriteriaSet {
   /**
    * Returns criteria with the specified id
    *
-   * @params integer $criteria_id
+   * @param integer $criteria_id
    */
   function getCriteriaElement( $criteria_id ) {
     if( !isset($this->_list[$criteria_id]) ) {

@@ -750,7 +750,6 @@ class ZenTargets {
    */
   function _check_directories( $create = true ) {
     print "- Checking directory structure\n";
-    $success = true;
 
     // read each directory (from the data file)
     foreach($this->_dirs as $d) {
@@ -765,11 +764,10 @@ class ZenTargets {
 
       // do the work here
       if( !$this->_checkDir( $file, $create, $chmod ) ) {
-        $success = false;
+        return false;
       }
     }
-    
-    return $success;
+    return true;
   }
   
   /**
@@ -1520,7 +1518,7 @@ class ZenTargets {
     if( !$this->_check_permissions() ) { return false; }
 
     // copy config files if flag set
-    if( !$this->_copy_config_files() ) { return false; }
+    if( !$this->_copy_config_files(true) ) { return false; }
     
     // check database connection
     if( !$this->_verify_db_connection() ) { return false; }
@@ -1977,6 +1975,7 @@ class ZenTargets {
    * @return true if directory exists (or was created)
    */
   function _checkDir( $dir, $create ) {
+    $dir = ZenUtils::cleanPath($dir);
     //$permissions = decoct( ()$permissions );
     if( !@is_dir($dir) && !$create ) {
       // doesn't exist & $create = false
@@ -1984,6 +1983,31 @@ class ZenTargets {
       return false;
     }    
     else if( !@is_dir($dir) ) {
+      // first, check the base path, 
+      // insure all parent directories
+      // exist before we move on
+      $pathBits = array();
+      $bit = dirname($dir);
+      while( $bit != $dir && !@is_dir($bit) ) {
+        $pathBits[] = $bit;
+        $bit = dirname($bit);
+      }
+      if( count($pathBits) ) {
+        // if we found any problems, confirm with user
+        // and attempt to create directories
+        $pathBits = array_reverse($pathBits);
+        for($i=0; $i<count($pathBits); $i++) {
+          $bit = $pathBits[$i];
+          $tf = $this->_confirm("   Directory $bit does't exist, create?", null, 'y') == 'y';
+          if( !$tf || !mkdir($bit, 0755) ) {
+            $this->_printerr("_checkDir", "A required directory is missing: $bit");
+            return false;
+          }
+          else {
+            print "   C $bit\n";
+          }
+        }
+      }
       $res = mkdir($dir);
       if( $res ) {
         print "   C $dir\n";

@@ -4,7 +4,9 @@
    * Includes and sets up global functions, variables, classes, etc.
    *
    * Includes and sets up global functions, variables, classes, etc.  This is normally the only
-   * file in inc/ that needs to be included in control scripts to initialize variables, sessions, libraries, and database.
+   * file in inc/ that needs to be included in control scripts to initialize variables, sessions, 
+   * libraries, and database.
+   *
    * Benchmark times
    * Normally we would use startPTime or endPtime, but here
    * we haven't built those functions yet, so we do the first couple
@@ -13,6 +15,7 @@
    * @package Libs
    */
 
+  /** Stores the performance times for use with {@link startPTime()} and {@link endPTime()} */
   $GLOBALS['ptimes'] = array('total'=>array(microtime(), null), 'global.php'=>array(microtime(),null));
   // include all global functions
   require("$dir_lib/inc/functions.php");
