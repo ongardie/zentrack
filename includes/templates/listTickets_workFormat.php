@@ -48,23 +48,17 @@ if( is_array($tickets) ) {
       unset($per);
       
       if( $t["status"] == 'CLOSED' ) {
-	$row = $zen->settings["color_bars"];
-	$txt = $rollover_greytext;
-	$text = $zen->settings["color_bar_text"];
-      } else if( $t["priority"] <= $zen->settings["level_hot"] ) {
-	$row = $zen->settings["color_background"];      
-	$tx = "style='background:".$zen->settings["color_highlight"]."'";
-	$txt = $hotrollover_text;
-	$text = $zen->settings["color_hot"];
-      } else if( $t["priority"] <= $zen->settings["level_highlight"] ) {
-	$row = $zen->settings["color_background"];
-	$txt = $rollover_text;
-	$text = $zen->settings["color_hot"];    
-      } else {
-	$row = $zen->settings["color_background"];
-	$txt = $rollover_text;
-	$text = $zen->settings["color_text"];   
-      }     
+        $classxText = "class='bars' onclick='ticketClk(\"{$link}?id={$t['id']}\")' $rollover_greytext";
+      }
+      else if( $zen->settings["priority_medium"] ) {
+        $classxText = "class='priority{$t['priority']}' "
+         ."onclick='ticketClk(\"{$link}?id={$t['id']}\")' "
+         ."onMouseOver='mClassX(this, \"priority{$t['priority']}Over\", true)' "
+         ."onMouseOut='mClassX(this, \"priority{$t['priority']}\", false)'";
+      }
+      else {
+        $classxText = "class='cell' onclick='ticketClk(\"{$link}?id={$t['id']}\")' $rollover_text";
+      }
       
       // calculate the total hours
       // and format the ticket's hours
@@ -73,48 +67,48 @@ if( is_array($tickets) ) {
       $ttl_wkd += ($wkd > $est)? $est : $wkd;
       $ttl_ext += ($wkd > $est)? $wkd - $est : 0;
       if( !strlen($est) )
-	$est = "n/a";
+   $est = "n/a";
       if( $wkd <= 0 )
-	$wkd = 0;
+   $wkd = 0;
       if( $zen->inProjectTypeIDs($t["type_id"]) ) {   
-	$link = $projectUrl;
+   $link = $projectUrl;
       } else {
-	$link = $ticketUrl;
+   $link = $ticketUrl;
       }
       if( $est > 0 )
-	$per = round($zen->percentWorked($est,$wkd),1)."%";
-	?>
-	<tr style="background:<?=$row?>;color:<?=$text?>">
-	<td height="25" valign="middle" <?=$td_ttl?> <?=$txt?>>
-	 <a class="rowLink" style="color:<?=$text?>" 
-	   href="<?=$link?>?id=<?=$t["id"]?>"><?=$t["id"]?></a>
-	</td>
-	<td height="25" valign="middle" <?=$txt?> <?=$td_ttl?>>
-	 <a class="rowLink" style="color:<?=$text?>" 
-	   href="<?=$link?>?id=<?=$t["id"]?>"><?=$t["title"]?></a>
-	</td>
-	<td height="25" <?=$tx?> valign="middle">
-	  <?=$zen->priorities["$t[priority]"]?>
-	</td>
-	 <td height="25" valign="middle">
-	   <?=$zen->types["$t[type_id]"]?>
-	 </td>
-	 <td width="40" height="25" valign="middle">
-	   <?=$zen->formatName($t["user_id"],2)?>
-	 </td>
-	 <td width="40" height="25" valign="middle">
-	   <?=$t["status"]?>
-	 </td>
-	 <td width="40" height="25" valign="middle" align="right">
-	   <?=$est?>
-	 </td>
-	 <td width="40" height="25" valign="middle" align="right">
-	   <?=$wkd?>
-	 </td>
-	 <td width="40" height="25" valign="middle" align="right">
-	   <?=($per)? $per : tr("n/a"); ?>
-	 </td>
-	 </tr>
+   $per = round($zen->percentWorked($est,$wkd),1)."%";
+   ?>
+   <tr style="background:<?=$row?>;color:<?=$text?>">
+   <td height="25" valign="middle" <?=$td_ttl?> <?=$txt?>>
+    <a class="rowLink" style="color:<?=$text?>" 
+      href="<?=$link?>?id=<?=$t["id"]?>"><?=$t["id"]?></a>
+   </td>
+   <td height="25" valign="middle" <?=$txt?> <?=$td_ttl?>>
+    <a class="rowLink" style="color:<?=$text?>" 
+      href="<?=$link?>?id=<?=$t["id"]?>"><?=$t["title"]?></a>
+   </td>
+   <td height="25" <?=$tx?> valign="middle">
+     <?=$zen->priorities["$t[priority]"]?>
+   </td>
+    <td height="25" valign="middle">
+      <?=$zen->types["$t[type_id]"]?>
+    </td>
+    <td width="40" height="25" valign="middle">
+      <?=$zen->formatName($t["user_id"],2)?>
+    </td>
+    <td width="40" height="25" valign="middle">
+      <?=$t["status"]?>
+    </td>
+    <td width="40" height="25" valign="middle" align="right">
+      <?=$est?>
+    </td>
+    <td width="40" height="25" valign="middle" align="right">
+      <?=$wkd?>
+    </td>
+    <td width="40" height="25" valign="middle" align="right">
+      <?=($per)? $per : tr("n/a"); ?>
+    </td>
+    </tr>
        <?
    }     
    if( $ttl_est ) {

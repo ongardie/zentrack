@@ -43,17 +43,19 @@ if( is_array($tickets) ) {
          $link = $ticketUrl;   
       }
       
-   if( $zen->settings["priority_medium"] ) {
+      if( $t["status"] == 'CLOSED' ) {
+        $classxText = "class='bars' onclick='ticketClk(\"{$link}?id={$t['id']}\")' $rollover_greytext";
+      }
+      else if( $zen->settings["priority_medium"] ) {
+        $classxText = "class='priority{$t['priority']}' "
+         ."onclick='ticketClk(\"{$link}?id={$t['id']}\")' "
+         ."onMouseOver='mClassX(this, \"priority{$t['priority']}Over\", true)' "
+         ."onMouseOut='mClassX(this, \"priority{$t['priority']}\", false)'";
+      }
+      else {
+        $classxText = "class='cell' onclick='ticketClk(\"{$link}?id={$t['id']}\")' $rollover_text";
+      }
 
-      $classxText = "class='priority{$t['priority']}' "
-      ."onclick=\"mClk(this);\" "
-      ."onMouseOver='mClassX(this, \"priority{$t['priority']}Over\", true)' "
-      ."onMouseOut='mClassX(this, \"priority{$t['priority']}\", false)'";
-
-   }
-   else {
-      $classxText = "class='cell' $rollover_text";
-   }
       ?>
    <tr <?=$classxText?>>
    <td height="25" valign="middle" <?=$td_ttl?>>

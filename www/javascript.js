@@ -67,6 +67,10 @@ function mClk(src) {
   }
 }
 
+function ticketClk( url ) {
+  window.location = url;
+}
+
 function mClassX( obj, classname, hand ) {
   if( hand ) { 
      obj.style.cursor = 'hand'; 
