@@ -12,14 +12,14 @@
   in the Administration's Configuration interface to be "%m/%d/%Y"
   for those users that are using MySQL.
     Added:
-    - www/popcalendar.js
-    - www/actions/images/calendar/*.gif
-    - www/images/calendar/*.gif
+    - www/popcalendar.js v1.1
+    - www/actions/images/calendar/*.gif v1.1
+    - www/images/calendar/*.gif v1.1
     Modified:
-    - includes/nav.php
-    - includes/templates/newProjectForm.php
-    - includes/templates/newTicketForm.php
-    - install/seed_mysql.sql
+    - includes/nav.php v1.6
+    - includes/templates/newProjectForm.php v1.9
+    - includes/templates/newTicketForm.php v1.11
+    - install/seed_mysql.sql v1.6
 
 2003-01-31, Altman
   Updated build_oracle.sql per comments from Maxim Maletsky
