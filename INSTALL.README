@@ -22,6 +22,7 @@
 
 
   QUICK AND DIRTY INSTALL INSTRUCTIONS:
+     -if installing from cvs, run setup_from_cvs from the command line (./setup_from_cvs)
      -place www/ in the httpd directory tree
      -place includes/ in a non-httpd directory (safest method)
      
