@@ -68,13 +68,13 @@ class ZenMetaDb extends Zen {
     foreach( $fieldInfo as $f ) {
       $field = $f['col_name'];
       $table = $f['table_name'];
-      $this->_tables[$table]['fields'][$field] = $this->_schema->getFieldArray($table,$field);
+      $this->_tables[$table]['fields'][$field] = $this->_tables[$table]['fields'][$field];
       foreach( $f as $key=>$val ) {
         if( $key == 'col_criteria' ) {
           $val = explode('=',$val);
         }
         $this->_tables[$table]['fields'][$field][$this->mapFieldDbToProp($key)] = $val;
-      }      
+      }
     }
     Zen::debug($this, '_load', count($tableInfo)." tables were loaded, containing ".count($fieldInfo)." fields", 01, LVL_DEBUG);    
   }

@@ -55,6 +55,7 @@ class DbTypeInfo {
     $pkinline = ($pkinfo['location'] == 'inline');
     $stmts = array( null ); //set first element, since our table command will go here
     $keys = "";
+    // create column info
     foreach($columns as $c) {
       $pk = ($c['type'] == 'primarykey');
       $keyname = $this->genKeyName($table, $c['name'], $c['type']);
@@ -100,6 +101,7 @@ class DbTypeInfo {
    * @param string $unique (true or false)
    * @param string $required (true or false)
    * @param integer $length (if applicable) of column
+   * @param string $keyname provide to create a primary key field (some databases need to name the constraint)
    * @param string $default the default value for column (will be quoted)
    * @return array of sql statements
    */
@@ -116,8 +118,11 @@ class DbTypeInfo {
         $attrtext .= str_replace("%default%", $this->_dbo->quote($default), $deftxt);
       }
     }
-    if( $pk ) {
-      $attrtext .= $this->getStatement('primarykey',array($keyname));
+    if( $type == 'primarykey' ) {
+      $pk = $this->getSqlProps('primarykey');
+      if( $pk['location'] == 'inline' ) {
+        $attrtext .= $this->getStatement('primarykey',array($keyname));
+      }
     }
     else if( $required && isset($props['notnull']) ) {
       $attrtext .= str_replace("%keyname%", $keyname, $props['notnull']);

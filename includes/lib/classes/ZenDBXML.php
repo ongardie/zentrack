@@ -95,10 +95,13 @@ class ZenDBXML {
     }
     $files = array();
     while( ($file = readdir($dh)) == true ) {
-      if( !strpos($file, '.') === 0 && $file != 'database.xml' && preg_match('/\.(zip|gz|xml)$/', $file) ) {
+      if( $file == "database.xml" ) {
+        continue;
+      }
+      if( !(strpos($file, '.') === 0) && preg_match('/\.(zip|gz|xml)$/', $file) ) {
         $files[] = $file;
       }
-      else if( !strpos($file, '.')===0 ) {
+      else if( strpos($file, '.') > 0 ) {
         ZenUtils::safeDebug($this, 'loadDatabaseData', "Invalid file: $file, skipping", 
                             25, LVL_WARN);
       }
@@ -116,9 +119,14 @@ class ZenDBXML {
     $nums[0] = count($files);
     $max_ids = array();
     foreach($files as $f) {
-      $rows = $this->_loadDataFromXML("$dir/$file");
+      $rows = $this->_loadDataFromXML("$dir/$f");
       $table = substr($f, 0, strpos($f, '.'));
-      $this->msg("L $table");
+      if( $drop ) {
+        $this->msg("D $table");
+        $query = Zen::getNewQuery();
+        $query->table($table);
+        $query->delete();        
+      }
       if( $rows ) {
         $count = 0;
         $row = 1;
@@ -136,16 +144,18 @@ class ZenDBXML {
             $count++; 
           }
         }
+        $this->msg("L $table ($count)");
         if( $count == count($rows) ) { $nums[1]++; }
       }
     }
     // update the table_ids so that we don't run into a calamity
     // when an attempt is made to do an insert in the future
+    $this->msg("U Updating id counters\n");
     foreach($max_ids as $table=>$max) {
       $curr = $this->_dbobj->generateID($table);
       if( $curr <= $max_ids ) {
         $update = "UPDATE ".$this->_dbobj->makeTableName('TABLE_IDS')
-          ." SET current_id = current_id + 1 where name_of_table = '$table'";
+          ." SET current_id = $max where name_of_table = '$table'";
         if( !$this->_dbobj->execute($update) ) {
           ZenUtils::safeDebug($this, 'loadDatabaseData', 
                               "Unable to update primary key value for table $table", 
@@ -190,6 +200,9 @@ class ZenDBXML {
   function createDbSchema( $drop = false ) {
     $num = array(0,0);
     $tables = $this->_schema->getAllTables();
+    $done = array(); // table_ids
+    $tds = array();  // table_defs
+    $fds = array();  // field_defs
     foreach($tables as $name=>$table) {
       // do not create abstract tables
       if( $table['is_abstract'] ) { continue; }
@@ -203,6 +216,7 @@ class ZenDBXML {
         if( !$this->_dbobj->execute($sql) ) {
           ZenUtils::safeDebug($this, 'createDbSchema', 
                               "Table $name not dropped(probably ok)", 00, LVL_NOTE);           
+          $this->msg("D $dbt not found");
         }
         else {
           $this->msg("D $dbt dropped");
@@ -219,10 +233,24 @@ class ZenDBXML {
         }
       }
 
+      // create the table create statement and supporting
+      // sql such as indices, etc
       $sql_stmts = $this->_dbTypeInfo->addTableSyntax($dbt, $table['fields'], 
                                                       ($table['has_transactions'] == true));
       if( $this->_dbobj->execute($sql_stmts[0]) ) {
         $this->msg("C $dbt created");
+        // create a list of tables to be added to
+        // to the table_ids
+        $done[] = $dbt;
+
+        // create table_defs and field_defs entries
+        if( strtolower($name) != 'table_defs' && strtolower($name) != 'field_defs' ) {
+          $tds[] = $this->_translateTableToDefs($name, $table);
+          foreach($table['fields'] as $k=>$props) {
+            $fds[] = $this->_translatePropsToDefs($name, $k, $props);
+          }
+        }
+
         // run special sql associated with table
         // (may create sequences, indexes, or primary
         // keys)
@@ -250,6 +278,29 @@ class ZenDBXML {
                             220, LVL_ERROR);
       }
     }
+
+    // add entry to the table_ids set
+    // which is used to track primary key
+    // values
+    $this->msg("Creating id counters");
+    foreach( $done as $dbt ) {
+      $query = Zen::getNewQuery();
+      $query->table('table_ids');
+      $query->field('name_of_table',$dbt);
+      $query->field('current_id',1);
+      $query->insert(false);
+    }
+
+    // add the entries to table_defs and field_defs
+    // which will be used to create the ZenMetaDb info
+    $this->msg("Adding table definitions");
+    for($i=0; $i<count($tds); $i++) {
+      Zen::simpleInsert('table_defs', $tds[$i]);
+    }
+    for($i=0; $i<count($fds); $i++) {
+      Zen::simpleInsert('field_defs', $fds[$i]);
+    }
+
     return $num;
   }
 
@@ -290,22 +341,37 @@ class ZenDBXML {
   function updateDbSchema( $newxml ) {
     $res = array(0,0);
     $updates = $this->compareXmlSchemas($newxml);
+    $ids = array("drop"=>array(), "add"=>array());
+    $tds = array("drop"=>array(), "add"=>array());
+    $fds = array("drop"=>array(), "add"=>array());
     foreach( $updates as $u ) {
       $res[0]++;
       $tbl = $this->_dbobj->makeTableName($u['table']);
       switch($u['action']) {
       case "droptable":
         $sql = $this->_dbTypeInfo->dropTableSyntax( $tbl );
+        $ids["drop"][] = $tbl;
+        $tds["drop"][] = $u['table'];
         break;
       case "addtable":
         $sql = $this->_dbTypeInfo->addTableSyntax($tbl, $u['columns'], $u['has_transactions']);
+        //todo: fill in version and updated
+        //todo
+        //todo
+        $tds["add"][] = $this->_translateTableToDefs($u['table'], array()); 
+        $ids["add"][] = $tbl;
+        foreach($u['columns'] as $uc) {
+          $fds["add"][] = $this->_translatePropsToDefs($u['table'], $uc['name'], $uc);
+        }
         break;
       case "dropcolumn":
         $sql = $this->_dbTypeInfo->dropColumnSyntax($tbl, $u['column']);
+        $fds["drop"][] = array($u['table'], $u['column']);
         break;
       case "addcolumn":
         $sql = $this->_dbTypeInfo->addColumnSyntax($tbl, $u['column'], $u['type'], $u['unique'],
                                                    $u['notnull'], $u['size']);
+        $fds["add"][] = $this->_translatePropsToDefs($u['table'], $u['column'], $u);
         break;
       case "dropindex":
         $sql = $this->_dbTypeInfo->dropIndexSyntax($u['index']);
@@ -323,6 +389,43 @@ class ZenDBXML {
         $res[1]++; 
       }
     }
+
+    // add entry to the table_ids set
+    // which is used to track primary key
+    // values
+    $this->msg("Updating id counters");
+    foreach( $ids["add"] as $dbt ) {
+      $query = Zen::getNewQuery();
+      $query->table('table_ids');
+      $query->field('name_of_table',$dbt);
+      $query->field('current_id',1);
+      $query->insert(false);
+    }
+    foreach( $ids["drop"] as $dbt ) {
+      Zen::simpleDelete('table_ids','name_of_table',$dbt);
+    }
+
+    // add the entries to table_defs and field_defs
+    // which will be used to create the ZenMetaDb info
+    $this->msg("Updating table definitions");
+    for($i=0; $i<count($tds['add']); $i++) {
+      Zen::simpleInsert('table_defs', $tds['add'][$i]);
+    }
+    for($i=0; $i<count($tds['drop']); $i++) {
+      Zen::simpleDelete('table_defs', 'tbl_name', $tds['drop'][$i]);
+    }
+    for($i=0; $i<count($fds['add']); $i++) {
+      Zen::simpleInsert('field_defs', $fds['add'][$i]);
+    }
+    for($i=0; $i<count($fds['drop']); $i++) {
+      $query = Zen::getNewQuery();
+      $query->table('field_defs');
+      $query->match('table_name', ZEN_EQ, $fds['drop'][$i][0]);
+      $query->match('col_name', ZEN_EQ, $fds['drop'][$i][1]);
+      $query->delete();
+    }
+    
+
     return $res;
   }
 
@@ -475,7 +578,7 @@ class ZenDBXML {
       }
       $file = join('',gzfile($file));
     }
-    else if( preg_match('/.zip$', $file) ) {
+    else if( preg_match('/.zip$/', $file) ) {
       die("zip format not implemented!");
       //todo
       //todo
@@ -487,16 +590,18 @@ class ZenDBXML {
     $root =& $parser->parse($file);
 
     // obtain all <dataRow> nodes
-    $vals = $root->getChild('dataRow');
+    $dataRows = $root->getChild('dataRow');
 
     // load dataRow vals into array
     $rows = array();
     $i=0;
-    foreach($vals as $v) {
-      $set = $v->toArray(true);
-      foreach( $set['children'] as $key=>$val ) {
+    foreach($dataRows as $row) {
+      $set = $row->toArray(true);      
+      foreach( $set['children'] as $val ) {
+        $key = $val['name'];
         $rows[$i][$key] = $val['data'];
       }
+      $i++;
     }
 
     //todo
@@ -506,6 +611,32 @@ class ZenDBXML {
 
     // return vals
     return $rows;
+  }
+
+  /**
+   * Translate a table schema to defs for use in table_defs
+   */
+  function _translateTableToDefs( $table, $props ) {
+    return array("tbl_name"    => $table,
+                 "tbl_version" => (isset($props['version'])? $props['version'] : 1),
+                 "tbl_updated" => (isset($props['updated'])? $props['updated'] : time()));
+  }
+
+  /**
+   * Translates an array of field properties to field definitions for use in field_defs table
+   */
+  function _translatePropsToDefs( $table, $field, $props ) {
+    return array("table_name"      => $table,
+                 "col_name"        => $field,
+                 "col_label"       => $props['label'],
+                 "col_form_type"   => $props['ftype'],
+                 "col_required"    => $props['required'],
+                 "col_criteria"    => count($props['criteria'])?$props['criteria'][0]."=".$props['criteria'][1]:null,
+                 "col_reference"   => $props['reference'],
+                 "col_default"     => $props['default'],
+                 "col_description" => $props['description'],
+                 "col_order"       => $props['order'],
+                 "col_unique"      => $props['unique']);
   }
   
   /**
@@ -525,6 +656,7 @@ class ZenDBXML {
     // strip off leading . for users like me who try to put the extension
     if( $compress ) { $compress = str_replace('.','',$compress); }
     // read gz compression
+    $gz = false;
     if( $compress == 'gzip' ) {
       //todo
       //todo add zip compression

@@ -143,15 +143,14 @@ class ZenMetaTable extends Zen {
   function validate( $values ) {
     $errors = array();
     foreach( $values as $k=>$v ) {
-      if( isset($this->_data['fields'][$k]) ) {
-        $f = new ZenMetaField($this->_data[$k]);
-        $e = $f->validate( $v );
-        if( $e !== true ) { $errors[] = $e; }
-      }
-      else {
+      if( !isset($this->_data['fields'][$k]) ) {
         Zen::debug($this, 'validate', 'Invalid field', 105, LVL_WARN);
         $errors[] = "Field not found: $k";
+        continue;
       }
+      $f = $this->getMetaField($k);
+      $e = $f->validate( $v );
+      if( !($e === true) ) { $errors[] = $e; }
     }
     if( count($errors) ) { return $errors; }
     return true;

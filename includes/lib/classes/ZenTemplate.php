@@ -60,6 +60,9 @@
    *  "a "+color+" "+fruit      //produces 'a blue apple'
    *  "I am "+"color"           //produces 'I am color'
    * </code>
+   *
+   * Comments can be provided using normal html <!--    --> tags.  These tags cannot be nested!  All html comments
+   * will be stripped before rendering page.
    * 
    * @package Utils
    */
@@ -127,7 +130,8 @@ class ZenTemplate {
     for($i=0; $i<count($txt); $i++) {
       $txt[$i] = preg_replace("@[{]([^}]+)[}]@e", "''.\$this->_insert(\"\\1\").''",$txt[$i]);
     }
-    return stripslashes(join("",$txt));
+    $newtext = stripslashes(join("",$txt));
+    return preg_replace("/<!--.*-->/", "", $newtext);
   }
 
   /**

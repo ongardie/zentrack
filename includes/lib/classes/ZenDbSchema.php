@@ -268,10 +268,29 @@ class ZenDbSchema extends Zen {
    */
   function _loadField( $field, $is_custom = false ) {
     $f = $field['properties'];
+    $c = $field['children'];
     foreach( $this->_columnTags as $t ) {
-      $f[$t] = isset($field['children'][$t])? $field['children'][$t]['data'] : null;
-      if( $t == 'criteria' && isset($field['children'][$t]) ) {
-        $f[$t] = array($field['children'][$t]['properties']['type'], $f[$t]);
+      $f[$t] = isset($c[$t])? $c[$t]['data'] : null;
+      if( $t == 'criteria' && isset($c[$t]) ) {
+        $f[$t] = array($c[$t]['properties']['type'], $f[$t]);
+      }
+      else if( $t == 'required' ) {
+        if( isset($c[$t]) && $c[$t] != "false" ) {
+          // in the case where we have a required param, we will
+          // use this
+          $f[$t] = 1;
+        }
+        else if( !isset($c[$t]) && isset($c['notnull']) && $c['notnull'] != "false" 
+                 && !isset($c['default']) ) {
+          // in the case that there is not a required param, the field is not null,
+          // and we do not have a default, then user input is required
+          $f[$t] = 1;
+        }
+        else {
+          // all other cases (since it isn't specified, or we have a default) can
+          // be assumed to be ok
+          $f[$t] = 0;
+        }
       }
     }
     $f['custom'] = $is_custom;

@@ -308,7 +308,7 @@ class ZenDatabase extends Zen {
     //todo extract transaction code 
     //todo
     // generate the update query (which will create a unique id) and the sql query (which will retrieve the id)
-    $update = "UPDATE ".$this->makeTableName('TABLE_IDS')
+    $update = "UPDATE ".$this->makeTableName('table_ids')
       ." SET current_id = current_id + 1 where name_of_table = '$table'";
     $query = "SELECT current_id FROM ".$this->makeTableName('table_ids')." where name_of_table = '$table'";
     $this->setFetchMode(false);
@@ -331,6 +331,7 @@ class ZenDatabase extends Zen {
   
   /**
    * STATIC: Generate the primary key for a table from the table name
+   * (do not pass table with database prefix before name)
    *
    * @access static
    * @param string $table

@@ -448,7 +448,7 @@ class ZenTargets {
     // copy file
     print "   C $dest\n";      
     if( !copy( $source, $dest ) ) {
-      $this->_printerr("_backup_file", "Backup of $file failed ($source/$dest)");
+      $this->_printerr("_backup_file", "Backup of $name failed ({$source}->{$dest})");
       return false;
     }
     @chmod( $dest, 0600 );
@@ -502,7 +502,7 @@ class ZenTargets {
       $GLOBALS['installMode'] = $lvl;
     }
 
-    return $res[0] > 0 && $res[0] == $res[1];
+    return $res[0] == $res[1];
   }
 
   /**
@@ -703,7 +703,7 @@ class ZenTargets {
     // read each file
     foreach($dirs as $d) {
       // split up the params
-      list($sect,$root,$dir,$chmod) = $d;
+      list($sect,$root,$dir,$chmod,$sourcedir) = $d;
 
       // get the filename
       $file = $this->_ini[$sect][$root];
@@ -889,7 +889,7 @@ class ZenTargets {
    *    <li>skip - this will leave the old file and ignore any updates (if unsure, do not use this)
    * </ul>
    *
-   * @param boolean $overwrite if set to true, will automatically merge existing config files (backed up)
+   * @param boolean $overwrite if set to true, will automatically merge or replace existing config files (backed up)
    * @return boolean success
    */
   function _copy_config_files( $overwrite = false ) {    
@@ -902,7 +902,7 @@ class ZenTargets {
     // run through these files
     foreach( $this->_configFiles as $c) {
       // split up the array
-      list($sect,$var,$file,$is_tmplt,$permissions) = $c;
+      list($sect,$var,$file,$is_tmplt,$permissions,$source) = $c;
 
       // set up destination directory
       $dest = $this->_ini[$sect][$var];
@@ -912,8 +912,7 @@ class ZenTargets {
       // this is a directory or the install.php
       // file itself, in either of those cases
       // it will be installs/
-      $source = ($file == 'install.php' || preg_match('#/$#', $file))? 
-        $this->_installdir : $this->_installdir."/defaults";
+      $source = $this->_installdir.($source? "/$source" : "");
       $file = preg_replace('#/$#', '', $file);
 
       // check directory structure
@@ -930,6 +929,19 @@ class ZenTargets {
       // set up file names
       $dest .= "/".$file;
       $source .= $is_tmplt? "/$file.template" : "/$file";
+
+      // we will deal with directories seperately, since they require
+      // some special procedures
+      if( @is_dir($source) ) {
+        if( @is_dir($dest) && !$overwrite && $this->_confirm("Replace directory $dest?") != 'y' ) {
+          print "   S $file\n";         
+        }
+        else {
+          print @is_dir($dest)? "   R $file\n" : "   C $file\n";
+          $this->_copyRecursively($source, $dest, $permissions, true);
+        }
+        continue;
+      }
 
       if( file_exists($dest) && !$overwrite ) {
         // if this file exists, we will ask for confirmation
@@ -949,7 +961,7 @@ class ZenTargets {
         // if the file doesn't exist then
         // we create it
         $choice = "c";
-      }
+      }      
 
       // check overwrite
       if( !file_exists($dest) || $overwrite || $choice != 's' ) {
@@ -998,7 +1010,7 @@ class ZenTargets {
           }
         }
         // set permissions
-        @chmod( $dest, 0755 );
+        eval("@chmod( '$dest', $permissions );");
       }
       else {
         print "   S skipped $file, you must manually update this file!\n";
@@ -1025,19 +1037,28 @@ class ZenTargets {
       return false;
 
     // directories
-    $source = "../";
+    $source = dirname($this->_installdir);
     $inc = $this->_ini['paths']['path_includes'];
     $conf = $this->_ini['directories']['dir_config'];
     $web = $this->_ini['paths']['path_www'];
-    
+
     // includes files
-    if( !$this->_copyRecursively( "$source/includes", $inc, 0644, $replace ) ) { return false; }
+    if( "$source/includes" != realpath($inc) ) {
+      if( !$this->_copyRecursively( "$source/includes", $inc, '0755', $replace ) ) { return false; }
+    }
+    else { print "   S includes/, source and dest are the same\n"; }
     
     // web files
-    if( !$this->_copyRecursively( "$source/www", $web, 0644, $replace ) ) { return false; }
+    if( "$source/www" != realpath($web) ) {
+      if( !$this->_copyRecursively( "$source/www", $web, '0755', $replace ) ) { return false; }
+    }
+    else { print "   S www/, source and dest are the same\n"; }
     
     // install directory
-    if( !$this->_copyRecursively( "$source/install", $conf, 0644, $replace) ) { return false; } 
+    if( $this->_installdir != realpath($conf) ) {
+      if( !$this->_copyRecursively( $this->_installdir, $conf, '0755', $replace) ) { return false; } 
+    }
+    else { print "   S install/, source and dest are the same\n"; }
 
     return true;
   }
@@ -1107,6 +1128,9 @@ class ZenTargets {
       return false;
     }
 
+    // copy content files to destination
+    if( !$this->_copy_content_files( true ) ) { return false; }
+
     // test directory structures and permissions
     if( !$this->_check_directories( true ) ) { return false; }
     
@@ -1120,10 +1144,10 @@ class ZenTargets {
     if( !$this->_verify_db_connection() ) { return false; }
 
     // create database
-    if( !$this->_create_database($this->_ini['directories']['dir_config']) ) { return false; }
+    if( !$this->_create_database($this->_ini['directories']['dir_config']."/sampledata") ) { return false; }
 
     // load initial data
-    if( !$this->_load_data($this->_ini['directories']['dir_config']) ) { return false; }
+    if( !$this->_load_data($this->_ini['directories']['dir_config']."/sampledata") ) { return false; }
 
     return $success;
   }
@@ -1193,6 +1217,9 @@ class ZenTargets {
 
     // backup data
     if( !$this->_backup_all() ) { return false; }
+
+    // copy content files to destinations
+    if( !$this->_copy_content_files( true ) ) { return false; }
 
     // test directory structures and permissions
     if( !$this->_check_directories( true ) ) { return false; }
@@ -1364,8 +1391,6 @@ class ZenTargets {
    * @param boolean $dropOldData if true, all data in database will be dropped before loading new data
    */
   function _load_data( $dir, $table = null, $dropOldData = true ) {
-    print "- Loading Data from $dir\n";
-
     // confirm data directory
     if( !@dir($dir) ) {
       $this->_printerr("_load_data", "$dir does not exist! Aborting");
@@ -1377,14 +1402,16 @@ class ZenTargets {
       return false;
     }
 
+    print "- Loading Data from $dir\n";
+
     // parse table param
     if( $table && !is_array($table) ) { $table = explode(',', $table); }
 
     // load the new data
     $source = $this->_ini['directories']['dir_config']."/database.xml";
     $dbc =& $this->getDbConnection();
-    $dbx = new ZenDBXML( $dbc, $source, $this->_ini['debug']['develop_mode'] );                 
-    $res = $dbx->loadDatabaseData( $dir, $table, $dropOldData ); 
+    $dbx = new ZenDBXML( $dbc, $source, $this->_ini['debug']['develop_mode'] );
+    $res = $dbx->loadDatabaseData( $dir, $table, $dropOldData );
     print "   {$res[1]} of {$res[0]} tables loaded successfully\n";
     if( $res[0] != $res[1] ) {
       $diff = $res[0] - $res[1];
@@ -1642,7 +1669,7 @@ class ZenTargets {
    * @access private
    * @param string $source the directory to copy from
    * @param string $dest the directory to copy to
-   * @param integer $chmod is the permissions to create any needed directories with
+   * @param string $chmod is the permissions to create any needed directories with (this is a string representing octal value, such as '0755')
    * @param boolean $replace tells whether files should be replaced if found
    * @return boolean succeeded
    */
@@ -1651,7 +1678,7 @@ class ZenTargets {
     $success = true;
 
     // make sure the directory exists
-    if( !@is_dir( $dest ) && !@mkdir($des) ) {
+    if( !@is_dir( $dest ) && !eval("return @mkdir('$des', $chmod);") ) {
       $this->_printerr("_copyRecursively", "Unable to create directory: $dest");
       return false;
     }
@@ -1682,7 +1709,7 @@ class ZenTargets {
       else { print "   + $f\n"; }
 
       // do the copy
-      if( !@copy( $file, $dest."/".$f ) ) {
+      if( !@copy( $file, $newfile ) ) {
         $this->_printerr("_copyRecursively", "Unable to create: $newfile");
         return false;
       }

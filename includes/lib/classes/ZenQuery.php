@@ -84,6 +84,11 @@ class ZenQuery extends Zen {
    * @param mixed $table the table(s) to be included
    */
   function table( $table ) {
+    // we set the primary key here, on the assumption that if this statement
+    // is going to use a primary key, there will only be one table... otherwise
+    // there is no intuitive means of executing this, and the calling method should
+    // manually determine and set key info
+    $this->_key = $this->_dbobject->getPrimaryKey((is_array($table)? $table[0] : $table));
     if (is_array($table)) {
       foreach($table as $t) {
 	$this->_tables[] = $this->_fixName($t);
@@ -232,13 +237,12 @@ class ZenQuery extends Zen {
    * @see ZenQuery::table()
    */
   function setPrimaryKey( $key = null ) {    
-    if( !$key ) { $key = ZenDatabase::getPrimaryKey($this->_tables[0]); }
-    $this->_key = $key;
+    if( $key ) { $this->_key = $key; }
     if( !in_array($key, $this->_fields) ) {
       $this->_fields[] = $key;
     }
     $this->_vals[$key] = $this->_dbobject->generateId($this->_tables[0]);
-    Zen::debug($this, "setPrimaryKey", "Primary key set: {$key}->{$this->_vals[$key]}", 0, LVL_DEBUG);
+    ZenUtils::safeDebug($this, "setPrimaryKey", "Primary key set: {$key}->{$this->_vals[$key]}", 0, LVL_DEBUG);
     return $this->_vals[$key];
   }
   
@@ -419,7 +423,7 @@ class ZenQuery extends Zen {
     if( $setPrimaryKey ) { $this->setPrimaryKey(); }
     $this->_queryType = 'INSERT';
     if( $this->_execute(false) ) {
-      if( isset($this->_key) ) {
+      if( isset($this->_key) && isset($this->_vals[$this->_key]) ) {
         return $this->_vals[$this->_key];
       }
       else {

@@ -5,7 +5,7 @@
     <table name="ABSTRACT_DESCRIPTORS">
       <description>Descriptive columns common to many tables</description>
       <columns>
-	<column name="desc" type="string" ftype="text" label="Description" />      
+	<column name="descript" type="maxstring" ftype="text" label="Description" />      
 	<column name="last_update" type="date" ftype="hidden">
 	  <default>NOW</default>
 	</column>
@@ -62,7 +62,7 @@
 	  <reference>USER.user_id</reference>
 	  <notnull>true</notnull>
 	</column>
-        <column name="bin_id" type="integer" ftype="selection">
+        <column name="bin_id" type="integer" ftype="select">
 	  <reference>BIN.bin_id</reference>
 	  <notnull>true</notnull>
 	</column>
@@ -91,13 +91,13 @@
       <description>Access Priviledges</description>
       <columns>
         <column name="access_id" type="primarykey" ftype="hidden" />
-	<column name="bin_id" type="integer" ftype="selection">
+	<column name="bin_id" type="integer" ftype="select">
 	  <reference>BIN.bin_id</reference>
 	</column>
-	<column name="role_id" type="integer" ftype="selection">
+	<column name="role_id" type="integer" ftype="select">
 	  <reference>ROLE.role_id</reference>
 	</column>
-	<column name="action_id" type="integer" ftype="selection">
+	<column name="action_id" type="integer" ftype="select">
 	  <reference>ACTION.action_id</reference>
 	</column>
 	<column name="yesorno" type="byte" ftype="checkbox" label="Active">
@@ -115,7 +115,7 @@
       <inherit>ABSTRACT_DATA_NAMED</inherit>
       <columns>
         <column name="action_id" type="primarykey" ftype="hidden" />
-	<column name="action_type" type="value" ftype="selection" label="Action Type">
+	<column name="action_type" type="value" ftype="select" label="Action Type">
 	  <criteria type="list">Normal,Helper,URL</criteria>
 	  <default>Normal</default>
 	</column>
@@ -135,19 +135,39 @@
 	     [5]Owner or unowned
 	   </criteria>
 	</column>
-	<column name="stage_reqs" type="string" ftype="checklist" label="Stage">
-	  <description>The required stage of the ticket to perform this action</description>
-	  <criteria type="zenlist">stages</criteria>
-	</column>
-	<column name="bin_reqs" type="string" ftype="checklist" label="Bin">
-	  <description>Set this action to only be active in certain bins (blank=all)</description>
-	  <criteria type="zenlist">bins</criteria>
-	</column>
       </columns>
       <indexList>
-        <index name="act_get">action_id,isactive</index>
-	<index name="act_sort">field_name,field_pri</index>
-	<index name="act_check">owner_reqs,stage_reqs,bin_reqs</index>
+        <index name="key_act_get">action_id,isactive</index>
+	<index name="key_act_sort">field_name,field_pri</index>
+	<index name="key_act_check">owner_reqs</index>
+      </indexList>
+    </table>
+
+    <table name="ACTION_BIN">
+      <description>Maps actions to the bins in which they are active</description>
+      <columns>
+         <column name="action_id" type="integer" ftype="hidden" label="Action" />
+         <column name="bin_id" type="integer" ftype="checklist" label="Active Bins">
+           <reference>BIN.bin_id</reference>
+           <criteria type="zenlist">bins</criteria>
+         </column>
+      </columns>
+      <indexList>
+        <index name="key_actbin_get">action_id,bin_id</index>
+      </indexList>
+    </table>
+
+    <table name="ACTION_STAGE">
+      <description>Maps actions to the stages in which they are active</description>
+      <columns>
+         <column name="action_id" type="integer" ftype="hidden" label="Action" />
+         <column name="stage_id" type="integer" ftype="checklist" label="Active Stages">
+           <reference>STAGE.stage_id</reference>
+           <criteria type="zenlist">stages</criteria>
+         </column>
+      </columns>
+      <indexList>
+        <index name="key_actbin_get">action_id,stage_id</index>
       </indexList>
     </table>
 
@@ -203,7 +223,7 @@
 	<column name="log_id" type="integer" ftype="immutable" label="Log Entry">
 	  <reference>LOG.log_id</reference>
 	</column>
-	<column name="file_name" type="value" ftype="immutable" label="File Name" />
+	<column name="field_name" type="value" ftype="immutable" label="File Name" />
 	<column name="file_type" type="value" ftype="immutable" label="File Type" />
       </columns>
       <indexList>
@@ -239,6 +259,7 @@
     <table name="FIELD_DEFS">
       <description>Meta information about tables and their fields</description>
       <columns>
+        <column name="field_defs_id" type="primarykey" ftype="hidden" label="PrimeKey" />
 	<column name="table_name" type="value" ftype="immutable" label="Table">
 	  <description>The table this field is in</description>
 	  <reference>TABLE_DEFS.tbl_name</reference>
@@ -299,10 +320,10 @@
       <description>Transaction enabled table that stores unique ids for each table</description>
       <transactions>true</transactions>
       <columns>
-        <column name="name_of_table" type="string">
+        <column name="name_of_table" type="string" ftype="immutable" label="Current ID">
 	  <unique>true</unique>
 	</column>
-	<column name="current_id" type="long"  />
+	<column name="current_id" type="long" ftype="immutable" label="Current ID"/>
       </columns>
       <indexList>
         <index name="name_idx">name_of_table</index>
@@ -324,8 +345,8 @@
 	  <description>Hours associated with this log entry, decimals are acceptable here</description>
 	</column>
 	<column name="entry" type="text" ftype="textarea" label="Details" />	  
-	<column name="action_id" type="integer">
-	  <default>{action_id}</default>
+	<column name="action_id" type="integer" ftype="select">
+          <notnull>true</notnull>
 	  <reference>ACTION.action_id</reference>
 	</column>
         <column name="user_inits" type="string" ftype="hidden">
@@ -334,6 +355,11 @@
 	  <size>5</size>
 	</column>
       </columns>
+      <customList>
+	<column name="string1" type="string" ftype="hidden" label="String 1" />
+	<column name="date1" type="date" ftype="hidden" label="Date 1" />	
+	<column name="num1" type="integer" ftype="hidden" label="Int 1" />	
+      </customList>
       <indexList>
         <index name="log_sort">ctime</index>
 	<index name="log_get">ticket_id</index>
@@ -523,10 +549,13 @@
 
     <!-- meta data from the database construction -->
     <table name="TABLE_DEFS">
-      <description>Meta data describing how tables are structures</description>
+      <description>
+         Meta data describing how tables are structured.  This extends the xml schema and
+         allows users to edit certain properties of the fields.
+      </description>
       <columns>
+        <column name="table_defs_id" type="primarykey" ftype="hidden" label="PrimeKey" />
         <column name="tbl_name" type="value" ftype="immutable" label="Name" />
-	<column name="tbl_inherits" type="string" ftype="immutable" label="Inherited From" />
 	<column name="tbl_version" type="value" ftype="immutable" label="Version" />
 	<column name="tbl_updated" type="date" ftype="immutable" label="Last Update" />
       </columns>
@@ -582,7 +611,15 @@
 	</column>
       </columns>
       <customList>
-        <column name="customer" type="string" ftype="text" label="Customer" />
+        <column name="string1" type="string" ftype="hidden" label="String 1" />
+        <column name="string2" type="string" ftype="hidden" label="String 2" />
+        <column name="string3" type="string" ftype="hidden" label="String 3" />
+        <column name="date1" type="date" ftype="hidden" label="Date 1" />
+        <column name="date2" type="date" ftype="hidden" label="Date 2" />
+        <column name="date3" type="date" ftype="hidden" label="Date 3" />
+        <column name="num1" type="integer" ftype="hidden" label="Int 1" />
+        <column name="num2" type="integer" ftype="hidden" label="Int 2" />
+        <column name="num3" type="integer" ftype="hidden" label="Int 3" />
       </customList>
       <indexList>
 	<index name="tckt_bin">bin_id</index>
@@ -604,7 +641,7 @@
     <table name="TRIGGER_ACTIONS">
       <description>Actions trigger activates, and their params</description>
       <columns>
-        <column name="trigger_id" type="integer">
+        <column name="trigger_id" type="integer" ftype="select">
 	  <reference>TRIGGER.trigger_id</reference>
 	</column>
 	<column name="action_id" type="integer" ftype="select" label="Action">
@@ -625,7 +662,7 @@
       <description>Fields and values that activate triggers</description>
       <inherit>ABSTRACT_FILTER_TYPE</inherit>
       <columns>
-        <column name="trigger_id" type="integer">
+        <column name="trigger_id" type="integer" ftype="immutable">
 	  <reference>TRIGGER.trigger_id</reference>
 	</column>
       </columns>
@@ -649,7 +686,7 @@
     <table name="TYPE_STAGES">
       <description>The staging order for this ticket type</description>
       <columns>
-        <column name="type_id" type="integer">
+        <column name="type_id" type="integer" ftype="select">
 	  <reference>TYPE.type_id</reference>
 	</column>
 	<column name="stage_id" type="integer" ftype="select" label="Stage">
@@ -668,7 +705,7 @@
     <table name="TYPE_FIELDS">
       <description>fields used in this type</description>
       <columns>
-        <column name="type_id" type="integer">
+        <column name="type_id" type="integer" ftype="select">
 	  <reference>TYPE.type_id</reference>
 	</column>
 	<column name="field_name" type="value" ftype="select" label="Field">
@@ -683,20 +720,20 @@
     <table name="TYPE_BINS">
       <description>Bins used by this type</description>
       <columns>
-        <column name="type_id" type="integer">
+        <column name="type_id" type="integer" ftype="select">
 	  <reference>TYPE.type_id</reference>
 	</column>
         <column name="bin_id" type="integer" ftype="select">
 	  <reference>BIN.bin_id</reference>
 	  <criteria type="zenlist">bins</criteria>
-	</column>      
+	</column>
       </columns>
     </table>
 
     <table name="TYPE_SYSTEMS">
       <description>Systems used by this type</description>
       <columns>
-        <column name="type_id" type="integer">
+        <column name="type_id" type="integer" ftype="select">
 	  <reference>TYPE.type_id</reference>
 	</column>
         <column name="system_id" type="integer" ftype="select">
@@ -709,7 +746,7 @@
     <table name="TYPE_PRIORITIES">
       <description>Priorities used by this type</description>
       <columns>
-        <column name="type_id" type="integer">
+        <column name="type_id" type="integer" ftype="select">
 	  <reference>TYPE.type_id</reference>
 	</column>
         <column name="priority_id" type="integer" ftype="select">
@@ -722,7 +759,7 @@
     <table name="TYPE_ACTIONS">
       <description>Actions used by this type</description>
       <columns>
-        <column name="type_id" type="integer">
+        <column name="type_id" type="integer" ftype="select">
 	  <reference>TYPE.type_id</reference>
 	</column>
         <column name="action_id" type="integer" ftype="select">
@@ -767,8 +804,15 @@
 	</column>
       </columns>
       <customList>
-	<column name="notes" type="string" ftype="text" label="Comments" />
-	<column name="phone" type="value" ftype="text" label="Phone" />	
+        <column name="string1" type="string" ftype="hidden" label="String 1" />
+        <column name="string2" type="string" ftype="hidden" label="String 2" />
+        <column name="string3" type="string" ftype="hidden" label="String 3" />
+        <column name="date1" type="date" ftype="hidden" label="Date 1" />
+        <column name="date2" type="date" ftype="hidden" label="Date 2" />
+        <column name="date3" type="date" ftype="hidden" label="Date 3" />
+        <column name="num1" type="integer" ftype="hidden" label="Int 1" />
+        <column name="num2" type="integer" ftype="hidden" label="Int 2" />
+        <column name="num3" type="integer" ftype="hidden" label="Int 3" />
       </customList>
       <indexList>
         <index name="user_get">user_id,isactive</index>
@@ -780,7 +824,7 @@
     <table name="USER_ROLES">
       <description>Define user roles</description>
       <columns>
-        <column name="user_id" type="integer">
+        <column name="user_id" type="integer" ftype="select">
 	  <reference>USER.user_id</reference>
 	</column>
 	<column name="role_id" type="integer" ftype="select">

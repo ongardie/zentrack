@@ -143,9 +143,24 @@ class Zen {
   function simpleQuery($table, $field = null, $value = null, $sort = null) {
     $query = Zen::getNewQuery();
     $query->table($table);
-    if( $field ) { $query->match($field,$value,ZEN_EQ); }
+    if( $field ) { $query->match($field,ZEN_EQ,$value); }
     if( $sort ) { $query->sort($sort); }
     return $query->select(Zen::getCacheTime(), true);
+  }
+
+  /**
+   * STATIC:: Performs a simple delete from table
+   *
+   * @param string $table
+   * @param string $field field to match for deletion
+   * @param string $value value to match in $field for deletion
+   * @return boolean
+   */
+  function simpleDelete($table, $field = null, $value = null) {
+    $query = Zen::getNewQuery();
+    $query->table($table);
+    if( $field ) { $query->match($field,ZEN_EQ,$value); }
+    return $query->delete();
   }
 
   /**
@@ -172,7 +187,7 @@ class Zen {
     // create primary key if not already set
     $pk = ZenDatabase::getPrimaryKey($table);
     if( !isset($vals[$pk]) || !strlen($vals[$pk]) ) {
-      $query->setPrimaryKey();
+      $query->setPrimaryKey($pk);
     }
 
     return $query->insert();

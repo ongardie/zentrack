@@ -8,19 +8,15 @@
 ##   2- filename
 ##   3- template? if so, tacks .template onto filename and parses
 ##   4- permissions to create with
+##   5- source directory
 
 # config files
 
-directories:dir_config:zen.ini:1:0744
-directories:dir_config:debug.xml:0:0744
-directories:dir_config:database.xml:0:0744
+directories:dir_config:zen.ini:1:0744:defaults
+directories:dir_config:debug.xml:0:0744:defaults
+directories:dir_config:database.xml:0:0744:sampledata
 
 # header.php
 
-paths:path_www:header.php:1:0744
+paths:path_www:header.php:1:0744:defaults
 
-# data and install files
-
-directories:dir_config:install.php:0:0744
-directories:dir_config:sample_data/:0:0744
-directories:dir_config:setup/:0:0744
