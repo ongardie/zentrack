@@ -100,35 +100,35 @@ if( $TODO == 'SAVED' ) {
       $k = $v['field_name'];
       $l = $v['field_label'];
       if( $v['js_validation'] ) {
-	print preg_replace('/\{form\}/', 'document.ticket_customForm', $v['js_validation']);
+	      print preg_replace('/\{form\}/', 'document.ticket_customForm', $v['js_validation']);
       }
       else {
-	$f = "document.ticket_customForm.{$k}";
-	$e = 'errs[ errs.length ]';
-	switch( getVarfieldDataType($k) ) {
-	case "menu":
-	  // if the value of the menu selection is '', then
-	  // the required status is significant
-	  if( $v['is_required'] ) {
-	    print "if( {$f}.options[ {$f}.selectedIndex ].value == '' )"
-	      . " { {$e} = '{$l} is required'; }\n";
-	  }
-	case "boolean":
-	  // no validation for checkboxes
-	  break;
-	case "number":
-	  // make sure it is a valid number
-	  print "if( {$f}.value.match( /[^0-9.]/ ) ) { {$e} = '"
-	    .tr('? is not a valid number',array(tr($l)))."'; }\n";
-	default:
-	  // nothing to do for dates or strings, just
-	  // check the required status
-	  // numbers fall through to here also
-	  if( $v['is_required'] ) {
-	    print "if( !{$f}.value ) { {$e} = '"
-	      .tr('? is required',array(tr($l)))."'; }\n";
-	  }
-	}
+        $f = "document.ticket_customForm.{$k}";
+        $e = 'errs[ errs.length ]';
+        switch( getVarfieldDataType($k) ) {
+          case "menu":
+            // if the value of the menu selection is '', then
+            // the required status is significant
+            if( $v['is_required'] ) {
+              print "if( {$f}.options[ {$f}.selectedIndex ].value == '' )"
+                . " { {$e} = '{$l} is required'; }\n";
+            }
+          case "boolean":
+            // no validation for checkboxes
+            break;
+          case "number":
+            // make sure it is a valid number
+            print "if( {$f}.value.match( /[^0-9.]/ ) ) { {$e} = '"
+              .tr('? is not a valid number',array(tr($l)))."'; }\n";
+          default:
+            // nothing to do for dates or strings, just
+            // check the required status
+            // numbers fall through to here also
+            if( $v['is_required'] ) {
+              print "if( !{$f}.value ) { {$e} = '"
+                .tr('? is required',array(tr($l)))."'; }\n";
+            }
+        }
       }
    }
  }

@@ -13,6 +13,16 @@ abstraction, and endless possibilities for project expansion.
 
 ----- VERSION 2.5.0.3 (development) -----
 
+2005-03-11, kato
+  UI fixed to allow clicking anywhere in nav menus.
+  
+  Added sorting to ticket lists
+  
+  Completed implementation of search pages in fieldMap
+  
+  Added SQL code to upgrade and install scripts
+  
+  
 2005-03-10, cfalonso
 Included field_map for close page
     - zentrack_2/includes/ZenFieldMap.class 1.9

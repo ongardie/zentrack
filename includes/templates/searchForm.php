@@ -5,17 +5,23 @@
      (string)$view - the current view (probably project_list or ticket_list)
   **/  
   
-  $view = 'project_create';
+  $view = 'search_form';
   $fields = $map->getFieldMap($view);
   $text_fields = array();
   $other_fields = array();
   $hidden_fields = array();
+  $date_fields = array();
   foreach($fields as $f=>$field) {
     if( $field['field_type'] == 'hidden' ) {
       $hidden_fields[$f] = $field;
     }
-    else if( $field['field_type'] == 'text' || $field['field_type'] == 'textarea' ) {
+    else if( !$field['is_visible'] ) { continue; }
+    
+    if( $field['field_type'] == 'text' || $field['field_type'] == 'textarea' ) {
       $text_fields[$f] = $field; }
+    else if( $field['field_type'] == 'date' ) {
+      $date_fields[$f] = $field;
+    }
     else { $other_fields[$f] = $field; }
   }
 ?>
@@ -39,7 +45,7 @@ if( count($text_fields) ) {
 ?>
 <tr>
   <td colspan="2" class="subTitle">
-    <?=tr("By Text Match")?>
+    <?=tr("Containing Text")?>
   </td>
 </tr>
 <tr>
@@ -59,46 +65,65 @@ if( count($text_fields) ) {
     <table><tr><td valign='top'>
 <?
   $c = 0;
-  if( !is_array($search_fields) || !count($search_fields) ) 
-      { $search_fields = array('title','description'); }
-  foreach($text_fields as $t=>$field) {
-    if( $c > 0 ) { print "<br>"; }
-    $checked = is_array($search_fields) && array_key_exists($t, $search_fields) && $search_fields[$t] > 0;
-    print "<input type='checkbox' name='search_fields[$t]' value='1'$checked>&nbsp;".tr($t)."\n";
-    if( count($text_fields) > 3 && ++$c == ceil(count($text_fields)/2) ) {
-      print "</td><td>\n";
+  if( !is_array($search_fields) ) 
+      { $search_fields = array('title'=>1,'description'=>1); }
+    foreach($text_fields as $t=>$field) {
+      if( $c > 0 && !$switch) { print "<br>"; }
+      $switch = false;
+      $checked = is_array($search_fields) && array_key_exists($t, $search_fields) && $search_fields["$t"] > 0? " checked" : "";
+      print "<input type='checkbox' name='search_fields[$t]' value='1'$checked>&nbsp;".$map->getLabel($view, $t)."\n";
+      if( count($text_fields) > 3 && ++$c == ceil(count($text_fields)/2) ) {
+        $switch = true;
+        print "</td><td valign='top'>\n";
+      }
     }
-  }
 }
 ?>
     </td></tr></table>
   </td>
 </tr>
 <?
-foreach( $other_fields as $f=>$field ) {
-  if( !$field['is_visible'] ) { continue; }
 
-  if( $field['field_type'] == 'section' ) {
-    print "<tr><td colspan='2' class='subTitle'>";
-    print $map->renderTicketField($view, 'searchForm', $f);
-    print "</td></tr>\n";
-  }
-  else {
-    print "<tr><td class='bars'>";
-    print $map->getLabel($view, $f);
-    print "</td><td class='bars'>";
-    if( $field['field_type'] == 'date' ) {
+if( count($date_fields) ) {
+?>
+<tr>
+  <td colspan="2" class="subTitle">
+    <?=tr("Date Matches")?>
+  </td>
+</tr>
+<?
+  foreach( $date_fields as $f=>$field ) {
+      print "<tr><td class='bars'>";
+      print $map->getLabel($view, $f);
+      print "</td><td class='bars'>";
       print "<span class='note'>between ";
-      $name = strpos($f, 'custom_')===0? "dates_{$f}_begin" : "{$f}_begin";
-      print $map->renderTicketField($view, 'searchForm', $f, $$name, $name);
+      $name = "{$f}_begin";
+      print $map->renderTicketField($view, 'searchForm', $f, $search_params["$name"], "search_params[$name]");
       print " and ";
-      $name = strpos($f, 'custom_')===0? "dates_{$f}_end" : "{$f}_end";
-      print $map->renderTicketField($view, 'searchForm', $f, $$name, $name);
+      $name = "{$f}_end";
+      print $map->renderTicketField($view, 'searchForm', $f, $search_params["$name"], "search_params[$name]");
       print "</span>";
-    }
-    else {
-      $name = "search_params[$f]";
-      print $map->renderTicketField($view, 'searchForm', $f, $$name, $name);
+      print "</td></tr>\n";
+  }
+}
+
+
+if( count($other_fields) ) {
+?>
+<tr>
+  <td colspan="2" class="subTitle">
+    <?=tr("Other Fields")?>
+  </td>
+</tr>
+<?
+  
+  foreach( $other_fields as $f=>$field ) {
+    print "<tr><td class='bars'>";
+    print $map->getLabel($view,$f);
+    print "</td><td class='bars'>";
+    print $map->renderTicketField($view, 'searchForm', $f, $search_params["$f"], "search_params[$f]");
+    if( $f == 'priority' ) {
+      print "&nbsp;<input type='checkbox' name='or_higher' checked value='1'> or higher";
     }
     print "</td></tr>\n";
   }

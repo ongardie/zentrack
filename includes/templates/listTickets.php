@@ -15,15 +15,15 @@ if( !$page_type )
 if( is_array($tickets) && count($tickets) ) {
 ?>
 <script type='text/javascript'>
-function resortListPage( fieldName ) {
+function resortListPage( sortName ) {
 <? if( strpos($view, 'search')===0 ) { ?>
-  document.searchModifyForm.sortBy.value = fieldName;
+  document.searchModifyForm.newsort.value = sortName;
   document.searchModifyForm.TODO.value = 'SEARCH';
   document.searchModifyForm.submit();
   return false;
 <? } else { ?>
   s = window.location.href;
-  s += s.indexOf('?') > 0? '&sortBy='+fieldName : '?sortBy=fieldName';
+  s += s.indexOf('?') > 0? '&newsort='+sortName : '?newsort='+sortName;
   window.location = s;
 <? } ?>
 }
@@ -38,7 +38,12 @@ function resortListPage( fieldName ) {
     if( !$field['is_visible'] ) { continue; }
 
     $tf = tr($map->getLabel($view,$f));
-    print "<td width='32' height='25' valign='middle' title='".$zen->ffv($tf)."' class='titleCell'><span class='small'>$tf</span></td>\n";
+    $sn = in_array($f, $orderby)? "$f DESC" : $f;
+    print "<td width='32' height='25' valign='middle' ";
+    if( getFmFieldProps($view, $f) ) {
+      print "onclick='resortListPage(\"$sn\")' $nav_rollover_eff ";
+    }
+    print " title='".$zen->ffv($tf)."' class='titleCell'><span class='small'>$tf</span></td>\n";
     
     // store information about field types
     if( strpos($f, 'custom_') === 0 && $field['is_visible'] ) {
@@ -148,7 +153,7 @@ function resortListPage( fieldName ) {
        <form method="post" action="search.php" name='searchModifyForm' style="display: inline; margin: 0px;">
           <input type="submit" class="smallSubmit" value="<?=tr("Modify Search")?>">
           <input type='hidden' name='TODO' value=''>
-          <input type='hidden' name='sort_field' value=''>
+          <input type='hidden' name='newsort' value=''>
           <input type="hidden" name="search_text" value="<?=$zen->ffv($search_text)?>">
           <?
            foreach($search_params as $k=>$v) {

@@ -150,7 +150,13 @@
      background:  <?=$zen->settings["color_bars"]?>;
      padding: 2px;
   }
-
+  
+  .disabled, .disabled INPUT, .disabled BUTTON, .disabled SUBMIT, 
+  .disabled SELECT, .inputDisabled {
+     color:      <?=$zen->settings['color_grey']?> !important;
+     background: <?=$zen->settings['color_bars']?> !important;
+  }
+  
   .altBars {
      color:       <?=$zen->settings["color_bars"]?>;
      background:  <?=$zen->settings["color_bar_text"]?>;
@@ -338,11 +344,6 @@ TD.bigger { font-size: 50px; }
   INPUT, TEXTAREA, SELECT, .input {
      color:      <?=$zen->settings["color_bar_text"]?>;
      background: <?=$zen->settings["color_background"]?>;
-  }
-
-  .inputDisabled {
-     color:      <?=$zen->settings['color_grey']?>;
-     background: <?=$zen->settings['color_bars']?>;
   }
 
   BUTTON, .navButtons {

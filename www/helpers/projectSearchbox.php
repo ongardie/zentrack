@@ -178,7 +178,7 @@
            val += ","+element.value;
        } 
      }
-     opener.document.<?=$return_form?>.<?=$return_field?>.value = val;
+     opener.document.<?=$return_form?>["<?=$return_field?>"].value = val;
      window.self.close();
      return false;
    }

@@ -69,7 +69,7 @@ class Translator {
       $this->_domainList = array();
       $this->_curDomain = '';
       $this->_locale = '';
-      $this->_zenObj;
+      $this->_zenObj = null;
       $this->_translationCache = array();
    }
 
@@ -157,7 +157,7 @@ class Translator {
       $error = false;
       $translationFile = $this->_domainList[$this->_curDomain] . '/' . $this->_locale . '.trans';
       $compiledFile = $this->_domainList[$this->_curDomain] . '/' . $this->_locale . '.ctrans';
-
+      
       //Check for a cached copy
       if (!array_key_exists($translationFile, $this->_translationCache)) {
          //check for file

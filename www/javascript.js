@@ -63,12 +63,14 @@ function mOut(src,clrIn,txtIn) {
 }
 
 function mClk(src) {
-  if( !src.children ) { return; }
-  if( src.children.tags('A') && src.children.tags('A').length > 0 ) {
-    src.children.tags('A')[0].click();
-  }
-  else if( src.children.tags('TD') && src.children.tags('TD').length > 0 ) {
-    src.children.tags('TD')[0].children.tags('A')[0].click();
+  if( src.childNodes ) {
+    for( var i=0; i < src.childNodes.length; i++ ) {
+      var n = src.childNodes[i];
+      if( n.tagName == "A" ) {
+        if( n.click ) { n.click(); }
+        else { window.location = n.href; }
+      }
+    }
   }
 }
 

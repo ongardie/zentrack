@@ -15,10 +15,11 @@
   $expand_search = 1;
   include("$libDir/nav.php");
   
-  
   if( $TODO == 'SEARCH' ) {
     include("$templateDir/searchResults.php");
     if( is_array($tickets) ) {
+      $view = "search_list";
+      $fields = $map->getFieldMap($view);
       include("$templateDir/listTickets.php");
       include("$libDir/paging.php"); //Addition for paging        
     } else {

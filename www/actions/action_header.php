@@ -23,6 +23,21 @@
     include("../index.php");
     exit;
   }
+  
+  // check to insure that this user has access
+  // and this ticket allows the requested action
+  // to be completed
+  $ticket = $zen->get_ticket($id);
+  $tid = $ticket["type_id"];
+  if( in_array($tid,$zen->projectTypeIDs()) ) {
+    $ticket["children"] = $zen->getProjectChildren($id, 
+	    array("id,title,status,est_hours,wkd_hours"));
+    list($ticket["est_hours"],$ticket["wkd_hours"]) = $zen->getProjectHours($id);
+    $page_type = "project";
+  }  else {
+    $page_type = "ticket";
+  }
+  
   // use the filename to 
   // determine the action
   $basename = strtolower(preg_replace("@.*/([a-zA-Z0-9_-]+)\.php@", "\\1", $SCRIPT_NAME));
@@ -39,19 +54,6 @@
     $action = "view";
   }
   
-  // check to insure that this user has access
-  // and this ticket allows the requested action
-  // to be completed
-  $ticket = $zen->get_ticket($id);
-  $tid = $ticket["type_id"];
-  if( in_array($tid,$zen->projectTypeIDs()) ) {
-    $ticket["children"] = $zen->getProjectChildren($id, 
-	    array("id,title,status,est_hours,wkd_hours"));
-    list($ticket["est_hours"],$ticket["wkd_hours"]) = $zen->getProjectHours($id);
-    $page_type = "project";
-  }  else {
-    $page_type = "ticket";
-  }
   $setmode = "system";
 
   // find out if this is the ticket's creator (special conditions apply)
@@ -69,8 +71,9 @@
   }
 
   // set up page paremeters
-  $page_title = tr("Ticket #?", array($id));
+  $page_title = $page_type == "project"? tr("Project #?", array($id)) : tr("Ticket #?", array($id));
   $page_section = "Ticket #$id";
-  $expand_tickets = 1;
+  if( $page_type == 'project' ) { $expand_projects = 1; }
+  else { $expand_tickets = 1; }
 
 ?>

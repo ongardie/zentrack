@@ -135,7 +135,7 @@
        //else { s += "skipped "+element.name+": "+element.type+"\n"; }//debug
      }
      //alert(s);//debug
-     opener.document.<?=$return_form?>.<?=$return_field?>.value = val;
+     opener.document.<?=$return_form?>["<?=$return_field?>"].value = val;
      window.self.close();
      return false;
    }

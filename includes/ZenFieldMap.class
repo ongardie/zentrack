@@ -53,12 +53,14 @@ function getFmViewProps( $view = null ) {
  *  <li>multiple - (boolean)may have multiple entries (view can override this)
  *  <li>always_required - (boolean)true if this field is required by system
  *  <li>default - (boolean)true if this field can use default values
+    <li>data_type - (string) contains 'int', 'string', 'date', 'boolean', or 'float'
  * </ul>
  *
  * @param string $view
  * @param string $field if omitted, returns all fields formatted for a given view
  */
 function getFmFieldProps( $view, $field = null ) {
+  $field = ZenFieldMap::fieldName($field);
   if( !$field ) {
     // return all fields for a view
     $set = array();
@@ -73,7 +75,9 @@ function getFmFieldProps( $view, $field = null ) {
   $vals = $GLOBALS['zt_field_dependencies']['fields'][$field];
   if( !is_array($vals) ) { return false; }
   $vars = array();
-  $indices = array("searchable", "types", "admin_view", "multiple", "always_required", "default");
+  // the distance between "types" and "admin_view" is important for
+  // the details listed below
+  $indices = array("searchable", "types", "data_type", "admin_view", "multiple", "always_required", "default");
   for($i=0; $i < count($indices); $i++) {
     if( $indices[$i] == 'admin_view' ) { continue; }
     else if( $indices[$i] == 'types' ) {
@@ -82,12 +86,15 @@ function getFmFieldProps( $view, $field = null ) {
       foreach($vals[$i] as $v) {
         $set[] = ZenFieldMap::getTypeString($v);
       }
-      if( $vprops['admin_view'] && $vals[$i+1] ) {
-        foreach($vals[$i+1] as $v) {
+      if( $vprops['admin_view'] && $vals[$i+2] ) {
+        foreach($vals[$i+2] as $v) {
           $set[] = ZenFieldMap::getTypeString($v);
         }
       }
       $vars[ $indices[$i] ] = $set;
+    }
+    else if( $vprops['multiple'] && $indices[$i] == 'multiple' ) {
+      $vars[ $indices[$i] ] = true;
     }
     else {
       $vars[ $indices[$i] ] = $vals[$i];
@@ -129,46 +136,47 @@ function getFmTypeProps( $type = null ) {
 // these can't be edited or the system will break
 // they define system dependancies and possible
 // layouts for various fields
+// this array is used by sorting.php directory (a little cheat)
 $ztf = array(
-  "fields" => array(//       searchable,  types                 , admin_view , multiple, always_required, default
-    "id"              => array(   true,   array(1)              ,        null, false,  true,  false),
-    "title"           => array(   true,   array(1,2)            ,        null, false,  true,   true),
-    "priority"        => array(   true,   array(1,3,4,6)        ,        null, false,  true,   true),
-    "status"          => array(   true,   array(1,3,4,6)        ,        null, false,  true,  false),
-    "description"     => array(   true,   array(1,2)            ,        null, false,  false,  true),
-    "otime"           => array(   true,   array(1)              ,    array(7), false,  true,  false),
-    "ctime"           => array(   true,   array(1)              ,    array(7), false,  false,  false),
-    "bin_id"          => array(   true,   array(1,3,4,6)        ,        null, false,  true,   true),
-    "type_id"         => array(   true,   array(1,3,4,6)        ,        null, false,  true,   true),
-    "user_id"         => array(   true,   array(1,3,4,6)        ,        null, false,  false,  true),
-    "system_id"       => array(   true,   array(1,3,4,6)        ,        null, false,  true,   true),
-    "creator_id"      => array(  false,   array(1)              ,    array(4), false,  true,  false),
-    "tested"          => array(  false,   array(1,3,5,6)        ,        null, false,  false,  true),
-    "approved"        => array(  false,   array(1,3,5,6)        ,        null, false,  false,  true),
-    "relations"       => array(  false,   array(1,4)            ,    array(2), true ,  false,  true),
-    "project_id"      => array(  false,   array(1,4)            ,    array(2), false,  false,  true),
-    "est_hours"       => array(  false,   array(1,2)            ,        null, false,  false,  true),
-    "deadline"        => array(  false,   array(1,7)            ,        null, false,  false,  true),
-    "start_date"      => array(  false,   array(1,7)            ,        null, false,  false,  true),
-    "wkd_hours"       => array(  false,   array(1,2)            ,        null, false,  false,  true),
-    "custom_string"   => array(   true,   array(1,2)            ,        null, false,  false,  true),
-    "custom_number"   => array(   true,   array(1,2)            ,        null, false,  false,  true),
-    "custom_boolean"  => array(   true,   array(1,3,5,6)        ,        null, false,  false,  true),
-    "custom_date"     => array(   true,   array(1,7)            ,        null, false,  false,  true),
-    "custom_menu"     => array(   true,   array(1,3,6)          ,        null, false,  false,  true),
-    "custom_text"     => array(  false,   array(1,2)            ,        null, false,  false,  true)
+  "fields" => array(//       searchable,  types                 , data_type,  admin_view, multiple, always_required, default
+    "id"              => array(   true,   array(1)              , 'int'    ,      null, false,  true,  false),
+    "title"           => array(   true,   array(1,2)            , 'string' ,      null, false,  true,   true),
+    "priority"        => array(   true,   array(1,3,4,6)        , 'int'    ,      null, false,  true,   true),
+    "status"          => array(   true,   array(1,3,4,6)        , 'string' ,      null, false,  true,  false),
+    "description"     => array(   true,   array(1,2)            , 'string' ,      null, false,  false,  true),
+    "otime"           => array(   true,   array(1)              , 'date'   ,  array(7), false,  true,  false),
+    "ctime"           => array(   true,   array(1)              , 'date'   ,  array(7), false,  false,  false),
+    "bin_id"          => array(   true,   array(1,3,4,6)        , 'int'    ,      null, false,  true,   true),
+    "type_id"         => array(   true,   array(1,3,4,6)        , 'int'    ,      null, false,  true,   true),
+    "user_id"         => array(   true,   array(1,3,4,6)        , 'int'    ,      null, false,  false,  true),
+    "system_id"       => array(   true,   array(1,3,4,6)        , 'int'    ,      null, false,  true,   true),
+    "creator_id"      => array(  false,   array(1)              , 'int'    ,  array(4), false,  true,  false),
+    "tested"          => array(  false,   array(1,3,5,6)        , 'int'    ,      null, false,  false,  true),
+    "approved"        => array(  false,   array(1,3,5,6)        , 'int'    ,      null, false,  false,  true),
+    "relations"       => array(  false,   array(1,4)            , 'string' ,  array(2), true ,  false,  true),
+    "project_id"      => array(  false,   array(1,4)            , 'int'    ,  array(2), false,  false,  true),
+    "est_hours"       => array(  false,   array(1,2)            , 'float'  ,     null, false,  false,  true),
+    "deadline"        => array(  false,   array(1,7)            , 'date'   ,      null, false,  false,  true),
+    "start_date"      => array(  false,   array(1,7)            , 'date'   ,      null, false,  false,  true),
+    "wkd_hours"       => array(  false,   array(1,2)            , 'float'  ,      null, false,  false,  true),
+    "custom_string"   => array(   true,   array(1,2)            , 'string' ,      null, false,  false,  true),
+    "custom_number"   => array(   true,   array(1,2)            , 'int'    ,      null, false,  false,  true),
+    "custom_boolean"  => array(   true,   array(1,3,5,6)        , 'boolean',      null, false,  false,  true),
+    "custom_date"     => array(   true,   array(1,7)            , 'date'   ,      null, false,  false,  true),
+    "custom_menu"     => array(   true,   array(1,3,6)          , 'string' ,      null, false,  false,  true),
+    "custom_text"     => array(  false,   array(1,2)            , 'string' ,      null, false,  false,  true)
   ),
   
   "views" => array(//           disabled, view_only, has_behaviors, admin_view, multiple, sections
     "ticket_create"   => array(    false,    false,      true, false, false, true  ), 
     "project_create"  => array(    false,    false,      true, false, false, true  ),
-    "ticket_edit"     => array(    false,    false,      true, false, false, true  ), 
-    "project_edit"    => array(    false,    false,      true, false, false, true  ),
+    "ticket_edit"     => array(    false,    false,      true,  true, false, true  ), 
+    "project_edit"    => array(    false,    false,      true,  true, false, true  ),
     "ticket_list"     => array(    false,     true,     false, false, false, false ),
     "project_list"    => array(    false,     true,     false, false, false, false ),
+    "search_form"     => array(    false,    false,      true,  true, true , false ),
+    "search_list"     => array(    false,     true,     false, false, false, false ),
     "ticket_close"    => array(    false,    false,      true, false, false, true  ), 
-    "ticket_search"   => array(     true,    false,      true, false, true , true  ),
-    "project_search"  => array(     true,    false,      true, false, true , true  ),
     "ticket_title"    => array(     true,     true,     false, false, false, false ),
     "project_title"   => array(     true,     true,     false, false, false, false ),
     "ticket_detail"   => array(     true,     true,     false, false, false, true  ),
@@ -272,7 +280,7 @@ class ZenFieldMap {
           if( isset($vals["$value"]) ) { return $this->_zen->ffv(tr($vals["$value"])); }
           else {
             $this->_zen->addDebug("getTextValue", "Unable to find choices for {$view}->{$field_name}", 1);
-            return $this->_zen->ffv(tr($value)); 
+            return $this->_zen->ffv($value); 
           }
         case "user_id":
         case "creator_id":
@@ -348,7 +356,8 @@ class ZenFieldMap {
     $vals["rooturl"] = $rootUrl;
     $vals['date_format'] = $this->_zen->popupDateFormat();
     $vals["field_name"] = $this->_zen->ffv(strlen($override_name)>0? $override_name : $field_name);
-    if( is_null($value) && ($view=="ticket_create" || $view=="project_create")) {
+    
+    if( !isset($value) && ($view=="ticket_create" || $view=="project_create")) {
       $vals["field_value"] = $this->getDefaultValue($view,$field_name);
     } else {
       $vals["field_value"] = $this->_zen->ffv($value);
@@ -359,6 +368,17 @@ class ZenFieldMap {
       $vals["field_choices"] = $this->getChoices($view,$field_name);
     }
     
+    // deal with fields by checking 
+    // the row count to make sure it is reasonable
+    if( $field['num_rows'] == 1 ) { $vals['field_cols'] = $field['num_cols'] > 30? 30 : $field['num_cols']+2; }
+    else { $vals['field_cols'] = $field['num_cols'] > 50? 50 : $field['num_cols']; }
+    $vals['field_rows'] = $field['num_rows'];
+    
+    $vals['field_multiple'] = $view == 'search_form' && $typeint == ZTFIELD_MENU && $field['num_rows'] > 1? "multiple" : "";
+    if( $vals['field_multiple'] && $typename == 'menu' ) {
+      $vals['field_name'] .= "[]";
+    }
+
     // set up special searchbox properties such as url and instructions
     if( $typeint == ZTFIELD_SEARCHBOX ) {
       if( $field_name == 'relations' ) { 
@@ -388,17 +408,11 @@ class ZenFieldMap {
           return $this->getTextValue($view,$field_name,$value);
       }
       $vals["search_url"] = $rootUrl."/helpers/{$s}Searchbox.php?"
-          ."return_form=$form_name&return_field=$field_name";
+        ."return_form=$form_name&return_field={$vals['field_name']}";
       if( !$fprops["multiple"] && !$vprops["multiple"] ) {
         $vals['search_url'] .= "&onechoice=1";
       }
     }
-    
-    // deal with fields by checking 
-    // the row count to make sure it is reasonable
-    if( $field['num_rows'] == 1 ) { $vals['field_cols'] = $field['num_cols'] > 30? 30 : $field['num_cols']+2; }
-    else { $vals['field_cols'] = $field['num_cols'] > 50? 50 : $field['num_cols']; }
-    $vals['field_rows'] = $field['num_rows'];
     
     // deal with special custom field problems
     if( strpos($field_name,'custom_')===0 ) {
@@ -578,7 +592,7 @@ class ZenFieldMap {
       case "ctime":
       case "deadline":
       case "start_date":
-        return $this->_zen->showDateTime($field['default_val']);
+        return strlen($field['default_val'])? $this->_zen->showDateTime($this->_zen->dateParse($field['default_val'])) : "";
       default:
         return $field['default_val'];
     }
@@ -598,21 +612,32 @@ class ZenFieldMap {
     $bins = $this->_zen->getUsersBins($_SESSION['login_id']);
     
     switch( $this->fieldName($field_name) ) {
+      case "bin_id":
+        $vals = array();
+        for($i=0; $i<count($bins); $i++) {
+          $b = $bins[$i];
+          $vals["$b"] = $this->_zen->getBinName($b);
+        }
+        break;
+      case "status":
+        $vals = array('OPEN'=>"Open",'PENDING'=>"Pending",'CLOSED'=>"Closed");
+        break;
       case "id":
       case "title":
       case "priority":
-      case "status":
-      case "bin_id":
       case "type_id":
       case "user_id":
       case "system_id":
       case "creator_id":
         $vals = $this->_zen->getValsForTicketField($field_name, $bins);
         break;
+      case 'custom_boolean':
+        $vals = array('1'=>'Yes', '0'=>'No');
+        break;      
       case "tested":
       case "approved":
-        $vals = $vprops["admin_view"]? 
-          array('0'=>'n/a', '1'=>'No', '2'=>'Yes') : array('0'=>'No', '1'=>'Yes');
+        $vals = $vprops["admin_view"]?
+          array('0'=>'n/a', '2'=>'Yes', '1'=>'No') : array('1'=>'Yes', '2'=>'No');
         break;
       default:
         if( strncmp("custom_menu",$this->fieldName($field_name),11)==0 ) {
@@ -632,6 +657,10 @@ class ZenFieldMap {
     }
     
     $this->_zen->addDebug('_getChoices', "Generated ".count($vals)." choices for {$view}->{$field_name}", 3);
+    
+    if( $view == 'search_form' && $field['num_rows'] == 1 ) {
+      $vals = array_merge( array(''=>'-any-'), $vals );
+    }
     
     if( !isset($this->_fieldVals[$view]) ) { $this->_fieldVals[$view] = array(); }
     $this->_fieldVals[$view][$field_name] = $vals;

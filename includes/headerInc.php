@@ -366,11 +366,13 @@
     ."onmouseover=\"mOvr(this,'"
     .$zen->settings["color_highlight"]."', '');\"";
   
-  $nav_rollover_text = " onclick=\"mClk(this);\" onmouseout=\"mOut(this,'"
+  $nav_rollover_eff = " onmouseout=\"mOut(this,'"
     .$zen->settings["color_title_background"]."','"
     .$zen->settings["color_title_txt"]."');\" onmouseover=\"mOvr(this,'"
     .$zen->settings["color_alt_background"]."','"
-    .$zen->settings["color_alt_text"]."');\"";
+    .$zen->settings["color_alt_text"]."');\" ";
+    
+  $nav_rollover_text = " onclick=\"mClk(this);\" ".$nav_rollover_eff;
   
   
   /*

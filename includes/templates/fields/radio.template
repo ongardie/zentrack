@@ -1,2 +1,2 @@
 
-{list:field_choices:"<input type='radio' name='"+field_name+"' value='"+index+"'>&nbsp;"+value+"<br>"}
+{list:field_choices:"<input type='radio' name='"+field_name+"' value='"+index+"'>&nbsp;"+value+"&nbsp;"}

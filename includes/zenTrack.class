@@ -5657,6 +5657,8 @@ class zenTrack extends zen {
     list($fullfile, $voided) = explode("?", $_SERVER['REQUEST_URI']);
     $cgi = $_SERVER['REQUEST_METHOD'] == 'GET' ? $_GET : $_POST;
 
+    if( !$fullfile ) { $fullfile = $_SERVER['SCRIPT_NAME']; }
+    
     reset ($cgi);
     while (list($key, $value) = each($cgi)) {
       if (( $key != "username" ) && ($key != "passphrase") ){

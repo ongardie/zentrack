@@ -28,7 +28,7 @@
       $params["bin_id"] = $zen->getUsersBins($login_id);
     }
     include("$libDir/sorting.php");
-    $tickets = $zen->get_tickets($params, $orderby);
+    $tickets = $zen->get_tickets($params, join(',',$orderby));
     include("$templateDir/listTickets.php");
     if( count($tickets) ) {
       include("$libDir/paging.php"); //Addition for paging

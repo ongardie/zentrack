@@ -140,8 +140,10 @@ class zenTemplate {
 	    $str = $this->_parseString($parts[2]);
 	    // loop the list and make output text
 	    foreach($vars as $k=>$v) {
+        $fv = $this->_getVar("field_value");
 	      $tmp=$str;
-	      if($this->_getVar("field_value")==$k) {
+	      if($fv===$k || is_array($fv) && in_array($k, $fv) || 
+            (!is_array($fv) && !strlen($k) && !strlen($fv))) {
 	        $tmp = str_replace("{selected}", " selected", $tmp);
 	        $tmp = str_replace("{checked}", " checked", $tmp);
 	      } else {

@@ -21,11 +21,10 @@
       $description = preg_replace("@<br ?/?>@","\n",$description); 
       if( $zen->inProjectTypeIDs($ticket["type_id"]) ) {
         $view = "project_edit";
-        include("$templateDir/newProjectForm.php");
       } else {
         $view = "ticket_edit";
-        include("$templateDir/newTicketForm.php");
       }
+      include("$templateDir/newTicketForm.php");
     }
   } 
   if( !$skip ) {

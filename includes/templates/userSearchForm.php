@@ -13,6 +13,7 @@
 
 <form action="<?=$SCRIPT_NAME?>">
 <input type="hidden" name="TODO" value="ALL">
+<input type="hidden" name="return_field" value="<?=$zen->ffv($return_field)?>">
 
 <tr>
   <td class="bars" colspan="2">

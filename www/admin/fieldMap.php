@@ -79,7 +79,7 @@
       fmGetSet($f, 'num_cols', 'int');
       
       // num_rows
-      if( !$tprops['multiple'] ) {
+      if( !$tprops['multiple'] && !$vprops['multiple'] ) {
         $updates[$f]['num_rows'] = 1;
       }
       else { fmGetSet($f, 'num_rows', 'int'); }
@@ -106,18 +106,13 @@
       
       // is_required
       if( $vprops['view_only'] ) { $updates[$f]['is_required'] = false; }
+      else if( $view == 'search_form' ) { $updates[$f]['is_required'] = false; }
       else if( $fprops['always_required'] ) { $updates[$f]['is_required'] = true; }
       else { fmGetSet($f, 'is_required', 'boolean'); }
       
       // default_val has some special considerations
       if( !$vprops['view_only'] ) {
-        if( $fprops['default'] && !$updates[$f]['is_visible'] 
-            && $updates[$f]['is_required'] && !$_POST[$f]['default_val'] ) {
-          // here is a problem, we have hidden the field, but required the user
-          // to enter a value... this will be problematic
-          $errs[] = "'$f' is required and not visible and must have a default value";
-        }
-        else if( $fprops['default'] ) { fmGetSet($f, 'default_val'); }
+        if( $fprops['default'] ) { fmGetSet($f, 'default_val'); }
       }
     }
     
@@ -169,8 +164,6 @@
   else {
     $fields = $map->getFieldMap($view);
   }
-  
-  //Zen::printArray($fields,'FIELDS');
   
   $zen->printErrors($errs);
 

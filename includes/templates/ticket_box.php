@@ -77,10 +77,9 @@
     // tr("Related"); tr("Notify"); tr("Tasks");
     $txt = (isset($counts[$key]) && $counts[$key])?
       $t." (".$counts["$key"].")" : $t;
-    $link = ($key == 'system')? $SCRIPT_NAME : $pageUrl;
     $w = ($key == "attachments")? 85 : 60;
     print "<td class='$class' height='$height_num' width='$w'>";
-    print "<a href='$link?id=$id&setmode=$key' class='$lclass'>$txt</a></td>\n";
+    print "<a href='$pageUrl?id=$id&setmode=$key' class='$lclass'>$txt</a></td>\n";
     if( $i < count($tabs) ) {
       print "<td width='3'><img src='$rootUrl/images/empty.gif' width='3' height='1'></td>\n";
     }

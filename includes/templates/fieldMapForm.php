@@ -49,7 +49,7 @@ if( !is_array($fields) || !count($fields) || !$map || !$view ){
 else {
 ?>
 <tr toofar="toofar">
-  <td class='subTitle' width='30' align='center'><b><?=tr("ID")?></b></td>
+  <td class='subTitle' align='center'><b><?=tr("Options")?></b></td>
   <td class='subTitle' align='center'><b><?=tr("Name")?></b></td>
   <td class='subTitle' align='center'><b><?=tr("Label")?></b></td>
   <td class='subTitle' align='center'><b><?=tr("Show")?></b></td>
@@ -58,7 +58,6 @@ else {
   <td class='subTitle' align='center'><b><?=tr("Type")?></b></td>
   <td class='subTitle' align='center'><b><?=tr("Columns")?></b></td>
   <td class='subTitle' align='center'><b><?=tr("Rows")?></b></td>
-  <td class='subTitle' align='center'><b><?=tr("Options")?></b></td>
 </tr>
 
 <?
@@ -89,91 +88,10 @@ foreach($fields as $f=>$field) {
   $tprops = $typeprops[$field['field_type']];
   
   // generate row of information
-  $class = $field['field_type'] == 'section'? 'altBars' : 'bars';
+  $s = $field['is_visible']? 'bold' : 'disabled';
+  $class = $field['field_type'] == 'section'? "altBars $s" : "bars $s";
   print "<tr id='$f'>";
-  // the field id (read only)
-  fmfRow($field['field_map_id'],$class);
-  // the field name (read only)
-  fmfRow($field['field_name'],$class);
-  // the label (text)
-  fmfRow("<input type='text' ".fmfName($f,'field_label')
-        ."value='".fmfVal($field,'field_label')."' size=15 maxlength=200>",$class);
-  // visibility (checkbox)
-  $sel = $field['is_visible']? ' checked' : '';
-  fmfRow("<input type='checkbox' ".fmfName($f, 'is_visible')
-         ."value='1' onclick='return checkVisible(this)'$sel>",$class);
-  // required, always required if this is a system based field
-  if( $field['field_type'] == 'section' ) {
-    print "<td class='altBars' colspan='5'>&nbsp;</td>";
-  }
-  else {
-    if( $vprops['view_only'] ) {
-      fmfRow(tr('n/a'),$class);
-    }
-    else if( $fprops['always_required'] ) {
-      fmfRow(tr('yes'),$class);
-    }
-    else {
-      $sel = $field['is_required']? ' checked' : '';
-      fmfRow("<input type='checkbox' ".fmfName($f, 'is_required')." value='1'$sel>",$class);
-    }
-    // default value (text)
-    $txt = "n/a";
-    if( $fprops['default'] && !$vprops['view_only'] ) {
-      if( strpos($f,'custom_menu')===0 ) {
-        // custom menus use the data groups as a selector, not a list of values
-        $choices = $zen->getDataGroups();
-      }
-      else {
-        $choices = $map->getChoices($view, $f);
-      }
-      //if( $f == 'custom_menu1' ) { Zen::printArray($choices); }
-      if( is_array($choices) && count($choices) ) {
-        $txt = "<select ".fmfName($f,'default_val').">";
-        $txt .= "<option value=''>--</option>";
-        foreach($choices as $k=>$v) {
-          $sel = $field['default_val'] == $k? " selected" : "";
-          $txt .= "<option value='$k'{$sel}>$v</option>";
-        }
-        $txt .= "</select>";
-      }
-      else {
-        $txt = "<input type='text' ".fmfName($f, 'default_val')
-               ."value='".$zen->ffv($field['default_val'])."' size=10 maxlength=200>";
-      }
-    }
-    fmfRow($txt,$class);
-    
-    // field type, not useful for fields which only have label as type
-    // or for sections
-    if( count($fprops['types']) == 1 && $fprops['types'][0] == 'label' ) {
-      fmfRow($field['field_type']=='section'?'&nbsp;':fmfVal($field,'field_type'),$class);
-    }
-    else {
-      $txt = "<select style='width:80px;' ".fmfName($f, 'field_type').">";
-      foreach($fprops['types'] as $t) {
-        $sel = ( $field['field_type'] == $t )? ' selected':'';
-        $txt .= "<option value='$t'$sel>$t</option>\n";
-      }
-      $txt .= "</select>";
-      fmfRow($txt,$class);
-    }
-    // number of columns
-    fmfRow("<input type='text' ".fmfName($f, 'num_cols')
-        ." value='".fmfVal($field,'num_cols')."' size='5' maxlength='4'>",$class);
-    // number of rows
-    $dorows = false;
-    if( $fprops['types'] ) {
-      foreach($fprops['types'] as $t) {
-        if( $typeprops[$t]['multiple'] ) { $dorows = true; break; }
-      }
-    }
-    if( $dorows ) {
-      fmfRow("<input type='text' ".fmfName($f, 'num_rows')
-          ." value='".fmfVal($field,'num_rows')."' size='3' maxlength='2'>",$class);
-    }
-    else { fmfRow('1',$class); }
-  }
+
   // create options row
   $txt = '';
     $fn = "document.fieldMapForm";
@@ -202,6 +120,93 @@ foreach($fields as $f=>$field) {
     }
   }
   fmfRow($txt,$class);
+
+  // the field name (read only)
+  fmfRow($field['field_name'],$class);
+  // the label (text)
+  fmfRow("<input type='text' ".fmfName($f,'field_label')
+        ."value='".fmfVal($field,'field_label')."' size=15 maxlength=200>",$class);
+  // visibility (checkbox)
+  $sel = $field['is_visible']? ' checked' : '';
+  fmfRow("<input type='checkbox' ".fmfName($f, 'is_visible')
+         ."value='1' onclick='return checkVisible(this)'$sel>",$class);
+  // required, always required if this is a system based field
+  if( $field['field_type'] == 'section' ) {
+    $s = $field['is_visible']? 'bold' : 'disabled';
+    print "<td class='altBars $s' colspan='5'>&nbsp;</td>";
+  }
+  else {
+    if( $vprops['view_only'] ) {
+      fmfRow(tr('n/a'),$class);
+    }
+    else if( $view == 'search_form' ) {
+      fmfRow(tr('n/a'), $class);
+    }
+    else if( $fprops['always_required'] ) {
+      fmfRow(tr('yes'),$class);
+    }
+    else {
+      $sel = $field['is_required']? ' checked' : '';
+      fmfRow("<input type='checkbox' ".fmfName($f, 'is_required')." value='1'$sel>",$class);
+    }
+    // default value (text)
+    $txt = "n/a";
+    if( $fprops['default'] && !$vprops['view_only'] ) {
+      if( strpos($f,'custom_menu')===0 ) {
+        // custom menus use the data groups as a selector, not a list of values
+        $choices = $zen->getDataGroups();
+      }
+      else {
+        $choices = $map->getChoices($view, $f);
+      }
+      //if( $f == 'custom_menu1' ) { Zen::printArray($choices); }
+      if( is_array($choices) && count($choices) ) {
+        $txt = "<select ".fmfName($f,'default_val').">";
+        $txt .= "<option value=''>--</option>";
+        foreach($choices as $k=>$v) {
+          $sel = $field['default_val'] === $k? " selected" : "";
+          $txt .= "<option value='$k'{$sel}>$v</option>";
+        }
+        $txt .= "</select>";
+      }
+      else {
+        $txt = "<input type='text' ".fmfName($f, 'default_val')
+               ."value='".$zen->ffv($field['default_val'])."' size=10 maxlength=200>";
+      }
+    }
+    fmfRow($txt,$class);
+    
+    // field type, not useful for fields which only have label as type
+    // or for sections
+    if( count($fprops['types']) == 1 && $fprops['types'][0] == 'label' ) {
+      fmfRow($field['field_type']=='section'?'&nbsp;':fmfVal($field,'field_type'),$class);
+    }
+    else {
+      $txt = "<select style='width:80px;' ".fmfName($f, 'field_type').">";
+      foreach($fprops['types'] as $t) {
+        if( $view == 'search_form' && $t == 'checkbox' ) { continue; }
+        $sel = ( $field['field_type'] == $t )? ' selected':'';
+        $txt .= "<option value='$t'$sel>$t</option>\n";
+      }
+      $txt .= "</select>";
+      fmfRow($txt,$class);
+    }
+    // number of columns
+    fmfRow("<input type='text' ".fmfName($f, 'num_cols')
+        ." value='".fmfVal($field,'num_cols')."' size='5' maxlength='4'>",$class);
+    // number of rows
+    $dorows = false;
+    if( $fprops['types'] ) {
+      foreach($fprops['types'] as $t) {
+        if( $typeprops[$t]['multiple'] ) { $dorows = true; break; }
+      }
+    }
+    if( $dorows ) {
+      fmfRow("<input type='text' ".fmfName($f, 'num_rows')
+          ." value='".fmfVal($field,'num_rows')."' size='3' maxlength='2'>",$class);
+    }
+    else { fmfRow('1',$class); }
+  }
   
   print "</tr>\n";
   $fcount++;
@@ -209,12 +214,11 @@ foreach($fields as $f=>$field) {
 }
 ?>
 <tr id='section0' style="display:none;">
-  <td class='highlight'>30</td>
+  <td class='highlight'><input type='hidden' name='orderset[section0]' value='3'><a href='#' onClick='moveRowUp(this.parentNode);return false;' border='0' alt='Move Up' title='Move Up'><img src='/images/icon_arrow_up.gif' width='16' height='16' alt='Move Up' title='Move Up' border='0'></a><a href='#' onClick='moveRowDown(this.parentNode);return false;' border='0' alt='Move Down' title='Move Down'><img src='/images/icon_arrow_down.gif' width='16' height='16' alt='Move Up' title='Move Up' border='0'></a><a href='#' onClick='removeRow(this);return false;' border='0' alt='Remove Section' title='Remove Section'><img src='/images/icon_trash.gif' width='16' height='16' alt='Remove Section' title='Remove Section' border='0'></a></td>
   <td class='highlight' islabel="islabel">section0</td>
   <td class='highlight'><input type='text' name='section0[field_label]' value='' size=15 maxlength=200></td>
   <td class='highlight'><input type='checkbox'  name='section0[is_visible]' value='1' onclick='return checkVisible(this)' checked></td>
   <td class='highlight' colspan='5'>&nbsp;</td>
-  <td class='highlight'><input type='hidden' name='orderset[section0]' value='3'><a href='#' onClick='moveRowUp(this.parentNode);return false;' border='0' alt='Move Up' title='Move Up'><img src='/images/icon_arrow_up.gif' width='16' height='16' alt='Move Up' title='Move Up' border='0'></a><a href='#' onClick='moveRowDown(this.parentNode);return false;' border='0' alt='Move Down' title='Move Down'><img src='/images/icon_arrow_down.gif' width='16' height='16' alt='Move Up' title='Move Up' border='0'></a><a href='#' onClick='removeRow(this);return false;' border='0' alt='Remove Section' title='Remove Section'><img src='/images/icon_trash.gif' width='16' height='16' alt='Remove Section' title='Remove Section' border='0'></a></td>
 </tr>
 <tr id="submitRow" toofar="toofar">
   <td class='cell' colspan='4'>
@@ -359,21 +363,46 @@ function moveRowDown( tdCell ) {
   parentNode.insertBefore(nextRow, thisRow);  
 }
 
+function toggleRowColor( checkBox ) {
+    // navigate to the TR tag for this row
+    var trTag = checkBox.parentNode.parentNode;
+    
+    for(var i=0; i < trTag.childNodes.length; i++) {
+      var obj = trTag.childNodes[i];
+      if( obj.nodeName != "TD" ) { continue; }
+      // perform the class switch
+      if( obj.className ) {
+        // determine what we are setting the style to based on checkbox
+        obj.className = checkBox.checked? 
+          obj.className.substr(0, obj.className.indexOf(" ")) + " bold" :
+          obj.className.substr(0, obj.className.indexOf(" ")) + " disabled";
+      }
+      else {
+        // determine what we are setting the style to based on checkbox
+        var oldStyle = obj.getAttribute('class');
+        obj.setAttribute('class', checkBox.checked? 
+          oldStyle.substr(0, oldStyle.indexOf(" "))+" bold" : 
+          oldStyle.substr(0, oldStyle.indexOf(" "))+" disabled" );
+      }
+    }
+}
+
   function checkVisible( obj ) {
     var namePrefix = getNamePrefix(obj.name);
     var defName = namePrefix+'[default_val]';
     var reqName = namePrefix+'[is_required]';
     var defObj = document.fieldMapForm[defName];
     var reqObj = document.fieldMapForm[reqName];
-    if( !defObj ) { alert("crap!"); }//debug
-    if( defObj.value == null && reqObj.checked ) {
+    toggleRowColor( document.fieldMapForm[namePrefix+"[is_visible]"] );
+    //if( !defObj ) { alert("crap!"); }//debug
+    if( defObj && defObj.value == null && reqObj.checked ) {
       alert("You cannot hide a required field unless it has a default value.");
       return false;
     }
     return true;
   }
   
-  function getNamePrefix( nameStr ) {
-    return nameStr.substr(0, obj.name.indexof('['))
+  function getNamePrefix( name ) {
+    return name.substr(0, name.indexOf('['))
   }
 </script>
