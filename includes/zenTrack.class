@@ -2942,7 +2942,7 @@ class zenTrack extends zen {
     // if $val is provided, returns true/false whether
     // $val is a project type id
     if( !strlen($this->projectTypeID) ) {
-      $this->projectTypeID = -1;
+      $this->projectTypeID = null;
       foreach( $this->types as $k=>$b ) {
 	if( preg_match("@project@i",$b) ) {
 	  $this->projectTypeID = $k;

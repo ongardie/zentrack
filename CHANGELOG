@@ -7,6 +7,12 @@
 
 ----- V2.2.3 (development, see CVS) ----
 
+2003-03-08, Kato
+  Filtered projects from ticket listing
+    - includes/zenTrack.class 1.67
+    - www/index.php 1.8
+    - www/projects.php 1.6
+
 2003-03-07, Kato
   Improved logoff functions
   Thanks to roland spahn (rosp) for feedback
