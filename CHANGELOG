@@ -13,6 +13,10 @@ abstraction, and endless possibilities for project expansion.
 
 ----- VERSION 2.5.0.3 (development) -----
 
+2005-02-10, cfalonso
+  Fixed a bug on behaviors when using file groups evaluating on a standard key-value field
+    - includes/zenTrack.class 1.169
+
 2005-02-09, cfalonso
   Default groups in field_map page didn't show the selected field in the pulldown, just added the $sel variable
     - includes/templates/fieldMapForm.php (not sure about the version)
