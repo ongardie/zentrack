@@ -7,16 +7,11 @@
 
 ----- V2.4.3 (RC2 Released: 2003-08-27) ----
 
-/cvsroot/zentrack/zentrack_2/setup_from_cvs,v  <--  setup_from_cvs
-new revision: 1.10; previous revision: 1.9
-done
-Checking in includes/zenTrack.class;
-/cvsroot/zentrack/zentrack_2/includes/zenTrack.class,v  <--  zenTrack.class
-new revision: 1.113; previous revision: 1.112
-done
-Checking in includes/templates/accessForm.php;
-/cvsroot/zentrack/zentrack_2/includes/templates/accessForm.php,v  <--  accessForm.php
-new revision: 1.8; previous revision: 1.7
+2003-09-02, Kato
+  Enhanced debugging output (two settings now, some help messages)
+
+  Fixed the click on title in project details to be sticky (rather
+  than automatically going to tasks)
 
 2003-08-28, Kato
   Fixed access screen issues with blank bin fields, improper saving

@@ -551,6 +551,8 @@ class zen extends zenDate {
      if( is_array($this->debugMessages) ) {
        $styles = array("","error","","note");
        print "<p>--------<b>MESSAGES</b>--------<ul>\n";
+       print "<i>To disable this output, set $Debug_Mode "
+         ."in header.php to 0.</i><br>\n";
        if( is_array($this->debugMessages) ) {   
 	 foreach($this->debugMessages as $v) {
 	   $n = $v[2];

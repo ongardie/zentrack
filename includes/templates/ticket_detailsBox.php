@@ -16,7 +16,7 @@
   <tr style='background:<?=$zen->settings["color_background"]?>'>
    <? if( $project_id ) { ?>  
     <td colspan='3' <?=$rollover_text?>><a 
-	href='<?=$rootUrl?>/project.php?id=<?=$project_id?>&setmode=Tasks' 
+	href='<?=$rootUrl?>/project.php?id=<?=$project_id?>' 
 	class='rowLink'><?=$project_id?> -  
     	<?=stripslashes($project["title"])?></a></td>
     <? } ?>

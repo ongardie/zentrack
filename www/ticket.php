@@ -14,8 +14,9 @@
     include_once("../header.php");
   }
 
-  if( $page != "project" )
-      $page = "ticket";
+  if( $page_type != "project" )
+      $page_type = "ticket";
+  $page = $page_type;
 
   // redirect to somewhere user can pick a ticket if no id was recieved
   if( !$id ) {
@@ -44,6 +45,7 @@
 	 $ticket = $zen->get_project($id);
 	 $page_section = "Project $id";
 	 $expand_projects = 1;
+	 $page_type = "project";
        } else {
 	 $page_type = "ticket";
 	 $page_section = $zen->types["$ticket[type_id]"]." #$id";

@@ -30,14 +30,14 @@
   **  This is the debugging section... please keep this intact, as
   **  we use it extensively for support questions
   */
-  if( strlen($zen->debug) ) {
-     print "<span color='#666666'>\n";
+  if( $Debug_Overview ) {
+     print "<span class='note'>\n";
      print "<p>&nbsp;------DEBUG OVERVIEW-------&nbsp;</p>\n";
+     print "<i>To disable this output, set $Debug_Overview in header.php to 0.</i><br>\n";
      print "<a href='$rootUrl/phpinfo.php'>click here to view phpinfo</a><br>\n";
      print "HTTP_USER_AGENT: $HTTP_USER_AGENT<br>\n";
      print "SCRIPT_NAME: $SCRIPT_NAME<br>\n";
      print "HTTP_HOST: $HTTP_HOST<br>\n";
-     print "DOCROOT: $DOCUMENT_ROOT<br>\n";
      print "HTTP_COOKIE: $HTTP_COOKIE<br>\n";
      print "SERVER_SOFTWARE: {$_SERVER['SERVER_SOFTWARE']}<br>\n";
      print "SERVER_NAME: $SERVER_NAME<br>\n";
@@ -73,7 +73,11 @@
      }
      print "<p>&nbsp;------/DEBUG OVERVIEW-------&nbsp;</p>\n";
      print "</span>\n";
+  }
+  if( $zen->debug ) {
+     print "<span class='note'>\n";
      $zen->printDebugMessages();
+     print "</span>\n";
   }
 ?>
 

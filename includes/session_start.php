@@ -16,7 +16,7 @@ session_start();
 // ... except the following list
 $reservedList = array("libDir", "rootUrl", 
 		      "Db_Type", "Db_Instance", "Db_Login", "Db_Pass", "Db_Host", 
-		      "Debug_Mode", "Demo_Mode", 
+		      "Debug_Mode", "Demo_Mode", "Debug_Overview", 
 		      "page_prefix", "page_title", "page_section", 
 		      "configFile", "system_message_limit", 
 		      "login_id", "login_level", "login_inits", "login_bin", 
