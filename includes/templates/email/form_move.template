@@ -1,0 +1,14 @@
+
+To move ticket #{id}, select reply, and fill out the form below.
+
+@Bin:
+(*place an x in the appropriate box*)
+{foreach:bins:"[] "+value+"\n"}
+
+@Details:
+(*optional: enter reason for move here*)
+
+
+
+
+@end details
