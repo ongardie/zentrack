@@ -1049,19 +1049,19 @@ class zenTrack extends zen {
       // to the users last name until that user
       // logs into the system and changes it
       
-      if( $params["access"] ) {
-    $access = $params["access"];
-    unset($params["access"]);
-      }
-      $params["passphrase"] = ($params["passphrase"])?
-   $this->encval($params["passphrase"]) : $this->encval($params["lname"]);
-      $table = $this->table_users;
-      $id = $this->db_insert($table, $params);
-      if( $id ) {
-    if( is_array($access_level) )
-      $this->add_access($id, $access_level);
-    return($id);
-      }
+     if( $params["access"] ) {
+       $access = $params["access"];
+       unset($params["access"]);
+     }
+     $params["passphrase"] = ($params["passphrase"])?
+       $this->encval($params["passphrase"]) : $this->encval($params["lname"]);
+     $table = $this->table_users;
+     $id = $this->db_insert($table, $params);
+     if( $id ) {
+       if( is_array($access_level) )
+	 $this->add_access($id, $access_level);
+       return($id);
+     }
    }
    
    function delete_user( $user_id ) {
@@ -1158,7 +1158,7 @@ class zenTrack extends zen {
      // for a user.  This will probably be the users last name
 
      $user = $this->get_user($user_id);
-     $params["passphrase"] = $user["lname"];
+     $params["passphrase"] = $this->encval($user["lname"]);
      return $this->update_user($user_id, $params);
    }
    
