@@ -9,9 +9,13 @@
   $expand_admin = 1;
                                                                                                                              
   $fields = array();
+  $required = array();
                                                                                                                              
-  $cfd=$zen->getCustomFields(1,$page_type,"C");
-  foreach($cfd as $k => $v) {
+  $cfd=$zen->getCustomFields(0,$page_type,"C");
+  foreach($cfd as $f) {
+    $k=$f['field_name'];
+    $v=$f['field_label'];
+    $r=$f['is_required'];
     $varfield_type=ereg_replace("[^a-z_]", "", $k);
     switch($varfield_type) {
       case "custom_number":
@@ -29,6 +33,10 @@
     }
     $fields[$k]=$cft;
     $$k=$cfv;
+    // check for required fields
+    if ($r && !$$k) {
+      $errs[] = ucfirst($v)." ".tr("is a required field");
+    }
   }
 
   $zen->cleanInput($fields);
