@@ -11,6 +11,27 @@ and user experience, internationalization, platform and database
 abstraction, and endless possibilities for project expansion. 
 --------------------
 
+2004-11-26, cfalonso
+  Worked on translations
+    - zentrack_2/includes/editCustomSubmit.php 1.5
+    - zentrack_2/includes/editTicketSubmit.php 1.10
+    - zentrack_2/includes/headerInc.php 1.51
+    - zentrack_2/includes/templates/loginForm 1.13
+    - zentrack_2/includes/templates/newAgreementForm.php 1.4
+    - zentrack_2/includes/templates/ticket_attachmentsBox.php 1.7
+    - zentrack_2/includes/translations/spanish.trans 1.5
+    - zentrack_2/www/actions/agreement_edit.php 1.3
+    - zentrack_2/www/actions/contact_edit.php 1.2
+    - zentrack_2/www/addProjectSubmit.php 1.15
+    - zentrack_2/www/addSubmit.php 1.21
+    - zentrack_2/www/admin/addGroupSubmit.php 1.11
+    - zentrack_2/www/admin/deleteGroup.php 1.3
+    - zentrack_2/www/admin/editGroupSubmit.php 1.9
+    - zentrack_2/www/behavior_js.php 1.15
+    - zentrack_2/www/behavior_js.php 1.16
+    - zentrack_2/www/reports/saveSubmit.php 1.8
+    - zentrack_2/www/ticket.php 1.23
+
 2004-11-25, cfalonso
   Fixed function uptr to properly display spanish characters converted to uppercase
     - zentrack_2/includes/headerInc.php 1.51
