@@ -1009,10 +1009,10 @@ class zenTrack extends zen {
 	$recipients = $this->get_notify_recipients($id);
         // make sure the testers/managers gets a notification
         if( $t['tested'] == 1 ) {
-          $vals = $this->get_bin_roles($t['bin_id'], $this->getBinId('tester'));
+          $vals = $this->get_bin_roles($t['bin_id'], $this->getRoleId('tester'));
         }
         if( $t['tested'] != 1 || !is_array($vals) ) {
-          $vals = $this->get_bin_roles($t['bin_id'], $this->getBinId('manager'));
+          $vals = $this->get_bin_roles($t['bin_id'], $this->getRoleId('manager'));
         }        
         $this->checkIncludedRecipients($recipients, $vals);
         // create email
@@ -1089,7 +1089,7 @@ class zenTrack extends zen {
     if( $res && $this->settings["email_arrival"] == "on" ) {
       $recipients = $this->get_notify_recipients($id);
       // make sure the manager gets a notification
-      $vals = $this->get_bin_roles($t['bin_id'], $this->getBinId('manager'));
+      $vals = $this->get_bin_roles($t['bin_id'], $this->getRoleId('manager'));
       $this->checkIncludedRecipients($recipients,$vals);
       // create email
       if( is_array($recipients) && count($recipients) ) {
@@ -1284,7 +1284,7 @@ class zenTrack extends zen {
       $bin = $t["bin_id"];
       $recipients = $this->get_notify_recipients($id);
       // make sure the testers/managers gets a notification
-      $vals = $this->get_bin_roles($t['bin_id'], $this->getBinId('manager'));
+      $vals = $this->get_bin_roles($t['bin_id'], $this->getRoleId('manager'));
       $this->checkIncludedRecipients($recipients,$vals);
       // create email
       if( is_array($recipients) ) {
@@ -1992,6 +1992,15 @@ class zenTrack extends zen {
     }
   }   
 
+  function get_bin_roles( $bin_id, $role = '') {
+    // Pending further testing, this function simply acts as a pass-through to
+    // fetch_bin_roles()
+    
+    $result = $this->fetch_bin_roles($bin_id, $role);
+    
+    return ($result);
+  }
+  
   function fetch_bin_roles( $bin_id, $role = '' ) {
     // fetches members of bin with a particular
     // role.  If $role is given, fetches only

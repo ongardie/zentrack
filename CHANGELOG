@@ -7,6 +7,10 @@
 
 ----- V2.4 (2003-04-19) ----
 
+2003-04-22, Rob Hillis
+  Fix syntax error on ticket closing.
+    - zentrack/includes/zenTrack.class
+
 2003-04-21, Rob Hillis
   Allow users to select "-All-" as their default bin
     - zentrack/www/misc/homebin.php 1.5
