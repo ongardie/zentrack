@@ -18,6 +18,23 @@
   $email_templates = array();
 
   /**
+   * Check quoting, since adodb will escape based on magic_quotes_gpc...
+   * Thus if magic_quotes are on, we need to add slashes to the incoming
+   * values to simulate magic quotes so that adodb can function accordingly
+   *
+   * @param array $vals is the body values passed to the ticket action functions
+   * @return array the $vals with slashes simulating the current setting of magic_quotes_gpc()
+   */
+  function check_magic_quotes( $vals ) {
+    if( get_magic_quotes_gpc() > 0 ) {
+      foreach($vals as $k=>$v) {
+	$vals[$k] = addslashes($v);
+      }
+    }
+    return $vals;
+  }
+
+  /**
    * Stores log info
    *
    * @param string/array $text the text to store
@@ -562,6 +579,9 @@
 	break;
       }      
     }
+    
+    $vals = check_magic_quotes($vals);
+
     // include the proper template
     //egate_store_subject("Create New Ticket");
     //egate_store_template("create.template");
@@ -798,6 +818,8 @@
     if( !isset($body["details"]) )
       $body["details"] = "";
     
+    $body = check_magic_quotes($body);
+
     // format a name entry for logging
     $fullname = ($name)? "\"$name\" <$email>" : $email;
 
@@ -1201,7 +1223,7 @@
     if( !$email ) {
       egate_log("No return email address",2);
       $success = false;
-    }
+    }    
     
     // create the ticket
     if( $success ) {    
