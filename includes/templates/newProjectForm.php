@@ -92,13 +92,38 @@ value="<?=strip_tags($title)?>">
     <select name="user_id">
       <option value=''>--not assigned--</option>
 <?
+/*
     if( is_array($users) ) {
-    	foreach($users as $k=>$v) {
-	   $check = ( $k == $user_id )? "selected" : "";
-	   print "<option $check value='$k'>$v[lname], $v[fname]</option>\n";
-	}
+        foreach($users as $k=>$v) {
+           $check = ( $k == $user_id )? "selected" : "";
+           print "<option $check value='$k'>$v[lname], $v[fname]</option>\n";
+        }
     }
+*/
 ?>
+<?
+   /* PTA : 1/25/2003 5:48 PM CST : Bug 673258
+    * ----------------------------------------
+    * The above logic was assuming that the user_id's were always going to be
+    * sequential as the "key" is just going to 0,1,2...N while the user_ids 
+    * can be out of order if users are deleted from the Admin interface.
+    */
+   $userBins = $zen->getUsersBins($login_id);
+   if( is_array($userBins) && $zen->settings["allow_assign"] == "on" ) {
+     $users = $zen->get_users($userBins);
+     if( is_array($users) ) {
+       asort($users);
+       foreach($users as $usr) {
+         $check = ( $usr["user_id"] == $login_id )? "selected" : "";
+         print "<option $check value='";
+         print $usr["user_id"]."'>";
+         print $usr["lname"].", ".$usr["fname"];
+         print "</option>\n";
+       }
+     }
+   }
+?>
+
     </select>&nbsp;(optional)
   </td>
 </tr>				   
