@@ -14,7 +14,7 @@
   </td>
 </tr>
 <?
-  if( $zen->settings["check_pwd_simple"] ) {
+  if( $zen->settings["check_pwd_simple"] == "on" ) {
 ?>
 <tr>
   <td colspan="2" class="bars">

@@ -1242,8 +1242,9 @@ class zenTrack extends zen {
       $query = "select user_id from ".$this->table_users
 	." where login = '$username' and passwd = '".$this->encval($password)."' and active > 0";
       $user_id = $this->db_get($query);
+			$this->addDebug("zentrack.class:login_user($user_id)",$query,2);
       if( $user_id )
-	$this->getUser($user_id);
+			$this->getUser($user_id);
       return($user_id);
    }
 

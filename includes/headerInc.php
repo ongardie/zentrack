@@ -58,6 +58,7 @@
      // all the session variables to
      // be used and registers them as
      // required
+		 global $PHPSESSID;
      session_start();     
      $session_vars = array(
 			   "login_level",
@@ -69,8 +70,9 @@
 			   "login_messages"
 			   );
      foreach($session_vars as $s) {
-	if( !session_is_registered("$s") )
-	  session_register("$s");
+			global $$s;
+			if( !session_is_registered("$s") )
+	  		session_register("$s");
      }
   }
   start_session();

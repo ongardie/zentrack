@@ -9,12 +9,14 @@
   // if there is no login id then include the form
   // or process the form results
   if( $login_level == 'first_login' && !ereg("pwc\.php",$SCRIPT_NAME) )
-	header("Location:$rootUrl/misc/pwc.php");
+	   header("Location:$rootUrl/misc/pwc.php");
 
   if( !$login_id ) {
      if( $username && isset($password) ) {
 	$login_id = $zen->login_user( $username, $password );
-	if( $login_id && $zen->user["lname"] == $zen->encval($password) ) {
+	if( $login_id && !$zen->demo_mode 
+			&& $zen->user["initials"] != "GUEST" 
+			&& $zen->encval($zen->user["lname"]) == $zen->encval($password) ) {
 	   // this will redirect the user
 	   // to a login screen where they can
 	   // change their password, since it is 
