@@ -5,18 +5,65 @@
  object oriented and database abstracted design lend to 
  endless possibilities for project expansion. 
 
------ V2.5 (in development) ----
+----- V2.5 LIVE (in testing) -----
+
+----- V2.5 RC1 [Pre 1] (2004-08-24) ----
 
 2004-08-23, Kato
   Email error handling cleaned up
-
+    - zentrack_2/includes/egate_utils.php 1.35
+    - zentrack_2/includes/zenTrack.class 1.141
+    - zentrack_2/www/actions/email.php 1.13
   Added variable fields to the search screen
   Improved date search capabilities
-
+    - zentrack_2/includes/db.class 1.28
+    - zentrack_2/includes/login.php 1.24
+    - zentrack_2/includes/headerInc.php 1.40
+    - zentrack_2/includes/nav.php 1.10
+    - zentrack_2/includes/prepareSearchVarfields.php 1.1
+    - zentrack_2/includes/varfieldConfig.php 1.1
+    - zentrack_2/includes/zen.class 1.25
+    - zentrack_2/includes/zenTrack.class 1.141
+    - zentrack_2/includes/templates/searchForm.php 1.10
+    - zentrack_2/includes/templates/searchList.php 1.13
+    - zentrack_2/includes/templates/searchResults.php 1.7
+    - zentrack_2/includes/templates/ticket_box.php 1.13
+    - zentrack_2/includes/templates/ticket_customBox.php 1.6
+    - zentrack_2/install/UPGRADE_mssqlserver.sql 1.11
+    - zentrack_2/install/UPGRADE_mysql.sql 1.17
+    - zentrack_2/install/UPGRADE_oracle.sql 1.18
+    - zentrack_2/install/build_mssqlserver.sql 1.7
+    - zentrack_2/install/build_mysql.sql 1.10
+    - zentrack_2/install/build_oracle.sql 1.11
+    - zentrack_2/install/seed_mssqlserver.sql 1.19
+    - zentrack_2/install/seed_mysql.sql 1.30
+    - zentrack_2/install/seed_oracle.sql 1.25
   Cleaned up behavior bugs and enhanced js eval capabilities
-
+    - zentrack_2/www/styles.php 1.16
+    - zentrack_2/www/ticket.php 1.20
+    - zentrack_2/includes/zenTrack.class 1.141
+    - zentrack_2/includes/templates/behaviorDetailForm.php 1.5
+    - zentrack_2/includes/templates/behaviorForm.php 1.5
+    - zentrack_2/includes/templates/behaviorMenu.php 1.3
+    - zentrack_2/includes/templates/groupAdd.php 1.3
+    - zentrack_2/includes/templates/groupForm.php 1.8
+    - zentrack_2/www/behavior_js.php 1.6
+    - zentrack_2/www/javascript.js 1.10
+    - zentrack_2/www/admin/addBehaviorSubmit.php 1.4
+    - zentrack_2/www/admin/addGroupSubmit.php 1.5
+    - zentrack_2/www/admin/editBehaviorDetails.php 1.4
+    - zentrack_2/www/admin/editCustom.php 1.6
+    - zentrack_2/www/admin/editGroupDetails.php 1.7
+    - zentrack_2/www/admin/editGroupSubmit.php 1.4
   Fixed issue with edit screens and project identification when errors occur
   Added editing of varfields to edit screens
+    - zentrack_2/www/addProjectSubmit.php 1.12
+    - zentrack_2/www/newTicket.php 1.6
+    - zentrack_2/www/addSubmit.php 1.18
+    - zentrack_2/includes/zenTrack.class 1.141
+    - zentrack_2/includes/editTicketSubmit.php 1.8
+    - zentrack_2/www/actions/edit.php 1.6
+    - zentrack_2/includes/templates/editTicketForm.php 1.5
 
 2004-08-13, cfalonso
   Function $zen->getDataGroups raised an error when no data groups exists. Fixed.
