@@ -15,18 +15,32 @@ abstraction, and endless possibilities for project expansion.
 
 2004-11-07, Kato
   Added missing bugTo and bugFrom constants to configVars.php
-  
+    - zentrack_2/install/configVars.php.default 1.8  
 
 2004-11-02, Kato
   Added ability to use label or id for standard fields in data group files
   Added validation for standard ticket fields to data group file entries
-  
+    - zentrack_2/includes/zenTrack.class 1.161
+    - zentrack_2/includes/templates/behaviorDetailForm.php 1.8
+    - zentrack_2/includes/templates/groupForm.php 1.13
+    - zentrack_2/www/behavior_js.php 1.14
+    - zentrack_2/www/projects.php 1.10
+    - zentrack_2/install/header.php.default 1.13
+    - zentrack_2/www/admin/deleteGroup.php 1.2
+    - zentrack_2/www/admin/editBehaviorSubmit.php 1.4  
   Fixed "(invalid)" entry in custom_menu entries in project screen
-    [newProjectForm.php]
+    - zentrack_2/www/newProject.php 1.7
+    - zentrack_2/www/newTicket.php 1.7
+    - zentrack_2/includes/db.class 1.33
+    - zentrack_2/includes/footer.php 1.29
+    - zentrack_2/includes/zen.class 1.32
+    - zentrack_2/includes/templates/listTickets.php 1.20
+    - zentrack_2/includes/templates/newProjectForm.php 1.28
+    - zentrack_2/includes/templates/newTicketForm.php 1.35
     
-  
 2004-11-01, cfalonso
-  Added character_set to ZENTRACK_SETTINGS. Used in function ffv. Modified files replacing htmlspecialchars and htmlentities with ffv.
+  Added character_set to ZENTRACK_SETTINGS. Used in function ffv. 
+  Modified files replacing htmlspecialchars and htmlentities with ffv.
     - zentrack_2/includes/zen.class 1.31
     - zentrack_2/includes/zenTrack.class 1.160
     - zentrack_2/includes/templates/configSettingsForm.php 1.10
