@@ -220,7 +220,11 @@ class ZenSystemAction extends Zen {
    * @return the return value of the action
    */
   function runAction( $action_id, $args, $list = null ) {
-    $act = new ZenAction($action_id);
+  	if (isset($list)) {
+  	  $act = $list->get($action_id);
+  	} else {
+      $act = new ZenAction($action_id);
+  	}
     $act->activate($args);
   }
 
