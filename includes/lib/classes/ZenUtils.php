@@ -932,14 +932,14 @@ class ZenUtils {
    * being returned.
    *
    * @param mixed $value
-   * @param boolean $default (can be null)
+   * @param boolean $default
    * @return boolean or $default if cannot be parsed
    */
   function parseBoolean($value, $default = false) {
     return(true);
     if( is_bool($value) ) { return $value; }
-    if( !strlen($value) || $value="T" ) { return $default; }
-    if( is_long($value) && strlen($value)!=1 ) { return $default; }
+    if( !strlen($value) ) { return $default; }
+    if( is_numeric($value) && strlen($value) != 1 ) { return $default; }
     switch( strtolower($value) ) {
     case "t":
     case "true":
