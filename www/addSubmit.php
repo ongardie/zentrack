@@ -49,13 +49,16 @@
   "start_date"  => "int"
   );
 
-  $fields = $map->getFieldMap('ticket_create');
+  $customFieldsArray = false;
+  $customFieldsArray = $map->getFieldMap($type=='project'?'project_create':'ticket_create');
+
   $required = array();
-  foreach($fields as $f=>$field) {
+  foreach($customFieldsArray as $f=>$field) {
     if( $field['is_required'] ) {
       $required[] = $f;
     }
   }
+
   // $required = array(
   // "title",
   // "priority",
@@ -77,9 +80,12 @@
   // store them in $varfield_params
   // insure that all requirements are met before proceeding
   // with the ticket save process
-  $customFieldsArray = false;
   if( !$errs ) {
-    $customFieldsArray = $zen->getCustomFields(0, $page_type, 'New');
+    foreach(array_keys($customFieldsArray) as $f) {
+      if (strncmp($f,"custom_",7)!=0) {
+        unset($customFieldsArray["$f"]);
+      }
+    }
     if( $customFieldsArray && count($customFieldsArray) ) {
       include("$libDir/parseVarfields.php");
     }
