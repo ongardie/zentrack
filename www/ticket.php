@@ -50,12 +50,16 @@
      print "<p class='hot'>You are not allowed to view {$page_type}s in this bin</p>\n";
   } else {
 
-     extract($ticket);
-     if( $type_id == $zen->projectTypeID() ) {
+    if( is_array($ticket) ) {
+      extract($ticket);
+      if( $type_id == $zen->projectTypeID() ) {
 	include("$templateDir/projectView.php");
-     } else {
+      } else {
 	include("$templateDir/ticketView.php");     
-     }
+      }
+    } else {
+      print "<p class='error'>That ticket doesn't exist</p>\n";
+    }
      
   }
 
