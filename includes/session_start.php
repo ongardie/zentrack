@@ -17,7 +17,7 @@ session_start();
 $reservedList = array("libDir", "rootUrl", 
 		      "Db_Type", "Db_Instance", "Db_Login", "Db_Pass", "Db_Host", 
 		      "Debug_Mode", "Demo_Mode", "page_prefix", "page_title", 
-		      "configFile", "system_message_limit");
+		      "configFile", "system_message_limit", "login_id");
 
 // dump the system variables for use
 if( isset($_SERVER) ) {
