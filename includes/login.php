@@ -32,7 +32,10 @@
       $login_name  = $zen->user["fname"]." ".$zen->user["lname"];
       $login_inits = $zen->user["initials"];
       $login_bin   = $zen->user["homebin"];
-      header("Location:$rootUrl/misc/pwc.php");
+      include("$libDir/nav.php");
+      include("$templateDir/pwcForm.php");
+      include("$libDir/footer.php");
+      exit;    
       $skip = 1;
    } else if( $login_id ) {
       // this will log the user in successfully
