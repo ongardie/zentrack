@@ -216,6 +216,5 @@
              "SOLUTION"
            );
 
-
 // you can't have any spaces after this closing tag!
 ?>

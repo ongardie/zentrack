@@ -47,13 +47,27 @@ $session_vars = array("login_name",
 		      "ticket_mode");
 
 if( is_array($_SESSION) ) {
-  extract($_SESSION);
+  foreach($session_vars as $s) {
+    if( strlen($_SESSION["$s"]) ) {
+      $$s = $_SESSION["$s"];
+    }
+    else {
+      $$s = "";
+    }
+  }
 }
 else if( is_array($HTTP_SESSION_VARS) ) {
-  extract($HTTP_SESSION_VARS);
+  foreach($session_vars as $s) {
+    if( strlen($HTTP_SESSION_VARS["$s"]) ) {
+      $$s = $HTTP_SESSION_VARS["$s"];
+    }
+    else {
+      $$s = "";
+    }
+  }
 }
 else {
-  die("Sessions are not enabled properly on this system.  zenTrack is exising.");
+  die("Sessions are not enabled properly on this system.  zenTrack is exiting.");
 }
 
 // you can't have any spaces after this closing tag!

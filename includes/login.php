@@ -30,9 +30,9 @@
 	 setcookie("zentrackUsername", $username, time()+2592000);
 	 $login_inits = $zen->user["initials"];
 	 $login_bin   = $zen->user["homebin"];
-	 include("$libDir/nav.php");
-	 include("$templateDir/pwcForm.php");
-	 include("$libDir/footer.php");
+	 include_once("$libDir/nav.php");
+	 include_once("$templateDir/pwcForm.php");
+	 include_once("$libDir/footer.php");
 	 exit;    
 	 $skip = 1;
    } else if( $login_id ) {

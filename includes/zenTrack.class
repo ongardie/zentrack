@@ -2437,7 +2437,7 @@ class zenTrack extends zen {
     $actions = $this->getActions();
     $valid = array();
     foreach($actions as $k=>$v) {
-      if( $this->action_applicable($ticket_id,$k,$user_id) ) {
+      if( $this->actionApplicable($ticket_id,$k,$user_id) ) {
 	$valid["$k"] = $v;
       }
     }
@@ -2496,7 +2496,7 @@ class zenTrack extends zen {
 				 "access"   => 1,
 				 "status"   => null,
 				 "override" => 0,
-				 "egate"    => 0,
+				 "egate"    => 1,
 				 "level"    => $this->settings["level_create"]
 				 );
       $actions["edit"] = array(
@@ -2504,7 +2504,7 @@ class zenTrack extends zen {
 			       "access"   => 1,
 			       "status"   => array('OPEN','PENDING'),
 			       "override" => 0,
-			       "egate"    => 1,
+			       "egate"    => 0,
 			       "level"    => $this->settings["level_edit"]
 			       );
       $actions["email"] = array(

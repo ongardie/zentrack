@@ -1,8 +1,9 @@
 #!/usr/bin/php -q
 <?
-  /*
-  ** EGATE CHECK - checks a pop3 account for emails, and injects them via the egate utils
-  */
+/**
+ ** EGATE CHECK - checks a pop3 account for emails, and 
+ ** injects them via the egate utils
+ */
    
   $start = time();
 
@@ -44,7 +45,7 @@
   // close the connection
   imap_close($mb);
   
-  $errs = image_errors();
+  $errs = imap_errors();
   egate_log($errs);
   
   $exectime = time()-$start_time;

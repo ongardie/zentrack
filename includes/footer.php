@@ -24,7 +24,7 @@
 
 <?
 
-  include("$libDir/session_save.php");
+  include_once("$libDir/session_save.php");
 
   /*
   **  This is the debugging section... please keep this intact, as

@@ -7,7 +7,7 @@
   **
   */
   
-  include("../header.php");
+  include_once("../header.php");
 
   $page_tile = "Change Password";
   $expand_options = 1;
