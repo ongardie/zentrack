@@ -15,6 +15,7 @@
     $more = $more-3;
   }
 
+  $vars = array();
   if( $TODO == 'MORE' || $TODO == 'LESS' ) {
     for( $i=0; $i<count($newName); $i++ ) {
       if( !$newName[$i] && $newID[$i] ) {

@@ -8,7 +8,7 @@
   if( $TODO == 'MORE' || $TODO == 'LESS' ) {
     $n = ($more < 4)? 2 : 4;
     $more += ($TODO == 'MORE')? $n : -$n;
-    //$bins = null;
+    $bins = array();
     if( is_array($binLevels) ) {
       ksort($binLevels);
       foreach($binLevels as $k=>$v) {
@@ -35,19 +35,17 @@
       }
     }
     $roles = $zen->fetch_user_roles($user_id);
-    for($i=0; $i<count($roles); $i++) {
-      $n = $roles[$i]["bin_id"];
+    foreach($roles as $r) {
+      $n = $r["bin_id"];
       if( is_array($bins["$n"]) ) {
-	$bins["$n"][1] = $roles[$i]["notes"];
+	$bins["$n"][1] = $r["notes"];
       } else {
-	$bins["$n"] = array("",$roles[$i]["notes"]);
+	$bins["$n"] = array("",$r["notes"]);
       }
     }
   }
 
-  if( $TODO == 'Reset' )
-     $more = 0;
-  else if( !isset($more) )
+  if( $TODO == 'RESET' || !isset($more) )
      $more = 0;
 
   // set up the more links
@@ -79,11 +77,17 @@
     }
   }
 
+  function setTodo( val ) {
+    document.accessForm.TODO.value = val;
+    return true;
+  }
+
 ?>
 
-<form method="post" action="<?=$SCRIPT_NAME?>">
+<form method="post" action="<?=$SCRIPT_NAME?>" name="accessForm">
 <input type="hidden" name="more" value="<?= strip_tags($more) ?>">
 <input type="hidden" name="user_id" value="<?= strip_tags($user_id) ?>">
+<input type="hidden" name="TODO" value="">
 <blockquote>
 <table width="300" cellpadding="5">
 <tr>
@@ -146,13 +150,13 @@
 </tr>
 <tr>
   <td class="bars" colspan="3">
-    <input type="submit" name="TODO" value="<?=uptr("More")?>">
+    <input type="submit" value="<?=uptr("More")?>" onClick="return setTodo('MORE')">
    &nbsp;&nbsp;&nbsp;&nbsp;
-    <input type="submit" name="TODO" value="<?=uptr("less")?>">
+    <input type="submit" value="<?=uptr("less")?>" onClick="return setTodo('LESS')">
    &nbsp;&nbsp;&nbsp;&nbsp;
-    <input type="submit" name="TODO" value="<?=tr("Update")?>" class="submit">
+    <input type="submit" value="<?=tr("Update")?>" class="submit" onClick="return setTodo('UPDATE')">
     &nbsp;&nbsp;&nbsp;&nbsp;
-   <input type="submit" name="TODO" value="<?=tr("Reset")?>" class="submit">
+   <input type="submit" value="<?=tr("Reset")?>" class="submit" onClick="return setTodo('RESET')">
   </td>
 </tr>
 </table>

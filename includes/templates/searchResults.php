@@ -44,6 +44,8 @@
     $errs[] = tr("No valid fields were provided to conduct a search");
   }
 
+  $tickets = null;
+
   // if there are any search params
   // then perform the query
   if( !is_array($errs) ) {

@@ -1,8 +1,8 @@
 <?	
   unset($userBins);
   unset($users);
-  $userBins = $zen->getUsersBins($login_id,"level_create");
-  if( is_array($userBins) ) {
+  $userBins = $zen->getUsersBins($login_id,"level_create_proj");
+  if( is_array($userBins) && count($userBins) ) {
     $users = $zen->get_users( $userBins, "level_user" );
   } else {
     print "<span class='error'>".
@@ -138,7 +138,7 @@ value="<?=strip_tags($title)?>">
   <td class="bars">
     <select name="bin_id">
 <?
-   if( is_array($userBins) ) {
+   if( is_array($userBins) && count($userBins) ) {
       foreach($zen->getBins(1) as $v) {
          $k = $v["bid"];
          
@@ -249,3 +249,4 @@ value="<?=($deadline)?$zen->showDate(strip_tags($deadline)):""?>">
   </td>
 </tr>
 </table>
+dd

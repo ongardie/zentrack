@@ -72,7 +72,7 @@
 </tr>
       <tr>
 	 <td class='cell' colspan='4'>
-         <input type='hidden' name='TODO' value='MORE'>
+         <input type='hidden' name='TODO' value=''>
 	 <input type='submit' value='<?=uptr("More")?>' onClick='return setToDo("MORE")'>
          &nbsp;
          <input type='submit' value='<?=uptr("Less")?>' onClick='return setToDo("LESS")'>	

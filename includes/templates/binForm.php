@@ -13,6 +13,7 @@
 
       <ul>
       <form name='binForm' action='<?=$SCRIPT_NAME?>' method='post'>
+      <input type='hidden' name='TODO' value=''>
       <table cellpadding="2" cellspacing="1" class='plainCell'>
 	 <tr>
 	 <td class='titleCell' align='center' colspan='4'>
@@ -79,13 +80,13 @@
 </tr>
       <tr>
 	 <td class='cell' colspan='4'>
-	 <input type='submit' name='TODO' value='MORE'>
+	 <input type='submit' value='<?=uptr('More')?>' onClick="return setTodo('MORE')">
          &nbsp;
-         <input type='submit' name='TODO' value='LESS'>	
+         <input type='submit' value='<?=uptr('less')?>' onClick="return setTodo('LESS')">
 	 &nbsp;
-	 <input type='submit' class='submit' name='TODO' value='Save'>
+	 <input type='submit' class='submit' value='<?=tr('Save')?>' onClick="return setTodo('Save')">
 	 &nbsp;
-	 <input type='submit' class='submitPlain' name='TODO' value='Reset'>
+	 <input type='submit' class='submitPlain' value='<?=tr('Reset')?>' onClick="return setTodo('Reset')">
          </td>
       </tr>
       </table>
@@ -113,6 +114,10 @@
 	   bin[num] = val;
 	   return true;
 	 }
+
+	 function setTodo( val ) {
+	   document.binForm.TODO.value = val;
+	 } 	 
       </script> 
 
 

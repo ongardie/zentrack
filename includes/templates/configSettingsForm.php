@@ -2,7 +2,7 @@
       <p class='error'><?=tr("Changing these settings can have a severe impact on the system.  Please consider this before making modifications.")?></p>
       <p><?=tr("All entries must contain a value.")?></p>
 
-      <form name='binForm' action='<?=$SCRIPT_NAME?>' method='post' onSubmit='return confirm("Save system settings?")'>
+      <form name='configSettingsForm' action='<?=$SCRIPT_NAME?>' method='post' onSubmit='return confirm("Save system settings?")'>
       <table width="600" cellpadding="2" cellspacing="1" class='plainCell'>
 	 <tr>
 	 <td class='titleCell' align='center' colspan='4'>
@@ -57,7 +57,8 @@
 </tr>
       <tr>
 	 <td class='cell' colspan='4'>
-	  <input type='submit' class='submit' name='TODO' value='<?=tr("Save")?>'>
+          <input type='hidden' name='TODO' value='Save'>
+	  <input type='submit' class='submit' value='<?=tr("Save")?>'>
 	  </form>&nbsp;<form method='post' action='<?=$SCRIPT_NAME?>'>
 	  <input type='submit' class='submitPlain' value='<?=tr("Reset")?>'>
           </form>

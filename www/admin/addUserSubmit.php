@@ -26,6 +26,7 @@
   }
 
   if( !$errs ) {
+    $params = array();
     foreach(array_keys($user_fields) as $k) {
       if( strlen($$k) ) {
 	$params["$k"] = $$k;

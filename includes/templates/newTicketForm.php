@@ -1,7 +1,7 @@
 <?  
   unset($users);
   $userBins = $zen->getUsersBins($login_id,"level_create");
-  if( is_array($userBins) ) {
+  if( is_array($userBins) && count($userBins) ) {
     $users = $zen->get_users( $userBins, "level_user" );
   } else {
     print "<span class='error'>"
@@ -143,7 +143,7 @@
   <td class="bars">
     <select name="bin_id">
 <?
-   if( is_array($userBins) ) {
+   if( is_array($userBins) && count($userBins) ) {
       foreach($zen->getBins(1) as $v) {
          $k = $v["bid"];
          

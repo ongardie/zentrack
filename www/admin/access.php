@@ -14,7 +14,7 @@
   $user_id = ereg_replace("[^0-9]", "", $user_id);
   // update database if submitted
   if( $TODO == 'Update' ) {
-    unset($bins);
+    $bins = array();
     if( is_array($binLevels) ) {
       foreach($binLevels as $k=>$v) {
         if( $k && (strlen($v) || strlen($binRoles["$k"])) ) {

@@ -11,7 +11,7 @@ REQUIREMENTS
     Supported DBs: Mysql, Oracle 8i/9i, Postgres
        Other Possible DBs: DB2, SQLServer
 
-UPGRADE FROM 2.4.1
+UPGRADE FROM 2.4.2
 
   Be sure to BACKUP CONFIG FILES:
       www/header.php
@@ -27,8 +27,9 @@ UPGRADE FROM 2.4.1
      -chmod 777 includes/cache
      -chmod 777 includes/translations
 
-  If you like, you may update your version information with the following sql statement:
-    UPDATE ZENTRACK_SETTINGS SET value = '2.4.2' WHERE name = 'version_xx';
+  Run the sql file install/upgrade_[yourdb].sql file using your favorite
+  sql interface (you can open the file and run the statements directly if
+  this is easier for you)
 
 
 

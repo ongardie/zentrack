@@ -55,6 +55,7 @@ if( !$zen->checkAccess($login_id,$ticket["bin_id"],"edit") ) {
      }
   }
   if( !$errs ) {
+     $params = array();
      // create an array of existing fields
      foreach(array_keys($fields) as $f) {
          $params["$f"] = $$f;

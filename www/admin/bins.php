@@ -16,6 +16,7 @@
     $more = $more-3;
   }
 
+  $vars = array();
   if( $TODO == 'MORE' || $TODO == 'LESS' ) {
     for( $i=0; $i<count($newBin); $i++ ) {
       if( !$newBin[$i] && $newID[$i] ) {
