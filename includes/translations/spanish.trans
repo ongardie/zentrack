@@ -3334,7 +3334,7 @@ msgstr "Env&iacute;e solamente un v&iacute;nculo a este ticket"
 #file "/home/ired/zentrack_2/includes/templates/actions/email.php"
 #args ""
 msgid "Send a summary of the ticket"
-msgstr "Env/iacute;e un resumen del ticket"
+msgstr "Env&iacute;e un resumen del ticket"
 
 
 #file "/home/ired/zentrack_2/includes/templates/actions/email.php"
@@ -4270,7 +4270,7 @@ msgstr "Informaci&oacute;n del Ticket"
 #file "/home/ired/zentrack_2/includes/zenTrack.class"
 #args ""
 msgid "Ticket Summary")
-msgstr "Res&uacute;men del Ticket"
+msgstr "Resumen del Ticket"
 
 
 #file "/home/ired/zentrack_2/includes/templates/editCustomsForm.php"
