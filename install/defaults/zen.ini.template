@@ -26,7 +26,7 @@ path_includes = "{path_includes}" ;absolute path to includes directory (not web 
 
 path_www = "{path_www}"  ;absolute path to www directory (not web path)
 
-url_www = "{url_www}"       ;browser path to zentrack www directory
+url_www = "{url_www}"       ;browser path to zentrack www directory (this should include the domain name)
 
 
 ;;;;;;;;;;;;;;; DATABASE SETTINGS ;;;;;;;;;;;;;;;;;;;;;;
@@ -62,9 +62,9 @@ table_prefix = "{table_prefix}"
 
 system_name = "{system_name}"                 ;system name to display
 
-page_title = "{page_title}"  ;the default title displayed by browser
-
 page_prefix = "{page_prefix}"              ;the prefix for titles displayed by browser
+
+page_title = "{page_title}"  ;the default title displayed by browser
 
 template = "{template}"                     ;which layout templates to employ
 
@@ -76,16 +76,16 @@ template = "{template}"                     ;which layout templates to employ
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 [debug]
 
-; true or false, display messages on screen
+; 1=true, 0=false, display messages on screen
 debug_display = {debug_display}
 
 ; location of the debug config file
-debug_configfile = {debug_configfile}
+debug_configfile = "{debug_configfile}"
 
 ; location of log file, blank disables file output
-debug_logfile = {debug_logfile}
+debug_logfile = "{debug_logfile}"
 
-; set to true if you are developing, this will enable useful notices and such
+; set to 1 if you are a developer, otherwise leave this at 0
 develop_mode = {develop_mode}
 
 ;;;;;;;;;;;;;;; ADVANCED SETTINGS ;;;;;;;;;;;;;;;;;;;;;;

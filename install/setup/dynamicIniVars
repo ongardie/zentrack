@@ -1,0 +1,15 @@
+
+
+########################################################
+#### VARIABLES TO SET DYNAMICALLY WHEN MERGING INI FILES
+########################################################
+###
+###  0 - section
+###  1 - variable to match against and replace with dynamic marker
+###
+
+directories:path_includes
+directories:dir_cache
+directories:dir_lib
+layout:system_name
+layout:page_prefix

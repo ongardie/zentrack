@@ -33,7 +33,7 @@
   @set_magic_quotes_runtime(0);
 
   // setup develop mode params
-  if( $zen['debug']['develop_mode'] == "true" ) {    
+  if( $zen['debug']['develop_mode'] > 0 ) {    
     // turn on most restrictive error_reporting (E_ALL)
     error_reporting(E_ALL);
     

@@ -118,8 +118,8 @@ class ZenTargets {
     case "backup_database": return $this->_backup_database();
     case "check_directories":
       {
-        $d = ( count($t[$target])>0 && $t[$target][0] )? $t[$target][0] : null;
-        return $this->_check_directories;
+        $b = ( count($t[$target])>0 && $t[$target][0] )? $t[$target][0] : null;
+        return $this->_check_directories( $b );
       }
     case "copy_class_files":
       {
@@ -135,7 +135,7 @@ class ZenTargets {
     case "full_install":    return $this->_full_install();
     case "merge_ini_file": 
       {
-        if( !$this->_ini['debug']['develop_mode'] == "true" ) {
+        if( !$this->_ini['debug']['develop_mode'] ) {
           $this->_printerr("_target", "$u is only for use during development");
           return false;
         }
@@ -271,11 +271,13 @@ class ZenTargets {
    * @return boolean structure is validated
    */
   function _check_directories( $create = true ) {
+    print "- Checking directory structure\n";
     $success = true;
 
     // check the includes root folder
+    print "   validating root folders...\n";
     if( !is_dir( $this->_ini['paths']['path_includes'] ) ) {
-      $this->_printerr("The includes directory is missing: "+$this->_ini['paths']['path_includes']);
+      $this->_printerr("_check_directories", "The includes directory is missing: ".$this->_ini['paths']['path_includes']);
       return false;
     }
 
@@ -286,6 +288,7 @@ class ZenTargets {
     }
 
     // check the dynamic directories created by system
+    print "   validating system directories...\n";
     foreach($this->_dirs as $d) {
       $dir = ($d[0] == includes)? 
         $this->_ini['paths']['path_includes']."/".$d[1] : $this->_ini['paths']['path_www']."/".$d[1];
@@ -294,6 +297,7 @@ class ZenTargets {
         $success = false;                      
       }
       else if( !is_dir($dir) ) {
+        print "   creating $dir\n";
         if( !mkdir( $dir, decoct($d[2]) ) ) {
           $this->_printerr("_check_directories", "Failed to create system directory: $dir\n");
           $success = false;
@@ -406,47 +410,6 @@ class ZenTargets {
   }
 
   /**
-   * Merges the values from the setup/zen.ini and the contents setup/zen.ini.template to create a new
-   * ini file.  This prevents the need to modify both the zen.ini and zen.ini.template files for each
-   * new modification.  Any settings without values will be left empty for you to fill in.
-   *
-   * @param boolean $overwrite specifies whether the ini file should be overwritten if one is encountered
-   * @return boolean succeeded
-   */
-  function _merge_ini_file( $overwrite = false ) {
-    print "- Merging ini files\n";
-    // check for overwrite
-    if( $overwrite || !file_exists("zen.ini") ) {
-      // make a backup if file exists
-      if( $overwrite && file_exists("zen.ini") ) {
-        print "   zen.ini found, creating backup\n";
-        copy("zen.ini", "zen.ini.".date("Y-m-d-h-m"));
-      }
-
-      // read the .ini file
-      print "   reading default values from setup/zen.ini\n";
-      $bulk = Zen::flatten_array( Zen::read_ini( "defaults/zen.ini", false ) );
-
-      // parse ini.template
-      print "   merging into template file\n";
-      $template = new ZenTemplate( "defaults/zen.ini.template" );
-      $template->values($bulk);
-      $txt = $template->process();
-      $fp = fopen($dest, "w");
-      if( !fputs($fp, $txt) ) {
-        $this->_printerr("_merge_ini_file", "Failed to create merged ini file");
-        $success = false;
-      }
-      fclose($fp);
-      return true;
-    }
-    else {
-      $this->_printerr("_merge_ini_file", "Cannot overwrite existing zen.ini file.  (-merge_ini_file true to override)"); 
-      return false;
-    }
-  }
-
-  /**
    * Updates the directory structure and information from a cvs download
    * 
    * @param boolean $overwrite overwrite config files with new versions (default true)
@@ -482,6 +445,8 @@ class ZenTargets {
    * @return boolean success
    */
   function _full_install( ) {
+    // make directories
+
     // test directory structures
     
     // check db connections
@@ -494,6 +459,77 @@ class ZenTargets {
 
   }
   
+  /**
+   * Creates proper directory structure and loads files into it
+   *
+   * @return boolean success
+   */
+  function _make_directories() {
+    // create root directories
+
+    // insure that source and destination are not the same
+
+    // recursively copy file contents
+
+    // run _check_directories to validate and create dynamics
+
+  }
+
+  /**
+   * Merges the values from the setup/zen.ini and the contents setup/zen.ini.template to create a new
+   * ini file.  This prevents the need to modify both the zen.ini and zen.ini.template files for each
+   * new modification.  Any settings without values will be left empty for you to fill in.
+   *
+   * @param boolean $overwrite specifies whether the ini file should be overwritten if one is encountered
+   * @return boolean succeeded
+   */
+  function _merge_ini_file( $overwrite = false ) {
+    print "- Merging ini files\n";
+    // check for overwrite
+    if( $overwrite || !file_exists("zen.ini") ) {
+      // make a backup if file exists
+      if( $overwrite && file_exists("zen.ini") ) {
+        print "   zen.ini found, creating backup\n";
+        copy("zen.ini", "zen.ini.".date("Y-m-d-h-m"));
+      }
+
+      // read the .ini file
+      print "   reading default values from setup/zen.ini\n";
+      $vars = Zen::read_ini( "defaults/zen.ini", false );
+      $bulk = Zen::flatten_array($vars);
+      print "bulk: \n";
+      print_r($bulk);
+      foreach( $this->_parseConfigData("dynamicIniVars") as $dat ) {
+        list($sect,$rep) = $dat;
+        foreach( $vars[$sect] as $key=>$val ) {          
+          if( $key != $rep ) {
+            $match = $bulk[$rep];
+            $bulk[$key] = $vars[$sect][$key] = str_replace($match, "%$rep%", $val);
+          }
+        }
+      }
+      print "post-bulk: \n";
+      print_r($bulk);
+
+      // parse ini.template
+      print "   merging into template file\n";
+      $template = new ZenTemplate( "defaults/zen.ini.template" );
+      $template->values($bulk);
+      $txt = $template->process();
+      $fp = fopen("zen.ini", "w");
+      if( !fputs($fp, $txt) ) {
+        $this->_printerr("_merge_ini_file", "Failed to create merged ini file");
+        $success = false;
+      }
+      fclose($fp);
+      return true;
+    }
+    else {
+      $this->_printerr("_merge_ini_file", "Cannot overwrite existing zen.ini file.  (-merge_ini_file true to override)"); 
+      return false;
+    }
+  }
+
   /**
    * Parses a setup data file and sets results
    *
@@ -528,15 +564,15 @@ class ZenTargets {
    * @return boolean succeeded
    */
   function _prepare_install_files( $src, $dest ) {
-    // copy defaults/zen.ini to install directory, set develop_mode = false
+    // copy defaults/zen.ini to install directory, set develop_mode = 0
+
+    // check directories
 
     // copy class files
     
-    // remove includes/cache
+    // remove config files
 
-    // remove includes/config
-
-    // remove www/header.php
+    // remove dynamic directories
 
     // tar and package a .tar.gz and a .zip file
 
@@ -548,6 +584,8 @@ class ZenTargets {
    * @param string $version is the previous version we are updating from
    */
   function _upgrade( $version ) {
+    // create directories
+
     // test directory structures
 
     // check db connections
@@ -557,16 +595,6 @@ class ZenTargets {
     // create database schema
 
     // delete cache data and touch cache/last_config_update
-
-  }
-
-  /**
-   * Validates proper directory structure in place to load files
-   *
-   * @param boolean $create create any directories which are missing
-   * @return boolean success
-   */
-  function _validate_directories( $create = true ) {
 
   }
 
@@ -592,7 +620,6 @@ class ZenTargets {
   /***********************************
    ****  VARIABLES
    **********************************/
-
 
   /** @var array $_configFiles is a list of config files to copy, locations, and permissions */
   var $_configFiles;
