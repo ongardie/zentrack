@@ -42,9 +42,9 @@
       for( $i=0; $i<count($newBin); $i++ ) {
 	if( $newBin[$i] ) {
 	  $updateParams = array( 
-				"name"     => $newBin[$i],
-				"active"   => $newActive[$i],
-				"priority" => "$newPri[$i]"
+		"name"     => $newBin[$i],
+		"active"   => (strlen($newActive[$i])? $newActive[$i]:0)
+		"priority" => (strlen($newPri[$i])? $newPri[$i]:0)
 				);
 	  $res = ($newID[$i])?
 	    $zen->update_bin($newID[$i], $updateParams) :

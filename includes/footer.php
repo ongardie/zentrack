@@ -50,6 +50,7 @@
      print "types: ".join(",",$zen->types)."<br>\n";
      print "priorities: ".join(",",$zen->priorities)."<br>\n";
      print "systems: ".join(",",$zen->systems)."<br>\n";
+     print "login_language: $login_language<br>\n";
      if( $login_id ) {
        print "login_id: $login_id<br>\n";
        print "login_level: $login_level<br>\n";

@@ -44,6 +44,9 @@
       if( strlen($$k) ) {
 	$params["$k"] = $$k;
       }
+      else {
+	$params["$k"] = "NULL";
+      }
     }
     if( $zen->demo_mode == "on" ) {
       $msg = tr("Process successful.  User was not updated, because this is a demo site.");
@@ -51,7 +54,10 @@
       $res = $zen->update_user($user_id, $params);
       if( $res ) {
 	$msg = tr("User ? was updated successfully. ? to customize user ?'s access permissions.",
-				array($user_id, "<br><a href='$rootUrl/admin/access.php?user_id=$user_id'>" . tr("Click Here") . "</a>", $user_id));
+		  array($user_id,
+			"<br><a href='$rootUrl/admin/access.php?user_id=$user_id'>"
+			.tr("Click Here")."</a>",
+			$user_id));
       } else {
 	$errs[] = tr("System Error: Could not update ?, ?", array($lname, $fname));
       }

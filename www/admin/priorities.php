@@ -42,8 +42,8 @@
 	if( $newName[$i] ) {
 	  $updateParams = array( 
 				"name"     => $newName[$i],
-				"active"   => $newActive[$i],
-				"priority" => "$newPri[$i]"
+				"active"   => (strlen($newActive[$i])?$newActive[$i]:0),
+				"priority" => (strlen($newPri[$i])?$newPri[$i]:0)
 				);
 	  $res = ($newID[$i])?
 	    $zen->update_priority($newID[$i], $updateParams) :

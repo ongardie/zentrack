@@ -538,7 +538,7 @@ class zen extends zenDate {
      $vals = array();
      foreach($this->debugMessages as $d) {
        if( $d[0] == $class ) {
-    $vals[] = $d;
+	 $vals[] = $d;
        }
      }
      return $vals;
@@ -549,25 +549,25 @@ class zen extends zenDate {
     */
    function printDebugMessages() {  
      if( is_array($this->debugMessages) ) {
-   $styles = array("","error","","note");
-       print "<p>--------<b>DEBUG</b>--------<ul>\n";
+       $styles = array("","error","","note");
+       print "<p>--------<b>MESSAGES</b>--------<ul>\n";
        if( is_array($this->debugMessages) ) {   
-    foreach($this->debugMessages as $v) {
-      $n = $v[2];
-      $style = $styles[$n];
-      print "<li class='$style'>$v[0]: \"";
-      if( is_array($v[1]) ) {
-        print "<pre>\n";
-        print_r($v[1]);
-        print "</pre>\n";
-      }
-      else {
-        print $v[1];
-      }
-      print "\"\n";
-    }
+	 foreach($this->debugMessages as $v) {
+	   $n = $v[2];
+	   $style = $styles[$n];
+	   print "<li class='$style'>$v[0]: \"";
+	   if( is_array($v[1]) ) {
+	     print "<pre>\n";
+	     print_r($v[1]);
+	     print "</pre>\n";
+	   }
+	   else {
+	     print $v[1];
+	   }
+	   print "\"\n";
+	 }
        }
-       print "</ul>------<b>END DEBUG</b>------</p>\n";
+       print "</ul>------<b>MESSAGES</b>------</p>\n";
      }
    }
    
