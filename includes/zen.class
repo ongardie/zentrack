@@ -474,7 +474,16 @@ class zen extends zenDate {
 	 foreach($this->debugMessages as $v) {
 	   $n = $v[2];
 	   $style = $styles[$n];
-	   print "<li class='$style'>$v[0]: \"$v[1]\"\n";
+	   print "<li class='$style'>$v[0]: \"";
+	   if( is_array($v[1]) ) {
+	     print "<pre>\n";
+	     print_r($v[1]);
+	     print "</pre>\n";
+	   }
+	   else {
+	     print htmlentities($v[1]);
+	   }
+	   print "\"\n";
 	 }
        }
        print "</ul>------<b>END DEBUG</b>------</p>\n";
