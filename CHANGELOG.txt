@@ -1,7 +1,14 @@
 
---- V3.0 RC1 (beta,in CVS) ---	
+--- V3.0 RC1 (beta, in CVS) ---	
 
 2004-03-27, Kato
+  Implemented ZenUser, ZenRole, ZenAccessList libs
+    - zentrack/includes/lib/classes/ZenAccess.php 1.5 (deleted)
+    - zentrack/includes/lib/classes/ZenAccessList.php 1.4
+    - zentrack/includes/lib/classes/ZenList.php 1.16
+    - zentrack/includes/lib/classes/ZenUser.php 1.8
+
+2004-03-26, Kato
   Updated smarty templates
   Added overlib capabilities to ZenFormGenerator
     - zentrack/includes/lib/classes/ZenFormGenerator.php 1.15
