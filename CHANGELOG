@@ -1,6 +1,11 @@
 
 --- V3.0 RC1 (beta,in CVS) ---	
 
+2004-03-07, Kato
+  Completed implementation of Smarty template library
+  Implemented "full_install" target for install program
+  Cleaned up targets, dev utilities,  etc
+	
 2004-01-06, Kato
   Completed db schema tools, install program, form generator
 

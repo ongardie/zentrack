@@ -108,6 +108,8 @@ class ZenDBXML {
     $files = array();
     while( ($file = readdir($dh)) == true ) {
       if( $file == "database.xml" ) {
+        ZenUtils::safeDebug($this, 'loadDatabaseData', "Schema file: $file, skipping", 
+                            25, LVL_WARN);
         continue;
       }
       if( !(strpos($file, '.') === 0) && preg_match('/\.(zip|gz|xml)$/', $file) ) {
@@ -228,7 +230,6 @@ class ZenDBXML {
         if( !$this->_dbobj->execute($sql) ) {
           ZenUtils::safeDebug($this, 'createDbSchema', 
                               "Table $name not dropped(probably ok)", 00, LVL_NOTE);           
-          $this->msg("D $dbt not found");
         }
         else {
           $this->msg("D $dbt dropped");
@@ -605,13 +606,18 @@ class ZenDBXML {
     $dataRows = $root->child('dataRow');
 
     // load dataRow vals into array
-    $rows = array();
-    $i=0;
-    foreach($dataRows as $row) {
-      foreach( $row->childSet() as $val ) {
-        $rows[$i][$val->name()] = $val->data();
+    if( is_array($dataRows) && count($dataRows) ) {
+      $rows = array();
+      $i=0;
+      foreach($dataRows as $row) {
+        foreach( $row->childSet() as $val ) {
+          $rows[$i][$val->name()] = $val->data();
+        }
+        $i++;
       }
-      $i++;
+    }
+    else {
+      ZenUtils::safeDebug($this, '_loadDataFromXml', "No data found for file {$file}", 24, LVL_WARN);
     }
 
     //todo

@@ -103,7 +103,9 @@ class Zen {
    */
   function &getDbConnection( $connect = true ) {
     if( !isset($GLOBALS['dbConnection']) ) {
-      ZenUtils::safeDebug("Zen", "getDbConnection", "Creating database connection (cache empty)", 0, LVL_NOTE);
+      ZenUtils::safeDebug("Zen", "getDbConnection", 
+                          "Creating database connection (cache empty)", 
+                          0, LVL_NOTE);
       $db = ZenUtils::getIni('db');
       $dir_cache = ZenUtils::getIni('directories','dir_dbcache');
       $prefix = ZenUtils::getIni('db','db_prefix');
@@ -203,7 +205,9 @@ class Zen {
 
     // insert values
     foreach( $vals as $key=>$val ) {
-      $query->field($key, $val);
+      if( isset($val) ) {
+        $query->field($key, $val);
+      }
     }
 
     // create primary key if not already set

@@ -1009,7 +1009,7 @@ class ZenUtils {
    * @param string $dir directory where class resides, it will be loaded
    *                    from the dir_classes config setting if this variable
    *                    is blank.
-   * @return integer representing number of classes loaded
+   * @return integer representing number of classes loaded (classes already present are not counted)
    */
   function prep( $class, $dir = '' ) {
     $classes = is_array($class)? $class : array($class);
@@ -1020,12 +1020,31 @@ class ZenUtils {
     foreach( $classes as $c ) {
       if( !class_exists($c) ) {
         ZenUtils::mark("prep $c");
-        include("$dir/$c.php");
+        include("$dir".DIRECTORY_SEPARATOR."$c.php");
         $count++;
         ZenUtils::unmark("prep $c");
       }
     }
     return $count;
+  }
+
+  /**
+   * Clean directory names, make sure slashes are pointing correct direction...
+   * this is significantly important before trying to use dirname or basename on
+   * concatenated directories, because it won't handle slashes which don't point
+   * the correct direction
+   *
+   * This method will only work reliably on full paths. (a windows path might accidentally
+   * be translated as a unix path if it doesn't begin with a drive letter and colon.)
+   *
+   * @param string $dir
+   * @return string
+   */
+  function cleanPath( $dir ) {
+    $dir = realpath($dir);
+    $alt = DIRECTORY_SEPARATOR == '/'? '\\' : '/';
+    $dir = str_replace($alt, DIRECTORY_SEPARATOR, $dir);
+    return $dir;
   }
   
 }

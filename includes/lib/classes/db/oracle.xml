@@ -25,7 +25,7 @@
     <endline>;</endline>
     <escapechar>'</escapechar>
     <create>CREATE TABLE %table% (%columns%)</create>
-    <droptable>DROP TABLE %table% CASCADE</droptable>
+    <droptable>DROP TABLE %table% CASCADE CONSTRAINT</droptable>
     <primarykey location="internal">CONSTRAINT %keyname% PRIMARY KEY (%column%)</primarykey>
     <index uniquelabel="UNIQUE">CREATE %unique% INDEX %name% ON %table%(%columns%)</index>
     <dropindex></dropindex>

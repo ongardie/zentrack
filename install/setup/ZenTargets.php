@@ -7,11 +7,12 @@ class ZenTargets {
    * CONSTRUCTOR - loads config data files
    *
    * @param array (associative) $ini_array is the ini file parsed by ZenUtils::read_ini()
-   * @param boolean $supress_config_dialog prevents confirmation messages from appearing (answers yes to all)
+   * @param boolean $suppress_config_dialog prevents confirmation messages from appearing 
+   *                (answers yes to all)
    * @param string $compression null-do not compress, zip-use zip compression, gzip-use gzip compression
    */
-  function ZenTargets( $ini_array, $supress_confirm_dialog = false, $compression = null ) {
-    $this->_supress = $supress_confirm_dialog;
+  function ZenTargets( $ini_array, $suppress_confirm_dialog = false, $compression = null ) {
+    $this->_suppress = $suppress_confirm_dialog;
     $this->_installdir = dirname(dirname(__FILE__));
     $this->_printHeading();
     $this->_compress = $compression;
@@ -21,10 +22,9 @@ class ZenTargets {
     $paths = array($this->_installdir);
     foreach($this->_ini['paths'] as $val) { $paths[] = $val; }
     foreach( $paths as $key=>$val ) {
-      $val = preg_replace('|[\\\\/]|', '[\\\\\\\\/]', $val);
+      $val = ZenUtils::cleanPath($val);
       $this->_pathExps[] = '|^'.$val.'|';
-    }    
-    $GLOBALS['templateDir'] = $this->_ini['directories']['dir_templates']."/".$this->_ini['layout']['template_set'];
+    }   
   }
 
   /**
@@ -321,13 +321,15 @@ class ZenTargets {
         print "   - source_file: the xml file containing db schema\n";
         print "   - output_dir: where the html files will be created\n";
         print "   - this will create html docs describing the db schema\n";
+        break;
       }
     case "gen_testunit":
       {
-        print "   Usage: install.php [modifiers] -$target classname dir\n";
+        print "   Usage: install.php [modifiers] -$target classname package\n";
         print "   - classname: the class to generate a php test unit for\n";
         print "   - package: the subdirectory (in install/utilities/tests) to place output file in\n";
         print "   - this will create a test unit framework for a given class (a developers tool)\n";
+        break;
       }
     case "load_data":
       {
@@ -340,7 +342,7 @@ class ZenTargets {
     case "merge_template_file": 
       {
         print "   Usage: install.php [modifiers] -$target file source dest [replace]\n";
-        print "   - file: the template or file to be copied (do not append .template suffix)\n";
+        print "   - file: the template or file to be copied (do not append .tpl suffix)\n";
         print "   - source: directory to copy from\n";
         print "   - dest: directory to copy to\n";
         print "   - replace: merge with existing file (false) or replace existing(true) [default=false]\n";
@@ -403,7 +405,7 @@ class ZenTargets {
     }
     print "\nThe following special modifiers are allowed:\n";
     print "   --ini_file=file, specify an alternate zen.ini (config) file to use (defaults to ./zen.ini)\n";
-    print "   --supress_confirm, supresses confirm dialog (answers yes(or default) to all, needed for cron jobs)\n";
+    print "   --suppress_confirm, suppresses confirm dialog (answers yes(or default) to all, needed for cron jobs)\n";
     print "   --verbose, increases message output\n";
     print "   --compress=type, set data compression:"
       ."\n       null - do not compress(default)"
@@ -454,7 +456,7 @@ class ZenTargets {
   function _backup_config() {
     $success = true;
 
-    print "- Backing up config files to ".$this->_getBackupLocation()."/$dest\n";
+    print "- Backing up config files to ".$this->_getBackupLocation().DIRECTORY_SEPARATOR.$dest."\n";
     foreach( $this->_configFiles as $c) {
       // split the array
       list($sect,$var,$name,$is_tmplt,$permissions,$default) = $c;
@@ -501,21 +503,22 @@ class ZenTargets {
     // creating if necessary
     $dir = "";
     foreach( $des as $d ) {
-      $dir .= $dir? "/$d" : $d;
-      if( $dir && !@is_dir("$base/$dir") ) {
-        mkdir( "$base/$dir", 0700 );
+      $dir .= $dir? DIRECTORY_SEPARATOR."$d" : $d;
+      if( $dir && !@is_dir($base.DIRECTORY_SEPARATOR.$dir) ) {
+        mkdir( $base.DIRECTORY_SEPARATOR.$dir, 0700 );
       }
     }
 
     // put it together into complete directory
-    $dest = $dest? $base."/".$dest : $base;
+    $dest = $dest? $base.DIRECTORY_SEPARATOR.$dest : $base;
+    
 
     // create the destination file
     if( !$newname ) { $newname = $name; }
-    $dest .= "/$newname";
+    $dest = ZenUtils::cleanPath($dest).DIRECTORY_SEPARATOR.$newname;
     
     // create the source file
-    $source = $source."/$name";
+    $source = ZenUtils::cleanPath($source).DIRECTORY_SEPARATOR.$name;
     
     // if no source, return gracefully
     if( !file_exists($source) ) {
@@ -537,9 +540,9 @@ class ZenTargets {
    * Back up database files
    *
    * @param string $table if provided, only tables listed here will be backed up (separate names with a comma)
-   * @param boolean $supress (system use only)if true, then errors will be ignored
+   * @param boolean $suppress (system use only)if true, then errors will be ignored
    */
-  function _backup_database( $table = null, $supress = false ) {
+  function _backup_database( $table = null, $suppress = false ) {
     print "- Backing up database contents\n";
 
     // determine which tables to backup
@@ -552,33 +555,34 @@ class ZenTargets {
     
     // backup the database schema
     if( !$this->_backup_file('database.xml', $source, $dir, '', true) ) {
-      if( !$supress ) {
+      if( !$suppress ) {
         $this->_printerr("_backup_database", "Could not backup schema file");
       }
       return false;
     }
 
     // turn off error reporting for now
-    if( $supress ) {
+    if( $suppress ) {
       $lvl = $GLOBALS['installMode'];
       $GLOBALS['installMode'] = 0;
     }
 
     // perform backups
     $dbc =& $this->getDbConnection();
-    $dbx = new ZenDBXML( $dbc, $source.'/database.xml', $this->_ini['debug']['develop_mode'] );
-    $res = $dbx->dumpDatabaseData( $this->_getBackupLocation()."/".$dir, 
+    $dbx = new ZenDBXML( $dbc, $source.DIRECTORY_SEPARATOR.'database.xml', 
+                         $this->_ini['debug']['develop_mode'] );
+    $res = $dbx->dumpDatabaseData( $this->_getBackupLocation().DIRECTORY_SEPARATOR.$dir, 
                                    $tables, $this->_compress );
 
     print "   {$res[1]} of {$res[0]} statements processed successfully\n";
-    if( $res[0] != $res[1] && !$supress ) {
+    if( $res[0] != $res[1] && !$suppress ) {
       $diff = $res[0] - $res[1];
       $this->_printerr("_backup_database", "Backup error: $diff statements failed");
       return false;
     }
 
     // return error reporting to normal
-    if( $supress ) {
+    if( $suppress ) {
       $GLOBALS['installMode'] = $lvl;
     }
 
@@ -594,7 +598,7 @@ class ZenTargets {
     print "- Backing up attachments\n";
 
     $src = $this->_ini['directories']['dir_attachments'];
-    return $this->_backup_directory( $src, 'includes/attachments', true );
+    return $this->_backup_directory( $src, 'includes'.DIRECTORY_SEPARATOR.'attachments', true );
   }
 
   /**
@@ -604,7 +608,7 @@ class ZenTargets {
     print "- Backing up userfiles\n";
 
     $src = $this->_ini['directories']['dir_user'];
-    $dest = "includes/user";
+    $dest = "includes".DIRECTORY_SEPARATOR."user";
     return $this->_backup_directory( $src, $dest, true );
   }
 
@@ -617,7 +621,7 @@ class ZenTargets {
    */
   function _getBackupLocation() {
     if( !$this->_bdir ) {
-      $this->_bdir = $this->_ini['directories']['dir_backups']."/".date("Y-m-d-H-i");
+      $this->_bdir = $this->_ini['directories']['dir_backups'].DIRECTORY_SEPARATOR.date("Y-m-d-H-i");
       if( !@is_dir($this->_bdir) ) { @mkdir($this->_bdir, 0700); }
     }
     return $this->_bdir;
@@ -631,7 +635,7 @@ class ZenTargets {
   function _backup_directory( $src, $dest, $recurse = false ) {
     $success = true;
     $subdirs = array();
-    $fulldest = $this->_getBackupLocation().'/'.$dest;
+    $fulldest = $this->_getBackupLocation().DIRECTORY_SEPARATOR.$dest;
     if( !@is_dir($fulldest) ) {
       if( !@mkdir($fulldest) ) {
         $this->_printerr("_backup_directory", "Unable to create destination: $fulldest");
@@ -665,7 +669,8 @@ class ZenTargets {
     // recurse if needed
     if( $recurse && count($subdirs) > 0 ) {
       foreach( $subdirs as $s ) {
-        if( !$this->_backup_directory( $src."/$s", $dest."/$s", true ) )
+        if( !$this->_backup_directory( $src.DIRECTORY_SEPARATOR.$s, 
+                                       $dest.DIRECTORY_SEPARATOR.$s, true ) )
           $success = false;
       }
     }
@@ -685,7 +690,9 @@ class ZenTargets {
 
     // check directory structure and permissions
     if( !$this->_check_directories( false ) ) {
-      $this->_printerr("_changed_config", "Directory structure is not valid.  File structure and config settings must match");
+      $this->_printerr("_changed_config", 
+                       "Directory structure is not valid.  "
+                       ."File structure and config settings must match");
       return false;
     }
     $this->_check_permissions();
@@ -699,7 +706,7 @@ class ZenTargets {
 
     // parse and update header.php file
     print "   Creating new header.php file\n";
-    $f = $this->_ini['paths']['path_www']."/header.php";
+    $f = $this->_ini['paths']['path_www'].DIRECTORY_SEPARATOR."header.php";
     $res = false;
     if( file_exists($f) ) {
       $conf = $this->_confirm("Updating header.php file: merge, replace, or skip?", array('m','r','s'));
@@ -710,7 +717,7 @@ class ZenTargets {
         $this->_backup_file( 'header.php', $this->_ini['paths']['path_www'], 'www' );
       }
       if( !$this->_merge_template_file( "header.php",
-                                        $this->_installdir."/defaults",
+                                        $this->_installdir.DIRECTORY_SEPARATOR."defaults",
                                         $this->_ini['paths']['path_www'],
                                         ($conf == 'r'? true : false) ) ) {
         $res = false;
@@ -722,13 +729,14 @@ class ZenTargets {
 
     // clean out all cache data
     if( !$this->_clean_cache_data ) {
-      print "   The changed_config target has completed successfully; however, cache data could not be cleared.\n";
+      print "   The changed_config target has completed successfully; however, "
+        ."cache data could not be cleared.\n";
       print "   Please login as an administrator and run install.php [modifiers] -clean_cache_data\n";
     }
 
     // update the last_config_update counter
-    touch( $this->_ini['directories']['dir_cache']."/last_config_update" );
-    chmod( $this->_ini['directories']['dir_cache']."/last_config_update", 0766 );
+    touch( $this->_ini['directories']['dir_cache'].DIRECTORY_SEPARATOR."last_config_update" );
+    chmod( $this->_ini['directories']['dir_cache'].DIRECTORY_SEPARATOR."last_config_update", 0766 );
 
     return true;
   }
@@ -752,7 +760,7 @@ class ZenTargets {
       $file = $this->_ini[$sect][$root];
 
       // if the $dir portion was blank, just create the ini file directory
-      if( strlen($dir) ) { $file .= "/".$dir; }
+      if( strlen($dir) ) { $file .= DIRECTORY_SEPARATOR.$dir; }
 
       // do the work here
       if( !$this->_checkDir( $file, $create, $chmod ) ) {
@@ -787,7 +795,7 @@ class ZenTargets {
 
       // get the filename
       $file = $this->_ini[$sect][$root];
-      if( strlen($dir) ) { $file .= "/".$dir; }
+      if( strlen($dir) ) { $file .= DIRECTORY_SEPARATOR.$dir; }
 
       // tell the user what is going on
       print "   P $chmod ".($securemode? $apachegroup.' ':'')."$file\n";
@@ -802,7 +810,8 @@ class ZenTargets {
         $success = false;
       }
       if( $securemode && !@chgrp($file, $apachegroup) ) {
-        $this->_printerr("_check_permissions", "Unable to chgrp for $file to $apachegroup, are you sure you are superuser?");
+        $this->_printerr("_check_permissions", "Unable to chgrp for $file to "
+                         ."$apachegroup, are you sure you are superuser?");
         $success = false;
       }
     }
@@ -828,7 +837,7 @@ class ZenTargets {
     }
     $dirs = array();
     while( $d = readdir($dh) ) {
-      $dir = $this->_ini['directories']['dir_cache']."/".$d;
+      $dir = $this->_ini['directories']['dir_cache'].DIRECTORY_SEPARATOR.$d;
       // ignore system directories and files
       // ignore attachments directory
       // ignore file names
@@ -843,7 +852,7 @@ class ZenTargets {
     }
 
     // update the last_config_update file
-    touch( $this->_ini['directories']['dir_cache']."/last_config_update" );
+    touch( $this->_ini['directories']['dir_cache'].DIRECTORY_SEPARATOR."last_config_update" );
 
     return $success;
   }
@@ -871,19 +880,20 @@ class ZenTargets {
     }
 
     $installdir = $this->_installdir;
-    print "   Copying from $dir to $installdir/setup\n";
+    print "   Copying from $dir to $installdir".DIRECTORY_SEPARATOR."setup\n";
 
     // copy the files specified in data file
     $success = true;
+    $sep = DIRECTORY_SEPARATOR;
 
     // we don't use _parseConfigData() here because the ZenUtils class may not exist yet(we're copying it)
-    $files = file( "$installdir/setup/classFiles" );
+    $files = file( $installdir.$sep."setup".$sep."classFiles" );
     foreach($files as $f) {
       $fn = trim($f);
       if( !strlen($fn) || strpos($fn, '#') === 0 ) { continue; }
       print "   C $fn\n";
-      if( !@copy("$dir/$fn", "$installdir/setup/$fn") ) {
-        $this->_printerr("_copy_class_files", "Unable to copy: $dir/$fn -> $installdir/$fn");
+      if( !@copy($dir.$sep.$fn, "$installdir{$sep}setup{$sep}$fn") ) {
+        $this->_printerr("_copy_class_files", "Unable to copy: $dir{$sep}$fn -> $installdir{$sep}$fn");
         return false;
       }
     }
@@ -1015,30 +1025,33 @@ class ZenTargets {
     // the date/time text was generated
     $gentime = date("Y-m-d H:i");
 
+    $sep = DIRECTORY_SEPARATOR;
+
     // generate frame page
-    $template = new ZenTemplate("schema/frameset.template");
-    $template->values( array('title'=>$titleText,'gentime'=>$gentime) );
-    $fp = fopen("$dest/index.html", 'w');
+    $template = new ZenTemplate( $this->_ini );
+    $template->assign( array('title'=>$titleText,'gentime'=>$gentime) );
+    $res = $template->fetch("schema{$sep}frameset.tpl");
+    $fp = fopen("$dest{$sep}index.html", 'w');
     if( !$fp ) {
       $this->_printerr("_gen_schema_docs", "Unable to create index.html in $dest");
       return false;
     }
-    fputs($fp, $template->process());
+    fputs($fp, $res);
     fclose($fp);
     print "   C index.html\n";
 
     // generate navigation bar
-    $template = new ZenTemplate("schema/nav.template");
-    $template->values( array('abstract' => $navList['a'],
+    $template->assign( array('abstract' => $navList['a'],
                              'tables'   => $navList['t'],
                              'gentime'  => $gentime,
                              'source'   => $source));
-    $fp = fopen("$dest/nav.html", 'w');
+    $res = $template->fetch("schema{$sep}nav.tpl");
+    $fp = fopen("$dest{$sep}nav.html", 'w');
     if( !$fp ) {
       $this->_printerr("_gen_schema_docs", "Unable to create nav.html in $dest");
       return false;
     }
-    fputs($fp, $template->process());
+    fputs($fp, $res);
     fclose($fp);
     print "   C nav.html\n";
 
@@ -1048,14 +1061,14 @@ class ZenTargets {
                   'count'   => count($tables),
                   'gentime' => $gentime,
                   'tables'  => $tableData);
-    $template = new ZenTemplate("schema/menu.template");
-    $template->values($vals);
-    $fp = fopen("$dest/menu.html", 'w');
+    $template->assign($vals);
+    $res = $template->fetch("schema{$sep}menu.tpl");
+    $fp = fopen("$dest{$sep}menu.html", 'w');
     if( !$fp ) {
       $this->_printerr("_gen_schema_docs", "Unable to create main.html in $dest");
       return false;
     }
-    fputs($fp, $template->process());
+    fputs($fp, $res);
     fclose($fp);
     print "   C menu.html\n";
 
@@ -1066,15 +1079,15 @@ class ZenTargets {
       $vals['gentime'] = $gentime;
       // create the template
       $tmp = $vals['is_abstract']? "abstract" : "table";
-      $template = new ZenTemplate("schema/$tmp.template");
-      $template->values( $vals );
+      $template->assign( $vals );
+      $res = $template->fetch("schema{$sep}$tmp.tpl");
       // write to file
-      $fp = fopen("$dest/$t.html", 'w');
+      $fp = fopen("$dest{$sep}$t.html", 'w');
       if( !$fp ) {
         $this->_printerr("_gen_schema_docs", "Unable to create $t.html in $dest");
         return false;
       }
-      fputs($fp, $template->process());
+      fputs($fp, $res);
       fclose($fp);
       print "   C $t.html\n";
     }
@@ -1090,17 +1103,17 @@ class ZenTargets {
    * @return boolean
    */
   function _gen_testunit( $classname, $package ) {
-    print "- Generating Test Unit for $package/$classname\n";
+    $sep = DIRECTORY_SEPARATOR;
+    print "- Generating Test Unit for $package{$sep}$classname\n";
 
     // prepare a list of method names for use
     // in rendering the test unit file
-    $vals = array();
-    $vars = array('class' => $classname,
-                  'methods' => get_class_methods($classname));
+    $vals = array('class'=>$classname, 'methods'=>array());
+    $vars = get_class_methods($classname);
     for($i=0; $i<count($vars); $i++) {
       // skip private methods and constructor
       if( strpos($vars[$i], '_') === 0 || strtolower($classname) == strtolower($vars[$i]) ) { continue; }
-      $vals[$i] = ucfirst($vars[$i]);
+      $vals['methods'][] = ucfirst($vars[$i]);
     }
     // validate
     if( !count($vals) ) {
@@ -1108,14 +1121,20 @@ class ZenTargets {
       return false;
     }
     // parse the template, inserting data
-    $template = new ZenTemplate($this->_installdir.'/defaults/testunit.template');
-    $template->values();
-    $text = $template->process();
+    // use special delimiters << and >>
+    // since this template will contain
+    // a lot of { and } chars
+    $template = new ZenTemplate( $this->_ini );
+    $template->template_dir = $this->_installdir.$sep.'defaults';
+    $template->left_delimiter = '<<';
+    $template->right_delimiter = '>>';
+    $template->assign( $vals );
+    $text = $template->fetch('testunit.tpl');
     
     // generate file info
-    $dir = $this->_installdir."/utilities/tests/$package";
-    $file = "$dir/{$classname}Test.php";
-    $xfile = "$dir/{$classname}Test.xml";
+    $dir = $this->_installdir."{$sep}utilities{$sep}tests{$sep}$package";
+    $file = "$dir{$sep}{$classname}Test.php";
+    $xfile = "$dir{$sep}{$classname}Test.xml";
     if( !is_dir($dir) ) {
       print "   C $dir\n";
       mkdir($dir, '0744');
@@ -1137,9 +1156,15 @@ class ZenTargets {
 
     // copy xml helper
     print "   C $xfile\n";
-    copy($this->_installdir.'/defaults/testunit_xml.template', $xfile);
+    copy($this->_installdir."{$sep}defaults{$sep}testunit_xml.tpl", $xfile);
 
-    print "!!!IMPORTANT!!! remember to add the new test units to CVS!\n";
+    if( preg_match('/Usage:/', `cvs`) ) {
+      `cvs add $file`;
+      `cvs add $xfile`;       
+    }
+    else {
+      print "!!!IMPORTANT!!! remember to add the new test units to CVS!\n";
+    }
     return true;
   }
 
@@ -1150,14 +1175,14 @@ class ZenTargets {
    * If replace is set to true, then the current zen.ini file (from this install directory) will
    * be used to fill values as possible, to reduce the user configuration as much as possible.
    *
-   * @param string $file is the filename (without .template extension)
-   * @param string $source is the path for the source file ($file.template will be appended)
+   * @param string $file is the filename (without .tpl extension)
+   * @param string $source is the path for the source file ($file.tpl will be appended)
    * @param string $dest the full path for output file ($filename will be appended)
    * @param boolean $replace if true, then the destination will be replaced instead of merged
    */
   function _merge_template_file( $file, $source, $dest, $replace = false ) {
-    $source = $source . "/$file.template";
-    $dest = $dest ."/$file";
+    $source = $source.DIRECTORY_SEPARATOR.$file.'.tpl';
+    $dest = $dest.DIRECTORY_SEPARATOR.$file;
     
     if( !@file_exists($source) ) {
       $this->_printerr('_merge_template_file', "Template file ($source) not found, cannot continue");
@@ -1198,8 +1223,8 @@ class ZenTargets {
     }
 
     $template = new ZenTemplate( $source );
-    $template->values($vals);
-    $newtext = $template->process();
+    $template->assign($vals);
+    $newtext = $template->fetch();
 
     $fp = fopen($dest, 'w');
     if( !$fp ) { 
@@ -1265,7 +1290,7 @@ class ZenTargets {
       // this is a directory or the install.php
       // file itself, in either of those cases
       // it will be installs/
-      $source = $this->_installdir.($source? "/$source" : "");
+      $source = $this->_installdir.($source? DIRECTORY_SEPARATOR.$source : "");
       $file = preg_replace('#/$#', '', $file);
 
       // check directory structure
@@ -1280,8 +1305,9 @@ class ZenTargets {
       }
 
       // generate full pathnames
-      $sourcefile = ($is_tmplt)? $source."/$file.template" : $source."/$file";
-      $destfile = $dest."/$file";
+      $sourcefile = ($is_tmplt)? $source.DIRECTORY_SEPARATOR.$file.'.tpl' : 
+        $source.DIRECTORY_SEPARATOR.$file;
+      $destfile = $dest.DIRECTORY_SEPARATOR.$file;
 
       if( $sect == 'directories' && $var == 'dir_user' && file_exists($destfile) ) {
         print "   S $file (files in user directory are not overwritten)\n";
@@ -1369,8 +1395,8 @@ class ZenTargets {
       }
     }
     // update the last_config_update counter
-    touch( $this->_ini['directories']['dir_cache']."/last_config_update" );
-    chmod( $this->_ini['directories']['dir_cache']."/last_config_update", 0766 );
+    touch( $this->_ini['directories']['dir_cache'].DIRECTORY_SEPARATOR."last_config_update" );
+    chmod( $this->_ini['directories']['dir_cache'].DIRECTORY_SEPARATOR."last_config_update", 0766 );
     return $success;
   }
 
@@ -1384,6 +1410,8 @@ class ZenTargets {
   function _copy_content_files( $replace = true ) {
     print "- Copying all content files to appropriate destinations\n";
     
+    $sep = DIRECTORY_SEPARATOR;
+
     // confirm if replace
     if( $this->_confirm("This will replace all existing files, continue?") != 'y' )
       return false;
@@ -1395,22 +1423,22 @@ class ZenTargets {
     $web = $this->_ini['paths']['path_www'];
 
     // includes files
-    if( "$source/includes" != realpath($inc) ) {
-      if( !$this->_copyRecursively( "$source/includes", $inc, '0755', $replace ) ) { return false; }
+    if( !$this->_sameDir("$source{$sep}includes", $inc) ) {
+      if( !$this->_copyRecursively( "$source{$sep}includes", $inc, '0755', $replace ) ) { return false; }
     }
-    else { print "   S includes/, source and dest are the same\n"; }
+    else { print "   S includes{$sep}, source and dest are the same\n"; }
     
     // web files
-    if( "$source/www" != realpath($web) ) {
-      if( !$this->_copyRecursively( "$source/www", $web, '0755', $replace ) ) { return false; }
+    if( !$this->_sameDir("$source{$sep}www", $web) ) {
+      if( !$this->_copyRecursively( "$source{$sep}www", $web, '0755', $replace ) ) { return false; }
     }
-    else { print "   S www/, source and dest are the same\n"; }
+    else { print "   S www{$sep}, source and dest are the same\n"; }
     
     // install directory
-    if( $this->_installdir != realpath($conf) ) {
+    if( !$this->_sameDir($this->_installdir, $conf) ) {
       if( !$this->_copyRecursively( $this->_installdir, $conf, '0755', $replace) ) { return false; } 
     }
-    else { print "   S install/, source and dest are the same\n"; }
+    else { print "   S install{$sep}, source and dest are the same\n"; }
 
     return true;
   }
@@ -1425,7 +1453,8 @@ class ZenTargets {
     $success = true;
     // check for develop mode
     if( $this->_ini['debug']['develop_mode'] < 1 ) {
-      $this->_printerr("_cvs_update", "This method is only available during development [develop_mode=true]");
+      $this->_printerr("_cvs_update", 
+                       "This method is only available during development [develop_mode=true]");
       return false;
     }
 
@@ -1480,28 +1509,30 @@ class ZenTargets {
       return false;
     }
 
-    // copy content files to destination
-    if( !$this->_copy_content_files( true ) ) { return false; }
-
     // test directory structures and permissions
     if( !$this->_check_directories( true ) ) { return false; }
     
+    // copy content files to destination
+    if( !$this->_copy_content_files( true ) ) { return false; }
+
     // check the permissions
     if( !$this->_check_permissions() ) { return false; }
 
     // copy config files if flag set
-    if( !$this->_copy_config_files() ) { $success = false; }
+    if( !$this->_copy_config_files() ) { return false; }
     
     // check database connection
     if( !$this->_verify_db_connection() ) { return false; }
 
     // create database
-    if( !$this->_create_database($this->_ini['directories']['dir_config']."/sampledata") ) { return false; }
+    if( !$this->_create_database($this->_ini['directories']['dir_config']
+                                 .DIRECTORY_SEPARATOR."sampledata") ) { return false; }
 
     // load initial data
-    if( !$this->_load_data($this->_ini['directories']['dir_config']."/sampledata") ) { return false; }
+    if( !$this->_load_data($this->_ini['directories']['dir_config']
+                           .DIRECTORY_SEPARATOR."sampledata") ) { return false; }
 
-    return $success;
+    return true;
   }
   
   /**
@@ -1519,7 +1550,8 @@ class ZenTargets {
   function _prepare_install_files( $src, $dest, $version ) {
     // check for develop mode
     if( $this->_ini['debug']['develop_mode'] < 1 ) {
-      $this->_printerr("_prepare_install_file", "This target is only used during development [develop_mode=true]");
+      $this->_printerr("_prepare_install_file", 
+                       "This target is only used during development [develop_mode=true]");
       return false;
     }
 
@@ -1529,7 +1561,8 @@ class ZenTargets {
     return true;
 
     // create zen.ini in new install directory
-    ZenTargets::makeNewIniFile( $this->_ini['directories']['dir_classes'], $dest."/install" );
+    ZenTargets::makeNewIniFile( $this->_ini['directories']['dir_classes'], 
+                                $dest.DIRECTORY_SEPARATOR."install" );
 
     // check directories
 
@@ -1655,10 +1688,13 @@ class ZenTargets {
     // find adodb and include
     $dir = $this->_ini['directories']['dir_classes'];
     if( !@is_dir($dir) ) {
-      $this->_printerr("getDbConnection","Cannot find the class files to enable adodb, unable to establish db connection");
+      $this->_printerr("getDbConnection",
+                       "Cannot find the class files to enable adodb, "
+                       ."unable to establish db connection");
       return false;
     }
-    include_once("$dir/adodb/adodb.inc.php");
+    $sep = DIRECTORY_SEPARATOR;
+    include_once("$dir{$sep}adodb{$sep}adodb.inc.php");
     $GLOBALS['zen'] = $this->_ini;
     return Zen::getDbConnection();
   }
@@ -1678,13 +1714,14 @@ class ZenTargets {
       return false;
     }
 
-    // backup first, supress all errors (there may not even be a db to backup)
+    // backup first, suppress all errors (there may not even be a db to backup)
     $this->_backup_database(null, true);
     
     // add new schema
     print "- Create database schema\n";
     $dbc =& $this->getDbConnection();
-    $dbx = new ZenDBXML( $dbc, $dataDirectory.'/database.xml', $this->_ini['debug']['develop_mode'] );
+    $dbx = new ZenDBXML( $dbc, $dataDirectory.DIRECTORY_SEPARATOR.'database.xml', 
+                         $this->_ini['debug']['develop_mode'] );
     $res = $dbx->createDbSchema( true );
     print "   {$res[1]} of {$res[0]} tables created successfully\n";
     if( $res[0] != $res[1] ) {
@@ -1723,7 +1760,7 @@ class ZenTargets {
     print "- Dropping existing database schema\n";
     $dbc =& $this->getDbConnection();
     $dbx = new ZenDBXML( $dbc, 
-                         $this->_ini['directories']['dir_config'].'/database.xml', 
+                         $this->_ini['directories']['dir_config'].DIRECTORY_SEPARATOR.'database.xml', 
                          $this->_ini['debug']['develop_mode'] );
     $res = $dbx->dropDbSchema( $tables );
     print "   {$res[1]} of {$res[0]} tables dropped successfully\n";
@@ -1764,14 +1801,14 @@ class ZenTargets {
     if( $table && !is_array($table) ) { $table = explode(',', $table); }
 
     // load the new data
-    $source = $this->_ini['directories']['dir_config']."/database.xml";
+    $source = $this->_ini['directories']['dir_config'].DIRECTORY_SEPARATOR."database.xml";
     $dbc =& $this->getDbConnection();
     $dbx = new ZenDBXML( $dbc, $source, $this->_ini['debug']['develop_mode'] );
     $res = $dbx->loadDatabaseData( $dir, $table, $dropOldData );
-    print "   {$res[1]} of {$res[0]} tables loaded successfully\n";
+    print "   {$res[1]} of {$res[0]} tables populated with data\n";
     if( $res[0] != $res[1] ) {
       $diff = $res[0] - $res[1];
-      $this->_printerr("_load_data", "Load error: $diff tables failed to load correctly");
+      $this->_printerr("_load_data", "Load error: $diff tables could not be populated");
       return false;
     }
     return true;
@@ -1796,10 +1833,10 @@ class ZenTargets {
     print $perform? "- Updating database schema\n" : "- (simulated)Updating database schema\n";
 
     // get the backup folder
-    $dir = $this->_getBackupLocation()."/database";
+    $dir = $this->_getBackupLocation().DIRECTORY_SEPARATOR."database";
 
     // create schema parser and backup utility
-    $source = $this->_ini['directories']['dir_config']."/database.xml";
+    $source = $this->_ini['directories']['dir_config'].DIRECTORY_SEPARATOR."database.xml";
     $dbc =& $this->getDbConnection();
     $dbx = new ZenDBXML( $dbc, $source, $this->_ini['debug']['develop_mode'] );                 
 
@@ -1873,14 +1910,16 @@ class ZenTargets {
    */
   function _find_classes_directory() {
     $dir = null;
-    if( isset($this->_ini['directories']['dir_classes']) && @is_dir( $this->_ini['directories']['dir_classes'] ) ) {
+    $sep = DIRECTORY_SEPARATOR;
+    if( isset($this->_ini['directories']['dir_classes']) 
+        && @is_dir( $this->_ini['directories']['dir_classes'] ) ) {
       $dir = $this->_ini['directories']['dir_classes'];
     }
-    else if( @is_dir("../includes/lib/classes") ) {
-      $dir = "../includes/lib/classes";
+    else if( @is_dir("..{$sep}includes{$sep}lib{$sep}classes") ) {
+      $dir = "..{$sep}includes{$sep}lib{$sep}classes";
     }
-    else if( @is_dir("../lib/classes") ) {
-      $dir = "../lib/classes";
+    else if( @is_dir("..{$sep}lib{$sep}classes") ) {
+      $dir = "..{$sep}lib{$sep}classes";
     }
     return $dir;
   }
@@ -1891,7 +1930,8 @@ class ZenTargets {
    * @access private
    */
   function _printHeading() {
-    print join("",file($this->_installdir."/setup/headingInfo"));
+    print join("",file($this->_installdir.DIRECTORY_SEPARATOR
+                       ."setup".DIRECTORY_SEPARATOR."headingInfo"));
   }
 
   /**
@@ -1974,7 +2014,7 @@ class ZenTargets {
       return false;
     }
     while( $f = readdir($dh) ) {
-      $file = $dir."/".$f;
+      $file = $dir.DIRECTORY_SEPARATOR.$f;
       // ignore system files
       if( strpos($f,".") === 0 ) { continue; }
       // store directories
@@ -2016,11 +2056,24 @@ class ZenTargets {
    * @return boolean succeeded
    */
   function _copyRecursively( $source, $dest, $chmod, $replace = true ) {
-    print "   populating $dest [+ added, S skipped, R replaced]\n";
+    // clean up dir names
+    $source = ZenUtils::cleanPath($source);
+    $dest = ZenUtils::cleanPath($dest);
+
+    // ignore version control
+    if( strtoupper(basename($source)) == 'CVS' || strtoupper(basename($dest)) == 'CVS' ) {
+      print "   ->ignoring CVS (version control) directory ($source)\n";
+      return true;
+    }
+
+    print "   ->populating $dest\n";
     $success = true;
 
     // make sure the directory exists
-    if( !@is_dir( $dest ) && !eval("return @mkdir('$des', $chmod);") ) {
+    // we must eval this statement to create
+    // a proper octal value from $chmod
+    eval("\$oct = $chmod;");
+    if( !@is_dir( $dest ) && !mkdir($dest, $oct) ) {
       $this->_printerr("_copyRecursively", "Unable to create directory: $dest");
       return false;
     }
@@ -2028,9 +2081,9 @@ class ZenTargets {
     // copy files in this directory
     $dirs = array();
     $dh = opendir( $source );
-    while( ($f = readdir($dh)) === true ) {
-      $oldfile = $source."/".$file;
-      $newfile = $dest."/".$f;
+    while( !(($f = readdir($dh)) === false) ) {
+      $oldfile = $source.DIRECTORY_SEPARATOR.$f;
+      $newfile = $dest.DIRECTORY_SEPARATOR.$f;
       if( strpos($f,".") === 0 || preg_match("/([-~]|\.old)$/", $f) ) {
         // skip backups and system entries
         continue;
@@ -2051,12 +2104,12 @@ class ZenTargets {
       else { print "   + $f\n"; }
 
       // do the copy
-      if( !@copy( $file, $newfile ) ) {
+      if( !copy( $oldfile, $newfile ) ) {
         $this->_printerr("_copyRecursively", "Unable to create: $newfile");
         return false;
       }
     }
-    closedir($source);
+    closedir($dh);
 
     // copy files in all subdirectories    
     foreach( $dirs as $d ) {
@@ -2076,7 +2129,8 @@ class ZenTargets {
    * @return boolean loaded successfully
    */
   function _parseConfigData( $filename ) {
-    $filename = $this->_installdir."/setup/$filename";
+    $s = DIRECTORY_SEPARATOR;
+    $filename = $this->_installdir."{$s}setup{$s}$filename";
     if( !@file_exists($filename) ) {
       print "ERROR: $filename could not be loaded.  Setup will not run correctly!";
       return false;
@@ -2098,7 +2152,7 @@ class ZenTargets {
   /**
    * Confirms that the user wants to perform an action (y/n)
    *
-   * Note that if the --supress_confirm option was passed, then this function will simply return the default
+   * Note that if the --suppress_confirm option was passed, then this function will simply return the default
    * or the first element in the list.
    *
    * @access private
@@ -2110,8 +2164,8 @@ class ZenTargets {
     $res = null;
     // default choices
     if( !$choices ) { $choices = array('y','n'); }
-    // check for --supress, return first element or default
-    if( $this->_supress ) {
+    // check for --suppress, return first element or default
+    if( $this->_suppress ) {
       return $default? $default : $choices[0];
     }
     // get the users reply (keep trying until it is valid
@@ -2146,18 +2200,59 @@ class ZenTargets {
    */
   function makeNewIniFile( $class_dir, $output_dir = '' ) {
     print "Creating new zen.ini file\n";
-    $file = $output_dir? "$output_dir/zen.ini" : "zen.ini";
+    $file = $output_dir? $output_dir.DIRECTORY_SEPARATOR."zen.ini" : "zen.ini";
     if( file_exists($file) ) {
       print "  - $file already exists in this directory (cowardly refusing to overwrite)\n";
       return false;
     }
+
+    $instdir = dirname(dirname(__FILE__));
     ZenUtils::prep('ZenTemplate',$class_dir);
-    $template = new ZenTemplate('defaults/zen.ini.template');
-    $text = $template->process();
+    $template = new ZenTemplate( array() );
+    $template->template_dir = $instdir.DIRECTORY_SEPARATOR.'defaults';
+    $template->compile_dir = $instdir;
+    $template->config_dir = $instdir;
+    $template->cache_dir = $instdir;
+    $text = $template->fetch('zen.ini.tpl');
+
+    $dh = opendir($instdir);
+    while( !($fname = readdir($dh)===false) ) {
+      if( strpos($fname,'%') === 0 ) {
+        
+      }
+    }
+
     $fp = fopen('zen.ini','w');
     $res = fputs($fp, $text);
     fclose($fp);
     return $res;
+  }
+
+  /**
+   * Check directory paths to see if they are the same
+   *
+   * @param string $path1
+   * @param string $path2
+   * @return boolean
+   */
+  function _sameDir($path1, $path2) {
+    // get the fully translated path
+    $path1 = realpath($path1);
+    $path2 = realpath($path2);
+
+    // make all of our slashes point the same way
+    $path1 = ZenUtils::cleanPath($path1);
+    $path2 = ZenUtils::cleanPath($path2);
+
+    // if this is windows, it is case insensitive
+    if( preg_match('/^[a-zA-Z]:/', $path1) ) { 
+      $path1 = strtolower($path1); 
+    }
+    if( preg_match('/^[a-zA-Z]:/', $path2) ) { 
+      $path2 = strtolower($path2); 
+    }
+
+    return $path1 == $path2;
   }
 
   /**
@@ -2182,6 +2277,7 @@ class ZenTargets {
                  "drop_database" => "Delete a database (use with caution!!)",
                  "extra_secure_mode" => "Tighten directory permissions(for unix, experimental)",
                  "full_install" => "Install a new zentrack version",
+                 "gen_testunit" => "Create test unit classes (development tool)",
                  "merge_template_file" => "Merge existing config file into template(development tool)",
                  "prepare_install_files" => "Prepare install file(development tool)",
                  "try_db_connection" => "Test db connectivity by manually specifying connection info",

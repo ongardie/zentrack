@@ -41,11 +41,11 @@
     //  ..do something here..
     //}
 
-  <<foreach item=item from=$methods>>
+<<foreach item=item from=$methods>>
     function <<$item>>( $vals ) {
       Assert::equalsTrue(false, 'write me');
     }
-  <</foreach>>
+<</foreach>>
 
   }
 

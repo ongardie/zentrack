@@ -26,7 +26,8 @@
                           "ZenMessage",
                           "ZenMessageList",
                           "ZenQuery",
-                          "adodb/adodb.inc" );
+                          "adodb/adodb.inc",
+                          "smarty/Smarty.class");
 
   /** @var array $classes_data_types the DataType classes */
   $classes_data_types = array(

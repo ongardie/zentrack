@@ -39,7 +39,7 @@ path_includes = "{$path_includes|default:"/web/zentrack/includes"}"
 path_www = "{$path_www|default:"/web/zentrack/www"}"  
 
 ;browser path to zentrack www directory (this should include the domain name)
-url_www = "{$url_www|default="http://mysite.com/zentrack"}"
+url_www = "{$url_www|default:"http://mysite.com/zentrack"}"
 
 ;path to the php CLI executable (i.e. C:/php/cli/php.exe or /usr/bin/php)
 ;if the CLI binary is in the system path, a blank is ok here
@@ -62,28 +62,28 @@ path_cli = "{$path_cli}"
 
 ; the type of database
 ; mysql, mysqlt(transaction enabled), postgres, oci8po (oracle), mssqlpo
-db_type = "{$db_type|default="mysql"}"
+db_type = "{$db_type|default:"mysql"}"
 
 ; domain or ip for database server, sometimes blank is good
-db_host = "{$db_host|default="localhost"}"
+db_host = "{$db_host|default:"localhost"}"
 
 ; the table set or instance to use for zentrack
-db_instance = "{$db_instance|default="zentrack"}" 
+db_instance = "{$db_instance|default:"zentrack"}" 
 
 ; username for logging into db
-db_user = "{$db_user|default="zentrack"}" 
+db_user = "{$db_user|default:"zentrack"}" 
 
 ; password for logging in, sometimes blank for postgres
-db_pass = "{$db_pass|default="zentrack"}"
+db_pass = "{$db_pass|default:"zentrack"}"
 
 ; whether we should use persistent connections or not
 ; On improves efficiency, if your db experiences problems
 ; with too many open connections, or not closing connections
 ; when you would like, turn this off (1=on, 0=off)
-db_persistent = {$db_persistent|default="0"}
+db_persistent = {$db_persistent|default:"0"}
 
 ;the prefix for table names, keep in upper case, blank for none
-db_prefix = "{$db_prefix|default="ZENTRACK_"}"
+db_prefix = "{$db_prefix|default:"ZENTRACK_"}"
 
 ;the length time to cache queries in seconds
 ;use blank to disable caching
@@ -129,7 +129,7 @@ debug_logfile = "{$debug_logfile}"
 ; allows certain security settings to be overridden during development
 ; set to 1 if you are a developer, otherwise leave this at 0
 ; this SHOULD NOT be set to 1 in a production environment
-develop_mode = {$develop_mode=0}
+develop_mode = {$develop_mode|default:0}
 
 ;;;;;;;;;;;;;;; ADVANCED SETTINGS ;;;;;;;;;;;;;;;;;;;;;;
 ;;; It's probably best to leave these settings "as is"

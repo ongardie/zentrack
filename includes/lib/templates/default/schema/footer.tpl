@@ -1,8 +1,8 @@
 
 <p style='font-size:75%;font-style:italic'>
-Auto-generated: {gentime}
+Auto-generated: {$gentime}
 <br>
-Source file: {source}
+Source file: {$source}
 </p>
 </body>
 </html>

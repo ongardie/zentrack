@@ -8,13 +8,13 @@
    *
    * The following special configuration options are available:
    * <ul>
-   *   <li>--ini_file=file:  specify an alternate zen.ini (config) file to use (defaults to ./zen.ini)
-   *   <li>--supress_confirm: supresses confirm dialog (answers yes to all, needed for cron jobs)
-   *   <li>--verbose:  increase message output to screen
-   *   <li>--compress=type: set compression on data output, null-do not compress(default), zip-use zip compression, 
+   *   <li>--ini=filename:  specify an alternate zen.ini (config) file to use (defaults to ./zen.ini)
+   *   <li>--s: suppresses confirm dialog (answers yes to all, needed for cron jobs)
+   *   <li>--v: verbose: increase message output to screen
+   *   <li>--c=type: set compression on data output, null-do not compress(default), zip-use zip compression, 
    *         gzip-use gzip compresion
    *   <li>--classdir=dir:  specify location of class files (for development)
-   *   <li>--makeini:  create an ini file
+   *   <li>--makeini:  create an ini file then exit (rather than running targets normally)
    * </ul>
    *
    * @package Setup
@@ -34,7 +34,7 @@
   // set default locations
   $ini_file = "$thisdir/zen.ini";
   $class_dir = "../includes/lib/classes";
-  $supress = false;
+  $suppress = false;
   $verbose = false;
   $compress = null;
   $makeini = false;
@@ -52,11 +52,11 @@
     $argv[$i] = trim($argv[$i]);
     if( strpos($argv[$i], '--') === 0 ) {
       $val = explode('=',substr(trim($argv[$i]),2));
-      if( $val[0] == 'ini_file' ) { $ini_file = $val[1]; }
+      if( $val[0] == 'ini' ) { $ini_file = $val[1]; }
       else if( $val[0] == 'classdir' ) { $class_dir = $val[1]; }
-      else if( $val[0] == 'supress_confirm' ) { $supress = true; }
-      else if( $val[0] == 'verbose' ) { $verbose = true; }
-      else if( $val[0] == 'compress' ) { $compress = $val[1]; }
+      else if( $val[0] == 's' ) { $suppress = true; }
+      else if( $val[0] == 'v' ) { $verbose = true; }
+      else if( $val[0] == 'c' ) { $compress = $val[1]; }
       else if( $val[0] == 'makeini') { $makeini = true; }
       else { print "Invalid modifier ".$argv[$i]."\n"; }
     }
@@ -127,6 +127,12 @@
   }
 
   if( $makeini ) {
+    if( !@file_exists("$class_dir/smarty/Smarty.class.php") ) {
+      die("ERROR: The required class ($class_dir/smarty/Smarty.inc.php) was not found."
+	  ."Try using --classdir=source_dir/includes/lib/classes.\n");
+    }
+    include("$class_dir/smarty/Smarty.class.php");
+    include("$class_dir/ZenTemplate.php");
     ZenTargets::makeNewIniFile($class_dir, $thisdir);
     print "Finished, please edit to your needs.\n";
     exit;
@@ -147,7 +153,7 @@
 
   // run the targets
   if( $verbose ) { print "Compression set to ".($compress? $compress : "none"); }
-  $z = new ZenTargets($GLOBALS['zen'], $supress, $compress);
+  $z = new ZenTargets($GLOBALS['zen'], $suppress, $compress);
 
   // prepare to run
   $z->args( $argv );

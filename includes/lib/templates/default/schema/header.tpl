@@ -1,7 +1,8 @@
 <html>
 <head>
-  <title>{title=name}</title>
+  <title>{$title|default:$name}</title>
 <style type='text/css'>
+{literal}
 .rowA {
   background: #FFFFFF;
   font-size: 90%;
@@ -29,6 +30,7 @@ PRE {
   margin-top: 0px;
   margin-bottom: 0px;
 }
+{/literal}
 </style>
 </head>
 <body>

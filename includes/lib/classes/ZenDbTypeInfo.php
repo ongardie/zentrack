@@ -404,7 +404,17 @@ class ZenDbTypeInfo {
    * @param string $type type of column
    */
   function genKeyName($table, $column, $type) {
-    return ($type=='primarykey'? "pk_" : "idx_").substr($table,0,3)."_".substr($column,0,3);
+    $txt = $type == 'primarykey'? 'pk' : 'idx';
+    $tvals = explode('_', $table);
+    foreach($tvals as $t) { $txt .= '_'.substr($t,0,2); }
+    $txt .= '_'.substr($column,0,2).substr($column,-2);
+    $ext = '';
+    while( isset($this->_keynames[$txt.$ext]) ) {
+      $ext++;
+    }
+    $txt = $txt.$ext;
+    $this->_keynames[$txt] = 1;
+    return $txt;
   }
 
   /**
@@ -446,6 +456,13 @@ class ZenDbTypeInfo {
   /*************************************
    **   SETTINGS
    ************************************/
+
+  /**
+   * Hash list to store keynames (for verifying unique entries)
+   * @access private
+   * @var array
+   */
+  var $_keynames;
 
   /** @var ZenDatabase the database connection to use */
   var $_dbo;

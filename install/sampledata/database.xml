@@ -335,9 +335,9 @@
            <notnull>true</notnull>
 	</column>
 	<column name="col_required" type="byte" ftype="checkbox" label="Required" />
-	<column name="col_criteria" type="string" ftype="textbox" label="Criteria" />
-	<column name="col_reference" type="value" ftype="popselect" label="Reference" />
-	<column name="col_showfield" type="value" ftype="popselect" 
+	<column name="col_criteria" type="text" ftype="textbox" label="Criteria" />
+	<column name="col_reference" type="string" ftype="popselect" label="Reference" />
+	<column name="col_showfield" type="string" ftype="popselect" 
                 label="Display Field(from ref. table)" />
 	<column name="col_default" type="string" ftype="text" label="Default Value" />
 	<column name="col_description" type="string" ftype="text" label="Description" />
@@ -415,7 +415,6 @@
 	</column>
         <column name="user_inits" type="string" ftype="hidden">
 	  <description>Initials of person who created entry</description>
-	  <default>{login_inits}</default>
 	  <size>5</size>
 	</column>
       </columns>
@@ -524,7 +523,6 @@
       <description>User Preferences</description>
       <columns>
 	<column name="user_id" type="integer" ftype="hidden" label="User">
-	  <default>{login_id}</default>
 	  <reference>USER.user_id</reference>
 	</column>
 	<column name="pref_name" type="value" ftype="hidden" />

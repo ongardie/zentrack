@@ -61,9 +61,9 @@ class ZenDatabase extends Zen {
       return true;
     }
     else {
-      $this->_genDbError("setCacheDirectory", 
-                          "$directory is not writable", 
-                         40, LVL_ERROR);
+      $this->_genDebug("setCacheDirectory", 
+                       "$directory is not writable", 
+                       40, LVL_ERROR);
       return false;
     }
   }
@@ -148,10 +148,12 @@ class ZenDatabase extends Zen {
    * @param string $query the query object to be executed
    * @param mixed $cacheTime The amount of time in seconds to cache the query. Set to 0 to override cache(reset). 
    *              Set to boolean false if you want to ignore caching altogether.
-   * @return resource
+   * @return resource (possibly false)
    */
   function execute( $query, $cacheTime = null, $limit = 0, $offset = 0 ) {
-    $this->_genDbError( "execute", "[cachetime:$cacheTime]$query", 
+    $this->_errmsg = null;
+    $this->_errnum = null;
+    $this->_genDebug( "execute", "[cachetime:$cacheTime]$query", 
                         0, LVL_NOTE);
     if (!strlen($cacheTime) || !isset($GLOBALS['ADODB_CACHE_DIR']) 
         || !strlen($GLOBALS['ADODB_CACHE_DIR'])) {
@@ -166,18 +168,11 @@ class ZenDatabase extends Zen {
       else
         $result = &$this->_adodb->cacheExecute($cacheTime, $query);
     }
-    if ($result === false) {
-      $msg = $this->_adodb->ErrorMsg();
-      if( $msg ) {
-        // we aren't worried about deleting things which don't exist, so
-        // suppress some of the messages about this
-        $l = (strpos(strtolower(trim($query)), 'delete') === 0)? LVL_NOTE : LVL_WARN;
-        $this->_genDbError( 'execute', "SQL Error", 220, $l );
-      }
-      else {
-        $this->_genDbError( 'execute', "Query returned no results", 0, LVL_NOTE );
-      }
-      return false;
+    if ($result === false && $this->_adodb->errorMsg()) {
+      // we aren't worried about deleting things which don't exist, so
+      // suppress some of the messages about this
+      $l = preg_match('/^(DROP|DELETE)/i', $query)? LVL_NOTE : LVL_WARN;
+      $this->_genDbError( 'execute', "SQL Error", 220, $l );
     }
     return $result;
   }
@@ -191,7 +186,7 @@ class ZenDatabase extends Zen {
    * @return the old value of fetchMode
    */
   function setFetchMode( $indexed = false ) {
-    $this->_genDbError( "setFetchMode", "Fetch mode is ".($indexed? 'true':'false'), 0, LVL_DEBUG);
+    $this->_genDebug( "setFetchMode", "Fetch mode is ".($indexed? 'true':'false'), 0, LVL_DEBUG);
     if ($indexed) {
       return $this->_adodb->SetFetchMode(ADODB_FETCH_ASSOC);
     }
@@ -210,15 +205,17 @@ class ZenDatabase extends Zen {
    * @return string
    */
   function executeGetOne( $query, $cacheTime = null) {
-    if (!strlen($cacheTime) || !isset($GLOBALS['ADODB_CACHE_DIR']) || !strlen($GLOBALS['ADODB_CACHE_DIR'])) {
+    $this->_genDebug( "executeGetOne", "[cachetime:$cacheTime]$query", 
+                        0, LVL_NOTE);
+    if (!strlen($cacheTime) || !isset($GLOBALS['ADODB_CACHE_DIR']) 
+        || !strlen($GLOBALS['ADODB_CACHE_DIR'])) {
       $result = $this->_adodb->getOne($query);
     }
     else {
       $result = $this->_adodb->cacheGetOne($cacheTime, $query);
     }
     if ($result === false && $this->_adodb->errorMsg() ) {
-      $this->_genDbError('executeGetOne', "There was an error in the query ($query)", 200, LVL_ERROR);
-      return false;
+      $this->_genDbError('executeGetOne', "SQL Error", 200, LVL_ERROR);
     }
     return $result;
   }
@@ -267,7 +264,7 @@ class ZenDatabase extends Zen {
       if( !strlen($text) ) {
         $text = 0;
       }
-      return $text;
+      break;
     case "date":
       if( $text == 'NOW' || $text == 'CURRENT_TIMESTAMP' || $text == 'NOW()' ) {
         $text = time();
@@ -276,7 +273,7 @@ class ZenDatabase extends Zen {
       if( !strlen($text) ) {
         $text = 0;
       }
-      return $text;
+      break;
     default:
       {
         if (is_array($text)) {
@@ -286,16 +283,15 @@ class ZenDatabase extends Zen {
             $quotedText[$name] = $this->_adodb->quote($value);
             $t .= "[$name]".$quotedText[$name];
           }
-          $this->_genDbError( "quote", "Quoted array: ".$t, 0, LVL_DEBUG);
           return $quotedText;
         }
         else {
-          $res = $this->_adodb->quote($text);
-          $this->_genDbError( "quote", "Quoted string: ".$res, 0, LVL_DEBUG);
-          return $res;
+          $text = $this->_adodb->quote($text);
         }
       }
     }
+    $this->_genDebug( "quote", "Quoted text: {$text}", 0, LVL_DEBUG);
+    return $text;
   }
 
   /**
@@ -323,10 +319,8 @@ class ZenDatabase extends Zen {
    * @return string
    */
   function getErrorMessage() {
-    if( $this->_adodb->ErrorMsg() ) { 
-      return "[".$this->_adodb->ErrorNo()."]".$this->_adodb->ErrorMsg();
-    }
-    return null;
+    if( !$this->_errmsg ) { return null; }
+    return '['.$this->_errnum.']'.$this->_errmsg;
   }
 
   /**
@@ -344,7 +338,8 @@ class ZenDatabase extends Zen {
     //todo add an option to enable/disable transactions
     //todo extract transaction code 
     //todo
-    // generate the update query (which will create a unique id) and the sql query (which will retrieve the id)
+    // generate the update query (which will create a unique id) and the sql query 
+    // (which will retrieve the id)
     $update = "UPDATE ".$this->makeTableName('table_ids')
       ." SET current_id = current_id + 1 where name_of_table = '$table'";
     $query = "SELECT current_id FROM ".$this->makeTableName('table_ids')." where name_of_table = '$table'";
@@ -356,10 +351,12 @@ class ZenDatabase extends Zen {
     $id = $this->_adodb->GetOne($query);
     // show error if we didn't get one
     if( !$this->_adodb->CompleteTrans() ) {
-      $this->_genDbError("generateID", "Generate id for $table failed ($query)", 220, LVL_ERROR);
+      $this->_genDbError("generateID", 
+                         "Failed to generate ID for table $table ({$update}::{$query})", 
+                         220, LVL_ERROR);
     }
     else {
-      $this->_genDbError( "generateID", "Generated id $id for $table", 0, LVL_DEBUG);
+      $this->_genDebug( "generateID", "Generated id $id for $table", 0, LVL_NOTE);
     }
     // return the result if we got one
     if( $id ) { return $id; }
@@ -462,8 +459,23 @@ class ZenDatabase extends Zen {
   function _genDbError( $method, $message = 'Database error', $errnum = 200, $level = 1 ) {
     $this->_errmsg = $this->_adodb->ErrorMsg();
     $this->_errnum = $this->_adodb->ErrorNo();
-    return ZenUtils::safeDebug( $this, $method, $message." [".$this->_adodb->ErrorNo()
-                        ."]".$this->_adodb->ErrorMsg(), $errnum, $level);      
+    if( $this->_errmsg || $this->_errnum ) 
+      { $message = $message." [{$this->_errnum}]{$this->_errmsg}"; }
+    return $this->_genDebug( $method, $message, $errnum, $level);   
+  }
+
+  /**
+   * Generates a debug message without an error
+   *
+   * @access private
+   * @return true if debug message was stored
+   * @param string $method the method which produced the error
+   * @param string $message the message to print [optional]
+   * @param int $errnum the error number
+   * @param int $level the error level
+   */
+  function _genDebug( $method, $message, $errnum = 0, $level = 3 ) {
+    return ZenUtils::safeDebug( $this, $method, $message, $errnum, $level);      
   }
 
 

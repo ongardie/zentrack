@@ -17,16 +17,19 @@ paths:path_includes::0540
 paths:path_www::0550
 
 # user directories
+
 directories:dir_user::0550
 directories:dir_user:code:0550
 
-# cach directories
+# cache directories
 
 directories:dir_cache::0770
 directories:dir_cache:db:0770
 directories:dir_cache:config:0770
 directories:dir_cache:translations:0770
 directories:dir_cache:attachments:0770
+directories:dir_cache:tpl_compiled:0770
+directories:dir_cache:tpl_cached:0770
 
 # config directories
 

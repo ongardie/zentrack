@@ -27,6 +27,8 @@ directories:dir_cache:db:0777
 directories:dir_cache:config:0777
 directories:dir_cache:translations:0777
 directories:dir_cache:attachments:0777
+directories:dir_cache:tpl_compiled:0777
+directories:dir_cache:tpl_cached:0777
 
 # config directories
 
