@@ -12,13 +12,13 @@
     <dataType name="maxstring"  type="TEXT"     size=""     max=""     fixed="false"/>
     <dataType name="text"       type="TEXT"     size=""     max=""     fixed="true" />
     <dataType name="byte"       type="SMALLINT" size=""     max="1"    fixed="true" />
-    <dataType name="shortint"   type="INT2"     size=""     max="3"    fixed="true" />
-    <dataType name="integer"    type="INT8"     size=""     max="9"    fixed="true" />
+    <dataType name="shortint"   type="INT2"     size=""     max=""     fixed="true" />
+    <dataType name="integer"    type="INT8"     size=""     max=""     fixed="true" />
     <dataType name="decimal"    type="DECIMAL"  size="6,2"  max="16,4" fixed="false"/>
-    <dataType name="long"       type="BIGINT"   size=""     max="18"   fixed="true" />
-    <dataType name="primarykey" type="INT"      size=""     max="9"    fixed="true" />
+    <dataType name="long"       type="BIGINT"   size=""     max=""     fixed="true" />
+    <dataType name="primarykey" type="BIGINT"   size=""     max=""     fixed="true" />
     <dataType name="email"      type="VARCHAR"  size="255"  max="255"  fixed="true" />
-    <dataType name="date"       type="BIGINT"   size=""     max="18"   fixed="true" />
+    <dataType name="date"       type="BIGINT"   size=""     max=""     fixed="true" />
   </dataTypes>
 
 
