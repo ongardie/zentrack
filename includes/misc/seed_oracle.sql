@@ -179,8 +179,8 @@ INSERT INTO ZENTRACK_TRANSLATION_STRINGS (trID, language, identifier, string) VA
 INSERT INTO ZENTRACK_TRANSLATION_STRINGS (trID, language, identifier, string) VALUES (15,'english','administrate tickets','administrate tickets');
 INSERT INTO ZENTRACK_TRANSLATION_STRINGS (trID, language, identifier, string) VALUES (16,'english','phrase 1','open a new ticket');
 INSERT INTO ZENTRACK_TRANSLATION_STRINGS (trID, language, identifier, string) VALUES (17,'english','phrase 2','please enter a new bin');
-INSERT INTO ZENTRACK_TRANSLATION_STRINGS (trID, language, identifier, string) VALUES (18,'english','phrase 3','enter id\'s seperated by commas or carriage returns');
-INSERT INTO ZENTRACK_TRANSLATION_STRINGS (trID, language, identifier, string) VALUES (19,'english','phrase 4','please read the administrator\'s manual before attempting to alter any settings.  altering these settings can result in severe consequences, without proper understanding.');
+INSERT INTO ZENTRACK_TRANSLATION_STRINGS (trID, language, identifier, string) VALUES (18,'english','phrase 3', 'enter id''s seperated by commas or carriage returns');
+INSERT INTO ZENTRACK_TRANSLATION_STRINGS (trID, language, identifier, string) VALUES (19,'english','phrase 4','please read the administrator''s manual before attempting to alter any settings.  altering these settings can result in severe consequences, without proper understanding.');
 
 --
 -- Dumping data for table 'ZENTRACK_TRANSLATION_WORDS'
