@@ -225,7 +225,15 @@ class ZenDatabase extends Zen {
 	$this->_connect();
 	return ($dbConnection);
   }
-  
+
+  /**
+   * Returns the database type in use
+   *
+   * @return string database type
+   */
+  function getDbType() { return $this->_dbtype; }
+
+
   /* VARIABLES */
 
   /**

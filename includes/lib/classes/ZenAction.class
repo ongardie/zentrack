@@ -12,8 +12,9 @@ class ZenAction extends ZenDataType {
    * Loads a ZenAction object for use
    *
    * @param integer $action_id is the id of the action (optional)
+   * @param ZenActionList $list (optional)loads the action from a ZenActionList rather than database
    */
-  function ZenAction( $action_id ) { }
+  function ZenAction( $action_id = null, $list = null ) { }
 
   /**
    * Performs action (also checks all associated triggers)

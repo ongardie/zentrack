@@ -9,21 +9,10 @@ class ZenTicketList extends ZenList {
    *
    * Creates an empty ticket list.
    * 
-   * This method must prepare the $_dbquery object @see DbQuery and ZenList for details
-   * The DbQuery object provided by this constructor will be used
-   * by the extended ZenList functions to create the resulting
-   *
-   * This method should also call the ZenList::ZenList() constructor and pass it the ZenQuery
-   * object, and a list of fields to be returned in the results.
+   * This method should also call the ZenList::ZenList() constructor and pass it a ZenMetaTable
+   * object corresponding to this list type
    */
   function ZenTicketList() { }
-
-  /**
-   * Creates a ZenTicket object from a set of values
-   *
-   * @param array $data the data set to be loaded
-   */
-  function makeObject( $data ) { }
 
   /**
    * returns the relationship information for a specific ticket

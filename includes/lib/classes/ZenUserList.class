@@ -9,14 +9,10 @@ class ZenUserList extends ZenList {
    *
    * Creates an empty user list.
    * 
-   * This method must prepare the $_dbquery object see DbQuery and ZenList for details
-   * The DbQuery object provided by this constructor will be used
-   * by the extended ZenList functions to create the resulting
+   * This method should also call the ZenList::ZenList() constructor and pass it the ZenMetaTable
+   * object
    *
-   * This method should also call the ZenList::ZenList() constructor and pass it the DbQuery
-   * object, and a list of fields to be returned in the results
-   *
-   * @see DbQuery
+   * @see ZenMetaTable
    * @see ZenList
    */
   function ZenUserList() { }

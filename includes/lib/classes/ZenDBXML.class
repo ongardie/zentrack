@@ -14,7 +14,8 @@ class ZenDBXML {
    * @param string $dbobject is a ZenDatabase instance
    */
   function ZenDBXML( &$dbobject ) { 
-    $this->_db =& $dbobject;
+    $this->_dbobj =& $dbobject;
+    $this->_dbtype = $this->_db->getDbType();
   }
 
 
@@ -47,75 +48,17 @@ class ZenDBXML {
    */
   function updateSqlFromXML() { }
 
-  /* UTILITIES */
-
-  /**
-   * creates sql needed to drop a table
-   *
-   * @param string $table
-   * @return array of sql statements
-   */
-  function _dropTableSyntax( $table ) { }
-
-  /**
-   * creates sql needed to add a table
-   *
-   * @params string $table
-   * @return array of sql statements
-   */
-  function _addTableSyntax( $table ) { }
-
-  /**
-   * creates sql needed to drop a column
-   *
-   * @param string $table
-   * @param string $column
-   * @return array of sql statements
-   * @return array of sql statements
-   */
-  function _dropColumnSyntax( $table, $column ) { }
-
-  /**
-   * creates sql needed to add a column
-   *
-   * @param string $table
-   * @param string $name of column
-   * @param string $type data type
-   * @param string $unique (true or false)
-   * @param integer $length (if applicable) of column
-   * @param string $formtype field type in a form
-   * @param string $description description of column
-   * @param string $required (true or false)
-   * @return array of sql statements
-   */
-  function _addColumnSyntax( $table, $name, $type, $unique, $length, $formtype, $description, $required ) { }
-
-  /**
-   * creates an index on a table for various columns
-   *
-   * @param string $name name of the index
-   * @param string $table
-   * @param array $columns
-   * @param boolean $unique
-   * @return array of sql statements
-   */
-  function _addIndexSyntax( $name, $table, $columns, $unique = false ) { }
-
-  /**
-   * drops an index on a table
-   *
-   * @param string $table
-   * @param string $name name of the index
-   */
-  function _dropIndexSyntax( $table, $name ) { }
 
   /* VARIABLES */
 
   /** @var ZenDatabase $_dbobj a db connection to use (also provides db type, specs, etc) */
   var $_dbobj;
 
-  /** @var DbConverter $_dbc a DbConverter* object specific to the database type */
+  /** @var DbTypeInfo $_dbc a DbTypeInfo* object specific to the database type */
   var $_dbc;
+
+  /** @var string $_dbtype is the database type in use */
+  var $_dbtype;
 
 }
 

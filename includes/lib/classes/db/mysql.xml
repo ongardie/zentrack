@@ -1,0 +1,41 @@
+
+<dbTypeInfo>
+
+  <dbInfo>
+    <preferredCase>upper</preferredCase>
+  </dbInfo>
+
+
+  <dataTypes>
+    <dataType name="value"      type="VARCHAR" size="25"  max="25"  />
+    <dataType name="string"     type="VARCHAR" size=""    max="200" />
+    <dataType name="text"       type="TEXT"    size=""    max=""    />
+    <dataType name="byte"       type="BYTE"    size="1"   max="1"   />
+    <dataType name="shortint"   type="INT"     size="3"   max="3"   />
+    <dataType name="integer"    type="INT"     size=""    max="12"  />
+    <dataType name="decimal"    type="DECIMAL" size="4,2" max="12,4"/>
+    <dataType name="long"       type="INT"     size="20"  max="20"  />
+    <dataType name="primarykey" type="INT"     size="12"  max="12"  />
+    <dataType name="email"      type="VARCHAR" size="255" max="255" />
+    <dataType name="date"       type="INT"     size="20"  max="20"  />
+  </dataTypes>
+
+
+  <sqlInfo>
+    <endline>;</endline>
+    <escapeCharacter>\</escapeCharacter>
+    <createSyntax>CREATE {table} {%columns%}</createSyntax>
+    <dropTableSyntax>DROP TABLE %table%</dropTableSyntax>
+    <primaryKey location="aftercolumns">PRIMARY KEY (%column%)</primaryKey>
+    <indexSyntax location="independant" uniquelabel="UNIQUE">
+      CREATE INDEX %unique% %name% ON %table%(%columns%)
+    </indexSyntax>
+    <dropIndexSyntax></dropIndexSyntax>
+    <addColumnSyntax>ALTER TABLE %table% ADD COLUMN %name% (%properties%) %after%</addColumnSyntax>
+    <dropColumnSyntax>ALTER TABLE %table% DROP COLUMN %name%</dropColumnSyntax>
+    <deleteSyntax><format>DELETE FROM %table% %where%</deleteSyntax>
+    <insertSyntax>INSERT INTO %table% COLUMNS(%columns%) VALUES(%values%)</insertSyntax>
+    <updateSyntax>UPDATE %table% SET %set% %where%</updateSyntax>
+  </sqlInfo>
+
+</dbTypeInfo>

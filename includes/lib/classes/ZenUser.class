@@ -10,9 +10,10 @@ class ZenUser extends ZenDataType {
    * Prepares a ZenUser object for use
    *
    * @param integer $user_id is the id of the user to be loaded (optional)
+   * @param ZenUserList $list (optional)loads the user from a ZenUserList rather than database
    */
-  function ZenUser( $user_id = null ) {
-    $this->ZenDataType( $this, $user_id );
+  function ZenUser( $user_id = null, $list = null ) {
+    $this->ZenDataType( $this, $user_id, $list );
   }
 
   /**

@@ -45,9 +45,10 @@ class ZenTrigger extends ZenDataType {
    * Either creates a blank trigger or loads an existing trigger
    *
    * @param integer $trigger_id the trigger to load (optional)
+   * @param ZenTriggerList $list (optional)loads the trigger from a ZenTriggerList rather than database
    */
-  function ZenTrigger( $trigger_id = null ) { 
-    $this->ZenDataType($this, $trigger_id);
+  function ZenTrigger( $trigger_id = null, $list = null ) { 
+    $this->ZenDataType($this, $trigger_id, $list);
   }
 
   /**

@@ -14,10 +14,7 @@
  * This class should not be called, rather, it should be extended and used
  * by a child class.
  *
- * All child classes must define the DbQuery object in their constructor, specifying
- * the tables to be used, and preparing this class for use
- *
- * All child classes must define the makeObject() method
+ * All child classes must define the ZenMetaTable object in their constructor
  *
  * @package zen 
 */
@@ -27,25 +24,20 @@ class ZenList extends Zen {
   /**
    * CONSTRUCTOR
    *
-   * This method recieves the ZenQuery object, and utilizes this to find out
+   * This method recieves the ZenMetaTable object, and utilizes this to find out
    * which columns and tables are valid for use by this object. This allows for 
    * validation of the incoming params.
    *
-   * The ZenQuery object should be prepared as follows: table names to reference set
-   *
-   * This constructor will also throw an error if !method_exists("makeObject")
-   * this method must be defined by the child class
-   *
-   * @param ZenQuery $dbquery a ZenQuery object corresponding to this data type
+   * @param ZenMetaTable $metainfo a ZenMetaTable object corresponding to this data type
    */
-  function ZenList( $dbquery ) { }
+  function ZenList( $metainfo ) { }
 
   /**
    * Limits the results to the set of ids provided (a wrapper for doing criteria() for ticket ids)
    *
    * This also provides a quick means to get a list of data items from a list of ids
    *
-   * @param array $ids a simple array of ticket ids that are to be included
+   * @param array $ids a simple array of data rows that are to be included
    */
   function criteriaIdSet( $ids ) { }
 
@@ -143,14 +135,31 @@ class ZenList extends Zen {
       $n = $vals[$key];
       $this->_data["$n"] = $vals;
       if( $n == $id )
-        return makeObject($vals);
+        return $this->_makeObject($vals);
     }
     $this->debug($this, "_find", "ID $id was expected but not found in the list data", 2, 122);
     return false;
   }
 
+  /**
+   * Constructs a new data type object containing the data row requested
+   *
+   * @param insteger $id the row to return
+   * @return ZenDataType of the data type comparable to this list
+   */
+  function _makeObject( $id ) {
+    $n = $this->_datatype;
+    return new $n( $id, $this );
+  }
+
 
   /* VARIABLES */
+
+  /** @var string $_datatype the data type class for this List type (set in constructor) */
+  var $_datatype;
+
+  /** @var string $_listtype the list object extending this List class (set in constructor) */
+  var $_listtype;
 
   /** @var array $_rawdata the non-indexed data, straight from the db */
   var $_rawdata;
@@ -173,8 +182,8 @@ class ZenList extends Zen {
   /** @var boolean $_loaded whether load() has been called */
   var $_loaded = false;
 
-  /** @var ZenQuery $_dbquery the ZenQuery object provided by the extending class */
-  var $_dbquery;
+  /** @var ZenMetaTable $_metainfo the ZenMetaTable object provided by the extending class */
+  var $_metainfo;
 
   /** @var array $_columns is the list of valid columns, and their data types... provided by the constructor */
   var $_columns;

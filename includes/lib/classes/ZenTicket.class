@@ -10,8 +10,9 @@ class ZenTicket extends ZenDataType {
    * loads a blank ticket object, or loads a ticket by id
    * 
    * @param integer $ticket_id (optional)id of ticket to load
+   * @param ZenTicketList $list (optional)loads the ticket from a ZenTicketList rather than database
    */
-  function zenTicket( $ticket_id = 0 ) { }
+  function zenTicket( $ticket_id = 0, $list = null ) { }
 
   /**
    * copies an existing ticket to this one

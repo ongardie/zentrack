@@ -30,7 +30,15 @@ class ZenDataType extends Zen {
     // set the primary key field for this table
     $this->_primarykey = getPrimaryKey( $this->_childobj );
     
-  }  
+  }
+
+  /**
+   * Returns a ZenMetaTable object for this data type
+   *
+   * @return ZenMetaTable object containing meta info for this data type
+   */  
+  function getMetaInfo() { }
+  
 
   /*****************************
    * COMMON METHODS
@@ -72,9 +80,6 @@ class ZenDataType extends Zen {
    * if there is an integrity issue
    *
    * The data for the fields can be obtains from the getMetaData() method
-   *
-   * The save function should ALWAYS update the FIELD_DEFS entry for the
-   * appropriate table
    *
    * Most likely this will be overridden by several methods
    * This sets the $this->_changed flag to false upon completion
