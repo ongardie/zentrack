@@ -919,10 +919,10 @@
 	  // do the message
 	  $res = $zen->sendEmail($recipients,$subject,$message,$user_id);
 	  if( $res ) {
-	    egate_log("Ticket summary delivered: ".join(",",$recipients),3);
+	    egate_log("Ticket summary delivered: $str",3);
 	  }
 	  else {
-	    egate_log("Failed to deliver ticket summary for #$id to ".join(",",$recipients),2);
+	    egate_log("Failed to deliver ticket summary for #$id to $str",2);
 	    $success = false;
 	  }
 	}
