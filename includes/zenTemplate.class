@@ -25,6 +25,10 @@
    **  <li>{varname} - inserts value of varname
    **  <li>{zen:varname} - inserts value of $zen->settings["varname"]
    **  <li>{list:varname:"text"+index+"more text"+value} - loops through indexed array and prints name/value
+   **  <li>{list:varname:"text"+index+"more text"+selected+"other text"+value} - loops through indexed array and print
+   **                                                                            name/value (and " selected" when appropriate)
+   **  <li>{list:varname:"text"+index+"more text"+checked+"other text"+value} - loops through indexed array and print
+   **                                                                            name/value (and " checked" when appropriate)
    **  <li>{foreach:varname:"text"+value+"text"} - loops through array and prints values
    **  <li>{include:template_name} - inserts another template into this one
    **  <li>{if:field:"text to print"+field+"text to print"} - inserts text if field exists
@@ -136,14 +140,14 @@ class zenTemplate {
 	    $str = $this->_parseString($parts[2]);
 	    // loop the list and make output text
 	    foreach($vars as $k=>$v) {
-              $tmp=$str;
-              if($this->_getVar("field_value")==$k) {
-                $tmp = str_replace("{selected}", " selected", $tmp);
-                $tmp = str_replace("{checked}", " checked", $tmp);
-              } else {
-                $tmp = str_replace("{selected}", "", $tmp);
-                $tmp = str_replace("{checked}", "", $tmp);
-              }
+	      $tmp=$str;
+	      if($this->_getVar("field_value")==$k) {
+	        $tmp = str_replace("{selected}", " selected", $tmp);
+	        $tmp = str_replace("{checked}", " checked", $tmp);
+	      } else {
+	        $tmp = str_replace("{selected}", "", $tmp);
+	        $tmp = str_replace("{checked}", "", $tmp);
+	      }
 	      $tmp = str_replace("{index}", $k, $tmp);
 	      $txt .= str_replace("{value}", $v, $tmp);
 	    }
