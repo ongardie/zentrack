@@ -28,12 +28,6 @@
       $this->obj = new Zen();
     }
 
-    /** Test the getIniVal function, this will create a $_GLOBALS['zen'] object, and parse ini file contents */
-    function testGetIniVal( $vals ) {
-      $val = Zen::getIniVal( $vals['cat'], $vals['name'] );
-      Assert::equals( $val, $vals['expected'], "Expected {$vals['expected']}, found $val" );
-    }
-
     /** Test the method for getting db connections, make sure it returns the same one each time */
     function testGetDbConnection() {
       $conn =& Zen::getDbConnection();

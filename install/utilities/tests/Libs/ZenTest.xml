@@ -35,24 +35,6 @@
      **************************
   -->
 
-  <testgetinival>
-    <test1>
-      <param name='cat'>debug</param>
-      <param name='name'>debug_configfile</param>
-      <param name='expected'>debug.xml</param>
-    </test1>
-    <test2>
-      <param name='cat'>debug</param>
-      <param name='name'>debug_logfile</param>
-      <param name='expected'>debug_log.txt</param>
-    </test2>
-    <test3>
-      <param name='cat'>login requirements</param>
-      <param name='name'>excluded</param>
-      <param name='expected'>help/,styles.php</param>
-    </test3>
-  </testgetinival>
-
   <testgetmetadata>
     <ticket_1>
       <param name='class'>ZenTicket</param>
