@@ -9,7 +9,11 @@
   
   // read email from stdin
   $input = join("",file("php://stdin"));  
-  
+
   // process the email
-  process_email($input);
+  process_message($input);
+
+  // clean the log file
+  egate_log_write();
+
 }?>

@@ -87,7 +87,7 @@ class zen extends zenDate {
    function stripPHP( $val = '' ) {
      // replaces php tags with ascii code
       if( strlen($val) )
-	return ereg_replace("<\?", "&lt;?", ereg_replace("\?>", "?&gt;", $val));
+	return str_replace("<?", "&lt;?", str_replace("?>", "?&gt;", $val));
    }
    
    function getFileArray( $file, $delim = '', $index = '', $combined = 0 ) {

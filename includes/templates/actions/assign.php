@@ -20,12 +20,17 @@
  <td>
 <select name="user_id">
 <?
-  $bins = array_keys($zen->getAccess($login_id));
-  foreach($zen->get_users($bins) as $v) {
-    if( $v["user_id"] != $login_id ) {
-      $sel = ($v["user_id"] == $user_id)? "selected" : "";
-      print "<option value='$v[user_id]' $sel>".$zen->formatName($v,1)."</option>\n";
+  $bins = $zen->getUsersBins($login_id,"level_assign");
+  if( is_array($bins) ) {
+    foreach($zen->get_users($bins) as $v) {
+      if( $v["user_id"] != $login_id ) {
+	$sel = ($v["user_id"] == $user_id)? "selected" : "";
+	print "<option value='$v[user_id]' $sel>".$zen->formatName($v,1)."</option>\n";
+      }
     }
+  }
+  else {
+    print "<option value=''>--none--</option>\n";
   }
 ?>
 </select>

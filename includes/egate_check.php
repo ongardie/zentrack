@@ -12,22 +12,23 @@
   
   // connect to mailbox
   $mb = @imap_open($smtp_string, $smtp_user, $smtp_pass);
+  
   // return error if needed
   if( !$mb ) {
     $errs = imap_errors();
     if( is_array($errs) && count($errs) ) {
-      egate_log($errs);
+      egate_log($errs,2);
     } else {
-      egate_log("Mailbox was empty");
+      egate_log("Mailbox was empty",3);
     }
     egate_log_write();
     exit;
   }
-  
+
   // get the number of messages in the box
   // and log it
   $number_of_messages = imap_num_msg($mb);
-  egate_log(date("Y-m-d-h-m: Mailbox contains $number_of_messages message".($number_of_messages!=1?"s":""));
+  egate_log(date("Y-m-d-h-m: Mailbox contains $number_of_messages message").($number_of_messages!=1?"s":""),2);
   
   // collect messages
   for($i=1; $i<=$number_of_messages; $i++) {
@@ -46,10 +47,10 @@
   imap_close($mb);
   
   $errs = imap_errors();
-  egate_log($errs);
+  egate_log($errs,2);
   
   $exectime = time()-$start_time;
-  egate_log("Completed in $exectime seconds");
+  egate_log("Completed in $exectime seconds",3);
   egate_log_write();
   
 ?>

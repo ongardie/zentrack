@@ -953,7 +953,24 @@ class zenTrack extends zen {
       $logParams["hours"] = $hours;
     if( $comments )
       $logParams["entry"] = $comments;
-    return $this->add_log($id, $logParams);
+    $res = $this->add_log($id, $logParams);
+    if( $res && $this->settings["email_log"] == "on" ) {
+      $recipients = $this->get_notify_recipients($id);
+      if( is_array($recipients) && count($recipients) ) {
+	$eParams = array(
+			 "Sent" => $this->showDateTime(),
+			 "By"   => $this->formatName($user_id)
+			 );
+	if( $hours )
+	  $eParams["hours"] = $hours;
+	if( $comments )
+	  $eParams["body"] = $comments;	
+	$eParams["tid"] = $id;
+	$message = $this->formatEmailMessage($eParams);
+	$this->sendEmail($recipients,$subject,$message,$user_id);
+      }
+    }
+    return $res;
   }
 
   function move_ticket( $id, $newBin, $user_id = '', $comments = '' ) {
@@ -1217,9 +1234,10 @@ class zenTrack extends zen {
    * create a new ticket
    * 
    * @param array $params is an indexed array("database_column"=>value), the values will be quoted and checked
+   * @param string $log_notes is extra notes to add to create log
    * @return integer returns the new ticket's id, if creation succeeded
    */
-   function add_ticket( $params ) {
+   function add_ticket( $params, $log_notes = '' ) {
      // perform the ticket insert
      $id = $this->db_insert($this->table_tickets,$params);
      if( $id ) {
@@ -1245,7 +1263,10 @@ class zenTrack extends zen {
        }
        // the ticket creator
        if( $this->settings["default_notify_creator"] == "on" ) {
-	 $notify_list[]["user_id"] = $params["creator_id"];
+	 // make sure we don't add the egate user
+	 $usr = $this->get_user($params["creator_id"]);
+	 if( !$usr["login"] == "egate" && !$usr["initials"] == "egate" )
+	   $notify_list[]["user_id"] = $params["creator_id"];
        }
        // the ticket owner
        if( $this->settings["default_notify_owner"] == "on"
@@ -1261,6 +1282,9 @@ class zenTrack extends zen {
 			"user_id"   =>   $params["creator_id"],
 			"bin_id"    =>   $params["bin_id"]
 			);
+       if( $log_notes ) {
+	 $lParams["entry"] = $log_notes;
+       }
        $this->add_log($id,$lParams);
 
        if( $this->settings["email_created"] == "on" ) {
@@ -1967,7 +1991,7 @@ class zenTrack extends zen {
     // $recipients, $sender, and $cc can all be an array
 
     // add the obligatory email stuff
-    $subject = "[".$this->settings["system_name"]."] ".$subject;
+    $subject = "[".$this->settings["bot_name"]."] ".$subject;
 
     // figure out who sent it
     $message = (get_magic_quotes_gpc())? stripslashes($message) : $message;
@@ -2309,32 +2333,29 @@ class zenTrack extends zen {
     // this function caches results for efficiency, so repeating
     // calls for the same user will not result slow the system
 
-    if( $user_id != $this->lastUsersID || !is_array($this->lastUsersBins) ) {
-      $access = $this->getAccess($user_id);
-      $user   = $this->getUser($user_id);
-      if( is_array($this->bins) ) {
-	foreach($this->bins as $k=>$v) {
-	  if( $k ) {
-	    if( strlen($access["$k"]) ) {
-	      if( $access["$k"] >= $this->settings["$level"] ) {
-		$vars[] = $k;
-	      }
-	    } else {
-	      if( $user["access_level"] >= $this->settings["$level"] ) {
-		$vars[] = $k;
-	      }
+    $access = $this->getAccess($user_id);
+    $user   = $this->getUser($user_id);
+    if( is_array($this->bins) ) {
+      foreach($this->getBins() as $k=>$v) {
+	if( $k ) {
+	  if( strlen($access["$k"]) ) {
+	    if( $access["$k"] >= $this->settings["$level"] ) {
+	      $vars[] = $k;
+	    }
+	  } else {
+	    if( $user["access_level"] >= $this->settings["$level"] ) {
+	      $vars[] = $k;
 	    }
 	  }
 	}
       }
-      $this->lastUsersBins = $vars;
     }
-    $adp = (is_array($this->lastUsersBins))? 
-      join(",",$this->lastUsersBins) : "-none-";
+    $adp = (is_array($vars))? 
+      join(",",$vars) : "-none-";
     $this->addDebug("getUsersBins()results",$adp,3);
-    return $this->lastUsersBins;
+    return $vars;
   }
-
+  
   function checkCreator( $user_id, $ticket_id ) {
     // checks to see if the $user is the creator the ticket
     // they have special priviledges

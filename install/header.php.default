@@ -12,28 +12,14 @@
   **  OR ZENTRACK WILL NOT RUN PROPERLY
   **  Don't use trailing slashes
   */
+
   // the directory where zentrack includes are stored
+  // use the complete system path
   $libDir = "/web/zentrack/includes";
 
   // the directory where zentrack www docs are kept
   $rootUrl = "http://www.yourhost.com/zentrack";
 
-  /*
-  ** DEMO MODE AND DEBUG OUTPUT 
-  **
-  ** This will solve many of your troubles...
-  ** please turn it on, and copy and paste
-  ** the output into any support requests
-  **
-  */
-  //set this from 0=overview, 1=errors, 2=warnings, 3=notices, null=none
-  $Debug_Mode = 0;  
-
-  //set this to "on" prevents users from doing anything you don't
-  //them doing on a demo site
-  $Demo_Mode = "off"; 
-
-  
   /*
   **
   **  DATABASE SETTINGS
@@ -76,6 +62,20 @@
    //   putenv("TNS_ADMIN=/opt/oracle/product/8.1.5/network/admin"); 
    // the directory of the tnsnames.ora file
 
+  /*
+  ** DEMO MODE AND DEBUG OUTPUT 
+  **
+  ** This will solve many of your troubles...
+  ** please turn it on, and copy and paste
+  ** the output into any support requests
+  **
+  */
+  //set this from 0=overview, 1=errors, 2=warnings, 3=notices, null=none
+  $Debug_Mode = 0;  
+
+  //set this to "on" prevents users from doing anything you don't
+  //them doing on a demo site
+  $Demo_Mode = "off"; 
   
   /*
   **

@@ -99,7 +99,7 @@
       $fp = fopen("$libDir/logs/egate_log","a");
       fputs($fp,$text);
       fclose($fp);
-      $log = array();
+      $egate_log = array();
     }
   }
 
@@ -255,9 +255,9 @@
     $structure = $decoder->decode($params);
     
     // record what we recieved
-    egate_log( "Decoding... \n\tFrom: ".$structure->headers["from"]
-	       ."\n\tReply-to: ".$structure->headers["reply-to"]
-	       ."\n\tSubject: ".$structure->headers["subject"], 2 );
+    egate_log( "From: ".$structure->headers["from"]
+	       ."\nReply-to: ".$structure->headers["reply-to"]
+	       ."\nSubject: ".$structure->headers["subject"], 2 );
     
     return $structure;
   }
@@ -291,7 +291,7 @@
   function fetch_valid_actions( $ticket_id ) {
     global $egate_user;
     global $zen;
-    $vars = array("remove","help","template");
+    $vars = array("remove","help","template","options");
     $vals = $zen->listValidActions($ticket_id,$egate_user["user_id"]);
     foreach($vals as $k=>$v) {
       if( $v["egate"] > 0 ) {
@@ -310,16 +310,27 @@
    */
   function fetch_create_vals( $vals ) {
     global $zen;
+    global $egate_user;
     $vals["types"] = $zen->getTypes();
     $vals["systems"] = $zen->getSystems();
-    $vals["bins"] = $zen->getUsersBins($user_id,"level_create");
+    $bins = $zen->getUsersBins($egate_user["user_id"],"level_create");
+    if( is_array($bins) ) {
+      $vals["bins"] = array();
+      foreach($bins as $b) {
+	$vals["bins"][] = $zen->getBinName($b);
+      }
+    }
     $vals["priorities"] = $zen->getPriorities();
     $vals["default_start_date"] = $zen->getDefaultValue("default_start_date");
+    if( strlen($vals["default_start_date"]) )
+      $vals["default_start_date"] = $zen->showDate($vals["default_start_date"]);
     $vals["default_deadline"] = $zen->getDefaultValue("default_deadline");
+    if( strlen($vals["default_deadline"]) )
+      $vals["default_deadline"] = $zen->showDate($vals["default_deadline"]);
     $vals["default_test"] = 
-      ($zen->getDefaultValue("default_tested_checked")=="checked")? "x" : "";
+      ($zen->getDefaultValue("default_tested_checked")==" checked ")? "x" : "";
     $vals["default_approve"] = 
-      ($zen->getDefaultValue("default_aprv_checked")=="checked")? "x" : "";
+      ($zen->getDefaultValue("default_aprv_checked")==" checked ")? "x" : "";
     return $vals;
   }
 
@@ -390,17 +401,110 @@
   /**
    * Creates a new ticket entry
    *
+   * @param integer $user_id the user id to use for creation 
    * @param string $name the name of the sender
    * @param string $email the email of the sender
    * @param array $body the indexed array from parse_message_body()
    * @param object $params the object obtained from decode_contents()
-   * @return boolean succeeded
+   * @return integer ticket id or 0 if failed
    */
-  function create_new_ticket($name, $email, $body, $params) {
-
-    //todo: this
-
-
+  function create_new_ticket($user_id, $name, $email, $body, $params) {
+    $vals = array("creator_id"=>$user_id);
+    $fullname = ($name)? "$name <$email>" : $email;
+    // here we run through all the body elements
+    // and prepare the results
+    foreach($body as $k=>$v) {
+      $v = trim($v);
+      switch(strtolower($k)) {
+      case "parent":
+	$vals["project_id"] = get_ticket_id($v);
+	break;
+      case "title":
+	$vals["title"] = $zen->stripPHP($v);
+	break;
+      case "type":
+	$vals["type_id"] = get_type_id("types",$v);
+	break;
+      case "system":
+	$vals["system_id"] = get_type_id("systems",$v);
+	break;
+      case "owner":
+	{
+	  if( strtolower($v) == "me" ) {
+	    $vals["user_id"] = find_user_id($name,$email);
+	  }
+	  else if( preg_match("/^[0-9]+$/", $v) ) {
+	    $user = $zen->get_user($v);
+	    $vals["user_id"] = $id;
+	  }
+	  else if( strlen($v) ) {
+	    $vals["user_id"] = find_user_id('',$email);
+	  }	  
+	}
+	break;
+      case "bin":
+	$vals["bin_id"] = get_type_id("bins",$v);
+	break;
+      case "priority":
+	$vals["priority"] = get_type_id("prioities",$v);
+	break;
+      case "start date":
+	if( strlen($v) ) {
+	  $vals["start_date"] = strtotime($v);
+	}
+      case "deadline":
+	if( strlen($v) ) {
+	  $vals["deadline"] = strtotime($v);
+	}
+      case "testing required":
+	{
+	  if( $v == 1 )
+	    $vals["tested"] = 1;
+	  else
+	    $vals["tested"] = 0;
+	}
+      case "approval required":
+	{
+	  if( $v == 1 )
+	    $vals["approved"] = 1;
+	  else
+	    $vals["approved"] = 0;
+	}
+      case "details":
+	$vals["description"] = $zen->stripPHP($v);
+      }      
+    }
+    // check required fields
+    $success = true;
+    $required = array(
+		   "title",
+		   "priority",
+		   "description",
+		   "bin_id",
+		   "type_id",
+		   "system_id",
+		   "creator_id"
+		   );    
+    foreach($required as $r) {
+      if( !isset($vals[$r]) || !$vals[$r] ) {
+	$success = false;
+	egate_log( ucfirst(str_replace("_id","",$r))." is required",2);
+      }
+    }
+    if( $success == true ) {
+      $notes = ($user_id == $egate_user["user_id"])? 
+	"Created by $fullname" : "";
+      $id = $zen->add_ticket($vals,$notes);
+      if( $id ) {
+	egate_log("Ticket created with id #$id",3);
+	return $id;
+      }
+      else {
+	egate_log("Ticket create failed",2);
+	return 0;
+      }
+    }
+    return 0;
   }
 
   /**
@@ -463,7 +567,7 @@
       }
     }
     // return tag from subject
-    preg_match("/#[0-9]+: *$action(.*)/",$params->headers["subject"],$matches);
+    preg_match("/#[0-9]+: *[a-zA-Z0-9_-]+ +(.*)/",$params->headers["subject"],$matches);
     if( $matches[1] ) {
       return trim($matches[1]);
     }
@@ -473,6 +577,59 @@
     }
     else {
       return "";
+    }
+  }
+
+  /**
+   * attempts to retrieve a ticket by the title, or by the id
+   *
+   * @param string $text title or id
+   * @return integer id of ticket or 0 if failed
+   */
+  function get_ticket_id( $text ) {
+    global $zen;
+    // insure the input is cleaned up
+    $text = trim($text);
+    // check for #nnnn
+    $text = preg_replace("/^#([0-9]+)$/", "\\1", $text);
+    if( !preg_match("/[^0-9]/", $text) && strlen($text) && intval($text) > 0 ) {
+      // here we look for an id, if found, we validate it
+      $ticket = $zen->get_ticket($text);
+      if( is_array($ticket) ) {
+	return $ticket["id"];
+      }
+      else {
+	egate_log("Ticket #$text not found",2);
+	return 0;
+      }
+    }
+    else {
+      if( strlen($text) ) {
+	// here we look for a complete title match
+	$params = array("title"=>array("title","=",$text));
+	$vals = $zen->search_tickets($params);
+	if( !is_array($vals) || !count($vals) ) {
+	  // here we try for a partial title match
+	  $params["title"][1] = "contains";
+	  $vals = $zen->search_tickets($params);
+	}
+      }
+      if( is_array($vals) ) {
+	if( count($vals) > 0 ) {
+	  // if we have more than one, we return an error, since
+	  // we aren't sure what the right one is
+	  egate_log("More than one ticket with that title, please try the id",2);
+	  return 0;
+	}
+	else {
+	  // otherwise, we have success
+	  return $vals[0]["id"];
+	}
+      }
+      else {
+	egate_log("Title didn't match any active tickets",2);
+	return 0;
+      }
     }
   }
 
@@ -531,7 +688,6 @@
     if( !isset($body["details"]) )
       $body["details"] = "";
     
-
     // format a name entry for logging
     $fullname = ($name)? "$name <$email>" : $email;
 
@@ -555,7 +711,7 @@
     case "accept":
       {
 	if( $user_id == $egate_user["user_id"] ) {
-	  egate_log("Ticket could not be accepted, user $fullname not found.",2);
+	  egate_log("Ticket could not be accepted, user $fullname not registered.",2);
 	  $success = false;
 	}
 	$res = $zen->accept_ticket($id,$user_id,$body["details"],$ticket["bin_id"]);
@@ -586,7 +742,7 @@
     case "create":
       {
 	// create a new ticket
-	create_new_ticket($name,$email,$body,$params);
+	create_new_ticket($user_id,$name,$email,$body,$params);
 	break;
       }
     case "email":
@@ -645,7 +801,8 @@
       }
     case "help":
       {
-	egate_store_templates("help.template");
+	egate_store_template("help.template");
+	egate_log("Returning help template",3);
 	break;
       }
     case "log":
@@ -680,7 +837,7 @@
     case "move":
       {
 	$binput = get_subject_param($params,"bin",$body);
-	$bin_id = get_type_id("bins",$bin_id);
+	$bin_id = get_type_id("bins",$binput);
 	if( $bin_id ) {
 	  $res = $zen->move_ticket($id,$bin_id,$user_id,$body["details"]);
 	  if( $res ) {
@@ -699,10 +856,16 @@
     case "notify_add":
       {
 	// add user to notify list
-	$list = get_subject_param($params,"user",$body);
+	$list = isset($body["recipient"])? $body["recipient"] : "";
 	if( !strlen($list) ) {
 	  $em = $zen->checkEmail($email);
-	  $en = preg_replace("/['\"<>]/", "", $name);
+	  $en = $name;
+	  $fullname = "$en <$em>";
+	}
+	else {
+	  $em = $zen->checkEmail($list);
+	  $en = "";
+	  $fullname = $em;
 	}
 	$vars = array("email"     => $em,
 		      "ticket_id" => $id,
@@ -712,18 +875,17 @@
 	}
 	$res = $zen->add_to_notify_list( $id, $vars );
 	if( $res && $res != "duplicate" ) {
-	  egate_log("added ".($name?$name."/":'')."$email to notify for #$id",3);
+	  egate_log("added $fullname to notify for #$id",3);
 	} else if( $res && $res == "duplicate" ) {
-	  egate_log("entry ".($name?$name."/":'')
-		    ."$email already on notify for #$id",3);
+	  egate_log("Recipient $fullname already on notify for #$id",3);
 	  $success = false;
 	} else {
-	  egate_log("unable to add $name/$email to notify for #$id",2);
+	  egate_log("Unable to add $fullname to notify for #$id",2);
 	  $success = false;
 	} 
 	break;
       }
-    case "nofity_drop":
+    case "notify_drop":
       {
 	// grap the recipient to remove from the body["details"]
 	// and send him bye bye
@@ -762,7 +924,8 @@
     case "options":
       {
 	// return a list of valid options for this ticket
-	egate_store_templates("options.template");
+	egate_store_template("options.template");
+	egate_log("Returning options template",3);
 	break;
       }
     case "reject":
@@ -800,7 +963,8 @@
       {
 	$str = strtolower(get_subject_param($params,"template",$body));
 	if( $str == "create" ) {
-	  egate_store_templates("form_$str.template");
+	  egate_store_template("form_$str.template");
+	  egate_log("returning $str template",3);
 	}
 	else {
 	  egate_log("$str is an invalid template",2);
@@ -857,23 +1021,15 @@
     
     // find out what action we are taking
     $res = parse_subject($params);
-    print "result: \n";
-    print_r($res);
     if( is_array($res) ) {
       list($action,$ticket) = $res;
     } 
     else { $success = false; }    
 
-    print("action: $action\n");//debug
-
     // retrieve the contents from the body
     // of the email
     $body = parse_message_body($params->body);
     
-    // quit if we have any errors, before we try to peform
-    // the action
-    if( $success == false ) { return false; }
-
     // set up the return email address
     // and the user's name, if it can be found
     $email = $params->headers["reply-to"]? 
@@ -907,9 +1063,9 @@
 
       // todo: send a reply email
       $rec = array(array("name"=>$name,"email"=>$email));
-      $rep = send_reply_mail( $rec, $id, $success );
+      $rep = send_reply_mail( $rec, $ticket["id"], $success, $action );
       if( !$rep ) {
-	egate_log("reply email failed to $name<$email>",2);
+	egate_log("reply email failed to $name <$email>",2);
       }
     }
 
@@ -926,18 +1082,11 @@
     // todo: fix user_id to match person sending, rather than egate for
     //       checking owner of ticket/valid actions
     //
-    // todo: format the || entry for user consumption
-    //
-    // todo: add egate_store_templates()
-    //
     // todo: add docs for all of this
     //
     // todo: email_notify config setting
     //
-    // todo: update egate and egate_check
-    //
-    // todo: make options for @login: & @password: in the body of docs
-    // todo: probably need an option in config settings to disable/enable this
+    // todo: check email in notify list, reject from non-notify users
     //
     // todo: testing
     //
@@ -954,46 +1103,64 @@
    * with $egate_notify_level
    *
    * @param array $recipients is an indexed array of email addresses and names (names optional)
+   * @param integer $id is the tickets id
    * @param boolean $success is whether action was completed successfully
+   * @param string $action is the action taken
    * @return integer number of emails sent
    */
-  function send_reply_mail( $recipients, $id, $success ) {    
+  function send_reply_mail( $recipients, $id, $success, $action ) {    
     // employ $egate_notify_level (0-3)
     global $egate_notify_level;
     global $libDir;
     global $egate_user;
     global $zen;
-
+    
     // get the messages
     $messages = egate_fetch_messages($egate_notify_level);
     $templates = egate_fetch_templates();
-
+    
     // send an email if we have data
     if( (is_array($messages)&&count($messages))
 	||(is_array($templates)&&count($templates)) ) {
       $text = "";
-
+      
       // grab the params
       $valid_actions = fetch_valid_actions($id);      
       $vals = array("success"  =>   $success,
 		    "id"       =>   $id,
 		    "messages" =>   $messages,
+		    "action"   =>   $action,
 		    "valid_actions" => $valid_actions);
-
+      
       // create header
       $temp = new zenTemplate("$libDir/templates/email/heading.template");
       $temp->values($vals);
       $txt .= $temp->process();
 
-      // create reply
-      $temp = new zenTemplate("$libDir/templates/email/reply.template");
-      $temp->values($vals);
-      $txt .= $temp->process();
-
+      if( $id > 0 && "$action" != "help" && "$action" != "template" ) {
+	// create reply
+	$temp = new zenTemplate("$libDir/templates/email/reply.template");
+	$temp->values($vals);
+	$txt .= $temp->process();
+	$subject = "[".$zen->settings["bot_name"]."] Ticket #$id: results";
+	$subject .= ($success)? " (successful)" : " (failed)";
+      }
+      else if( $action == "template" ) {
+	if( is_array($templates) && in_array("form_create.template",$templates) ) {
+	  $subject = "[".$zen->settings["bot_name"]."] Create New Ticket";
+	}
+	else {
+	  $subject = "[".$zen->settings["bot_name"]."] Re: template";
+	}
+      }
+      else if( $action ) {
+	$subject = "[".$zen->settings["bot_name"]."]Re: $action";
+      }
+      
       // include extra footer templates
       if( is_array($templates) ) {
 	// get ticket create fields if needed
-	if( in_array("new.template",$templates) ) {
+	if( in_array("form_create.template",$templates) ) {
 	  $vals = fetch_create_vals($vals);
 	}
 	// run through templates
@@ -1003,17 +1170,17 @@
 	  $txt .= $temp->process();
 	}
       }
-
-      // create footer
-      $temp = new zenTemplate("$libDir/templates/email/footer.template");
-      $temp->values($vals);
-      $txt .= $temp->process();
-
+      
+      if( $id && $action != "help" && $action != "template" ) {
+	// create footer	
+	$temp = new zenTemplate("$libDir/templates/email/footer.template");
+	$temp->values($vals);	
+	$txt .= $temp->process();
+      }
+      
       // send messages
       $i=0;
       $from = $egate_user["email"];
-      $subject = "[".$zen->settings["bot_name"]."] Ticket #$id: results";
-      $subject .= ($success)? " (successful)" : " (failed)";
       foreach($recipients as $r) {
 	$to = ($r["name"])? "{$r['name']}<{$r['email']}>" : $r['email'];
 	$res = mail($to,$subject,$txt,"From:$from\nReply-to:$from\n");

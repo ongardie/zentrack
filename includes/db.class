@@ -108,7 +108,7 @@ class DB {
     }      
     list($cols,$vals) = $this->makeInsertVals($params);
     $query = "INSERT INTO $table ($cols) VALUES($vals)";
-    $this->addDebug("db_insert",$query,3);//debug
+    $this->addDebug("db_insert",$query,3);
     $res = $this->db_link->Execute($query);
     if( $res && $this->database_type == "mysql" ) {
       $id = $this->db_insertID();
