@@ -31,8 +31,8 @@
     <li>Chmod the includes/attachments directory to 666 (or 766 if you're religious)
 
   <p><b>Configure zenTrack</b></p>
-    <li>Open the www/header.php file and change the $rootUrl and $libDir to match your system.  Change any other variables here to match your preferences.
-    <li>Open the includes/configVars.php file and change the parameters to match your database and preferences.
+    <li><b>Open the www/header.php file and change the $rootUrl and $libDir to match your system. THESE MUST BE SET BEFORE ZENTRACK WILL RUN.</b> $rootUrl is the url to reach zenTrack: i.e. http://mysystem.com/zentrack_directory... Change any other variables here to match your preferences.
+    <li>Open the includes/configVars.php file and change the parameters to match your database and preferences.  You must set the $this->database_type unless you are using mysql.
   </ul>
 
   <p><b>Build an Seed Database</b></p>  

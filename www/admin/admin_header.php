@@ -32,8 +32,8 @@
   $access_fields = array(
 			 "userID"  =>  "int",
 			 "binID"   =>  "int",
-			 "lvl"   =>  "int",
-			 "role"    =>  "text"
+			 "lvl"     =>  "int",
+			 "notes"   =>  "text"
 			 );
   $access_required = array("userID","binID");
 

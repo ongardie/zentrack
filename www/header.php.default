@@ -5,6 +5,19 @@
   // of this file somewhere safe when upgrading!
 
   /*
+  **  T H E S E    M U S T    B E   S E T ! ! !
+  **
+  **  OR ZENTRACK WILL NOT RUN PROPERLY
+  */
+
+  // the directory where zentrack includes are stored
+  $libDir = "/root/web_folder/zentrack/includes";
+
+  // the directory where zentrack www docs are kept
+  $rootUrl = "http://myhost.com/zentrack_directory";
+
+
+  /*
   **  NO TRAILING SLASHES
   */
 
@@ -13,12 +26,6 @@
 
   // the title to appear in the browser title
   $page_title = "Welcome to zenTrack";
-  
-  // the directory where zentrack includes are stored
-  $libDir = "/zentrack/includes";
-
-  // the directory where zentrack www docs are kept
-  $rootUrl = "";
   
   // the configuration settings for the zenTrack functions
   $configFile = "$libDir/configVars.php";

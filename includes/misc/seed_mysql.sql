@@ -2,11 +2,11 @@
 # Dumping data for table 'ZENTRACK_ACCESS'
 #
 
-INSERT INTO ZENTRACK_ACCESS (accessID, userID, binID, lvl, role) VALUES (1,2,2,1,NULL);
-INSERT INTO ZENTRACK_ACCESS (accessID, userID, binID, lvl, role) VALUES (2,2,3,1,NULL);
-INSERT INTO ZENTRACK_ACCESS (accessID, userID, binID, lvl, role) VALUES (3,2,3,2,NULL);
-INSERT INTO ZENTRACK_ACCESS (accessID, userID, binID, lvl, role) VALUES (4,2,4,1,NULL);
-INSERT INTO ZENTRACK_ACCESS (accessID, userID, binID, lvl, role) VALUES (5,2,3,1,NULL);
+INSERT INTO ZENTRACK_ACCESS (accessID, userID, binID, lvl, notes) VALUES (1,2,2,1,NULL);
+INSERT INTO ZENTRACK_ACCESS (accessID, userID, binID, lvl, notes) VALUES (2,2,3,1,NULL);
+INSERT INTO ZENTRACK_ACCESS (accessID, userID, binID, lvl, notes) VALUES (3,2,3,2,NULL);
+INSERT INTO ZENTRACK_ACCESS (accessID, userID, binID, lvl, notes) VALUES (4,2,4,1,NULL);
+INSERT INTO ZENTRACK_ACCESS (accessID, userID, binID, lvl, notes) VALUES (5,2,3,1,NULL);
 
 #
 # Dumping data for table 'ZENTRACK_BINS'

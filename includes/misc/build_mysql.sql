@@ -7,7 +7,7 @@ CREATE TABLE ZENTRACK_ACCESS (
   userID int(12) default NULL,
   binID int(12) default NULL,
   lvl int(2) default NULL,
-  role varchar(25) default NULL,
+  notes varchar(25) default NULL,
   PRIMARY KEY (accessID)
 ) TYPE=MyISAM;
 

@@ -1,33 +1,22 @@
 <?{
 
   /*
-   *  GENERAL SETTINGS 
+  **  YOU MUST CONFIGURE $this->database_type in this file!!
   */
 
-   $this->language = "english";  // language to show zenTrack in 
-                                 // (rename lists/english and translate to add a new langauage)
-                                 // please pass your translations on to us, so we can add 
-                                 // them to the project for others
 
-   // see the php manual (http://www.php.net/manual/en/function.date.php) for all available date formatting
-   // options [not yet implemented, planned for 2.1]
-   $this->date_format_long = "M d, Y H:i";
-   $this->date_format_short = "m-d-y";			     
-   
-  /*
-   *  DIRECTORY SETTINGS 
-  */
-  
-   // the folder under includes holding utility files
-   $this->listDir        = $this->libDir."/lists";
-   
-   // the folder under includes holding templates
-   $this->templateDir    = $this->libDir."/templates";
-   
-   // the attachments folder under includes
-   $this->attachmentsDir = $this->libDir."/attachments"; 
 
+   /*
+   **  DEBUG / HELP / DEMO
+   */
+
+   $this->demo_mode = "off";  // on/off  on prevents users from changing passwords or altering
+	                     // system configurations/user accounts (annoying demo stuff)
    
+   // not yet fully implemented (upcoming for 2.1)
+   $this->debug = 0;         // 0-none, 1-footer debug messages, 2-common debug, 3-all debug
+   
+
   /*
    *  DATABASE SETTINGS
   */
@@ -43,7 +32,15 @@
    //      database_login: scott
    //      database_pass:  tiger
    //      database_intance: TNSName (try the TNSname here, then try the whole connection string!)      
-   $this->database_type      = 'mysql';          //mysql,oracle (Oracle <=7),oci8 (Oracle >= 8),postgres,sqlserver
+
+   $this->database_type      = 'mysql';
+	// the database types that can be used here are:
+	//    mysql
+	//    oracle
+	//    oci8po (oracle 8i)
+	//    mssql  (Microsoft SQL Server 7/2000)
+	//    for more, see http://php.weblogs.com/ADOdb_manual#drivers
+
    $this->database_instance  = 'zentrack';	 //database name
    $this->database_login     = 'test';           //database login
    $this->database_password  = 'test';           //database password
@@ -79,15 +76,32 @@
 
    $this->defaultHighlight = array("<span class='highlight'>","</span>");
    
-   /*
-   **  DEBUG / HELP / DEMO
-   */
+  /*
+   *  GENERAL SETTINGS 
+  */
 
-   $this->demo_mode = "off";  // on/off  on prevents users from changing passwords or altering
-	                     // system configurations/user accounts (annoying demo stuff)
+   $this->language = "english";  // language to show zenTrack in 
+                                 // (rename lists/english and translate to add a new langauage)
+                                 // please pass your translations on to us, so we can add 
+                                 // them to the project for others
+
+   // see the php manual (http://www.php.net/manual/en/function.date.php) for all available date formatting
+   // options [not yet implemented, planned for 2.1]
+   $this->date_format_long = "M d, Y H:i";
+   $this->date_format_short = "m-d-y";			     
    
-   $this->sql_debug = "off"; // on/off (shows all queries, no really.. all of them)
-   // not yet implemented (upcoming for 2.1)
-   $this->debug = 0;         // 0-none, 1-footer debug messages, 2-common debug, 3-all debug
+  /*
+   *  DIRECTORY SETTINGS 
+  */
+  
+   // the folder under includes holding utility files
+   $this->listDir        = $this->libDir."/lists";
+   
+   // the folder under includes holding templates
+   $this->templateDir    = $this->libDir."/templates";
+   
+   // the attachments folder under includes
+   $this->attachmentsDir = $this->libDir."/attachments"; 
+
    
 }?>

@@ -18,16 +18,16 @@
 	      you may get a response if I'm bored
 
 
-  Quick and Dirty Install Instructions:
+  QUICK AND DIRTY INSTALL INSTRUCTIONS:
 
      -place www/ in the httpd directory tree
      -place includes/ in a non-httpd directory
      
      -configure the following files:
 	includes/configVars.php
+	   particularly $this->database_type!!!!
    	www/header.php
-
-        (you must configure $includesDir and $rootUrl or nothing will work)
+	   you must configure $includesDir and $rootUrl or nothing will work!!!
 
      -build the database
 	you must run both the build.sql and seed.sql file
