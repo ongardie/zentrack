@@ -970,7 +970,7 @@
 	    $zen->add_log( $id, array('user_id' => $user_id, 
 				      'bin_id'  => $ticket['bin_id'],
 				      'entry'   => $log_entry,
-				      'action'  => 'ESTIMATE');
+				      'action'  => 'ESTIMATE') );
 	  }
 	  else {
 	    egate_log("Estimate hours failed",2);

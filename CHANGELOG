@@ -5,19 +5,30 @@
  object oriented and database abstracted design lend to 
  endless possibilities for project expansion. 
 
------ V2.5 LIVE (in testing) -----
+----- V2.5.0(2004-10-12) -----
 
-2004-10-06, Kato
+2004-10-11, Kato
+  Cleaned up email templates and doc files
+    - zentrack_2/UPGRADE.readme 1.19
+    - zentrack_2/includes/templates/email/footer.template 1.4
+    - zentrack_2/includes/templates/email/heading.template 1.4
+    - zentrack_2/www/actions/email.php 1.14
+
   Added documentation for file based groups
-  
+    - zentrack_2/www/help/english/admin/behaviors.php 1.2
+    - zentrack_2/www/help/english/admin/data_groups.php 1.2  
+
   Fixed get_table_id (missing function)
     - zentrack_2/includes/reportDataParser.php
     
   Fixed searchList formatting to handle blank search strings
-    - searchList & searchResults
+    - zentrack_2/includes/templates/searchList.php 1.14
     
   Fixed empty behavior javascript error (103)
-    - behavior_js
+    - zentrack_2/includes/db.class 1.32
+    - zentrack_2/includes/zen.class 1.30
+    - zentrack_2/includes/zenTrack.class 1.153
+    - zentrack_2/www/behavior_js.php 1.12
 
 2004-09-28, Kato
   Fixed reject ticket bug
@@ -26,6 +37,7 @@
   
 2004-09-27, Kato
   Added -none- option for data groups
+    - zentrack_2/includes/headerInc.php 1.47 
     - zentrack_2/includes/zenTrack.class 1.152
     - zentrack_2/includes/headerInc.php 1.48
     - zentrack_2/includes/templates/behaviorForm.php 1.7
@@ -33,6 +45,7 @@
     - zentrack_2/includes/templates/newTicketForm.php 1.33
   
   Fixed mssql identity problem
+    - zentrack_2/install/UPGRADE_mssqlserver.sql 1.19
     - zentrack_2/includes/zenTrack.class 1.152
     - zentrack_2/includes/db.class 1.31
     - zentrack_2/install/UPGRADE_mssqlserver.sql 1.20
