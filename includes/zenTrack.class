@@ -164,6 +164,17 @@ class zenTrack extends zen {
                     ."/".$query,3);
     return( $vals );
   }
+  
+  function getPriorityStyle($priority) {
+     // checks settings for priority styles and return the
+     // appropriate cell style
+     
+     if (!$this->settings["color_priority_low"]) {
+        return ("cell");
+     } else {
+        return ("priority$priority");
+     }
+  }
 
   /**
    * returns a count of entries concerning this ticket
@@ -2172,16 +2183,31 @@ class zenTrack extends zen {
         } else {
           $name = "n/a";
         }
-        $message .= "{$ticket['title']}\n\n";     
-        $message .= $this->trans("ID").":\t{$ticket['id']}\n";
-        $message .= $this->trans("Status").":\t{$ticket['status']}\n";
-        $message .= $this->trans("Deadline").":\t".$this->showDate($ticket["deadline"])."\n";
-        $message .= $this->trans("Bin").":\t".$this->bins[$n]."\n";
-        $message .= $this->trans("Owner").":\t$name\n";
-        $message .= $this->trans("URL").":\t$url\n";
+        
         $des = preg_replace("#&quot;#",'"',
                             preg_replace("#&amp;#","&",$ticket["description"]));
         $des = preg_replace("@<br( /)?>@", "", $des);
+
+        // Create message template
+        $msg = new zenTemplate($this->templateDir."/email/ticket_summary.template");
+        
+        // Set variables for message
+        unset($vars);
+        $vars["title"] = $ticket["title"];
+        $vars["id"] = $ticket["id"];
+        $vars["type"] = $this->getTypeName($ticket["type_id"]);
+        $vars["priority"] = $this->priorities[$ticket["priority"]];
+        $vars["status"] = $ticket["status"];
+        $vars["deadline"] = $this->showDate($ticket["deadline"]);
+        $vars["bin"] = $this->bins[$n];
+        $vars["owner"] = $name;
+        $vars["url"] = $url;
+        $vars["desc"] = $des;
+        
+        // Process the template
+        $msg->values($vars);
+        
+        $message .= $msg->process();
       } else if( $k == "log" ) {
         // print the log for the ticket
         if( $this->settings["email_max_logs"] )
@@ -2193,28 +2219,40 @@ class zenTrack extends zen {
           $message .= "\n".strtoupper($this->trans("Log History"))."\n------------------\n";
           $sep = "--";
           foreach( $logs as $l ) {
-            $message .= $this->showDateTime($l["created"],'M');
-            $message .= $sep.str_pad($l["action"],8,"-",STR_PAD_LEFT);
-            $message .= $sep.str_pad($this->formatName($l["user_id"],2),
-                                     6,"-",STR_PAD_LEFT);
-            $message .= (strlen($l["hours"]))? 
-              $sep.str_pad($l["hours"],4,"-",STR_PAD_LEFT)." hrs":"";
-            //
-            // the log and attachments
-            if( $l["entry"] ) {
-              $log["entry"] = "\n".stripslashes($l["entry"])."\n";
-              $log["entry"] = preg_replace("#&amp;#", "&", $log["entry"]);
-              $log["entry"] = preg_replace("#&quot;#", '"', $log["entry"]);
-              $l["entry"] = preg_replace("@<br( /)?>@", "", $log["entry"]);
-              $message .= "\n".$l["entry"]."\n";
-            }
-            if( $att["$id"]["$lid"] ) {
-              $message .= "\n".strtoupper($this->trans("Attachments") . '').":\n";
-              foreach( $att["$id"]["$lid"] as $a ) {
-                $message .= "$a[name] ($a[description])\n";
-                $message .= "\t".$this->attachmentUrl."?file=$a[filename]\n";
-              }
-            }        
+             // Create log entry template
+             $logentry = new zenTemplate($this->templateDir."/email/ticket_log.template");
+             
+             // Set the variables for the log entry
+             unset ($vars);
+             $vars["date"] = $this->showDateTime($l["created"],'M');
+             $vars["action"] = $sep.str_pad($l["action"],8,"-",STR_PAD_LEFT);
+             $vars["user_initials"] = $sep.str_pad($this->formatName($l["user_id"],2),
+                                      6,"-",STR_PAD_LEFT);
+             $vars["hours"] = (strlen($l["hours"]))? 
+                              $sep.str_pad($l["hours"],4,"-",STR_PAD_LEFT)." hrs":"";
+             
+             //
+             // the log and attachments
+             if( $l["entry"] ) {
+                $log["entry"] = "\n".stripslashes($l["entry"])."\n";
+                $log["entry"] = preg_replace("#&amp;#", "&", $log["entry"]);
+                $log["entry"] = preg_replace("#&quot;#", '"', $log["entry"]);
+                $l["entry"] = preg_replace("@<br( /)?>@", "", $log["entry"]);
+                $vars["log"] = $l["entry"];
+             }
+             
+             // Process the template and add it to the message.
+             $logentry->values($vars);
+             $message .= $logentry->process();
+             
+             // Add attachments to the message.
+             if( $att["$id"]["$lid"] ) {
+                $message .= "\n".strtoupper($this->trans("Attachments") . '').":\n";
+                foreach( $att["$id"]["$lid"] as $a ) {
+                   $message .= "$a[name] ($a[description])\n";
+                   $message .= "\t".$this->attachmentUrl."?file=$a[filename]\n";
+                }
+             }
           }
           if( $v > 0 && count($logs) == $v ) {
             $message .= "\n".$this->trans("There are more log entries.")

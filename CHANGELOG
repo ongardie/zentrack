@@ -7,6 +7,12 @@
 
 ----- V2.4.1 (Development, See CVS) ----
 
+2003-05-07, Rob Hillis
+  Template ticket summary and log entries in notification email.
+    - zentrack/includes/zenTrack.class 1.98
+    - zentrack/includes/templates/email/ticket_log.template <add> 1.1
+    - zentrack/includes/templates/email/ticket_log.template <add> 1.1
+
 2003-05-06, Rob Hillis
   Correct "attachment_types_allowed" description to accurately reflect usage.
     - zentrack/install/UPGRADE_SEED_mssqlserver.sql 1.3
