@@ -170,7 +170,13 @@ class ZenMetaTable extends Zen {
   /**
    * Validates values to be inserted into this table of the database
    *
-   * @param array $values mapped (string)field -> (mixed)value
+   * The old value is used for checking unique constraints (see {@link ZenMetaField::validate()} for more info)
+   *
+   * If this is a new field, there is no need to include the old values, so you may simply pass $values mapped as
+   * (string)field -> (mixed)value instead of an array containing the new and old values.  If you use this approach
+   * with an existing field, it will fail on all unqiue constraints, so be careful!
+   *
+   * @param array $values mapped (string)field -> array((mixed)value, (mixed)old_value) [see notes above for more]
    * @return mixed true if all succeeded or an array mapped (string)field -> (string)error
    */
   function validate( $values ) {
@@ -181,8 +187,12 @@ class ZenMetaTable extends Zen {
         $errors[] = "Field not found: $k";
         continue;
       }
+      // for new fields, we might not have an old value, so
+      // we don't want to make a mess of things by requiring
+      // the incoming data to support this.
+      if( !is_array($v) ) { $v = array($v, null); }
       $f = $this->getMetaField($k);
-      $e = $f->validate( $v );
+      $e = $f->validate( $v[0], $v[1] );
       if( !($e === true) ) { $errors[] = $e; }
     }
     if( count($errors) ) { return $errors; }
@@ -194,10 +204,11 @@ class ZenMetaTable extends Zen {
    *
    * @param string $field
    * @param mixed $value
+   * @param mixed $old_value used for unique constraint (see {@link ZenMetaField::validate()} for more)
    * @return mixed true if all succeeded or an array mapped (string)field -> (string)error
    */
-  function validateField($field, $value) {
-    return $this->validate( array($field=>$value) );
+  function validateField($field, $value, $oldvalue = null ) {
+    return $this->validate( array($field=>array($value,$oldvalue)) );
   }
 
   /**

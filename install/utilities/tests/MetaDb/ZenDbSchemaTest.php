@@ -101,6 +101,7 @@
         if( isset($table['inherits']) ) { $table['inherits'] = join(',', $table['inherits']); }
         // test each field
         foreach( $vals as $key=>$val ) {
+          if( $key == 'name' ) { $val = strtoupper($val); }
           if( $key != 'expected' ) {
             Assert::equals($val, $table[$key], 
                            "getTableArray '$val' != '".$table[$key]."' for field $key");
@@ -136,7 +137,8 @@
       $table = $this->obj->getTableArray($t);
       $res = $this->obj->dropColumn( $t, $c );
       if( $vals['exists'] ) {
-        Assert::equalsTrue( isset($table['fields'][$c]), "The requested column does not exist, test will not work properly" );
+        Assert::equalsTrue( isset($table['fields'][$c]), "The requested column ({$vals['table']}/{$vals['field']})"
+                            ."does not exist, test will not work properly" );
         Assert::equalsTrue($res, "The column was not dropped as expected");
       }
       else {
@@ -192,7 +194,7 @@
       $res = $this->obj->setColumnProperty( $vals['table'], $vals['column'], $vals['property'], $vals['newval'] );
       if( $vals['expected'] ) {
         $newvals = $this->obj->getFieldArray($vals['table'], $vals['column']);
-        Assert::equalsTrue( $res, "Return value indicates failure" );
+        Assert::equalsTrue( $res, "Return value indicates failure for {$vals['table']}->{$vals['column']}" );
         $p = $vals['property'];
         Assert::equals( $vals['newval'], $newvals[$p], "Expected value '{$vals['newval']}', recieved '".$newvals[$p]."'" );
       }
@@ -205,7 +207,7 @@
       $res = $this->obj->setTableProperty( $vals['table'], $vals['property'], $vals['newval'] );
       if( $vals['expected'] ) {
         $newvals = $this->obj->getTableArray($vals['table']);
-        Assert::equalsTrue( $res, "Return value indicates failure" );
+        Assert::equalsTrue( $res, "Return value indicates failure for {$vals['table']}->{$vals['property']}" );
         $p = $vals['property'];
         Assert::equals( $vals['newval'], $newvals[$p], "Expected value '{$vals['newval']}', recieved '".$newvals[$p]."'" );
       }

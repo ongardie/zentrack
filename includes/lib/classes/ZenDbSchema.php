@@ -293,13 +293,17 @@ class ZenDbSchema extends Zen {
         $criteria = $field->child('criteria','0');
         $f[$t] = array($criteria->prop('type'), $criteria->data());
       }
-      else if( $t == 'required' ) {
+      else if( $t == 'required' || $t == 'unique' ) {
         $val = ZenUtils::parseBoolean( $field->childData('required'), false );
         $f[$t] = $val? 1 : 0;
       }
       else {
         $f[$t] = $field->childData($t,0);
       }
+    }
+    // primary keys are always unique
+    if( $f['type'] == 'primarykey' ) {
+      $f['unique'] = 1;
     }
     $f['custom'] = $is_custom;
     // relaxed 'requirement' status for label (should be required)
@@ -328,11 +332,16 @@ class ZenDbSchema extends Zen {
    */
   function addTable( $name, $description, $is_abstract, $has_custom_fields, 
                      $inherits, $has_transactions = false ) {
+    
     //todo add some sort of validation here
+    $name = strtoupper($name);
     if( isset($this->_tables[$name]) ) {
       ZenUtils::safeDebug($this, "addTable", "The table name $name already exists", 105, LVL_WARN);
       return false;
     }
+    zenUtils::safeDebug($this, "addTable", "Adding new table: [name]$name, [des]$description, "
+                        ."[abstr]$is_abstract, [hascust]$has_custom_fields, [inh]$inherits, "
+                        ."[hastr]$has_transactions", 0, LVL_DEBUG);
     $this->_tables[$name] = 
       compact( array('name', 'description', 'is_abstract', 'has_custom_fields', 
                      'inherits', 'has_transactions') );

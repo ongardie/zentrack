@@ -123,8 +123,8 @@
 
     function testIsRequired( $vals ) {
       $field = $this->_get($vals);
-      Assert::equalsTrue($field->isRequired(), $vals['expected'], 
-                         "{$vals['name']}: expected {$vals['expected']}");
+      Assert::equals($field->isRequired(), $vals['expected'], 
+                     "{$vals['name']}: expected {$vals['expected']}");
     }
 
     function testName( $vals ) {
@@ -164,12 +164,13 @@
     }
 
     function testValidate( $vals ) {
-      $field = $this->_get($vals);
-      $res = $field->validate($vals['newval']);
+      $f = $vals['field'];
+      $field = $this->_schema->getMetaField('DATATYPE_TEST', $f);
+      $row = Zen::getDataRow('DATATYPE_TEST', $vals['rowid']);
+      $res = $field->validate($vals['newval'], $row[$f]);
       Assert::assert( ($vals['expected'] && $res === true) || !$vals['expected'] && is_string($res), 
-                     "{$vals['name']}: expected ".($vals['expected']? 'true' : 'false')
-                     ." for value '{$vals['newval']}'" );
-      //todo: add a test for unique values
+                     "{$vals['rowid']}: expected ".($vals['expected']? 'true' : 'false')
+                     ." for field '{$f}' value '{$vals['newval']}' (old value: ".$row[$f].")" );
     }
 
     function testSave( $vals ) {
@@ -185,7 +186,7 @@
         // validate the entry in the database
         $query = Zen::getNewQuery();
         $query->table('FIELD_DEFS');
-        $query->match('table_name', ZEN_EQ, $vals['table']);
+        $query->match('col_table', ZEN_EQ, $vals['table']);
         $query->match('col_name', ZEN_EQ, $vals['field']);
         $vals = $query->selectRow(null, true);
         foreach($vals as $key=>$val) {

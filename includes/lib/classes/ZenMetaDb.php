@@ -70,7 +70,7 @@ class ZenMetaDb extends Zen {
     }
     foreach( $fieldInfo as $f ) {
       $field = strtolower($f['col_name']);
-      $table = strtoupper($f['table_name']);
+      $table = strtoupper($f['col_table']);
       $this->_tables[$table]['fields'][$field] = array();
       foreach( $f as $key=>$val ) {
         if( $key == 'col_criteria' ) {
@@ -288,7 +288,7 @@ class ZenMetaDb extends Zen {
   /** @var ZenDbSchema $_schema is the base xml schema for the database */
   var $_schema;
 
-  /** @var array $_tables mapped (string)table_name -> (ZenMetaTable)table_object */
+  /** @var array $_tables mapped (string)col_table -> (ZenMetaTable)table_object */
   var $_tables;
 
   /** @var ZenDatabase $_conn database connection */

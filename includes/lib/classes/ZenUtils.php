@@ -668,6 +668,18 @@ class ZenUtils {
   }
 
   /**
+   * STATIC: wrapper for {@link isInstanceOf()}
+   *
+   * @static
+   * @param string $expected
+   * @param Object $obj
+   * @return boolean
+   */
+  function instanceOf( $expected, $obj ) {
+    return ZenUtils::isInstanceOf($expected, $obj);
+  }
+
+  /**
    * STATIC: Provides debugging output which is safe to use during installation 
    * (before config is enabled).
    *

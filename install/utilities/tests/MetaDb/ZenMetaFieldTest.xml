@@ -97,25 +97,28 @@
       <unique>1</unique>
     </field>
     <load>
-      <field_name>test_field_1</field_name>
-      <isactive>1</isactive>
-      <field_pri>10</field_pri>
-      <syslock>0</syslock>
-      <descript>test 1 description</descript>
+      <column_primarykey>1</column_primarykey>
+      <column_value>test_field_1</column_value>
+      <column_string>test 1 string</column_string>
+      <column_integer>10</column_integer>
+      <column_byte>0</column_byte>
+      <column_email>an@email.com</column_email>
     </load>
     <load>
-      <field_name>test_field_2</field_name>
-      <isactive>1</isactive>
-      <field_pri>20</field_pri>
-      <syslock>0</syslock>
-      <descript>test 2 description</descript>
+      <column_primarykey>2</column_primarykey>
+      <column_value>test_field_2</column_value>
+      <column_string>test 2 string</column_string>
+      <column_integer>20</column_integer>
+      <column_byte>1</column_byte>
+      <column_email>another@email.net</column_email>
     </load>
     <load>
-      <field_name>test_field_3</field_name>
-      <isactive>0</isactive>
-      <field_pri>30</field_pri>
-      <syslock>1</syslock>
-      <descript>test 3 description</descript>
+      <column_primarykey>3</column_primarykey>
+      <column_value>test_field_3</column_value>
+      <column_string>test 3 string</column_string>
+      <column_integer>30</column_integer>
+      <column_byte>0</column_byte>
+      <column_email>alt@email.gov.cc</column_email>
     </load>
   </setup>
 
@@ -285,16 +288,16 @@
   <testsave>
     <pass_1>
       <param name='table'>DATATYPE_TEST</param>
-      <param name='field'>syslock</param>
+      <param name='field'>custom_byte</param>
       <param name='set'>label</param>
-      <param name='value'>Spifflock</param>
+      <param name='value'>customary bytage</param>
       <param name='expected' eval='true'>true</param>
     </pass_1>
     <pass_2>
       <param name='table'>DATATYPE_TEST</param>
-      <param name='field'>isactive</param>
+      <param name='field'>column_string</param>
       <param name='set'>default</param>
-      <param name='value'>0</param>
+      <param name='value'>I'm a string</param>
       <param name='expected' eval='true'>true</param>
     </pass_2>
     <fail_1>
@@ -306,7 +309,7 @@
     </fail_1>
     <fail_2>
       <param name='table'>DATATYPE_TEST</param>
-      <param name='field'>syslock</param>
+      <param name='field'>column_email</param>
       <param name='set'>type</param>
       <param name='value'>string</param>
       <param name='expected' eval='true'>false</param>
@@ -392,50 +395,71 @@
 
   <testvalidate>
     <pass_1>
-      <param name='name'>an_integer</param>
+      <param name='rowid'>1</param>
+      <param name='field'>column_integer</param>
       <param name='newval'>24</param>
       <param name='expected' eval='true'>true</param>
     </pass_1>
     <pass_2>
-      <param name='name'>a_byte</param>
-      <param name='newval'></param>
+      <param name='rowid'>2</param>
+      <param name='field'>column_byte</param>
+      <param name='newval'>3</param>
       <param name='expected' eval='true'>true</param>
     </pass_2>
     <pass_3>
-      <param name='name'>a_string</param>
+      <param name='rowid'>3</param>
+      <param name='field'>column_string</param>
       <param name='newval'>35</param>
       <param name='expected' eval='true'>true</param>
     </pass_3>
     <pass_4>
-      <param name='name'>a_primarykey</param>
+      <param name='rowid'>1</param>
+      <param name='field'>column_primarykey</param>
       <param name='newval'>222</param>
       <param name='expected' eval='true'>true</param>
     </pass_4>
     <pass_5>
-      <param name='name'>a_custom_email</param>
+      <param name='rowid'>2</param>
+      <param name='field'>column_email</param>
       <param name='newval'>me-me_me128-24@here.tcc24.us.gov</param>
       <param name='expected' eval='true'>true</param>
     </pass_5>
+    <pass_6>
+      <param name='rowid'>2</param>
+      <param name='field'>column_value</param>
+      <param name='newval'>test_field_2</param>
+      <param name='expected' eval='true'>true</param>
+    </pass_6>
     <fail_1>
-      <param name='name'>an_integer</param>
+      <param name='rowid'>1</param>
+      <param name='field'>an_integer</param>
       <param name='newval'></param>
       <param name='expected' eval='true'>false</param>
     </fail_1>
     <fail_2>
-      <param name='name'>a_byte</param>
+      <param name='rowid'>3</param>
+      <param name='field'>a_byte</param>
       <param name='newval'>2.5</param>
       <param name='expected' eval='true'>false</param>
     </fail_2>
     <fail_3>
-      <param name='name'>a_primarykey</param>
+      <param name='rowid'>2</param>
+      <param name='field'>a_primarykey</param>
       <param name='newval'>0.1</param>
       <param name='expected' eval='true'>false</param>
     </fail_3>
     <fail_4>
-      <param name='name'>a_custom_email</param>
+      <param name='rowid'>1</param>
+      <param name='field'>a_custom_email</param>
       <param name='newval'>memeeme@memememe</param>
       <param name='expected' eval='true'>false</param>
     </fail_4>
+    <fail_5>
+      <param name='rowid'>3</param>
+      <param name='field'>column_value</param>
+      <param name='newval'>test_field_2</param>
+      <param name='expected' eval='true'>false</param>
+    </fail_5>
   </testvalidate>
   
 </TestUnit>

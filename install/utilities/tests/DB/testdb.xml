@@ -114,7 +114,20 @@
     <table name="ABSTRACT_TEST">
       <description>Testing and development tables.  Any table inheriting this abstract is
                    only created if develop_mode is true</description>
-      <columns />
+      <columns>
+        <column name="column_primarykey" type='primarykey' ftype='immutable' label='PrimeKey' />	
+        <column name="column_value" type='value' ftype='text' label='Value'>
+          <unique>true</unique>
+        </column>
+        <column name="column_string" type='string' ftype='text' label='String' />
+        <column name="column_integer" type='integer' ftype='text' label='Integer'>
+           <notnull>true</notnull>
+        </column>	
+        <column name="column_byte" type='byte' ftype='text' label='Byte'>
+           <required>true</required>
+        </column>
+        <column name="column_email" type='email' ftype='text' label='Email' />	
+      </columns>
     </table>
  </abstractTables>
 
@@ -281,7 +294,6 @@
     <table name="DATATYPE_TEST">
       <description>Test data for PHPUnit tests, used to create fake data types</description>
       <inherit>ABSTRACT_TEST</inherit>
-      <inherit>ABSTRACT_DATA_NAMED</inherit>
       <columns>
         <column name="datatype_test_id" type="primarykey" ftype="immutable" label="ID" />
       </columns>
@@ -292,12 +304,8 @@
       <inherit>ABSTRACT_TEST</inherit>
       <transactions>true</transactions>      
       <columns>
-        <column name="column_primarykey" type='primarykey' ftype='immutable' label='PrimeKey' />	
-        <column name="column_value" type='value' ftype='text' label='Value' />
-        <column name="column_string" type='string' ftype='text' label='String' />
-        <column name="column_integer" type='integer' ftype='text' label='Integer' />	
-        <column name="column_byte" type='byte' ftype='text' label='Byte' />	
-      </columns>
+        <column name="dbtest_id" type="primarykey" ftype="immutable" label="Key" />
+      </column>
     </table>
     
     <table name="FIELD_DEFS">
@@ -323,7 +331,9 @@
 	</column>
 	<column name="col_required" type="byte" ftype="checkbox" label="Required" />
 	<column name="col_criteria" type="string" ftype="textbox" label="Criteria" />
-	<column name="col_reference" type="value" ftype="text" label="Reference" />
+	<column name="col_reference" type="value" ftype="popselect" label="Reference" />
+	<column name="col_showfield" type="value" ftype="popselect" 
+                label="Display Field(from ref. table)" />
 	<column name="col_default" type="string" ftype="text" label="Default Value" />
 	<column name="col_description" type="string" ftype="text" label="Description" />
 	<column name="col_order" type="integer" ftype="text" label="Display Order" />

@@ -218,7 +218,7 @@
   
   <testdroptable>
      <test_1>
-        <param name='table'>ACTION_PARAMS</param>
+        <param name='table'>ACTION</param>
 	<param name='exists' eval='true'>true</param>
      </test_1>
      <test_2>
@@ -229,8 +229,8 @@
 
   <testdropcolumn>
      <test_1>
-        <param name='table'>ACTION</param>
-	<param name='field'>stage_reqs</param>
+        <param name='table'>ACTION_STEPS</param>
+	<param name='field'>action_type</param>
 	<param name='exists' eval='true'>true</param>
      </test_1>
      <test_2>
@@ -244,7 +244,7 @@
      <test_1>
         <param name='table'>LOG</param>
 	<param name='expected' eval='true'>true</param>
-	<param name='fieldnames'>name,description,last_update,syslock,priority,isactive,user_id,bin_id,ticket_id</param>
+	<param name='fieldnames'>descript,last_update,syslock,field_pri,isactive,user_id,bin_id,ticket_id</param>
      </test_1>
      <test_2>
         <param name='table'>not_a_real_table</param>
@@ -312,9 +312,9 @@
 
   <testsettableproperty>
      <test_1>
-        <param name='table'>ABSTRACT_FILTER_TYPE</param>
-	<param name='property'>name</param>
-	<param name='newval'>ABSTRACT_FILTEROO</param>
+        <param name='table'>ABSTRACT_INDEX_LIST</param>
+	<param name='property'>description</param>
+	<param name='newval'>a new description</param>
 	<param name='expected' eval='true'>true</param>
      </test_1>
      <test_2>
@@ -325,9 +325,15 @@
      </test_2>
      <test_3>
         <param name='table'>not_a_table</param>
+	<param name='property'>description</param>
+	<param name='newval'>should not work</param>
+	<param name='expected' eval='true'>false</param>
+     </test_3>
+     <test_4>
+        <param name='table'></param>
 	<param name='property'></param>
 	<param name='newval'></param>
 	<param name='expected' eval='true'>false</param>
-     </test_3>
+     </test_4>
   </testsettableproperty>
 </TestUnit>

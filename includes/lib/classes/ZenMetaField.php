@@ -32,7 +32,7 @@ class ZenMetaField extends Zen {
    * @return boolean valid ZenMetaField provided
    */
   function copy( $field ) {
-    if( !is_object($field) || get_class($field) != "ZenMetaField" ) { 
+    if( !is_object($field) || ZenUtils::isInstanceOf($field, "ZenMetaField") ) {
       Zen::debug($this,'copy','Param was not a valid ZenMetaField object', 105, LVL_ERROR);      
       return false; 
     }
@@ -188,10 +188,19 @@ class ZenMetaField extends Zen {
    * It is important to note the possible return values when checking the return code
    * from this function.
    *
+   * The old_value is used for unique constraints.  If it is null, this is assumed to
+   * be a new field, thus, if this value exists in the database, it cannot be used.  If this
+   * is not a new field, then the value must be unique, or the same as the current value.
+   *
+   * Thus, if the current value is not provided, this will validate to false even if the value
+   * is unchanged (it will think some other field is using the value when it finds it in the
+   * database).
+   *
    * @param mixed $value
+   * @param mixed $old_value the current value of this field (see description of this method)
    * @return mixed true if ok or a string containing the error
    */
-  function validate( $value ) {
+  function validate( $value, $old_value = null ) {
     // check empty vals
     if( $this->isRequired() && !strlen($value) ) {
       return "Field required";
@@ -201,7 +210,7 @@ class ZenMetaField extends Zen {
     }
     
     // check for unique constraints
-    if( $this->getProp('unique') && strlen($value) ) {
+    if( $value != $old_value && $this->getProp('unique') && strlen($value) ) {
       $query = Zen::getNewQuery();
       $query->table( $this->table() );
       $query->match( $this->name(), ZEN_EQ, $value );
