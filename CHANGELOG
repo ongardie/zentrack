@@ -18,6 +18,9 @@ abstraction, and endless possibilities for project expansion.
     - zentrack_2/www/help/english/admin/admin_header.php 1.2
     - zentrack_2/www/help/english/users/user_header.php 1.4
     - zentrack_2/www/help/help_header.php 1.8
+  Fix to properly display ticket_titleBox information when adding new recipients to notify list (Bug #157).
+    - zentrack_2/www/actions/addToNotify.php 1.8
+
 
 ----- VERSION 2.5.0.2 (2004-11-10) -----
 
