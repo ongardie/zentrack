@@ -226,11 +226,12 @@
         }
         // create input field and date picker
         $inp = "<input type='text' name='{$key}' "
-          ." value='{$value}' size='20' maxlength='250'{$onblur}>\n"
+          ." value='{$value}' size='20' maxlength='250'{$onblur} "
+          ." hascalendar='".$varfield['field_name']."-calendar_icon'>\n"
           ." <img name='date_button' src='{$rootUrl}/images/cal.gif' "
           ."  onClick=\"popUpCalendar(this, document.{$formName}.{$varfield['field_name']}, '"
           .$zen->popupDateFormat()." 00:00')\"\n"
-          ."  alt='".tr("Select a Date")."'>\n";
+          ."  alt='".tr("Select a Date")."' id='".$varfield['field_name']."-calendar_icon'>\n";
           break;
       case "number":
         if( $value == 'NULL' ) { $value = ''; }

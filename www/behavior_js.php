@@ -301,6 +301,7 @@ function fieldChangedBehavior( fieldObject ) {
   return false;
 }
 
+
 /**
  * Execute a behavior.  We flag all fields changed and insure
  * that they cannot be recursively edited by behaviors (to prevent
@@ -342,6 +343,21 @@ function executeBehavior( formObj, behaviorId, setid ) {
 
   // disable/enable field as appropriate
   fieldObj.disabled = behavior.disabled? true : false;
+
+  // disable/enable calendar icon and popup as appropriate
+  var inputField=fieldObj;
+
+  if (inputField.getAttribute('hascalendar')) {
+    var calendarIcon=document.getElementById(inputField.getAttribute('hascalendar'));
+    if (inputField.disabled) {
+      calendarIcon.src="images/disabled-cal.gif";
+      calendarIcon.oldonclick=calendarIcon.onclick;
+      calendarIcon.onclick=function() {return false;};
+    } else {
+      calendarIcon.src="images/cal.gif";
+      calendarIcon.onclick=calendarIcon.oldonclick;
+    }
+  }
 
   if( fieldObj.disabled ) {
     mClassX(fieldObj, 'inputDisabled');
