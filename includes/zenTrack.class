@@ -2192,8 +2192,11 @@ class zenTrack extends zen {
 	." WHERE ticket_id = $id"
 	." AND (action = 'MOVED' OR action = 'ASSIGNED' OR action = 'CREATED')"
 	." ORDER BY created DESC"
-	." LIMIT 1";
-      return( $this->db_quickIndexed($query) );
+      $vars = $this->db_quickIndexed($query);
+      if( !count($vars) ) {
+	
+      }
+      return $vars;
    }
    
    function projectTypeID() {
@@ -2276,16 +2279,16 @@ class zenTrack extends zen {
       
       $this->bins        = $this->getBins();
       $this->systems     = $this->getSystems();
-      //$this->strings   = $this->getStrings($this->language);
+      //$this->strings     = $this->getStrings($this->language);
       $this->settings    = $this->getSettings();
       $this->settings["font_size_small"] = $this->settings["font_size"] - 2;
       $this->settings["font_size_large"] = $this->settings["font_size"] + 4;
       // this is a quick hack to fix an oops
       // should eventually go through code and fix this
       $this->settings["color_title_txt"] = $this->settings["color_title_text"];
-      $this->types          = $this->getTypes();
-      $this->priorities     = $this->getPriorities();
-      $this->tasks          = $this->getTasks();
+      $this->types       = $this->getTypes();
+      $this->priorities  = $this->getPriorities();
+      $this->tasks       = $this->getTasks();
 
       $this->date_fmt_long  = $this->settings["date_fmt_long"];
       $this->date_fmt_short = $this->settings["date_fmt_short"];
@@ -2304,7 +2307,7 @@ class zenTrack extends zen {
    
   
    /*
-    *  REPORTING FUNCTIONS
+    *  REPORTING FUNCTIONS (incomplete... add later)
    */     
 
    /**
