@@ -38,7 +38,7 @@
     }
     $res = $zen->saveReport($report_name,$tempid,$select_bins,$users);
     if( $res ) {
-      print "<b>" . tr("Your chart has been saved successfully saved with title: $report_name") . "</b>\n";
+      print "<b>" . tr("Your chart has been successfully saved with title: ?",array($report_name)) . "</b>\n";
     } else {
       $errs[] = tr("Chart could not be saved.") . " "
 	.(($zen->db_error)?$zen->db_errnum.":".$db_error:"");
