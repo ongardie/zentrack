@@ -11,40 +11,54 @@
  * essential events that define the abilities of the ZenTrack
  * system.
  *
+ * When using this class, always use the {@link ZenSystemAction::getInstance()} instead
+ * of the default constructor.  There is a significant amount of overhead involved in
+ * loading this class, and only one instance is necessary.
+ *
  * @package Actions
  */
 class ZenSystemAction extends Zen {
-
+  
   /**
-   * CONSTRUCTOR
-   *
-   * Loads a ZenSystemAction object for use
+   * CONSTRUCTOR: no need to call this (methods are static)
    */
   function ZenSystemAction() {
-    $this->Zen();
-    $this->_dbo =& Zen::getDbConnection();
+    ZenUtils::safeDebug("ZenSystemAction", "init", "There is no need to instantiate this class"
+                        160, LVL_WARN);    
   }
+  
+  /**
+   * STATIC: A generic call to a system action which takes a parm set id, loads the parms from
+   * database and runs the associated method
+   *
+   * @static
+   * @param integer $parmSetId the parm set to pass as args to the method
+   * @return mixed the result of the method called
+   */
+   function callMethod( $parmSetId ) {
+     
+   }
 
   /**
-   * Load a form
+   * Load a new page (redirect user) and send parms as url arguments
    */
 
   //todo
 
   /**
-   * Create data type
+   * Create data type entry
    */
   
   //todo
 
   /**
-   * Edit data type
+   * Edit data type entry
    */
   
   //todo
 
   /**
-   * Delete data type
+   * Delete data type entry
    */
 
   //todo
@@ -86,9 +100,21 @@ class ZenSystemAction extends Zen {
   //todo
 
   /**
-   * Get Notify List
+   * Get notify list
    */
   
+  //todo
+  
+  /**
+   * Add to notify list
+   */
+   
+  //todo
+  
+  /**
+   * Remove from notify list
+   */
+   
   //todo
 
   /**
@@ -102,14 +128,13 @@ class ZenSystemAction extends Zen {
   /**
    * Edit the values of a row of data in the database.
    *
-   * @access private
    * @param Array $vals mapped (String)field => (mixed)value
    * @param String $table is the tablename without prefix (prefix is defined in zen.ini->db->db_prefix)
    * @param mixed $id is the value of the primary key for this row or the unique field defined by $keyname
    * @param String $keyname defines field used to identify row(must have a unique value), defaults to the primary key for this table
    * @return boolean true if row edited successfully
    */
-  function _editData( $vals, $table, $id, $keyname = null ) {
+  function editData( $vals, $table, $id, $keyname = null ) {
     // set the row id
     if( $keyname == null ) {
       $keyname = $this->_dbo->getPrimaryKey($table);      
@@ -133,7 +158,6 @@ class ZenSystemAction extends Zen {
   /**
    * Send an email message   
    *
-   * @access private
    * @param array $to contains valid email addresses for recipients of email
    * @param string $subject contains the subject of the email
    * @param string $from contains the sender
@@ -150,6 +174,21 @@ class ZenSystemAction extends Zen {
 
     
   }
+  
+  /**
+   * Executes a user function from the user_functions.php class
+   *
+   * Note that the user method is assumed to return a valid value that
+   * can be used by the action calling this, and no validation is done
+   * by this method.
+   *
+   * @param string $userFxn the function to run
+   * @param array $args contains any arguments to pass to the method
+   * @return mixed whatever is returned by the user function
+   */
+   function runUserFxn( $userFxn, $args ) {
+     return ZenUtils::callUserFunction($userFxn, $args); 
+   }
 
   /**
    * Executes an external shell script or batch file.  
@@ -159,20 +198,26 @@ class ZenSystemAction extends Zen {
    * must be allowed to the user, and this script
    * must be executable by the user.
    *
-   * @param string $command the script/command to execute
+   * @param string $script the script/command to execute
    * @param array $args contains (String)argument values to be passed
    * @return mixed if the script returns a value, this value is returned here too
    */
-  function runScript( $command, $args = null ) { }
+  function runScript( $script, $args = null ) {
+    return ZenUtils::runScript($script, $args);
+  }
 
   /**
-   * Executes a user defined action
+   * Executes another user defined action
    *
    * @param integer $action_id id of action to run
    * @param array $args any arguments to pass to the action
+   * @param ZenActionList $list if provided, will be used to create action (for db efficiency)
    * @return the return value of the action
    */
-  function runAction( $action_id, $args = null ) { }
+  function runAction( $action_id, $args = null, $list = null ) {
+    $act = new ZenAction($action_id);
+    $act->activate($args);
+  }
 
   /**
    * Runs a helper script
@@ -196,10 +241,7 @@ class ZenSystemAction extends Zen {
    * @return mixed value of variable or null if not found
    */
   function getScope( $name, $key = null ) {
-    $val = null;
-    if( isset($_SESSION) && isset($_SESSION[$name]) ) { $val = $_SESSION[$name]; }
-    else if( isset($GLOBALS) && isset($GLOBALS[$name]) ) { $val = $GLOBALS[$name]; }
-    return $key && is_array($val)? $val[$key] : $val;
+    return ZenUtils::findGlobal($name, $key);
   }
 
   /**
@@ -210,12 +252,8 @@ class ZenSystemAction extends Zen {
    * @param string $key if the variable is an array $key can be an index in that array 
    * @return mixed value of variable or null if not found
    */
-  function getEnv( $name, $key = null ) {
-    $val = null;
-    if( isset($_SERVER) && isset($_SERVER[$name]) ) { $val = $_SERVER[$name]; }
-    else if( isset($_ENV) && isset($_ENV[$name]) ) { $val = $_ENV[$name]; }
-    else if( isset($HTTP_VARS) && isset($HTTP_VARS[$name]) ) { $val = $HTTP_VARS[$name]; }
-    return $key && is_array($val)? $val[$key] : $val;
+  function getEnvProperty( $name, $key = null ) {
+    return ZenUtils::findEnv($name, $key);
   }
 
   /**
@@ -286,13 +324,6 @@ class ZenSystemAction extends Zen {
     return Zen::showDateTime(ZenSystemAction::getDateTime($date));
   }
 
-  /** 
-   * @var array $_fxns contains a map of the functions in this method and parameters used to call them
-   */
-  var $_fxns;
-
-  /** @var ZenDatabase $_dbo the database connection */
-  var $_dbo;
 }
 
 ?>

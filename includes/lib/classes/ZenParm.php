@@ -10,15 +10,16 @@
  *
  * The parm can get its data from several sources (see {@link source()}):
  * <ul>
+ *  <li><b>Admin Setting</b> - setting from admin panel 
  *  <li><b>Boolean</b> - the value of this cell is a boolean true/false
  *  <li><b>Database</b> - the value of this cell comes from db table/field 
- *  <li><b>Setting</b> - setting from admin panel 
- *  <li><b>Ini</b> - setting from ini file
- *  <li><b>Form</b> - form data (from posted form)
+ *  <li><b>Environment</b> - get value from environment ($_SERVER, $_ENV, $HTTP_VARS, etc)
+ *  <li><b>Form Data</b> - form data (from posted form, $_POST)
  *  <li><b>Helper</b> - run a helper function
- *  <li><b>Scope</b> - get variable from session
+ *  <li><b>Session</b> - get variable from session ($_SESSION, $GLOBALS)
  *  <li><b>Text</b> - insert value as text
- *  <li><b>User Fxn</b> - run a function from user file
+ *  <li><b>User Function</b> - run a function from user file
+ *  <li><b>zen.ini</b> - setting from ini file
  * </ul>
  *
  * @package Actions
@@ -51,43 +52,59 @@ class ZenParm extends ZenDataType {
   }
 
   /**
-   * Returns the final(parsed) value of this parm
-   *
-   * @return mixed
+   * Load data for this parm
    */
-  function value() {
+  function _load() {
+    ZenUtils::mark("ZenParm ".$this->_id." load");
     $p1 = $this->getField('parm_cat1');
     $p2 = $this->getField('parm_cat2');
     $p3 = $this->getField('parm_cat3');
     $p4 = $this->getField('parm_cat4');
     switch($this->source()) {
     case "boolean":
-      return ZenUtils::parseBoolean($p4);
+      $this->_val = ZenUtils::parseBoolean($p4);
       break;
     case "db":
       $query = Zen::getNewQuery();
       $query->table( $p1 );
       $query->field( $p2 );
       $query->match( $p3, ZEN_EQ, $p4, $p1 );
-      return $query->get( Zen::getCacheTime() );
+      $this->_val = $query->get( Zen::getCacheTime() );
+      break;
     case "setting":
-      return Zen::getSetting( $p1, $p2 ); 
+      $this->_val = Zen::getSetting( $p1, $p2 );
+      break;
     case "form":
-      return ZenUtils::getFormData($p2);
+      $this->_val = ZenUtils::getFormData($p2);
+      break;
     case "helper":
-      return ZenUtils::runHelper($p2, array("parm"=>$this));
+      $this->_val = ZenUtils::runHelper($p2, array("parm"=>$this));
+      break;
     case "ini":
-      return ZenUtils::getIni($p1, $p2);
+      $this->_val = ZenUtils::getIni($p1, $p2);
     case "scope":
-      return ZenUtils::findGlobal($p1, $p2);
+      $this->_val = ZenUtils::findGlobal($p1, $p2);
     case "text":
-      return $p4;
+      $this->_val = $p4;
     case "user":
-      return ZenUtils::runScript($p2, array("parm"=>$this));
+      $this->_val = ZenUtils::runScript($p2, array("parm"=>$this));
     default:
       ZenUtils::safeDebug($this, "value", "Requested parm type ".$this->source()." was invalid", 105, LVL_ERROR);
-      return null;
+      $this->_val = null;
     }
+    ZenUtils::unmark("ZenParm ".$this->_id." load");
+  }
+  
+  /**
+   * Returns the final(parsed) value of this parm
+   *
+   * @return mixed
+   */
+  function value() {
+    if( !$this->_val ) {
+      $this->_load(); 
+    }
+    return $this->_val;
   }
 
   /**
@@ -98,6 +115,11 @@ class ZenParm extends ZenDataType {
   function source() {
     return $this->getField('parm_source');
   }
+  
+  /**
+   * @var mixed $_val stores the parm value
+   */
+  var $_val;
 
 }
 

@@ -146,9 +146,10 @@ class ZenTranslator {
    $string = $this->trans($string);
    // replace the ?'s one at a time
    foreach($vals as $v) {
-      $string = preg_replace("/\?/", $v, $string, 1);   
+     $v = str_replace('?', '&#63;', $v);
+     $string = preg_replace("/\?/", $v, $string, 1);   
    } 
-   return $string;
+   return str_replace('&#63;', '?', $string);
  }
 
 /**

@@ -164,6 +164,28 @@ class ZenUtils {
       return isset($ini[$category][$property])? $ini[$category][$property] : null;
     }
   }
+  
+  /**
+   * STATIC: Returns a system environment setting.  The following locations are inspected
+   * in order: $_ENV, $_SERVER, $HTTP_VARS
+   *
+   * @param string $key is the variable name to retrieve
+   * @param string $sub if provided $key is assumed to be an array an $sub is an element of that array
+   */
+   function findEnv( $key, $sub = null ) {
+      if( isset($_ENV) && isset($_ENV[$key]) ) {
+        return ($sub)? $_ENV[$key][$sub] : $_ENV[$key];
+      }
+      else if( isset($_SERVER) && isset($_SERVER[$key]) ) {
+        return ($sub)? $_SERVER[$key][$sub] : $_SERVER[$key];
+      }
+      else if( isset($HTTP_VARS) && isset($HTTP_VARS[$key]) ) {
+        return ($sub)? $HTTP_VARS[$key][$sub] : $HTTP_VARS[$key];
+      }
+      else {
+        return null;
+      }
+   }
 
   /**
    * STATIC: Returns the name of the db table corresponding to this class object
@@ -445,11 +467,6 @@ class ZenUtils {
        $end = $tmp;
      }
 
-     // split up dates
-     $sp = getdate($start);
-     $ee = getdate($end);
-     $diff = $end - $start;
-     $div = ZenUtils::secondsIn($period);
      $mod = 0;
 
      // return correct vals
@@ -461,6 +478,7 @@ class ZenUtils {
      case "ho":
      case "da":
      case "we":
+       $diff = $end - $start;
        return ZenUtils::convertSecondsTo( $diff, $period );
      case "ye":
        $mod = 12;
@@ -468,6 +486,8 @@ class ZenUtils {
        $mod = 3;
      case "mo":
        {
+         $sp = getdate($start);
+         $ee = getdate($end);
          $mos = ($ee['years'] - $sp['years'])*12 + $ee['months'] - $sp['months'];
          // if our days are equal, test hours
          if( $ee['days'] == $sp['days'] ) {
@@ -494,10 +514,18 @@ class ZenUtils {
    }
 
   /**
-   * STATIC: Converts seconds(usually diffs between timestamps) to other measures of time
-   * 
-   * For example, if I pass <code>ZenUtils::convertSecondsTo(120, 'minutes')</code> I will get 2
-   * This method rounds to the nearest whole unit (dropping partial times)
+   * STATIC: Converts seconds(usually diffs between timestamps) to other measures of time, 
+   * rounded to the nearest whole unit (dropping partial times)
+   *
+   * Examples:
+   * <code>
+   * ZenUtils::convertSecondsTo(120, 'minutes');   // 2
+   * ZenUtils::convertSecondsTo(128, 'minutes');   // also 2
+   * ZenUtils::convertSecondsTo(20,  'hours');     // 0
+   * ZenUtils::convertSecondsTo(3618, 'hours');    // 1
+   * ZenUtils::convertSecondsTo(145, 'seconds');   // 145
+   * ZenUtils::convertSecondsTo(1209645, 'weeks'); // 2
+   * </code>
    *
    * @static
    * @param integer $seconds is the unix timestampe
@@ -761,17 +789,16 @@ class ZenUtils {
     //todo make this initialize the
     //todo tr() method if possible
     //todo
-    //todo move the tr() method here?
-    //todo
     if( function_exists("tr") ) {
       return tr($text, $vals);
     }
     else if( $vals ) {
       foreach($vals as $v) {
+        $v = str_replace('?', '&#63;', $v);
         $text = preg_replace("/\?/", $v, $text, 1);
       }      
     }
-    return $text;
+    return str_replace('&#63;', '?', $text);
   }
 
   /**

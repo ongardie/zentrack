@@ -470,15 +470,16 @@
         <column name="parm_source" type="string" ftype="select" label="Source">
           <size>20</size>
           <criteria type='list'>
+            [setting]Admin Setting
             [boolean]Boolean
             [db]Database
-            [setting]Admin Setting
+            [env]Environment
             [form]Form Data
             [helper]Helper
-            [ini]Ini File
+            [ini]Zen.Ini File
             [scope]Session
             [text]Text
-            [user]User Function       
+            [user]User Function
           </criteria>
         </column>
         <column name="parm_cat1" type="value" ftype="popselect" label="Section/Table">
