@@ -1,67 +1,79 @@
 <?{ /* -*- Mode: C; c-basic-indent: 3; indent-tabs-mode: nil -*- ex: set tabstop=3 expandtab: */ 
+
+  // benchmarking
   startPTime("classes.php");
 
-  // include all classes
+  /**
+   * @package Libs
+   *
+   * Provides simple means of including the appropriate classes for each page.  The 
+   * methods of interest are {@link getAllClasses} and {@link getCommonClasses}.
+   */
+
+  /** Includes the standard classes */
   function getStandardClasses() {
     return array(
-                 "Zen.class",
-                 "ZenDataType.class",
-                 "ZenDatabase.class",
-                 "ZenEmail.class",
-                 "ZenFormGenerator.class",
-                 "ZenList.class",
-                 "ZenMessage.class",
-                 "ZenMessageList.class",
-                 "ZenMetaField.class",
-                 "ZenMetaFieldList.class",
-                 "ZenMetaTable.class",
-                 "ZenMetaTableList.class",
-                 "ZenQuery.class",
-                 "ZenTemplate.class",
-                 "ZenTranslator.class",
-                 "ZenXMLParser.class",
+                 "Zen.php",
+                 "ZenDataType.php",
+                 "ZenDatabase.php",
+                 "ZenEmail.php",
+                 "ZenFormGenerator.php",
+                 "ZenList.php",
+                 "ZenMessage.php",
+                 "ZenMessageList.php",
+                 "ZenMetaField.php",
+                 "ZenMetaFieldList.php",
+                 "ZenMetaTable.php",
+                 "ZenMetaTableList.php",
+                 "ZenQuery.php",
+                 "ZenTemplate.php",
+                 "ZenTranslator.php",
+                 "ZenXMLParser.php",
                  "adodb/adodb.inc.php" );
   }
 
+  /** Includes the DataType classes */
   function getDataTypeClasses() {
     return array(
-                 "ZenAccess.class",
-                 "ZenAccessList.class",
-                 "ZenAction.class",
-                 "ZenActionList.class",
-                 "ZenAttachment.class",
-                 "ZenAttachmentList.class",
-                 "ZenBin.class",
-                 "ZenBinList.class",
-                 "ZenFilter.class",
-                 "ZenFilterList.class",
-                 "ZenNotifyList.class",
-                 "ZenPriority.class",
-                 "ZenPriorityList.class",
-                 "ZenRole.class",
-                 "ZenStage.class",
-                 "ZenStageList.class",
-                 "ZenSystem.class",
-                 "ZenSystemList.class",
-                 "ZenTask.class",
-                 "ZenTaskList.class",
-                 "ZenTicket.class",
-                 "ZenTicketList.class",
-                 "ZenRelatedList.class",
-                 "ZenTrigger.class",
-                 "ZenTriggerList.class",
-                 "ZenType.class",
-                 "ZenTypeList.class",
-                 "ZenUser.class",
-                 "ZenUserList.class" );
+                 "ZenAccess.php",
+                 "ZenAccessList.php",
+                 "ZenAction.php",
+                 "ZenActionList.php",
+                 "ZenAttachment.php",
+                 "ZenAttachmentList.php",
+                 "ZenBin.php",
+                 "ZenBinList.php",
+                 "ZenFilter.php",
+                 "ZenFilterList.php",
+                 "ZenNotifyList.php",
+                 "ZenPriority.php",
+                 "ZenPriorityList.php",
+                 "ZenRole.php",
+                 "ZenStage.php",
+                 "ZenStageList.php",
+                 "ZenSystem.php",
+                 "ZenSystemList.php",
+                 "ZenTask.php",
+                 "ZenTaskList.php",
+                 "ZenTicket.php",
+                 "ZenTicketList.php",
+                 "ZenRelatedList.php",
+                 "ZenTrigger.php",
+                 "ZenTriggerList.php",
+                 "ZenType.php",
+                 "ZenTypeList.php",
+                 "ZenUser.php",
+                 "ZenUserList.php" );
   }
 
+  /** Includes misc classes */
   function getOtherClasses() {
     return array( 
-                 "ZenDBXML.class",
-                 "db/DbTypeInfo.class" );
+                 "ZenDBXML.php",
+                 "db/DbTypeInfo.php" );
   }
 
+  /** Runs through the list of classes and includes each one with require_once */
   function requireOnceClasses( $array ) {
     global $dir_classes;
     foreach($array as $class) {
@@ -69,12 +81,14 @@
     }
   }
 
+  /** Includes all available classes */
   function includeAllClasses() {
     requireOnceClasses( getStandardClasses() );
     requireOnceClasses( getDataTypeClasses() );
     requireOnceClasses( getOtherClasses() );
   }
 
+  /** Includes classes needed for most pages */
   function includeCommonClasses() {
     requireOnceClasses( getStandardClasses() );
     requireOnceClasses( getDataTypeClasses() );
@@ -87,5 +101,6 @@
     includeCommonClasses();
   }
 
+  // benchmarking
   endPTime("classes.php");
 }?>

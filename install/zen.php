@@ -1,6 +1,12 @@
 #!/usr/bin/php -q
 <?{
 
+  /**
+   * @package Setup
+   *
+   *  This initializes and runs ZenTargets, providing proper class inclusion and environemnt checks.
+   */
+
   // get time for performance
   $stime = time();
 
@@ -60,10 +66,10 @@
    ****** PROCESS
    ************************************************/
 
-  include("setup/Zen.class");
-  include("setup/ZenDatabase.class");
-  include("setup/ZenTemplate.class");
-  include("setup/ZenTargets.class");
+  include("setup/Zen.php");
+  include("setup/ZenDatabase.php");
+  include("setup/ZenTemplate.php");
+  include("setup/ZenTargets.php");
 
   $z = new ZenTargets();
   $z->args( $argv );

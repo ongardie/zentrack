@@ -1,5 +1,13 @@
 <?{ /* -*- Mode: C; c-basic-indent: 3; indent-tabs-mode: nil -*- ex: set tabstop=3 expandtab: */ 
 
+  /**
+   * Prepares php environment settings and checks critical system params(such as version) to make
+   * sure that things run smoothly (without user having to configure php.ini file)
+   *
+   * @package Libs
+   */
+
+  // benchmark times
   startPTime("environment.php");
 
   // check php version and cli binary

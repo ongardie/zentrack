@@ -1,0 +1,8 @@
+<?
+
+/** @package Zen */
+class ZenNotifyList {
+
+}
+
+?>

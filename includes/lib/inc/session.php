@@ -1,5 +1,12 @@
 <?{ /* -*- Mode: C; c-basic-indent: 3; indent-tabs-mode: nil -*- ex: set tabstop=3 expandtab: */ 
 
+  /**
+   * @package Libs
+   *
+   * Initializes session and prepares common session variables
+   */
+
+  // benchmarking
   startPTime( "session.php" );
 
   // initialize all session data
@@ -12,7 +19,7 @@
   if( !isset($_SESSION['configLastUpdated']) )
     $_SESSION['configLastUpdated'] = 0;
 
-  // store session cache information
+  /** Clears and initializes the session data */
   function clearZenSessionCache() {
     $_SESSION['cache'] = array();
     
@@ -25,6 +32,7 @@
     // store the MessageListConfig (parsed from debug.xml)
     $_SESSION['cache']['messageListConfig'] = null;
   }
+
   if( !isset($_SESSION['cache']) || $_SESSION['cache'] == null ) clearZenSessionCache();
 
   // set up the login data
