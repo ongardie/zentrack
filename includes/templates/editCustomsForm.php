@@ -1,10 +1,8 @@
       <br>
-      <p class='error'><?=tr("Changing the custom fields definition is a new facility.") . '  '
-          .tr("Please read documentation before trying to do it.")?></p>
-      <p class='error'><?=tr("You cannot add nor delete custom fields using this interface.") . '  '
-          .tr("This is only for modifying the current custom fields.")?></p>
-      <p class='error'><?=tr("You can add and delete custom fields modifying the DB structure and then using this tool.")?></p>
-      <p class='smallBold'><?=tr("For more information please refer to the documentation.")?></p>
+      <p class='error'><?
+         $str = "<a href='$rootUrl/help/find.php?s=admin&p=varfields'>".tr('Documentation')."</a>";
+         print tr("Please refer to the ? before using this feature", array($str));
+       ?></p>
 
       <ul>
       <form name='editCustomsForm' action='<?=$SCRIPT_NAME?>' method='post'>

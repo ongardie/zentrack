@@ -4,10 +4,14 @@
          $dlnk="$rootUrl/admin/deleteBehavior.php";
 ?>
       <br>
-      <p class='error'><?=tr("Edit existing behaviors or create a new one.")?></p>
+      <p><b><?=tr("Edit existing behaviors or create a new one.")?></b></p>
       <p>Note that behaviors are meant to provide suggested values to
          the user.  They are not meant to be used as a security mechanism
          and could be circumvented by creative users.</p>
+      <p class='error'><?
+         $str = "<a href='$rootUrl/help/find.php?s=admin&p=behaviors'>".tr('Documentation')."</a>";
+         print tr("Please refer to the ? before using this feature", array($str));
+       ?></p>
       <ul>
       <form name='behaviorForm' action='<?=$elnk?>' method='post'>
       <input type='hidden' name='TODO' value=''>
@@ -52,7 +56,7 @@
                  . "[<a href='".$elnk."?behavior_id=".$v['behavior_id']."'>".uptr('properties')."</a>]</span>";
              print "<br>";
              print "\n<span class='small'>"
-                 . "[<a href='".$llnk."?behavior_id=".$v['behavior_id']."'>".uptr('matches')."</a>]</span>";
+                 . "[<a href='".$llnk."?behavior_id=".$v['behavior_id']."'>".uptr('rules')."</a>]</span>";
              print "<br>";
              print "\n<span class='small'><span class='error'>"
                  . "[<a href='".$dlnk."?behavior_id=".$v['behavior_id']."'"

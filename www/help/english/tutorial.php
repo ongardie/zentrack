@@ -1,9 +1,13 @@
 <?
-  $b = dirname(__FILE__);
-  include("$b/user_header.php");
+  $b = dirname(dirname(__FILE__));
+  include("$b/help_header.php");
+
+  $page_section = tr("User's Manual");  
+  include("$libDir/nav.php");
+
   $tutDir = "$templateDir/tutorial/$helpLang";
   
-  $tutUrl = "$helpUrl/users/tutorial.php";
+  $tutUrl = "$helpUrl/tutorial.php";
   $sections = array(
      'introduction'    => 'Introduction',
      'login'           => 'Logging In',
@@ -26,6 +30,7 @@
 <table width='100%'>
 <tr>
   <td width='125' valign='top'>
+    <a href='<?=$helpUrl?>/index.php'>Back to Help</a><br>
     <?
     $linktext = '';
     $title = 'Introduction';
@@ -66,6 +71,5 @@
 </table>
 
 <? 
-  renderNavbar('users', $usersTOC);
   include("$libDir/footer.php"); 
 ?>

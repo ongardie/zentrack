@@ -1,5 +1,9 @@
       <br>
-      <p class='error'><?=tr("Changing these settings can have a severe impact on the system.  Please consider this before making modifications.")?></p>
+      <p><b><?=tr("Changing these settings can have a severe impact on the system.  Please consider this before making modifications.")?></b></p>
+      <p class='error'><?
+         $str = "<a href='$rootUrl/help/find.php?s=admin&p=settings'>".tr('Documentation')."</a>";
+         print tr("Please refer to the ? before using this feature", array($str));
+       ?></p>
       <p><?=tr("All entries must contain a value.")?></p>
 
       <form name='configSettingsForm' action='<?=$SCRIPT_NAME?>' method='post' onSubmit='return confirm("Save system settings?")'>

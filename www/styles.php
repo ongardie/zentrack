@@ -17,13 +17,20 @@
 
   TD {
      font-family:      <?=$zen->settings["font_face"]?>;
-     font-size:        <?=$zen->settings["font_size"]?>px;     
+     font-size:        <?=$zen->settings["font_size"]?>px;
+     align-vertical:   top;
+  }
+  
+  LI {
+     margin-top: 5px; 
   }
   
   FORM {
      margin-top: 0px;
      margin-bottom: 0px;
   }
+  
+  
 
   /*** PAGE COMPONENTS ***/
 
@@ -125,7 +132,8 @@ else {
 
   .cell, .invalidCell, .content, .labelCell {
      color:       <?=$zen->settings["color_alt_text"]?>;
-     background:  <?=$zen->settings["color_background"]?>;     
+     background:  <?=$zen->settings["color_background"]?>;
+     padding: 4px;     
   }
   
   .labelCell {

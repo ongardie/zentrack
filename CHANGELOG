@@ -9,6 +9,15 @@
 
 ----- V2.5 RC2 [Pre 2] (in development) -----
 
+2004-09-09, Kato
+  Completed tutorial and user's manual docs
+  Completed admin section of help docs
+  Updated admin pages to include links to docs
+  
+  Changed the admin password to match last name
+  of administrator.  This will force users to change
+  it on the first login.
+
 2004-09-08, Kato
   Added new documentation (still incomplete)
     - zentrack_2/www/help/about.php 1.6

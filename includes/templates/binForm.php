@@ -1,8 +1,8 @@
       <br>
-      <p class='error'><?=tr("Changing the Bin Configuration has a large system impact.") . '  '
-          .tr("Please consider this before making modifications.")?></p>
-      <p class='error'><?=tr("Bins cannot be destroyed, to maintain data integrity.")?></p>
-      <p class='smallBold'><?=tr("To remove a bin from use, uncheck the 'active' box.")?></p>
+      <p class='error'><?
+         $str = "<a href='$rootUrl/help/find.php?s=admin&p=varfields'>".tr('Documentation')."</a>";
+         print tr("Please refer to the ? before using this feature", array($str));
+       ?></p>
 
       <ul>
       <form name='binForm' action='<?=$SCRIPT_NAME?>' method='post'>

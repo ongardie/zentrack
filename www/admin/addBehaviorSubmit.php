@@ -54,7 +54,7 @@
                        );
       $res = $zen->addBehavior($updflds,array());
       if( $res ) {
-	$msg = tr("Behavior ? was added successfully. ? to customize behavior ?'s details.",
+	$msg = tr("Behavior ? was added successfully. ? to customize behavior ?'s rules.",
 		  array($NewBehaviorName,
 			"--link--",
 			$NewBehaviorName));

@@ -5,6 +5,7 @@
 
   $page_prefix = tr("zenTrack Help | ");
   $page_section = tr("Help Menu");
+  $page_name = null;
   
   // determine which directory contains
   // our current translation (if one exists)
@@ -18,6 +19,8 @@
   }
   $helpUrl = "$helpBase/$helpLang";
   $helpDir = "$b/$helpLang";
+
+  $tutImageUrl = "$imageUrl/help_screenshots/$helpLang";
 
   // store our directory links in the global scope
   // for functions and pages
@@ -131,23 +134,18 @@
    * language files instead.
    */
   $usersTOC = array(
-		    "tutorial.php"     => tr("Tutorial"),
 		    "tickets.php"      => tr("Tickets"),
 		    "projects.php"     => tr("Projects"),
 		    "options.php"      => tr("Personal Options"),
-		    "notify_lists.php" => tr("Notify Lists"),
-        "contacts.php"     => tr("Contacts"),
-		    "reports.php"      => tr("Reports")
+        "contacts.php"     => tr("Contacts")
 		    );
 
   $adminTOC = array(
-		    "behaviors.php"       => tr("Behaviors"),
 		    "bins.php"            => tr("Bins and Permissions"),
-		    "data_groups.php"     => tr("Data Groups"),
 		    "data_types.php"      => tr("Data Types (standard ticket fields)"),
+		    "data_groups.php"     => tr("Data Groups"),
+		    "behaviors.php"       => tr("Behaviors"),
 		    "varfields.php"       => tr("Variable Fields (custom ticket fields)"),
-		    "notify_lists.php"    => tr("Notify Lists"),
-		    "users.php"           => tr("User Maintenance"),
 		    "settings.php"        => tr("System Settings")
 		    );
 

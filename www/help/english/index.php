@@ -14,7 +14,15 @@
   <blockquote>
   <b>Welcome to <?=$zen->settings["system_name"]?> Help!</b>
   <ul>
-    <b>User's Manual</b>
+    <b>Tutorial</b>
+    <ul>
+      New to <?=$zen->settings['system_name']?>?  Try out the tutorial, which
+      will explain everything you need to know... except for the stuff it doesn't.
+      
+      <p><a href='<?=$helpUrl?>/tutorial.php'>View the Tutorial</a></p>
+    </ul>
+    
+    &nbsp;<br><b>User's Manual</b>
     <?
       // prints out an index of the user's manual
       // do not try to manually replace the values here, just
@@ -30,7 +38,7 @@
       renderTOC( 'admin', true ); 
     ?>
     
-    &nbsp;<br><b>More Assistance</b>
+    &nbsp;<br><b>Help and Support</b>
     <ul>
       <a href='<?=$helpUrl?>/support.php'>Support & Community</a>
       <br><a href='<?=$helpUrl?>/bugs.php'>Reporting Bugs</a>

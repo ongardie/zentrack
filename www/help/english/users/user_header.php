@@ -2,14 +2,12 @@
   $b = dirname(dirname(dirname(__FILE__)));
   include_once("$b/help_header.php");
   
-  $tutImageUrl = "$imageUrl/help_screenshots/$helpLang";
-  
   $page_section = tr("User's Manual");  
   include("$libDir/nav.php");
 
   renderNavbar('users', $usersTOC);  
 ?>
-<p class='bigBold'>
+<p class='bigBold' align='center'>
 <?=
   basename($_ENV['SCRIPT_NAME']) == 'index.php'?
      'Overview' : 

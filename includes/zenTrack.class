@@ -3406,7 +3406,7 @@ class zenTrack extends zen {
   }
   
   function getTableId( $table ) {
-    $table = preg_replace('/^ZENTRACK_/i', '', strtoupper($table));
+    $table = preg_replace('/^ZENTRACK_/', '', strtoupper($table));
     switch( $table ) {
       case 'ACCESS':
         return 'access_id';

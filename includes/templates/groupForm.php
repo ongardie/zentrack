@@ -3,7 +3,11 @@
          $llnk="$rootUrl/admin/editGroupDetails.php";
 ?>
       <br>
-      <p class='error'><?=tr("Edit existing groups or create a new group.")?></p>
+      <p><b><?=tr("Edit existing groups or create a new group.")?></b></p>
+      <p class='error'><?
+         $str = "<a href='$rootUrl/help/find.php?s=admin&p=data_groups'>".tr('Documentation')."</a>";
+         print tr("Please refer to the ? before using this feature", array($str));
+       ?></p>      
       <ul>
       <form name='groupForm' action='<?=$elnk?>' method='post'>
       <input type='hidden' name='TODO' value=''>

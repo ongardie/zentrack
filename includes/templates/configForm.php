@@ -1,7 +1,8 @@
       <br>
-      <p class='error'><?=tr("Changing this configuration list has a large system impact.")?>  <?=tr("Please consider this before making modifications.")?></p>
-      <p class='error'><?=tr("Items in this list cannot be destroyed, to maintain data integrity.")?></p>
-      <p class='smallBold'><?=tr("To remove a ? from use, uncheck the 'active' box.",array($type))?></p>
+      <p class='error'><?
+         $str = "<a href='$rootUrl/help/find.php?s=admin&p=data_types'>".tr('Documentation')."</a>";
+         print tr("Please refer to the ? before using this feature", array($str));
+       ?></p>
 
 <? if( $type == "type" ) { ?>
       <p><?=tr('There are two special types, which can be set by including either the word <span class="error">project</span> or <span class="error">note</span> in the bin name.')?></p>
@@ -38,7 +39,7 @@
 	     print "<tr>\n";
 	     $i = ($v["$id_type"])? $v["$id_type"] : $newtext;
 	     print "$t$i$te";
-	     print "<input type='hidden' name='newID[$j]' value='$v[$id_type]'>\n";
+	     print "<input type='hidden' name='newID[$j]' value='".$v[$id_type]."'>\n";
 	     print "$t<input type='text' name='newName[$j]' "
 	       ." value='$v[name]' size='20' maxlength='25'>$te";
 	     print "$t<select name='newPri[$j]' "

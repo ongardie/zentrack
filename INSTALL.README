@@ -14,15 +14,16 @@
 
   REQUIREMENTS
     Basic Install
-       Basic knowledge of PHP
-       PHP 4.2 or greater
-       Mysql, Oracle, Postgres, or SqlServer(beta testing sqlserver)
-    Email Gateway
+       PHP 4.3 or greater
+       Mysql, Oracle, Postgres, or SqlServer
+       A Basic knowledge of PHP is helpful
+    Email Gateway (optional)
        Some knowledge of SMTP and ability to set up email account
+       Basic PHP knowledge required
        PHP 4.3 or greater
        PEAR Library Mail_Mime  (possibly imap support installed)
-    Report Images
-       Intermediate PHP knowledge to set up GD
+    Report Images (optional)
+       Intermediate PHP knowledge needed if GD is not compiled
        PHP 4.3 or greater
        GD >= 2.0
        Freetype support enabled
@@ -35,8 +36,8 @@
 
   QUICK AND DIRTY INSTALL INSTRUCTIONS:
      -if installing from cvs, run setup_from_cvs from the install directory
-     -place www/ in the httpd(wwwroot) directory tree
-     -place includes/ in a non-httpd directory (security measure)
+     -place www/ in the htdocs/wwwroot directory tree
+     -place includes/ in a non-httpd directory (for security)
      
      -configure the header file:
    	www/header.php
@@ -45,17 +46,18 @@
 
      -build the database
         create a database instance and a user with access to this DB
-	locate install/build_[yourdb].sql and run in SQL interface
-	   this will create your db tables
-	locate install/seed_[yourdb].sql and run in SQL interface
-           this will populate your db
+        locate install/build_[yourdb].sql and run in SQL interface
+          this will create your db tables
+        locate install/seed_[yourdb].sql and run in SQL interface
+          this will populate your db
 	
      -chmod 777 includes/attachments (if using attachments)
      -chmod 777 includes/logs
      -chmod 777 includes/cache
      -chmod 777 includes/translations
-     -log in as Administrator/admin and configure the system to taste.
-     -the other test accounts are Guest/Guest and User/User
+     
+     -log in as Administrator/Administrator and configure the system to taste.
+     -a guest account exists as Guest/Guest and a user account as User/User.
 
      -if you intend to use the email gateway, please read the online docs
         which give a thorough overview of how to set this up:
@@ -63,9 +65,9 @@
         http://zendocs.phpzen.net/bin/view/Zentrack/ManualInstallation#Setting_Up_Email_Gateway
  
      -please let us know!  
-        send an email, log into irc.sourceforge.net #zentrack, 
-        or visit our forum and tell us what platform your install
-        was successful on.  We can also add your company/url to our user list.
+        send an email or use our feedback page:  http://www.zentrack.net/feedback
+        and tell us what platform your install was successful on.  
+        We can also add your company/url to our user list upon request.
    
   TROUBLESHOOTING
 
@@ -101,9 +103,10 @@
         Note that you have to view the image directly to see this (in the page, it just shows a broken image)
 
       -Problems viewing png images
-	You can manually set the image type to "jpeg" if you have
-	trouble with pngs by opening includes/reportConfig.php
-	and finding the line called image_type.
+
+      You can manually set the image type to "jpeg" if you have
+      trouble with pngs by opening includes/reportConfig.php
+      and finding the line called image_type.
 
     EMAIL GATEWAY PROBLEMS
       -Check includes/logs/egate_log for clues
@@ -116,8 +119,8 @@
     POSTGRES USERS
       -Please report any postgres nuisances... we just released postgres in 2.4
 
-    MS SQL SERVER USERS
-      - Beta, give it a try (submit any problems, and we will correct them)
+    SQL SERVER USERS
+      - Submit any problems and we will correct.  Fairly well tested in SQL Server
 
     OTHER DATABASE USERS
       -We can support, upon request, DB2, Sybase, or other
