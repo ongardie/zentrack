@@ -6,6 +6,61 @@
  endless possibilities for project expansion.
 
 ----- V2.4 (development, see CVS) ----
+2003-03-27, mlively
+  Integrating tr() translation function
+    - zentrack/www/actions/accept.php 1.5
+    - zentrack/www/actions/action_header.php 1.10
+    - zentrack/www/actions/addToNotify.php 1.5
+    - zentrack/www/actions/approve.php 1.5
+    - zentrack/www/actions/assign.php 1.7
+    - zentrack/www/actions/close.php 1.11
+    - zentrack/www/actions/dropFromNotify.php 1.2
+    - zentrack/www/actions/edit.php 1.5
+    - zentrack/www/actions/editSubmit.php 1.7
+    - zentrack/www/actions/email.php 1.7
+    - zentrack/www/actions/estimate.php 1.5
+    - zentrack/www/actions/log.php 1.7
+    - zentrack/www/actions/move.php 1.5
+    - zentrack/www/actions/print.php 1.7
+    - zentrack/www/actions/reject.php 1.5
+    - zentrack/www/actions/relate.php 1.7
+    - zentrack/www/actions/reopen.php 1.6
+    - zentrack/www/actions/test.php 1.5
+    - zentrack/www/actions/upload.php 1.9
+    - zentrack/www/actions/yank.php 1.4
+    - zentrack/www/admin/access.php 1.6
+    - zentrack/www/admin/addUser.php 1.4
+    - zentrack/www/admin/addUserSubmit.php 1.8
+    - zentrack/www/admin/admin_header.php 1.9
+    - zentrack/www/admin/bins.php 1.3
+    - zentrack/www/admin/config.php 1.9
+    - zentrack/www/admin/deleteUser.php 1.5
+    - zentrack/www/admin/editTicket.php 1.5
+    - zentrack/www/admin/editUser.php 1.5
+    - zentrack/www/admin/editUserSubmit.php 1.7
+    - zentrack/www/admin/index.php 1.4
+    - zentrack/www/admin/listUsers.php 1.4
+    - zentrack/www/admin/priorities.php 1.3
+    - zentrack/www/admin/resetPassword.php 1.6
+    - zentrack/www/admin/systems.php 1.3
+    - zentrack/www/admin/tasks.php 1.4
+    - zentrack/www/admin/types.php 1.4
+    - zentrack/includes/translations/english.trans 1.1
+    - zentrack/includes/templates/ticket_actionBar.php 1.6
+    - zentrack/includes/templates/ticket_box.php 1.9
+    - zentrack/includes/zenTrack.class 1.84
+    - zentrack/www/actions/log.php 1.8
+    - zentrack/www/actions/upload.php 1.10
+    - zentrack/www/help/install.php 1.3
+    - zentrack/www/helpers/projectSearchbox.php 1.8
+    - zentrack/www/helpers/userSearchbox.php 1.7
+    - zentrack/www/reports/drop.php 1.5
+    - zentrack/www/reports/projectSearchbox.php 1.3
+    - zentrack/www/reports/save.php 1.10
+  Set initialization variables for the translation engine
+    - zentrack/includes/headerInc.php 1.26
+  Created a parser to create translation files
+    - devtools/tr-parser.php 1.1
 
 2003-03-24, Kato
   Updated docs
