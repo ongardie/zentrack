@@ -7,6 +7,11 @@
 
 ----- V2.4 (development, see CVS) ----
 
+2003-03-13, Kato
+  Adding more template forms missing in cvs
+    - includes/templates/email/form_log.template
+    - includes/templates/email/form_move.template
+
 2003-03-12, MLively
   Created Translation Engine 
     - includes/tranlator.class 1.1
