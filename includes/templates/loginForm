@@ -2,7 +2,8 @@
 <blockquote><br>
   <p>&nbsp;</p>
   <span class="big"><b>Welcome!  Please Log On.</b></span>
-  <form method="post" action="<?=$SCRIPT_NAME?>" name='zenLoginForm'>
+  <form method="post" action="<?=$SCRIPT_NAME.(isset($QUERY_STRING)?"?".strip_tags($QUERY_STRING):"")?>" 
+        name='zenLoginForm'>
   <input type=text name="username" value='<?=$zen->ffv($zentrackUsername)?>' width=20 maxlength=20>&nbsp;Login Name
   <br>
   <input type="password" name="passphrase" width=20 maxlength=20>&nbsp;Password
