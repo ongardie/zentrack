@@ -1,0 +1,154 @@
+
+<TestUnit>
+
+  <!-- 
+     **************************
+     test data for PHPUnit tests
+
+     An optional <setup> node can
+     appear in the list, if it exists
+     then it will be passed as the
+     ZenXNode to the (assumed to exist)
+     $this->load() method
+
+     The xml file should contain nodes
+     named the same as the method the
+     data applies to.
+
+     Each method node can contain any
+     number of test nodes which will
+     each contain a set of <param>
+     nodes which will be passed back
+     to the test method
+
+     An optional eval='true' attribute
+     can be applied to any param tag
+     which will cause the data block to
+     be run using eval() (executed as code)
+     
+     This is useful for creating boolean vals,
+     for running functions, using variables, etc
+
+     IMPORTANT NOTE: the method names need
+     to be in all lower case here, since the
+     call uses get_class_methods, which returns
+     them entirely in lower case
+     **************************
+  -->
+
+  <!-- setup params are passed to the load() method to prepare the class -->
+  <setup>
+     <message>
+       <param name='class'>defaultclass</param>
+       <param name='method'>defaultmethod</param>
+       <param name='message'>A message not in config list, but matching root level</param>
+       <param name='errnum'>1</param>
+       <param name='lvl'>1</param>
+     </message>
+     <message>
+       <param name='class'>ZenDatabase</param>
+       <param name='method'>defaultmethod</param>
+       <param name='message'>A message matching a class but not a method</param>
+       <param name='errnum'>100</param>
+       <param name='lvl'>2</param>
+     </message>
+     <message>
+       <param name='class'>Zen</param>
+       <param name='method'>getTicket</param>
+       <param name='message'>A message mathcing a class and method</param>
+       <param name='errnum'>100</param>
+       <param name='lvl'>3</param>
+     </message>
+  </setup>
+
+  <testaddmessage>
+    <good_1>
+      <param name='class'>SpiffyDo</param>
+      <param name='method'>YappaYappa</param>
+      <param name='message'>This is a level 1, 
+should match root, "I'm putting some junk in these for fun\n!</param>
+      <param name='errnum'>100</param>
+      <param name='lvl'>1</param>
+      <param name='expected' eval='true'>true</param>
+    </good_1>
+    <good_2>
+      <param name='class'>Zen</param>
+      <param name='method'>getTicket</param>
+      <param name='message'>This is a level 3</param>
+      <param name='errnum'>120</param>
+      <param name='lvl'>3</param>
+      <param name='expected' eval='true'>true</param>
+    </good_2>
+    <good_3>
+      <param name='class'>ZenDatabase</param>
+      <param name='method'>RunAndHide</param>
+      <param name='message'>This is a level 1</param>
+      <param name='errnum'>200</param>
+      <param name='lvl'>1</param>
+      <param name='expected' eval='true'>true</param>
+    </good_3>
+    <bad_1>
+      <param name='class'>SpiffyDo</param>
+      <param name='method'>YappaYappa</param>
+      <param name='message'>This is a level 2, should fail</param>
+      <param name='errnum'>33</param>
+      <param name='lvl'>2</param>
+      <param name='expected' eval='true'>false</param>
+    </bad_1>
+    <bad_2>
+      <param name='class'>Zen</param>
+      <param name='method'>getSetting</param>
+      <param name='message'>This is a level 1, should fail</param>
+      <param name='errnum'>140</param>
+      <param name='lvl'>1</param>
+      <param name='expected' eval='true'>false</param>
+    </bad_2>
+    <bad_3>
+      <param name='class'>Zen</param>
+      <param name='method'>yohoo</param>
+      <param name='message'>This method not in config, should fail</param>
+      <param name='errnum'>140</param>
+      <param name='lvl'>2</param>
+      <param name='expected' eval='true'>false</param>
+    </bad_3>
+  </testaddmessage>
+
+  <testfilter>
+    <classtest>
+      <param name='class'>Zen</param>
+      <param name='method'></param>
+      <param name='errnum'></param>
+      <param name='lvl'></param>
+      <param name='expected'>1</param>
+    </classtest>
+    <methodtest>
+      <param name='class'></param>
+      <param name='method'>getTicket</param>
+      <param name='errnum'></param>
+      <param name='lvl'></param>
+      <param name='expected'>1</param>
+    </methodtest>
+    <errnumtest>
+      <param name='class'></param>
+      <param name='method'></param>
+      <param name='errnum'>100</param>
+      <param name='lvl'></param>
+      <param name='expected'>2</param>
+    </errnumtest>
+    <leveltest>
+      <param name='class'></param>
+      <param name='method'></param>
+      <param name='errnum'></param>
+      <param name='lvl'>2</param>
+      <param name='expected'>2</param>
+    </leveltest>
+  </testfilter>
+
+</TestUnit>
+
+
+
+
+
+
+
