@@ -18,6 +18,10 @@ class ZenTargets {
     $this->_dirs = $this->_parseConfigData("directories");
     $this->_configFiles = $this->_parseConfigData("configFiles");
     $this->_ini = $ini_array;
+    $this->_pathExps = $this->_ini['paths'];
+    foreach($this->_pathExps as $key=>$val) {
+      $this->_pathExps[$key] = '|^'.$val.'|';
+    }
   }
 
   /**
@@ -169,7 +173,19 @@ class ZenTargets {
         }
         return $this->_load_data( $p, $this->_getParm($target,1), $this->_getBooleanParm($target,2,true) );
       }
-    case "merge_template_file":    return $this->_merge_template_file( $p, $this->_getBooleanParm($target,1,false) );
+    case "merge_template_file":    
+      {
+        $p2 = $this->_getParm($target,1);
+        $p3 = $this->getParm($target,2);
+        if( !$p || !$p2 || !$p3 ) {
+          $this->_help($target);
+          return false;
+        }
+        return $this->_merge_template_file( $p, 
+                                            $p2,
+                                            $p3,
+                                            $this->_getBooleanParm($target,2,false) );
+      }
     case "prepare_install_files": 
       {
         $p2 = $this->_getParm($target,0);
@@ -237,14 +253,14 @@ class ZenTargets {
     case "backup_database":
       {
         print "   Usage: install.php [modifiers] -$target [tables]\n";
-        print "   - where tables is a comma separated list of tables (default is to backup all tables)\n";
+        print "   - tables: a comma separated list of tables (default is to backup all tables)\n";
         print "   - the backup is stored in includes/backups/yyyy-mm-dd-HH-mm directory\n";
         break;
       }
     case "create_database":
       {
         print "   Usage: install.php [modifiers] -$target data_dir\n";
-        print "   - where data_dir is the source directory containing db schema and data\n";
+        print "   - data_dir: the source directory containing db schema and data\n";
         print "   - you must create the database instance before running this command\n";
         print "   - you must create the database user and priviledges before running this command\n";
         break;
@@ -252,14 +268,14 @@ class ZenTargets {
     case "drop_database":  
       {
         print "   Usage: install.php [modifiers] -$target [table]\n";
-        print "   - where tables is a comma separated list of tables (default is to drop all tables)\n";
+        print "   - tables: a comma separated list of tables (default is to drop all tables)\n";
         break;
       }
     case "extra_secure_mode":
       {
         print "   Usage: install.php [modifiers] -$target apache_user apache_group\n";
-        print "   - where apache_user is the name the apache web process runs as\n";
-        print "   - where apache_group is the group the apache web process runs as\n";
+        print "   - apache_user: the name the apache web process runs as\n";
+        print "   - apache_group: the group the apache web process runs as\n";
         print "   - you must be a superuser to run this command\n";
         print "   - this command means nothing to windows\n";
         break;
@@ -267,9 +283,18 @@ class ZenTargets {
     case "load_data":
       {
         print "   Usage: install.php [modifiers] -$target data_directory [delete_first]\n";
-        print "   - where data_directory is the source directory containing xml data to upload\n";
-        print "   - where delete_first [default=true] is whether or not to delete existing data before uploading\n";
+        print "   - data_directory: the source directory containing xml data to upload\n";
+        print "   - delete_first: [default=true] is whether or not to delete existing data before uploading\n";
         print "   - this command can read zip or gzip compressed data files\n";
+        break;
+      }
+    case "merge_template_file": 
+      {
+        print "   Usage: install.php [modifiers] -$target file source dest [replace]\n";
+        print "   - file: the template or file to be copied (do not append .template suffix)\n";
+        print "   - source: directory to copy from\n";
+        print "   - dest: directory to copy to\n";
+        print "   - replace: merge with existing file (false) or replace existing(true) [default=false]\n";
         break;
       }
     case "prepare_install_files": 
@@ -280,24 +305,23 @@ class ZenTargets {
     case "try_db_connection":
       {
         print "   Usage: install.php [modifiers] -$target type host instance user password\n";
-        print "   - where type is the db type, such as mysql, pgsql, oci8po, etc (see zen.ini for details)\n";
-        print "   - where host can be localhost or possibly '', and instance is the database name, or TNS file for oracle\n";
+        print "   - type: the db type, such as mysql, pgsql, oci8po, etc (see zen.ini for details)\n";
+        print "   - host: can be localhost or possibly '', and instance is the database name, or TNS file for oracle\n";
         break;
       }
     case "update_db_schema":
       {
         print "   Usage: install.php [modifiers] -$target new_schema.xml [true|false]\n";
-        print "   - where true|false is 'actually do it' vs. just preview it\n";
+        print "   - true|false: 'actually do it' vs. just preview it [default=true]\n";
         break;
       }
     case "upgrade":
       {
         print "   Usage: install.php [modifiers] -$target old_version\n";
-        print "   - where old_version is the version you want to upgrade from\n";
+        print "   - old_version: the version you want to upgrade from\n";
         break;
       }
     case "full_install": 
-    case "merge_template_file": 
     case "verify_db_connection":
     case "backup_all":       
     case "backup_config":    
@@ -316,7 +340,7 @@ class ZenTargets {
     case "help":
       {
         print "   Usage: install.php [modifiers] -help target\n";
-        print "   - where command is the command to display help for\n";
+        print "   - command: the command to display help for\n";
         print "\n   Available targets:\n";
         foreach( $targets as $key=>$val ) {
           print "   -$key ($val)\n";
@@ -381,14 +405,16 @@ class ZenTargets {
   function _backup_config() {
     $success = true;
 
-    $dest = "includes/config";
     print "- Backing up config files to ".$this->_getBackupLocation()."/$dest\n";
     foreach( $this->_configFiles as $c) {
       // split the array
-      list($sect,$var,$name,$is_tmplt,$permissions) = $c;
+      list($sect,$var,$name,$is_tmplt,$permissions,$default) = $c;
 
       // set up source
       $source = $this->_ini[$sect][$var];
+      
+      // create the destination
+      $dest = preg_replace( $this->_pathExps, "", $source );
       
       // backup and check for errors
       if( !$this->_backup_file($name, $source, $dest) ) {
@@ -621,23 +647,23 @@ class ZenTargets {
     print "   Creating new header.php file\n";
     $f = $this->_ini['paths']['path_www']."/header.php";
     $res = false;
-    if( !file_exists($f) || $this->_confirm("Replace header.php file?", null, 'y') == 'y' ) {
-      $bulk = ZenUtils::flatten_array($this->_ini);
-      $tpl = new ZenTemplate("defaults/header.php.template");
-      $tpl->values($bulk);
-      $fp = @fopen($f,"w");
-      if( $fp ) {
-        if( !@fputs($fp, $tpl->process()) ) {
-          $res = false;
-        }
-        else {
-          $res = @fclose($fp);
-        }
+    if( file_exists($f) ) {
+      $conf = $this->_confirm("Updating header.php file: merge, replace, or skip?", array('m','r','s'));
+    }
+    if( !file_exists($f) || $conf != 's' ) {
+      if( !file_exists($f) ) { $conf = 'r'; }
+      else {
+        $this->_backup_file( 'header.php', $this->_ini['paths']['path_www'], 'www' );
       }
-      else { $res = false; }
+      if( !$this->_merge_template_file( "header.php",
+                                        $this->_installdir."/defaults",
+                                        $this->_ini['paths']['path_www'],
+                                        ($conf == 'r'? true : false) ) ) {
+        $res = false;
+      }
     }
     else {
-      print "   WARNING: $f could not be updated, you may need to manually update this file\n";
+      print "   WARNING!! $f was not updated, you may need to manually update this file\n";
     }
 
     // update the last_config_update counter
@@ -816,15 +842,17 @@ class ZenTargets {
    * If replace is set to true, then the current zen.ini file (from this install directory) will
    * be used to fill values as possible, to reduce the user configuration as much as possible.
    *
-   * @param string $dest the full path and filename to be created
+   * @param string $file is the filename (without .template extension)
+   * @param string $source is the path for the source file ($filename.template will be appended)
+   * @param string $dest the full path for output file ($filename will be appended)
    * @param boolean $replace if true, then the destination will be replaced instead of merged
    */
-  function _merge_template_file( $dest, $replace = false ) {
-    $file = basename($dest);
-    $tmplt = $this->_installdir."/defaults/{$file}.template";
+  function _merge_template_file( $file, $source, $dest, $replace = false ) {
+    $source = $source . "/$file.template";
+    $dest = $dest ."/$file";
     
-    if( !@file_exists($tmplt) ) {
-      $this->_printerr('_merge_template_file', "Template file ($tmplt) not found, cannot continue");
+    if( !@file_exists($source) ) {
+      $this->_printerr('_merge_template_file', "Template file ($source) not found, cannot continue");
       return false;
     }
 
@@ -860,7 +888,7 @@ class ZenTargets {
       }
     }    
 
-    $template = new ZenTemplate( $tmplt );
+    $template = new ZenTemplate( $source );
     $template->values($vals);
     $newtext = $template->process();
 
@@ -918,7 +946,7 @@ class ZenTargets {
     // run through these files
     foreach( $this->_configFiles as $c) {
       // split up the array
-      list($sect,$var,$file,$is_tmplt,$permissions,$source) = $c;
+      list($sect,$var,$file,$is_tmplt,$permissions,$default,$source) = $c;
 
       // set up destination directory
       $dest = $this->_ini[$sect][$var];
@@ -942,36 +970,35 @@ class ZenTargets {
         return false;
       }
 
-      // set up file names
-      $dest .= "/".$file;
-      $source .= $is_tmplt? "/$file.template" : "/$file";
+      // generate full pathnames
+      $sourcefile = ($is_tmplt)? $source."/$file.template" : $source."/$file";
+      $destfile = $dest."/$file";
 
       // we will deal with directories seperately, since they require
       // some special procedures
-      if( @is_dir($source) ) {
-        if( @is_dir($dest) && !$overwrite && $this->_confirm("Replace directory $dest?") != 'y' ) {
-          print "   S $file\n";         
+      if( @is_dir($sourcefile) ) {
+        if( @is_dir($destfile) && !$overwrite && $this->_confirm("Replace directory $destfile?") != 'y' ) {
+          print "   S $file\n";
         }
         else {
-          print @is_dir($dest)? "   R $file\n" : "   C $file\n";
-          $this->_copyRecursively($source, $dest, $permissions, true);
+          print @is_dir($destfile)? "   R $file\n" : "   C $file\n";
+          $this->_copyRecursively($sourcefile, $destfile, $permissions, true);
         }
         continue;
       }
 
-      if( file_exists($dest) && !$overwrite ) {
+      if( file_exists($destfile) && !$overwrite ) {
         // if this file exists, we will ask for confirmation
         // if it is a template, we will try to merge it
         // if not we either replace or skip
         $choices = $is_tmplt? array('m','r','s') : array('r','s');
-        $d = $is_tmplt? 'm' : 'r';
         $choicetext = $is_tmplt? "merge, replace, or skip" : "replace or skip";
-        $choice = $this->_confirm("   $file exists, $choicetext?", $choices, $d);
+        $choice = $this->_confirm("   $file exists, $choicetext?", $choices, $default);
       }
-      else if( file_exists($dest) && $overwrite ) {
+      else if( file_exists($destfile) && $overwrite ) {
         // we will automagically merge or replace
         // if the overwrite flag is set
-        $choice = $is_tmplt? "m" : "r";        
+        $choice = $default;
       }
       else {
         // if the file doesn't exist then
@@ -980,7 +1007,7 @@ class ZenTargets {
       }      
 
       // check overwrite
-      if( !file_exists($dest) || $overwrite || $choice != 's' ) {
+      if( !file_exists($destfile) || $overwrite || $choice != 's' ) {
         // create display text
         $choice = strtoupper($choice);
         switch($choice) {
@@ -994,23 +1021,18 @@ class ZenTargets {
           $ctext = 'Create';
         }
         // if the file exists, we back it up
-        if( file_exists($dest) ) {
+        if( file_exists($destfile) ) {
           // figure out where to put the backup
-          switch($var) {
-          case 'dir_config':
-            $to = 'includes/config';
-          case 'path_www':
-            $to = 'www';
-          }
+          $to = preg_replace( $this->_pathExps, "", $source );
           // perform backup
-          $this->_backup_file( $file, $this->_ini[$sect][$var], $to );
+          $this->_backup_file( $file, $source, $to );
         }
         if( !$is_tmplt ) {
           // get new config file
           print "   $choice $file\n";
           // this is a replace or a create
           // there is no option to merge
-          if( !@copy( $source, $dest ) ) {
+          if( !@copy( $sourcefile, $destfile ) ) {
             $this->_printerr("_copy_config_files", "Failed to $ctext config: $dest with $source");
             $success = false;
           }
@@ -1021,12 +1043,12 @@ class ZenTargets {
           // file values. If it is not a merge, then we will simply create
           // using the defaults.
           // parse templates and write
-          if( !$this->_merge_template_file( $dest, ($choice == 'R'? true : false) ) ) {
+          if( !$this->_merge_template_file( $file, $source, $dest, ($choice == 'R'? true : false) ) ) {
             $success = false;
           }
         }
         // set permissions
-        eval("@chmod( '$dest', $permissions );");
+        eval("@chmod( '$destfile', $permissions );");
       }
       else {
         print "   S skipped $file, you must manually update this file!\n";

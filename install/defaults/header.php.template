@@ -1,5 +1,15 @@
 <? /* -*- Mode: C; c-basic-indent: 3; indent-tabs-mode: nil -*- ex: set tabstop=3 expandtab: */ 
 
+/**
+ * This file defines the location of the zen.ini file and the location of the lib and classes
+ * directories.
+ *
+ * DO NOT MODIFY THIS FILE!!
+ *
+ * Instead, modify the zen.ini file, find the install.php program, and run:
+ *   install.php -config_updated
+ */
+
   // this variable must match the full file path location of your zen.ini file
   $ini_file = "{ini_file=dir_config+"/zen.ini"}";
 

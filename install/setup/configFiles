@@ -8,15 +8,22 @@
 ##   2- filename
 ##   3- template? if so, tacks .template onto filename and parses
 ##   4- permissions to create with
+##   5- default behavior if file already exists:
+##       s = skip
+##       m = merge (only valid for templates)
+##       r = replace
 ##   5- source directory
 
 # config files
 
-directories:dir_config:zen.ini:1:0744:defaults
-directories:dir_config:debug.xml:0:0744:defaults
-directories:dir_config:database.xml:0:0744:sampledata
+directories:dir_config:zen.ini:1:0744:defaults:m
+directories:dir_config:debug.xml:0:0744:defaults:r
+directories:dir_config:database.xml:0:0744:sampledata:r
 
 # header.php
 
-paths:path_www:header.php:1:0744:defaults
+paths:path_www:header.php:1:0744:defaults:m
 
+# user files
+directories:dir_user:user_functions.php:0:0744:s
+directories:dir_user:user_javascript.php:0:0755:s
