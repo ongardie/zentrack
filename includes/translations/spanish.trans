@@ -874,7 +874,7 @@ msgstr "Presione el bot&oacute;n para adjuntar un archivo al ticket"
 #file "/home/ired/zentrack_2/includes/templates/actions/yank.php"
 #args ""
 msgid "Click button to yank ticket"
-msgstr "Presione el bot&oacute;n para sustraer el ticket"
+msgstr "Presione el bot&oacute;n para capturar el ticket"
 
 
 #file "/home/ired/zentrack_2/includes/templates/newAgreementForm.php"
@@ -4720,13 +4720,13 @@ msgstr "Trabajado"
 #file "/home/ired/zentrack_2/includes/templates/actions/yank.php"
 #args ""
 msgid "Yank Ticket"
-msgstr "Sustraer Ticket"
+msgstr "Capturar Ticket"
 
 
 #file "/home/ired/zentrack_2/includes/templates/actions/yank.php"
 #args ""
 msgid "Yank"
-msgstr "Sustraer"
+msgstr "Capturar"
 
 
 #file "/home/ired/zentrack_2/includes/templates/reportsDateMenu.php"
@@ -5842,7 +5842,7 @@ msgstr "Informe de Usuario"
 #file "/home/ired/zentrack_2/www/help/english/users/tickets.php"
 #args ""
 msgid 'Yank'
-msgstr "Sustraer"
+msgstr "Capturar"
 
 
 #file "/home/ired/zentrack_2/includes/templates/searchLogResults.php"
