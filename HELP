@@ -5,7 +5,7 @@
 
   Documentation
     local - zentrack_diretory/www/help/index.php
-    online - http://zentrack.phpzen.net/help/
+    online - http://zendocs.phpzen.net/zentrack/
 	
   Troubleshooting:
         Open includes/configVars.php and set $this->debug = 3;  This will produce
@@ -28,13 +28,11 @@
     email  - phpzen@users.sourceforge.net
              (you may get a response if I'm bored, maybe in hours, maybe never)
 
-    chat   - Please only use chat for important or critical issues.  If you are
-	     a registered tester for zenTrack, then you may chat directly for all
-	     of your issues.
-	     icq:  100360657
-	     msn:  havenshade@hotmail.com 	     
-	     (sorry, I don't have time to answer all requests... if you aren't a 
-		registered tester, make sure you try the forum and docs first.)
+    irc    - zentrack now has a home on irc.sourceforge.net, #zentrack, this may
+   	     be a good place to find some help with more in depth issues.
+
+
+
 
 
 

@@ -3,11 +3,11 @@
 
   The installation instructions can be found:
 	locally - zentrack_diretory/www/help/install.html
-        online  - http://zendocs.phpzen.net/bin/view/Zentrack/IndexPage
+        online  - http://zendocs.phpzen.net/zentrack/
 
   If you checked this version out from the CVS repository you will need
-     to copy includes/configVars.php.default and www/header.php.default
-     to the working versions(no .default) to run this program.
+	run ./setup_from_cvs from the zentrack/ root directory, or 
+	emulate the commands in this file (windows: see the online docs)
 
   REQUIREMENTS
 

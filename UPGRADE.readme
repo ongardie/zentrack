@@ -1,13 +1,31 @@
 
-  MAKE A BACKUP OF YOUR includes/configVars.php and www/header.php
+UPGRADE FROM 2.2.1
 
-  These files will no longer be useful.. but you may want settings from them.
+  MAKE A BACKUP OF YOUR www/header.php file
+  
+  MAKE A BACKUP OF YOUR includes/attachments directory
+
+  REPLACE Your entire zentrack directory structure with the
+  included files: includes/ should overwrite your existing includes,
+  www/ should overwrite your existing www/
+
+  RESTORE YOUR www/header.php settings to the new file
+
+  RESTORE YOUR includes/attachments files to the new directory
+
+  Run the following sql command against your zentrack database:
+     UPDATE ZENTRACK_SETTINGS SET value = '2.2.2' WHERE name = 'version_xx';
+
+UPGRADE FROM >= 2.0
+
+  MAKE A BACKUP OF YOUR includes/configVars.php	and www/header.php
+
+  These will no longer be useful.. but you may want settings from them.
 
   Make a backup of your attachments directory!  You will need this.
 
   Documentation and Install info will continue to grow at:
      http://zendocs.phpzen.net/bin/view/Zentrack/IndexPage
-
 
   REQUIREMENTS
 
@@ -55,4 +73,5 @@
   TROUBLESHOOTING/SUPPORT
 
     - See the INSTALL.readme file
+
 
