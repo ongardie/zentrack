@@ -3,11 +3,11 @@
 --
 
 CREATE TABLE ZENTRACK_ACCESS (
-  aid int(12) NOT NULL auto_increment,
-  userID int(12) default NULL,
-  binID int(12) default NULL,
-  lvl   int(2) default NULL,
-  role varchar(25) default NULL,
+  aid number(12) NOT NULL,
+  userID number(12) default NULL,
+  binID number(12) default NULL,
+  lvl   number(2) default NULL,
+  role varchar2(25) default NULL,
   CONSTRAINT access_pk PRIMARY KEY (aid)
 ) ;
 
@@ -16,13 +16,13 @@ CREATE TABLE ZENTRACK_ACCESS (
 --
 
 CREATE TABLE ZENTRACK_ATTACHMENTS (
-  attachmentID int(12) NOT NULL auto_increment,
-  logID int(12) default NULL,
-  ticketID int(12) default NULL,
-  name varchar(25) default NULL,
-  filename varchar(250) default NULL,
-  filetype varchar(250) default NULL,
-  description varchar(100) default NULL,
+  attachmentID number(12) NOT NULL,
+  logID number(12) default NULL,
+  ticketID number(12) default NULL,
+  name varchar2(25) default NULL,
+  filename varchar2(250) default NULL,
+  filetype varchar2(250) default NULL,
+  description varchar2(100) default NULL,
   CONSTRAINT attachment_pk PRIMARY KEY (attachmentID)
 ) ;
 
@@ -31,10 +31,10 @@ CREATE TABLE ZENTRACK_ATTACHMENTS (
 --
 
 CREATE TABLE ZENTRACK_BINS (
-  bid int(12) NOT NULL auto_increment,
-  name varchar(25) NOT NULL default '',
-  priority int(4) default NULL,
-  active int(1) default '1',
+  bid number(12) NOT NULL,
+  name varchar2(25) NOT NULL,
+  priority number(4) default NULL,
+  active number(1) default '1',
   CONSTRAINT bin_pk PRIMARY KEY (bid)
 ) ;
 
@@ -43,14 +43,14 @@ CREATE TABLE ZENTRACK_BINS (
 --
 
 CREATE TABLE ZENTRACK_LOGS (
-  lid int(12) NOT NULL auto_increment,
-  ticketID int(12) NOT NULL default '0',
-  userID int(12) NOT NULL default '0',
-  binID int(12) NOT NULL default '0',
-  created int(12) default NULL,
-  action varchar(25) default NULL,
+  lid number(12) NOT NULL,
+  ticketID number(12) DEFAULT 0 NOT NULL,
+  userID number(12) DEFAULT 0 NOT NULL,
+  binID number(12) DEFAULT 0 NOT NULL,
+  created number(12) default NULL,
+  action varchar2(25) default NULL,
   hours decimal(10,2) default NULL,
-  entry text,
+  entry clob,
   CONSTRAINT logs_pk PRIMARY KEY (lid)
 ) ;
 
@@ -59,13 +59,13 @@ CREATE TABLE ZENTRACK_LOGS (
 --
 
 CREATE TABLE ZENTRACK_LOGS_ARCHIVED (
-  lid int(12) default NULL,
-  ticketID int(12) default NULL,
-  userID int(12) default NULL,
-  binID int(12) default NULL,
-  created int(12) default NULL,
-  action varchar(25) default NULL,
-  entry text
+  lid number(12) default NULL,
+  ticketID number(12) default NULL,
+  userID number(12) default NULL,
+  binID number(12) default NULL,
+  created number(12) default NULL,
+  action varchar2(25) default NULL,
+  entry clob
 ) ;
 
 --
@@ -73,12 +73,12 @@ CREATE TABLE ZENTRACK_LOGS_ARCHIVED (
 --
 
 CREATE TABLE ZENTRACK_PREFERENCES (
-  userID int(12) NOT NULL default '0',
-  bin int(12) default NULL,
-  log varchar(255) default NULL,
-  time varchar(255) default NULL,
-  close varchar(255) default NULL,
-  test varchar(255) default NULL,
+  userID number(12) DEFAULT 0 NOT NULL,
+  bin number(12) default NULL,
+  log varchar2(255) default NULL,
+  time varchar2(255) default NULL,
+  close varchar2(255) default NULL,
+  test varchar2(255) default NULL,
   CONSTRAINT preferences_pk PRIMARY KEY (userID)
 ) ;
 
@@ -87,10 +87,10 @@ CREATE TABLE ZENTRACK_PREFERENCES (
 --
 
 CREATE TABLE ZENTRACK_PRIORITIES (
-  pid int(12) NOT NULL auto_increment,
-  name varchar(25) NOT NULL default '',
-  priority int(4) default NULL,
-  active int(1) default NULL,
+  pid number(12) NOT NULL,
+  name varchar2(25) NOT NULL,
+  priority number(4) default NULL,
+  active number(1) default NULL,
   CONSTRAINT priorities_pk PRIMARY KEY (pid)
 ) ;
 
@@ -99,10 +99,10 @@ CREATE TABLE ZENTRACK_PRIORITIES (
 --
 
 CREATE TABLE ZENTRACK_SETTINGS (
-  setID int(12) NOT NULL auto_increment,
-  name varchar(25) default NULL,
-  value varchar(100) default NULL,
-  description varchar(200) default NULL,
+  setID number(12) NOT NULL,
+  name varchar2(25) default NULL,
+  value varchar2(100) default NULL,
+  description varchar2(200) default NULL,
   CONSTRAINT settings_pk PRIMARY KEY (setID)
 ) ;
 
@@ -111,10 +111,10 @@ CREATE TABLE ZENTRACK_SETTINGS (
 --
 
 CREATE TABLE ZENTRACK_SYSTEMS (
-  sid int(12) NOT NULL auto_increment,
-  name varchar(25) NOT NULL default '',
-  priority int(4) default NULL,
-  active int(1) default NULL,
+  sid number(12) NOT NULL,
+  name varchar2(25) NOT NULL,
+  priority number(4) default NULL,
+  active number(1) default NULL,
   CONSTRAINT systems_pk PRIMARY KEY (sid)
 ) ;
 
@@ -123,10 +123,10 @@ CREATE TABLE ZENTRACK_SYSTEMS (
 --
 
 CREATE TABLE ZENTRACK_TASKS (
-  taskID int(12) NOT NULL auto_increment,
-  name varchar(25) NOT NULL default '',
-  priority int(4) default NULL,
-  active int(1) default NULL,
+  taskID number(12) NOT NULL,
+  name varchar2(25) NOT NULL,
+  priority number(4) default NULL,
+  active number(1) default NULL,
   CONSTRAINT tasks_pk PRIMARY KEY (taskID)
 ) ;
 
@@ -135,26 +135,26 @@ CREATE TABLE ZENTRACK_TASKS (
 --
 
 CREATE TABLE ZENTRACK_TICKETS (
-  id int(12) NOT NULL auto_increment,
-  title varchar(50) NOT NULL default 'untitled',
-  priority int(2) NOT NULL default '0',
-  status varchar(25) NOT NULL default 'OPEN',
-  description text,
-  otime int(12) default NULL,
-  ctime int(12) default NULL,
-  binID int(12) default NULL,
-  typeID int(12) default NULL,
-  userID int(12) default NULL,
-  systemID int(12) default NULL,
-  creatorID int(12) default NULL,
-  tested int(1) default '0',
-  approved int(1) default '0',
-  relations varchar(255) default NULL,
-  projectID int(12) default NULL,
-  est_hours decimal(10,2) default '0.00',
-  deadline int(12) default NULL,
-  start_date int(12) default NULL,
-  wkd_hours decimal(10,2) default '0.00',
+  id number(12) NOT NULL,
+  title varchar2(50) default 'untitled' NOT NULL,
+  priority number(2) DEFAULT 0 NOT NULL,
+  status varchar2(25) default 'OPEN' NOT NULL,
+  description clob,
+  otime number(12) default NULL,
+  ctime number(12) default NULL,
+  binID number(12) default NULL,
+  typeID number(12) default NULL,
+  userID number(12) default NULL,
+  systemID number(12) default NULL,
+  creatorID number(12) default NULL,
+  tested number(1) default 0,
+  approved number(1) default 0,
+  relations varchar2(255) default NULL,
+  projectID number(12) default NULL,
+  est_hours number(10,2) default 0.00,
+  deadline number(12) default NULL,
+  start_date number(12) default NULL,
+  wkd_hours number(10,2) default 0.00,
   CONSTRAINT tickets_pk PRIMARY KEY (id)
 ) ;
 
@@ -163,16 +163,16 @@ CREATE TABLE ZENTRACK_TICKETS (
 --
 
 CREATE TABLE ZENTRACK_TICKETS_ARCHIVED (
-  id int(12) default NULL,
-  title varchar(50) default NULL,
-  priority int(2) default NULL,
+  id number(12) default NULL,
+  title varchar2(50) default NULL,
+  priority number(2) default NULL,
   description text,
-  otime int(12) default NULL,
-  ctime int(12) default NULL,
-  typeID varchar(25) default NULL,
-  systemID int(12) default NULL,
-  relations varchar(255) default NULL,
-  projectID int(12) default NULL,
+  otime number(12) default NULL,
+  ctime number(12) default NULL,
+  typeID varchar2(25) default NULL,
+  systemID number(12) default NULL,
+  relations varchar2(255) default NULL,
+  projectID number(12) default NULL,
   est_hours decimal(10,2) default NULL,
   wkd_hours decimal(10,2) default NULL
 ) ;
@@ -182,10 +182,10 @@ CREATE TABLE ZENTRACK_TICKETS_ARCHIVED (
 --
 
 CREATE TABLE ZENTRACK_TRANSLATION_STRINGS (
-  trID int(12) NOT NULL auto_increment,
-  language varchar(25) default NULL,
-  identifier varchar(25) default NULL,
-  string varchar(255) default NULL,
+  trID number(12) NOT NULL,
+  language varchar2(25) default NULL,
+  identifier varchar2(25) default NULL,
+  string varchar2(255) default NULL,
   CONSTRAINT trstr_pk PRIMARY KEY (trID)
 ) ;
 
@@ -194,10 +194,10 @@ CREATE TABLE ZENTRACK_TRANSLATION_STRINGS (
 --
 
 CREATE TABLE ZENTRACK_TRANSLATION_WORDS (
-  wordID int(12) NOT NULL auto_increment,
-  language varchar(25) default NULL,
-  identifier varchar(50) default NULL,
-  translation varchar(50) default NULL,
+  wordID number(12) NOT NULL,
+  language varchar2(25) default NULL,
+  identifier varchar2(50) default NULL,
+  translation varchar2(50) default NULL,
   PRIMARY KEY (wordID),
   KEY language(language),
   KEY identifier(identifier)
@@ -208,10 +208,10 @@ CREATE TABLE ZENTRACK_TRANSLATION_WORDS (
 --
 
 CREATE TABLE ZENTRACK_TYPES (
-  typeID int(12) NOT NULL auto_increment,
-  name varchar(25) NOT NULL default '',
-  priority int(4) default NULL,
-  active int(1) default NULL,
+  typeID number(12) NOT NULL,
+  name varchar2(25) NOT NULL,
+  priority number(4) default NULL,
+  active number(1) default NULL,
   CONSTRAINT types_pk PRIMARY KEY (typeID)
 ) ;
 
@@ -220,18 +220,21 @@ CREATE TABLE ZENTRACK_TYPES (
 --
 
 CREATE TABLE ZENTRACK_USERS (
-  uid int(12) NOT NULL auto_increment,
-  login varchar(25) default NULL,
-  access int(2) default NULL,
-  passwd varchar(32) default NULL,
-  lname varchar(50) default NULL,
-  fname varchar(50) default NULL,
-  initials varchar(5) default NULL,
-  email varchar(100) default NULL,
-  notes varchar(255) default NULL,
-  homebin int(12) default NULL,
-  active int(1) default '1',
-  CONSTRAINT users_pk PRIMARY KEY (uid)
+--  uid number(12) NOT NULL,
+  id number(12) NOT NULL,
+  login varchar2(25) default NULL,
+--  access number(2) default NULL,
+  privil number(2) default NULL,
+  passwd varchar2(32) default NULL,
+  lname varchar2(50) default NULL,
+  fname varchar2(50) default NULL,
+  initials varchar2(5) default NULL,
+  email varchar2(100) default NULL,
+  notes varchar2(255) default NULL,
+  homebin number(12) default NULL,
+  active number(1) default 1,
+--  CONSTRAINT users_pk PRIMARY KEY (uid)
+  CONSTRAINT users_pk PRIMARY KEY (id)
 ) ;
 
 
