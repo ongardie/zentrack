@@ -4355,7 +4355,7 @@ class zenTrack extends zen {
       if( $ticket["user_id"] != $user_id ) {
         if( !$c["override"] 
             || ( strlen($access["$bin_id"]) 
-                 && $access["bin_id"] < $this->settings["level_super"] )
+                 && $access["$bin_id"] < $this->settings["level_super"] )
             || ( !strlen($access["$bin_id"]) 
                  && $user["access_level"] < $this->settings["level_super"])
                  ) {

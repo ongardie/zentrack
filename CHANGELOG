@@ -14,6 +14,9 @@ abstraction, and endless possibilities for project expansion.
 ----- VERSION 2.5.0.3 (development) -----
 
 2005-03-31, cfalonso
+  Fixed security hole for first login
+    - zentrack_2/includes/leftMain.php 1.6
+    - zentrack_2/www/admin/admin_header.php 1.13
   Some minor modifications
     - zentrack_2/includes/ZenFieldMap.class 1.13
     - zentrack_2/includes/zenTrack.class 1.180

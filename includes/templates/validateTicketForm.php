@@ -38,7 +38,7 @@
    var errs = new Array();
 <?
 foreach($fields as $f) {
-  $field = $map->getFieldFromMap($view,$f);
+  $field = $map->getFieldFromMap($view,$f['field_name']);
   // we don't want to validate any hidden fields using javascript, this is
   // a potential problem.
   if( $field['is_required'] && $field['is_visible'] && $field['field_type'] != 'label' ) {
