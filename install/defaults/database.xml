@@ -603,7 +603,7 @@
         <column name="trigger_id" type="primarykey" ftype="hidden" />
       </columns>
       <indexList>
-        <column name="trgr_sort">priority,name</column>
+        <index name="trgr_sort">priority,name</index>
       </indexList>
     </table>
 

@@ -102,7 +102,7 @@ class Zen {
    */
   function &getDbConnection() {
     if( !isset($GLOBALS['dbConnection']) || $GLOBALS['dbConnection'] == null ) {
-      Zen::debug("Zen", "getDbConnection", "Creating database connection (cache empty)", 0, LVL_NOTE);
+      ZenUtils::safeDebug("Zen", "getDbConnection", "Creating database connection (cache empty)", 0, LVL_NOTE);
       $db = ZenUtils::getIni('db');
       $dir_cache = ZenUtils::getIni('directories','dir_dbcache');
       $prefix = ZenUtils::getIni('db','db_prefix');
@@ -340,7 +340,7 @@ class Zen {
 
     // get word lists
     if( $ucwords == null || $lcwords == null || $states == null ) {
-      Zen::debug('Zen', 'titleCase', 'Generating static vars for this method', 0, LEVEL_DEBUG);
+      ZenUtils::safeDebug('Zen', 'titleCase', 'Generating static vars for this method', 0, LEVEL_DEBUG);
       $dir = Zen::getIniVal('directories','dir_lib');
       $ucwords = ZenUtils::parse_datafile( "$dir/lists/ucwords", null );
       $lcwords = ZenUtils::parse_datafile( "$dir/lists/lcwords", null );

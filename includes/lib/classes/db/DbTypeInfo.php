@@ -15,9 +15,9 @@ class DbTypeInfo {
    *
    * @param ZenDatabase $dbo is the database connection
    */
-  function DbTypeInfo( $dbo ) { 
+  function DbTypeInfo( &$dbo ) { 
     $this->_dir = dirname(__FILE__);
-    $this->_dbo = $dbo;
+    $this->_dbo =& $dbo;
     $this->_load();
   }
 

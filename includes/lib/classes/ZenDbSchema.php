@@ -35,7 +35,7 @@ class ZenDbSchema extends Zen {
       if( !@file_exists($xmlfile) ) {
         $newfile = ZenUtils::getIni( 'directories', 'dir_config' )."/$xmlfile";
         if( !@file_exists($newfile) ) {
-          Zen::debug($this, "ZenDbSchema", "The requested schema ($xmlfile) could not be located", 
+          ZenUtils::safeDebug($this, "ZenDbSchema", "The requested schema ($xmlfile) could not be located", 
                      21, LVL_ERROR);
           return;
         }
@@ -147,7 +147,7 @@ class ZenDbSchema extends Zen {
    * @param string $xmlfile filename or valid xml data to parse
    */
   function _load( $xmlfile ) {
-    Zen::debug($this, '_load', "Loading xml data from $xmlfile", 0, LVL_DEBUG);
+    ZenUtils::safeDebug($this, '_load', "Loading xml data from $xmlfile", 0, LVL_DEBUG);
     // load xml data to an array
     $x = new ZenXMLParser();
     $xnode =& $x->parse($xmlfile);
@@ -171,10 +171,10 @@ class ZenDbSchema extends Zen {
     // read array 
     foreach( $atables as $val ) {
       $this->_loadTable( $val, true );
-    }
+    } 
     foreach( $tables as $val ) {
       $this->_loadTable( $val, false );
-    }
+    } 
     foreach( $updates as $val ) {
       $this->_loadUpdateQuery($val);
     }
@@ -201,7 +201,7 @@ class ZenDbSchema extends Zen {
     // check for devmode param, skip
     // if this is a test table
     if( !$this->_devmode && in_array('ABSTRACT_TEST',$t['inherits']) ) {
-      Zen::debug($this, '_load', "Not in develop mode, skipping test table: $n", 0, LVL_DEBUG);
+      ZenUtils::safeDebug($this, '_load', "Not in develop mode, skipping test table: $n", 0, LVL_DEBUG);
       return;
     }
 
@@ -210,7 +210,7 @@ class ZenDbSchema extends Zen {
 
     // see if table supports transactions
     if( isset($data['children']['transactions'])
-        && $data['children']['transactions'][0] == 'true' ) {
+        && $data['children']['transactions'] == 'true' ) {
       $t['has_transactions'] = true;
     }
     else {
@@ -250,8 +250,11 @@ class ZenDbSchema extends Zen {
     // and create appropriately
     $indices = array();
     if( isset($c['indexList']['children']) ) {
+      if( !isset($c['indexList']['children']['index'][0]) ) {
+        $c['indexList']['children']['index'] = array($c['indexList']['children']['index']);
+      }
       foreach( $c['indexList']['children']['index'] as $index ) {
-        $key = $index['props']['name'];
+        $key = $index['properties']['name'];
         $indices[$key] = explode(',', $index['data']);
       }
     }

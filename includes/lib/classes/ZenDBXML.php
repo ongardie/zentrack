@@ -16,8 +16,8 @@ class ZenDBXML {
    */
   function ZenDBXML( &$dbobject, $xmlfile, $devmode ) {
     $this->_dbobj =& $dbobject;
-    $this->_dbtype = $this->_db->getDbType();
-    $this->_dbTypeInfo = new DbTypeInfo( &$dbobject );
+    $this->_dbtype = $this->_dbobj->getDbType();
+    $this->_dbTypeInfo = new DbTypeInfo( $dbobject );
     $this->_schema = new ZenDbSchema( $xmlfile, false, $devmode );
   }
 
@@ -52,8 +52,8 @@ class ZenDBXML {
         $text .= "\t</dataRow>\n";
       }
       $text .= "</dataDump>\n";
-      if( !$this->_dumpToFile($ouptut, $text, $compress) ) {
-        ZenUtils::safeDebug(true, $this, 'dumpDatabaseData', "Unable to dump $t!", 20, LVL_ERROR);
+      if( !$this->_dumpToFile($output, $text, $compress) ) {
+        ZenUtils::safeDebug($this, 'dumpDatabaseData', "Unable to dump $t!", 20, LVL_ERROR);
       }
       else { $results[1]++; }
     }
@@ -71,7 +71,7 @@ class ZenDBXML {
     $nums = array(0,0);
     $dh = opendir($dir);
     if( !$dh ) { 
-      ZenUtils::safeDebug(true, $this, 'loadDatabaseData', "Invalid directory: $dir", 105, LVL_ERROR);
+      ZenUtils::safeDebug($this, 'loadDatabaseData', "Invalid directory: $dir", 105, LVL_ERROR);
       return false; 
     }
     $files = array();
@@ -80,7 +80,7 @@ class ZenDBXML {
         $files[] = $file;
       }
       else if( !strpos($file, '.')===0 ) {
-        ZenUtils::safeDebug(true, $this, 'loadDatabaseData', "Invalid file: $file, skipping", 
+        ZenUtils::safeDebug($this, 'loadDatabaseData', "Invalid file: $file, skipping", 
                             25, LVL_WARN);
       }
     }
@@ -93,7 +93,7 @@ class ZenDBXML {
         $row = 1;
         foreach($rows as $r) {
           if( !Zen::simpleInsert($table, $r) ) {
-            ZenUtils::safeDebug(true, $this, 'loadDatabaseData', 
+            ZenUtils::safeDebug($this, 'loadDatabaseData', 
                                 "Insert $row of ".count($rows)." failed for table $table", 
                                 26, LVL_ERROR);
           }
@@ -119,7 +119,7 @@ class ZenDBXML {
       $query->table($t);
       if( $query->delete() ) { $nums[1]++; }
       else { 
-        ZenUtils::safeDebug(true, $this, 'deleteDatabaseData',
+        ZenUtils::safeDebug($this, 'deleteDatabaseData',
                             "Could not truncate $t", 220, LVL_ERROR);
       }
     }
@@ -143,7 +143,7 @@ class ZenDBXML {
       if( $drop ) {
         $sql = $this->_dbTypeInfo->dropTableSyntax($dbt);
         if( !$this->_dbobj->execute($sql) ) {
-          ZenUtils::safeDebug(true, $this, 'loadSchemaToDB', 
+          ZenUtils::safeDebug($this, 'loadSchemaToDB', 
                               "Unable to drop table: $name", 00, LVL_NOTE);           
         }        
       }
@@ -163,7 +163,7 @@ class ZenDBXML {
           foreach($indices as $index=>$columns) {
             $sql = $this->_dbTypeInfo->addIndexSyntax($index, $dbt, $columns, false);
             if( !$this->_dbobj->execute($sql) ) {
-              ZenUtils::safeDebug(true, $this, 'loadSchemaToDB', 
+              ZenUtils::safeDebug($this, 'loadSchemaToDB', 
                                   "Unable to create index: $index", 220, LVL_ERROR); 
             }            
           }
@@ -171,7 +171,7 @@ class ZenDBXML {
         $num[1]++;
       }
       else {
-        ZenUtils::safeDebug(true, $this, 'loadSchemaToDB', "Unable to load table: $name", 
+        ZenUtils::safeDebug($this, 'loadSchemaToDB', "Unable to load table: $name", 
                             220, LVL_ERROR);
       }
     }
@@ -212,7 +212,7 @@ class ZenDBXML {
         break;
       }
       if( !$this->_dbobj->execute($sql) ) {
-        ZenUtils::safeDebug(true, $this, 'updateDbSchema', "{$u['action']}->{$u['table']} failed: $sql", 
+        ZenUtils::safeDebug($this, 'updateDbSchema', "{$u['action']}->{$u['table']} failed: $sql", 
                             220, LVL_ERROR);
       }
       else { $res[1]++; }
@@ -231,7 +231,7 @@ class ZenDBXML {
     $nums = array( count($queries), 0 );
     foreach($queries as $q) {
       if( !$this->_dbobj->execute($sql) ) {
-        ZenUtils::safeDebug(true, $this, 'updateDbSchema', "Sql failed: $sql", 
+        ZenUtils::safeDebug($this, 'updateDbSchema', "Sql failed: $sql", 
                             220, LVL_ERROR);
       }
       else { $nums[1]++; }
@@ -362,7 +362,7 @@ class ZenDBXML {
     // read gzipped files
     if( preg_match('/.gz$/', $file) ) {
       if( !function_exists('gzopen') ) {
-        ZenUtils::safeDebug(true, $this, '_loadDataFromXml',
+        ZenUtils::safeDebug($this, '_loadDataFromXml',
                             "ZLib doesn't appear to be compiled into php, unable to read gzipped files!",
                             22, LVL_ERROR);
         return false;
@@ -404,7 +404,7 @@ class ZenDBXML {
     if( $compress ) {
       $gz = function_exists('gzopen');
       if( !$gz ) {
-        ZenUtils::safeDebug(true, $this, '_dumpToFile', 
+        ZenUtils::safeDebug($this, '_dumpToFile', 
                             "Looks like ZLib isn't compiled into php, unable to compress file",
                             22, LVL_WARN);
       }

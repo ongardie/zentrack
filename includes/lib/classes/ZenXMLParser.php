@@ -390,7 +390,7 @@ class ZenXNode {
    */
   function createNodeFromArray( &$parent, $vals ) {
     // create a new node, store parent reference
-    $node = new ZenXNode( &$parent, $vals['name'], $vals['props'] );
+    $node = new ZenXNode( &$parent, $vals['name'], $vals['properties'] );
     // add data if applicable
     if( isset($vals['data']) ) {
       $node->data( $vals['data'] );
@@ -416,7 +416,7 @@ class ZenXNode {
    */
   function createNodeFromFile( $xmlFile ) {
     if( !@file_exists($xmlFile) ) {
-      Zen::debug('ZenXMLParser', 'createNodeFromFile', 'Unable to load $xmlFile', 21, LVL_ERROR);
+      ZenUtils::safeDebug('ZenXMLParser', 'createNodeFromFile', 'Unable to load $xmlFile', 21, LVL_ERROR);
       return null;
     }
     $xml = join("",file($xmlFile));

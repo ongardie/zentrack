@@ -437,13 +437,9 @@ class ZenTargets {
       return false;
     }
 
-    print "opening zendbxmml\n";//debug
-
     // perform backups
-    $dbx = new ZenDBXML( Zen::getDbConnection(), $source );                 
-
-    print "dumping db data\n";//debug
-
+    $dbc =& Zen::getDbConnection();
+    $dbx = new ZenDBXML( $dbc, $source.'/database.xml', ZenUtils::getIni('debug','develop_mode') );
     $res = $dbx->dumpDatabaseData( $dir, $tables, true );
     print "   {$res[1]} of {$res[0]} statements processed successfully\n";
     if( $res[0] != $res[1] ) {
@@ -451,8 +447,6 @@ class ZenTargets {
       $this->_printerr("_backup_database", "Backup error: $diff statements failed");
       return false;
     }
-
-    print "done\n";//debug
 
     return true;
   }
@@ -574,7 +568,7 @@ class ZenTargets {
     $res = false;
     if( !file_exists($f) || $this->_confirm("Replace header.php file?", null, 'y') == 'y' ) {
       $bulk = ZenUtils::flatten_array($this->_ini);
-      $tpl = new ZenTemplate("defaults/header.php.template", true);
+      $tpl = new ZenTemplate("defaults/header.php.template");
       $tpl->values($bulk);
       $fp = @fopen($f,"w");
       if( $fp ) {
@@ -740,7 +734,7 @@ class ZenTargets {
     }
 
     $installdir = $this->_installdir;
-    print "   Copying from $dir to $thisdir\n";
+    print "   Copying from $dir to $installdir/setup\n";
 
     // copy the files specified in data file
     $success = true;
@@ -796,7 +790,7 @@ class ZenTargets {
       $vals = ZenUtils::flatten_array($this->_ini);
     }
 
-    $template = new ZenTemplate( $tmplt, true );
+    $template = new ZenTemplate( $tmplt );
     $template->values($vals);
     $newtext = $template->process();
 
@@ -1245,10 +1239,11 @@ class ZenTargets {
   /**
    * Drop a database schema.  Be very careful using this!
    *
-   * @param boolean $backup_first if true, db schema will be backed up before deleting
-   * @param boolean $supress_errors (system use only) supresses errors if this is just a precautionary measure
+   * @param boolean $supress (system use only) supresses errors and confirm if this is part of a create(i.e. precautionary)
    */
-  function _drop_database() {
+  function _drop_database( $supress = false ) {
+    // confirm before dropping
+
     // backup schema and data
     
     // drop tables
@@ -1297,7 +1292,8 @@ class ZenTargets {
 
     // create schema parser and backup utility
     $source = $this->_ini['directories']['dir_config']."/database.xml";
-    $dbx = new ZenDBXML( Zen::getDbConnection(), $source );                 
+    $dbc =& Zen::getDbConnection();
+    $dbx = new ZenDBXML( $dbc, $source, ZenUtils::getIni('debug','develop_mode') );                 
 
     // perform the update (or preview)
     if( $perform ) {
@@ -1369,7 +1365,7 @@ class ZenTargets {
    */
   function _find_classes_directory() {
     $dir = null;
-    if( @is_dir( $this->_ini['directories']['dir_classes'] ) ) {
+    if( isset($this->_ini['directories']['dir_classes']) && @is_dir( $this->_ini['directories']['dir_classes'] ) ) {
       $dir = $this->_ini['directories']['dir_classes'];
     }
     else if( @is_dir("../includes/lib/classes") ) {
@@ -1590,10 +1586,6 @@ class ZenTargets {
     if( !@file_exists($filename) ) {
       print "ERROR: $filename could not be loaded.  Setup will not run correctly!";
       return false;
-    }
-    if( !class_exists('ZenUtils') ) {
-      $this->_copy_class_files();
-      require_once( $this->_installdir."/setup/ZenUtils.php" );
     }
     return ZenUtils::parse_datafile($filename);
   }

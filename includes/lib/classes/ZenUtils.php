@@ -96,6 +96,7 @@ class ZenUtils {
       $GLOBALS['zen'] = ZenUtils::read_ini($file);
       return $GLOBALS['zen'];
     }
+    return null;
   }
 
   /**
@@ -573,13 +574,15 @@ class ZenUtils {
 
   /**
    * Provides debugging output which is safe to use during installation 
-   * (before config is generated).
+   * (before config is generated).  This is accomplished by setting
+   * $GLOBALS['installMode'] to true when using the install program, which
+   * will direct output to stdout instead of ZenMessageList for operations
+   * that take place before the debug objects are initialized.
    *
    * This is useful for classes which may be used during installation,
    * but may also use {@link ZenMessageList} for debugging output during
    * normal operations.
    *
-   * @param boolean $install_mode whether we are in install mode or not
    * @param mixed $class the class object ($this) or a string representing the class/script name
    * @param string $method the method/section producing message
    * @param string $message the message to store
@@ -587,19 +590,21 @@ class ZenUtils {
    * @param integer $level the level of the message
    * @return boolean true if message was valid and added successfully
    */
-  function safeDebug( $install_mode, $class, $method, $message, $errnum, $level ) {    
-    if( $install_mode ) {
+  function safeDebug( $class, $method, $message, $errnum, $level ) {    
+    if( isset($GLOBALS) && isset($GLOBALS['installMode']) && $GLOBALS['installMode'] ) {
       // we are in install mode, so don't use ZenMessageList
       // determine the level of messages to show, normally this
       // will be 1 (errors), in develop_mode we will relax this to 3(note)
       $lvl = ZenUtils::getIni('debug','develop_mode')? 3 : 1;
       if( $lvl >= $level ) {
         if( is_object($class) ) { $class = get_class($class); }
-        print "  (".ZenUtils::displayDebugLevel($level).") {$class}->{$method}: [$errnum]$message";
+        print "  [".ZenUtils::displayDebugLevel($level)."]";
+        if( $errnum != 0 ) { print "[$errnum]"; }
+        print " {$class}->{$method}: $message\n";
         return true;
       }
     }
-    else if( class_exists('Zen') ) {
+    else if( class_exists('Zen') && class_exists('ZenMessageList') ) {
       // we are not in install mode, so send to ZenMessageList
       return Zen::debug($class, $method, $message, $errnum, $level);
     }
@@ -618,11 +623,11 @@ class ZenUtils {
     case 2:
       return "WARNING";
     case 3:
-      return "MESSAGE";
+      return "INFO";
     case 4:
       return "DEBUG";
     default:
-      return "";
+      return "MESSAGE";
     }
   }
 

@@ -31,9 +31,11 @@ class ZenDatabase extends Zen {
     $this->_dbuser = $dbuser;
     $this->_dbpass = $dbpass;
     $this->_persist = $persistent;
-    Zen::debug("ZenDatabase", "ZenDatabase", 
-               "establishing $dbtype connection {$this->randomNumber}: $dbuser@$dbhost/$dbinst"
-               ." [persist]".($persistent?"true":"false"), 0, LVL_NOTE);
+    ZenUtils::safeDebug("ZenDatabase", "ZenDatabase", 
+                        "$dbtype({$this->randomNumber}): $dbuser@$dbhost:$dbinst"
+                        ." [persist:".($persistent?"true":"false")."]"
+                        .(strlen($dbpass)? '':'(blank password)'), 
+                        0, LVL_NOTE);
     ZenDatabase::_getDbConnection();
   }
 
@@ -50,7 +52,7 @@ class ZenDatabase extends Zen {
       return true;
     }
     else {
-      Zen::debug("ZenDatabase", "setCacheDirectory", "$directory is not writable", 40, LVL_ERROR);
+      ZenUtils::safeDebug("ZenDatabase", "setCacheDirectory", "$directory is not writable", 40, LVL_ERROR);
       return false;
     }
   }
@@ -137,7 +139,7 @@ class ZenDatabase extends Zen {
    * @return resource
    */
   function execute( $query, $cacheTime = 0, $limit = 0, $offset = 0 ) {
-    $this->debug($this, "execute", "[cachetime:$cacheTime]$query", 0, LVL_NOTE);
+    ZenUtils::safeDebug($this, "execute", "[cachetime:$cacheTime]$query", 0, LVL_NOTE);
     if (!strlen($cacheTime) || !isset($GLOBALS['ADODB_CACHE_DIR']) 
         || !strlen($GLOBALS['ADODB_CACHE_DIR'])) {
       if( $limit )
@@ -157,7 +159,7 @@ class ZenDatabase extends Zen {
         $this->_genDbError( 'execute', "SQL Error", 220, LVL_ERROR );
       }
       else {
-        $this->debug( $this, 'execute', "Query returned no results", 0, LVL_WARN );
+        ZenUtils::safeDebug( $this, 'execute', "Query returned no results", 0, LVL_WARN );
       }
       return false;
     }
@@ -173,7 +175,7 @@ class ZenDatabase extends Zen {
    * @return the old value of fetchMode
    */
   function setFetchMode( $indexed = false ) {
-    $this->debug($this, "setFetchMode", "Fetch mode is ".($indexed? 'true':'false'), 0, LVL_DEBUG);
+    ZenUtils::safeDebug($this, "setFetchMode", "Fetch mode is ".($indexed? 'true':'false'), 0, LVL_DEBUG);
     if ($indexed) {
       return $this->_adodb->SetFetchMode(ADODB_FETCH_ASSOC);
     }
@@ -245,12 +247,12 @@ class ZenDatabase extends Zen {
         $quotedText[$name] = $this->_adodb->quote($value);
         $t .= "[$name]".$quotedText[$name];
       }
-      $this->debug($this, "quote", "Quoted array: ".$t, 0, LVL_DEBUG);
+      ZenUtils::safeDebug($this, "quote", "Quoted array: ".$t, 0, LVL_DEBUG);
       return $quotedText;
     }
     else {
       $res = $this->_adodb->quote($text);
-      $this->debug($this, "quote", "Quoted string: ".$res, 0, LVL_DEBUG);
+      ZenUtils::safeDebug($this, "quote", "Quoted string: ".$res, 0, LVL_DEBUG);
       return $res;
     }
   }
@@ -320,7 +322,7 @@ class ZenDatabase extends Zen {
       $this->_genDbError("generateID", "Generate id for $table failed ($query)", 220, LVL_ERROR);
     }
     else {
-      $this->debug($this, "generateID", "Generated id $id for $table", 0, LVL_DEBUG);
+      ZenUtils::safeDebug($this, "generateID", "Generated id $id for $table", 0, LVL_DEBUG);
     }
     // return the result if we got one
     if( $id ) { return $id; }
@@ -401,7 +403,7 @@ class ZenDatabase extends Zen {
   function _genDbError( $method, $message = 'Database error', $errnum = 200, $level = 1 ) {
     $this->_errmsg = $this->_adodb->ErrorMsg();
     $this->_errnum = $this->_adodb->ErrorNo();
-    return $this->debug($this, $method, $message." [".$this->_adodb->ErrorNo()
+    return ZenUtils::safeDebug($this, $method, $message." [".$this->_adodb->ErrorNo()
                         ."]".$this->_adodb->ErrorMsg(), $errnum, $level);      
   }
 

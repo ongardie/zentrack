@@ -16,6 +16,9 @@
    * @package Setup
    */
 
+  // set up install mode flag
+  $GLOBALS['installMode'] = true;
+
   // get time for performance
   $stime = time();
 
@@ -92,29 +95,31 @@
   // We include the classes in such a roundabout way because the first time we
   // call this install prog there may not be any class file, so we will have to
   // copy them.  This should only ever happen during development.
-  $class_files = array('ZenTargets.php', 'ZenUtils.php');
+  //
+  // Additionally, if the file modification time is greater than the current file
+  // time, then we overwrite with newer to prevent confusion during development
+  $class_files = array('ZenUtils.php','ZenTargets.php');
   foreach($class_files as $c) {
+    // try to locate the class files and copy them
+    if( @file_exists("$class_dir/$c") && !@file_exists("$thisdir/setup/$c") 
+	|| @filemtime("$class_dir/$c") > @filemtime("$thisdir/setup/$c") ) {
+      copy("$class_dir/$c", "$thisdir/setup/$c");
+    }
+    // fail if we couldn't find them
     if( !@file_exists("$thisdir/setup/$c") ) {
-      // try to locate the class files and copy them
-      if( @file_exists("$class_dir/$c") ) {
-	copy("$class_dir/$c", "$thisdir/setup/$c");
-      }
-      // fail if we couldn't find them
-      if( !@file_exists("$thisdir/setup/$c") ) {
-	die("ERROR: The required class file $c was not found. "
-	    ."Try using --classdir=source_dir/includes/lib/classes.\n");
-      }
+      die("ERROR: The required class file $c was not found. "
+	  ."Try using --classdir=source_dir/includes/lib/classes.\n");
     }
     include("$thisdir/setup/$c");
   }
 
-  $ini_set = ZenUtils::read_ini($ini_file);
-  $dir_classes = $ini_set['directories']['dir_classes'];
-  include_once($ini_set['directories']['dir_lib']."/inc/classes.php");
+  $GLOBALS['zen'] = ZenUtils::read_ini($ini_file);
+  $dir_classes = $GLOBALS['zen']['directories']['dir_classes'];
+  include_once($GLOBALS['zen']['directories']['dir_lib']."/inc/classes.php");
   load_classes($classes_all, $dir_classes);
 
   // run the targets
-  $z = new ZenTargets($ini_set, $supress);
+  $z = new ZenTargets($GLOBALS['zen'], $supress);
 
   // make sure we have parameters to work with
   $count = 0;
