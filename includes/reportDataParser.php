@@ -62,9 +62,9 @@ if( is_array($params) ) {
     }
     $sub = strtolower(substr($params["date_range"],0,2));
     if( $sub == "da" ) {
-      $key = strftime("%a %D",$cdate);
+      $key = ($params["date_value"]>7)? strftime("%a %m/%d/%y",$cdate) : strftime("%a",$cdate);
     } else if( $sub == "mo" ) {
-      $key = strftime("$b $D",$cdate);
+      $key = ($params["date_value"]>12)? strftime("%b %Y",$cdate) : strftime("%b",$cdate);
     } else if( $sub == "ye" ) {
       $key = strftime("%Y",$cdate);
     } else if( $sub == "ho" || $sub == "mi" ) {

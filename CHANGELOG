@@ -1,10 +1,16 @@
 
- zenTrack is a top quality, simple, and elegant 
+ zenTrack is a top quality, simple, and elegant
  tracking system for small to medium-large companies.
  Clean, simple interface, fully adaptable administration,
- 100 percent object oriented and database abstracted. 
+ object oriented and database abstracted design lend to 
+ endless possibilities for project expansion.
 
 ----- V2.2.3 (development, see CVS) ----
+2003-02-26, Kato
+  Fixed actionApplicable() typo
+  Thanks to Jamin W. Collins (jamincollins)
+    - includes/templates/ticket_attachmentsBox.php v1.5
+  
 2003-02-24, Kato
   Added some default settings for start_date and deadlines.
     - installs/seed_*.sql
