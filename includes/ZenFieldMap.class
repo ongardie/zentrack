@@ -166,6 +166,7 @@ $ztf = array(
     "project_edit"    => array(    false,    false,      true, false, false, true  ),
     "ticket_list"     => array(    false,     true,     false, false, false, false ),
     "project_list"    => array(    false,     true,     false, false, false, false ),
+    "ticket_close"    => array(    false,    false,      true, false, false, true  ), 
     "ticket_search"   => array(     true,    false,      true, false, true , true  ),
     "project_search"  => array(     true,    false,      true, false, true , true  ),
     "ticket_title"    => array(     true,     true,     false, false, false, false ),

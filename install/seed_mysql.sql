@@ -397,6 +397,13 @@ INSERT INTO ZENTRACK_FIELD_MAP (field_map_id, which_view, is_visible, sort_order
   (189, 'project_list', 0, 240, 100,  1, 0, 'label'     , 'custom_menu2', null, null );
 INSERT INTO ZENTRACK_FIELD_MAP (field_map_id, which_view, is_visible, sort_order, num_cols, num_rows, is_required, field_type, field_name, field_label, default_val ) VALUES
   (191, 'project_list', 0, 250, 50, 1, 0, 'section', 'elapsed', 'Time', null);
+INSERT INTO ZENTRACK_FIELD_MAP (field_map_id, which_view, is_visible, sort_order, num_cols, num_rows, is_required, field_type, field_name, field_label, default_val ) VALUES
+  (192, 'ticket_close', 1, 10, 10, 1, 0, 'text', 'hours', 'Hours', 0);
+INSERT INTO ZENTRACK_FIELD_MAP (field_map_id, which_view, is_visible, sort_order, num_cols, num_rows, is_required, field_type, field_name, field_label, default_val ) VALUES
+  (193, 'ticket_close', 1, 20, 80, 5, 1, 'textarea', 'comments', 'Comments', null);
+INSERT INTO ZENTRACK_FIELD_MAP (field_map_id, which_view, is_visible, sort_order, num_cols, num_rows, is_required, field_type, field_name, field_label, default_val ) VALUES
+  (194, 'ticket_close', 1, 30, 100, 1, 1, 'menu', 'custom_menu2', null, null);
+
 
 --
 -- Load data for table 'ZENTRACK_LOGS'
