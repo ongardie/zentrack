@@ -153,6 +153,9 @@ abstraction, and endless possibilities for project expansion.
     - zentrack_2/install/seed_mysql.sql 1.40
     - zentrack_2/install/seed_oracle.sql 1.35
     - zentrack_2/install/seed_postgres.sql 1.31
+    - zentrack_2/includes/templates/ticket_detailsBox.php 1.13
+    - zentrack_2/includes/templates/ticket_titleBox.php 1.9
+
 
 2004-11-19, Kato
   Added missing varfield index for custom_menu1

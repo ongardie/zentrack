@@ -150,7 +150,7 @@ foreach($fields as $f=>$field) {
     // down arrow
     $txt .= "<a href='#' onClick='moveRowDown(this.parentNode);return false;'";
     $txt .= " border='0' alt='Move Down' title='Move Down'><img src='/images/icon_arrow_down.gif'";
-    $txt .= " width='16' height='16' alt='Move Up' title='Move Up' border='0'></a>";
+    $txt .= " width='16' height='16' alt='Move Down' title='Move Down' border='0'></a>";
     // control sort ordering by tracking what order these hidden fields arrive
     $txt .= "<input type='hidden' name='orderset[$f]' value='$fcount'>";
   if( $vprops['sections'] ) {
@@ -180,7 +180,7 @@ foreach($fields as $f=>$field) {
   <td class='highlight'><input type='text' name='section0[field_label]' value='' size=15 maxlength=200></td>
   <td class='highlight'><input type='checkbox'  name='section0[is_visible]' value='1' onclick='return checkVisible(this)' checked></td>
   <td class='highlight' colspan='5'>&nbsp;</td>
-  <td class='highlight'><a href='#' onClick='moveRowUp(this.parentNode);return false;' border='0' alt='Move Up' title='Move Up'><img src='/images/icon_arrow_up.gif' width='16' height='16' alt='Move Up' title='Move Up' border='0'></a><a href='#' onClick='moveRowDown(this.parentNode);return false;' border='0' alt='Move Down' title='Move Down'><img src='/images/icon_arrow_down.gif' width='16' height='16' alt='Move Up' title='Move Up' border='0'></a><input type='hidden' name='orderset[section0]' value='3'><a href='#' onClick='removeRow(this);return false;' border='0' alt='Remove Section' title='Remove Section'><img src='/images/icon_trash.gif' width='16' height='16' alt='Remove Section' title='Remove Section' border='0'></a></td>
+  <td class='highlight'><input type='hidden' name='orderset[section0]' value='3'><a href='#' onClick='moveRowUp(this.parentNode);return false;' border='0' alt='Move Up' title='Move Up'><img src='/images/icon_arrow_up.gif' width='16' height='16' alt='Move Up' title='Move Up' border='0'></a><a href='#' onClick='moveRowDown(this.parentNode);return false;' border='0' alt='Move Down' title='Move Down'><img src='/images/icon_arrow_down.gif' width='16' height='16' alt='Move Up' title='Move Up' border='0'></a><a href='#' onClick='removeRow(this);return false;' border='0' alt='Remove Section' title='Remove Section'><img src='/images/icon_trash.gif' width='16' height='16' alt='Remove Section' title='Remove Section' border='0'></a></td>
 </tr>
 <tr id="submitRow" toofar="toofar">
   <td class='cell' colspan='4'>
@@ -218,9 +218,24 @@ function addRow( obj ) {
     }
     else if( sect.hasChildNodes() && sect.childNodes[0] ) {
       var c = sect.childNodes[0];
-      if( c.type == 'text' || c.type == 'checkbox' ) {
+      if( c.type == 'text' || c.type == 'checkbox' || c.type == 'hidden' ) {
         c.setAttribute('name', c.getAttribute('name').replace('section0',newName));
         s += " - new name: "+c.name+"\n";
+        if ( c.type == 'hidden' ) {
+          var v1, v2;
+          v1=parseFloat(document.fieldMapForm[ "orderset[" + obj.parentNode.parentNode.id + "]" ].value);
+          var previousRow = obj.parentNode.parentNode.previousSibling;
+          while( previousRow && previousRow.nodeName != "TR" ) {
+            previousRow = previousRow.previousSibling;
+          }
+          if( !previousRow || previousRow.getAttribute("toofar") ) {
+            v2=-1.0;
+          } else {
+            v2=parseFloat(document.fieldMapForm[ "orderset[" + previousRow.id + "]" ].value);
+          }
+          v=(v1 + v2) / 2.0;
+          c.setAttribute('value',v);
+        }
       }
     }
   }
@@ -235,6 +250,7 @@ function removeRow( obj ) {
 }
 
 function moveRowUp( tdCell ) {
+  var v1, v2;
   var thisRow = tdCell.parentNode;
   var previousRow = thisRow.previousSibling;
   var parentNode = thisRow.parentNode;
@@ -243,16 +259,31 @@ function moveRowUp( tdCell ) {
   }
   if( !previousRow || previousRow.getAttribute("toofar") ) {
     parentNode.insertBefore(thisRow, document.getElementById("submitRow"));
+    //As this is now the last row, we can get the orderset value of it's new previous row
+    previousRow = thisRow.previousSibling;
+    while( (previousRow && previousRow.nodeName != "TR") || (previousRow && previousRow.id === "section0") ) {
+      previousRow = previousRow.previousSibling;
+    }
+    //And set the current row's orderset value to it's previous row orderset value + 1
+    v1=parseFloat(document.fieldMapForm[ "orderset[" + previousRow.id + "]" ].value);
+    document.fieldMapForm[ "orderset[" + thisRow.id + "]" ].value=v1+1;
     return;
   }
   parentNode.insertBefore(thisRow, previousRow);
+  //If it didn't cross the edge of the table, we just swap the orderset values:
+  v1=parseFloat(document.fieldMapForm[ "orderset[" + thisRow.id + "]" ].value);
+  v2=parseFloat(document.fieldMapForm[ "orderset[" + previousRow.id + "]" ].value);
+  document.fieldMapForm[ "orderset[" + thisRow.id + "]" ].value=v2;
+  document.fieldMapForm[ "orderset[" + previousRow.id + "]" ].value=v1;
 }
 
 function moveRowDown( tdCell ) {
+  var v1, v2;
   var thisRow = tdCell.parentNode;
   var nextRow = thisRow.nextSibling;
   var parentNode = thisRow.parentNode;
-  while( nextRow && nextRow.nodeName != "TR" ) {
+  //while( nextRow && nextRow.nodeName != "TR" ) {
+  while( (nextRow && nextRow.nodeName != "TR") || (nextRow && nextRow.id === "section0") ) {
     nextRow = nextRow.nextSibling;
   }
   if( !nextRow || nextRow.getAttribute("toofar") ) {
@@ -261,7 +292,16 @@ function moveRowDown( tdCell ) {
     while( thisRow.nodeName != "TR" || thisRow.getAttribute("toofar") ) {
       thisRow = thisRow.nextSibling;
     }
-  }  
+    //We set the current row's orderset value to the first row's orderset -1
+    v1=parseFloat(document.fieldMapForm[ "orderset[" + thisRow.id + "]" ].value);
+    document.fieldMapForm[ "orderset[" + nextRow.id + "]" ].value=v1-1;
+  } else {
+    //We swap the orderset values:
+    v1=parseFloat(document.fieldMapForm[ "orderset[" + thisRow.id + "]" ].value);
+    v2=parseFloat(document.fieldMapForm[ "orderset[" + nextRow.id + "]" ].value);
+    document.fieldMapForm[ "orderset[" + thisRow.id + "]" ].value=v2;
+    document.fieldMapForm[ "orderset[" + nextRow.id + "]" ].value=v1;
+  } 
   parentNode.insertBefore(nextRow, thisRow);  
 }
 

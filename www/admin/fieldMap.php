@@ -131,6 +131,7 @@
 
     // set the sort order
     $i = 1;
+    asort($_POST['orderset']);
     foreach( $_POST['orderset'] as $k=>$v ) {
       if( array_key_exists($k, $updates) ) {
         $updates[$k]['sort_order'] = $i++;
@@ -149,7 +150,12 @@
       print "<p><b>$res[0] of $res[1] updates were saved</b></p>\n";
     }
     
-    $fields = $updates;
+    //cfalonso changed the following line with the next 3 because it didn't work properly:
+    //$fields = $updates;
+    $fullMap = $map->getFieldMap();
+    $fields = $fullMap[$view];
+    unset($fullMap);
+    //Zen::printArray($orderset,'RECEIVED ORDERSET');
     //Zen::printArray($updates,'UPDATES');
     //Zen::printArray($inserts,'INSERTS');
     //Zen::printArray($deletes,'DELETES');
