@@ -129,17 +129,17 @@
      if( is_array($login_messages) ) {
        $i = 0;
        foreach( $login_messages as $v ) {
-	 if( $style != "smallGrey" && $v[2] ) {
-	   $style = "small$v[2]";
-	 } else if( $style != "smallGrey" ) {
-	   $style = "smallBold";
-	 }
-	 $login_messages[$i][2] = "Grey";
-	 if( $style == "smallGrey" && $flag )
-	   break;
-	 print "<br><span class='$style'>";
-	 print "[".$zen->showTime($v[1])."] ";
-	 print $v[0]."</span>\n";
+    if( $style != "smallGrey" && $v[2] ) {
+      $style = "small$v[2]";
+    } else if( $style != "smallGrey" ) {
+      $style = "smallBold";
+    }
+    $login_messages[$i][2] = "Grey";
+    if( $style == "smallGrey" && $flag )
+      break;
+    print "<br><span class='$style'>";
+    print "[".$zen->showTime($v[1])."] ";
+    print $v[0]."</span>\n";
        }  
      } else {
        print "<span class='smallGrey'>No system messages</span>";
@@ -178,7 +178,7 @@
     $vals = array();
     while( false !== ($file = readdir($dir)) ) {
       if( preg_match("/\.trans$/",$file) ) {
-	$vals[] = basename($file, ".trans");
+   $vals[] = basename($file, ".trans");
       }
     }
     closedir($dir);

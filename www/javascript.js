@@ -43,24 +43,37 @@ le'
 //
 
 function mOvr(src,clrOver,txtOver) {
-	    src.style.cursor = 'hand'; 
-	    src.style.backgroundColor = clrOver;
-	    if( txtOver != null &&  txtOver != "" ){
-	         src.children.tags('A')[0].style.color = txtOver;
-		 }
-}
-function mOut(src,clrIn,txtIn) {
-	    src.style.cursor = 'default'; 
-	    src.style.backgroundColor = clrIn; 
-	    if( txtIn != null && txtIn != "" ){
-	         src.children.tags('A')[0].style.color = txtIn;
-		 }
-}
-function mClk(src) {
-	    src.children.tags('A')[0].click();
+	src.style.cursor = 'hand'; 
+	src.style.backgroundColor = clrOver;
+	if( txtOver != null &&  txtOver != "" ){
+	  src.children.tags('A')[0].style.color = txtOver;
+	}
 }
 
-function mClassX( obj, classname ) {
+function mOut(src,clrIn,txtIn) {
+    src.style.cursor = 'default'; 
+    src.style.backgroundColor = clrIn; 
+    if( txtIn != null && txtIn != "" ){
+      src.children.tags('A')[0].style.color = txtIn;
+   }
+}
+
+function mClk(src) {
+  if( src.children.tags('A') && src.children.tags('A').length > 0 ) {
+    src.children.tags('A')[0].click();
+  }
+  else if( src.children.tags('TD') && src.children.tags('TD').length > 0 ) {
+    src.children.tags('TD')[0].children.tags('A')[0].click();
+  }
+}
+
+function mClassX( obj, classname, hand ) {
+  if( hand ) { 
+     obj.style.cursor = 'hand'; 
+  }
+  else {
+     obj.style.cursor = 'default';
+  }
   //refToElement.className = 'newclass', or refToElement.setAttribute('class', 'newclass')
   if( obj.className ) {
     obj.className = classname;

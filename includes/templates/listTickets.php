@@ -46,12 +46,13 @@ if( is_array($tickets) ) {
    if( $zen->settings["priority_medium"] ) {
 
       $classxText = "class='priority{$t['priority']}' "
-      ."onMouseOver='mClassX(this,\"priority{$t['priority']}Over\")' "
-      ."onMouseOut='mClassX(this,\"priority{$t['priority']}\")'";
+      ."onclick=\"mClk(this);\" "
+      ."onMouseOver='mClassX(this, \"priority{$t['priority']}Over\", true)' "
+      ."onMouseOut='mClassX(this, \"priority{$t['priority']}\", false)'";
 
    }
    else {
-      $classxText = "class='cell'";
+      $classxText = "class='cell' $rollover_text";
    }
       ?>
    <tr <?=$classxText?>>
