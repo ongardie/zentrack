@@ -51,6 +51,9 @@
 	// generate an error message and let them try again
 	$msg = "<p>&nbsp;</p><ul><b>".tr("That passphrase didn't work.")."</b></ul>";
       }
+      if( $login_bin == -1 ) {
+	$login_bin = null;
+      }
     } else {
       $zen->addDebug("login.php:userLogin",
 		     "User not logged in, username and passphrase not detected, so creating login form",3);

@@ -19,7 +19,7 @@
     "status"  => array('OPEN','PENDING'),
     "type_id" => $zen->notProjectTypeIDs()
     );
-    if( $login_bin ) {
+    if( $login_bin > 0 ) {
       $params["bin_id"] = $login_bin;
     } else {
       $params["bin_id"] = $zen->getUsersBins($login_id);

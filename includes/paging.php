@@ -7,7 +7,6 @@
        $links = $zen->get_links("all", "off");
        for ($y = 0; $y < count($links); $y++) {
           echo $links[$y] . "&nbsp;&nbsp;";
-
        }
      ?>
    </td>

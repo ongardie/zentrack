@@ -4965,7 +4965,7 @@ class zenTrack extends zen {
      list($extra_vars, $file) = $this->build_geturl();
      $pageNumber = array_key_exists('pageNumber', $_GET)? 
                  $this->checkNum($_GET['pageNumber']) : 0;
-     $activePages = 5;
+     $activePages = 10;
      $number_of_pages = ceil($this->total_records/ $numtoshow);
      $subscript = 0;
      $backnos = intval($activePages/2);
@@ -4988,6 +4988,7 @@ class zenTrack extends zen {
          // our visible entries consistent
          $current = $number_of_pages - $activePages;
        }
+       $maxrow = $current + $activePages;
      }
      else {
        // we will just display all of the pages

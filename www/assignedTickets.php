@@ -15,7 +15,7 @@
   $params = array("status"  => array('OPEN','PENDING'),
 		  "user_id" => $login_id,
 		  "type_id" => $zen->notProjectTypeIDs());
-  if( $login_bin ) {
+  if( $login_bin > 0 ) {
     $params["bin_id"] = $login_bin;
   }
   $tickets = $zen->get_tickets($params);
