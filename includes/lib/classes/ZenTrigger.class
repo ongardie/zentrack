@@ -37,7 +37,7 @@
  * @package zen 
  */
 
-class ZenTrigger extends ZenBase {
+class ZenTrigger extends ZenDataType {
 
   /**
    * CONSTRUCTOR
@@ -47,7 +47,7 @@ class ZenTrigger extends ZenBase {
    * @param integer $trigger_id the trigger to load (optional)
    */
   function ZenTrigger( $trigger_id = null ) { 
-    $this->ZenBase($this, $trigger_id);
+    $this->ZenDataType($this, $trigger_id);
   }
 
 

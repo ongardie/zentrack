@@ -13,11 +13,28 @@ class ZenTicketList extends ZenList {
    * The DbQuery object provided by this constructor will be used
    * by the extended ZenList functions to create the resulting
    *
-   * This method should also call the ZenList::ZenList() constructor and pass it the DbQuery
+   * This method should also call the ZenList::ZenList() constructor and pass it the ZenQuery
    * object, and a list of fields to be returned in the results.
    */
   function ZenTicketList() { }
 
+  /**
+   * Creates a ZenTicket object from a set of values
+   *
+   * @param array $data the data set to be loaded
+   */
+  function makeObject( $data ) { }
+
+  /**
+   * returns the relationship information for a specific ticket
+   *
+   * NOTE: the ticket requested must be in this list!
+   *
+   * @param integer $id ticket in question (returns the id of the current index if none is specified)
+   * @return ZenRelatedList for ticket in question
+   */
+  function getRelations( $id = 0 ) { }
+  
 }
 
 ?>

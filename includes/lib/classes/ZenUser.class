@@ -2,7 +2,7 @@
 
 /** @package zen */
 
-class ZenUser extends Zen {
+class ZenUser extends ZenDataType {
   
   /**
    * CONSTRUCTOR
@@ -12,7 +12,7 @@ class ZenUser extends Zen {
    * @param integer $user_id is the id of the user to be loaded (optional)
    */
   function ZenUser( $user_id = null ) {
-    $this->ZenBase( $this, $user_id );
+    $this->ZenDataType( $this, $user_id );
   }
 
   /**

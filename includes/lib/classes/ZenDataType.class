@@ -3,13 +3,13 @@
 /** 
  * @package zen 
  * 
- * The purpose of the ZenBase object is to extract all common functionality between various
+ * The purpose of the ZenDataType object is to extract all common functionality between various
  * object types such as ZenTicket, ZenUser, ZenAction, ZenTrigger, etc.
  *
  * All Objects which directly correspond to a single data row in the db should extend this object.
  */
 
-class ZenBase extends Zen {
+class ZenDataType extends Zen {
 
   /**
    * CONSTRUCTOR - initialize Zen class and load data if appropriate
@@ -17,13 +17,16 @@ class ZenBase extends Zen {
    * @param Object $child is a $this reference from the calling object
    * @param integer $id the id to load
    */
-  function ZenBase( $child, $id ) { 
+  function ZenDataType( $child, $id ) { 
     $this->Zen();
     $this->_childobj = $child;
     if( $id ) {
       $this->_id = $id;
       $this->_load();
     }
+    // set the primary key field for this table
+    $this->_primarykey = getPrimaryKey( $this->_childobj );
+    
   }  
 
   /*****************************
@@ -85,16 +88,34 @@ class ZenBase extends Zen {
    */
   function getTriggers() { }
 
-
   /**
-   * @private Loads the Object from its corresponding db entry
+   * Loads the Object from its corresponding db entry
    *
    * Only works if $this->_id has been set
    * Checks $this->loaded() and causes an error message if already loaded
    *
+   * @private
    * @return boolean load succeeded, id was valid (actually returns $this->loaded())
    */
   function _load() { }
+
+  /**
+   * Creates a ticket object from a data set provided by a ZenList class type
+   *
+   * The data set will be validated to insure all rows are present and correct
+   * It will not be checked to insure it matches the db entry.
+   *
+   * The ONLY ACCEPTABLE USE of this class is by constructing the object from
+   * the data row provided by ZenList types.
+   *
+   * @param array $data is the COMPLETE data set for this database row
+   * @return boolean succeeded and validated
+   */
+  function loadFromListData( $data ) { }
+
+  /****************
+   * VARIABLES
+   ***************/
 
   /** @var integer $_id the id associated with this object (used by isEmtpy() */
   var $_id = 0;
@@ -110,6 +131,9 @@ class ZenBase extends Zen {
 
   /** @var boolean $_changed tells whether properties have been changed since last save */
   var $_changed;
+
+  /** @var string $_primarykey the column used for a primary key by this data type */
+  var $_primarykey;
 
 }
 

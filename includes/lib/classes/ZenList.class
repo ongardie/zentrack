@@ -17,6 +17,8 @@
  * All child classes must define the DbQuery object in their constructor, specifying
  * the tables to be used, and preparing this class for use
  *
+ * All child classes must define the makeObject() method
+ *
  * @package zen 
 */
 
@@ -31,9 +33,21 @@ class ZenList extends Zen {
    *
    * The ZenQuery object should be prepared as follows: table names to reference set
    *
+   * This constructor will also throw an error if !method_exists("makeObject")
+   * this method must be defined by the child class
+   *
    * @param ZenQuery $dbquery a ZenQuery object corresponding to this data type
    */
   function ZenList( $dbquery ) { }
+
+  /**
+   * Limits the results to the set of ids provided (a wrapper for doing criteria() for ticket ids)
+   *
+   * This also provides a quick means to get a list of data items from a list of ids
+   *
+   * @param array $ids a simple array of ticket ids that are to be included
+   */
+  function criteriaIdSet( $ids ) { }
 
   /**
    * sets search criteria for populating the list
@@ -92,22 +106,65 @@ class ZenList extends Zen {
    */
   function count() { }
 
+  /**
+   * gets data from the database and loads it into $this->_rawdata
+   *
+   * @return integer number of records stored in $this->_rawdata
+   * @private
+   */
+  function _loadRawData() { }
+
+  /**
+   * searches the rawdata for a specific ticket id and indexes all entries until it is found
+   *
+   * note that for retrieving several tickets at random from the raw data, this will produce
+   * a log*n algorithm, making for a fairly fast search pattern, since the first element will
+   * take an average of n/2 cycles, and the second will take an average of n/4 cycles, etc.
+   *
+   * @param integer $id is the id to be found
+   * @return Object of the type specified (see the extending class makeObject() method)
+   */
+  function _find( $id ) {
+    if( !is_array($this->_rawdata) ) {
+      $this->debug($this, "_find", 121, "Return data is empty, cannot fetch ID $id", 2);
+      return false;
+    }
+    while( $vals = array_shift($this->_rawdata) ) {
+      $key = $this->getPrimaryKey( $this );
+      $n = $vals[$key];
+      $this->_data["$n"] = $vals;
+      if( $n == $id )
+        return makeObject($vals);
+    }
+    $this->debug($this, "_find", 122, "ID $id was expected but not found in the list data", 2);
+    return false;
+  }
+
 
   /* VARIABLES */
 
+  /** @var array $_rawdata the non-indexed data, straight from the db */
+  var $_rawdata;
+
+  /** @var integer $_thisid id of the currently indexed element */
+  var $_thisid;
+
+  /** @var string $_primarykey the column used as primary key for this data type */
+  var $_primarykey;
+
+  /** @var array $_data the indexed data set, populated on-demand by the get methods */
+  var $_data;
+
   /** @var integer $_position the current position in the result list */
-  var $_position;
+  var $_position = 0;
 
   /** @var integer $_count the number matched */
-  var $_count;
+  var $_count = 0;
 
   /** @var boolean $_loaded whether load() has been called */
-  var $_loaded;
+  var $_loaded = false;
 
-  /** @var array $_list the list of ZenTicket objects matched */
-  var $_list;
-
-  /** @var DbQuery $_dbquery the DbQuery object provided by the extending class */
+  /** @var ZenQuery $_dbquery the ZenQuery object provided by the extending class */
   var $_dbquery;
 
   /** @var array $_columns is the list of valid columns, and their data types... provided by the constructor */

@@ -83,10 +83,11 @@ class Zen {
    *
    * @param mixed $class the class object ($this) or a string representing the class/script name
    * @param string $method the method/section producing message
+   * @param intege $errnum the error number associated with message
    * @param string $message the message to store
    * @param integer $level the level of the message
    */
-  function debug( $class, $method, $message, $level ) { }
+  function debug( $class, $method, $errnum, $message, $level = 3 ) { }
 
   /**
    * retrieves a ticket object, these are cached for life of the page
@@ -103,6 +104,24 @@ class Zen {
    * @return ZenUser object or false
    */
   function getUser( $user_id ) { }
+
+  /*************************
+   * DATA CLASS UTILS
+   ************************/
+
+  /**
+   * Takes a data type and returns the primary key of that table field
+   *
+   * This method will validate the class type using is_a to see if it is a valid ZenList
+   * or ZenBase child (extends one of these)
+   *
+   * @param Object $class is an empty class object for validation
+   * @return string the name of the primary key column
+   */
+  function getPrimaryKey( $class ) {
+    $n = preg_replace("/^Zen/", "", class_name($this->_childobj)) . "_id";
+    return preg_replace("/List$/", "", $n);
+  }
 
 
   /*********************************

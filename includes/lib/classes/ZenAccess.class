@@ -2,7 +2,7 @@
 
 /** @package zen */
 
-class ZenAccess extends Zen {
+class ZenAccess extends ZenDataType {
 
   /**
    * CONSTRUCTOR

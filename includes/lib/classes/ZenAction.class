@@ -12,7 +12,7 @@
  * @package zen 
  */
 
-class ZenAction extends Zen {
+class ZenAction extends ZenDataType {
 
   /**
    * CONSTRUCTOR
