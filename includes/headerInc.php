@@ -30,7 +30,7 @@
   $listDir     = "$libDir/lists";
   $imageUrl    = "$rootUrl/images";
   $ticketUrl   = "$rootUrl/ticket.php";
-  $projectUrl   = "$rootUrl/project.php";
+  $projectUrl  = "$rootUrl/project.php";
 
   /*
   **  BROWSER DETERMINATIONS
@@ -50,6 +50,7 @@
   */
 
   include_once("$libDir/zenTrack.class");
+  include_once("$libDir/zenTemplate.class");
   $zen = new zenTrack( $configFile );
 
   /*

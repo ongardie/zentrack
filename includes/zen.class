@@ -488,6 +488,23 @@ class zen extends zenDate {
    }
 
    /**
+    * returns debug information for a given method
+    *
+    * @param string $class name of the class (not currently used)
+    * @param string $method name of the method
+    * @return array indexed, contains debug messages, source, and level
+    */
+   function returnDebug( $class, $method ) {
+     $vals = array();
+     foreach($this->debugMessages as $d) {
+       if( $d[0] == $class ) {
+	 $vals[] = $d;
+       }
+     }
+     return $vals;
+   }
+
+   /**
     * Prints the debug output collected by addDebug()
     */
    function printDebugMessages() {	

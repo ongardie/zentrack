@@ -1,4 +1,3 @@
-#!/usr/bin/php -q
 <?{
 
   /*
@@ -8,10 +7,12 @@
   */
   
   // get configuration
-  include("egate_config.php");
-  
+  include_once("egate_config.php");
+
   // initialize log
-  $log = array();
+  $egate_log = array();
+  // initialize the templates
+  $email_templates = array();
 
   /**
    * Stores log info
@@ -23,15 +24,18 @@
     // if we get an array, handle it gracefully
     if( is_array($text) ) {
       foreach($text as $t)
-        egate_log($text);
+        egate_log($text, $lvl);
       return;
     } 
     // get the log text
-    global $log;
+    global $egate_log;
     // check for this fatal error, which isn't really an error
-    if( preg_match("@mailbox is empty@i", $e) ) {
+    if( preg_match("@mailbox is empty@i", $text) ) {
       $text = "Mailbox was empty";
-      $log[] = array($text,$lvl);
+      $egate_log[] = array($text,$lvl);
+    }
+    else {
+      $egate_log[] = array($text,$lvl);
     }
   }
 
@@ -42,15 +46,36 @@
    * @return array of log entries
    */
   function egate_fetch_messages( $lvl = '' ) {
-    global $log;
+    global $egate_log;
     // save time if there is nothing to fetch
-    if( $lvl === 0 || !count($log) ) { return; }
+    if( $lvl === 0 || !count($egate_log) ) { return; }
     // get appropriate logs
     $vars = null;
-    foreach($log as $l) {
+    foreach($egate_log as $l) {
       if( $l[1] <= $lvl ) { $vars[] = $l[0]; }
     }
     return $vars;
+  }
+
+  /**
+   * stores footer templates that should be
+   * included in an email reply
+   *
+   * @param string $template is the template name to include
+   */
+  function egate_store_template( $template ) {
+    global $email_templates;
+    $email_templates[] = $template;
+  }
+
+  /**
+   * returns the email templates which have been collected
+   *
+   * @return array of template strings
+   */
+  function egate_fetch_templates() {
+    global $email_templates;
+    return $email_templates;
   }
   
   /**
@@ -61,16 +86,17 @@
   * 
   */
   function egate_log_write() {
-    global $log;
+    global $egate_log;
+    global $libDir;
     global $egate_log_level;
-    if( count($log) ) {
+    if( count($egate_log) ) {
       $text = "---".date("Y-m-d H:i")."---\n";
-      foreach($log as $l) {
+      foreach($egate_log as $l) {
         if( $l[1] <= $egate_log_level ) {
           $text .= $l[0]."\n";
         }
       }    
-      $fp = fopen("./logs/egate_log");
+      $fp = fopen("$libDir/logs/egate_log","a");
       fputs($fp,$text);
       fclose($fp);
       $log = array();
@@ -83,40 +109,56 @@
     egate_log_write();
     exit;
   }
-  
+
   // get the system settings
-  include_once($header_file_location);
+  // and process them, but don't include
+  // the headerInc.php file, just get
+  // the setting values
+  $file = file($header_file_location);
+  foreach($file as $f) {
+    if( preg_match("/^ *([$]|set_locale)/", $f)) {
+      eval($f);
+    }
+  }
+
+  // include the zen objects
+  include_once("$libDir/zenTrack.class");
+  include_once("$libDir/zenTemplate.class");
+  $zen = new zenTrack( $configFile );
+  
+  echo "HERE---------\n";//debug
+  print PEAR_INSTALL_DIR."\n";//debug
   
   // check for PEAR library Mail_Mime
-  if( !file_exists('Mail/mimeDecode.php') ) {
+  if( !file_exists(PEAR_INSTALL_DIR.'/Mail/mimeDecode.php') ) {
     egate_log("ERROR: Mail/mimeDecode (PEAR Library) not found... exiting",1);
     egate_log_write();
     exit;
   }
-  
+
   // include the mail decoding functions
-  include_once('Mail/mimeDecode.php');
+  include_once(PEAR_INSTALL_DIR.'/Mail/mimeDecode.php');
   
+  // check for PEAR library Mail_Mime
   // make sure we are using the email interface
-  if( !$zen->email_interface_enabled == "on" ) {
+  if( $zen->settings["email_interface_enabled"] != "on" ) {
     egate_log("ERROR: email ignored, email_interface_enabled = off",1);
     egate_log_write();
     exit;
   }
   
   // determine the egate user's settings and access rights
-  $egate_user = $zen->get_user_by_login("egate");
+  $egate_user = $zen->get_user_by_login($egate_account);
   
   // produce an error if the egate user is not in database
   if( !is_array($egate_user) || !count($egate_user) ) {
-    egate_log("ERROR: egate user account is missing",1);
+    egate_log("ERROR: egate user account not found",1);
     egate_log_write();
     exit;    
   }
   
   // get the egate access priviledges
   $egate_user["access"] = $zen->get_access($egate_user["user_id"]);
-  
 
   /**
    * parses out the body of the email, looking for template properties
@@ -145,7 +187,7 @@
       if( preg_match("/^>*@([a-zA-Z0-9_ -]+):(.*)/", $l, $matches) ) {
 	// determine the index
 	$n = trim($matches[1]);
-	$t = $matches[2];
+	$t = trim($matches[2]);
 	// if we didn't get a proper index, then skip it
 	if( !$n ) { continue; }
 	if( preg_match("@^\[ *[xX] *\]@", $t) ) {
@@ -181,7 +223,7 @@
 	    else if( preg_match("@>*[ *[xX] *] *([0-9]+)-@", $l, $matches) ) {
 	      // this line starts with [x] nn-wordswords, 
 	      // then nn is our value
-	      $params["$n"] = $matches[1];
+	      $params["$n"] = trim($matches[1]);
 	      break;
 	    }
 	    else if( preg_match("/>*(@end|@[a-zA-Z0-9_ -]+:)/", $l) ) {
@@ -202,6 +244,7 @@
       // all other text becomes part of the details
       else { $params["details"] .= $l."\n"; }      
     }
+    $params["details"] = trim($params["details"]);
     return( $params );
   }
 
@@ -213,6 +256,7 @@
    * @return object params
    */
   function decode_contents($input) {
+    global $zen;
     // set up params and execute decoding
     $params['include_bodies'] = TRUE;
     $params['decode_bodies']  = TRUE;
@@ -221,9 +265,9 @@
     $structure = $decoder->decode($params);
     
     // record what we recieved
-    egate_log( $zen->showDateTime() ."||"
-         .$structure->headers["from"] ."||"
-         .$structure->headers["subject"], 2 );
+    egate_log( "Decoding... \n\tFrom: ".$structure->headers["from"]
+	       ."\n\tReply-to: ".$structure->headers["reply-to"]
+	       ."\n\tSubject: ".$structure->headers["subject"], 2 );
     
     return $structure;
   }
@@ -239,13 +283,32 @@
     // validate the file parameters
     if( $params->headers["subject"] == "" ) {
       $errors = false;
-      egate_log("ERROR: Subject was blank",3);
+      egate_log("ERROR: Subject was blank",2);
     }
     if( !$params->headers["from"] && !$params->headers["reply-to"] ) {
-      $errors = false;
-      egate_log("ERROR: There is no return address",3);
+      $valid = false;
+      egate_log("ERROR: There is no return address",2);
     }
     return $valid;
+  }
+
+  /**
+   ** returns a list of valid actions for the ticket and user
+   **
+   ** @param integer $ticket_id the ticket id
+   ** @return array of actions which are valid
+   */
+  function fetch_valid_actions( $ticket_id ) {
+    global $egate_user;
+    global $zen;
+    $vars = array("remove","help");
+    $vals = $zen->listValidActions($ticket_id,$egate_user["user_id"]);
+    foreach($vals as $k=>$v) {
+      if( $v["egate"] > 0 ) {
+	$vars[] = $k;
+      }
+    }
+    return $vars;
   }
 
   /**
@@ -268,6 +331,10 @@
     
     // check for create action
     if( (count($matches) < 3 || $matches[1] <= 0) 
+	&& preg_match("@help@i",$params->headers["subject"]) ) {
+      $action = "help";
+    }
+    else if( (count($matches) < 3 || $matches[1] <= 0) 
 	&& preg_match("@create@i",$params->headers["subject"]) ) {
       $action = "create";
     } 
@@ -279,14 +346,14 @@
       $ticket = $zen->get_ticket($id);    
       if( !is_array($ticket) || !count($ticket) ) {
 	$errors = true;
-	egate_log("Ticket id $id is not a valid ticket");
+	egate_log("Ticket #$id is not a valid ticket",2);
 	return;
       }
     } else {
       // no valid action
       $errors = true;
       egate_log("ERROR - no valid action was found for header:"
-		.$params->headers["subject"]);
+		.$params->headers["subject"],2);
       return;
     }
 
@@ -295,21 +362,20 @@
       $action = "notify_$action";
     }
     
+    // get a list of valid actions
+    $valid_actions = fetch_valid_actions($id);
+
     // determine which actions might be in the subject
-    $valid_actions = array_keys($zen->listValidActions($id,$egate_user["user_id"]));
-    if( !$action == "remove" && !isset($valid_actions["$action"]) ) {
+    if( !in_array($action,$valid_actions) ) {
       $errors = true;
-      egate_log("The action $action was not valid.");
+      egate_log("The action $action was not valid.",2);
       return;
     }
-    else if( !$action == "remove" && $valid_actions["$action"]["egate"] <= 0 ) {
-      $errors = true;
-      egate_log("The action $action is not allowed via the email interface.");
-      return;
-    }    
+
     // return the results
     if( !$errors ) { return array($action,$ticket); }
     else { return false; }
+
   }
 
   /**
@@ -324,17 +390,23 @@
   function perform_ticket_action($action,$ticket,$body,$params) {
     // take an appropriate ticket action
     // todo: approve,accept,create,close,email,estimate,log,move,reject,test    
+    // todo: store in email_templates
+    print "----\npeforming $action on ticket $ticket with the following:\n"; //debug
+    print_r($params); //debug
+    print "\n\n"; //debug
+    print_r($body); //debug
+    print "----\n"; //debug
   }
 
   /**
    * process raw message and take appropriate actions 
    *
    * @param string $input is the raw message data
-   * @return boolean errors were encountered
+   * @return boolean succeeded
    */ 
   function process_message($input) {
     // process the input data for an email and return results
-    $errors = false;     
+    $success = true;     
     global $valid_actions;
     global $zen;
     global $egate_user;
@@ -349,16 +421,15 @@
     $params = decode_contents($input);
 
     // validate the data
-    $res = validate_contents($params);
-    if( !validate_contents($params) ) { $errors = true; }
+    if( !validate_params($params) ) { $success = false; }
     
     // find out what action we are taking
-    $res = fetch_action($params);
+    $res = parse_subject($params);
     if( is_array($res) ) {
-      list($action,$ticket) == $res;
+      list($action,$ticket) = $res;
       // return if we didn't get a valid ticket + action
-      if( !$action || ($action != "create" && !is_array($ticket)) ) {
-	$errors = true;
+      if( !$action || ($action != "create" && $action != "help" && !is_array($ticket)) ) {
+	$success = false;
       }
     } 
     else { $errors = true; }
@@ -369,12 +440,12 @@
     
     // quit if we have any errors, before we try to peform
     // the action
-    if( $errors == true ) { return false; }
+    if( $success === false ) { return false; }
 
     // set up the return email address
     // and the user's name, if it can be found
     $email = $params->headers["reply-to"]? 
-      $params->headers["reply-to"] : $params->headers["from"];
+      trim($params->headers["reply-to"]) : trim($params->headers["from"]);
     if( preg_match("/([^<]*)<([a-zA-Z0-9_@.-]+)>/", $email, $matches) ) {
       $name = $matches[1];
       $email = $matches[2];
@@ -391,31 +462,52 @@
     }
 
     // extract the ticket id for convenience
-    $id = $ticket["id"];
+    if( is_array($ticket) ) {
+      $id = $ticket["id"];
+    }
 		
     if( $action == "create" ) {
       // create a new ticket
+      // todo:
       print "creating a ticket<br>\n";//debug
     }    
     else if( $action == "remove" ) {
       // remove user from notify list
+      // Todo:
       $res = $zen->drop_notify_by_email($email,$id);
+      if( $res ) {
+	egate_log("dropped $email from ticket $id notify list",3);
+      }
+      else {
+	egate_log("unable to remove $email from ticket $id notify list",2);
+	$success = false;
+      }
     }
     else if( $action == "help" ) {
-      // return a help selection
-      print "returning help selections to $email<br>\n";//debug
+      egate_store_templates("help.template");
     }
     else if( $action == "options" ) {
       // return a list of valid options for this ticket
-      print "selecting valid options for $id<br>\n";//debug
+      egate_store_templates("options.template");
     }
     else if( $action == "notify_add" ) {
       // add user to notify list
-      $vars = array("name"      => $name,
-		    "email"     => $email,
+      // todo: fix this to allow to add other users
+      // todo: make it email the person added
+      $vars = array("email"     => $zen->checkEmail($email),
 		    "ticket_id" => $id,
 		    "priority"  => 1);
-      $res = $zen->add_to_notify( $vars );
+      $name = preg_replace("/['\"<>]/", "", $name);
+      if( strlen($name) ) {
+	$vars["name"] = $name;
+      }
+      $res = $zen->add_to_notify_list( $id, $vars );
+      if( $res ) {
+	egate_log("added ".($name?$name."/":'')."$email to ticket $id",3);
+      } else {
+	egate_log("unable to add $name/$email to ticket $id",2);
+	$success = false;
+      } 
     }
     else if( $action == "notify_drop" ) {
       // grap the recipient to remove from the body["details"]
@@ -429,37 +521,138 @@
 	    // user id
 	    $res = $zen->drop_from_notify($v,$id);
 	    if( $res ) { $i++; }
-	    else { egate_log("user_id $v not found in #$id notify list",3); }
+	    else { egate_log("user_id $v not found in #$id notify list",2); }
 	  }
 	  else if( str_pos("@",$v) ) {
 	    // email address
 	    $res = $zen->drop_notify_by_email($v,$id);
 	    if( $res ) { $i++; }
-	    else { egate_log("email $v not found in #$id notify list",3); }
+	    else { egate_log("email $v not found in #$id notify list",2); }
 	  }
 	  else {
-	    egate_log("$v was not a valid email address or user_id",3);
+	    egate_log("$v was not a valid email address or user_id",2);
 	  }
 	}
-	egate_log("$i recipients dropped from #$id notify list",3);
+	if( $i > 0 ) {
+	  egate_log("$i recipients dropped from #$id notify list",3);
+	}
       }
       else {
 	// nobody was found to remove
-	egate_log("No recipients were found to remove from $id notify list",3);
+	egate_log("No recipients were found to remove from $id notify list",2);
+	$success = false;
       }
     }
     else {
-      perform_ticket_action($action,$ticket,$body,$params);      
+      $res = perform_ticket_action($action,$ticket,$body,$params);
+      if( !$res )
+	return false;
     }
 
-    // create log entry for action taken
-    // add sender to notify list if appropriate
-    
-    // make an email reply for sender
-    // employ $egate_notify_level (0-3)
+    // todo: send a reply email
+    send_reply_mail( array("name"=>$name,"email"=>$email), $id, $success );
 
-    //todo: add docs for all of this
-    
+    // write the log entry
+    egate_log_write();
+
+    //
+    // todo: fix the formatEmail in zenTrack.class to use templates
+    // todo: and make sendEmail create some custom options for
+    // todo: including special templates for user activities such
+    // todo: as sending approve blurb to approval person when
+    // todo: ticket is set to pending, etc
+    //
+    // todo: fix user_id to match person sending, rather than egate for
+    //       checking owner of ticket/valid actions
+    //
+    // todo: format the || entry for user consumption
+    //
+    // todo: add egate_store_templates()
+    //
+    // todo: add docs for all of this
+    //
+    // todo: email_notify config setting
+    //
+    // todo: update egate and egate_check
+    //
+    // todo: testing
+    //
+
+    // success
+    return true;
+  }
+
+  /**
+   * make an email reply for the sender
+   * 
+   * this will send a reply to the person
+   * who submitted the entry, compliant
+   * with $egate_notify_level
+   *
+   * @param array $recipients is an indexed array of email addresses and names (names optional)
+   * @param boolean $success is whether action was completed successfully
+   * @return integer number of emails sent
+   */
+  function send_reply_mail( $recipients, $id, $success ) {    
+    // employ $egate_notify_level (0-3)
+    global $egate_notify_level;
+    global $libDir;
+    global $egate_user;
+    global $zen;
+
+    // get the messages
+    $messages = egate_fetch_messages($egate_notify_level);
+    $templates = egate_fetch_templates();
+
+    // send an email if we have data
+    if( (is_array($messages)&&count($messages))
+	||(is_array($templates)&&count($templates)) ) {
+      $text = "";
+
+      // grab the params
+      $valid_actions = fetch_valid_actions($id);      
+      $vals = array("success"  =>   $success,
+		    "id"       =>   $id,
+		    "messages" =>   $messages,
+		    "valid_actions" => $valid_actions);
+
+      // create header
+      $temp = new zenTemplate("$libDir/templates/email/heading.template");
+      $temp->values($vals);
+      $txt .= $temp->process();
+
+      // create reply
+      $temp = new zenTemplate("$libDir/templates/email/reply.template");
+      $temp->values($vals);
+      $txt .= $temp->process();
+
+      // include extra footer templates
+      if( is_array($templates) ) {
+	foreach( $templates as $t ) {
+	  $temp = new zenTemplate("$libDir/templates/email/$t");
+	  $temp->values($vals);
+	  $txt .= $temp->process();
+	}
+      }
+
+      // create footer
+      $temp = new zenTemplate("$libDir/templates/email/footer.template");
+      $temp->values($vals);
+      $txt .= $temp->process();
+
+      // send messages
+      $i=0;
+      $from = $egate_user["email"];
+      $subject = "[".$zen->settings["bot_name"]."] Ticket #$id: results";
+      foreach($recipients as $r) {
+	$res = mail($r,$subject,$txt,"From:$from\nReply-to:$from\n");
+	if( $res )
+	  $i++;
+      }
+      return $i;
+    }
+    // if we skipped the results, we sent 0 emails
+    return 0;
   }
 
 }?>

@@ -323,8 +323,7 @@ class zenTrack extends zen {
     // perform database inserts, and return ids
     $insert_ids = array();
     foreach($list as $l) {
-      $l["ticket_id"] = $ticket_id;
-      $new_id = $this->db_insert($this->table_notify_list,$l);
+      $new_id = $this->add_to_notify_list($ticket_id,$l);
       if( $new_id )
 	$insert_ids[] = $new_id;
     }
@@ -345,10 +344,14 @@ class zenTrack extends zen {
     if( is_array($list) ) {
       foreach($list as $l) {
 	if( $params["user_id"] && $params["user_id"] == $l["user_id"] ) {
+	  $this->addDebug("add_to_notify_list",
+			  "Skipping {$paramsz['user_id']}/{$params['email']}, duplicate",2);
 	  return 0;
 	}
 	else if( !$params["user_id"] && $l["email"] 
 		 && $l["email"] == $params["email"] ) {
+	  $this->addDebug("add_to_notify_list",
+			  "Skipping {$paramsz['user_id']}/{$params['email']}, duplicate",2);
 	  return 0;
 	}
       }
