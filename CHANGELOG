@@ -16,6 +16,37 @@
     - includes/templates/newProjectForm.php 1.14
     - www/actions/editProjectSubmit.php 1.1
     - www/admin/editProjectSubmit.php 1.2
+  Removed ./ prefix for debian linux users
+  Users who encounter a problem without this
+  prefix may add . to the path to fix it.
+    - includes/egate.php               includes/egate_check.php
+    - includes/egate_utils.php         includes/adodb/server.php 
+    - includes/adodb/tests/test.php    www/addProjectSubmit.php
+    - www/addSubmit.php                www/viewAttachment.php
+    - www/actions/accept.php           www/actions/approve.php
+    - www/actions/assign.php           www/actions/close.php
+    - www/actions/edit.php             www/actions/editSubmit.php
+    - www/actions/editTicketSubmit.php www/actions/email.php
+    - www/actions/estimate.php         www/actions/log.php
+    - www/actions/move.php             www/actions/print.php
+    - www/actions/reject.php           www/actions/relate.php
+    - www/actions/reopen.php           www/actions/test.php
+    - www/actions/upload.php           www/admin/access.php
+    - www/admin/addUser.php            www/admin/addUserSubmit.php
+    - www/admin/bins.php               www/admin/config.php
+    - www/admin/deleteUser.php         www/admin/editTicket.php
+    - www/admin/editTicketSubmit.php   www/admin/editUser.php
+    - www/admin/editUserSubmit.php     www/admin/index.php
+    - www/admin/listUsers.php          www/admin/priorities.php
+    - www/admin/resetPassword.php      www/admin/systems.php
+    - www/admin/tasks.php              www/admin/types.php 
+    - www/help/about.php               www/help/gpl.php
+    - www/reports/custom.php           www/reports/view.php
+    - www/help/features.php            www/help/future.php 
+    - www/help/index.php               www/help/install.php 
+    - www/reports/drop.php             www/reports/index.php
+    - www/reports/report.php           www/reports/save.php
+    - www/reports/saveSubmit.php       www/reports/show.php
 
 2003-03-06, Kato
   Session enhancments: support for older versions of php, and hopefully
