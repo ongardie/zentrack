@@ -20,7 +20,7 @@
   $homebin= $user["homebin"];
   $check = ($homebin == -1)?"selected":"";
   
-  print "<option $check value='all'>-All-</option>\n";
+  //print "<option $check value='all'>-All-</option>\n";
   if( is_array($userBins) ) {
     foreach($userBins as $k=>$v) {
       if( $v ) {

@@ -5,24 +5,28 @@
  object oriented and database abstracted design lend to 
  endless possibilities for project expansion.
 
------ V2.4 (2003-04-19) ----
+----- V2.4.1 (Development, See CVS) ----
+2003-04-22, Rob Hillis
+  Allow users to select "-All-" as their default bin
+    - zentrack/www/misc/homebin.php 1.5
+    - zentrack/includes/templates/homebinForm.php 1.6
+    - zentrack/includes/leftBins.php 1.7
 
+----- V2.4.0.1 (2003-04-21) ----
 2003-04-22, Rob Hillis
   Fix syntax error on ticket closing.
     - zentrack/includes/zenTrack.class
 
 2003-04-21, Rob Hillis
-  Allow users to select "-All-" as their default bin
-    - zentrack/www/misc/homebin.php 1.5
-    - zentrack/includes/templates/homebinForm.php 1.6
-    - zentrack/includes/leftBins.php 1.7
-  Rename mis-spelt LISCENCE-GPL-2.0 in install/ directory
+  Rename mis-spelled LISCENCE-GPL-2.0 in install/ directory
     - zentrack/install/LISCENCE-GPL-2.0 <del>
     - zentrack/install/LICENSE-GPL-2.0 1.1
   Fix minor typos in INSTALL.README
     - zentrack/INSTALL.README 1.23
   Include missing instructions for upgrading database in UPGRADE.readme
     - zentrack/UPGRADE.readme 1.10
+
+----- V2.4 (2003-04-19) ----
 
 2003-04-19, Rob Hillis
   More work for sorting of bins: create and search menus

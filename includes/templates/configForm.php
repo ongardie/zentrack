@@ -72,13 +72,14 @@
 </tr>
       <tr>
 	 <td class='cell' colspan='4'>
-	 <input type='submit' name='TODO' value='<?=uptr("More")?>'>
+         <input type='hidden' name='TODO' value='MORE'>
+	 <input type='submit' value='<?=uptr("More")?>' onClick='return setToDo("MORE")'>
          &nbsp;
-         <input type='submit' name='TODO' value='<?=uptr("Less")?>'>	
+         <input type='submit' value='<?=uptr("Less")?>' onClick='return setToDo("LESS")'>	
 	 &nbsp;
-	 <input type='submit' class='submit' name='TODO' value='<?=uptr("Save")?>'>
+	 <input type='submit' class='submit' value='<?=uptr("Save")?>' onClick='return setToDo("Save")'>
 	 &nbsp;
-	 <input type='submit' class='submitPlain' name='TODO' value='<?=uptr("Reset")?>'>
+	 <input type='submit' class='submitPlain' value='<?=uptr("Reset")?>' onClick='return setToDo("Reset")'>
          </td>
       </tr>
       </table>
@@ -90,6 +91,10 @@
 	 var i;
          var ci;
          var bin = [ <?=join(",",$js_vals)?> ];
+	 function setToDo(val) {
+	   document.configForm.TODO.value = val;
+           return true;
+         }
          function checkOrder( num, f ) {
 	   if( num == "" )
 	     num = 0;
