@@ -885,8 +885,8 @@ msgstr "System fel: Ärende ? kunde ej stängas"
 
 #file "D:\zentrack\zentrack/www/actions/email.php"
 #args ""
-msgid "System error: Ticket ? could not be emailed", array($id
-msgstr "System fel: Ärende ? kunde ej e-postas", array($id
+msgid "System error: Ticket ? could not be emailed"
+msgstr "System fel: Ärende ? kunde ej e-postas"
 
 
 #file "D:\zentrack\zentrack/www/actions/move.php"
