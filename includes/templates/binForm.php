@@ -4,13 +4,6 @@
       <p class='error'><?=tr("Bins cannot be destroyed, to maintain data integrity.")?></p>
       <p class='smallBold'><?=tr("To remove a bin from use, uncheck the 'active' box.")?></p>
 
-      <p><?=tr('There are two special bin types, which can be set manually in the includes/configVars.php file (poor method), or set here (preferred	method) by naming a bin with either the word "project" or "note" in	the bin name.')?></p>
-
-     <p><?=tr('Projects act as containers, which can hold multiple tickets as "tasks" which are part of the projects completion requirements.')?></p>
-     <p><?=tr('Notes are special tickets which do not require any actions.').'  '.
-	       tr('They start their life closed, and do not need to be completed.').'  '. 
-	       tr('Use them only for tracking and documentation.')?></p>
-
       <ul>
       <form name='binForm' action='<?=$SCRIPT_NAME?>' method='post'>
       <input type='hidden' name='TODO' value=''>

@@ -2,6 +2,15 @@
       <p class='error'><?=tr("Changing this configuration list has a large system impact.")?>  <?=tr("Please consider this before making modifications.")?></p>
       <p class='error'><?=tr("Items in this list cannot be destroyed, to maintain data integrity.")?></p>
       <p class='smallBold'><?=tr("To remove a ? from use, uncheck the 'active' box.",array($type))?></p>
+
+<? if( $type == "type" ) { ?>
+      <p><?=tr('There are two special types, which can be set by including either the word <span class='error'>project</span> or <span class='error'>note</span> in the bin name.')?></p>
+
+     <p><?=tr('Projects act as containers, which can hold multiple tickets as "tasks" which are part of the projects completion requirements.')?></p>
+     <p><?=tr('Notes are special tickets which do not require any actions.').'  '.
+	       tr('They start their life closed, and do not need to be completed.').'  '. 
+	       tr('Use them only for tracking and documentation.')?></p>
+<? } ?>
 	
       <ul>
       <form name='configForm' action='<?=$SCRIPT_NAME?>' method='post'>
