@@ -45,22 +45,15 @@ $session_vars = array("login_name",
 		      "login_messages",
 		      "project_mode",
 		      "ticket_mode");
-if( !isset($_SESSION) ) {
-  foreach($session_vars as $s) {
-    session_register($s);
-  }
+
+if( is_array($_SESSION) ) {
+  extract($_SESSION);
+}
+else if( is_array($HTTP_SESSION_VARS) ) {
+  extract($HTTP_SESSION_VARS);
 }
 else {
-  foreach($session_vars as $s) {
-    if( !isset($_SESSION[$s]) ) {
-      $_SESSION[$s] = "";
-    }
-    else {
-      $$s = $_SESSION[$s];
-    }
-  }
-  // this only makes them available for reading.. they still 
-  // need to be set in $_SESSION before we close up the page
+  die("Sessions are not enabled properly on this system.  zenTrack is exising.");
 }
 
 // you can't have any spaces after this closing tag!

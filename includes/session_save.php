@@ -9,4 +9,9 @@
       $_SESSION[$s] = $$s;
     }
   }
+  else if( is_array($HTTP_SESSION_VARS) ) {
+    foreach($session_vars as $s) {
+      $HTTP_SESSION_VARS[$s] = $$s;
+    }
+  }
 ?>

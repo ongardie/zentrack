@@ -60,20 +60,20 @@
       $zen->addDebug("login.php:userLogin",
      "User not logged in, username and passphrase not detected, so creating login form",3);
      }
-  
+     
      // user isn't logged in, so show the login form
      if( !isset($skip) || !$skip ) {
-   // no login has been recieved, but it's required
-   // so generate a login prompt and form
-   if( isset($zentrackUsername) )
-      $zentrackUsername = strip_tags($zentrackUsername);
-   else
-      $zentrackUsername = "";
-   $page_title = "Please Log On";
-   include("$libDir/nav.php");
-   include("$templateDir/loginForm");
-   include("$libDir/footer.php");
-   exit;
+       // no login has been recieved, but it's required
+       // so generate a login prompt and form
+       if( isset($zentrackUsername) )
+	 $zentrackUsername = strip_tags($zentrackUsername);
+       else
+	 $zentrackUsername = "";
+       $page_title = "Please Log On";
+       include("$libDir/nav.php");
+       include("$templateDir/loginForm");
+       include("$libDir/footer.php");
+       exit;
      }          
   } 
   
