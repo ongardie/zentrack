@@ -115,4 +115,4 @@ INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (97,
 INSERT INTO ZENTRACK_VARFIELD (ticket_id) SELECT id FROM ZENTRACK_TICKETS;
 
 # Modify the version number
-UPGRADE ZENTRACK_SETTINGS SET value='2.5' WHERE setting_id=74;
+UPDATE ZENTRACK_SETTINGS SET value='2.5' WHERE setting_id=74;
