@@ -1,6 +1,9 @@
 
 --- V3.0 RC1 (beta,in CVS) ---	
 
+2003-11-14, Kato
+  Added db schema classes for maintining db structure
+
 2003-11-6, Kato
   Implemented ZenQuery object
   Added ability to iterate arrays to ZenTemplate
