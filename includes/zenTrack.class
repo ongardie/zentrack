@@ -1900,6 +1900,14 @@ class zenTrack extends zen {
     return( $this->db_insert($this->table_types, $params) );
   }
 
+  function update_custom_field_idx( $field_name, $params ) {
+    // update properties for a given custom_field definition (key= field_name)
+    $set = $this->makeInsertVals($params,1);
+    $query = "UPDATE ".$this->table_custom_fields_idx." SET $set WHERE field_name = '$field_name'";
+    $this->addDebug("update_custom_field_idx()Query",$query,2);
+    return( $this->db_result($query) );
+  }
+
   function update_bin( $bid, $params ) {
     // update properties for a given bid (bin id)
     $set = $this->makeInsertVals($params,1);
@@ -2957,14 +2965,87 @@ class zenTrack extends zen {
     return( isset($bins["$id"])? $bins["$id"] : "" );
   }
 
-  function getBins($flag = 0,$active = 1) {
-    // if flag is set, retrieves a full
-    // indexed array, otherwise, just
-    // a list of names, indexed by bid,
-    // ordered by priority and alphebetized 
-    // set $active to zero to retrieve 
-    // the bins which are disabled as well
+  /**
+   * returns information about custom fields definition
+   *
+   * Returns an array with information about custom fields definition
+   * ordered by sort_order and field_label
+   * set $filterUse ("P"roject, "T"icket or blank)
+   * and/or $filterShow ("S"earch, "L"ist, "C"ustom, "D"etail or blank)
+   * to filter which custom fields are returned
+   * If indexedMode is set, the array returned has only the field_label and is
+   * indexed by the field_name
+   *
+   * @param int $indexedMode
+   * @param string $filterUse
+   * @param string $filterShow
+   * @return array of custom fields
+   */
+  function getCustomFields($indexedMode=0, $filterUse = "",$filterShow = "") {
+    if ( ! $indexedMode ) {
+      $query = "SELECT * FROM ".$this->table_custom_fields_idx;
+    }
+    else {
+      $query = "SELECT field_name, field_label FROM ".$this->table_custom_fields_idx;
+    }
+    $connector = " WHERE ";
+    switch ( $filterUse ) {
+      case "P":
+        $query .= $connector . "use_for_project=1";
+        $connector = " AND ";
+        break;
+      case "T":
+        $query .= $connector . "use_for_ticket=1";
+        $connector = " AND ";
+        break;
+    }
+    switch ( $filterShow ) {
+      case "S":
+        $query .= $connector . "show_in_search=1";
+        $connector = " AND ";
+        break;
+      case "L":
+        $query .= $connector . "show_in_list=1";
+        $connector = " AND ";
+        break;
+      case "C":
+        $query .= $connector . "show_in_custom=1";
+        $connector = " AND ";
+        break;
+      case "D":
+        $query .= $connector . "show_in_detail=1";
+        $connector = " AND ";
+        break;
+    }
+    $query .= " ORDER BY sort_order, field_label";
+    if ( $indexedMode ) {
+      $vars = $this->db_query($query);
+      foreach ($vars as $v) {
+        $VALS["$v[0]"] = $v[1];
+      }
+    } 
+    else {
+      return( $this->db_queryIndexed($query) );
+    }
+  }
 
+  /**
+   * returns information about available bins
+   *
+   * if flag is set, retrieves a full
+   * indexed array, otherwise, just
+   * a list of names, indexed by bid,
+   * ordered by priority and alphebetized 
+   * set $active to zero to retrieve 
+   * the bins which are disabled as well
+   * the main reason for this method is that we will be updating
+   * the structure of the settings before long to become more rigid.
+   *
+   * @param int $flag 1=return full info, 0=return bids and names
+   * @param int $active 1=only active bins, 0=all bins
+   * @return array of bins
+   */
+  function getBins($flag = 0,$active = 1) {
     if( !$flag ) {
       $query = "SELECT bid, name FROM ".$this->table_bins;
       if( $active )
@@ -3394,6 +3475,7 @@ class zenTrack extends zen {
     $this->types       = $this->getTypes();
     $this->priorities  = $this->getPriorities();
     $this->tasks       = $this->getTasks();
+    $this->custom_fields = $this->getCustomFields(1);
 
     // set the date formatting
     $this->date_fmt_long  = $this->settings["date_fmt_long"];
@@ -3698,6 +3780,8 @@ class zenTrack extends zen {
   var $noteTypeID;
   var $projectTypeID;
 
+  var $custom_fields;
+
   var $language;
   var $strings;
   var $words;
@@ -3728,6 +3812,7 @@ class zenTrack extends zen {
   var $table_translation_strings;
   var $table_translation_words;
   var $table_notify_list;
+  var $table_custom_fields_idx;
 
   var $cleanTempReports;
   var $reportImageWidth;

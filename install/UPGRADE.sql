@@ -1,5 +1,5 @@
 
-CREATE TABLE ZENTRACK_BEHAVIOR {
+CREATE TABLE ZENTRACK_BEHAVIOR (
   behavior_id int(12) NOT NULL auto_increment,
   behavior_name varchar(100),
   group_id int(12) NOT NULL,
@@ -7,32 +7,32 @@ CREATE TABLE ZENTRACK_BEHAVIOR {
   sort_order int(3),
   PRIMARY KEY (behavior_id),
   INDEX (is_enabled)
-}
+);
 
-CREATE TABLE ZENTRACK_BEHAVIOR_DETAIL {
+CREATE TABLE ZENTRACK_BEHAVIOR_DETAIL (
   behavior_id int(12) NOT NULL,
   field_name varchar(50),
   comparator varchar(2),
   match_value varchar(255),
   sort_order int(3)
-}
+);
 
-CREATE TABLE ZENTRACK_GROUP {
+CREATE TABLE ZENTRACK_GROUP (
   group_id int(12) NOT NULL auto_increment,
   table_name varchar(50) NOT NULL,
   group_name varchar(100),
   descript varchar(255),
   PRIMARY KEY (group_id)
-}
+);
 
-CREATE TABLE ZENTRACK_GROUP_DETAIL {
+CREATE TABLE ZENTRACK_GROUP_DETAIL (
   group_id int(12) NOT NULL,
   value varchar(255),
   sort_order int(3),
   INDEX (group_id, sort_order)
-}
+);
 
-CREATE TABLE ZENTRACK_VARFIELD {
+CREATE TABLE ZENTRACK_VARFIELD (
   ticket_id int(12) NOT NULL,
 
   /* CHANGES HERE MUST BE REFLECTED IN the values for ZENTRACK_VARFIELD_IDX */
@@ -50,9 +50,9 @@ CREATE TABLE ZENTRACK_VARFIELD {
   custom_text1 text,
 
   INDEX (ticket_id)
-}
+);
 
-CREATE TABLE ZENTRACK_VARFIELD_IDX {
+CREATE TABLE ZENTRACK_VARFIELD_IDX (
   field_name varchar(25) NOT NULL,
   field_label varchar(50),
   sort_order int(3),
@@ -65,7 +65,7 @@ CREATE TABLE ZENTRACK_VARFIELD_IDX {
   show_in_detail int(1) default 0,
   js_validation text,
   INDEX (sort_order, field_name)
-}
+);
 
 INSERT INTO ZENTRACK_VARFIELD_IDX (field_name,       field_label,       sort_order) 
                            VALUES ('custom_string1', 'Custom String 1', 1         );
