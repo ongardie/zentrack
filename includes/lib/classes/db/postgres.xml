@@ -25,7 +25,7 @@
   <sqlInfo>
     <endline>;</endline>
     <escapechar>\</escapechar>
-    <create>CREATE %table% {%columns%}</create>
+    <create>CREATE TABLE %table% (%columns%)</create>
     <droptable>DROP TABLE %table%</droptable>
     <primarykey location="inline"> NOT NULL PRIMARY KEY</primarykey>
     <index uniquelabel="UNIQUE">

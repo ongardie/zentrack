@@ -23,7 +23,7 @@
   <sqlInfo>
     <endline>;</endline>
     <escapechar>'</escapechar>
-    <create>CREATE %table% {%columns%}</create>
+    <create>CREATE TABLE %table% (%columns%)</create>
     <droptable>DROP TABLE %table%</droptable>
     <primarykey location="internal">CONSTRAINT %name% PRIMARY KEY (%column%)</primarykey>
     <index uniquelabel="UNIQUE">CREATE %unique% INDEX %name% ON %table%(%columns%)</index>

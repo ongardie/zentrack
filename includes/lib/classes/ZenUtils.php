@@ -26,6 +26,11 @@ define("LVL_WARN", 2);
 define("LVL_NOTE", 3);
 
 /** 
+ * LVL_INFO alias for LVL_NOTE
+ */
+define("LVL_INFO", 3);
+
+/** 
  * LVL_DEBUG for ZenMessage: specifies lowest error level (maximum output, very verbose)
  */
 define("LVL_DEBUG", 4);
@@ -574,10 +579,12 @@ class ZenUtils {
 
   /**
    * Provides debugging output which is safe to use during installation 
-   * (before config is generated).  This is accomplished by setting
-   * $GLOBALS['installMode'] to true when using the install program, which
-   * will direct output to stdout instead of ZenMessageList for operations
-   * that take place before the debug objects are initialized.
+   * (before config is enabled).
+   *
+   * Normally this method works just like {@link Zen::debug()}, however
+   * if $GLOBALS['installMode'] is set to an integer value, then debugging
+   * is redirected to stdout, and the level of debugging that is produced
+   * is controlled by this value instead of the normal debug.xml configuration.
    *
    * This is useful for classes which may be used during installation,
    * but may also use {@link ZenMessageList} for debugging output during
@@ -592,6 +599,8 @@ class ZenUtils {
    */
   function safeDebug( $class, $method, $message, $errnum, $level ) {    
     if( isset($GLOBALS) && isset($GLOBALS['installMode']) && $GLOBALS['installMode'] ) {
+      // check installMode level vs $level
+      if( $GLOBALS['installMode'] < $level ) { return false; }
       // we are in install mode, so don't use ZenMessageList
       // determine the level of messages to show, normally this
       // will be 1 (errors), in develop_mode we will relax this to 3(note)
@@ -608,6 +617,7 @@ class ZenUtils {
       // we are not in install mode, so send to ZenMessageList
       return Zen::debug($class, $method, $message, $errnum, $level);
     }
+    return false;
   }
 
   /**
@@ -618,13 +628,13 @@ class ZenUtils {
    */
   function displayDebugLevel( $level ) {
     switch( $level ) {
-    case 1:
+    case LVL_ERROR:
       return "ERROR";
-    case 2:
+    case LVL_WARN:
       return "WARNING";
-    case 3:
+    case LVL_INFO:
       return "INFO";
-    case 4:
+    case LVL_DEBUG:
       return "DEBUG";
     default:
       return "MESSAGE";

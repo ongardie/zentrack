@@ -36,7 +36,7 @@ class DbTypeInfo {
    * @return array of sql statements
    */
   function dropTableSyntax( $table ) { 
-    return $this->getStatement("droptable", array('table',$table));
+    return $this->getStatement("droptable", array('table'=>$table));
   }
 
   /**
@@ -56,8 +56,8 @@ class DbTypeInfo {
                                                $c['unique'], $c['notnull'], 
                                                $c['size']);
     }
-    return $this->getStatement('addtable', 
-                               array('table'=>$table, 'columns'=>$columntext), 
+    return $this->getStatement('create', 
+                               array('table'=>$table, 'columns'=>$columnText), 
                                $transactions);
   }
 
@@ -88,7 +88,7 @@ class DbTypeInfo {
     $attrtext = ($required && isset($props['notnull']))? $props['notnull'] : '';
     $vals = array(
                   'name'    => $name,
-                  'type'    => $this->makeTypeDef($type,$length),
+                  'datatype'    => $this->makeTypeDef($type,$length),
                   'unique'  => $uniquetext,
                   'attr'    => $attrtext );
     return $this->getStatement('tablecolumn',$vals);
@@ -175,9 +175,12 @@ class DbTypeInfo {
    */
   function getStatement( $type, $vals, $transaction_enabled = false ) {
     $text = $this->getSyntax($type);
-    if( !$text ) { return $text; }
+    if( !$text ) { 
+      ZenUtils::safeDebug($this,'getStatement',"Type $type is not defined", 221, LVL_ERROR);
+      return 'ERROR'; 
+    }
     foreach($vals as $k=>$v) {
-      $text = str_replace("%{$k}%", $v, $text);
+      $text = str_replace("%$k%", $v, $text);
     }
     if( $type == "addtable" && $transaction_enabled == true 
         && $this->getSyntax('transaction_table') ) { $text .= " ".$this->getSyntax('transaction_table'); }
@@ -208,7 +211,7 @@ class DbTypeInfo {
     }
 
     // get the properties
-    $props = $this->_dataTypes[$type]['props'];
+    $props = $this->_dataTypes[$type];
 
     // if this element doesn't use a size, then just return the type
     if( !$props['size'] && !$props['max'] ) {

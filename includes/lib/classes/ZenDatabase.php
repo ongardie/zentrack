@@ -156,10 +156,10 @@ class ZenDatabase extends Zen {
     if ($result === false) {
       $msg = $this->_adodb->ErrorMsg();
       if( $msg ) {
-        $this->_genDbError( 'execute', "SQL Error", 220, LVL_ERROR );
+        $this->_genDbError( 'execute', "SQL Error", 220, LVL_WARN );
       }
       else {
-        ZenUtils::safeDebug( $this, 'execute', "Query returned no results", 0, LVL_WARN );
+        ZenUtils::safeDebug( $this, 'execute', "Query returned no results", 0, LVL_NOTE );
       }
       return false;
     }

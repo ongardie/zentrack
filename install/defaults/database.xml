@@ -150,7 +150,7 @@
     <table name="ACTION_PARAMS">
       <description>Action parameters to be passed for each action</description>
       <columns>
-        <column name="action_params_id" type="primary_key" ftype="hidden" />
+        <column name="action_params_id" type="primarykey" ftype="hidden" />
 	<column name="param_number" type="shortint" ftype="text" label="Order" />
 	<column name="param_type" type="value" ftype="select" label="Parameter Type">
 	  <!-- the selections for special value may require a definition in the value field -->
@@ -388,7 +388,7 @@
       <description>Priorities and their properties</description>
       <inherit>ABSTRACT_DATA_TYPE</inherit>
       <columns>
-	<column name="priority_id" type="primary_key" ftype="hidden" />
+	<column name="priority_id" type="primarykey" ftype="hidden" />
 	<column name="colorpick" type="value" ftype="colorbox">
 	  <description>The color provided here will be used to highlight tickets in the list view, leaving this blank will use the default background color</description>
 	</column>
@@ -427,7 +427,7 @@
 	  <default>Weeks</default>
 	  <description>Range to graph</description>
 	</column>
-	<column name="date_span" type="smallint" ftype="text" label="Span">
+	<column name="date_span" type="shortint" ftype="text" label="Span">
 	  <description>The number of divisions to show, more than 10 will be merged</description>
 	  <default>8</default>
 	</column>
@@ -481,7 +481,7 @@
       <description>System settings</description>
       <inherit>ABSTRACT_DESCRIPTORS</inherit>
       <columns>
-        <column name="setting_id" type="primary_key" ftype="hidden" />
+        <column name="setting_id" type="primarykey" ftype="hidden" />
 	<column name="set_category" type="value" ftype="immutable" label="Category" />
 	<column name="field_type" type="value" ftype="hidden" />
 	<column name="field_criteria" type="string" ftype="hidden" />
@@ -491,9 +491,9 @@
 	</column>	
       </columns>
       <indexList>
-        <index name="setting_cat">category</index>
-	<index name="setting_name">name</index>
-	<index name="setting_sort">category,name</index>
+        <index name="setting_cat">set_category</index>
+	<index name="setting_name">set_name</index>
+	<index name="setting_sort">set_category,set_name</index>
       </indexList>
     </table>
 
@@ -514,7 +514,7 @@
       <description>Systems and their properties</description>
       <inherit>ABSTRACT_DATA_TYPE</inherit>
       <columns>
-        <column name="system_id" type="primary_key" ftype="hidden" />
+        <column name="system_id" type="primarykey" ftype="hidden" />
       </columns>
       <indexList>
         <index name="sys_sort">priority,name</index>
@@ -585,14 +585,8 @@
         <column name="customer" type="string" ftype="text" label="Customer" />
       </customList>
       <indexList>
-        <index name="tckt_usr">user_id</index>
 	<index name="tckt_bin">bin_id</index>
 	<index name="tckt_name">name</index>
-	<index name="tckt_sort1">ticket.name,bin.priority</index>
-	<index name="tckt_sort2">ticket.name,priority.priority</index>
-	<index name="tckt_sort3">ticket.name,type.priority</index>
-	<index name="tckt_sort4">ticket.name,system.priority</index>
-	<index name="tckt_sort5">ticket.name,bin.priority,type.priority,system.priority</index>
       </indexList>
     </table>    
 
@@ -618,7 +612,7 @@
 	  <criteria type="helper">field:trigger_id,field:action_id</criteria>
 	  <reference>ACTION.action_id</reference>
 	</column>
-	<column name="priority" type="smallint" ftype="text" label="Order">
+	<column name="priority" type="shortint" ftype="text" label="Order">
 	  <description>Order that actions will take place</description>
 	</column>
       </columns>
@@ -662,7 +656,7 @@
 	  <reference>STAGE.stage_id</reference>
 	  <criteria type="zenlist">stages</criteria>
 	</column>
-	<column name="priority" type="smallint" ftype="text" label="Order">
+	<column name="priority" type="shortint" ftype="text" label="Order">
 	  <description>Lowest to highest</description>
 	</column>
       </columns>
@@ -748,24 +742,24 @@
 	  <default>0</default>
 	  <description>Currently this is ignored, but should be implemented soon</description>
 	</column>
-	<column name="login" value="value" ftype="text">
+	<column name="login" type="value" ftype="text">
 	  <unique>true</unique>
 	  <notnull>true</notnull>
 	</column>
-	<column name="passphrase" value="value" ftype="skip">
+	<column name="passphrase" type="value" ftype="skip">
 	  <notnull>true</notnull>
 	</column>
-	<column name="lname" value="string" ftype="text" label="Last Name">
+	<column name="lname" type="string" ftype="text" label="Last Name">
 	  <size>40</size>
 	</column>
-	<column name="fname" value="string" ftype="text" label="First Name">
+	<column name="fname" type="string" ftype="text" label="First Name">
 	  <size>40</size>
 	</column>
-	<column name="inits" value="string" ftype="text" label="Inits">
+	<column name="inits" type="string" ftype="text" label="Inits">
 	  <size>5</size>
 	</column>
-	<column name="email" value="string" ftype="email" label="Email" />
-	<column name="homebin" value="integer" ftype="select" label="Home Bin">
+	<column name="email" type="string" ftype="email" label="Email" />
+	<column name="homebin" type="integer" ftype="select" label="Home Bin">
 	  <reference>BIN.bin_id</reference>
 	  <criteria type="helper"></criteria>
 	  <notnull>true</notnull>
@@ -773,8 +767,8 @@
 	</column>
       </columns>
       <customList>
-	<column name="notes" value="string" ftype="text" label="Comments" />
-	<column name="phone" value="value" ftype="text" label="Phone" />	
+	<column name="notes" type="string" ftype="text" label="Comments" />
+	<column name="phone" type="value" ftype="text" label="Phone" />	
       </customList>
       <indexList>
         <index name="user_get">user_id,isactive</index>

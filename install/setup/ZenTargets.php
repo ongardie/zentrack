@@ -138,12 +138,18 @@ class ZenTargets {
     case "clean_cache_data":  return $this->_clean_cache_data();
     case "copy_class_files":  return $this->_copy_class_files( $p );
     case "copy_config_files": return $this->_copy_config_files( $this->_getBooleanParm($target,0,false) );
-    case "create_database":   return $this->_create_database();
+    case "create_database":
+      {
+        if( !$p ) {
+          $this->_help($target);
+          return false;
+        }
+        return $this->_create_database($p);
+      }
     case "cvs_update":        return $this->_cvs_update();
     case "drop_database":     return $this->_drop_database( $p );
     case "extra_secure_mode":
       {
-        $p = $this->_getParm($target, 0);
         $p2 = $this->_getParm($target, 1);
         if( !$p || !$p2 ) {
           $this->_help($target);
@@ -151,14 +157,15 @@ class ZenTargets {
         }
         return $this->_extra_secure_mode( $p, $p2 );
       }
+    case "install":
     case "full_install":      return $this->_full_install();
     case "load_data":
       {
-        if( !strlen($p) ) {
+        if( !$p ) {
           $this->_help($target);
           return false;          
         }
-        return $this->_load_data( $p, $this->_getBooleanParm($target,1,true) );
+        return $this->_load_data( $p, $this->_getParm($target,1), $this->_getBooleanParm($target,2,true) );
       }
     case "merge_template_file":    return $this->_merge_template_file( $p );
     case "prepare_install_files": 
@@ -224,6 +231,19 @@ class ZenTargets {
     $description = isset($targets[$target])? $targets[$target] : "";
     if( $target ) { print "\n".strtoupper($target).": $description\n"; }
     switch( $target ) {
+    case "create_database":
+      {
+        print "   Usage: zen.php  [--config_file=zen.ini] -$target data_dir\n";
+        print "   - where data_dir is the source directory containing db schema and data\n";
+        print "   - you must create the database instance before running this command\n";
+        print "   - you must create the database user and priviledges before running this command\n";
+        break;
+      }
+    case "drop_database":  
+      {
+        print "   Usage: install.php [--config_file=zen.ini] -$target\n";
+        break;
+      }
     case "extra_secure_mode":
       {
         print "   Usage: zen.php  [--config_file=zen.ini] -$target apache_user apache_group\n";
@@ -276,9 +296,7 @@ class ZenTargets {
     case "clean_cache_data": 
     case "copy_class_files": 
     case "copy_config_files":
-    case "create_database":  
     case "cvs_update":       
-    case "drop_database":  
       {
         print "   Usage: install.php [--config_file=zen.ini] -$target\n";
         break;
@@ -419,8 +437,9 @@ class ZenTargets {
    * Back up database files
    *
    * @param string $table if provided, only tables listed here will be backed up (separate names with a comma)
+   * @param boolean $supress (system use only)if true, then errors will be ignored
    */
-  function _backup_database( $table = null ) {
+  function _backup_database( $table = null, $supress = false ) {
     print "- Backing up database contents\n";
 
     // determine which tables to backup
@@ -432,20 +451,31 @@ class ZenTargets {
     $source = $this->_ini['directories']['dir_config'];
     
     // backup the database schema
-    if( !$this->_backup_file('database.xml', $source, $dir, 'database.xml.schema') ) {
+    if( !$this->_backup_file('database.xml', $source, $dir, 'database.xml') && !$supress ) {
       $this->_printerr("_backup_database", "Could not backup schema file");
       return false;
     }
 
+    // turn off error reporting for now
+    if( $supress ) {
+      $lvl = $GLOBALS['installMode'];
+      $GLOBALS['installMode'] = null;
+    }
+
     // perform backups
-    $dbc =& Zen::getDbConnection();
-    $dbx = new ZenDBXML( $dbc, $source.'/database.xml', ZenUtils::getIni('debug','develop_mode') );
+    $dbc =& $this->getDbConnection();
+    $dbx = new ZenDBXML( $dbc, $source.'/database.xml', $this->_ini['debug']['develop_mode'] );
     $res = $dbx->dumpDatabaseData( $dir, $tables, true );
     print "   {$res[1]} of {$res[0]} statements processed successfully\n";
-    if( $res[0] != $res[1] ) {
+    if( $res[0] != $res[1] && !$supress ) {
       $diff = $res[0] - $res[1];
       $this->_printerr("_backup_database", "Backup error: $diff statements failed");
       return false;
+    }
+
+    // return error reporting to normal
+    if( $supress ) {
+      $GLOBALS['installMode'] = $lvl;
     }
 
     return true;
@@ -1038,12 +1068,10 @@ class ZenTargets {
    * @return boolean success
    */
   function _full_install( ) {
-    //todo
-    print "- full_install not ready for use yet\n";
-    return true;
+    print "PERFORMING FULL INSTALLATION\n\n";
 
     // confirm
-    $str = "This will completely destroy any existing data in the target directory or database, continue?";
+    $str = "This will destroy data in the target directories and database, continue?";
     if( $this->_confirm($str) != 'y') {
       print "   Aborted!\n";
       return false;
@@ -1062,10 +1090,10 @@ class ZenTargets {
     if( !$this->_verify_db_connection() ) { return false; }
 
     // create database
-    //todo
+    if( !$this->_create_database($this->_ini['directories']['dir_config']) ) { return false; }
 
     // load initial data
-    //todo    
+    if( !$this->_load_data($this->_ini['directories']['dir_config']) ) { return false; }
 
     return $success;
   }
@@ -1201,16 +1229,20 @@ class ZenTargets {
     print "   Connecting to {$db['db_type']}//{$db['db_user']}@{$db['db_host']}:{$db['db_instance']}\n";
     // establish and test connection
     $GLOBALS['dbConnection'] = null;  //delete any cached connection
-    $dbc = $this->_get_db_connection();
+    $dbc = $this->getDbConnection();
     return $dbc->isConnected();
   }
 
-  /** Establish a database connection */
-  function &_get_db_connection() {
+  /** 
+   * Establish a database connection 
+   *
+   * @return ZenDbConnection
+   */
+  function &getDbConnection() {
     // find adodb and include
     $dir = $this->_ini['directories']['dir_classes'];
     if( !@is_dir($dir) ) {
-      $this->_printerr("_get_db_connection","Cannot find the class files to enable adodb, unable to establish db connection");
+      $this->_printerr("getDbConnection","Cannot find the class files to enable adodb, unable to establish db connection");
       return false;
     }
     include_once("$dir/adodb/adodb.inc.php");
@@ -1219,35 +1251,71 @@ class ZenTargets {
   }
 
   /**
-   * Create a database schema.  If the schema already exists, it will be deleted!!
+   * Create a database schema.  If the schema already exists, it will be deleted before starting!
    *
    * Note that this will not create the database instance.  Users must manually create the
    * database instance, user and password.
    *
-   * @param boolean perform if false, then simply display what would happen during a create
+   * @param string $dataDirectory is the directory which contains the database.xml schema
    * @return boolean
    */
-  function _create_database() {
+  function _create_database( $dataDirectory ) {
     // drop database and backup first, supress errors
+    $this->_backup_database(null, true);
 
     // add new schema
-
-    // load new data
-    
+    print "- Create database schema\n";
+    $dbc =& $this->getDbConnection();
+    $dbx = new ZenDBXML( $dbc, $dataDirectory.'/database.xml', $this->_ini['debug']['develop_mode'] );
+    $res = $dbx->createDbSchema( true );
+    print "   {$res[1]} of {$res[0]} tables created successfully\n";
+    if( $res[0] != $res[1] ) {
+      $diff = $res[0] - $res[1];
+      $this->_printerr("_drop_database", "Create error: $diff statements failed");
+      return false;
+    }
+    return true;
   }
 
   /**
    * Drop a database schema.  Be very careful using this!
    *
-   * @param boolean $supress (system use only) supresses errors and confirm if this is part of a create(i.e. precautionary)
+   * @param string $table if provided, only tables listed here(separated with comma) will be dropped
+   * @return boolean
    */
-  function _drop_database( $supress = false ) {
+  function _drop_database( $table = null ) {
     // confirm before dropping
+    $msg = "This will destroy any existing data(it will be backed up first), continue?";
+    if( $this->_confirm($msg, array('y','n'), 'n') != 'y' ) {
+      print "   Cancelled\n";
+      return false;
+    }
+
+    // decide which tables to do
+    if( $table ) { $tables = explode(',',$table); }
+    else { $tables = null; }
 
     // backup schema and data
-    
-    // drop tables
+    if( !$this->_backup_database($table, true) ) {
+      $this->_printerr("_drop_database", "Unable to backup db tables, aborting");
+      return false;
+    }
 
+    // drop tables
+    print "- Dropping existing database schema\n";
+    $dbc =& $this->getDbConnection();
+    $dbx = new ZenDBXML( $dbc, 
+                         $this->_ini['directories']['dir_config'].'/database.xml', 
+                         $this->_ini['debug']['develop_mode'] );
+    $res = $dbx->dropDbSchema( $tables );
+    print "   {$res[1]} of {$res[0]} tables dropped successfully\n";
+    if( $res[0] != $res[1] ) {
+      $diff = $res[0] - $res[1];
+      $this->_printerr("_drop_database", "Drop error: $diff statements failed");
+      return false;
+    }
+
+    return true;
   }
 
   /**
@@ -1256,17 +1324,39 @@ class ZenTargets {
    * <b>NOTE</b>: the default behavior is to drop all existing data.  You must override this to load data
    * without deleting old data first.
    * 
-   * @param string $dir the directory where xml data will be loaded from
+   * @param string $dir the directory containing xml files that data is to be loaded from
+   * @param string $table if provided, is a list of tables(comma separated) to load, otherwise all tables are loaded
    * @param boolean $dropOldData if true, all data in database will be dropped before loading new data
    */
-  function _load_data( $dir, $dropOldData = true ) {
+  function _load_data( $dir, $table = null, $dropOldData = true ) {
+    print "- Loading Data from $dir\n";
+
     // confirm data directory
+    if( !@dir($dir) ) {
+      $this->_printerr("_load_data", "$dir does not exist! Aborting");
+      return false;
+    }
 
     // backup existing data
+    if( !$this->_backup_database(null) ) {
+      return false;
+    }
 
-    // drop existing data
+    // parse table param
+    if( $table && !is_array($table) ) { $table = explode(',', $table); }
 
-    // load new data
+    // load the new data
+    $source = $this->_ini['directories']['dir_config']."/database.xml";
+    $dbc =& $this->getDbConnection();
+    $dbx = new ZenDBXML( $dbc, $source, $this->_ini['debug']['develop_mode'] );                 
+    $res = $dbx->loadDatabaseData( $dir, $table, $dropOldData ); 
+    print "   {$res[1]} of {$res[0]} tables loaded successfully\n";
+    if( $res[0] != $res[1] ) {
+      $diff = $res[0] - $res[1];
+      $this->_printerr("_load_data", "Load error: $diff tables failed to load correctly");
+      return false;
+    }
+    return true;
   }
 
   /**
@@ -1292,8 +1382,8 @@ class ZenTargets {
 
     // create schema parser and backup utility
     $source = $this->_ini['directories']['dir_config']."/database.xml";
-    $dbc =& Zen::getDbConnection();
-    $dbx = new ZenDBXML( $dbc, $source, ZenUtils::getIni('debug','develop_mode') );                 
+    $dbc =& $this->getDbConnection();
+    $dbx = new ZenDBXML( $dbc, $source, $this->_ini['debug']['develop_mode'] );                 
 
     // perform the update (or preview)
     if( $perform ) {
@@ -1318,7 +1408,7 @@ class ZenTargets {
       }
     }
     
-    return $this->_synchronize_db_data($newschema, $perform);
+    return $this->_synchronize_db_data($newschema, $dbx, $perform);
   }
 
   /*****************************************************
@@ -1413,7 +1503,7 @@ class ZenTargets {
    * @param mixed $default is the value to substitute if not found
    * @return boolean true or false
    */
-  function _getBooleanParm( $target, $index, $default = false ) {
+  function _getBooleanParm( $target, $index, $default = null ) {
     $p = $this->_getParm($target,$index);
     if( !$p ) { return $default; }
     if( is_bool($p) ) { return $p; }

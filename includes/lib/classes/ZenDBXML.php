@@ -41,9 +41,7 @@ class ZenDBXML {
       $results[0]++;
       $text = "<dataDump>\n";
       $file = $output."/$t.xml";
-      $query = Zen::getNewQuery();
-      $query->table($t);
-      $rows = $query->select();
+      $rows = Zen::simpleQuery($t);
       foreach($rows as $r) {
         $text .= "\t<dataRow>\n";
         foreach($r as $col=>$val) {
@@ -53,7 +51,7 @@ class ZenDBXML {
       }
       $text .= "</dataDump>\n";
       if( !$this->_dumpToFile($output, $text, $compress) ) {
-        ZenUtils::safeDebug($this, 'dumpDatabaseData', "Unable to dump $t!", 20, LVL_ERROR);
+        ZenUtils::safeDebug($this, 'dumpDatabaseData', "Unable to dump $t!", 220, LVL_ERROR);
       }
       else { $results[1]++; }
     }
@@ -61,13 +59,16 @@ class ZenDBXML {
   }
 
   /**
-   * Loads xml data into database
+   * Loads xml data into database.  This will load all files in the source
+   * directory ending with .xml or .gz, but not the database.xml file 
+   * (this is the schema file)
    *
    * @param string $dir is the source directory where xml dump is stored
    * @param string $table if provided, then only this table will be loaded
+   * @param boolean $drop if true, drops data from table before loading new data
    * @return array [0]tables attempted, [1]tables successfully loaded
    */
-  function loadDatabaseData( $dir, $table = null ) {
+  function loadDatabaseData( $dir, $table = null, $drop = true ) {
     $nums = array(0,0);
     $dh = opendir($dir);
     if( !$dh ) { 
@@ -76,7 +77,7 @@ class ZenDBXML {
     }
     $files = array();
     while( ($file = readdir($dh)) == true ) {
-      if( !strpos($file, '.') === 0 && preg_match('/\.(gz|xml)$/', $file) ) {
+      if( !strpos($file, '.') === 0 && $file != 'database.xml' && preg_match('/\.(gz|xml)$/', $file) ) {
         $files[] = $file;
       }
       else if( !strpos($file, '.')===0 ) {
@@ -127,27 +128,33 @@ class ZenDBXML {
   }
   
   /**
-   * Loads a schema from xml to the database
+   * Loads a schema from xml to the database.  The schema passed in the constructor of
+   * this object will be used for constructing new db.
    *
-   * @param string $xmlfile is the xml file to load
    * @param boolean $drop will cause the load to drop each table before creation
    * @return array [0]number of adds attempted, [1]number of adds succeeded
    */
-  function loadSchemaToDB( $xmlfile, $drop = false ) {
+  function createDbSchema( $drop = false ) {
     $num = array(0,0);
-    $schema = new ZenDbSchema( $xmlfile, false ); 
-    $tables = $schema->getAllTables();
+    $tables = $this->_schema->getAllTables();
     foreach($tables as $name=>$table) {
+      // do not create abstract tables
+      if( $table['is_abstract'] ) { continue; }
+
       $num[0]++;
+
+      // drop tables before creating
       $dbt = $this->_dbobj->makeTableName($name);
       if( $drop ) {
         $sql = $this->_dbTypeInfo->dropTableSyntax($dbt);
         if( !$this->_dbobj->execute($sql) ) {
-          ZenUtils::safeDebug($this, 'loadSchemaToDB', 
-                              "Unable to drop table: $name", 00, LVL_NOTE);           
+          ZenUtils::safeDebug($this, 'createDbSchema', 
+                              "Table $name not dropped(probably ok)", 00, LVL_NOTE);           
         }        
       }
-      $inheritedFields = $schema->getInheritedFields($name);
+
+      // assign abstract fields and create
+      $inheritedFields = $this->_schema->getInheritedFields($name);
       if( is_array($inheritedFields) ) {
         foreach( $inheritedFields as $key=>$props ) {
           if( !isset($table['fields'][$key]) ) {
@@ -156,14 +163,15 @@ class ZenDBXML {
         }
       }
       $sql = $this->_dbTypeInfo->addTableSyntax($dbt, $table['fields'], 
-                                                ($table['transactions'] == true));
-      if( $this->_dbobj->execute($sql) ) { 
-        $indices = $schema->getMergedIndices($name);
+                                                ($table['has_transactions'] == true));
+      if( $this->_dbobj->execute($sql) ) {
+        // create indices for table
+        $indices = $this->_schema->getMergedIndices($name);
         if( $indices ) {
           foreach($indices as $index=>$columns) {
             $sql = $this->_dbTypeInfo->addIndexSyntax($index, $dbt, $columns, false);
             if( !$this->_dbobj->execute($sql) ) {
-              ZenUtils::safeDebug($this, 'loadSchemaToDB', 
+              ZenUtils::safeDebug($this, 'createDbSchema', 
                                   "Unable to create index: $index", 220, LVL_ERROR); 
             }            
           }
@@ -171,9 +179,33 @@ class ZenDBXML {
         $num[1]++;
       }
       else {
-        ZenUtils::safeDebug($this, 'loadSchemaToDB', "Unable to load table: $name", 
+        ZenUtils::safeDebug($this, 'createDbSchema', "Unable to create table: $name", 
                             220, LVL_ERROR);
       }
+    }
+    return $num;
+  }
+
+  /**
+   * Drop tables from database.  This does not create a backup, use with caution!!
+   *
+   * @param mixed $tables is array of tables or single table to drop (all if not specified)
+   * @return array [0]number of drops attempted, [1]number of drops succeeded
+   */
+  function dropDbSchema( $tables = null ) {
+    $num = array(0,0);
+    if( $tables ) { $tables = is_array($tables)? $tables : array($tables); }
+    else { $tables = $this->_schema->getAllTables(); }
+    foreach($tables as $name=>$table) {
+      if( $table['is_abstract'] ) { continue; } // skip abstract tables
+      $num[0]++;
+      $dbt = $this->_dbobj->makeTableName($name);
+      $sql = $this->_dbTypeInfo->dropTableSyntax($dbt);
+      if( !$this->_dbobj->execute($sql) ) {
+        ZenUtils::safeDebug($this, 'dropDbSchema', 
+                            "Unable to drop table: $name", 220, LVL_ERROR);
+      }
+      else { $num[1]++; }
     }
     return $num;
   }
@@ -195,7 +227,7 @@ class ZenDBXML {
         $sql = $this->_dbTypeInfo->dropTableSyntax( $tbl );
         break;
       case "addtable":
-        $sql = $this->_dbTypeInfo->addTableSyntax($tbl, $u['columns'], $u['transactions']);
+        $sql = $this->_dbTypeInfo->addTableSyntax($tbl, $u['columns'], $u['has_transactions']);
         break;
       case "dropcolumn":
         $sql = $this->_dbTypeInfo->dropColumnSyntax($tbl, $u['column']);
