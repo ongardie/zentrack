@@ -2,7 +2,7 @@
   /* 
   **  zenTrack Class
   **
-  **  Author: Kato "PHPzen"
+  **  Author: Kato "phpzen"
   **  Description: Ticketing system functions
   **  Version: See CVS Repository for version information
   **  Created: 02/22/21
@@ -304,7 +304,7 @@ class zenTrack extends zen {
    
    /*
     *  PROJECT ADMINISTRATION 
-   */         
+   */
    
 
    function add_project( $params ) {
@@ -316,7 +316,7 @@ class zenTrack extends zen {
       $params["type_id"] = $this->projectTypeID();
       unset($params["est_hours"]);
       unset($params["wkd_hours"]);
-      return( $this->add_ticket($params, $archive_flag) );
+      return( $this->add_ticket($params) );
    }
    
    function delete_project( $pid, $archive_flag = 0 ) {
@@ -349,8 +349,8 @@ class zenTrack extends zen {
       $fields = $this->db_get_fields($this->table_tickets_archived);
       $query = "INSERT INTO "
 	.$this->table_tickets_archived." ($fields) SELECT $fields FROM ".$this->table_tickets
-	." WHERE id = $pid";     
-      $res = $this->db_result($query);            
+	." WHERE id = $pid";
+      $res = $this->db_result($query);
       $this->archive_log($pid);
       $this->delete_project($id);
       return( $res );
@@ -514,7 +514,7 @@ class zenTrack extends zen {
 	    if( $user_id ) {
 	       $logParams["user_id"] = $name;
 	    }
-	    $logParams["bin_id"] = $t["bin_id"];	    
+	    $logParams["bin_id"] = $t["bin_id"];
 	    if( $hours )
 	      $logParams["hours"] = $hours;
 	    if( $comments )
@@ -803,7 +803,7 @@ class zenTrack extends zen {
 	 $this->assign_ticket($id,$user_id);
 	 return( 1 );
       }
-   }        
+   }
    
    /*
     *  TICKETS ADMINISTRATION
@@ -815,7 +815,16 @@ class zenTrack extends zen {
       // given params and return the new
       // insert ID for that ticket
       
-      return( $this->db_insert($this->table_tickets, $params) );      
+     $id = $this->db_insert($this->table_tickets,$params);
+     if( $id ) {
+       $lParams = array(
+			"action"   =>   "CREATED",
+			"user_id"   =>   $params["creator_id"],
+			"bin_id"    =>   $params["bin_id"]
+			);
+       $this->add_log($id,$lParams);
+     }
+     return $id;
    }
 
    function archive_ticket( $id ) { 
@@ -1023,8 +1032,8 @@ class zenTrack extends zen {
 	 $access = $params["access"];
 	 unset($params["access"]);
       }
-      $params["passwd"] = ($params["passwd"])?
-	$this->encval($params["passwd"]) : $this->encval($params["lname"]);
+      $params["passphrase"] = ($params["passphrase"])?
+	$this->encval($params["passphrase"]) : $this->encval($params["lname"]);
       $table = $this->table_users;
       $id = $this->db_insert($table, $params);
       if( $id ) {
@@ -1052,8 +1061,8 @@ class zenTrack extends zen {
      // do not encrypt the passphrase, this is done
      // automatically
       
-      if( $params["passwd"] )
-	$params["passwd"] = $this->encval($params["passwd"]);
+      if( $params["passphrase"] )
+	$params["passphrase"] = $this->encval($params["passphrase"]);
       $set = $this->makeInsertVals($params,1);
       $query = "UPDATE ".$this->table_users." SET $set WHERE user_id = $user_id";
       $this->addDebug("update_user()Query",$query,2);
@@ -1128,7 +1137,7 @@ class zenTrack extends zen {
      // for a user.  This will probably be the users last name
 
      $user = $this->get_user($user_id);
-     $params["passwd"] = $user["lname"];
+     $params["passphrase"] = $user["lname"];
      return $this->update_user($user_id, $params);
    }
    
@@ -1240,7 +1249,7 @@ class zenTrack extends zen {
       // returns the user's user_id
       
       $query = "select user_id from ".$this->table_users
-	." where login = '$username' and passwd = '".$this->encval($passphrase)."' and active > 0";
+	." where login = '$username' and passphrase = '".$this->encval($passphrase)."' and active > 0";
       $user_id = $this->db_get($query);
 			$this->addDebug("zentrack.class:login_user($user_id)",$query,2);
       if( $user_id )
@@ -1475,17 +1484,17 @@ class zenTrack extends zen {
       // $recipients, $sender, and $cc can all be an array
       
       // figure out who sent it
-	$message = (get_magic_quotes_gpc())? stripslashes($message) : $message;
+        $message = (get_magic_quotes_gpc())? stripslashes($message) : $message;
 	$message = preg_replace(
 				array("#&lt;#", "#&gt;#", "#&quot;#", "#&amp;#"),
 				array("<",">",'"',"&"),
 				$message);
       if( !$sender ) {
-	 $sender_address = $this->settings["botName"]."<".$this->settings["botEmail"].">";
+	 $sender_address = $this->settings["botEmail"];
       } else {
 	 if( eregi("^[0-9]+$", $sender) ) {
 	    $s = $this->get_user($sender);
-	    $sender_address = $this->formatName($s)." <$s[email]>";
+	    $sender_address = $s["email"];
 	 } else {
 	    $sender_address = $sender;
 	 }
@@ -1499,7 +1508,7 @@ class zenTrack extends zen {
 	   $recipient_address .= ", ";
 	 if( eregi("^[0-9]+$", $r) ) {
 	    $s = $this->get_user($r);
-	    $recipient_address .= $this->formatName($s)." <$s[email]>";
+	    $recipient_address .= $s["email"];
 	 } else {
 	    $recipient_address .= $r;
 	 }	 
@@ -1515,7 +1524,7 @@ class zenTrack extends zen {
 	      $cc_address .= ", ";
 	    if( eregi("^[0-9]+$", $c) ) {
 	       $s = $this->get_user($c);
-	       $cc_address .= $this->formatName($s)." <$s[email]>";
+	       $cc_address .= $s["email"];
 	    } else {
 	       $cc_address .= $c;
 	    }
@@ -1525,7 +1534,7 @@ class zenTrack extends zen {
       
       // finalize and send the message
       $message = (get_magic_quotes_gpc())? $message : addslashes($message);
-      $subject = (get_magic_quotes_gpc())? $subject : addslashes($message);
+      $subject = (get_magic_quotes_gpc())? $subject : addslashes($subject);
       return( mail( $recipient_address, $subject, $message, $headers ) );      
    }
    
@@ -2105,7 +2114,7 @@ class zenTrack extends zen {
       $query = "SELECT user_id,bin_id FROM "
 	.$this->table_logs
 	." WHERE ticket_id = $id"
-	." AND (action = 'MOVED' OR action = 'ASSIGNED')"
+	." AND (action = 'MOVED' OR action = 'ASSIGNED' OR action = 'CREATED')"
 	." ORDER BY created DESC"
 	." LIMIT 1";
       return( $this->db_quickIndexed($query) );
@@ -2179,11 +2188,11 @@ class zenTrack extends zen {
       $this->tasks       = $this->getTasks();
       
       if( $user ) {
-	 			$this->user = $this->get_user($user_id);
-	 			$this->access = $this->get_access($user_id);
+	$this->user = $this->get_user($user_id);
+	$this->access = $this->get_access($user_id);
       }
       if( $language )
-			$this->language = $language;
+	$this->language = $language;
    }
    
   

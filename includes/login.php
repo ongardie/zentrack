@@ -15,8 +15,8 @@
      if( $username && isset($passphrase) ) {
 	$login_id = $zen->login_user( $username, $passphrase );
 	if( $login_id && $zen->demo_mode != "on" 
-			&& $zen->user["initials"] != "GUEST" 
-			&& $zen->encval($zen->user["lname"]) == $zen->encval($passphrase) ) {
+	    && $zen->user["initials"] != "GUEST" 
+	    && $zen->encval($zen->user["lname"]) == $zen->encval($passphrase) ) {
 	   // this will redirect the user
 	   // to a login screen where they can
 	   // change their passphrase, since it is 
@@ -36,6 +36,7 @@
 	   $login_name  = $zen->user["fname"]." ".$zen->user["lname"];
 	   $login_inits = $zen->user["initials"];
 	   $login_bin   = $zen->user["homebin"];
+	   $zentrackUsername = $username;
 	   setcookie("zentrackUsername", $username, time()+2592000, "/", ".$HTTP_HOST");
 	   $skip = 1;
 	   unset($TODO);

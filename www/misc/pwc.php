@@ -30,7 +30,7 @@
 
   	if( !$errs ) {
   	  $params = array();
-  	  $params["passwd"] = $newPass1;
+  	  $params["passphrase"] = $newPass1;
   	  if( $zen->demo_mode == "on" ) {
 			  $msg = "Your request was successful, but this is a demo site, so the passphrase was not altered";
 				$skip = 1;

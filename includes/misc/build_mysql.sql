@@ -225,7 +225,7 @@ CREATE TABLE ZENTRACK_USERS (
   user_id int(12) NOT NULL auto_increment,
   login varchar(25) default NULL,
   access_level int(2) default NULL,
-  passwd varchar(32) default NULL,
+  passphrase varchar(32) default NULL,
   lname varchar(50) default NULL,
   fname varchar(50) default NULL,
   initials varchar(5) default NULL,

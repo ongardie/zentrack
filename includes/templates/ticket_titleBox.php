@@ -48,7 +48,7 @@
        $actions = array(
 			"accept"  => 1,			
 			"assign"  => 0,		     
-			"reject"  => 0,
+			"reject"  => 1,
 			"yank"    => 0,
 			"reopen"  => 0,			
 			"print"   => 1,
@@ -61,3 +61,4 @@
     </table></td>
   </tr>
 </table>
+

@@ -10,6 +10,8 @@
   include("./admin_header.php");
   $page_tile = "New User Submit";
 
+  if( !$active )
+    $active = 0;
   $zen->cleanInput($user_fields);
   foreach($user_required as $u) {
     if( !strlen($$u) ) {

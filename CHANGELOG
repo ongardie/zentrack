@@ -4,18 +4,19 @@
  Clean, simple interface, fully adaptable administration,
  100 percent object oriented and database abstracted. 
 
------ this version -----
+----- v2.0.3 Live () ------
 
-Added feature to display "all users" for the user admin screen.
+Created a zenTrack project with useful tickets to begin new users, and explain 
+to them how to configure their system accordingly.
 
-Fixed bug with creating new users that caused their access level to
-be set to null instead of the value entered.
+Fixed several link bugs associated with ticketView.php and attachmentView.php
 
-Added title to the heading of the page for ticket and project views.
+Fixed -DEBUG OVERVIEW- in footer to include some highly valuable info
+for troubleshooting support requests.
 
-Added the "note" type to the ticket types.  This type will auto-close
-when created, preventing the need for a user to close it.  Thus, it 
-is stored only for documentation.
+Added Postgres build/seed files.  Thanks to jofry@users.sourceforge.net!
+
+----- v2.0.2 Beta (05-06-02) -----
 
 Changed "password" to "passphrase" for Sybase compatibility.
 

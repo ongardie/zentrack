@@ -388,8 +388,8 @@ class DB {
       $this->db_link = &ADONewConnection($this->database_type);
       $ADODB_FETCH_MODE = ADODB_FETCH_ASSOC;      
       if( $this->sql_debug == "on" )
-				$this->db_link->debug = true;
-      $this->db_connect($host, $user, $passphrase, $database);
+        $this->db_link->debug = true;
+        $this->db_connect($host, $user, $passphrase, $database);
    }
       
 }
