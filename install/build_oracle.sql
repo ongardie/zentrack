@@ -254,7 +254,7 @@ CREATE TABLE ZENTRACK_REPORTS_TEMP (
    chart_type varchar2(25) default NULL, 
    chart_options varchar2(2000), 
    data_set varchar2(2000), 
-   created date default '1900-01-01 00:00:00', 
+   created date default to_date('1900-01-01','YYYY-MM-DD'), 
    chart_combine number(1) default NULL, 
    text_output number(1) default NULL, 
    show_data_vals number(1) default NULL, 
