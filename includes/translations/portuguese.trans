@@ -1,3442 +1,3616 @@
 # This is the translation template file. It is automatically generated from developers/tr-parser.php
 # If you have any questions on how to create a translation file please direct them to zentrack support
 
-#file "D:\zentrack\zentrack/www/actions/assign.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/actions/assign.php"
 #args "array($r)"
 msgid " ? is required"
-msgstr "? é obrigatório"
+msgstr "? é requerido"
 
 
-#file "D:\zentrack\zentrack/includes/templates/listTickets_workFormat.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/listTickets_workFormat.php"
 #args ""
 msgid "%"
-msgstr "%"
+msgstr ""
 
 
-#file "D:\zentrack\zentrack/www/actions/upload.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/actions/upload.php"
 #args "array($file_type)"
 msgid "'?' is not an allowed file extension - See your systems administrator for more information"
-msgstr "'?' não é uma extensão válida de arquivo - Para mais informações; consulte o Administrador do seu sistema"
+msgstr "'?' não é uma extensão válida de arquivo - Para mais informações consulte o Administrador do sistema"
 
 
-#file "D:\zentrack\zentrack/includes/templates/userAdd.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/userAdd.php"
 #args ""
 msgid "* = required"
-msgstr "* = obrigatório"
+msgstr "* = requerido"
 
 
-#file "D:\zentrack\zentrack/includes/templates/searchList.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/searchList.php"
 #args ""
 msgid "1 Match"
 msgstr "1 Ocorrência"
 
 
-#file "D:\zentrack\zentrack/www/actions/close.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/actions/close.php"
 #args "array($zen->types[$c['type_id']], $c['id'])"
 msgid "? ? is not completed."
-msgstr "? ? não foi completado."
+msgstr "? ? não foi concluído."
 
 
-#file "D:\zentrack\zentrack/includes/templates/searchList.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/searchList.php"
 #args "array($c)"
 msgid "? Matches"
 msgstr "? Ocorrências"
 
 
-#file "D:\zentrack\zentrack/www/admin/config.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/admin/config.php"
 #args "array($zen->settings["system_name"])"
 msgid "? Settings"
 msgstr "? Configurações"
 
 
-#file "D:\zentrack\zentrack/www/admin/bins.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/admin/bins.php"
 #args "array($j)"
 msgid "? bins were saved to the database. Updates complete"
-msgstr "? Repositórios foram armazenados no banco de dados. Atualizações completadas"
+msgstr "? repositórios foram salvos no banco de dados. Alterações concluídas"
 
 
-#file "D:\zentrack\zentrack/www/actions/editSubmit.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/actions/editSubmit.php"
 #args "array(ucfirst($r))"
 msgid "? is a required field"
-msgstr "? é um campo obrigatório"
+msgstr "? é um campo requerido"
 
 
-#file "D:\zentrack\zentrack/www/actions/email.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/actions/email.php"
 #args "array($r)"
 msgid "? is required"
-msgstr "? é obrigatório"
+msgstr "? é requerido"
 
 
-#file "D:\zentrack\zentrack/www/admin/config.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/admin/config.php"
 #args "array($k)"
 msgid "? must be set to 'on' or 'off'"
-msgstr "Deve ser definido ? como 'on' ou 'off'"
+msgstr "? Deve ser definido como 'Ligado' ou 'Desligado'"
 
 
-#file "D:\zentrack\zentrack/www/admin/config.php"
+
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/admin/config.php"
 #args "array($k)"
 msgid "? must have a value, use zero instead of a blank"
 msgstr "? deve ter um valor, use zero no lugar de branco"
 
 
-#file "D:\zentrack\zentrack/www/admin/config.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/admin/config.php"
 #args "array($j, count($newparams))"
 msgid "? of ? settings changed were successfully updated"
-msgstr "? de ? mudanças de configuração foram salvas no banco de dados com êxito"
+msgstr "? de ? alterações nas configurações foram salvas com êxito"
 
 
-#file "D:\zentrack\zentrack/includes/leftMain.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/leftMain.php"
 #args "array($num,count($zen->bins))"
 msgid "? open tickets in ? bins"
-msgstr "Existem ? Tickets abertos em ? Repositórios"
+msgstr "? tickets abertos em ? repositórios"
 
 
-#file "D:\zentrack\zentrack/www/admin/priorities.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/admin/priorities.php"
 #args "array($j)"
 msgid "? priorities were saved to the database. Updates complete"
-msgstr "? Prioridades foram salvas no banco de dados. Atualização completada"
+msgstr "? prioridades salvas no banco de dados. Alterações concluídas"
 
 
-#file "D:\zentrack\zentrack/www/admin/systems.php"
+
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/admin/systems.php"
 #args "array($j)"
 msgid "? systems were saved to the database. Updates complete"
-msgstr "? Sistemas foram salvos no banco de dados. Atualização completada"
+msgstr "? sistemas salvos no banco de dados. Alterações concluídas"
 
 
-#file "D:\zentrack\zentrack/www/admin/tasks.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/admin/tasks.php"
 #args "array($j)"
 msgid "? tasks were saved to the database. Updates complete"
-msgstr "? Tarefas foram salvas no banco de dados. Atualização completada"
+msgstr "? tarefas salvas no banco de dados. Alterações concluídas"
 
 
-#file "D:\zentrack\zentrack/www/admin/types.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/admin/types.php"
 #args "array($j)"
 msgid "? types were saved to the database. Updates complete"
-msgstr "? Tipos foram salvos no banco de dados. Atualização completada"
+msgstr "? tipos salvos no banco de dados. Alterações concluídas"
 
 
-#file "D:\zentrack\zentrack/www/actions/addToNotify.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/actions/addToNotify.php"
 #args "array($u)"
 msgid "? was not a valid user id"
-msgstr "? não é uma ID válida de usuário"
+msgstr "? não é uma ID de usário válida"
 
 
-#file "D:\zentrack\zentrack/includes/templates/reportsOptionsMenu.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/reportsOptionsMenu.php"
 #args ""
 msgid "A large number of elements will appear better in a line chart, bar charts tend to be more pleasing with smaller numbers."
-msgstr "Um número grande de elementos é melhor visualizado em um gráfico de linhas, gráficos de barra são mais indicados com números menores"
+msgstr "Um número grande de elementos é melhor visualizado em um gráfico de linhas, gráficos de barra são indicados para números menores"
 
 
-#file "D:\zentrack\zentrack/includes/leftHelp.php"
-#args ""
-msgid "API"
-msgstr "API"
 
-
-#file "D:\zentrack\zentrack/www/actions/print.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/actions/print.php"
 #args ""
 msgid "ATC"
 msgstr "ATC"
 
 
-#file "D:\zentrack\zentrack/www/help/install.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/help/install.php"
 #args "array($zen->settings["system_name"])"
 msgid "About ?"
-msgstr "Cerca de ?"
+msgstr "Sobre ? "
 
 
-#file "D:\zentrack\zentrack/includes/leftHelp.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/leftHelp.php"
 #args ""
 msgid "About"
-msgstr "Cerca de"
+msgstr "Sobre"
 
 
-#file "D:\zentrack\zentrack/www/addSubmit.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/ticket_actionBar.php"
+#args ""
+msgid "Accept"
+msgstr "Aceitar"
+
+
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/addSubmit.php"
 #args ""
 msgid "Access Error"
-msgstr "Erro de acesso"
+msgstr "Erro de ccesso"
 
 
-#file "D:\zentrack\zentrack/includes/templates/userSearchList.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/userSearchList.php"
 #args ""
 msgid "Access"
 msgstr "Acesso"
 
 
-#file "D:\zentrack\zentrack/includes/templates/optionsMenu.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/optionsMenu.php"
 #args ""
 msgid "Account Options"
-msgstr "Opções da conta de usuário"
+msgstr "Opções da conta"
 
 
-#file "D:\zentrack\zentrack/includes/templates/userAdd.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/userAdd.php"
 #args ""
+msgid "Account Settings"
 msgid "Configurações da conta de usuário"
-msgstr ""
 
 
-#file "D:\zentrack\zentrack/includes/templates/userSearchList.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/userSearchList.php"
 #args ""
 msgid "Account is Active"
-msgstr "Conta de usuário ativa"
+msgstr "Conta ativa"
 
 
-#file "D:\zentrack\zentrack/includes/templates/searchLogList.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/searchLogList.php"
 #args ""
 msgid "Action Taken"
-msgstr "Ação realizada"
+msgstr "Ação tomada"
 
 
-#file "D:\zentrack\zentrack/includes/templates/searchLogForm.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/searchLogForm.php"
 #args ""
 msgid "Action"
 msgstr "Ação"
 
 
-#file "D:\zentrack\zentrack/includes/templates/configForm.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/configForm.php"
 #args ""
 msgid "Active"
 msgstr "Ativo"
 
 
-#file "D:\zentrack\zentrack/includes/templates/ticket_attachmentsBox.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/ticket_attachmentsBox.php"
 #args ""
 msgid "Add Attachment"
-msgstr "Adicionar Arquivo"
+msgstr "Adicionar anexo"
 
 
-#file "D:\zentrack\zentrack/includes/templates/actions/notify.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/actions/notify.php"
 #args ""
 msgid "Add Notify Recipient"
-msgstr "Adicionar Receptor de Notificações"
+msgstr "Adicionar destinatário para notificação"
 
 
-#file "D:\zentrack\zentrack/includes/templates/ticket_notifyBox.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/ticket_notifyBox.php"
 #args ""
 msgid "Add Recipient"
-msgstr "Adicionar Receptor"
+msgstr "Adicionar destinatário"
 
 
-#file "D:\zentrack\zentrack/includes/templates/reportsOptionsMenu.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/reportsOptionsMenu.php"
 #args ""
 msgid "Add a total figure"
-msgstr "Adicionar um gráfico com totais"
+msgstr "Adicionar um gráfico de totais"
 
 
-#file "D:\zentrack\zentrack/includes/templates/reportsOptionsMenu.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/reportsOptionsMenu.php"
 #args ""
 msgid "Add an average figure"
-msgstr "Adicionar um gráfico com médias"
+msgstr "Adicionar um gráfico de médias"
 
 
-#file "D:\zentrack\zentrack/includes/templates/actions/notify.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/actions/notify.php"
 #args ""
 msgid "Add recipients to the notify list for this ticket"
-msgstr "Adicionar receptores na lista de notificações para este Ticket"
+msgstr "Adicionar destinatários na lista de notificações para este ticket"
 
 
-#file "D:\zentrack\zentrack/includes/templates/ticket_tasksBox.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/ticket_tasksBox.php"
 #args ""
 msgid "Add ticket to project"
-msgstr "Adicionar Ticket ao projeto"
+msgstr "Adicionar ticket ao projeto"
 
 
-#file "D:\zentrack\zentrack/includes/templates/actions/notify.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/actions/notify.php"
 #args ""
 msgid "Add"
 msgstr "Adicionar"
 
 
-#file "D:\zentrack\zentrack/www/admin/access.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/admin/access.php"
 #args ""
 msgid "Admin Section"
-msgstr "Seção do Administrador"
+msgstr "Administração"
 
 
-#file "D:\zentrack\zentrack/includes/leftAdmin.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/leftAdmin.php"
 #args ""
 msgid "Admin"
 msgstr "Administrador"
 
 
-#file "D:\zentrack\zentrack/www/admin/admin_header.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/admin/admin_header.php"
 #args ""
 msgid "Administration"
 msgstr "Administração"
 
 
-#file "D:\zentrack\zentrack/includes/templates/userSearchList.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/userSearchList.php"
 #args ""
 msgid "Administrative Options"
-msgstr "Opções de Administração"
+msgstr "Opções Administrativas"
 
 
-#file "D:\zentrack\zentrack/www/admin/access.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/admin/access.php"
 #args "array($user_id)"
 msgid "All bins were removed from access for user ?"
-msgstr "Todos os Repositórios foram negados para acesso do usuário ?"
+msgstr "Acessos aos repositórios revogados para o usuário ?"
 
 
-#file "D:\zentrack\zentrack/includes/templates/configSettingsForm.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/configSettingsForm.php"
 #args ""
 msgid "All entries must contain a value."
-msgstr "Todos os objetos deven ter valor."
+msgstr "Todos os campos devem ter valor."
 
 
-#file "D:\zentrack\zentrack/www/misc/homebin.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/leftBins.php"
 #args ""
 msgid "All"
 msgstr "Todos"
 
 
-#file "D:\zentrack\zentrack/includes/templates/listTickets_workFormat.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/listTickets_workFormat.php"
 #args ""
 msgid "Amount of time worked"
-msgstr "Tempo gasto"
+msgstr "Tempo Decorrido"
 
 
-#file "D:\zentrack\zentrack/includes/templates/reportsDateMenu.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/reportsDateMenu.php"
 #args ""
 msgid "Any valid date format"
-msgstr "Qualquer formato de data válido"
+msgstr "Qualquer formato válido de data"
 
 
-#file "D:\zentrack\zentrack/includes/templates/newProjectForm.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/newProjectForm.php"
 #args ""
 msgid "Approval Required"
-msgstr "Aprovação Requerida"
+msgstr "Requer Aprovação"
 
 
-#file "D:\zentrack\zentrack/includes/templates/ticket_detailsBox.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/ticket_detailsBox.php"
 #args ""
 msgid "Approval"
 msgstr "Aprovação"
 
 
-#file "D:\zentrack\zentrack/includes/leftAdmin.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/ticket_actionBar.php"
+#args ""
+msgid "Approve"
+msgstr "Aprovar"
+
+
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/leftAdmin.php"
 #args ""
 msgid "Archive Tickets"
 msgstr "Arquivar Tickets"
 
 
-#file "D:\zentrack\zentrack/includes/templates/reportMenu.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/reportMenu.php"
 #args ""
 msgid "Are you sure you want to permanently delete this template?"
-msgstr "Deseja apagar este Modelo? A exclusão será permanente"
+msgstr "Tem certeza que deseja apagar permanentemente este Modelo?"
 
 
-#file "D:\zentrack\zentrack/includes/templates/actions/assign.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/actions/assign.php"
 #args ""
 msgid "Assign Ticket"
-msgstr "Encaminhar Ticket"
+msgstr "Atribuir Ticket"
 
 
-#file "D:\zentrack\zentrack/includes/templates/actions/assign.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/actions/assign.php"
 #args ""
 msgid "Assign the ticket to a new user"
-msgstr "Encaminhar Ticket a um novo usuário"
+msgstr "Atribuir ticket a um novo usuário"
 
 
-#file "D:\zentrack\zentrack/includes/leftTickets.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/ticket_actionBar.php"
+#args ""
+msgid "Assign"
+msgstr "Atribuir"
+
+
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/leftTickets.php"
 #args ""
 msgid "Assigned to"
-msgstr "Encaminhado à"
+msgstr "Atribuído à"
 
 
-#file "D:\zentrack\zentrack/includes/templates/actions/relate.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/actions/relate.php"
 #args ""
 msgid "Associate this ticket with others"
-msgstr "Associar este Ticket com outros"
+msgstr "Associar este ticket com outros"
 
 
-#file "D:\zentrack\zentrack/includes/templates/actions/upload.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/actions/upload.php"
 #args ""
 msgid "Attach"
 msgstr "Anexar"
 
 
-#file "D:\zentrack\zentrack/includes/templates/ticket_attachmentsBox.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/ticket_attachmentsBox.php"
 #args ""
 msgid "Attachment"
 msgstr "Anexo"
 
 
-#file "D:\zentrack\zentrack/includes/templates/ticket_attachmentsBox.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/ticket_attachmentsBox.php"
 #args "array($page_type,$id)"
 msgid "Attachments on ? #?"
 msgstr "Anexos em ? #?"
 
 
-#file "D:\zentrack\zentrack/includes/zenTrack.class"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/zenTrack.class"
 #args ""
 msgid "Attachments"
 msgstr "Anexos"
 
 
-#file "D:\zentrack\zentrack/includes/templates/reportsOptionsMenu.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/reportsOptionsMenu.php"
 #args ""
 msgid "Bar Chart"
 msgstr "Gráfico de Barras"
 
 
-#file "D:\zentrack\zentrack/includes/templates/accessForm.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/accessForm.php"
 #args ""
 msgid "Bin Name"
-msgstr "Nome do Repositório"
+msgstr "Repositório"
 
 
-#file "D:\zentrack\zentrack/includes/templates/searchList.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/searchList.php"
 #args ""
 msgid "Bin ticket is located in"
-msgstr "O Ticket do Repositório localizado em"
+msgstr "Ticket do repositório encontrado em"
 
 
-#file "D:\zentrack\zentrack/includes/templates/listTickets.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/listTickets.php"
 #args ""
 msgid "Bin"
 msgstr "Repositório"
 
 
-#file "D:\zentrack\zentrack/www/reports/save.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/reports/save.php"
 #args ""
 msgid "Bin(s)"
 msgstr "Repositório(s)"
 
 
-#file "D:\zentrack\zentrack/includes/templates/searchLogForm.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/binForm.php"
+#args ""
+msgid "Bins cannot be destroyed, to maintain data integrity."
+msgstr "Repositórios não podem ser excluídos para preservar a integridade dos dados"
+
+
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/searchLogForm.php"
 #args ""
 msgid "By Date"
-msgstr "Por Data"
+msgstr "Por data"
 
 
-#file "D:\zentrack\zentrack/includes/templates/searchLogForm.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/searchLogForm.php"
 #args ""
 msgid "By Parameters"
-msgstr "Por Parâmetros"
+msgstr "Por parâmetros"
 
 
-#file "D:\zentrack\zentrack/includes/templates/searchLogForm.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/searchLogForm.php"
 #args ""
 msgid "By Text Match"
-msgstr "Por Texto contido"
+msgstr "Por texto coincidente"
 
 
-#file "D:\zentrack\zentrack/includes/templates/userSearchForm.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/userSearchForm.php"
 #args ""
 msgid "By Text"
-msgstr "Por Texto"
+msgstr "Por texto"
 
 
-#file "D:\zentrack\zentrack/includes/templates/optionsMenu.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/optionsMenu.php"
 #args ""
 msgid "Change Default Bin"
-msgstr "Mudar o Repositório padrão"
+msgstr "Mudar o repositório padrão"
 
 
-#file "D:\zentrack\zentrack/includes/templates/optionsMenu.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/optionsMenu.php"
 #args ""
 msgid "Change Language"
-msgstr "Mudar Idioma"
+msgstr "Mudar idioma"
 
 
-#file "D:\zentrack\zentrack/includes/templates/optionsMenu.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/optionsMenu.php"
 #args ""
 msgid "Change Password"
-msgstr "Mudar Senha"
+msgstr "Mudar senha"
 
 
-#file "D:\zentrack\zentrack/includes/templates/pwcForm.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/pwcForm.php"
 #args ""
 msgid "Change User Password"
-msgstr "Mudar Senha do Usuário"
+msgstr "Mudar senha do usuário"
 
 
-#file "D:\zentrack\zentrack/includes/templates/homebinForm.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/homebinForm.php"
 #args ""
 msgid "Change Your Default Bin"
-msgstr "Mudar seu Repositório padrão"
+msgstr "Alterar seu repositório padrão"
 
 
-#file "D:\zentrack\zentrack/includes/templates/languageForm.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/languageForm.php"
 #args ""
 msgid "Change Your Language"
-msgstr "Mudar seu Idioma"
+msgstr "Alterar seu idioma"
 
 
-#file "D:\zentrack\zentrack/includes/templates/reportsDataMenu.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/reportsOptionsMenu.php"
 #args ""
 msgid "Change"
-msgstr "Mudar"
+msgstr "Alterar"
 
 
-#file "D:\zentrack\zentrack/includes/templates/configSettingsForm.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/binForm.php"
+#args ""
+msgid "Changing the Bin Configuration has a large system impact."
+msgstr "A alteração na configuração do repositório tem um forte impacto no sistema."
+
+
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/configSettingsForm.php"
 #args ""
 msgid "Changing these settings can have a severe impact on the system.  Please consider this before making modifications."
-msgstr "A mudança destas opções poderá ter um forte impacto no sistema. Considere isto antes de fazer as modificações"
+msgstr "A alteração destas opções poderá ter um forte impacto no sistema. Considere isto antes de fazê-las."
 
 
-#file "D:\zentrack\zentrack/includes/templates/configForm.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/configForm.php"
 #args ""
 msgid "Changing this configuration list has a large system impact."
-msgstr "A mudança destas configurações terá um grande impacto sobre o sistema"
+msgstr "A alteração destas configurações tem um grande impacto sobre o sistema."
 
 
-#file "D:\zentrack\zentrack/includes/templates/reportsOptionsMenu.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/reportsOptionsMenu.php"
 #args ""
 msgid "Chart Options"
 msgstr "Opções de Gráfico"
 
 
-#file "D:\zentrack\zentrack/www/reports/saveSubmit.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/reports/saveSubmit.php"
 #args ""
 msgid "Chart could not be saved."
 msgstr "Não foi possível salvar o gráfico."
 
 
-#file "D:\zentrack\zentrack/includes/templates/actions/email.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/actions/email.php"
 #args ""
 msgid "Choose one of the following options"
-msgstr "Selecione uma das seguintes opções"
+msgstr "Escolha uma das seguintes opções"
 
 
-#file "D:\zentrack\zentrack/includes/templates/searchLogForm.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/searchLogForm.php"
 #args ""
 msgid "Click 'Search' to execute the search"
-msgstr "Clique em 'Buscar' para iniciar pesquisa"
+msgstr "Clique em 'Buscar' para fazer a pesquisa"
 
 
-#file "D:\zentrack\zentrack/includes/templates/homebinForm.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/homebinForm.php"
 #args ""
 msgid "Click 'Update' to change your default bin"
-msgstr "Clique em 'Atualizar' para mudar ser Repositório padrão"
+msgstr "Clique em 'Alterar' para mudar seu repositório padrão"
 
 
-#file "D:\zentrack\zentrack/includes/templates/languageForm.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/languageForm.php"
 #args ""
 msgid "Click 'Update' to change your language"
-msgstr "Clique em 'Atualizar' para mudar seu idioma"
+msgstr "Clique em 'Alterar' para mudar seu idioma"
 
 
-#file "D:\zentrack\zentrack/includes/templates/userAdd.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/userAdd.php"
 #args "array($button,$blurb)"
 msgid "Click ? to ?"
 msgstr "Clique em ? para ?"
 
 
-#file "D:\zentrack\zentrack/www/admin/editUser.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/admin/editUser.php"
 #args ""
 msgid "Click Here to search for users"
 msgstr "Clique aqui para buscar por usuários"
 
 
-#file "D:\zentrack\zentrack/includes/translations/english.trans"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/translations/french.trans"
 #args ""
 msgid "Click Here"
-msgstr "Clique aqui;"
+msgstr "Clique aqui"
 
 
-#file "D:\zentrack\zentrack/includes/templates/actions/notify.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/actions/notify.php"
 #args ""
 msgid "Click button to add recipients"
-msgstr "Clique no botão para adicionar Receptores"
+msgstr "Clique no botão para adicionar destinatários"
 
 
-#file "D:\zentrack\zentrack/includes/templates/actions/relate.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/actions/relate.php"
 #args ""
 msgid "Click button to assign relations"
-msgstr "Clique no botão para atribuir Relações"
+msgstr "Clique no botão para atribuir relações"
 
 
-#file "D:\zentrack\zentrack/includes/templates/actions/assign.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/actions/assign.php"
 #args ""
 msgid "Click button to assign"
 msgstr "Clique no botão para atribuir"
 
 
-#file "D:\zentrack\zentrack/includes/templates/actions/close.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/actions/close.php"
 #args ""
 msgid "Click button to close"
 msgstr "Clique no botão para fechar"
 
 
-#file "D:\zentrack\zentrack/includes/templates/actions/log.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/actions/log.php"
 #args ""
 msgid "Click button to create log"
-msgstr "Clique no botão para criar Log"
+msgstr "Clique no botão para adicionar log"
 
 
-#file "D:\zentrack\zentrack/includes/templates/actions/move.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/actions/move.php"
 #args ""
 msgid "Click button to move ticket"
-msgstr "Clique no botão para mover o Ticket"
+msgstr "Clique no botão para mover o ticket"
 
 
-#file "D:\zentrack\zentrack/includes/templates/actions/reopen.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/actions/reopen.php"
 #args ""
 msgid "Click button to open"
 msgstr "Clique no botão para abrir"
 
 
-#file "D:\zentrack\zentrack/includes/templates/actions/reject.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/actions/reject.php"
 #args ""
 msgid "Click button to reject"
 msgstr "Clique no botão para rejeitar"
 
 
-#file "D:\zentrack\zentrack/includes/templates/actions/email.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/actions/email.php"
 #args ""
 msgid "Click button to send email"
 msgstr "Clique no botão para enviar e-mail"
 
 
-#file "D:\zentrack\zentrack/includes/templates/actions/estimate.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/actions/estimate.php"
 #args ""
 msgid "Click button to set estimated hours to completion"
 msgstr "Clique no botão para definir as horas estimadas para completar o trabalho"
 
 
-#file "D:\zentrack\zentrack/includes/templates/actions/upload.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/actions/upload.php"
 #args ""
 msgid "Click button to upload file and attach to ticket"
-msgstr "Clique no botão para adicionar o arquivo e anexá-lo ao Ticket"
+msgstr "Clique no botão para enviar o arquivo e anexá-lo ao ticket"
 
 
-#file "D:\zentrack\zentrack/includes/templates/actions/yank.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/actions/yank.php"
 #args ""
 msgid "Click button to yank ticket"
-msgstr "Clique no botão para desvincular o Ticket"
+msgstr "Clique no botão para desvincular o ticket"
 
 
-#file "D:\zentrack\zentrack/includes/templates/newProjectForm.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/newProjectForm.php"
 #args ""
 msgid "Click button to"
 msgstr "Clique no botão para"
 
 
-#file "D:\zentrack\zentrack/includes/templates/actions/close.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/actions/close.php"
 #args ""
 msgid "Close Ticket"
-msgstr "Fechar Ticket"
+msgstr "Fechar ticket"
 
 
-#file "D:\zentrack\zentrack/includes/templates/actions/close.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/actions/close.php"
 #args ""
 msgid "Close"
 msgstr "Fechar"
 
 
-#file "D:\zentrack\zentrack/includes/templates/ticket_detailsBox.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/ticket_detailsBox.php"
 #args ""
 msgid "Closed"
 msgstr "Fechado"
 
 
-#file "D:\zentrack\zentrack/includes/templates/reportsOptionsMenu.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/reportsOptionsMenu.php"
 #args "array(strip_tags($report_type))"
 msgid "Combine selected ?s"
-msgstr "Combinar ?s seleções"
+msgstr "Combinar as ?s selecionadas"
 
 
-#file "D:\zentrack\zentrack/includes/templates/actions/assign.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/actions/assign.php"
 #args ""
 msgid "Comments or Instructions"
-msgstr "Comentários ou Instruções"
+msgstr "Comentários ou instruções"
 
 
-#file "D:\zentrack\zentrack/includes/templates/actions/move.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/actions/move.php"
 #args ""
 msgid "Comments"
 msgstr "Comentários"
 
 
-#file "D:\zentrack\zentrack/includes/editTicketSubmit.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/editTicketSubmit.php"
 #args ""
 msgid "Commit Edited Ticket"
-msgstr "Salvar Ticket editado"
+msgstr "Salvar ticket"
 
 
-#file "D:\zentrack\zentrack/www/addProjectSubmit.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/addProjectSubmit.php"
 #args ""
 msgid "Commit New Project"
-msgstr "Salvar Novo Projeto"
+msgstr "Salvar novo projeto"
 
 
-#file "D:\zentrack\zentrack/www/addSubmit.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/addSubmit.php"
 #args ""
 msgid "Commit New Ticket"
-msgstr "Criar novo Ticket"
+msgstr "Salvar novo ticket"
 
 
-#file "D:\zentrack\zentrack/www/actions/print.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/actions/print.php"
 #args ""
 msgid "Completed"
-msgstr "Completado"
+msgstr "Concluído"
 
 
-#file "D:\zentrack\zentrack/includes/templates/adminMenu.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/adminMenu.php"
 #args ""
 msgid "Configuration Settings"
 msgstr "Opções de Configuração"
 
 
-#file "D:\zentrack\zentrack/includes/templates/searchLogForm.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/searchLogForm.php"
 #args ""
 msgid "Containing"
 msgstr "Contendo"
 
 
-#file "D:\zentrack\zentrack/www/addProjectSubmit.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/addProjectSubmit.php"
 #args ""
 msgid "Could not create ticket."
-msgstr "Não foi possível criar Ticket."
+msgstr "Não foi possível adicionar o ticket."
 
 
-#file "D:\zentrack\zentrack/includes/leftTickets.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/leftTickets.php"
 #args ""
 msgid "Create New"
-msgstr "Criar Novo"
+msgstr "Adicionar"
 
 
-#file "D:\zentrack\zentrack/includes/templates/reportMenu.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/reportMenu.php"
 #args ""
 msgid "Create Reports"
-msgstr "Criar Relatórios"
+msgstr "Adicionar relatórios"
 
 
-#file "D:\zentrack\zentrack/includes/templates/ticket_tasksBox.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/ticket_tasksBox.php"
 #args ""
 msgid "Create Sub-Project"
-msgstr "Criar Sub-Projeto"
+msgstr "Adicionar sub-projeto"
 
 
-#file "D:\zentrack\zentrack/www/newProject.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/newProject.php"
 #args ""
 msgid "Create a New Project"
-msgstr "Criar um novo Projeto"
+msgstr "Adicionar projeto"
 
 
-#file "D:\zentrack\zentrack/www/newTicket.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/newTicket.php"
 #args ""
 msgid "Create a New Ticket"
-msgstr "Cruar um Novo Ticket"
+msgstr "Adicionar ticket"
 
 
-#file "D:\zentrack\zentrack/includes/templates/actions/log.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/actions/log.php"
 #args ""
 msgid "Create a log entry, or log hours worked"
-msgstr "Criar um Log ou Log de horas trabalhadas"
+msgstr "Adicionar uma entrada no log, ou log de horas decorridas"
 
 
-#file "D:\zentrack\zentrack/includes/templates/adminMenu.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/adminMenu.php"
 #args ""
 msgid "Create a new user account"
-msgstr "Criar uma nova conta de usuário"
+msgstr "Nova conta de usuário"
 
 
-#file "D:\zentrack\zentrack/includes/leftBins.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/newProjectForm.php"
+#args ""
+msgid "Create"
+msgstr "Adicionar"
+
+
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/leftBins.php"
 #args ""
 msgid "Current Bin"
 msgstr "Repositório atual"
 
 
-#file "D:\zentrack\zentrack/includes/templates/searchList.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/searchList.php"
 #args ""
 msgid "Current status of the ticket"
-msgstr "Estado atual do Ticket"
+msgstr "Estado atual do ticket"
 
 
-#file "D:\zentrack\zentrack/www/admin/access.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/admin/access.php"
 #args "array($user_id)"
 msgid "Custom Access priviledges updated for user ?"
-msgstr "Privilégios de acceso personalizados atualizados para o usuário ?"
+msgstr "Privilégios de acceso personalizados alterados para o usuário ?"
 
 
-#file "D:\zentrack\zentrack/www/actions/print.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/actions/print.php"
 #args ""
 msgid "DESCRIPTION"
 msgstr "DESCRIÇÃO"
 
 
-#file "D:\zentrack\zentrack/includes/templates/reportsOptionsMenu.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/reportsOptionsMenu.php"
 #args ""
 msgid "Data Options"
 msgstr "Opções de Dados"
 
 
-#file "D:\zentrack\zentrack/includes/templates/reportsDataMenu.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/reportsDataMenu.php"
 #args ""
 msgid "Data Selection"
 msgstr "Seleção de Dados"
 
 
-#file "D:\zentrack\zentrack/includes/templates/reportsDateMenu.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/reportsDateMenu.php"
 #args ""
 msgid "Date Range"
 msgstr "Faixa de Dados"
 
 
-#file "D:\zentrack\zentrack/includes/templates/searchLogList.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/searchLogList.php"
 #args ""
 msgid "Date log was created"
-msgstr "Log de Datas criado"
+msgstr "Log de datas adicionado"
 
 
-#file "D:\zentrack\zentrack/includes/templates/searchLogList.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/searchLogList.php"
 #args ""
 msgid "Date"
 msgstr "Data"
 
 
-#file "D:\zentrack\zentrack/includes/templates/reportsDateMenu.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/reportsDateMenu.php"
 #args ""
 msgid "Days"
 msgstr "Dias"
 
 
-#file "D:\zentrack\zentrack/includes/templates/newProjectForm.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/newProjectForm.php"
 #args ""
 msgid "Deadline"
 msgstr "Término"
 
 
-#file "D:\zentrack\zentrack/includes/templates/userAdd.php"
-#args ""
-msgid "Default Acces Level"
-msgstr "Nível de acesso padrão"
-
-
-#file "D:\zentrack\zentrack/includes/templates/userSearchForm.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/userAdd.php"
 #args ""
 msgid "Default Access Level"
 msgstr "Nível de acesso padrão"
 
 
-#file "D:\zentrack\zentrack/includes/templates/reportMenu.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/reportMenu.php"
 #args ""
 msgid "Delete Reports"
-msgstr "Apagar Relatórios"
+msgstr "Excluir relatórios"
 
 
-#file "D:\zentrack\zentrack/www/admin/deleteUser.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/admin/deleteUser.php"
 #args ""
 msgid "Delete User"
-msgstr "Apagar Usuário"
+msgstr "Excluir usuário"
 
 
-#file "D:\zentrack\zentrack/includes/templates/reportMenu.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/reportMenu.php"
 #args ""
 msgid "Delete"
-msgstr "Apagar"
+msgstr "Excluir"
 
 
-#file "D:\zentrack\zentrack/includes/templates/actions/upload.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/actions/upload.php"
 #args ""
 msgid "Description of Attachment"
 msgstr "Descrição do anexo"
 
 
-#file "D:\zentrack\zentrack/includes/templates/configSettingsForm.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/configSettingsForm.php"
 #args ""
 msgid "Description"
 msgstr "Descrição"
 
 
-#file "D:\zentrack\zentrack/includes/templates/newProjectForm.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/newProjectForm.php"
 #args ""
 msgid "Details"
 msgstr "Detalhes"
 
 
-#file "D:\zentrack\zentrack/includes/templates/userSearchForm.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/headerInc.php"
+#args ""
+msgid "Details"),
+       "Log" => tr("Log"),
+       "Related" => tr("Related"),
+       "Attachments" => tr("Attachments"),
+       "Notify" => tr("Notify"),
+       "System" => tr("System")
+msgstr "Detalhes"),
+       "Log" => tr("Log"),
+       "Related" => tr("Related"),
+       "Attachments" => tr("Attachments"),
+       "Notify" => tr("Notify"),
+       "System" => tr("System")
+
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/userSearchForm.php"
 #args ""
 msgid "Disabled"
 msgstr "Desabilitado"
 
 
-#file "D:\zentrack\zentrack/includes/templates/reportsOptionsMenu.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/reportsOptionsMenu.php"
 #args ""
 msgid "Display Values"
 msgstr "Mostrar Valores"
 
 
-#file "D:\zentrack\zentrack/includes/templates/ticket_notifyBox.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/ticket_notifyBox.php"
 #args ""
 msgid "Drop Recipients"
-msgstr "Apagar Receptores"
+msgstr "Excluir destinatários"
 
 
-#file "D:\zentrack\zentrack/www/reports/drop.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/reports/drop.php"
 #args ""
 msgid "Drop Template"
-msgstr "Apagar Modelo"
+msgstr "Excluir modelo"
 
 
-#file "D:\zentrack\zentrack/www/actions/print.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/actions/print.php"
 #args ""
 msgid "ETC"
 msgstr "ETC"
 
 
-#file "D:\zentrack\zentrack/includes/templates/adminMenu.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/adminMenu.php"
 #args ""
 msgid "Edit Bins"
-msgstr "Editar Repositórios"
+msgstr "Alterar repositórios"
 
 
-#file "D:\zentrack\zentrack/includes/templates/adminMenu.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/adminMenu.php"
 #args ""
 msgid "Edit Priorities"
-msgstr "Editar Prioridades"
+msgstr "Alterar prioridades"
 
 
-#file "D:\zentrack\zentrack/includes/templates/configSettingsForm.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/configSettingsForm.php"
 #args ""
 msgid "Edit Settings"
-msgstr "Editar Atributos"
+msgstr "Alterar configurações"
 
 
-#file "D:\zentrack\zentrack/includes/templates/adminMenu.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/adminMenu.php"
 #args ""
 msgid "Edit Systems"
-msgstr "Editar Sistemas"
+msgstr "Alterar sistemas"
 
 
-#file "D:\zentrack\zentrack/includes/templates/adminMenu.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/adminMenu.php"
 #args ""
 msgid "Edit Tasks"
-msgstr "Editar Tarefas"
+msgstr "Alterar tarefas"
 
 
-#file "D:\zentrack\zentrack/www/actions/edit.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/actions/edit.php"
 #args ""
 msgid "Edit Ticket"
-msgstr "Editar Ticket"
+msgstr "Alterar ticket"
 
 
-#file "D:\zentrack\zentrack/includes/leftAdmin.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/leftAdmin.php"
 #args ""
 msgid "Edit Tickets"
-msgstr "Editar Tickets"
+msgstr "Alterar tickets"
 
 
-#file "D:\zentrack\zentrack/includes/templates/adminMenu.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/adminMenu.php"
 #args ""
 msgid "Edit Types"
-msgstr "Editar Tipos"
+msgstr "Alterar tipos"
 
 
-#file "D:\zentrack\zentrack/www/admin/editUserSubmit.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/admin/editUserSubmit.php"
 #args ""
 msgid "Edit User Submit"
-msgstr "Editar envio do Usuário"
+msgstr "Alterar envio do usuário"
 
 
-#file "D:\zentrack\zentrack/includes/leftAdmin.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/leftAdmin.php"
 #args ""
 msgid "Edit Users"
-msgstr "Editar Usuários"
+msgstr "Alterar usuários"
 
 
-#file "D:\zentrack\zentrack/includes/templates/adminMenu.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/adminMenu.php"
 #args ""
 msgid "Edit Users/Access"
-msgstr "Editar Usuários/Acessos"
+msgstr "Alterar usuários/acessos"
 
 
-#file "D:\zentrack\zentrack/includes/templates/configForm.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/configForm.php"
 #args "array(ucfirst($type))"
 msgid "Edit the Active ?s"
-msgstr "Editar os ?s ativos"
+msgstr "Alterar ?s ativos"
 
 
-#file "D:\zentrack\zentrack/includes/templates/adminMenu.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/adminMenu.php"
 #args ""
 msgid "Edit the current bins"
-msgstr "Editar os Repositórios atuais"
+msgstr "Alterar repositório atual"
 
 
-#file "D:\zentrack\zentrack/includes/templates/adminMenu.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/adminMenu.php"
 #args ""
 msgid "Edit the priorities list"
-msgstr "Editar a lista de Prioridades"
+msgstr "Alterar lista de prioridades"
 
 
-#file "D:\zentrack\zentrack/includes/templates/adminMenu.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/adminMenu.php"
 #args ""
 msgid "Edit the systems list"
-msgstr "Editar a lista de Sistemas"
+msgstr "Alterar lista de sistemas"
 
 
-#file "D:\zentrack\zentrack/includes/templates/adminMenu.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/adminMenu.php"
 #args ""
 msgid "Edit the tasks list"
-msgstr "Editar a lista de Tarefas"
+msgstr "Alterar lista de tarefas"
 
 
-#file "D:\zentrack\zentrack/includes/templates/adminMenu.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/adminMenu.php"
 #args ""
 msgid "Edit the types list"
-msgstr "Editar a lista de Tipos"
+msgstr "Alterar lista de tipos"
 
 
-#file "D:\zentrack\zentrack/includes/templates/adminMenu.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/adminMenu.php"
 #args ""
 msgid "Edit the zenTrack settings.  Consult the documentation before using this feature."
-msgstr "Editar as configurações do zenTrack. Consulte a documentação antes de utilizar."
+msgstr "Alterar as configurações do zenTrack. Consulte a documentação antes de utilizar."
 
 
-#file "D:\zentrack\zentrack/includes/templates/adminMenu.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/adminMenu.php"
 #args ""
 msgid "Edit ticket information"
-msgstr "Editar a informação do Ticket"
+msgstr "Alterar ticket"
 
 
-#file "D:\zentrack\zentrack/includes/templates/ticket_titleBox.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/ticket_actionBar.php"
+#args ""
+msgid "Edit"
+msgstr "Alterar"
+
+
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/ticket_titleBox.php"
 #args ""
 msgid "Elapsed"
-msgstr "Transcorrido"
+msgstr "Decorrido"
 
 
-#file "D:\zentrack\zentrack/includes/templates/actions/email.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/actions/email.php"
 #args ""
 msgid "Email Ticket"
-msgstr "Enviar Ticket por e-mail"
+msgstr "Enviar ticket por e-mail"
 
 
-#file "D:\zentrack\zentrack/includes/templates/actions/email.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/actions/email.php"
 #args ""
 msgid "Email"
 msgstr "E-mail"
 
 
-#file "D:\zentrack\zentrack/includes/templates/newProjectForm.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/newProjectForm.php"
 #args ""
 msgid "Enter Project Information"
-msgstr "Informações do Projeto"
+msgstr "Informações do projeto"
 
 
-#file "D:\zentrack\zentrack/includes/templates/actions/relate.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/actions/relate.php"
 #args ""
 msgid "Enter Ticket IDs"
-msgstr "IDs dos Tickets"
+msgstr "IDs dos tickets"
 
 
-#file "D:\zentrack\zentrack/includes/nav.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/nav.php"
 #args ""
 msgid "Enter a ticket ID and press enter"
-msgstr "Informe a ID do Ticket e clique 'entrar'"
+msgstr "ID do ticket"
 
 
-#file "D:\zentrack\zentrack/includes/templates/actions/close.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/actions/close.php"
 #args ""
 msgid "Enter any hours worked not previously accounted for"
-msgstr "Informe o número de horas trabalhadas e não computadas anteriormente"
+msgstr "Horas trabalhadas não computadas anteriormente"
 
 
-#file "D:\zentrack\zentrack/includes/templates/actions/test.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/actions/test.php"
 #args ""
 msgid "Enter hours worked"
-msgstr "Informe horas trabalhadas"
+msgstr "Horas trabalhadas"
 
 
-#file "D:\zentrack\zentrack/includes/templates/newTicketForm.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/newTicketForm.php"
 #args ""
 msgid "Enter multiple ids, separated by a comma"
-msgstr "Informe os Ids, separdos por vírgulas"
+msgstr "IDs, separdos por vírgulas"
 
 
-#file "D:\zentrack\zentrack/includes/templates/actions/notify.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/actions/notify.php"
 #args ""
 msgid "Enter registered users"
-msgstr "Informe os usuários registrados"
+msgstr "Usuários registrados"
 
 
-#file "D:\zentrack\zentrack/includes/templates/actions/log.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/actions/log.php"
 #args ""
 msgid "Enter the hours worked for this entry"
-msgstr "Informe as horas trabalhadas nesta entrada"
+msgstr "Horas trabalhadas"
 
 
-#file "D:\zentrack\zentrack/includes/templates/actions/estimate.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/actions/estimate.php"
 #args ""
 msgid "Enter the number of hours (can contain up to 2 decimal places)"
-msgstr "Informe o número de horas (até 2 decimais)"
+msgstr "Número de horas (até 2 decimais)"
 
 
-#file "D:\zentrack\zentrack/includes/templates/actions/relate.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/actions/relate.php"
 #args ""
 msgid "Enter ticket ids, separated by commas"
-msgstr "Informe as IDs dos Tickets separadas por vírgulas"
+msgstr "IDs dos tickets, separadas por vírgulas"
 
 
-#file "D:\zentrack\zentrack/includes/templates/userSearchForm.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/userSearchForm.php"
 #args ""
 msgid "Equals"
 msgstr "Igual a"
 
 
-#file "D:\zentrack\zentrack/includes/templates/listTickets_workFormat.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/listTickets_workFormat.php"
 #args ""
 msgid "Est Hrs"
-msgstr "Tempo estimado (em horas)"
+msgstr "Horas est."
 
 
-#file "D:\zentrack\zentrack/includes/templates/actions/estimate.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/actions/estimate.php"
 #args ""
 msgid "Estimate Ticket Hours"
-msgstr "Tempo estimado do Ticket (em horas)"
+msgstr "Horas est. ticket"
 
 
-#file "D:\zentrack\zentrack/includes/templates/newTicketForm.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/newTicketForm.php"
 #args ""
 msgid "Estimated Hours to Complete"
-msgstr "Tempo estimado para finalizar (em Horas)"
+msgstr "Horas est. conclusão"
 
 
-#file "D:\zentrack\zentrack/includes/templates/ticket_detailsBox.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/ticket_detailsBox.php"
 #args ""
 msgid "Estimated Hours"
 msgstr "Horas estimadas"
 
 
-#file "D:\zentrack\zentrack/includes/templates/listTickets_workFormat.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/listTickets_workFormat.php"
 #args ""
 msgid "Estimated time to complete"
-msgstr "Tempo estimado para finalizar"
+msgstr "Tempo estimado conclusão"
 
 
-#file "D:\zentrack\zentrack/includes/templates/userAdd.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/userAdd.php"
 #args ""
 msgid "First Name"
 msgstr "Nome"
 
 
-#file "D:\zentrack\zentrack/includes/templates/userSearchForm.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/userSearchForm.php"
 #args ""
 msgid "Greater Than"
 msgstr "Maior que"
 
 
-#file "D:\zentrack\zentrack/includes/leftHelp.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/leftHelp.php"
 #args ""
 msgid "Help"
 msgstr "Ajuda"
 
 
-#file "D:\zentrack\zentrack/includes/templates/userAdd.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/userAdd.php"
 #args ""
 msgid "Home Bin"
 msgstr "Repositório Inicial"
 
 
-#file "D:\zentrack\zentrack/includes/templates/userSearchList.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/userSearchList.php"
 #args ""
 msgid "Home"
 msgstr "Início"
 
 
-#file "D:\zentrack\zentrack/includes/templates/ticket_detailsBox.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/ticket_detailsBox.php"
 #args ""
 msgid "Hours Worked"
 msgstr "Horas trabalhadas"
 
 
-#file "D:\zentrack\zentrack/www/actions/log.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/actions/log.php"
 #args ""
 msgid "Hours must be entered if the activity is 'LABOR'"
 msgstr "A quantidade de horas deve ser informada se a atividade for do tipo 'TRABALHO'"
 
 
-#file "D:\zentrack\zentrack/includes/templates/reportsDateMenu.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/reportsDateMenu.php"
 #args ""
 msgid "Hours"
 msgstr "Horas"
 
 
-#file "D:\zentrack\zentrack/includes/templates/listTickets_workFormat.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/listTickets_workFormat.php"
 #args "array($page_type)"
 msgid "ID of the ?"
 msgstr "ID de ?"
 
 
-#file "D:\zentrack\zentrack/includes/templates/searchList.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/searchList.php"
 #args ""
 msgid "ID of the ticket"
-msgstr "ID do Ticket"
+msgstr "ID do ticket"
 
 
-#file "D:\zentrack\zentrack/includes/templates/configForm.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/configForm.php"
 #args ""
 msgid "ID"
 msgstr "ID"
 
 
-#file "D:\zentrack\zentrack/includes/templates/reportsOptionsMenu.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/reportsOptionsMenu.php"
 #args ""
 msgid "Image Type"
 msgstr "Tipo de imagem"
 
 
-#file "D:\zentrack\zentrack/includes/templates/reportsOptionsMenu.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/reportsOptionsMenu.php"
 #args ""
 msgid "Image"
 msgstr "Imagem"
 
 
-#file "D:\zentrack\zentrack/includes/templates/listTickets_workFormat.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/listTickets_workFormat.php"
 #args "array($page_type)"
 msgid "Importance of the ?"
 msgstr "Importância de ?"
 
 
-#file "D:\zentrack\zentrack/includes/templates/userAdd.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/userAdd.php"
 #args ""
 msgid "Initials"
 msgstr "Iniciais"
 
 
-#file "D:\zentrack\zentrack/includes/leftHelp.php"
-#args ""
-msgid "Installation"
-msgstr "Instalação"
-
-
-#file "D:\zentrack\zentrack/includes/templates/configForm.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/configForm.php"
 #args ""
 msgid "Items in this list cannot be destroyed, to maintain data integrity."
-msgstr "Para manter a integridade dos dados os elementos da lista não podem ser apagados."
+msgstr "Para manter a integridade dos dados os elementos da lista não podem ser excluídos."
 
 
-#file "D:\zentrack\zentrack/www/actions/print.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/actions/print.php"
 #args ""
 msgid "LOG"
 msgstr "LOG"
 
 
-#file "D:\zentrack\zentrack/includes/templates/userAdd.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/userAdd.php"
 #args ""
 msgid "Last Name"
 msgstr "Sobrenome"
 
 
-#file "D:\zentrack\zentrack/includes/templates/userSearchForm.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/userSearchForm.php"
 #args ""
 msgid "Less Than"
-msgstr "Menor Que"
+msgstr "Menor que"
 
 
-#file "D:\zentrack\zentrack/includes/templates/configForm.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/configForm.php"
 #args ""
 msgid "Less"
-msgstr "Menos"
+msgstr "Menor"
 
 
-#file "D:\zentrack\zentrack/includes/templates/accessForm.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/accessForm.php"
 #args ""
 msgid "Level"
 msgstr "Nível"
 
 
-#file "D:\zentrack\zentrack/includes/templates/reportsOptionsMenu.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/leftHelp.php"
+#args ""
+msgid "License"
+msgstr "Licença"
+
+
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/reportsOptionsMenu.php"
 #args ""
 msgid "Line Chart"
 msgstr "Gráfico de Linhas"
 
 
-#file "D:\zentrack\zentrack/includes/templates/userSearchForm.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/userSearchForm.php"
 #args ""
 msgid "List All Users"
-msgstr "Listar Todos os Usuários"
+msgstr "Listar todos os usuários"
 
 
-#file "D:\zentrack\zentrack/includes/zenTrack.class"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/zenTrack.class"
 #args ""
 msgid "Log History")
-msgstr "Histórico do Log")
+msgstr "Histórico do Log"
 
 
-#file "D:\zentrack\zentrack/includes/templates/ticket_attachmentsBox.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/ticket_attachmentsBox.php"
 #args ""
 msgid "Log ID"
 msgstr "ID do Log"
 
 
-#file "D:\zentrack\zentrack/includes/leftMain.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/leftMain.php"
 #args ""
 msgid "Log Off"
-msgstr "Desativar Log"
+msgstr "Desligar Log"
 
 
-#file "D:\zentrack\zentrack/includes/leftMain.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/leftMain.php"
 #args ""
 msgid "Log On"
-msgstr "Ativar Log"
+msgstr "Ligar Log"
 
 
-#file "D:\zentrack\zentrack/includes/templates/actions/log.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/actions/log.php"
 #args ""
 msgid "Log"
 msgstr "Log"
 
 
-#file "D:\zentrack\zentrack/includes/templates/userAdd.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/userAdd.php"
 #args ""
 msgid "Login Name"
-msgstr "Usuário"
+msgstr "Nome de usuário"
 
 
-#file "D:\zentrack\zentrack/www/reports/save.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/loginForm"
+#args ""
+msgid "Login and passphrase are case sensitive"
+msgstr "Nome de usuário e senha diferenciam maiúsculas/minúsculas"
+
+
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/reports/save.php"
 #args ""
 msgid "Make Visible To"
-msgstr "Tornar Visível para"
+msgstr "Tornar visível para"
 
 
-#file "D:\zentrack\zentrack/www/reports/projectSearchbox.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/reports/projectSearchbox.php"
 #args ""
 msgid "Make search of projects that returns comma delimited list"
-msgstr "O resultado da busca de Projetos será uma lista delimitada por vírgulas"
+msgstr "O resultado da busca de projetos será uma lista separada por vírgulas"
 
 
-#file "D:\zentrack\zentrack/www/reports/ticketSearchbox.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/reports/ticketSearchbox.php"
 #args ""
 msgid "Make ticket search that returns comma delimited list"
-msgstr "O resultado da busca de Tickets será uma lista delimitada por vírgulas"
+msgstr "O resultado da busca de tickets será uma lista separada por vírgulas"
 
 
-#file "D:\zentrack\zentrack/includes/templates/reportMenu.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/reportMenu.php"
 #args ""
 msgid "Manage Reports"
-msgstr "Gestão de Relatórios"
+msgstr "Gerenciar relatórios"
 
 
-#file "D:\zentrack\zentrack/includes/templates/newProjectForm.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/newProjectForm.php"
 #args ""
 msgid "Master Project"
-msgstr "Projeto Principal"
+msgstr "Projeto principal"
 
 
-#file "D:\zentrack\zentrack/includes/templates/searchLogForm.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/searchLogForm.php"
 #args ""
 msgid "Maximum Age"
-msgstr "Data Máxima"
+msgstr "Idade máxima"
 
 
-#file "D:\zentrack\zentrack/www/reports/save.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/reports/save.php"
 #args ""
 msgid "Modify Existing"
-msgstr "Modificar Existente"
+msgstr "Alterar"
 
 
-#file "D:\zentrack\zentrack/www/reports/view.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/reports/view.php"
 #args ""
 msgid "Modify Report"
-msgstr "Modificar Relatório"
+msgstr "Alterar relatório"
 
 
-#file "D:\zentrack\zentrack/includes/templates/reportMenu.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/reportMenu.php"
 #args ""
 msgid "Modify Reports"
-msgstr "Modificar Relatórios"
+msgstr "Alterar relatórios"
 
 
-#file "D:\zentrack\zentrack/includes/templates/searchList.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/searchList.php"
 #args ""
 msgid "Modify Search"
-msgstr "Modificar Busca"
+msgstr "Alterar busca"
 
 
-#file "D:\zentrack\zentrack/includes/templates/reportMenu.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/reportMenu.php"
 #args ""
 msgid "Modify"
-msgstr "Modificar"
+msgstr "Alterar"
 
 
-#file "D:\zentrack\zentrack/includes/templates/reportsDateMenu.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/reportsDateMenu.php"
 #args ""
 msgid "Months"
 msgstr "Meses"
 
 
-#file "D:\zentrack\zentrack/includes/templates/accessForm.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/accessForm.php"
 #args ""
 msgid "More"
 msgstr "Mais"
 
 
-#file "D:\zentrack\zentrack/includes/templates/reportsDateMenu.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/reportsDateMenu.php"
 #args ""
 msgid "Most Current"
-msgstr "Mais Recente"
+msgstr "Mais atual"
 
 
-#file "D:\zentrack\zentrack/includes/templates/actions/move.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/actions/move.php"
 #args ""
 msgid "Move Ticket"
-msgstr "Mover Ticket"
+msgstr "Mover ticket"
 
 
-#file "D:\zentrack\zentrack/includes/templates/actions/move.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/actions/move.php"
 #args ""
 msgid "Move"
 msgstr "Mover"
 
 
-#file "D:\zentrack\zentrack/includes/templates/listTickets_workFormat.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/listTickets_workFormat.php"
 #args "array($page_type)"
 msgid "Name of the ?"
 msgstr "Nome de ?"
 
 
-#file "D:\zentrack\zentrack/includes/templates/actions/notify.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/configForm.php"
 #args ""
 msgid "Name"
 msgstr "Nome"
 
 
-#file "D:\zentrack\zentrack/includes/templates/homebinForm.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/homebinForm.php"
 #args ""
 msgid "New Default Bin"
-msgstr "Novo Repositório padrão"
+msgstr "Repositório padrão"
 
 
-#file "D:\zentrack\zentrack/includes/templates/languageForm.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/languageForm.php"
 #args ""
 msgid "New Language"
-msgstr "Novo Idioma"
+msgstr "Idioma"
 
 
-#file "D:\zentrack\zentrack/includes/templates/pwcForm.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/pwcForm.php"
 #args ""
 msgid "New Password"
-msgstr "Nova Senha"
+msgstr "Senha"
 
 
-#file "D:\zentrack\zentrack/includes/templates/reportMenu.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/reportMenu.php"
 #args ""
 msgid "New Report"
-msgstr "Novo Relatório"
+msgstr "Adicionar relatório"
 
 
-#file "D:\zentrack\zentrack/includes/leftSearch.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/leftSearch.php"
 #args ""
 msgid "New Search"
-msgstr "Nova Busca"
+msgstr "Nova busca"
 
 
-#file "D:\zentrack\zentrack/www/reports/save.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/reports/save.php"
 #args ""
 msgid "New Template"
-msgstr "Novo Modelo"
+msgstr "Adicionar modelo"
 
 
-#file "D:\zentrack\zentrack/includes/leftAdmin.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/leftAdmin.php"
 #args ""
 msgid "New User"
-msgstr "Novo Usuário"
+msgstr "Adicionar usuário"
 
 
-#file "D:\zentrack\zentrack/www/actions/print.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/actions/print.php"
 #args ""
 msgid "No Log Entries"
-msgstr "Sem entradas no Log"
+msgstr "Não há entradas no log."
 
 
-#file "D:\zentrack\zentrack/www/actions/print.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/actions/print.php"
 #args ""
 msgid "No Related Tickets"
-msgstr "Não há Tickets relacionados"
+msgstr "Não há tickets relacionados."
 
 
-#file "D:\zentrack\zentrack/www/actions/print.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/actions/print.php"
 #args ""
 msgid "No Tasks Assigned to this Project"
-msgstr "Não há tarefas vinculadas ao Projeto"
+msgstr "Não há tarefas atribuídas ao projeto."
 
 
-#file "D:\zentrack\zentrack/includes/templates/ticket_attachmentsBox.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/ticket_attachmentsBox.php"
 #args ""
 msgid "No attachments exist for this $page_type"
-msgstr "Não há anexos para esta $page_type"
+msgstr "Não há anexos para este $page_type"
 
 
-#file "D:\zentrack\zentrack/www/actions/log.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/actions/log.php"
 #args ""
 msgid "No comments were entered."
 msgstr "Não há comentários."
 
 
-#file "D:\zentrack\zentrack/www/actions/upload.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/actions/upload.php"
 #args ""
 msgid "No file was uploaded."
 msgstr "Nenhum arquivo enviado."
 
 
-#file "D:\zentrack\zentrack/includes/zenTrack.class"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/zenTrack.class"
 #args ""
 msgid "No logs found"
-msgstr "Nenhum Log encontrado"
+msgstr "Nenhum log encontrado"
 
 
-#file "D:\zentrack\zentrack/www/actions/dropFromNotify.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/actions/dropFromNotify.php"
 #args ""
 msgid "No recipients were selected to drop"
-msgstr "Não há receptores para apagar"
+msgstr "Nenhum destinatário selecionado para exclusão"
 
 
-#file "D:\zentrack\zentrack/www/admin/config.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/admin/config.php"
 #args ""
 msgid "No settings were recieved"
-msgstr "Nenhuma configuração recebida"
+msgstr "Nenhuma configuração alterada"
 
 
-#file "D:\zentrack\zentrack/includes/templates/ticket_tasksBox.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/ticket_tasksBox.php"
 #args ""
 msgid "No tickets have been added to this Project."
-msgstr "Nenhum Ticket adicionado ao Projeto."
+msgstr "Nenhum ticket adicionado ao projeto."
 
 
-#file "D:\zentrack\zentrack/includes/templates/ticket_relatedBox.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/ticket_relatedBox.php"
 #args ""
 msgid "No tickets have been associated with this ticket."
-msgstr "Nenhum Ticket associado à este Ticket"
+msgstr "Nenhum outro ticket associado à este."
 
 
-#file "D:\zentrack\zentrack/www/admin/resetPassword.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/admin/resetPassword.php"
 #args ""
 msgid "No user id was recieved"
 msgstr "Nenhuma ID de usuário recebida"
 
 
-#file "D:\zentrack\zentrack/includes/templates/searchLogResults.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/searchLogResults.php"
 #args ""
 msgid "No valid fields were provided to conduct a search"
 msgstr "Nenhum campo válido para realizar a busca"
 
 
-#file "D:\zentrack\zentrack/www/actions/print.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/actions/print.php"
 #args ""
 msgid "Not Required"
 msgstr "Opcional"
 
 
-#file "D:\zentrack\zentrack/includes/templates/actions/assign.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/actions/assign.php"
 #args ""
 msgid "Note"
 msgstr "Nota"
 
 
-#file "D:\zentrack\zentrack/includes/templates/userAdd.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/userAdd.php"
 #args ""
 msgid "Notes"
-msgstr "Notas"
+msgstr "Nota"
 
 
-#file "D:\zentrack\zentrack/includes/templates/ticket_notifyBox.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/ticket_notifyBox.php"
 #args ""
 msgid "Notify List"
 msgstr "Lista de notificações"
 
 
-#file "D:\zentrack\zentrack/includes/templates/actions/email.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/actions/email.php"
 #args ""
 msgid "OR manually enter email addresses, seperated by commas"
-msgstr "ou informe manualmente os endereços de e-mail, separados por vírgula"
+msgstr "ou informe os endereços de e-mail manualmente, separados por vírgula"
 
 
-#file "D:\zentrack\zentrack/includes/templates/configSettingsForm.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/configSettingsForm.php"
 #args ""
 msgid "Off"
-msgstr "Desabilitado"
+msgstr "Desligado"
 
 
-#file "D:\zentrack\zentrack/includes/templates/configSettingsForm.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/configSettingsForm.php"
 #args ""
 msgid "On"
-msgstr "Habilitado"
+msgstr "Ligado"
 
 
-#file "D:\zentrack\zentrack/www/admin/resetPassword.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/admin/resetPassword.php"
 #args ""
 msgid "Only the root administrator can change the root administrator's passphrase"
-msgstr "A senha do administrador só pode ser modificada pelo Administrador"
+msgstr "A senha do administrador só pode ser modificada pelo administrador"
 
 
-#file "D:\zentrack\zentrack/includes/templates/actions/reopen.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/actions/reopen.php"
 #args ""
 msgid "Open ticket closed in error"
-msgstr "Ticket fechado com erro"
+msgstr "Reabrir ticket fechado com erro"
 
 
-#file "D:\zentrack\zentrack/includes/templates/listTickets.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/listTickets.php"
 #args ""
 msgid "Opened"
 msgstr "Aberto"
 
 
-#file "D:\zentrack\zentrack/www/reports/save.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/reports/save.php"
 #args ""
 msgid "Optional.  Use control or shift to select multiples"
 msgstr "Opcional. Use as teclas 'control' ou 'shift' para seleções múltiplas"
 
 
-#file "D:\zentrack\zentrack/www/reports/save.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/reports/save.php"
 #args ""
 msgid "Optional. You do not need to select yourself"
 msgstr "Opcional. Não é necessário selecionar a si mesmo"
 
 
-#file "D:\zentrack\zentrack/includes/leftMain.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/leftMain.php"
 #args ""
 msgid "Options"
 msgstr "Opções"
 
 
-#file "D:\zentrack\zentrack/includes/templates/actions/notify.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/actions/notify.php"
 #args ""
 msgid "Or add an unregistered user"
 msgstr "ou adicione um usuário não registrado"
 
 
-#file "D:\zentrack\zentrack/includes/templates/configForm.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/configForm.php"
 #args ""
 msgid "Order"
 msgstr "Ordem"
 
 
-#file "D:\zentrack\zentrack/includes/templates/listTickets.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/listTickets_workFormat.php"
 #args ""
 msgid "Owner"
 msgstr "Proprietário"
 
 
-#file "D:\zentrack\zentrack/www/admin/resetPassword.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/admin/resetPassword.php"
 #args "array($user_id)"
 msgid "Password reset to the default [user's last name] for user ?"
 msgstr "A senha do usuário ? foi alterada para o valor padrão [sobrenome do usuário]"
 
 
-#file "D:\zentrack\zentrack/www/misc/pwc.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/misc/pwc.php"
 #args ""
 msgid "Password successfully changed"
-msgstr "Senha modificada"
+msgstr "Senha alterada com sucesso"
 
 
-#file "D:\zentrack\zentrack/includes/templates/listTickets_workFormat.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/listTickets_workFormat.php"
 #args ""
 msgid "Percent completed"
-msgstr "Percentual completado"
+msgstr "Percentual concluído"
 
 
-#file "D:\zentrack\zentrack/includes/templates/userSearchList.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/userSearchList.php"
 #args "array($u["user_id"])"
 msgid "Permanently remove user ??"
-msgstr "&iquest; Confirma a exclusão do usuário ??"
+msgstr "Excluir usuário ? ?"
 
-#file "D:\zentrack\zentrack/includes/templates/searchList.php"
+
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/searchList.php"
 #args ""
 msgid "Person ticket is assigned to"
-msgstr "Ticket pessoal vinculado à"
+msgstr "Ticket personalizado atribuído à"
 
 
-#file "D:\zentrack\zentrack/includes/templates/reportsTypeMenu.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/reportsTypeMenu.php"
 #args ""
 msgid "Pick a type"
 msgstr "Selecione um tipo"
 
 
-#file "D:\zentrack\zentrack/includes/templates/reportsOptionsMenu.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/reportsOptionsMenu.php"
 #args ""
 msgid "Pie Chart"
 msgstr "Gráfico de Pizza"
 
 
-#file "D:\zentrack\zentrack/includes/templates/configForm.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/configForm.php"
 #args ""
 msgid "Please consider this before making modifications."
-msgstr "Por favor, considere isto antes de fazer modificações."
+msgstr "Por favor considere isto antes de fazer modificações."
 
 
-#file "D:\zentrack\zentrack/includes/templates/editTicketForm.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/editTicketForm.php"
 #args ""
 msgid "Please enter a ticket ID"
-msgstr "Informe uma ID para o Ticket"
+msgstr "Informe a ID do ticket"
 
 
-#file "D:\zentrack\zentrack/www/misc/pwc.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/misc/pwc.php"
 #args ""
 msgid "Please fill in both of the fields"
-msgstr "Por favor, preencha todos os campos"
+msgstr "Por favor preencha todos os campos"
 
 
-#file "D:\zentrack\zentrack/includes/templates/pwcForm.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/pwcForm.php"
 #args ""
 msgid "Please keep track of your new passphrase."
-msgstr "Por favor, anote sua nova senha."
+msgstr "Por favor anote sua nova senha."
 
 
-#file "D:\zentrack\zentrack/includes/zenTrack.class"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/zenTrack.class"
 #args ""
 msgid "Please log in to view the entire ticket."
-msgstr "Por favor, registre-se para visualizar o Ticket."
+msgstr "Por favor registre-se para visualizar o ticket."
 
 
-#file "D:\zentrack\zentrack/includes/templates/configSettingsForm.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/configSettingsForm.php"
 #args ""
 msgid "Press 'Reset' to restore the original values."
-msgstr "Clique em 'Padrão' para restaurar os valores iniciais."
+msgstr "Clique em 'Padrão' para restaurar os valores originais."
 
 
-#file "D:\zentrack\zentrack/includes/templates/configSettingsForm.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/configSettingsForm.php"
 #args ""
 msgid "Press 'Save' when you are sure that the values are correct."
 msgstr "Clique em 'Salvar' depois que informar todos os valores."
 
 
-#file "D:\zentrack\zentrack/includes/templates/accessForm.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/accessForm.php"
 #args ""
 msgid "Press LESS to remove blank fields"
 msgstr "Clique em 'Menos' para eliminar os campos em branco"
 
 
-#file "D:\zentrack\zentrack/includes/templates/configForm.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/configForm.php"
 #args ""
-msgid "Press MORE to remove blank rows"
-msgstr "Clique em 'Menos' para eliminar as colunas em branco"
+msgid "Press LESS to remove blank rows"
+msgstr "Clique em 'Menos' para eliminar os linhas em branco"
 
 
-#file "D:\zentrack\zentrack/includes/templates/accessForm.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/accessForm.php"
 #args ""
 msgid "Press MORE to add more custom fields"
 msgstr "Clique em 'Mais' para adicionar campos personalizados"
 
 
-#file "D:\zentrack\zentrack/includes/templates/configForm.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/configForm.php"
 #args ""
 msgid "Press MORE to create new rows"
-msgstr "Clique em 'Mais'para criar novas colunas"
+msgstr "Clique em 'Mais' para adicionar novas linhas"
 
 
-#file "D:\zentrack\zentrack/includes/templates/configForm.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/configForm.php"
 #args ""
 msgid "Press Reset to return to original values"
-msgstr "Clique em 'Padrão' para restaurar os valores originais"
+msgstr "Clique em 'Padrão' para voltar os valores originais."
 
 
-#file "D:\zentrack\zentrack/includes/templates/accessForm.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/accessForm.php"
 #args ""
 msgid "Press Reset to return to users existing values"
-msgstr "Clique em 'Padrão' para restaurar os valores existentes para os usuários"
+msgstr "Clique em 'Padrão' para retornar os valores existentes para os usuários"
 
 
-#file "D:\zentrack\zentrack/includes/templates/configForm.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/configForm.php"
 #args ""
 msgid "Press Save to save changes"
-msgstr "Clique em 'Salvar' para confirmar as mudanças"
+msgstr "Clique em 'Salvar' para confirmar as alterações"
 
 
-#file "D:\zentrack\zentrack/includes/templates/accessForm.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/accessForm.php"
 #args ""
 msgid "Press Update to save changes"
-msgstr "Clique em 'Atualizar' para confirmar as mudanças"
+msgstr "Clique em 'Alterar' para confirmar as alterações"
 
 
-#file "D:\zentrack\zentrack/includes/templates/listTickets.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/listTickets_workFormat.php"
 #args ""
 msgid "Pri"
 msgstr "Pri"
 
 
-#file "D:\zentrack\zentrack/includes/templates/newProjectForm.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/ticket_actionBar.php"
+#args ""
+msgid "Print"
+msgstr "Imprimir"
+
+
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/newProjectForm.php"
 #args ""
 msgid "Priority"
 msgstr "Prioridade"
 
 
-#file "D:\zentrack\zentrack/www/admin/addUserSubmit.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/admin/addUserSubmit.php"
 #args ""
 msgid "Process completed successfully.  Account not added, because this is a demo site"
-msgstr "Processo completado. A conta de usuario não foi adicionado por estarmos no modo de Demonstração"
+msgstr "Processo concluído. A conta de usuario não foi adicionada por estarmos no modo de Demonstração"
 
 
-#file "D:\zentrack\zentrack/www/admin/bins.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/admin/bins.php"
 #args ""
 msgid "Process completed successfully.  Bins were not updated since this is a demo site."
-msgstr "Processo completado. Os Repositórios não foram atualizados por estarmos no modo de Demonstração"
+msgstr "Processo concluído. As alterações não foram efetuadas por estarmos no modo de Demonstração"
 
 
-#file "D:\zentrack\zentrack/www/admin/resetPassword.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/admin/resetPassword.php"
 #args ""
 msgid "Process completed successfully.  No changes were made because this is a demo site"
-msgstr "Processo completado. As mudanças não foram efetuadas por estarmos no modo de Demonstração"
+msgstr "Processo concluído. As alterações não foram efetuadas por estarmos no modo de Demonstração"
 
 
-#file "D:\zentrack\zentrack/www/admin/config.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/admin/config.php"
 #args ""
 msgid "Process completed successfully.  No changes were made, because this is a demo site."
-msgstr "Processo completado. As mudanças não foram efetuadas por estarmos no modo de Demonstração"
+msgstr "Processo concluído. As alterações não foram efetuadas por estarmos no modo de Demonstração"
 
-#file "D:\zentrack\zentrack/www/admin/priorities.php"
+
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/admin/priorities.php"
 #args ""
 msgid "Process completed successfully.  Priorities were not updated since this is a demo site."
-msgstr "Processo completado. As Prioridades não foram modificadas por estarmos no modo de Demonstração"
+msgstr "Processo concluído. As alterações não foram efetuadas por estarmos no modo de Demonstração"
 
-#file "D:\zentrack\zentrack/www/admin/systems.php"
+
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/admin/systems.php"
 #args ""
 msgid "Process completed successfully.  Systems were not updated since this is a demo site."
-msgstr "Processo completado. Os Sistemas não foram modificados por estarmos no modo de Demonstração"
+msgstr "Processo concluído. As alterações não foram efetuadas por estarmos no modo de Demonstração"
 
 
-#file "D:\zentrack\zentrack/www/admin/tasks.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/admin/tasks.php"
 #args ""
 msgid "Process completed successfully.  Tasks were not updated since this is a demo site."
-msgstr "Processo completado. As Tarefas não foram modificadas por estarmos no modo de Demonstração"
+msgstr "Processo concluído. As alterações não foram efetuadas por estarmos no modo de Demonstração"
 
 
-#file "D:\zentrack\zentrack/www/admin/types.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/admin/types.php"
 #args ""
 msgid "Process completed successfully.  Types were not updated since this is a demo site."
-msgstr "Processo completado. Os Tipos não foram modificados por estarmos no modo de Demonstração"
+msgstr "Processo concluído. As alterações não foram efetuadas por estarmos no modo de Demonstração"
 
 
-#file "D:\zentrack\zentrack/www/admin/access.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/admin/access.php"
 #args ""
 msgid "Process completed successfully. No privileges were changed, because this is a demo site."
-msgstr "Processo completado. Os Privilégios não foram modificados por estarmos no modo de Demonstração"
+msgstr "Processo concluído. As alterações não foram efetuadas por estarmos no modo de Demonstração"
 
 
-#file "D:\zentrack\zentrack/www/admin/editUserSubmit.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/admin/editUserSubmit.php"
 #args ""
 msgid "Process successful.  User was not updated, because this is a demo site."
-msgstr "Processo completado. Os Usuários não foram modificados por estarmos no modo de Demonstração"
+msgstr "Processo concluído. As alterações não foram efetuadas por estarmos no modo de Demonstração"
 
 
-#file "D:\zentrack\zentrack/www/reports/show.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/reports/show.php"
 #args ""
 msgid "Processing Error: Report ID Missing"
-msgstr "Erro de procezso. Relátorio sem ID"
+msgstr "Erro de processamento. Relátorio sem ID"
 
 
-#file "D:\zentrack\zentrack/www/reports/saveSubmit.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/reports/saveSubmit.php"
 #args ""
 msgid "Processing error: tempid not found\n"
-msgstr "Erro de processo; 'tempid' não encontrada\n"
+msgstr "Erro de processamento; 'tempid' não encontrada\n"
 
 
-#file "D:\zentrack\zentrack/www/reports/save.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/reports/save.php"
 #args ""
 msgid "Processing error: template not found."
-msgstr "Erro de processo. Modelo não encontrado"
+msgstr "Erro de processamento. Modelo não encontrado"
 
 
-#file "D:\zentrack\zentrack/includes/templates/reportsTypeMenu.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/reportsTypeMenu.php"
 #args ""
 msgid "Project ID"
-msgstr "ID do Projeto"
+msgstr "ID do projeto"
 
 
-#file "D:\zentrack\zentrack/includes/templates/newTicketForm.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/newTicketForm.php"
 #args ""
 msgid "Project"
 msgstr "Projeto"
 
 
-#file "D:\zentrack\zentrack/includes/leftTickets.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/leftTickets.php"
 #args ""
 msgid "Projects"
 msgstr "Projetos"
 
 
-#file "D:\zentrack\zentrack/includes/templates/actions/yank.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/actions/yank.php"
 #args ""
 msgid "Pull ticket from the current owner"
-msgstr "Desvincular o Ticket do propietário"
+msgstr "Desvincular ticket do proprietário atual"
 
 
-#file "D:\zentrack\zentrack/www/actions/print.php"
+
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/actions/print.php"
 #args ""
 msgid "RELATED TICKETS"
-msgstr "TICKETS RELACIONADOS"
+msgstr "TICKETS ASSOCIADOS"
 
 
-#file "D:\zentrack\zentrack/includes/templates/reportsDateMenu.php"
+
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/reportsDateMenu.php"
 #args ""
 msgid "Range"
 msgstr "Faixa"
 
 
-#file "D:\zentrack\zentrack/includes/leftMain.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/leftMain.php"
 #args ""
 msgid "Really log out of zenTrack?"
 msgstr "Deseja sair do zenTrack?"
 
 
-#file "D:\zentrack\zentrack/includes/templates/actions/reject.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/actions/reject.php"
 #args ""
 msgid "Reason"
-msgstr "Razão"
+msgstr "Motivo"
 
 
-#file "D:\zentrack\zentrack/includes/templates/actions/reject.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/actions/reject.php"
 #args ""
 msgid "Reject Ticket"
-msgstr "Apagar Ticket"
+msgstr "Rejeitar ticket"
 
 
-#file "D:\zentrack\zentrack/includes/templates/actions/reject.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/actions/reject.php"
 #args ""
 msgid "Reject"
-msgstr "Apagar"
+msgstr "Rejeitar"
 
 
-#file "D:\zentrack\zentrack/includes/templates/actions/relate.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/actions/relate.php"
 #args ""
 msgid "Relate Ticket"
-msgstr "Associar Ticket"
+msgstr "Associar ticket"
 
 
-#file "D:\zentrack\zentrack/includes/templates/actions/relate.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/actions/relate.php"
 #args ""
 msgid "Relate"
 msgstr "Associar"
 
 
-#file "D:\zentrack\zentrack/includes/templates/ticket_relatedBox.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/ticket_relatedBox.php"
 #args "array($page_type)"
 msgid "Related ?s"
-msgstr "Associados ?s"
+msgstr "Associar ?s"
 
 
-#file "D:\zentrack\zentrack/includes/templates/newTicketForm.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/newTicketForm.php"
 #args ""
 msgid "Related Tickets"
 msgstr "Tickets associados"
 
 
-#file "D:\zentrack\zentrack/includes/templates/optionsMenu.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/optionsMenu.php"
 #args ""
 msgid "Remember My Password"
-msgstr "Lembrar minha senha"
+msgstr "Lembrar senha"
 
 
-#file "D:\zentrack\zentrack/includes/templates/actions/reopen.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/actions/reopen.php"
 #args ""
 msgid "Reopen Ticket"
-msgstr "Reabrir Ticket"
+msgstr "Reabir ticket"
 
 
-#file "D:\zentrack\zentrack/includes/templates/actions/reopen.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/actions/reopen.php"
 #args ""
 msgid "Reopen"
 msgstr "Reabrir"
 
 
-#file "D:\zentrack\zentrack/www/reports/drop.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/reports/drop.php"
 #args ""
 msgid "Report Deleted"
-msgstr "Relatório apagado"
+msgstr "Relatório excluído"
 
 
-#file "D:\zentrack\zentrack/www/reports/custom.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/reports/custom.php"
 #args ""
 msgid "Report ID not found"
-msgstr "ID do Relatório não encontrada"
+msgstr "ID do relatório não encontrada"
 
 
-#file "D:\zentrack\zentrack/www/reports/saveSubmit.php"
+
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/reports/saveSubmit.php"
 #args ""
 msgid "Report Name is required"
-msgstr "Nome do Relatório é obrigatório"
+msgstr "Nome do relatório é requerido"
 
 
-#file "D:\zentrack\zentrack/includes/templates/reportsTypeMenu.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/reportsTypeMenu.php"
 #args ""
 msgid "Report Type"
 msgstr "Tipo de Relatório"
 
 
-#file "D:\zentrack\zentrack/includes/leftReports.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/leftReports.php"
 #args ""
 msgid "Reports"
 msgstr "Relatórios"
 
 
-#file "D:\zentrack\zentrack/www/addSubmit.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/addSubmit.php"
 #args ""
 msgid "Required field missing:"
-msgstr "Campo obrigatório não encontrado:"
+msgstr "Campo requerido não encontrado:"
 
 
-#file "D:\zentrack\zentrack/www/actions/print.php"
+
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/actions/print.php"
 #args ""
 msgid "Required"
-msgstr "Obrigatório"
+msgstr "requerido"
 
 
-#file "D:\zentrack\zentrack/includes/templates/newProjectForm.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/newProjectForm.php"
 #args ""
 msgid "Requirements"
-msgstr "Campos requeridos"
+msgstr "Requerimentos"
 
 
-#file "D:\zentrack\zentrack/www/admin/resetPassword.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/admin/resetPassword.php"
 #args ""
 msgid "Reset Password"
 msgstr "Senha Padrão"
 
 
-#file "D:\zentrack\zentrack/includes/templates/userSearchList.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/userSearchList.php"
 #args "array($u["user_id"])"
 msgid "Reset the password for user ??"
-msgstr "Mudar Senha do usuário ??"
+msgstr "Voltar senha do usuário ? para o padrão?"
 
 
-#file "D:\zentrack\zentrack/includes/templates/accessForm.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/accessForm.php"
 #args ""
 msgid "Reset"
 msgstr "Padrão"
 
 
-#file "D:\zentrack\zentrack/includes/templates/actions/reject.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/actions/reject.php"
 #args ""
 msgid "Return ticket to sender"
-msgstr "Devolver o Ticket ao emissor"
+msgstr "Devolver ticket ao remetente"
 
 
-#file "D:\zentrack\zentrack/includes/templates/pwcForm.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/pwcForm.php"
 #args ""
 msgid "Retype New Password"
 msgstr "Repita a nova Senha"
 
 
-#file "D:\zentrack\zentrack/includes/templates/accessForm.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/accessForm.php"
 #args ""
 msgid "Role"
 msgstr "Perfil"
 
 
-#file "D:\zentrack\zentrack/www/reports/save.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/reports/save.php"
 #args ""
 msgid "Save Report"
-msgstr "Salvar Relatório"
+msgstr "Salvar relatório"
 
 
-#file "D:\zentrack\zentrack/www/reports/saveSubmit.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/reports/saveSubmit.php"
 #args ""
 msgid "Save Submit"
-msgstr "Salvar Operação"
+msgstr "Salvar envio"
 
 
-#file "D:\zentrack\zentrack/www/reports/save.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/reports/save.php"
 #args ""
 msgid "Save Template"
 msgstr "Salvar Modelo"
 
 
-#file "D:\zentrack\zentrack/includes/templates/configForm.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/configForm.php"
 #args ""
 msgid "Save"
 msgstr "Salvar"
 
 
-#file "D:\zentrack\zentrack/includes/templates/reportsOptionsMenu.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/reportsOptionsMenu.php"
 #args ""
 msgid "Scatter Chart"
 msgstr "Gráfico de Dispersão"
 
 
-#file "D:\zentrack\zentrack/includes/templates/searchLogForm.php"
+
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/searchLogForm.php"
 #args ""
 msgid "Search For Logs"
-msgstr "Busca por Logs"
+msgstr "Buscar por logs"
 
 
-#file "D:\zentrack\zentrack/includes/templates/userSearchForm.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/userSearchForm.php"
 #args ""
 msgid "Search For Users"
-msgstr "Busca por Usuários"
+msgstr "Buscar por usuários"
 
 
-#file "D:\zentrack\zentrack/includes/leftSearch.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/leftSearch.php"
 #args ""
 msgid "Search Logs"
-msgstr "Buscar Logs"
+msgstr "Busca de logs"
 
 
-#file "D:\zentrack\zentrack/www/helpers/projectSearchbox.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/helpers/projectSearchbox.php"
 #args ""
 msgid "Search Projects"
-msgstr "Buscar Projecos"
+msgstr "Busca de projetos"
 
 
-#file "D:\zentrack\zentrack/www/helpers/projectSearchbox.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/helpers/projectSearchbox.php"
 #args ""
 msgid "Search Tickets"
-msgstr "Buscar Tickets"
+msgstr "Busca de tickets"
 
 
-#file "D:\zentrack\zentrack/www/helpers/userSearchbox.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/helpers/userSearchbox.php"
 #args ""
 msgid "Search Users"
-msgstr "Buscar Usuários"
+msgstr "Busca de usuários"
 
 
-#file "D:\zentrack\zentrack/www/admin/listUsers.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/admin/listUsers.php"
 #args ""
 msgid "Search for Users"
-msgstr "Busca por Usuários"
+msgstr "Busca por usuários"
 
 
-#file "D:\zentrack\zentrack/includes/leftSearch.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/leftSearch.php"
 #args ""
 msgid "Search"
 msgstr "Buscar"
 
 
-#file "D:\zentrack\zentrack/includes/templates/reportsDataMenu.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/reportsDataMenu.php"
 #args "array($zen->ffv($report_type))"
 msgid "Select ?s"
-msgstr "Selecione ?s"
+msgstr "?s selecionados"
 
 
-#file "D:\zentrack\zentrack/www/helpers/projectSearchbox.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/helpers/projectSearchbox.php"
 #args ""
 msgid "Select Projects"
-msgstr "Selecione Projetos"
+msgstr "Projetos selecionados"
 
 
-#file "D:\zentrack\zentrack/www/helpers/ticketSearchbox.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/helpers/ticketSearchbox.php"
 #args ""
 msgid "Select Tickets"
-msgstr "Selecione Tickets"
+msgstr "Tickets selecionados"
 
 
-#file "D:\zentrack\zentrack/includes/templates/actions/assign.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/actions/assign.php"
 #args ""
 msgid "Select a Recipient"
-msgstr "Selecione um Receptor"
+msgstr "Selecione um destinatário"
 
 
-#file "D:\zentrack\zentrack/includes/templates/actions/email.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/actions/email.php"
 #args ""
 msgid "Select a User"
-msgstr "Selecione um Usuário"
+msgstr "Selecione um usuário"
 
 
-#file "D:\zentrack\zentrack/includes/templates/actions/upload.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/actions/upload.php"
 #args ""
 msgid "Select a file to upload"
 msgstr "Selecione um arquivo"
 
 
-#file "D:\zentrack\zentrack/includes/templates/actions/log.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/actions/log.php"
 #args ""
 msgid "Select an activity"
 msgstr "Selecione uma atividade"
 
 
-#file "D:\zentrack\zentrack/www/helpers/projectSearchbox.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/helpers/projectSearchbox.php"
 #args ""
 msgid "Select more than one by using control or shift"
 msgstr "Use as teclas 'Control' ou 'Shift' para seleções múltiplas"
 
 
-#file "D:\zentrack\zentrack/www/helpers/projectSearchbox.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/helpers/projectSearchbox.php"
 #args ""
 msgid "Select"
 msgstr "Selecionar"
 
 
-#file "D:\zentrack\zentrack/includes/templates/actions/email.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/actions/email.php"
 #args ""
 msgid "Send a link to this ticket only"
-msgstr "Enviar um link somente para este Ticket"
+msgstr "Enviar um link somente para este ticket"
 
 
-#file "D:\zentrack\zentrack/includes/templates/actions/email.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/actions/email.php"
 #args ""
 msgid "Send a summary of the ticket"
-msgstr "Enviar um resumo deste Ticket"
+msgstr "Enviar um resumo deste ticket"
 
 
-#file "D:\zentrack\zentrack/includes/templates/actions/email.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/actions/email.php"
 #args ""
 msgid "Send a summary, and the ticket's log"
-msgstr "Enviar o resumo e o Log do Ticket"
+msgstr "Enviar um resumo e o log do ticket"
 
 
-#file "D:\zentrack\zentrack/includes/templates/actions/move.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/actions/move.php"
 #args ""
 msgid "Send ticket to another bin"
-msgstr "Enviar o Ticket para outro Repositório"
+msgstr "Mover o ticket para outro repositório"
 
 
-#file "D:\zentrack\zentrack/includes/templates/actions/email.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/actions/email.php"
 #args ""
 msgid "Send ticket to specified recipients"
-msgstr "Enviar el 'ticket' a los receptores especificados"
+msgstr "Enviar o ticket para os destinatários especificados"
 
 
-#file "D:\zentrack\zentrack/includes/templates/accessForm.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/accessForm.php"
 #args "array($zen->formatName($user_id))"
 msgid "Set Access for ?"
-msgstr "Definir Nível de Acesso para ?"
+msgstr "Nível de Acesso para ?"
 
-
-#file "D:\zentrack\zentrack/includes/templates/pwcForm.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/pwcForm.php"
 #args ""
 msgid "Set Password"
-msgstr "Definir Senha"
+msgstr "Senha"
 
 
-#file "D:\zentrack\zentrack/includes/templates/actions/close.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/actions/close.php"
 #args ""
 msgid "Set status to closed/pending"
-msgstr "Definir Estado para fechado/pendente"
+msgstr "Estado fechado/pendente"
 
 
-#file "D:\zentrack\zentrack/includes/templates/actions/test.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/actions/test.php"
 #args ""
 msgid "Set testing to completed on ticket"
-msgstr "Finalizar teste sobre o Ticket"
+msgstr "Finalizar teste sobre o ticket"
 
 
-#file "D:\zentrack\zentrack/includes/templates/actions/estimate.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/actions/estimate.php"
 #args ""
 msgid "Set the expected hours this ticket will take to complete"
-msgstr "Definir o número de horas estimado para completar o Ticket"
+msgstr "Número de horas estimado para concluir o ticket"
 
 
-#file "D:\zentrack\zentrack/includes/templates/actions/estimate.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/reportsOptionsMenu.php"
 #args ""
 msgid "Set"
-msgstr "Definir"
+msgstr "Configurar"
 
 
-#file "D:\zentrack\zentrack/includes/leftAdmin.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/adminMenu.php"
+#args ""
+msgid "Settings Administration"
+msgstr "Adminstração de Configurações"
+
+
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/leftAdmin.php"
 #args ""
 msgid "Settings"
-msgstr "Propiedades"
+msgstr "Configurações"
 
 
-#file "D:\zentrack\zentrack/includes/templates/userSearchForm.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/userSearchForm.php"
 #args ""
 msgid "Show All Users"
-msgstr "Mostrar todos os Usuários"
+msgstr "Exibir todos usuários"
 
 
-#file "D:\zentrack\zentrack/includes/templates/reportsOptionsMenu.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/reportsOptionsMenu.php"
 #args ""
 msgid "Show Both"
-msgstr "Mostrar Todos"
+msgstr "Exibir ambos"
 
 
-#file "D:\zentrack\zentrack/includes/templates/reportsOptionsMenu.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/reportsOptionsMenu.php"
 #args ""
 msgid "Show Graph"
-msgstr "Mostrar Gráfico"
+msgstr "Exibir gráfico"
 
 
-#file "D:\zentrack\zentrack/www/reports/show.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/reports/show.php"
 #args ""
 msgid "Show Report"
-msgstr "Mostrar Relatório"
+msgstr "Exibir relatório"
 
 
-#file "D:\zentrack\zentrack/includes/templates/reportsOptionsMenu.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/reportsOptionsMenu.php"
 #args ""
 msgid "Show Tables"
-msgstr "Mostrar Tabelas"
+msgstr "Exibir tabelas"
 
 
-#file "D:\zentrack\zentrack/includes/templates/reportsOptionsMenu.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/reportsOptionsMenu.php"
 #args ""
 msgid "Stack Chart"
-msgstr "Gráfico de Blocos"
+msgstr "Gráfico de blocos"
 
 
-#file "D:\zentrack\zentrack/includes/templates/newProjectForm.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/newProjectForm.php"
 #args ""
 msgid "Start Date"
-msgstr "Data de Início"
+msgstr "Data de início"
 
-
-#file "D:\zentrack\zentrack/includes/templates/reportsDateMenu.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/reportsDateMenu.php"
 #args ""
 msgid "Start From Date"
-msgstr "Começar em"
+msgstr "Iniciar a partir de"
 
 
-#file "D:\zentrack\zentrack/includes/templates/listTickets_workFormat.php"
+
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/listTickets_workFormat.php"
 #args ""
 msgid "Status"
 msgstr "Estado"
 
 
-#file "D:\zentrack\zentrack/includes/templates/reportsSubmit.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/reportsSubmit.php"
 #args ""
 msgid "Submit Results"
-msgstr "Enviar Resultados"
+msgstr "Enviar resultados"
 
 
-#file "D:\zentrack\zentrack/includes/templates/reportsOptionsMenu.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/reportsOptionsMenu.php"
 #args ""
 msgid "Subtitle"
 msgstr "Subtítulo"
 
 
-#file "D:\zentrack\zentrack/includes/editTicketSubmit.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/leftHelp.php"
+#args ""
+msgid "Support"
+msgstr "Suporte"
+
+
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/editTicketSubmit.php"
 #args ""
 msgid "System Error"
 msgstr "Erro de sistema"
 
 
-#file "D:\zentrack\zentrack/www/admin/addUserSubmit.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/admin/addUserSubmit.php"
 #args "array($lname, $fname)"
 msgid "System Error: Could not add ?, ? to the system"
-msgstr "Erro de sistema: Não foi possível adicionar ?,? ao sistema"
+msgstr "Erro de sistema: Não foi possível adicionar ?, ? para o sistema"
 
 
-#file "D:\zentrack\zentrack/www/admin/editUserSubmit.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/admin/editUserSubmit.php"
 #args "array($lname, $fname)"
 msgid "System Error: Could not update ?, ?"
-msgstr "Erro de sistema: Não foi possível atualizar ?, ?"
+msgstr "Erro de sistema: Não foi possível alterar ?, ?"
 
 
-#file "D:\zentrack\zentrack/www/misc/pwc.php"
+
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/misc/pwc.php"
 #args ""
 msgid "System Error: Unable to change user passphrase."
-msgstr "Erro de sistema: Não foi possível modificar a Senha do usuário."
+msgstr "Erro de sistema: Não foi possível alterar a senha do usuário."
 
 
-#file "D:\zentrack\zentrack/www/misc/homebin.php"
+
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/misc/homebin.php"
 #args ""
 msgid "System Error: Unable to update bin."
-msgstr "Eror de sistema: Não foi possível atualizar o Repositório"
+msgstr "Eror de sistema: Não foi possível alterar o repositório"
 
 
-#file "D:\zentrack\zentrack/www/admin/access.php"
+
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/admin/access.php"
 #args ""
 msgid "System Error: could not update access &#151; this is most likely because no bins were set, and no bins previously existed (i.e. nothing happened)"
-msgstr "Erro de sistema: Não foi possível atualizar &#151; possivelmente não há Repositório definido, ou não Repositório não criado (nada foi modificado)"
+msgstr "Erro de sistema: Não foi possível atualizar &#151; possivelmente não há um repositório definido, ou repositório não criado (nada foi alterado)"
 
 
-#file "D:\zentrack\zentrack/www/admin/access.php"
+
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/admin/access.php"
 #args "array($user_id)"
 msgid "System Error: could not update access for user ?"
-msgstr "Erro de sistema: Não foi possivel atualizar o nível de acesso para o usuário ?"
+msgstr "Erro de sistema: Não foi possivel alterar o nível de acesso para o usuário ?"
 
 
-#file "D:\zentrack\zentrack/includes/templates/ticket_systemBox.php"
+
+
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/ticket_systemBox.php"
 #args ""
 msgid "System History"
-msgstr "Histórico do Sistema"
+msgstr "Histórico do sistema"
 
 
-#file "D:\zentrack\zentrack/www/actions/log.php"
+
+
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/actions/log.php"
 #args ""
 msgid "System error: Activity could not be logged."
-msgstr "Erro de sistema: Não foi possível geral Log de atividades"
+msgstr "Erro de sistema: Não foi possível gerar log da atividade."
 
 
-#file "D:\zentrack\zentrack/www/actions/upload.php"
+
+
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/actions/upload.php"
 #args "array($userfile_name, $id)"
 msgid "System error: Attachment ? could not be uploaded for ticket ?. "
-msgstr "Erro de sistema: Não foi possível anexar arquivo ? ao Ticket"
+msgstr "Erro de sistema: Não foi possível anexar arquivo ? ao ticket."
 
 
-#file "D:\zentrack\zentrack/www/actions/addToNotify.php"
+
+
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/actions/addToNotify.php"
 #args ""
 msgid "System error: Notify list could not be updated "
-msgstr "Error de sistema: Não foi possível atualizar a Lista de Notificações"
+msgstr "Error de sistema: Não foi possível alterar a lista de notificações."
 
 
-#file "D:\zentrack\zentrack/www/actions/accept.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/actions/accept.php"
 #args "array($id)"
 msgid "System error: Ticket ? could not be accepted"
-msgstr "Erro de sistema: o Ticket ? não foi aceito"
+msgstr "Erro de sistema: o ticket ? não pôde ser aceito."
 
 
-#file "D:\zentrack\zentrack/www/actions/approve.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/actions/approve.php"
 #args "array($id)"
 msgid "System error: Ticket ? could not be approved"
-msgstr "Erro de sistema: O Ticket ? não foi aprovado"
+msgstr "Erro de sistema: o Ticket ? não pôde ser aprovado."
 
 
-#file "D:\zentrack\zentrack/www/actions/assign.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/actions/assign.php"
 #args "array($id)"
 msgid "System error: Ticket ? could not be assigned"
-msgstr "Erro de sistema: o Ticket ? não foi atribuído"
+msgstr "Erro de sistema: o ticket ? não pôde ser atribuído."
 
 
-#file "D:\zentrack\zentrack/www/actions/close.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/actions/close.php"
 #args "array($id)"
 msgid "System error: Ticket ? could not be closed"
-msgstr "Erro de sistema: o Ticket ? não foi fechado"
+msgstr "Erro de sistema: o ticket ? não pôde ser fechado."
 
 
-#file "D:\zentrack\zentrack/www/actions/email.php"
-#args ""
-msgid "System error: Ticket ? could not be emailed", array($id
-msgstr "Erro de sistema: o Ticket ? não foi enviado por e-mail", array($id
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/actions/email.php"
+#args "array($id)"
+msgid "System error: Ticket ? could not be emailed. "
+msgstr "Erro de sistema: o ticket ? não pôde ser enviado por e-mail."
 
-
-#file "D:\zentrack\zentrack/www/actions/move.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/actions/move.php"
 #args "array($id)"
 msgid "System error: Ticket ? could not be moved. "
-msgstr "Erro de sistema: o Ticket ? não foi movido"
+msgstr "Erro de sistema: o ticket ? não pôde ser movido."
 
 
-#file "D:\zentrack\zentrack/www/actions/reject.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/actions/reject.php"
 #args "array($id)"
 msgid "System error: Ticket ? could not be rejected"
-msgstr "Erro de sistema: o 'Ticket' ? não foi rejeitado"
+msgstr "Erro de sistema: o ticket ? não pôde ser rejeitado."
 
 
-#file "D:\zentrack\zentrack/www/actions/relate.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/actions/relate.php"
 #args "array($id)"
 msgid "System error: Ticket ? could not be related, or the entries were the same."
-msgstr "Erro de sistema: o Ticket ? não foi relacionado, ou as entradas são as mesmas."
+msgstr "Erro de sistema: o ticket ? não pôde ser associado, ou as entradas são as mesmas."
 
 
-#file "D:\zentrack\zentrack/www/actions/reopen.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/actions/reopen.php"
 #args "array($id)"
 msgid "System error: Ticket ? could not be reopened."
-msgstr "Erro de sistema: o Ticket ? não foi reaberto"
+msgstr "Erro de sistema: o ticket ? não pôde ser reaberto."
 
 
-#file "D:\zentrack\zentrack/www/actions/test.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/actions/test.php"
 #args "array($id)"
 msgid "System error: Ticket ? could not be tested"
-msgstr "Error de sistema: o Ticket ? não foi testado"
+msgstr "Erro de sistema: o ticket ? não pôde ser testado."
 
 
-#file "D:\zentrack\zentrack/www/actions/yank.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/actions/yank.php"
 #args "array($id)"
 msgid "System error: Ticket ? could not be yanked."
-msgstr "Erro de sistema: o Ticket ? não desvinculado"
+msgstr "Erro de sistema: o ticket ? não pôde ser desvinculado."
 
 
-#file "D:\zentrack\zentrack/includes/templates/searchList.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/actions/estimate.php"
+#args "array($id)"
+msgid "System error: Ticket ? hours could not be set"
+msgstr "Erro de sistema: o ticket ? não pôde ter as horas definidas."
+
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/searchList.php"
 #args ""
 msgid "System involved in ticket"
-msgstr "Sistema relacionado com Ticket"
+msgstr "Sistema relacionado com o ticket"
 
 
-#file "D:\zentrack\zentrack/includes/leftMain.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/leftMain.php"
 #args ""
 msgid "System"
 msgstr "Sistema"
 
 
-#file "D:\zentrack\zentrack/www/actions/print.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/actions/print.php"
 #args ""
 msgid "TASKS FOR COMPLETION"
-msgstr "TAREFAS À COMPLETAR"
+msgstr "TAREFAS À CONCLUIR"
 
-
-#file "D:\zentrack\zentrack/includes/templates/ticket_tasksBox.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/ticket_tasksBox.php"
 #args ""
 msgid "Tasks for this project"
-msgstr "Tarefas do projeto"
+msgstr "Tarefas para o projeto"
 
 
-#file "D:\zentrack\zentrack/includes/templates/actions/test.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/actions/test.php"
 #args ""
 msgid "Test Ticket"
 msgstr "Testar Ticket"
 
 
-#file "D:\zentrack\zentrack/includes/templates/actions/test.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/ticket_actionBar.php"
+#args ""
+msgid "Test"
+msgstr "Teste"
+
+
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/actions/test.php"
 #args ""
 msgid "Tested"
 msgstr "Testado"
 
 
-#file "D:\zentrack\zentrack/includes/templates/newProjectForm.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/newProjectForm.php"
 #args ""
 msgid "Testing Required"
-msgstr "Teste Requerido"
+msgstr "Teste requerido"
 
 
-#file "D:\zentrack\zentrack/includes/templates/ticket_detailsBox.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/ticket_detailsBox.php"
 #args ""
 msgid "Testing"
 msgstr "Testando"
 
 
-#file "D:\zentrack\zentrack/includes/templates/reportsOptionsMenu.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/reportsOptionsMenu.php"
 #args ""
 msgid "Text"
 msgstr "Texto"
 
 
-#file "D:\zentrack\zentrack/www/misc/homebin.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/misc/homebin.php"
 #args ""
 msgid "That bin doesn't exist"
-msgstr "Este Repostitório não existe"
+msgstr "Repostitório inexistente"
 
 
-#file "D:\zentrack\zentrack/www/actions/upload.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/actions/upload.php"
 #args ""
 msgid "That is not a recognized file type, by your browsers determinations"
-msgstr "O navegador não reconhece este tipo de arquivo"
+msgstr "Seu navegador não reconhece este tipo de arquivo"
 
 
-#file "D:\zentrack\zentrack/www/admin/addUserSubmit.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/admin/addUserSubmit.php"
 #args ""
 msgid "That login name already exists.  Please choose another."
-msgstr "Usuário já existe. Por favor, escolha outro."
+msgstr "Nome de usuário já cadastrado. Por favor escolha outro."
 
 
-#file "D:\zentrack\zentrack/www/admin/editUserSubmit.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/admin/editUserSubmit.php"
 #args ""
 msgid "That login name is in use by another account"
-msgstr "Nome já em uso por outro usuário"
+msgstr "Nome de usuário já em uso por outra conta"
 
 
-#file "D:\zentrack\zentrack/www/reports/custom.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/reports/custom.php"
 #args ""
 msgid "That temporary report doesn't exist"
-msgstr "Relatório de tempo não existe"
+msgstr "Relatório temporário não existe"
 
 
-#file "D:\zentrack\zentrack/www/ticket.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/ticket.php"
 #args ""
 msgid "That ticket doesn't exist"
-msgstr "O Ticket não existe"
+msgstr "Ticket inexistente"
 
 
-#file "D:\zentrack\zentrack/www/admin/editUser.php"
+
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/admin/editUser.php"
 #args ""
 msgid "That user could not be found"
 msgstr "Usuário não encontrado"
 
 
-#file "D:\zentrack\zentrack/www/misc/pwc.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/misc/pwc.php"
 #args ""
 msgid "The Guest Password cannot be changed!"
-msgstr "A senha do convidado (Guest) não pode ser modificada!"
+msgstr "Senha de usuário convidado (guest) não pode ser modificada!"
 
 
-#file "D:\zentrack\zentrack/www/admin/editUser.php"
+
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/admin/editUser.php"
 #args ""
 msgid "The Root Admin Account can only be modified by the Root Administrator"
 msgstr "A conta do Administrador só pode ser modificada por ele mesmo"
 
 
-#file "D:\zentrack\zentrack/www/admin/deleteUser.php"
+
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/admin/deleteUser.php"
 #args "array($user_id)"
 msgid "The account (?) could not be found/deleted successfully"
-msgstr "A conta do usuario (?) não foi localizada/apagada corretamente"
+msgstr "A conta do usuário (?) não foi encontrada/excluída corretamente"
 
 
-#file "D:\zentrack\zentrack/www/admin/deleteUser.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/admin/deleteUser.php"
 #args "array($user_id)"
 msgid "The account(?) was successfully removed"
-msgstr "A conta do usuario (?) foi apagada corretamente"
+msgstr "Conta do usuário (?) excluída com sucesso"
 
 
-#file "D:\zentrack\zentrack/www/admin/deleteUser.php"
+
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/admin/deleteUser.php"
 #args ""
 msgid "The action completed successfully.  The account was not actually deleted, because this is a demo site"
-msgstr "Ação completada com êxito. A conta de usuário não foi apagada por estarmos no modo de Demonstração"
+msgstr "Ação concluída com sucesso. A conta de usuário não foi excluída por estarmos no modo de Demonstração"
 
 
-#file "D:\zentrack\zentrack/www/actions/upload.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/actions/upload.php"
 #args ""
 msgid "The file could not be uploaded "
-msgstr "O arquivo não pode ser enviado"
+msgstr "O arquivo não pôde ser enviado"
 
 
-#file "D:\zentrack\zentrack/www/actions/upload.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/actions/upload.php"
 #args "array(number_format($userfile_size), number_format($max_size))"
 msgid "The file size (?) exceeded the maximum allowed (?)"
-msgstr "O tamanho (?) do arquivo excede o máximo permitido (?)"
+msgstr "O tamanho do arquivo (?) excede o máximo permitido (?)"
 
 
-#file "D:\zentrack\zentrack/www/actions/upload.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/actions/upload.php"
 #args "array(substr($max_size,0,strlen($max_size)-3))"
 msgid "The file was not recieved. Check to insure it's size does not exceed ?KB"
-msgstr "Arquivo não recebido. Verifique que seu tamanho não excede ?KB"
+msgstr "Arquivo não recebido. Verifique que seu tamanho não excede ? kb"
 
 
-#file "D:\zentrack\zentrack/includes/templates/searchList.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/searchList.php"
 #args ""
 msgid "The importance of the ticket"
-msgstr "A importância do Ticket"
+msgstr "Importância do ticket"
 
 
-#file "D:\zentrack\zentrack/www/misc/language.php"
+
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/misc/language.php"
 #args ""
-msgid "The language could not be changed to $newlang"
-msgstr "Não foi possível modificar o idioma para $newlang"
+msgid "The language could not be changed to ?", $newlang
+msgstr "Não foi possível alterar o idioma para $newlang"
 
 
-#file "D:\zentrack\zentrack/www/misc/language.php"
+
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/misc/language.php"
 #args ""
 msgid "The language file chosen was not valid"
-msgstr "Arquivo de idioma inválido"
+msgstr "Arquivo de idioma escolhido inválido"
 
 
-#file "D:\zentrack\zentrack/includes/templates/searchList.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/searchList.php"
 #args ""
 msgid "The name of the ticket"
-msgstr "Nome do Ticket"
+msgstr "Nome do ticket"
 
 
-#file "D:\zentrack\zentrack/includes/templates/userSearchList.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/userSearchList.php"
 #args ""
 msgid "The name of the user"
 msgstr "Nome do usuário"
 
 
-#file "D:\zentrack\zentrack/www/admin/editUserSubmit.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/admin/editUserSubmit.php"
 #args ""
 msgid "The root admin access cannot be less than the level_settings parameter"
-msgstr "O Nível de acesso do Administrador não pode ser menor que o parâmetro level_settings"
+msgstr "O Nível de acesso do Administrador não pode ser menor que o parâmetro 'level_settings'"
 
 
-#file "D:\zentrack\zentrack/www/admin/editUserSubmit.php"
+
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/admin/editUserSubmit.php"
 #args ""
 msgid "The root admin account cannot be deactivated"
 msgstr "Não é possível desativar a conta do administrador"
 
 
-#file "D:\zentrack\zentrack/www/admin/editUserSubmit.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/admin/editUserSubmit.php"
 #args ""
 msgid "The root admin account must have access of 5 or greater"
-msgstr "O Nível de acesso para o administrador deve ser 5 ou maior"
+msgstr "O Nível de acesso para a conta de administrador deve ser 5 ou maior"
 
 
-#file "D:\zentrack\zentrack/www/admin/deleteUser.php"
+
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/admin/deleteUser.php"
 #args ""
 msgid "The root administrator account cannot be deleted"
-msgstr "A conta de administrador não pode ser apagada"
+msgstr "A conta de administrador não pode ser excluída"
 
 
-#file "D:\zentrack\zentrack/includes/templates/listTickets_workFormat.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/listTickets_workFormat.php"
 #args ""
 msgid "The type of ticket"
-msgstr "Tipo do Ticket"
+msgstr "Tipo do ticket"
 
 
-#file "D:\zentrack\zentrack/www/actions/upload.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/actions/upload.php"
 #args ""
 msgid "The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the html form."
-msgstr "O arquivo enviado é maior que a diretiva MAX_FILE_SIZE que foi especificada no formulário HTML"
+msgstr "O tamanho do arquivo enviado é maior que o especificado na diretiva 'MAX_FILE_SIZE' no formulário HTML."
 
 
-#file "D:\zentrack\zentrack/www/actions/upload.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/actions/upload.php"
 #args ""
 msgid "The uploaded file exceeds the upload_max_filesize directive in php.ini."
-msgstr "O arquivo enviado é maior que a diretiva UPLOAD_MAX_FILESIZE que foi especificada no arquivo php.ini"
+msgstr "O tamanho do arquivo enviado é maior que o especificado na diretiva 'MAX_FILE_SIZE' no arquivo 'php.ini'."
 
 
-#file "D:\zentrack\zentrack/www/actions/upload.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/actions/upload.php"
 #args ""
 msgid "The uploaded file was only partially uploaded."
-msgstr "O arquivo enviado só foi recebido parcialmente"
+msgstr "O arquivo enviado foi recebido parcialmente."
 
 
-#file "D:\zentrack\zentrack/www/admin/resetPassword.php"
+
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/admin/resetPassword.php"
 #args ""
 msgid "The user passphrase could not be found/edited"
-msgstr "A Senha do usuário não pode ser encontrada/editada"
+msgstr "A Senha do usuário não pôde ser encontrada/alterada"
 
 
-#file "D:\zentrack\zentrack/includes/zenTrack.class"
+
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/zenTrack.class"
 #args ""
 msgid "There are more log entries."
-msgstr "Não existem mais entradas de Log"
+msgstr "Não existem mais entradas no log."
 
 
-#file "D:\zentrack\zentrack/includes/templates/configForm.php"
+
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/configForm.php"
 #args ""
 msgid "There is already an entry with that value."
-msgstr "Já existe uma entrada com este valor"
+msgstr "Já existe uma entrada com este valor."
 
 
-#file "D:\zentrack\zentrack/www/admin/bins.php"
+
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/admin/bins.php"
 #args ""
 msgid "There was nothing provided to update"
-msgstr "Não há nada à atualizar"
+msgstr "Não havia nada para alterar"
 
 
-#file "D:\zentrack\zentrack/www/admin/config.php"
+
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/admin/config.php"
 #args ""
 msgid "There were no changes made to the settings.  Procedure skipped."
-msgstr "Não foram feitas mudanças nas configurações. Procedimento ignorado."
+msgstr "Não foram feitas alterações nas configurações. Procedimento ignorado."
 
 
-#file "D:\zentrack\zentrack/www/searchLogs.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/searchLogs.php"
 #args ""
 msgid "There were no logs matching your search."
-msgstr "Não existem arquivos de Log para a busca solicitada."
+msgstr "Não existem arquivos de log para a busca solicitada."
 
 
-#file "D:\zentrack\zentrack/www/actions/email.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/actions/email.php"
 #args ""
 msgid "There were no recipients"
-msgstr "Não existem receptores"
+msgstr "Não há destinatários"
 
 
-#file "D:\zentrack\zentrack/www/admin/listUsers.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/admin/listUsers.php"
 #args ""
 msgid "There were no results for your search"
-msgstr "Não existem resultados para a busca solicitada"
+msgstr "Não foram encontrados resultados para a busca."
 
 
-#file "D:\zentrack\zentrack/www/search.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/search.php"
 #args ""
 msgid "There were no results for your search."
-msgstr "Não existem resultados para sua busca."
+msgstr "Não foram encontrados resultados para a busca."
 
 
-#file "D:\zentrack\zentrack/includes/templates/reportsOptionsMenu.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/reportsOptionsMenu.php"
 #args ""
 msgid "These options aren't useful when only graphing one element."
 msgstr "Estas opções não são úteis para gráficos de um único elemento"
 
 
-#file "D:\zentrack\zentrack/includes/templates/userSearchForm.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/userSearchForm.php"
 #args ""
 msgid "This could be a long list! Proceed anyways?"
 msgstr "A lista pode ser longa! Continuar?
 
 
-#file "D:\zentrack\zentrack/includes/templates/userAdd.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/userAdd.php"
 #args ""
-msgid "This grants the user the specified level of 
- 	access to all bins not otherwise indicated by 'user access'."
-msgstr "Isto garantirá ao usuário o nível de acesso especificado
-	a todos os Repositórios não somente aos indicados pelo 'acesso personalizado pelo usuário'."
+msgid "This grants the user the specified level of access to all bins not otherwise indicated by 'user access'."
+msgstr "Isto garantirá ao usuário o nível de acesso especificado à todos os repositórios não somente aos indicados pelo 'acesso personalizado' pelo usuário."
 
 
-#file "D:\zentrack\zentrack/includes/editTicketSubmit.php"
+
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/editTicketSubmit.php"
 #args "array($id)"
 msgid "Ticket #? cannot be edited in its current status"
-msgstr "Ticket #? não pode ser editado devido ao seu estado"
+msgstr "Ticket #? não pode ser alterado devido ao seu estado atual"
 
 
-#file "D:\zentrack\zentrack/includes/templates/editTicketForm.php"
+
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/editTicketForm.php"
 #args "array($id)"
 msgid "Ticket #? could not be found"
 msgstr "Ticket #? não encontrado"
 
 
-#file "D:\zentrack\zentrack/www/actions/action_header.php"
+
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/actions/action_header.php"
 #args "array($id)"
 msgid "Ticket #?"
 msgstr "Ticket #?"
 
 
-#file "D:\zentrack\zentrack/includes/zenTrack.class"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/zenTrack.class"
 #args "array($id,$this->formatName($user_id,2))"
 msgid "Ticket #?: Log added by ?"
 msgstr "Ticket #?: Log adicionado por ?"
 
 
-#file "D:\zentrack\zentrack/includes/zenTrack.class"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/zenTrack.class"
 #args "array($id,$name)"
 msgid "Ticket #?: assigned to ?"
 msgstr "Ticket #?: atribuído à ?"
 
 
-#file "D:\zentrack\zentrack/includes/zenTrack.class"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/zenTrack.class"
 #args "array($id)"
 msgid "Ticket #?: closed"
 msgstr "Ticket #?: fechado"
 
 
-#file "D:\zentrack\zentrack/includes/zenTrack.class"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/zenTrack.class"
 #args "array($id)"
 msgid "Ticket #?: created"
-msgstr "Ticket #?: fechado"
+msgstr "Ticket #?: adicionado"
 
 
-#file "D:\zentrack\zentrack/includes/zenTrack.class"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/zenTrack.class"
 #args "array($id,$this->getBinName($newBin))"
 msgid "Ticket #?: moved to ?"
 msgstr "Ticket #?: movido para ?"
 
 
-#file "D:\zentrack\zentrack/includes/zenTrack.class"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/zenTrack.class"
 #args "array($id)"
 msgid "Ticket #?: rejected"
 msgstr "Ticket #?: rejeitado"
 
 
-#file "D:\zentrack\zentrack/includes/zenTrack.class"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/zenTrack.class"
 #args "array($id)"
 msgid "Ticket #?: reopened"
 msgstr "Ticket #?: reaberto"
 
 
-#file "D:\zentrack\zentrack/includes/zenTrack.class"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/zenTrack.class"
 #args "array($id,$name)"
 msgid "Ticket #?: yanked by ?"
 msgstr "Ticket #?: desvinculado por ?"
 
 
-#file "D:\zentrack\zentrack/www/actions/editSubmit.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/actions/editSubmit.php"
 #args "array($id)"
 msgid "Ticket ? could not edit ticket. "
-msgstr "Ticket ? não pode editar o Ticket"
+msgstr "Ticket ? não pôde alterar o ticket"
 
 
-#file "D:\zentrack\zentrack/includes/templates/adminMenu.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/zenTrack.class"
+#args "array($id)"
+msgid "Ticket ? has been reopened."
+msgstr "Ticket ? foi reaberto"
+
+
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/adminMenu.php"
 #args ""
 msgid "Ticket Administration"
-msgstr "Administração de Tickets"
+msgstr "Administração de tickets"
 
 
-#file "D:\zentrack\zentrack/includes/nav.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/nav.php"
 #args ""
 msgid "Ticket ID"
-msgstr "ID do Ticket"
+msgstr "ID do ticket"
 
 
-#file "D:\zentrack\zentrack/includes/templates/newTicketForm.php"
+
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/newTicketForm.php"
 #args ""
 msgid "Ticket Information"
-msgstr "Informações do Ticket"
+msgstr "Informações do ticket"
 
 
-#file "D:\zentrack\zentrack/includes/zenTrack.class"
+
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/zenTrack.class"
 #args ""
 msgid "Ticket Summary")
-msgstr "Resumo do Ticket")
+msgstr "Resumo do ticket"
 
 
-#file "D:\zentrack\zentrack/includes/zenTrack.class"
-#args ""
-msgid "Ticket has been reopened."
-msgstr "O Ticket foi reaberto."
-
-
-#file "D:\zentrack\zentrack/www/ticket.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/ticket.php"
 #args ""
 msgid "Ticket"
 msgstr "Ticket"
 
 
-#file "D:\zentrack\zentrack/www/assignedTickets.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/assignedTickets.php"
 #args ""
 msgid "Tickets assigned"
 msgstr "Tickets atribuídos"
 
 
-#file "D:\zentrack\zentrack/includes/leftTickets.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/leftTickets.php"
 #args ""
 msgid "Tickets"
 msgstr "Tickets"
 
 
-#file "D:\zentrack\zentrack/includes/templates/listTickets.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/listTickets.php"
 #args ""
 msgid "Time"
 msgstr "Tempo"
 
 
-#file "D:\zentrack\zentrack/includes/templates/listTickets.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/listTickets_workFormat.php"
 #args ""
 msgid "Title"
 msgstr "Título"
 
 
-#file "D:\zentrack\zentrack/includes/templates/configForm.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/configForm.php"
 #args "array($type)"
 msgid "To remove a ? from use, uncheck the 'active' box."
-msgstr "Para apagar um ? do uso, desmarque a caixa 'ativo'"
+msgstr "Para remover um ? do uso, desmarque a caixa 'ativo'"
 
 
-#file "D:\zentrack\zentrack/www/actions/print.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/binForm.php"
+#args ""
+msgid "To remove a bin from use, uncheck the 'active' box."
+msgstr "Para excluir um repositório, desmarque a caixa 'ativo'"
+
+
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/actions/print.php"
 #args ""
 msgid "Totals"
 msgstr "Totais"
 
 
-#file "D:\zentrack\zentrack/includes/leftMain.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/leftMain.php"
 #args ""
 msgid "Tracker"
 msgstr "Rastreador"
 
 
-#file "D:\zentrack\zentrack/includes/templates/reportsOptionsMenu.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/reportsOptionsMenu.php"
 #args ""
 msgid "Try using Combine Selected with a very large number of elements, if you intend to view a graphical image."
-msgstr "Use 'Combinar Seleções' se quiser ver um gráfico quando o número de elementos é muito elevado."
+msgstr "Quando o número de elementos é muito elevado, combine as seleções se quiser ver em um gráfico."
 
 
-#file "D:\zentrack\zentrack/www/admin/access.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/admin/access.php"
 #args ""
 msgid "Two or more bins were submitted with the same name"
-msgstr "Tentativa de salvar dois ou mais Repositórios com o mesmo nome"
+msgstr "Dois ou mais repositórios enviados com o mesmo nome"
 
 
-#file "D:\zentrack\zentrack/www/reports/save.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/reports/save.php"
 #args ""
 msgid "Type ids separated by commas, or click on the button."
-msgstr "Informe os IDs separadas por vírgulas, ou clique no botão"
+msgstr "Informe as IDs separadas por vírgulas, ou clique no botão"
 
 
-#file "D:\zentrack\zentrack/includes/templates/searchList.php"
+
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/searchList.php"
 #args ""
 msgid "Type of ticket"
 msgstr "Tipo do Ticket"
 
 
-#file "D:\zentrack\zentrack/includes/templates/listTickets.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/listTickets_workFormat.php"
 #args ""
 msgid "Type"
 msgstr "Tipo"
 
 
-#file "D:\zentrack\zentrack/includes/zenTrack.class"
-#args ""
-msgid "URL"
-msgstr "URL"
-
-
-#file "D:\zentrack\zentrack/includes/templates/userAdd.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/userAdd.php"
 #args ""
 msgid "Uncheck to disable this account."
-msgstr "Desmarque para desabilitar a conta."
+msgstr "Desmarque para desativar esta conta"
 
 
-#file "D:\zentrack\zentrack/www/admin/bins.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/admin/bins.php"
 #args ""
 msgid "Update Bins"
-msgstr "Atualizar Repositórios"
+msgstr "Alterar repositórios"
 
 
-#file "D:\zentrack\zentrack/www/admin/priorities.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/admin/priorities.php"
 #args ""
 msgid "Update Priorities"
-msgstr "Atualizar Prioridades"
+msgstr "Alterar prioridades"
 
 
-#file "D:\zentrack\zentrack/www/admin/systems.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/admin/systems.php"
 #args ""
 msgid "Update Systems"
-msgstr "Atualizar Sistemas"
+msgstr "Alterar sistemas"
 
 
-#file "D:\zentrack\zentrack/www/admin/tasks.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/admin/tasks.php"
 #args ""
 msgid "Update Tasks"
-msgstr "Atualizar Tarefas"
+msgstr "Alterar tarefas"
 
 
-#file "D:\zentrack\zentrack/www/admin/types.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/admin/types.php"
 #args ""
 msgid "Update Types"
-msgstr "Atualizar Tipos"
+msgstr "Alterar tipos"
 
 
-#file "D:\zentrack\zentrack/includes/templates/accessForm.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/accessForm.php"
 #args ""
 msgid "Update"
-msgstr "Atualizar"
+msgstr "Alterar"
 
 
-#file "D:\zentrack\zentrack/includes/templates/actions/upload.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/actions/upload.php"
 #args ""
 msgid "Upload Attachment"
-msgstr "Atualizar Anexos"
+msgstr "Enviar anexo"
 
 
-#file "D:\zentrack\zentrack/www/actions/upload.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/actions/upload.php"
 #args ""
 msgid "Uploaded file size 0 bytes"
-msgstr "O arquivo contém 0 bytes"
+msgstr "O arquivo enviado contém 0 bytes"
 
 
-#file "D:\zentrack\zentrack/www/reports/index.php"
+
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/reports/index.php"
 #args ""
 msgid "Usage Reports"
 msgstr "Relatórios de Uso"
 
 
-#file "D:\zentrack\zentrack/includes/templates/userAdd.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/userAdd.php"
 #args ""
 msgid "Use zero if unsure."
 msgstr "Informe zero se não tiver certeza"
 
 
-#file "D:\zentrack\zentrack/www/admin/addUserSubmit.php"
-#args "array($user_id, "<br><a href='$rootUrl/admin/access.php?user_id=$user_id'>" . tr("Click Here") . "</a>", $user_id)"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/admin/addUserSubmit.php"
+#args "array($user_id, "--link--" . tr("Click Here") . "</a>", $user_id)"
 msgid "User ? was added successfully. The password is the last name of the user. ? to customize user ?'s access permissions."
-msgstr "Usuário ? adicionado corretamente. A senha é o sobrenome do usuário. ? para modificar as permissões de acesso do usuário ?"
+msgstr "Usuário ? adicionado com sucesso. A senha é o sobrenome do usuário. ? para alterar as permissões de acesso do usuário ?"
 
 
-#file "D:\zentrack\zentrack/www/admin/editUserSubmit.php"
-#args "array($user_id, "<br><a href='$rootUrl/admin/access.php?user_id=$user_id'>" . tr("Click Here") . "</a>", $user_id)"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/admin/editUserSubmit.php"
+#args "array($user_id,
+ 			"--link--",
+ 			$user_id)"
 msgid "User ? was updated successfully. ? to customize user ?'s access permissions."
-msgstr "Usuário ? atualizado corretamente. ? para modificar as permissões de acess do usuário ?"
+msgstr "Usuário ? alterado com sucesso. ? para alterar as permissões de acesso do usuário ?"
 
 
-#file "D:\zentrack\zentrack/includes/templates/adminMenu.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/adminMenu.php"
 #args ""
 msgid "User Administration"
-msgstr "Administração de Usuários"
+msgstr "Adminstração de usuários"
 
 
-#file "D:\zentrack\zentrack/includes/templates/reportsTypeMenu.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/reportsTypeMenu.php"
 #args ""
 msgid "User ID"
-msgstr "ID do Usuário"
+msgstr "ID do usuário"
 
 
-#file "D:\zentrack\zentrack/includes/templates/userAdd.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/userAdd.php"
 #args ""
 msgid "User Information"
-msgstr "Informações do Usuario"
+msgstr "Informações do usuário"
 
 
-#file "D:\zentrack\zentrack/www/options.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/options.php"
 #args ""
 msgid "User Options"
-msgstr "Opcões do Usuário"
+msgstr "Opcões do usuário"
 
 
-#file "D:\zentrack\zentrack/includes/templates/searchLogForm.php"
+
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/searchLogForm.php"
 #args ""
 msgid "User"
 msgstr "Usuário"
 
 
-#file "D:\zentrack\zentrack/www/reports/save.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/reports/save.php"
 #args ""
 msgid "User(s)"
 msgstr "Usuário(s)"
 
 
-#file "D:\zentrack\zentrack/includes/templates/userSearchList.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/userSearchList.php"
 #args ""
 msgid "Users Default Bin"
-msgstr "Repositório padrão do Usuário"
+msgstr "Repositório padrão do usuário"
 
 
-#file "D:\zentrack\zentrack/includes/templates/userSearchList.php"
+
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/userSearchList.php"
 #args ""
 msgid "Users Initials"
-msgstr "Iniciais do Usuário"
+msgstr "Iniciais do usuário"
 
 
-#file "D:\zentrack\zentrack/includes/templates/userSearchList.php"
+
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/userSearchList.php"
 #args ""
 msgid "Users System ID"
-msgstr "ID dos Usuários do Sistema"
+msgstr "IDs dos usuários do sistema"
 
 
-#file "D:\zentrack\zentrack/includes/templates/userSearchList.php"
+
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/userSearchList.php"
 #args ""
 msgid "Users email address"
-msgstr "E-mail dos Usuários"
+msgstr "E-mail dos usuários"
 
 
-#file "D:\zentrack\zentrack/includes/templates/configSettingsForm.php"
+
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/configSettingsForm.php"
 #args ""
 msgid "Value"
 msgstr "Valor"
 
 
-#file "D:\zentrack\zentrack/includes/templates/reportsSubmit.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/reportsSubmit.php"
 #args ""
 msgid "View Chart"
-msgstr "Ver Gráficos"
+msgstr "Ver Gráfico"
 
 
-#file "D:\zentrack\zentrack/includes/templates/reportMenu.php"
+
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/reportMenu.php"
 #args ""
 msgid "View Reports"
-msgstr "Ver Relatórios"
+msgstr "Ver Relatório"
 
 
-#file "D:\zentrack\zentrack/includes/templates/reportsDateMenu.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/loginForm"
+#args ""
+msgid "Visit the zenTrack development site"
+msgstr "Visite o site do desenvolvedor zenTrack"
+
+
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/reportsDateMenu.php"
 #args ""
 msgid "Weeks"
 msgstr "Semanas"
 
 
-#file "D:\zentrack\zentrack/www/index.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/index.php"
 #args ""
 msgid "Welcome to zenTrack"
 msgstr "Bem-vindo ao zenTrack"
 
 
-#file "D:\zentrack\zentrack/includes/templates/reportsOptionsMenu.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/loginForm"
+#args ""
+msgid "Welcome"
+msgstr "Bem-vindo"
+
+
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/reportsOptionsMenu.php"
 #args ""
 msgid "What to Graph"
-msgstr "Informação à mostrar no Gráfico"
+msgstr "Informação à mostrar no gráfico"
 
 
-#file "D:\zentrack\zentrack/includes/templates/listTickets_workFormat.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/listTickets_workFormat.php"
 #args "array($page_type)"
 msgid "Who the ? belongs to"
-msgstr "A quem pertence o ?"
+msgstr "Proprietário do ?"
 
 
-#file "D:\zentrack\zentrack/includes/templates/listTickets_workFormat.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/listTickets_workFormat.php"
 #args ""
 msgid "Worked"
 msgstr "Trabalhado"
 
 
-#file "D:\zentrack\zentrack/includes/templates/actions/yank.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/actions/yank.php"
 #args ""
 msgid "Yank Ticket"
 msgstr "Desvincular Ticket"
 
-
-#file "D:\zentrack\zentrack/includes/templates/actions/yank.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/actions/yank.php"
 #args ""
 msgid "Yank"
 msgstr "Desvincular"
 
 
-#file "D:\zentrack\zentrack/includes/templates/reportsDateMenu.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/reportsDateMenu.php"
 #args ""
 msgid "Years"
 msgstr "Anos"
 
 
-#file "D:\zentrack\zentrack/www/ticket.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/ticket.php"
 #args ""
 msgid "You are not allowed to view the following in this bin"
-msgstr "Sem permissão de acesso à este Repositório"
+msgstr "Acesso negado à este repositório"
 
 
-#file "D:\zentrack\zentrack/includes/editTicketSubmit.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/editTicketSubmit.php"
 #args ""
 msgid "You cannot edit a ticket in this bin "
-msgstr "Você não pode editar um Ticket neste Repositório"
+msgstr "Você não pode alterar um ticket neste repositório"
 
 
-#file "D:\zentrack\zentrack/includes/templates/editTicketForm.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/editTicketForm.php"
 #args ""
 msgid "You cannot edit a ticket in this bin"
-msgstr "Você não pode editar um Ticket neste Repositório"
+msgstr "Você não pode alterar um ticket neste repositório"
 
 
-#file "D:\zentrack\zentrack/www/admin/admin_header.php"
+
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/admin/admin_header.php"
 #args ""
 msgid "You do not have access to administrate zenTrack."
-msgstr "Você não tem privilégios adminstrativos no zenTrack"
+msgstr "Você não possui permissão para adminstrar o zenTrack."
 
-#file "D:\zentrack\zentrack/includes/templates/searchResults.php"
+
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/searchResults.php"
 #args ""
 msgid "You do not have access to any bins."
-msgstr "Você não tem acesso à nenhum Repositório"
+msgstr "Você não possui acesso aos repositórios"
 
 
-#file "D:\zentrack\zentrack/www/index.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/index.php"
 #args ""
 msgid "You do not have access to any existing bins"
-msgstr "Você não tem acesso à nenhum Repositório existente"
+msgstr "Você não tem acesso a nenhum dos repositórios"
 
 
-#file "D:\zentrack\zentrack/includes/templates/newProjectForm.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/newProjectForm.php"
 #args ""
 msgid "You do not have permission to create projects."
-msgstr "Você não tem permissão para criar Projetos"
+msgstr "Você não tem permissão para adicionar projetos"
 
 
-#file "D:\zentrack\zentrack/www/addProjectSubmit.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/addProjectSubmit.php"
 #args ""
 msgid "You do not have permission to create tickets in this bin."
-msgstr "Você não tem permissão para criar Tickets neste Repositório"
+msgstr "Você não tem permissão para adicionar tickets neste repositório"
 
 
-#file "D:\zentrack\zentrack/www/reports/reports_header.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/reports/reports_header.php"
 #args ""
 msgid "You do not have permission to view the reports."
-msgstr "você não tem permissão para visualizar os Relatórios"
+msgstr "Você não tem permissão para ver os relatórios."
 
 
-#file "D:\zentrack\zentrack/www/helpers/userSearchbox.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/helpers/userSearchbox.php"
 #args ""
 msgid "You may use * for a wildcard in any field but the id.. i.e. J* would match anything starting with J"
 msgstr "Utilize * como coringa em qualquer campo, por exemplo, J* selecionará qualquer elemento que começe por J"
 
 
-#file "D:\zentrack\zentrack/www/helpers/ticketSearchbox.php"
-#args ""
-msgid "You may use * for a wildcard in the title or           description.. i.e. J* would match anything starting with J"
-msgstr "Utilize * como coringa no título ou           a descrição, por exemplo, J* selecionará qualquer elemento que começe por J"
-
-
-#file "D:\zentrack\zentrack/www/helpers/projectSearchbox.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/helpers/projectSearchbox.php"
 #args ""
 msgid "You may use * for a wildcard in the title or description.. i.e. J* would match anything starting with J"
-msgstr "Utilice * como comod&iacute;n en el t&iacutetulo o la descripci&oacute;n, por ejemplo, J* seleccionar&aacute; cualquier elemento que comience por J"
+msgstr "Utilize * como coringa no título ou a descrição, por exemplo, J* selecionará qualquer elemento que começe por J"
 
 
-#file "D:\zentrack\zentrack/www/actions/addToNotify.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/actions/addToNotify.php"
 #args ""
 msgid "You must provide at least one registered user, or a valid name and email address"
-msgstr "Indique pelo menos usuário registrado ou um nome e e-mail válidos"
+msgstr "Você deve informar pelo menos um usuário registrado, ou um nome e e-mail válidos"
 
 
-#file "D:\zentrack\zentrack/www/misc/homebin.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/misc/homebin.php"
 #args ""
 msgid "Your bin has been changed to"
-msgstr "Seu Repositório foi modificado para"
+msgstr "Seu repositório foi mudado para"
 
 
-#file "D:\zentrack\zentrack/www/reports/saveSubmit.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/reports/saveSubmit.php"
 #args ""
 msgid "Your chart has been saved successfully saved with title: $report_name"
 msgstr "Seu gráfico foi salvo com o título: $report_name"
 
 
-#file "D:\zentrack\zentrack/www/misc/language.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/misc/language.php"
 #args ""
-msgid "Your language has been changed to $newlang"
+msgid "Your language has been changed to ?", $newlang
 msgstr "Seu idioma foi modificado para $newlang"
 
 
-#file "D:\zentrack\zentrack/www/misc/pwc.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/misc/pwc.php"
 #args ""
 msgid "Your new passphrase must contain at least 1 non-letter character"
 msgstr "Sua nova senha deve conter pelo menos 1 caractere não-alfabético"
 
 
-#file "D:\zentrack\zentrack/includes/templates/pwcForm.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/pwcForm.php"
 #args ""
-msgid "Your passphrase must be at least 6 characters long and 
-     contain at least 1 non-letter character."
+msgid "Your passphrase must be at least 6 characters long and contain at least 1 non-letter character."
 msgstr "Sua nova senha deve ter no mínimo 6 caracteres e conter ter pelo menos 1 caracter não-alfabético"
 
 
-#file "D:\zentrack\zentrack/www/misc/pwc.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/misc/pwc.php"
 #args ""
 msgid "Your passphrase must be at least 6 digits long"
-msgstr "Sua nova senha deve conter no mínimo 6 caracteres "
+msgstr "Sua nova senha deve conter no mínimo 6 caracteres"
 
 
-#file "D:\zentrack\zentrack/www/misc/pwc.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/misc/pwc.php"
 #args ""
 msgid "Your passwords did not match"
 msgstr "Suas senhas não conferem"
 
 
-#file "D:\zentrack\zentrack/www/misc/pwc.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/misc/pwc.php"
 #args ""
 msgid "Your request was successful, but this is a demo site, so the passphrase was not altered"
 msgstr "Sua requisição foi correta, mas no modo de Demonstração sua senha não será modificada"
 
 
-#file "D:\zentrack\zentrack/includes/templates/actions/log.php"
+
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/actions/log.php"
 #args ""
 msgid "accepts up to 2 decimal places"
 msgstr "até 2 decimais"
 
 
-#file "D:\zentrack\zentrack/includes/templates/userSearchList.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/userSearchList.php"
 #args ""
 msgid "access"
 msgstr "acesso"
 
 
-#file "D:\zentrack\zentrack/includes/templates/ticket_detailsBox.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/ticket_detailsBox.php"
 #args ""
 msgid "completed"
-msgstr "completado"
+msgstr "concluído"
 
 
-#file "D:\zentrack\zentrack/includes/templates/actions/upload.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/actions/upload.php"
 #args ""
 msgid "create an attachment for this ticket"
-msgstr "criar um anexo para este Ticket"
+msgstr "adicionar um anexo neste ticket"
 
 
-#file "D:\zentrack\zentrack/includes/templates/userSearchList.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/userSearchList.php"
 #args ""
 msgid "delete"
-msgstr "apagar"
+msgstr "excluir"
 
 
-#file "D:\zentrack\zentrack/includes/templates/userSearchList.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/userSearchList.php"
 #args ""
 msgid "edit"
-msgstr "editar"
+msgstr "alterar"
 
 
-#file "D:\zentrack\zentrack/includes/templates/adminMenu.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/adminMenu.php"
 #args ""
 msgid "edit,delete,change access"
-msgstr "editar, apagar, modificar acessos"
+msgstr "alterar, excluir, modificar acesso"
 
 
-#file "D:\zentrack\zentrack/includes/templates/userSearchForm.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/userSearchForm.php"
 #args ""
 msgid "enter a number"
-msgstr "informe um número"
+msgstr "ente um número"
 
 
-#file "D:\zentrack\zentrack/includes/templates/actions/email.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/actions/email.php"
 #args ""
 msgid "hold control or shift to select multiple users"
 msgstr "pressione as teclas 'Control' ou 'Shift' para selecionar vários usuários"
 
 
-#file "D:\zentrack\zentrack/includes/templates/accessForm.php"
+
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/accessForm.php"
 #args ""
 msgid "less"
 msgstr "menos"
 
 
-#file "D:\zentrack\zentrack/includes/templates/listTickets_workFormat.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/listTickets_workFormat.php"
 #args ""
 msgid "n/a"
 msgstr "n/d"
 
 
-#file "D:\zentrack\zentrack/www/helpers/projectSearchbox.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/helpers/projectSearchbox.php"
 #args ""
 msgid "no bins"
-msgstr "Nenhum Repositório"
+msgstr "Nenhum repositório"
 
 
-#file "D:\zentrack\zentrack/www/helpers/projectSearchbox.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/helpers/projectSearchbox.php"
 #args ""
 msgid "no priorities"
-msgstr "Nenhuma Prioridade"
+msgstr "Nenhuma prioridade"
 
 
-#file "D:\zentrack\zentrack/www/helpers/projectSearchbox.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/helpers/projectSearchbox.php"
 #args ""
 msgid "no systems"
-msgstr "Nenhum Sistema"
+msgstr "Nenhum sistema"
 
 
-#file "D:\zentrack\zentrack/www/helpers/ticketSearchbox.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/helpers/ticketSearchbox.php"
 #args ""
 msgid "no types"
-msgstr "Nenhum Tipo"
+msgstr "Nenhum tipo"
 
 
-#file "D:\zentrack\zentrack/includes/templates/userSearchList.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/userSearchList.php"
 #args ""
 msgid "no"
-msgstr "Nenhum"
+msgstr "Não"
 
 
-#file "D:\zentrack\zentrack/includes/templates/newProjectForm.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/newProjectForm.php"
 #args ""
 msgid "none"
 msgstr "Nenhum"
 
 
-#file "D:\zentrack\zentrack/includes/templates/actions/assign.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/newProjectForm.php"
 #args ""
 msgid "optional"
 msgstr "opcional"
 
 
-#file "D:\zentrack\zentrack/includes/templates/userSearchList.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/userSearchList.php"
 #args ""
 msgid "password"
 msgstr "senha"
 
 
-#file "D:\zentrack\zentrack/www/addProjectSubmit.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/addProjectSubmit.php"
 #args ""
 msgid "required field missing:"
-msgstr "campo requerido não encontrado:"
+msgstr "campo requerido faltando:"
 
 
-#file "D:\zentrack\zentrack/includes/templates/actions/close.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/actions/close.php"
 #args ""
 msgid "required"
 msgstr "requerido"
 
 
-#file "D:\zentrack\zentrack/www/reports/view.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/www/reports/view.php"
 #args ""
 msgid "required... processing error"
-msgstr "requerido... erro de processo"
+msgstr "requerido... erro de processamento"
 
 
-#file "D:\zentrack\zentrack/includes/templates/newTicketForm.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/newProjectForm.php"
 #args ""
 msgid "save your changes"
-msgstr "salvar alterações"
+msgstr "salvar suas alterações"
 
 
-#file "D:\zentrack\zentrack/includes/zenTrack.class"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/zenTrack.class"
 #args "array($id,$name)"
 msgid "ticket #?: accepted by ?"
-msgstr "Ticket #?: aceito por ?"
+msgstr "ticket #?: aceito por"
 
 
-#file "D:\zentrack\zentrack/includes/templates/newTicketForm.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/newTicketForm.php"
 #args ""
 msgid "up to two decimal places, optional"
 msgstr "até 2 decimais, opcional"
 
 
-#file "D:\zentrack\zentrack/includes/templates/reportsDateMenu.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/reportsDateMenu.php"
 #args ""
 msgid "use 4 digit year, time is optional"
-msgstr "indicar o ano con 4 dígitos, o tempo é opcional"
+msgstr "indicar o ano com 4 dígitos, o tempo é opcional"
 
 
-#file "D:\zentrack\zentrack/includes/templates/userSearchForm.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/userSearchForm.php"
 #args ""
 msgid "user ID"
 msgstr "ID do usuário"
 
 
-#file "D:\zentrack\zentrack/includes/leftMain.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/leftMain.php"
 #args ""
 msgid "version"
 msgstr "versão"
 
 
-#file "D:\zentrack\zentrack/includes/templates/userSearchList.php"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/userSearchList.php"
 #args ""
 msgid "yes"
-msgstr "sim;"
+msgstr "sim"
 
 
-msgid "Account Settings"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/binForm.php"
+#args ""
+msgid 'Notes are special tickets which do not require any actions.'
+msgstr "Notas são tickets especiais que não requerem nenhuma ação."
+
+
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/loginForm"
+#args ""
+msgid 'Please Log On.'
+msgstr "Por favor registre-se"
+
+
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/binForm.php"
+#args ""
+msgid 'Press LESS to remove blank rows'
+msgstr "Pressione 'Menos' para remover as linhas em branco"
+
+
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/binForm.php"
+#args ""
+msgid 'Press MORE to create new bins'
+msgstr "Pressione 'Mais' para adicionar novos repositórios"
+
+
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/binForm.php"
+#args ""
+msgid 'Press Reset to return to original values'
+msgstr "Pressione 'Padrão' para voltar aos valores originais"
+
+
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/binForm.php"
+#args ""
+msgid 'Press Save to save changes'
+msgstr "Pressione 'Salvar' para confirmar as alterações"
+
+
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/binForm.php"
+#args ""
+msgid 'Projects act as containers, which can hold multiple tickets as "tasks" which are part of the projects completion requirements.'
+msgstr "Projetos funcionam como depósitos, que podem conter vários tickets, como 'Tarefas' que são parte dos requisitos de conclusão dos projetos."
+
+
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/binForm.php"
+#args ""
+msgid 'There are two special bin types, which can be set manually in the includes/configVars.php file (poor method), or set here (preferred	method) by naming a bin with either the word "project" or "note" in	the bin name.'
+msgstr "Há dois tipos especiais de reposit'rorios, aquele que pode ser definido manualmente no arquivo 'includes/configVars.php'. ou definidos aqui (recomendável), dando um nome ao repositório como 'projeto' ou 'nota'"
+
+
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/binForm.php"
+#args ""
+msgid 'They start their life closed, and do not need to be completed.'
+msgstr "Ele já inicia fechado, e não precisa ser concluído."
+
+
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/binForm.php"
+#args ""
+msgid 'Use them only for tracking and documentation.'
+msgstr "Use-os apenas para ratreamento e documentação."
+
+
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/newTicketForm.php"
+#args ""
+msgid ($td
 msgstr ""
 
 
-msgid "Press LESS to remove blank rows"
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/ticket_actionBar.php"
+#args ""
+msgid ucfirst($a)
 msgstr ""
 
 
-msgid "Process completed successfully.  Systems were not updated since this is a demo site."
-msgstr ""
-
-
-msgid "Process completed successfully.  Tasks were not updated since this is a demo site."
-msgstr ""
-
-
-msgid "Process completed successfully.  Types were not updated since this is a demo site."
-msgstr ""
-
-
-msgid "System Error: Could not add ?, ? to the system"
-msgstr ""
-
-
-msgid "System Error: Could not update ?, ?"
-msgstr ""
-
-
-msgid "This grants the user the specified level of 
- 	access to all bins not otherwise indicated by 'user access'."
-msgstr ""
-
-
-msgid "Your passphrase must be at least 6 characters long and 
-     contain at least 1 non-letter character."
+#file "/home/e-smith/files/ibays/zt/files/zentrack/includes/templates/ticket_actionBar.php"
+#args ""
+msgid ucfirst($a)) ,18," ",STR_PAD_RIGHT
 msgstr ""
 
 
