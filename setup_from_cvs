@@ -5,5 +5,5 @@ chmod -R 755 www/images
 chmod 755 www/javascript.js
 chmod 755 www/styles.php
 
-cp installs/configVars.php.default includes/configVars.php
-cp installs/header.php.default www/header.php
+cp install/configVars.php.default includes/configVars.php
+cp install/header.php.default www/header.php
