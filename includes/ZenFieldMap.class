@@ -347,7 +347,11 @@ class ZenFieldMap {
     $vals["rooturl"] = $rootUrl;
     $vals['date_format'] = $this->_zen->popupDateFormat();
     $vals["field_name"] = $this->_zen->ffv(strlen($override_name)>0? $override_name : $field_name);
-    $vals["field_value"] = $this->_zen->ffv($value);
+    if( is_null($value) && ($view=="ticket_create" || $view=="project_create")) {
+      $vals["field_value"] = $this->getDefaultValue($view,$field_name);
+    } else {
+      $vals["field_value"] = $this->_zen->ffv($value);
+    }
     $vals["field_label"] = $this->getTextValue($view,$field_name,$value);
     $vals["field_max"] = $field['num_cols'];
     if( $tprops["has_choices"] ) {
@@ -609,17 +613,21 @@ class ZenFieldMap {
         $vals = $vprops["admin_view"]? 
           array('0'=>'n/a', '1'=>'No', '2'=>'Yes') : array('0'=>'No', '1'=>'Yes');
         break;
-      case "custom_menu":
-        $pts = explode("_", $view, 2);
-        $vars = $this->_zen->getCustomField($field_name);
-        $set = genDataGroupChoices($vars['field_value']);
-        $vals = array();
-        foreach($set as $s) {
-          $vals[ $s['field_value'] ] = $s['label'];
+      default:
+        if( strncmp("custom_menu",$this->fieldName($field_name),11)==0 ) {
+          $pts = explode("_", $view, 2);
+//          $vars = $this->_zen->getCustomField($field_name);
+//          $set = genDataGroupChoices($vars['field_value']);
+          $vars = $this->getFieldFromMap($view, $field_name);
+          $set = genDataGroupChoices($vars['default_val']);
+          $vals = array();
+          foreach($set as $s) {
+            $vals[ $s['field_value'] ] = $s['label'];
+          }
+        } else {
+          $vals = array();
         }
         break;
-      default:
-        $vals = array();
     }
     
     $this->_zen->addDebug('_getChoices', "Generated ".count($vals)." choices for {$view}->{$field_name}", 3);
