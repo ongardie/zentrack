@@ -384,6 +384,10 @@
     global $zen;
     $errors = false;
     $ticket = null;
+
+    // get a list of valid actions
+    $valid_actions = fetch_valid_actions($id);
+
     // parse the subject
     preg_match("@#([0-9]+): *([a-zA-Z0-9_-]+)@", 
 	       $params->headers["subject"], $matches);
@@ -407,11 +411,27 @@
 	return;
       }
     } else {
-      // no valid action
-      $errors = true;
-      egate_log("ERROR - no valid action was found for header:"
-		.$params->headers["subject"],2);
-      return;
+      // try to divine the action anyways, even though the format wasn't correct
+      // start by removing [zenBot] tag
+      $test = preg_replace("/\[".$zen->settings['bot_name']."]/","",$params->headers["subject"]);
+      if( strlen($test) ) {
+	// get a string of possible action names
+	$str = join('|',$valid_actions);
+	// look for an id
+	if( preg_match("/#([0-9]+)/", $subject, $matches) ) {
+	  $id = $matches[1];
+	}
+	if( preg_match("/($str)/", $subject,$matches) ) {
+	  $action = $matches[1];
+	}
+      }
+      if( !$action || !$id ) {
+	// no valid action
+	$errors = true;
+	egate_log("ERROR - no valid action was found for header:"
+		  .$params->headers["subject"],2);
+	return;
+      }
     }
 
     // customize the notify actions
@@ -425,9 +445,6 @@
       $action = "template";
       $params->headers["subject"] = "template help";
     }
-
-    // get a list of valid actions
-    $valid_actions = fetch_valid_actions($id);
 
     // determine which actions might be in the subject
     if( !in_array($action,$valid_actions) ) {

@@ -62,7 +62,7 @@ The nnnn listed in the actions below represents the ticket id number.
 
 #nnnn: approve - This will provide a final ok, indicating that all actions for this ticket have been completed, and it is done.
 
-#nnnn: assign xxxx - This will assign the ticket to a new user.  The user must be registered in the ticket system, and you must have supervisor rights to assign tickets to a user.  xxxx is the user's id, or their full name (first last)
+#nnnn: assign xxxx - This will assign the ticket to a new user.  The user must be registered in the ticket system, and you must have supervisor rights to assign tickets to a user.  xxxx is the user's id, or their email address
 
 #nnnn: close - This will mark the ticket as completed, and send appropriate notifications.  This will also  prepare the ticket for special conditions as approval and testing
 
