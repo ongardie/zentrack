@@ -13,6 +13,10 @@ abstraction, and endless possibilities for project expansion.
 
 ----- VERSION 2.5.0.3 (development) -----
 
+2005-03-21, cfalonso
+  Fixed a bug with retain_owner_move
+    - zentrack_2/includes/zenTrack.class 1.179
+
 2005-03-18, cfalonso
   Related tickets weren't shown  -Fixed
     - zentrack_2/includes/templates/ticket_relatedBox.php 1.6

@@ -73,7 +73,13 @@
            // Generate log entry with list of email addresses
            $entry = "Ticket emailed to ";
            foreach ($recipients as $v) {
-             $entry .= $v . ", ";
+             if ($zen->checkNum($v) >0) {
+               $user_info=$zen->get_user($v);
+               $v1="[".$v." - ".$user_info["email"]."]";
+             } else {
+               $v1=$v;
+             }
+             $entry .= $v1 . ", ";
            }
            $entry = substr($entry, 0, -2);
            $logParams["entry"] = $entry;
