@@ -364,13 +364,13 @@ class DB {
    **  DB RELATED
    */
    
-   function db_connect( $host = '', $user = '', $password = '', $database = '' ) {
+   function db_connect( $host = '', $user = '', $passphrase = '', $database = '' ) {
       // create a db connection
       // see configVars.php for details on how to 
       // configure the db connection
       
       // connect
-      $this->db_link->PConnect($host, $user, $password, $database);
+      $this->db_link->PConnect($host, $user, $passphrase, $database);
       if( $database and $this->db_link ) {
 	 $this->dbName = $database;
       }
@@ -381,7 +381,7 @@ class DB {
    **  INVOKE
    */
    
-   function DB( $host = '', $user = '', $password = '', $database = '' ) {
+   function DB( $host = '', $user = '', $passphrase = '', $database = '' ) {
       // call the zenDatabase class
       
       // create the object
@@ -389,7 +389,7 @@ class DB {
       $ADODB_FETCH_MODE = ADODB_FETCH_ASSOC;      
       if( $this->sql_debug == "on" )
 				$this->db_link->debug = true;
-      $this->db_connect($host, $user, $password, $database);
+      $this->db_connect($host, $user, $passphrase, $database);
    }
       
 }

@@ -1013,9 +1013,9 @@ class zenTrack extends zen {
       // then it will also run add_access()
       // with this array once the user has
       // been created
-      // if ["password"] is given, it should
+      // if ["passphrase"] is given, it should
       // be the unencrypted value.. if blank,
-      // ["password"] will be set automatically
+      // ["passphrase"] will be set automatically
       // to the users last name until that user
       // logs into the system and changes it
       
@@ -1049,7 +1049,7 @@ class zenTrack extends zen {
    
    function update_user( $user_id, $params ) {
      // updates user settings by user_id
-     // do not encrypt the password, this is done
+     // do not encrypt the passphrase, this is done
      // automatically
       
       if( $params["passwd"] )
@@ -1124,7 +1124,7 @@ class zenTrack extends zen {
    }
 
    function reset_password( $user_id ) {
-     // resets the users password to the default value
+     // resets the users passphrase to the default value
      // for a user.  This will probably be the users last name
 
      $user = $this->get_user($user_id);
@@ -1235,12 +1235,12 @@ class zenTrack extends zen {
    */
    
    
-   function login_user( $username, $password ) {
-      // perform a login check for username and password
+   function login_user( $username, $passphrase ) {
+      // perform a login check for username and passphrase
       // returns the user's user_id
       
       $query = "select user_id from ".$this->table_users
-	." where login = '$username' and passwd = '".$this->encval($password)."' and active > 0";
+	." where login = '$username' and passwd = '".$this->encval($passphrase)."' and active > 0";
       $user_id = $this->db_get($query);
 			$this->addDebug("zentrack.class:login_user($user_id)",$query,2);
       if( $user_id )
@@ -1412,6 +1412,7 @@ class zenTrack extends zen {
 	    $message .= "Owner:\t$name\n";
 	    $message .= "URL:\t$url\n";
             $des = preg_replace("#&quot;#",'"',preg_replace("#&amp;#","&",$t["description"]));
+	    $des = preg_repalce("@<br( /)?>@", "", $des);
 	    $message .= "\n\n$des\n\n------------------\n\n";
 	 } else if( $k == "log" ) {
 	    // print the log for the ticket
@@ -1431,9 +1432,11 @@ class zenTrack extends zen {
 		  //
 		  // the log and attachments
 		  if( $l["entry"] ) {
-		     $message .= "\n".stripslashes($l["entry"])."\n";
-	             $message .= preg_replace("#&amp;#", "&", $message);
-		     $message .= preg_replace("#&quot;#", '"', $message);	             
+		     $log["entry"] = "\n".stripslashes($l["entry"])."\n";
+	             $log["entry"] = preg_replace("#&amp;#", "&", $log["entry"]);
+		     $log["entry"] = preg_replace("#&quot;#", '"', $log["entry"]);
+		     $l["entry"] = preg_replace("@<br( /)?>@", "", $log["entry"]);
+		     $message .= "\n".$l["entry"]."\n";
 		  }
 		  if( $att["$id"]["$lid"] ) {
 		     $message .= "\nATTACHMENT(s):\n";
@@ -2030,16 +2033,16 @@ class zenTrack extends zen {
       $query = "SELECT $fields FROM ".$this->table_settings." $order";
       $vars = $this->db_queryIndexed($query);
       foreach($vars as $v) {
-			 if( preg_match("@^url_@",$v["name"]) ) {
-				  if(preg_match("@/$@", $rootUrl) && preg_match("@^/@", $v["value"]) ) {
-				 		preg_replace("@/$@", $rootUrl) . $v["value"];
-					} else if( !preg_match("@/$@", $rootUrl) && !preg_match("@^/@", $v["value"]) ) {
-						$v["value"] = $rootUrl ."/".$v["value"];		
-					} else {
-						$v["value"] = $rootUrl . $v["value"];
-					}
-			 }
-			 $vals["{$v['name']}"] = ($flag)? $v : $v["value"];
+	if( preg_match("@^url_@",$v["name"]) ) {
+	  if(preg_match("@/$@", $rootUrl) && preg_match("@^/@", $v["value"]) ) {
+	    preg_replace("@/$@", $rootUrl) . $v["value"];
+	  } else if( !preg_match("@/$@", $rootUrl) && !preg_match("@^/@", $v["value"]) ) {
+	    $v["value"] = $rootUrl ."/".$v["value"];		
+	  } else {
+	    $v["value"] = $rootUrl . $v["value"];
+	  }
+	}
+	$vals["{$v['name']}"] = ($flag)? $v : $v["value"];
       }
       return($vals);
    }

@@ -163,9 +163,9 @@ class zenDatabase {
    **  DB RELATED
    */
    
-   function db_connect( $host = '', $user = '', $password = '', $database = '' ) {
+   function db_connect( $host = '', $user = '', $passphrase = '', $database = '' ) {
       // create a db connection
-      $this->db_link = mysql_connect("$host", "$user", "$password");
+      $this->db_link = mysql_connect("$host", "$user", "$passphrase");
       if( $database and $this->db_link ) {
 	 $this->dbDB = $database;
 	 $result = mysql_select_db( $database, $this->db_link );
@@ -193,9 +193,9 @@ class zenDatabase {
    **  INVOKE
    */
    
-   function zenDatabase( $host = '', $user = '', $password = '', $database = '' ) {
+   function zenDatabase( $host = '', $user = '', $passphrase = '', $database = '' ) {
       // call the zenDatabase class
-      $this->db_connect($host, $user, $password, $database);
+      $this->db_connect($host, $user, $passphrase, $database);
    }
       
 }

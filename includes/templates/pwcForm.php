@@ -1,7 +1,7 @@
 <?
   $user = $zen->getUser($login_id);
-  if( $user["password"] == $zen->encval($user["lname"]) ) {
-    print "<p class='hot'>Your password is currently set to the system default.  Please update.</p>\n";
+  if( $user["passphrase"] == $zen->encval($user["lname"]) ) {
+    print "<p class='hot'>Your passphrase is currently set to the system default.  Please update.</p>\n";
   }
 ?>
 
@@ -18,7 +18,7 @@
 ?>
 <tr>
   <td colspan="2" class="bars">
-    Your password must be at least 6 characters long and 
+    Your passphrase must be at least 6 characters long and 
     contain at least 1 non-letter character
   </td>
 <tr>
@@ -43,7 +43,7 @@
 </tr>
 <tr>
   <td class="titleCell" colspan="2">
-    Please keep track of your new password.
+    Please keep track of your new passphrase.
   </td>
 </tr>
 <tr>

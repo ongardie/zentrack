@@ -94,7 +94,7 @@
 
    $this->database_instance  = 'zentrack';	 //database name
    $this->database_login     = 'test';           //database login
-   $this->database_password  = 'test';           //database password
+   $this->database_password  = 'test';           //database passphrase
    $this->database_host      = 'localhost';      //host name, if on same machine, 
                                                  //this is localhost
 

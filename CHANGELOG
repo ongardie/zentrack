@@ -17,8 +17,14 @@ Added the "note" type to the ticket types.  This type will auto-close
 when created, preventing the need for a user to close it.  Thus, it 
 is stored only for documentation.
 
+Changed "password" to "passphrase" for Sybase compatibility.
+
+Fixed $rootUrl issues with url_ticket_view and url_attachment_view
+
+Fixed some issues with the "view all users" function in user admin
+
 Fixed issue with the "first login" so that it will make users
-change their password from the default before they can continue
+change their passphrase from the default before they can continue
 
 Comments added to configVars.php section to indicate
 better use of Oracle/adodb methods
