@@ -49,7 +49,7 @@
   if( $actionComplete == 1 )
      $ticket = $zen->get_ticket($id);
   extract($ticket);
-  if( strtolower($zen->types["$type_id"]) == "project" ) {
+  if( $zen->inProjectTypeIDs($type_id) ) {
      include("$templateDir/projectView.php");
   } else {
      include("$templateDir/ticketView.php");     

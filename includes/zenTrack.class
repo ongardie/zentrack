@@ -1562,6 +1562,33 @@ class zenTrack extends zen {
     *  TRANSLATION UTILITIES
    */
 
+   function showLongDate($utime = '') {
+     // displays a long date format
+     if( !$utime )
+       $utime = time();
+     return strftime($this->date_format_long,$utime);
+   }
+
+   function showDate( $utime = '') {
+     // displays a short date and time
+     if( !$utime )
+       $utime = time();
+     return strftime($this->date_fmt_short,$utime);
+   }
+
+   function showDateTime( $utime = '' ) {
+     // displays a short date with time
+     if( !$utime )
+       $utime = time();
+     return strftime($this->date_and_time,$utime);
+   }
+
+   function showTime( $utime = '' ) {
+     if( !$utime )
+       $utime = time();
+     return strftime($this->time_fmt,$utime);
+   }
+
    function showTimeElapsed($start,$end,$round=1,$units=1) {
      // shows the elapsed time rounded to $round decimals
      // and the units abbreviated to $substr length
@@ -1574,7 +1601,6 @@ class zenTrack extends zen {
        $abr = " "
 	 .substr(preg_replace("@[aeiou]@", "", $this->elapsed_unit),0,2)
 	 ."s.";
-	$abr = "hrs.";
      } else if( strlen($units) ) {
        $abr = " ".$this->elapsed_unit;
      }

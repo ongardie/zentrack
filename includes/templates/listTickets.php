@@ -89,7 +89,7 @@ if( is_array($tickets) ) {
 	<?=$zen->bins["$t[bin_id]"]?>
 	</td>
 	<td height="25" valign="middle" align="right">
-	<?=$zen->showTimeElapsed($t["otime"],$t["ctime"])?>
+	<?=$zen->showTimeElapsed($t["otime"],$t["ctime"],1,1)?>
 	</td>
 	</tr>	 	   
 	<?

@@ -139,11 +139,10 @@ class zenDate extends DB {
       return($yday);
    }
 
-   function showDate( $utime = '', $flag = '' ) {
+   function showDate( $utime = '') {
       if( !$utime )
          $utime = $this->currTime;
-      $newtime = (ereg("4",$flag))? strftime("%m/%d/%Y", $utime) : strftime("%D", $utime);
-      return( $newtime );
+      return strftime($this->date_fmt_short,$utime);
    }
 
    function showTime( $utime = '', $flag = '' ) {

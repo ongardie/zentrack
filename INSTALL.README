@@ -20,4 +20,6 @@
 	you must run both the build.sql and seed.sql file
 	they are in includes/misc
 
+     -chmod 777 includes/attachments (if using attachments)
+
    

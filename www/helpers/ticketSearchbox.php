@@ -238,8 +238,9 @@
 </tr>
 <tr>
   <td class='bars' colspan='4' align='center'>
-     <input type='<?=(is_array($results))?"submit":"button"?>' 
-      class='submit' value='Select' onClick='return saveValues()'>
+     <input type='button' 
+      class='submit' value='Select' <?=(is_array($results))?
+	"onClick='return saveValues()'":""?>>
    &nbsp;&nbsp;&nbsp;&nbsp;
     <input type='submit' class='submit' value='Modify Search'>
   </td>
@@ -289,4 +290,3 @@
 
 <? } ?>
 
-<? $zen->printDebugMessages(); ?>

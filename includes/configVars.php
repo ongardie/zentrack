@@ -21,7 +21,7 @@
    // (http://www.php.net/manual/en/function.strftime.php)
    // for all of the options available to format 
    $this->date_fmt_long = '%A $d, %b %Y';
-   $this->date_fmt_short = '%x';			     
+   $this->date_fmt_short = '%x';
    $this->time_fmt       = '%R';
    $this->date_and_time = $this->date_fmt_short." ".$this->time_fmt;
 
@@ -29,7 +29,7 @@
    // for the 'time elapsed' fields
    // this must be one of the following:
    // 'seconds', 'minutes', 'hours', 'days', 'weeks', 'months', 'years'
-   $this->elapsed_unit = "days";
+   $this->elapsed_unit = "hours";
    
    // WINDOWS USERS
    //
