@@ -240,9 +240,9 @@ value="<?=($deadline)?$zen->showDate(strip_tags($deadline)):""?>">&nbsp;(mm/dd/y
   <td class="bars">
     <input type="checkbox" name="approved" value="1" 
     <?
-    if( $approved || (!strlen($approved) && $zen->settings["default_approve_checked"] == "on") ) {
+    if( $approved || (!strlen($approved) && $zen->settings["default_aprv_checked"] == "on") ) {
        print "checked";
-    }  
+    } 
   ?>>
   </td>
 </tr>
