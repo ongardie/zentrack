@@ -2087,7 +2087,7 @@ class zenTrack extends zen {
        
        $default = $this->getRoleDefault($role);
        
-       $vals = ($default) : "" ? array($this->getRoleDefault($role));
+       $vals = ($default) ? "" : array($default);
     }
     
     return( $vals );
