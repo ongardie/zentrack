@@ -6,7 +6,6 @@
   **
   */
   
-  
   include("./action_header.php");
 
   $page_tile = "Commit Edited Ticket";

@@ -23,10 +23,17 @@
     include("../index.php");
     exit;
   }
-  // if no action was provided, then just use the name for the page
-  // which will be the action
-  if( !$action ) {
-    $action = basename($SCRIPT_NAME,".php");
+  // use the filename to 
+  // determine the action
+  $basename = strtolower(basename($SCRIPT_NAME,".php"));
+  if( in_array($basename,array_keys($zen->getActions())) ) {
+    $action = $basename;
+  }
+  else if( $basename == "editticketsubmit" || $basename == "editsubmit" ) {
+    $action = "edit";
+  }
+  else if( !$action ) {
+    $action = "view";
   }
 
   // check to insure that this user has access
@@ -49,6 +56,7 @@
   // find out if user can do this action, if not, redirect them
   if( !$zen->actionApplicable( $id, $action, $login_id ) && !$tf_creator ) {
     $setmode = "details";
+    $zen->addDebug("action_header.php","Action was not applicable, redirecting",1);
     include("../ticket.php");
     exit;
     //header("Location: $rootUrl/ticket.php?id=$id&setmode=details");

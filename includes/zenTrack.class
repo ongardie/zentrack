@@ -2250,6 +2250,13 @@ class zenTrack extends zen {
 				    "override" => 1,
 				    "level"    => $this->settings["level_user"]
 				    );
+       $actions["view"] = array(
+				"owner"    => 0,
+				"access"   => 1,
+				"status"   => null,
+				"override" => 0,
+				"level"    => $this->settings["level_view"]
+				);
        $actions["yank"] = array(
 				  "owner"    => 4,
 				  "access"   => 1,
