@@ -4,7 +4,7 @@
    * Test the ZenDatabase.php class library
    *
    * Requirements: Relies on config.php in the install/utilities/tests/ folder
-   *
+   * 
    * @package PHPUnit
    */
 
@@ -12,7 +12,7 @@
   include_once( realpath(dirname(__FILE__)."/../")."/phpunit_config.php");
 
   /**
-   * Test the Zen.php class methods
+   * Test the ZenDatabase.php class methods
    *
    * This test unit requires that the Zen.php, ZenDatabase.php, DbTypeInfo.php and adodb libraries be included
    * This test also relies on the ZenDatabaseTest.xml file to provide test data
@@ -31,10 +31,11 @@
     var $_xml;
 
     function ZenDatabaseTest() {
+      $this->getConnection();
     }
 
     /** Obtain a valid database connection */
-    function testConnect() {
+    function getConnection() {
       $GLOBALS['dbConnection'] = null;
       $this->_dbo = Zen::getDbConnection();
       // use Assert::assert() here
@@ -132,22 +133,30 @@
       $query = $vals['statement'];
       if( $vals['table'] ) { $query = preg_replace("/\{table\}/", $this->_makeTableName($vals['table']), $query); }        
       $offset = isset($vals['offset'])? $vals['offset'] : 0;
+      $this->_dbo->setFetchMode(false);
       $recordSet = $this->_dbo->execute($query, $vals['cache'], $vals['limit'], $offset );
       // check pass or fail results
-      $bool = true;
-      if( $vals['passfail'] && !$recordSet ) { $bool = false; }
-      if( !$vals['passfail'] && $recordSet ) { $bool = false; }
-      Assert::equalsTrue( $bool, "Excecute did not return as expected(pass/fail)" );
-      if( $recordSet ) {
+      if( $vals['passfail'] ) {
+        Assert::equalsTrue( $recordSet !== false, 
+                            "Query failed, should succeed<br>($query)<br>".$this->_dbo->getErrorMessage() );
+      }
+      else {
+        Assert::equalsTrue( $recordSet === false, "Query passed, expected to faile<br>($query)" );
+      }
+
+      if( is_object($recordSet) ) {
         // check returned values
-        if( $vals['expected_count'] ) {
+        if( isset($vals['expected_count']) ) {
           $count = $recordSet->RecordCount();
-          Assert::equals( $vals['expected_count'], $count, "Count expected({$vals['expected_count']}) != actual($count)" );
+          Assert::equals( $vals['expected_count'], $count, "Count expected[{$vals['expected_count']}] != actual[$count]<br>($query)" );
         }
         if( isset($vals['expected_val']) ) {
-          Assert::equals( $recordSet->fields[0], $vals['expected_val'], "Val expected({$vals['expected_val']}) != actual({$recordSet->fields[0]})" );
+          Assert::equals( $recordSet->fields[0], $vals['expected_val'], "Val expected[{$vals['expected_val']}] != actual[{$recordSet->fields[0]}]<br>($query)" );
         }
-      }        
+      }
+      else if( isset($vals['expected_count']) || isset($vals['expected_val']) ) {
+        Assert::equalsTrue( false, "A value or count was expected, but there was no ResultSet<br>($query)<br>".$this->_dbo->getErrorMessage() );
+      }
     }
     
     function testExecuteGetOne( $vals ) {
@@ -155,50 +164,112 @@
       $query = $vals['statement'];
       if( $vals['table'] ) { $query = preg_replace("/\{table\}/", $this->_makeTableName($vals['table']), $query); }        
       //todo fix cache
-      $recordSet = $this->_dbo->executeGetOne($query, $vals['cache']); //$vals['cache']);
+      $retVal = $this->_dbo->executeGetOne($query, $vals['cache']); //$vals['cache']);
       // check pass or fail results
-      $bool = true;
-      if( $vals['passfail'] && !$recordSet ) { $bool = false; }
-      if( !$vals['passfail'] && $recordSet ) { $bool = false; }
-      Assert::equalsTrue( $bool, "Excecute did not return as expected(pass/fail)" );
-      if( is_object($recordSet) ) {
+      if( !$vals['passfail'] ) {
+        Assert::equalsTrue( $retVal === false, "Query passed, expected to faile<br>($query)" );
+      }
+      
+      if( strlen($retVal) ) {
         // check returned values
-        Assert::equalsTrue( $recordSet->RecordCount() == 1, "Count expected(1) != actual(".$recordSet->RecordCount().")" );
-        if( $vals['expected_val'] ) {
-          Assert::equals( $recordSet->fields[0], $vals['expected_val'], "Val expected({$vals['expected_val']}) != actual({$recordSet->fields[0]})" );
+        if( isset($vals['expected_count']) ) {
+          Assert::equalsTrue( is_string($retVal) || is_numeric($retVal),
+                          "Value returned was not string or number<br>($query)" );
+        }
+        if( isset($vals['expected_val']) ) {
+          Assert::equals( $retVal, $vals['expected_val'], 
+                          "Val expected[{$vals['expected_val']}] != actual[{$retVal}]<br>($query)" );
         }
       }
+      else if( isset($vals['expected_count']) || isset($vals['expected_val']) ) {
+        Assert::equalsTrue( false, "A value or count was expected, but there was no Return Val<br>($query)<br>"
+                            .$this->_dbo->getErrorMessage() );
+      }
+    }
+
+    function testGenerateID( $vals ) {
+      // select id from the database and compare to generated
+      $table = $this->_dbo->makeTableName($vals['table']);
+      $query = "SELECT current_id FROM ".$this->_dbo->makeTableName('TABLE_IDS')
+        ." where name_of_table = '{$table}'";
+      $maxid = $this->_dbo->executeGetOne($query, false);
+      Assert::equalsTrue( ($maxid > 0), 
+                          "Could not get max primary_key from database<br>($query)<br>".$this->_dbo->getErrorMessage() );
+      
+      // generate a new id and compare
+      $id = $this->_dbo->generateID( $table );
+      Assert::equalsTrue( ($id == $maxid+1), "Generated ID isn't valid(needed ".($maxid+1).", found $id)" );
     }
 
     function testInsert( $vals ) {
-      // select id from the database and compare to generated
-      $query = "SELECT MAX(id) FROM ".$this->_makeTableName($vals['table']);
-      $recordSet = $this->_dbo->executeGetOne($query, false);
-      Assert::equalsTrue( $recordSet, "Could not get max id from database" );
-      $maxid = $recordSet->fields[0];
-      
-      // generate a new id and compare
-      $id = $this->_dbo->generateID( $vals['table'] );      
-      Assert::equalsTrue( $id > $maxid, "Generated ID isn't valid(needed > $maxid, found $id)" );
-
+      $this->_clearTable();
+      // prefix table
+      $table = $this->_dbo->makeTableName($vals['table']);
       // perform insert, check results
-      $query = preg_replace("/\{table\}/", $this->_makeTableName($vals['table']), $vals['statement']);
-      $query = preg_replace("/\{key\}/", $id, $query);
+      $id = $this->_dbo->generateID( $table );
+      $query = $vals['statement'];
+      // substitute values for any {...} occurences in statement
+      foreach( $vals as $key=>$val ) {
+        // there could be table1, table2, etc.. so we do it this
+        // way instead of just == "table"
+        if( strpos($key, 'table') === 0 ) { $val = $this->_makeTableName($val); }
+        $query = str_replace( "{".$key."}", $val, $query );
+      }
+      $query = str_replace("{key}", $id, $query);
       $result = $this->_dbo->execute($query);
       if( $vals['passfail'] ) {
-        Assert::equalsFalse( ($result === false), "Insert failed: $query" );        
-        // use generateID and check the return value with id from select
-        Assert::equals( $result, $id, "Generated ID did not match db return value" );
+        Assert::equalsFalse( ($result === false), "Insert failed, expected success<br>($query)<br>".$this->_dbo->getErrorMessage() );
       }
       else {
-        Assert::equalsTrue( ($result === false), "Insert did not return false: $query" );
+        Assert::equalsTrue( ($result === false), "Insert did not fail as expected<br>($query)" );
+      }
+      $this->load( $this->_loaddata );
+    }
+
+    function _clearTable() {
+      $res = $this->_dbo->execute("DELETE FROM ".$this->_makeTableName("DBTEST"));
+      Assert::assert( $res, "Could not clean out DBTEST table" );
+    }
+
+    function load( $node ) {
+      $this->_loaddata = $node;
+      
+      Assert::assert( $node, "No load data found, exiting" );
+
+      // clean out table
+      $this->_clearTable();
+
+      // perform inserts
+      foreach( $node->getChildren() as $childset ) {
+        // Extract values from node
+        $v = ZenXMLParser::getParmSet( $childset[0]->getChild('param') );
+        
+        // perform insert, check results
+        $id = $this->_dbo->generateID( $this->_dbo->makeTableName($v['table']) );
+        $query = $v['statement'];
+        // substitute values for any {...} occurences in statement
+        foreach( $v as $key=>$val ) {
+          if( strpos($key, 'table') === 0 ) { $val = $this->_makeTableName($val); }
+          $query = str_replace( "{".$key."}", $val, $query );
+        }
+        $query = str_replace("{key}", $id, $query);
+        $result = $this->_dbo->execute($query);
+        Assert::assert( $result, "Could not load data: $query" );
       }
     }
 
-    function testReplace( $vals ) {
+    function testReplace( ) { //$vals ) {
       //todo
       //todo
       //todo
+      Assert::equalsTrue( false, "method not implemented" );
+    }
+
+    function testTransaction( ) { //$vals ) {
+      //todo
+      //todo
+      //todo
+      Assert::equalsTrue( false, "method not implemented" );
     }
 
     /** Construct a tablename with appropriate prefix and case */
@@ -217,6 +288,9 @@
         $this->_xml =& $parser->parse( join("",file($filename)) );
       }
     }
+
+    /** @var the xml data used to set data for testing */
+    var $_loaddata;
 
   }
 

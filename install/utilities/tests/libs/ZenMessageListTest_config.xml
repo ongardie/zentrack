@@ -9,7 +9,7 @@
   <!-- show differing levels for certain methods -->
   <class name="Zen">
     <method name="getTicket" level="3" />
-    <method name="getSetting" level="2" />
+    <method name="getSetting" level="0" />
   </class>
 
   <format>
@@ -48,6 +48,3 @@
   </format>
 
 </debug_settings>
-
-
-

@@ -69,7 +69,7 @@
     </test3>
   </testquote>
   <testexecute>
-    <select_1>
+    <pass_1>
       <param name='statement'>SELECT 1 + 2 as expected_val</param>
       <param name='table'></param>
       <param name='limit'></param>
@@ -77,119 +77,142 @@
       <param name='passfail' eval='true'>true</param>
       <param name='expected_count' eval='true'>1</param>
       <param name='expected_val'>3</param>
-    </select_1>    
-    <select_2>
+    </pass_1>
+    <pass_2>
+      <param name='statement'>SELECT column_primarykey as expected_val FROM {table} WHERE column_integer &lt; 10</param>
+      <param name='table'>DBTEST</param>
+      <param name='limit'></param>
+      <param name='cache' eval='true'>false</param>
+      <param name='passfail' eval='true'>true</param>
+      <param name='expected_count'>1</param>
+    </pass_2>    
+    <pass_3>
+      <param name='statement'>SELECT column_primarykey as expected_val FROM {table} WHERE column_integer &lt; 30</param>
+      <param name='table'>DBTEST</param>
+      <param name='limit'>2</param>
+      <param name='cache' eval='true'>false</param>
+      <param name='passfail' eval='true'>true</param>
+      <param name='expected_count'>2</param>
+    </pass_3>    
+    <pass_4>
+      <param name='statement'>SELECT column_primarykey as expected_val FROM {table} WHERE column_integer &gt; 100</param>
+      <param name='table'>DBTEST</param>
+      <param name='limit'></param>
+      <param name='cache' eval='true'>false</param>
+      <param name='passfail' eval='true'>true</param>
+      <param name='expected_count'>0</param>
+    </pass_4>
+    <pass_5>
+      <param name='statement'>SELECT column_primarykey as expected_val FROM {table} WHERE column_integer &lt;= 10</param>
+      <param name='table'>DBTEST</param>
+      <param name='limit'></param>
+      <param name='cache'>10</param>
+      <param name='passfail' eval='true'>true</param>
+      <param name='expected_count'>2</param>
+    </pass_5>    
+    <pass_6>
+      <param name='statement'>SELECT column_primarykey as expected_val FROM {table} WHERE column_byte &lt; 10</param>
+      <param name='table'>DBTEST</param>
+      <param name='limit'>2</param>
+      <param name='cache'>10</param>
+      <param name='passfail' eval='true'>true</param>
+      <param name='expected_count'>2</param>
+    </pass_6>    
+    <pass_7>
+      <param name='statement'>SELECT column_primarykey as expected_val FROM {table} WHERE column_byte &gt; 100</param>
+      <param name='table'>DBTEST</param>
+      <param name='limit'>2</param>
+      <param name='cache'>10</param>
+      <param name='passfail' eval='true'>true</param>
+      <param name='expected_count'>0</param>
+    </pass_7>
+    <fail_1>
       <param name='statement'>SELECT true FROM 1=2</param>
       <param name='table'></param>
       <param name='limit'></param>
       <param name='cache' eval='true'>false</param>
       <param name='passfail' eval='true'>false</param>
-      <param name='expected_count'>0</param>
-    </select_2>
-    <select_3>
-      <param name='statement'>SELECT column_primarykey as expected_val FROM {table} WHERE column_primarykey &lt; 5</param>
-      <param name='table'>DBTEST</param>
+    </fail_1>
+    <fail_2>
+      <param name='statement'>SELECT true FROM fweijioe184798237r89327fwejoi</param>
+      <param name='table'></param>
       <param name='limit'></param>
       <param name='cache' eval='true'>false</param>
-      <param name='passfail' eval='true'>true</param>
-      <param name='expected_count'>4</param>
-    </select_3>    
-    <select_4>
-      <param name='statement'>SELECT column_primarykey as expected_val FROM {table} WHERE column_primarykey &lt; 5</param>
-      <param name='table'>DBTEST</param>
-      <param name='limit'>2</param>
-      <param name='cache' eval='true'>false</param>
-      <param name='passfail' eval='true'>true</param>
-      <param name='expected_count'>2</param>
-    </select_4>    
-    <select_5>
-      <param name='statement'>SELECT column_primarykey as expected_val FROM {table} WHERE column_primarykey &gt; 100</param>
-      <param name='table'>DBTEST</param>
-      <param name='limit'></param>
-      <param name='cache' eval='true'>false</param>
-      <param name='passfail' eval='true'>true</param>
-      <param name='expected_count'>0</param>
-    </select_5>
-    <select_6>
-      <param name='statement'>SELECT column_primarykey as expected_val FROM {table} WHERE column_primarykey &lt; 5</param>
-      <param name='table'>DBTEST</param>
-      <param name='limit'></param>
-      <param name='cache'>10</param>
-      <param name='passfail' eval='true'>true</param>
-      <param name='expected_count'>4</param>
-    </select_6>    
-    <select_7>
-      <param name='statement'>SELECT column_primarykey as expected_val FROM {table} WHERE column_primarykey &lt; 5</param>
-      <param name='table'>DBTEST</param>
-      <param name='limit'>2</param>
-      <param name='cache'>10</param>
-      <param name='passfail' eval='true'>true</param>
-      <param name='expected_count'>2</param>
-    </select_7>    
-    <select_8>
-      <param name='statement'>SELECT column_primarykey as expected_val FROM {table} WHERE column_primarykey &gt; 100</param>
-      <param name='table'>DBTEST</param>
-      <param name='limit'></param>
-      <param name='cache'>10</param>
-      <param name='passfail' eval='true'>true</param>
-      <param name='expected_count'>0</param>
-    </select_8>
+      <param name='passfail' eval='true'>false</param>
+    </fail_2>    
   </testexecute>
 
   <!-- {table} will be replaced by table name [optional] -->
   <testexecutegetone>
-    <select_1>
+    <pass_1>
       <param name='statement'>SELECT 1 + 2 as expected_val</param>
       <param name='table'></param>
+      <param name='limit'></param>
       <param name='cache' eval='true'>false</param>
       <param name='passfail' eval='true'>true</param>
+      <param name='expected_count'>1</param>
       <param name='expected_val'>3</param>
-    </select_1>    
-    <select_2>
+    </pass_1>
+    <pass_2>
+      <param name='statement'>SELECT column_primarykey as expected_val FROM {table} WHERE column_integer &lt; 10</param>
+      <param name='table'>DBTEST</param>
+      <param name='limit'></param>
+      <param name='cache' eval='true'>false</param>
+      <param name='passfail' eval='true'>true</param>
+      <param name='expected_count'>1</param>
+    </pass_2>    
+    <pass_3>
+      <param name='statement'>SELECT column_primarykey as expected_val FROM {table} WHERE column_integer &lt; 30</param>
+      <param name='table'>DBTEST</param>
+      <param name='limit'>2</param>
+      <param name='cache' eval='true'>false</param>
+      <param name='passfail' eval='true'>true</param>
+      <param name='expected_count'>1</param>
+    </pass_3>    
+    <pass_4>
+      <param name='statement'>SELECT column_primarykey as expected_val FROM {table} WHERE column_integer &gt; 100</param>
+      <param name='table'>DBTEST</param>
+      <param name='limit'></param>
+      <param name='cache' eval='true'>false</param>
+      <param name='passfail' eval='true'>true</param>
+    </pass_4>
+    <pass_5>
+      <param name='statement'>SELECT column_primarykey as expected_val FROM {table} WHERE column_integer &lt;= 10</param>
+      <param name='table'>DBTEST</param>
+      <param name='limit'></param>
+      <param name='cache'>10</param>
+      <param name='passfail' eval='true'>true</param>
+      <param name='expected_count'>1</param>
+    </pass_5>    
+    <pass_6>
+      <param name='statement'>SELECT column_primarykey as expected_val FROM {table} WHERE column_byte &lt; 10</param>
+      <param name='table'>DBTEST</param>
+      <param name='limit'>2</param>
+      <param name='cache'>10</param>
+      <param name='passfail' eval='true'>true</param>
+      <param name='expected_count'>1</param>
+    </pass_6>    
+    <pass_7>
+      <param name='statement'>SELECT column_primarykey as expected_val FROM {table} WHERE column_byte &gt; 100</param>
+      <param name='table'>DBTEST</param>
+      <param name='limit'>2</param>
+      <param name='cache'>10</param>
+      <param name='passfail' eval='true'>true</param>
+    </pass_7>
+    <fail_1>
       <param name='statement'>SELECT true FROM 1=2</param>
       <param name='table'></param>
       <param name='cache' eval='true'>false</param>
       <param name='passfail' eval='true'>false</param>
-    </select_2>
-    <select_3>
-      <param name='statement'>SELECT column_primarykey as expected_val FROM {table} WHERE column_primarykey &lt; 5</param>
-      <param name='table'>DBTEST</param>
+    </fail_1>
+    <fail_2>
+      <param name='statement'>SELECT true FROM fjewifjew84798324fjkewjfiojweio</param>
+      <param name='table'></param>
       <param name='cache' eval='true'>false</param>
-      <param name='passfail' eval='true'>true</param>
-    </select_3>    
-    <select_4>
-      <param name='statement'>SELECT column_primarykey as expected_val FROM {table} WHERE column_primarykey &lt; 5</param>
-      <param name='table'>DBTEST</param>
-      <param name='cache' eval='true'>false</param>
-      <param name='passfail' eval='true'>true</param>
-    </select_4>    
-    <select_5>
-      <param name='statement'>SELECT column_primarykey as expected_val FROM {table} WHERE column_primarykey &gt; 100</param>
-      <param name='table'>DBTEST</param>
-      <param name='cache' eval='true'>false</param>
-      <param name='passfail' eval='true'>true</param>
-    </select_5>
-    <select_6>
-      <param name='statement'>SELECT column_primarykey as expected_val FROM {table} WHERE column_primarykey &lt; 5</param>
-      <param name='table'>DBTEST</param>
-      <param name='cache'>10</param>
-      <param name='passfail' eval='true'>true</param>
-    </select_6>    
-    <select_7>
-      <param name='statement'>SELECT column_primarykey as expected_val FROM {table} WHERE column_primarykey &lt; 5</param>
-      <param name='table'>DBTEST</param>
-      <param name='cache'>10</param>
-      <param name='passfail' eval='true'>true</param>
-    </select_7>    
-    <select_8>
-      <param name='statement'>SELECT column_primarykey as expected_val FROM {table} WHERE column_primarykey &gt; 100</param>
-      <param name='table'>DBTEST</param>
-      <param name='cache'>10</param>
-      <param name='passfail' eval='true'>true</param>
-    </select_8>
+      <param name='passfail' eval='true'>false</param>
+    </fail_2>
   </testexecutegetone>
 
-  <!-- {table} will be replaced by table name, {key} will be replaced by primary key value -->
   <testinsert>
     <insert_1>
       <param name='statement'>INSERT INTO {table} (column_primarykey, column_value, column_string, column_integer, column_byte) 
@@ -199,23 +222,57 @@
     </insert_1>
     <insert_2>
       <param name='statement'>INSERT INTO {table} (column_primarykey, column_value, column_string, column_integer, column_byte) 
-                              VALUES( 290, 'spiffy', 'happy', 299, 1 )</param>
+                              VALUES( 290, 'yah', 'nah', 299, 1 )</param>
       <param name='table'>DBTEST</param>
       <param name='passfail' eval='true'>true</param>
     </insert_2>
     <fail_1>
       <param name='statement'>INSERT INTO {table} (column_primarykey, column_value, column_string, column_integer, column_byte) 
-                              VALUES( null, 'spiffy', 'happy', 299, 1 )</param>
+                              VALUES( null, 'weee', 'yay', 299, 1 )</param>
       <param name='table'>DBTEST</param>
       <param name='passfail' eval='true'>false</param>
     </fail_1>
     <fail_2>
-      <param name='statement'>INSERT INTO {table} (column_primarykey, column_value, column_string, column_integer, column_byte) 
-                              VALUES( {key}, 'spiffy', 'happy', 'a', 20 )</param>
+      <param name='statement'>INSERT INTO {table} (column_notacolumn, column_value, column_string, column_integer, column_byte) 
+                              VALUES( {key}, 'hoohaw', 'weevul', 'a', 20 )</param>
       <param name='table'>DBTEST</param>
       <param name='passfail' eval='true'>false</param>
     </fail_2>
   </testinsert>
+
+  <testgenerateid>
+    <test_1>
+      <param name='table'>DBTEST</param>
+    </test_1>
+  </testgenerateid>
+
+  <!-- {table} will be replaced by table name, {key} will be replaced by primary key value -->
+  <setup>
+    <insert_1>
+      <param name='statement'>INSERT INTO {table} (column_primarykey, column_value, column_string, column_integer, column_byte) 
+                              VALUES( {key}, 'apple', 'green', 10, 1 )</param>
+      <param name='table'>DBTEST</param>
+      <param name='passfail' eval='true'>true</param>
+    </insert_1>
+    <insert_2>
+      <param name='statement'>INSERT INTO {table} (column_primarykey, column_value, column_string, column_integer, column_byte) 
+                              VALUES( {key}, 'orange', 'orange', 20, 0 )</param>
+      <param name='table'>DBTEST</param>
+      <param name='passfail' eval='true'>true</param>
+    </insert_2>
+    <insert_3>
+      <param name='statement'>INSERT INTO {table} (column_primarykey, column_value, column_string, column_integer, column_byte) 
+                              VALUES( {key}, 'cherry', 'red', 5, 1 )</param>
+      <param name='table'>DBTEST</param>
+      <param name='passfail' eval='true'>true</param>
+    </insert_3>
+    <insert_4>
+      <param name='statement'>INSERT INTO {table} (column_primarykey, column_value, column_string, column_integer, column_byte) 
+                              VALUES( {key}, 'lemon', 'yellow', 15, 0 )</param>
+      <param name='table'>DBTEST</param>
+      <param name='passfail' eval='true'>true</param>
+    </insert_4>
+  </setup>
 
 </TestUnit>
 

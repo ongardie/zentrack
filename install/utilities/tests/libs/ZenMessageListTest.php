@@ -5,6 +5,9 @@
    *
    * Requirements: Relies on config.php in the install/utilities/tests/ folder
    *
+   * The tests require ZenMessageListTest_config.xml and ZenMessageListTest.xml,
+   * both should reside in the same directory as this file.
+   *
    * @package PHPUnit
    */
 
@@ -32,6 +35,7 @@
     }
     
     function load( $node = null ) {
+      Assert::assert( is_object($this->obj), "ZenMessageList was not initialized properly" );
       $this->obj->clearMessages();
       if( $node ) { 
         $this->msgvals = $node->getChild('message');
@@ -54,15 +58,19 @@
         $bool = ($bool == true 
                  && $this->obj->count( $vals['lvl'] ) > $beforecount
                  && $this->obj->count() > $beforetotal);
-	Assert::equalsTrue( $bool, "{$vals['class']}->{$vals['method']}[{$vals['lvl']}]: failed to add" );
+	Assert::equalsTrue( $bool, "{$vals['class']}->{$vals['method']}[{$vals['lvl']}]: failed to add"
+                            ."<br>retVal=$bool, lvlCount=".$this->obj->count($vals['lvl']).", totalCount="
+                            .$this->obj->count() );
       }
       else {
         // check that counts have not increased and that the method returned false
         $bool = ($bool == false
                  && $this->obj->count( $vals['lvl'] ) == $beforecount
                  && $this->obj->count() == $beforetotal);
-	Assert::equalsTrue( $bool, "{$vals['class']}->{$vals['method']}[{$vals['lvl']}]:"
-                            ."failed to skip" );
+	Assert::equalsTrue( $bool, "{$vals['class']}->{$vals['method']}[{$vals['lvl']}]: failed to skip"
+                            ."<br>Returned Value = ".($bool? 'true':'false')
+                            ."<br>Level Count = ".$this->obj->count($vals['lvl']).":$beforecount"
+                            ."<br>Total Count = ".$this->obj->count().":$beforetotal" );
       }
     }
 

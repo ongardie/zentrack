@@ -98,9 +98,9 @@ should match root, "I'm putting some junk in these for fun\n!</param>
     <bad_2>
       <param name='class'>Zen</param>
       <param name='method'>getSetting</param>
-      <param name='message'>This is a level 3, should fail</param>
+      <param name='message'>This is a level 1, should fail</param>
       <param name='errnum'>140</param>
-      <param name='lvl'>3</param>
+      <param name='lvl'>1</param>
       <param name='expected' eval='true'>false</param>
     </bad_2>
     <bad_3>
