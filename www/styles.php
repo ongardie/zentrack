@@ -1,8 +1,8 @@
+<!--
+ 
 <?
   include_once("./header.php");  
 ?>
-<!--
- 
   /*** PAGE PROPERTIES ***/
   
   BODY {
@@ -99,26 +99,47 @@
 
   /*** PRIORITY PROPERTIES ***/
 <?
-function priority_color($priority, $num) {
+function color_scale($startcol, $endcol, $pct) {
+   // This function returns an HTML colour scaled on a percentile
+   // scale between the two provided colours
+   
+   $p = ($pct < 0)? 0: (($pct > 100)? 1: $pct / 100);
+   
+   // Split the colours into their red, green and blue ratios
+   $sr = hexdec(substr($startcol, 1, 2));
+   $sg = hexdec(substr($startcol, 3, 2));
+   $sb = hexdec(substr($startcol, 5, 2));
+   
+   $er = hexdec(substr($endcol, 1, 2));
+   $eg = hexdec(substr($endcol, 3, 2));
+   $eb = hexdec(substr($endcol, 5, 2));
+   
+   $r = $sr + (($er - $sr) * $p);
+   $g = $sg + (($eg - $sg) * $p);
+   $b = $sb + (($eb - $sb) * $p);
+
+   return ('#' . str_pad(dechex($r), 2, "0", STR_PAD_LEFT) . str_pad(dechex($g), 2, "0", STR_PAD_LEFT) . str_pad(dechex($b), 2, "0", STR_PAD_LEFT));
+}
+
+function priority_color($priority) {
    // This function returns an HTML colour based on the priority
    // supplied on a sliding colour scale.
-    
-   $p = $priority / $num * 100;
    
-   if ($p < 0) {
-       $p = 0;
-   }
+   global $lc, $mc, $hc, $mp, $num, $lowp;
    
-   if ($p > 100) {
-      $p = 100;
-   }
+   $p = ($priority - $lowp) / $num * 100;
+   $med = ($mp - $lowp) / $num * 100;
    
-   if ($p < 25) {
-      $colour = '#FFFF' . substr('0'.dechex((25 - $p) * 10.23), -2);
+   $p = ($p < 0)? 0: (($p > 100)? 100: $p);
+   
+   if ($p < $med) {
+      $pct = ($priority - $lowp) / $mp * 100;
+      $colour = color_scale($lc, $mc, $pct);
    } elseif ($p < 100) {
-      $colour = '#FF' . substr('0'.dechex((100 - $p) * 3.4), -2) . "00";
+      $pct = ($priority - $mp) / ($num - $mp + 1) * 100;
+      $colour = color_scale($mc, $hc, $pct);
    } else {
-      $colour = '#FF0000';
+      $colour = $hc;
    }
    
    return ($colour);
@@ -126,6 +147,11 @@ function priority_color($priority, $num) {
 
 $lowp = 99999;
 $hip = -1;
+
+$lc = $zen->settings["color_priority_low"];
+$mc = $zen->settings["color_priority_med"];
+$hc = $zen->settings["color_priority_hi"];
+$mp = $zen->settings["priority_medium"];
 
 foreach ($zen->getPriorities(1) as $v) {
    if ($v["priority"] < $lowp) $lowp = $v["priority"];
@@ -137,10 +163,9 @@ $num = $hip - $lowp;
 foreach ($zen->getPriorities(1) as $v) {
 ?>
   .priority<?=$v["pid"]?> {
-     background:      <?=priority_color($v["priority"] - $lowp, $num)?>;
+     background:      <?=priority_color($v["priority"])?>;
 <?
    if ($v["priority"] == $hip) {?>
-
      font-weight:     Bold;
 <?
 

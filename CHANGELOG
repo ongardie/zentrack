@@ -7,6 +7,12 @@
 
 ----- V2.4.1 (Development, See CVS) ----
 
+2003-05-02, Kato
+  Updated language files (minor cleanup)
+    - zentrack/includes/templates/languageForm.php 1.2
+    - zentrack/includes/translations/french.trans 1.3
+    - zentrack/includes/translations/spanish.trans 1.3
+
 2003-05-01, Kato
   Fixed issues with creating tickets via email (loss of spaces and returns)
   Enhanced the email template parsing functions

@@ -37,34 +37,21 @@ if( is_array($tickets) ) {
    $td_ttl = "title='Click here to view the $page_type.'";
    foreach($tickets as $t) {
       $row = $zen->settings["color_background"];
-      unset($txt);
-      unset($tx);
-      if( $t["priority"] <= $zen->settings["level_hot"] ) {
-    $tx = "style='background:".$zen->settings["color_highlight"]."'";
-    $txt = $hotrollover_text;
-    $text = $zen->settings["color_hot"];
-      } else if( $t["priority"] <= $zen->settings["level_highlight"] ) {
-    $txt = $rollover_text;
-    $text = $zen->settings["color_hot"];   
-      } else {
-    $txt = $rollover_text;
-    $text = $zen->settings["color_text"];  
-      }
       if( $zen->inProjectTypeIDs($t["type_id"]) ) {
-   $link = $projectUrl;
+         $link = $projectUrl;
       } else {
-   $link = $ticketUrl;   
+         $link = $ticketUrl;   
       }
 
       ?>
-   <tr style="background:<?=$row?>;color:<?=$text?>">
-   <td height="25" valign="middle" <?=$td_ttl?> <?=$txt?>>
-    <a class="rowLink" style="color:<?=$text?>" href="<?=$link?>?id=<?=$t["id"]?>"><?=$t["id"]?></a>
+   <tr class="priority<?=$t[priority]?>">
+   <td height="25" valign="middle" <?=$td_ttl?>>
+    <a class="rowLink" href="<?=$link?>?id=<?=$t["id"]?>"><?=$t["id"]?></a>
    </td>
-   <td height="25" valign="middle" <?=$txt?> <?=$td_ttl?>>
-    <a class="rowLink" style="color:<?=$text?>" href="<?=$link?>?id=<?=$t["id"]?>"><?=$t["title"]?></a>
+   <td height="25" valign="middle" <?=$td_ttl?>>
+    <a class="rowLink" href="<?=$link?>?id=<?=$t["id"]?>"><?=$t["title"]?></a>
    </td>
-   <td height="25" class="priority<?=$t[priority]?>" valign="middle">
+   <td height="25" valign="middle">
    <?=$zen->priorities["$t[priority]"]?>
    </td>
    <td height="25" valign="middle">

@@ -17,7 +17,7 @@
 <?
    $languages = get_languages_available();
    foreach($languages as $l) {
-     $txt = tr(ucwords($l));
+     $txt = ucwords($l);
      $sel = ($login_language == $l)? " selected" : "";
      print "<option value='$l'$sel>$txt</option>\n";
    }

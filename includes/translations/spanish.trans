@@ -3405,18 +3405,6 @@ msgid "yes"
 msgstr "s&iacute;"
 
 
-#file "D:\zentrack\zentrack/includes/templates/newTicketForm.php"
-#args ""
-msgid ($td
-msgstr ($td
-
-
-#file "D:\zentrack\zentrack/includes/templates/languageForm.php"
-#args ""
-msgid ucwords($l)
-msgstr ucwords($l)
-
-
 msgid "Account Settings"
 msgstr ""
 
