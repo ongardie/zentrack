@@ -516,10 +516,12 @@
 	if( strlen($v) ) {
 	  $vals["start_date"] = strtotime($v);
 	}
+	break;
       case "deadline":
 	if( strlen($v) ) {
 	  $vals["deadline"] = strtotime($v);
 	}
+	break;
       case "testing required":
 	{
 	  if( $v == 1 )
@@ -527,15 +529,18 @@
 	  else
 	    $vals["tested"] = 0;
 	}
+	break;
       case "approval required":
 	{
 	  if( $v == 1 )
 	    $vals["approved"] = 1;
 	  else
 	    $vals["approved"] = 0;
+	  break;
 	}
       case "details":
 	$vals["description"] = $zen->stripPHP($v);
+	break;
       }      
     }
     // include the proper template
