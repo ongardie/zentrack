@@ -26,13 +26,13 @@
      if( !$errs ) {
 	$res = $zen->reject_ticket($id, $login_id, $comments);
 	if( $res ) {
-	   add_system_messages("Ticket $id was rejected.");
+	   add_system_messages(tr("Ticket ? was rejected.", array($id)));
 	   $setmode = "details";
 	   include("../ticket.php");
 	   exit;
 	   //header("Location:$rootUrl/ticket.php?id=$id&setmode=details");
 	} else {
-	   $errs[] = "System error: Ticket $id could not be rejected".$zen->db_error;
+	   $errs[] = tr("System error: Ticket ? could not be rejected", array($id)).$zen->db_error;
 	}
      }
      if( $errs )

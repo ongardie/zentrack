@@ -25,20 +25,20 @@
      $required = array("id","comments");
      foreach($required as $r) {
 	if( !strlen($$r) ) {
-	   $errs[] = " $r is required";
+	   $errs[] = tr(" ? is required", array($r));
 	}
      }
      
      if( !$errs ) {
 	$res = $zen->reopen_ticket($id, $login_id, $comments);
 	if( $res ) {
-	   add_system_messages("Ticket $id was repoened.");
+	   add_system_messages(tr("Ticket ? was repoened.", array($id)));
 	   $setmode = "details";
 	   include("../ticket.php");
 	   exit;
 	   //header("Location:$rootUrl/ticket.php?id=$id&setmode=details");
 	} else {
-	   $errs[] = "System error: Ticket $id could not be reopened.".$zen->db_error;
+	   $errs[] = tr("System error: Ticket ? could not be reopened.", array($id)) .$zen->db_error;
 	}
      }
      if( $errs )

@@ -13,13 +13,13 @@
 
    $res = $zen->accept_ticket($id, $login_id);
    if( $res ) {
-      add_system_messages("Ticket $id was accepted by $login_name");
+      add_system_messages(tr("Ticket ? was accepted by ?", array($id, $login_name)));
       $setmode = "details";
       include("../ticket.php");
       exit;	   
       //header("Location:$rootUrl/ticket.php?id=$id&setmode=details");
    } else {
-      $errs[] = "System error: Ticket $id could not be accepted".$zen->db_error;
+      $errs[] = tr("System error: Ticket ? could not be accepted", array($id)).$zen->db_error;
    }
    if( $errs )
      add_system_messages( $errs, 'Error' );     

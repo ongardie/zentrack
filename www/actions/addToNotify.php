@@ -26,7 +26,7 @@
     }
 
     if( !count($users) && (!strlen($unreg_name)||!strlen($unreg_email)) ) {
-      $errs[] = "You must provide at least one registered user, or a valid name and email address";
+      $errs[] = tr("You must provide at least one registered user, or a valid name and email address");
     }
 
     if( !$errs ) {
@@ -34,7 +34,7 @@
       if( count($users) ) {
   foreach($users as $u) {
     if( !$zen->check_user_id($u) ) {
-      $errs[] = "$u was not a valid user id";
+      $errs[] = tr("? was not a valid user id", array($u));
     } else {
       $params = array("user_id"   => $u,
           "priority"  => $priority,
@@ -44,8 +44,8 @@
         $i++;
       }
       else if( $res && $res == "duplicate" ) {
-        add_system_messages("user_id $u already on notify "
-         ."list for #$ticket-id");        
+        add_system_messages(tr("user_id ? already on notify "
+         ."list for #?", array($u, $ticket_id)));        
       }
     }
   }
@@ -60,15 +60,15 @@
     $i++;
   }
   else if( $res && $res == "duplicate" ) {
-    add_system_messages("email $unreg_email already on notify "
-           ."list for #$ticket-id");        
+    add_system_messages(tr("email ? already on notify "
+           ."list for #?", array($unreg_email, $ticket_id)));        
   }
       }
       if( $i > 0 ) {
-  add_system_messages("$i entries added to #$ticket_id notification.");
+  add_system_messages(tr("? entries added to #? notification.", array($i, $ticket_id)));
   $setmode = "notify";
       } else {
-  $errs[] = "System error: Notify list could not be updated ".$zen->db_error;
+  $errs[] = tr("System error: Notify list could not be updated ").$zen->db_error;
       }
     }
     if( $errs )

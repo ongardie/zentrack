@@ -8,7 +8,7 @@
   
   include("action_header.php");
 
-  $page_tile = "Commit Edited Ticket";
+  $page_tile = tr("Commit Edited Ticket");
   $expand_tickets = 1;
 
   // initiate default values
@@ -49,7 +49,7 @@
   // check for required fields
   foreach($required as $r) {
      if( !$$r ) {
-	$errs[] = ucfirst($r)." is a required field";
+	$errs[] = tr("? is a required field", array(ucfirst($r)));
      }
   }
   if( !$errs ) {
@@ -63,12 +63,12 @@
      $res = $zen->update_ticket($id,$params);
      // check for errors
      if( !$res ) {
-	$errs[] = "Ticket $id could not edit ticket. ".$zen->db_error;
+	$errs[] = tr("Ticket ? could not edit ticket. ",array($id)).$zen->db_error;
      }
   }
 
   if( !$errs ) {
-     add_system_messages("Edited ticket $id.");
+     add_system_messages(tr("Edited ticket ?.", array($id)));
      $setmode = "details";
      include("../ticket.php");
      exit;

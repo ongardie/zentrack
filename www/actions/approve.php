@@ -25,7 +25,7 @@
        exit;       
        //header("Location:$rootUrl/ticket.php?id=$id&setmode=details");
      } else {
-       $errs[] = "System error: Ticket $id could not be approved".$zen->db_error;
+       $errs[] = tr("System error: Ticket ? could not be approved", array($id)).$zen->db_error;
      }
    }
    if( $errs )

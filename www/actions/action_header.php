@@ -69,7 +69,7 @@
   }
 
   // set up page paremeters
-  $page_title = "Ticket #$id";
+  $page_title = tr("Ticket #?", array($id));
   $page_section = "Ticket #$id";
   $expand_tickets = 1;
 

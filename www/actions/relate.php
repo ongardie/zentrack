@@ -22,20 +22,20 @@
      $required = array("relations","id");
      foreach($required as $r) {
 	if( !$$r ) {
-	   $errs[] = " $r is required";
+	   $errs[] = tr(" ? is required", array($r));
 	}
      }
      
      if( !$errs ) {
 	$res = $zen->relate_ticket($id, $relations, $login_id, $comments);
 	if( $res ) {
-	   add_system_messages("Ticket $id related.");
+	   add_system_messages(tr("Ticket ? related.", array($id)));
 	   $setmode = "related";
 	   include("../ticket.php");
 	   exit;
 	   //header("Location:$rootUrl/ticket.php?id=$id&setmode=related");
 	} else {
-	   $errs[] = "System error: Ticket $id could not be related, or the entries were the same.".$zen->db_error;
+	   $errs[] = tr("System error: Ticket ? could not be related, or the entries were the same.", array($id)).$zen->db_error;
 	}
      }
      if( $errs )

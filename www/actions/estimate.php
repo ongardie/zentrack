@@ -19,7 +19,7 @@
      $required = array_keys($input);
      foreach($required as $r) {
 	if( !$$r ) {
-	   $errs[] = " $r is required";
+	   $errs[] = tr(" ? is required", array($r));
 	}
      }
      
@@ -27,13 +27,13 @@
 	$params = array("est_hours"=>$hours);
 	$res = $zen->update_ticket($id, $params);
 	if( $res ) {
-	   add_system_messages("Ticket $id hours set to $hours");
+	   add_system_messages(tr("Ticket ? hours set to ?", array($id, $hours)));
 	   $setmode = "details";
 	   include("../ticket.php");
 	   exit;
 	   //header("Location:$rootUrl/ticket.php?id=$id&setmode=details");
 	} else {
-	   $errs[] = "System error: Ticket $id hours could not be set".$zen->db_error;
+	   $errs[] = "tr(System error: Ticket ? hours could not be set", array($id)).$zen->db_error;
 	}
      }
      if( $errs )

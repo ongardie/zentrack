@@ -42,7 +42,7 @@
 </tr>
 <tr>
   <td>
-	  <b>Project:</b>
+	  <b><?php echo tr("Project"); ?>:</b>
   </td>
   <td colspan=3>
     <b><?=$parent["id"]?> - <?=$parent["title"]?>
@@ -58,25 +58,25 @@
 
 <tr>
   <td colspan=4>
-	  <b>TASKS FOR COMPLETION:</b>
+	  <b><?php echo tr("TASKS FOR COMPLETION"); ?>:</b>
      <ul>
 <? if( is_array($ticket["children"]) ) { ?>     
      <table width=400 cellpadding=2 cellspacing=0 border=1>
      <tr>
      <td>
-     <b>ID</b>
+     <b><?php echo tr("ID"); ?></b>
      </td>
      <td>
-     <b>Title</b>
+     <b><?php echo tr("Title"); ?></b>
      </td>
      <td>
-     <b>Status</b>
+     <b><?php echo tr("Status"); ?></b>
      </td>
      <td>
-     <b>ETC</b>
+     <b><?php echo tr("ETC"); ?></b>
      </td>
      <td>
-     <b>ATC</b>
+     <b><?php echo tr("ATC"); ?></b>
      </td>
      </tr>
      <?
@@ -101,7 +101,7 @@
        }
    ?>
      <tr>
-     <td  colspan=3 align=right><b>Totals</b></td>
+     <td  colspan=3 align=right><b><?php echo tr("Totals"); ?></b></td>
      <td ><b><?=$total_etc?></b></td>
      <td ><b><?=$total_wkd?></b></td>
      </tr>
@@ -109,7 +109,7 @@
      <?
      
   } else {
-	 print "No Tasks Assigned to this Project";  
+	 print tr("No Tasks Assigned to this Project");  
   }
 ?>
      </ul>
@@ -180,7 +180,7 @@
   
 <tr>
   <td  colspan=4>
-    <b>DESCRIPTION</b>
+    <b><?php echo tr("DESCRIPTION"); ?></b>
     <ul>
       <?=nl2br(htmlspecialchars(stripslashes($ticket["description"])))?>
     </ul>
@@ -189,7 +189,7 @@
   
 <tr>
   <td colspan=4>
-	  <b>RELATED TICKETS:</b>
+	  <b><?php echo tr("RELATED TICKETS"); ?>:</b>
      <ul>
 <?
   if( $ticket["related"] ) {
@@ -199,7 +199,7 @@
 	print "$t[id] - $t[title] ($rootUrl/ticket.php?id=$t[id])<br>\n";
      }
   } else {
-     print "No Related Tickets";  
+     print tr("No Related Tickets");  
   }
 ?>
 	  </ul>
@@ -208,14 +208,14 @@
 
 <tr>
   <td >
-    <b>Testing:</b>
+    <b><?php echo tr("Testing"); ?>:</b>
   </td>
   <td  colspan=3>
     <?
       if( !$ticket["tested"] ) {
-	 print "Not Required";
+	 print tr("Not Required");
       } else {
-	 print ($ticket["tested"] == 1)? "Required" : "Completed";	
+	 print ($ticket["tested"] == 1)? tr("Required") : tr("Completed");	
       }
     ?>
   </td>
@@ -223,14 +223,14 @@
 
 <tr>
   <td >
-    <b>Approval:</b>
+    <b><?php echo tr("Approval"); ?>:</b>
   </td>
   <td  colspan=3>
   <?
     if( !$ticket["approved"] ) {
-       print "Not Required";
+       print tr("Not Required");
     } else {
-       print ($ticket["approved"] == 1)? "Required" : "Completed";	
+       print ($ticket["approved"] == 1)? tr("Required") : tr("Completed");	
     }
   ?>
   </td>
@@ -242,12 +242,12 @@
   
 <tr>
   <td colspan=4>
-    <b>LOG</b>
+    <b><?php echo tr("LOG"); ?></b>
     <ul>
 <?
   $logs = $zen->get_logs($id);
   if( !is_array($logs) ) {
-     print "No Log Entries";	  
+     print tr("No Log Entries");	  
   } else {
      foreach( $logs as $l ) {
 	print ($l["entry"])? 

@@ -35,7 +35,7 @@
      foreach($required as $r) {
 	if( !strlen($$r) && !is_array($$r) ) {
 	   $r = ucwords(ereg_replace("_", " ", $r));
-	   $errs[] = "$r is required";
+	   $errs[] = tr("? is required", array($r));
 	}
      }
      if( $emethod == 1 ) {
@@ -57,12 +57,12 @@
 	$params["log"] = $id;
      }
      if( !is_array($recipients) )
-	$errs[] = "There were no recipients";
+	$errs[] = tr("There were no recipients");
      $message = $zen->formatEmailMessage($params);
      if( !$errs ) {
 	$res = $zen->sendEmail($recipients, $subject, $message, $login_id);
 	if( $res ) {
-	   add_system_messages("Ticket $id emailed to selected recipients");
+	   add_system_messages(tr("Ticket ? emailed to selected recipients"));
 	   $setmode = "system";
 	   include("../ticket.php");
 	   exit;
@@ -70,7 +70,7 @@
 	   //unset($action);
 	   //exit;
 	} else {
-	   $errs[] = "System error: Ticket $id could not be emailed".$zen->db_error;
+	   $errs[] = tr("System error: Ticket ? could not be emailed", array($id).$zen->db_error;
 	}
      }
      if( $errs )

@@ -26,12 +26,12 @@
 	}
       }
     }
-    add_system_messages("$num recipients dropped from the notify list","Bold");
+    add_system_messages(tr("? recipients dropped from the notify list", array($num)),"Bold");
     $setmode = "notify";
   }
   else {
     // create an error message
-    $msg = "No recipients were selected to drop";
+    $msg = tr("No recipients were selected to drop");
     add_system_messages( $msg, 'Error' );
   }
 

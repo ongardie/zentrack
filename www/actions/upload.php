@@ -39,7 +39,7 @@
      $zen->cleanInput($input);
      foreach($required as $r) {
 	if( !$$r ) {
-	   $errs[] = " $r is required";
+	   $errs[] = tr(" ? is required", $r);
 	}
      }
      // print out an appropriate error message
@@ -47,19 +47,19 @@
      if( $userfile_error ) {
        switch ($userfile_error){
        case 1:
-	 $errs[] = "The uploaded file exceeds the upload_max_filesize directive in php.ini.";
+	 $errs[] = tr("The uploaded file exceeds the upload_max_filesize directive in php.ini.");
 	 break;
        case 2:
-	 $errs[] = "The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the html form.";
+	 $errs[] = tr("The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the html form.");
 	 break;
        case 3:
-	 $errs[] = "The uploaded file was only partially uploaded.";
+	 $errs[] = tr("The uploaded file was only partially uploaded.");
 	 break;
        case 4:
-	 $errs[] = "No file was uploaded.";
+	 $errs[] = tr("No file was uploaded.");
 	 break;
        case 5:
-	 $errs[] = "Uploaded file size 0 bytes";
+	 $errs[] = tr("Uploaded file size 0 bytes");
 	 break;
        }
      } 
@@ -85,19 +85,18 @@
 	}
         $max_size = $zen->settings["attachment_max_size"];	
 	if( !is_uploaded_file($userfile) ) {
-	  $errs[] = "The file was not recieved.  "
-	    ."Check to insure it's size does not exceed ".substr($max_size,0,strlen($max_size)-3)."KB";
+	  $errs[] = tr("The file was not recieved.  "
+	    ."Check to insure it's size does not exceed ?KB", array(substr($max_size,0,strlen($max_size)-3)));
 	} else if( $userfile_size > $max_size ) {
-	   $errs[] = "The file size (".number_format($userfile_size)
-	     .") exceeded the maximum allowed (".number_format($max_size).")";
+	   $errs[] = tr("The file size (?) exceeded the maximum allowed (?)", array(number_format($userfile_size), number_format($max_size)));
 	} else if( $zen->settings["attachment_types_allowed"] 
 		   && !preg_match("/\b$file_type\b/i", $zen->settings["attachment_types_allowed"]) ) {
-	   $errs[] = "'$file_type' is not an allowed file extension - "
-	     ."See your systems administrator for more information";
+	   $errs[] = tr("'?' is not an allowed file extension - "
+	     ."See your systems administrator for more information", array($file_type));
 	} else if( !$userfile_type ) {
-	   $errs[] = "That is not a recognized file type, by your browsers determinations";	   
+	   $errs[] = tr("That is not a recognized file type, by your browsers determinations");	   
 	} else if( !move_uploaded_file($userfile, $zen->attachmentsDir."/$file_name") ) {
-	   $errs[] = "The file could not be uploaded ";
+	   $errs[] = tr("The file could not be uploaded ");
 	}
 	
 	if( !$errs ) {
@@ -116,7 +115,7 @@
 	    include("../ticket.php");
 	    exit;
 	  } else {
-	    $errs[] = "System error: Attachment $userfile_name could not be uploaded for ticket $id. "
+	    $errs[] = tr("System error: Attachment ? could not be uploaded for ticket ?. ", array($userfile_name, $id))
 	      .$zen->db_error;
 	  }
 	}

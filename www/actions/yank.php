@@ -19,7 +19,7 @@
      $required = array("id");
      foreach($required as $r) {
 	if( !$$r ) {
-	   $errs[] = " $r is required";
+	   $errs[] = tr(" ? is required", array($r));
 	}
      }
      
@@ -33,7 +33,7 @@
 	   exit;
 	   //header("Location:$rootUrl/ticket.php?id=$id&setmode=details");
 	} else {
-	   $errs[] = "System error: Ticket $id could not be yanked.".$zen->db_error;
+	   $errs[] = tr("System error: Ticket ? could not be yanked.", array($id)) .$zen->db_error;
 	}
      }
      if( $errs )

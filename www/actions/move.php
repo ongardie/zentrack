@@ -21,20 +21,20 @@
     $required = array("id","newBin","user_id");
     foreach($required as $r) {
       if( !$$r ) {
-	$errs[] = " $r is required";
+	$errs[] = tr(" ? is required", array($r));
       }
     }
     
     if( !$errs ) {
       $res = $zen->move_ticket($id, $newBin, $login_id, $comments);
       if( $res ) {
-	add_system_messages("Ticket $id moved to the ".$zen->bins["$newBin"]." bin");
+	add_system_messages(tr("Ticket ? moved to the ? bin", array($id, $zen->bins["$newBin"])));
 	$setmode = "details";
 	include("../ticket.php");
 	exit;
 	//header("Location:$rootUrl/ticket.php?id=$id&setmode=details");
       } else {
-	$errs[] = "System error: Ticket $id could not be moved. ".$zen->db_error;
+	$errs[] = tr("System error: Ticket ? could not be moved. ", array($id)).$zen->db_error;
       }
     }
     if( $errs )

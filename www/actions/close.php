@@ -21,7 +21,7 @@
     $zen->cleanInput($input);
     foreach($required as $r) {
       if( !$$r ) {
-	$errs[] = " $r is required";
+	$errs[] = tr(" ? is required", array($r));
       }
     }
     
@@ -30,7 +30,7 @@
       if( is_array($children) ) {
 	foreach($children as $c) {
 	  if( $c["status"] != "CLOSED" ) {
-	    $errs[] = $zen->types["$c[type_id]"]." $c[id] is not completed.";
+	    $errs[] = tr("? ? is not completed.", array($zen->types[$c['type_id']], $c['id']));
 	  }
 	}
       }
@@ -39,13 +39,13 @@
     if( !$errs ) {
       $res = $zen->close_ticket($id, $login_id, $hours, $comments);
       if( $res ) {
-	add_system_messages("Ticket $id has been closed");
+	add_system_messages(tr("Ticket ? has been closed", array($id)));
 	$setmode = "details";
 	include("../ticket.php");
 	exit;
 	//header("Location:$rootUrl/ticket.php?id=$id&setmode=details");
       } else {
-	$errs[] = "System error: Ticket $id could not be closed".$zen->db_error;
+	$errs[] = tr("System error: Ticket ? could not be closed",array($id)).$zen->db_error;
       }
     }
     if( $errs )

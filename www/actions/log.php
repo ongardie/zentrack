@@ -21,27 +21,27 @@
     $required = array("id","action");
     foreach($required as $r) {
       if( !$$r ) {
-	$errs[] = " $r is required";
+	$errs[] = tr(" $r is required", array($r));
       }
     }     
     if( $log_action == 'LABOR' ) {
       if( !$hours )
-	$errs[] = 'Hours must be entered if the activity is "LABOR"';
+	$errs[] = tr('Hours must be entered if the activity is "LABOR"');
     } else if( !$comments ) {
-      $errs[] = 'No comments were entered.';
+      $errs[] = tr('No comments were entered.');
     }
     
     
     if( !$errs ) {
       $res = $zen->log_ticket($id, $login_id, $log_action, $hours, $comments);
       if( $res ) {
-	add_system_messages("Activity has been logged.");
+	add_system_messages(tr("Activity has been logged."));
 	$setmode = "log";
 	include("../ticket.php");
 	exit;
 	//header("Location:$rootUrl/ticket.php?id=$id&setmode=log");
       } else {
-	$errs[] = "System error: Activity could not be logged.".$zen->db_error;
+	$errs[] = tr("System error: Activity could not be logged.").$zen->db_error;
       }
     }
     if( $errs )
