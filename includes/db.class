@@ -146,7 +146,7 @@ class DB {
     // .. in mysql, there is no SELECT nextval()
     // so it is easieast to run the query, then return
     // the mysql function mysql_insert_id()
-    if( $this->database_type != 'mysql' ) {
+    if( !Zen::inString('mysql',$this->database_type) ) {
       if( !$sequence ) {
         $sequence = ereg_replace("zentrack_", "", strtolower($table));
         $sequence .= "_id_seq";
@@ -184,7 +184,7 @@ class DB {
         $res = $this->db_link->Execute($query);
       }
     }
-    if( $res && $this->database_type == "mysql" ) {
+    if( $res && Zen::inString('mysql',$this->database_type) ) {
       $id = $this->db_insertID();
     }
     if( $res ) {
@@ -252,7 +252,7 @@ class DB {
     // insert id for the INSERT statement about to take place... don't
     // forget to manually add the id with the insert statement in 
     // this case!
-    if( $this->database_type == 'mysql' ) {
+    if( Zen::inString('mysql',$this->database_type) ) {
       $id = mysql_insert_id();
     } else {
       $id = $this->db_link->genID($sequence);
@@ -476,8 +476,8 @@ class DB {
         }
         $p[2] = $this->checkSlashes($p[2]);
         if( !$p[3] && ereg("[a-zA-Z]",$p[2]) ) {
-          if( !Zen::inString('mysql',$this->db_type) 
-            && !Zen::inString('mssql',$this->db_type) ) {
+          if( !Zen::inString('mysql',$this->database_type) 
+            && !Zen::inString('mssql',$this->database_type) ) {
             $p[0] = "lower($p[0])";
             $p[2] = strtolower($p[2]);
           }
@@ -506,6 +506,13 @@ class DB {
     $this->db_link->Connect($host, $user, $passphrase, $database);
     if( $database and $this->db_link ) {
       $this->dbName = $database;
+    }
+    
+    if( $this->db_link ) {
+      $this->addDebug('db_connect', "Connected successfully to database", 3);
+    }
+    else {
+      $this->addDebug('db_connect', "Could not connect to $user@$host:$database", 1);
     }
     return( $this->db_link );      
   }

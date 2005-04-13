@@ -397,6 +397,7 @@ function setFormValsUsingGroup( fieldObj, group, setid ) {
     var f = 'window.document.'+fieldObj.form.getAttribute('name');
     var fn = f+'.'+fieldObj.name
     var s = unescape(group.evalText);
+    s = s.replace( /\{form\}.\{field\}/ig, "{field}" );
     s = s.replace( /{form}/ig, f);
     var vals = evalJsString( s.replace(/{field}/ig, fn) );
 
@@ -459,7 +460,7 @@ function setFormValsUsingGroup( fieldObj, group, setid ) {
     case "hidden":
       var labelText = document.getElementById(fieldObj.name+"LabelText");
       if( labelText ) {
-        labelText.innerHTML = fields[oldPos].value;
+        labelText.innerHTML = fields[oldPos].label;
       }
     case "button":
     case "submit":
@@ -473,6 +474,7 @@ function setFormValsUsingGroup( fieldObj, group, setid ) {
       if( fieldObj.selectedIndex && fieldObj.options && fieldObj.options.length > 0 ) {
         // store the currently selected value and try to reproduce in a minute
         var oldValue = fieldObj.options[ fieldObj.selectedIndex ].value;
+        behaviorDebug(3, "(setFormValsUsingGroup)storing oldValue="+oldValue);
       }
       behaviorDebug(3, "(setFormValsUsingGroup)storing oldValue="+oldValue); 
       fieldObj.length = 0;

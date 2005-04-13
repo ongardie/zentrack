@@ -317,7 +317,7 @@ INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,w
 
 -- Modify the version number
 
-UPDATE ZENTRACK_SETTINGS SET value='2.5.0.3' WHERE setting_id=74;
+UPDATE ZENTRACK_SETTINGS SET value='2.5.5 PRE1' WHERE setting_id=74;
 
 
 

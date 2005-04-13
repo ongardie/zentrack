@@ -51,19 +51,19 @@
      $debug_text .= "<span class='note'>\n";
      $debug_text .= "HTTP_USER_AGENT: $HTTP_USER_AGENT<br>\n";
      $debug_text .= "SCRIPT_NAME: $SCRIPT_NAME<br>\n";
-     $debug_text .= "HTTP_HOST: $HTTP_HOST<br>\n";
+     $debug_text .= "HTTP_HOST: (".($HTTP_HOST == $rootUrl? 'matches rootUrl' : 
+        '<b><span class="error">DOES NOT MATCH $rootUrl!!!</span></b>').")<br>\n";
      $debug_text .= "HTTP_COOKIE: $HTTP_COOKIE<br>\n";
      $debug_text .= "SERVER_SOFTWARE: {$_SERVER['SERVER_SOFTWARE']}<br>\n";
-     $debug_text .= "SERVER_NAME: $SERVER_NAME<br>\n";
      $debug_text .= "PHP Version: ".phpversion()."<br>\n";
      $debug_text .= "zenTrack Version: ".$zen->settings["version_xx"]."<br>\n";
      $debug_text .= "rootUrl: $rootUrl<br>\n";
      $debug_text .= "database: ".$zen->database_type."/".$zen->database_host."<br>\n";
      $debug_text .= "settings count: ".count($zen->settings)."<br>\n";
-     $debug_text .= "bins: ".join(",",$zen->bins)."<br>\n";
-     $debug_text .= "types: ".join(",",$zen->types)."<br>\n";
-     $debug_text .= "priorities: ".join(",",$zen->priorities)."<br>\n";
-     $debug_text .= "systems: ".join(",",$zen->systems)."<br>\n";
+     $debug_text .= "bins: ".(count($zen->bins)? join(",",$zen->bins) : 'NO BINS FOUND, DID YOU RUN THE SEED_YOURDB.SQL SCRIPT?')."<br>\n";
+     $debug_text .= "types: ".(count($zen->types)? join(",",$zen->types) : 'NO TYPES FOUND, DID YOU RUN THE SEED_YOURDB.SQL SCRIPT?')."<br>\n";
+     $debug_text .= "priorities: ".(count($zen->priorities)? join(",",$zen->priorities) : 'NO PRIORITIES FOUND, DID YOU RUN THE SEED_YOURDB.SQL SCRIPT?')."<br>\n";
+     $debug_text .= "systems: ".(count($zen->systems)? join(",",$zen->systems) : 'NO SYSTEMS FOUND, DID YOU RUN THE SEED_YOURDB.SQL SCRIPT?')."<br>\n";
      $debug_text .= "login_language: $login_language<br>\n";
      if( $login_id ) {
        $debug_text .= "login_id: $login_id<br>\n";
@@ -104,7 +104,12 @@
     <p><i>To disable this output, set $Debug_Mode in header.php to 0.</i><br>
     </td></tr>
     <?
-  
+    // for extra security, make sure we don't pass anything sensitive out to
+    // the public
+    $debug_text = preg_replace('/password=[^"\' ]+/', 'password=xxxx', $debug_text);
+    $debug_text = preg_replace('/Db_Pass=[^"\' ]+/', 'Db_Pass=xxxx', $debug_text);
+    $debug_text = preg_replace('/database_password=[^"\' ]+/', 'database_password=xxxx', $debug_text);
+    $debug_text = preg_replace('/[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+[.][a-zA-Z0-9_.-]+/', 'xxxx@xxxx.xxx',$debug_text);
     print $debug_text;
     
     // used by behavior_js.php

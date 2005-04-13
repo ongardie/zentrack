@@ -20,10 +20,10 @@
    global $Db_Instance;
    global $Db_Login;
    global $Db_Pass;
-   
 
    $this->demo_mode = $Demo_Mode; 
-   $this->debug = $Debug_Mode;  
+   $this->debug = $Debug_Mode;
+   //$this->sql_debug = true;  //uncommenting this will break everything and produce tons of garbage
    
    $this->database_type      = $Db_Type;
    $this->database_instance  = $Db_Instance;

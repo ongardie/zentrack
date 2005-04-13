@@ -18,6 +18,7 @@
   
   $page_title = tr("Commit New Project");
   $expand_projects = 1;
+  $page_type = "project";
   
   // initiate default values
   $otime = time();  // set time ticket opened
@@ -49,13 +50,14 @@
   "start_date"  => "int"
   );
   
-  $fields = $map->getFieldMap('project_create');
+  $req_fields = $map->getFieldMap('project_create');
   $required = array();
-  foreach($fields as $f=>$field) {
+  foreach($req_fields as $f=>$field) {
     if( $field['is_required'] ) {
       $required[] = $f;
     }
   }
+  
   $zen->cleanInput($fields);
   // check for required fields
   foreach($required as $r) {
@@ -108,7 +110,7 @@
     include("$libDir/nav.php");
     $zen->print_errors($errs);
     $view = "project_create";
-    include("$templateDir/newProjectForm.php");
+    include("$templateDir/newTicketForm.php");
     include("$libDir/footer.php");
   }
 ?>

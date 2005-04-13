@@ -645,7 +645,7 @@ class zen extends zenDate {
    * @return boolean
    */
    function inString( $pattern, $text ) {
-     return !strlen(strpos($text, $pattern));
+     return strlen(strpos($text, $pattern));
    }
    
    /**

@@ -10,7 +10,8 @@
   **  T H E S E   T W O   M U S T    B E   S E T ! ! !
   **
   **  OR ZENTRACK WILL NOT RUN PROPERLY
-  **  Don't use trailing slashes
+  **  Don't use trailing slashes, use only a forward slash "/"
+  **  as a backslash "\" has special meaning in php.
   */
 
   // the directory where zentrack includes are stored

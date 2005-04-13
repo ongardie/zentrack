@@ -11,7 +11,26 @@ and user experience, internationalization, platform and database
 abstraction, and endless possibilities for project expansion. 
 --------------------
 
------ VERSION 2.5.0.3 (development) -----
+----- VERSION 2.5.6 -----
+
+----- VERSION 2.5.5 (development) -----
+
+2005-04-12, kato
+  Cleaned up security restrictions
+  
+  Fixed arrow images in admin field map form, which were broken when rootUrl
+  is not /.
+  
+  Added some useful security into the debug information (protect passwords,
+  emails, and urls).
+  
+  Fixed project submit bug (type_id required, system_id required, etc..)
+
+2005-03-17, kato
+  Added ability to change label text when a behavior is run, so that the label
+  field type can work with behaviors properly.
+    - zentrack_2/includes/templates/fields/label.template
+    - zentrack_2/www/behavior_js.php
 
 2005-04-06, cfalonso
   Fixed problem in fieldmap admin page for ticket_close map

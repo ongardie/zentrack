@@ -46,7 +46,7 @@ function mOvr(src,clrOver,txtOver) {
 	src.style.cursor = 'hand'; 
 	src.style.backgroundColor = clrOver;
 	if( txtOver != null &&  txtOver != "" ){
-	  if( src.children ) {
+	  if( src.children && src.children.tags('A') && src.children.tags('A')[0] ) {
 	    src.children.tags('A')[0].style.color = txtOver;
 	  }
 	}
@@ -56,7 +56,7 @@ function mOut(src,clrIn,txtIn) {
   src.style.cursor = 'default'; 
   src.style.backgroundColor = clrIn; 
   if( txtIn != null && txtIn != "" ){
-    if( src.children ) {
+    if( src.children && src.children.tags('A') && src.children.tags('A')[0] ) {
       src.children.tags('A')[0].style.color = txtIn;
     }
   }

@@ -18,7 +18,7 @@ if( $_GET['clear_session_cache'] ) {
 }
 
 // ... except the following list
-$reservedList = array("libDir", "rootUrl", 
+$reservedList = array("libDir", "rootUrl", "rootWWW",
 		      "Db_Type", "Db_Instance", "Db_Login", "Db_Pass", "Db_Host", 
 		      "Debug_Mode", "Demo_Mode", "Debug_Overview", 
 		      "page_prefix", "page_title", "page_section", 

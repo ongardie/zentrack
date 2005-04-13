@@ -97,11 +97,11 @@ foreach($fields as $f=>$field) {
     $fn = "document.fieldMapForm";
     // up arrow
     $txt .= "<a href='#' onClick='moveRowUp(this.parentNode);return false;'";
-    $txt .= " border='0' alt='Move Up' title='Move Up'><img src='/images/icon_arrow_up.gif'";
+    $txt .= " border='0' alt='Move Up' title='Move Up'><img src='$rootUrl/images/icon_arrow_up.gif'";
     $txt .= " width='16' height='16' alt='Move Up' title='Move Up' border='0'></a>";
     // down arrow
     $txt .= "<a href='#' onClick='moveRowDown(this.parentNode);return false;'";
-    $txt .= " border='0' alt='Move Down' title='Move Down'><img src='/images/icon_arrow_down.gif'";
+    $txt .= " border='0' alt='Move Down' title='Move Down'><img src='$rootUrl/images/icon_arrow_down.gif'";
     $txt .= " width='16' height='16' alt='Move Down' title='Move Down' border='0'></a>";
     // control sort ordering by tracking what order these hidden fields arrive
     $txt .= "<input type='hidden' name='orderset[$f]' value='$fcount'>";
@@ -109,13 +109,13 @@ foreach($fields as $f=>$field) {
     if( $field['field_type'] == 'section' && $field['field_name'] != 'elapsed' ) {
       // remove sections
       $txt .= "<a href='#' onClick='removeRow(this);return false;'";
-      $txt .= " border='0' alt='Remove Section' title='Remove Section'><img src='/images/icon_trash.gif'";
+      $txt .= " border='0' alt='Remove Section' title='Remove Section'><img src='$rootUrl/images/icon_trash.gif'";
       $txt .= " width='16' height='16' alt='Remove Section' title='Remove Section' border='0'></a>";
     }
     else {
       // add new sections
       $txt .= "<a href='#' onClick='addRow(this);return false;'";
-      $txt .= " border='0' alt='Add Section' title='Add Section'><img src='/images/icon_add.gif'";
+      $txt .= " border='0' alt='Add Section' title='Add Section'><img src='$rootUrl/images/icon_add.gif'";
       $txt .= " width='16' height='16' alt='Add Section' title='Add Section' border='0'></a>";
     }
   }
