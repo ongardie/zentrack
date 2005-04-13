@@ -431,7 +431,7 @@ function setFormValsUsingGroup( fieldObj, group, setid ) {
   // To be used for hidden, text, etc: set the oldPos value if the fieldObj.value is in the list
   // (unless we do it, the first element of the list will always be assigned to the field, no matter if the fieldObj.value is in the list)
   var oldPos = -1;
-  if ( fieldObj.value != null && fieldObj.value.length > 0 ) {
+  if ( fieldObj.value != null && typeof fieldObj.value != "undef" ) {
     for(var i=0; i < fields.length && oldPos == -1; i++) {
       if ( fields[i].value == fieldObj.value ) {
         oldPos=i;
