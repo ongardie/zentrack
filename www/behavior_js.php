@@ -422,32 +422,34 @@ function setFormValsUsingGroup( fieldObj, group, setid ) {
   var fields = group.getFields(setid);
   
   // set the field values
-  if( fields.length < 50 ) {
-    var v = '';
-    for(var i=0; i < fields.length; i++) {
-      v += fields[i].label+",";
-    }
-  }
-  else {
-    v = "("+fields.length+" matches)";
+  var v = '';
+  for(var i=0; i < fields.length; i++) {
+    v += fields[i].label+",";
   }
   behaviorDebug(3, "(setFormValsUsingGroup)updating "+fieldObj.name
 		+" using "+group.name+"["+fieldObj.type+"] with setid="+setid+" and values=["+v+"]");
   // To be used for hidden, text, etc: set the oldPos value if the fieldObj.value is in the list
   // (unless we do it, the first element of the list will always be assigned to the field, no matter if the fieldObj.value is in the list)
   var oldPos = -1;
-  if ( fieldObj.value != null && fieldObj.value.length > 0 && !isNaN(parseInt(fieldObj.value)) ) {
+  if ( fieldObj.value != null && fieldObj.value.length > 0 ) {
     for(var i=0; i < fields.length && oldPos == -1; i++) {
-      if (parseInt(fields[i].value) == parseInt(fieldObj.value)) {
+      if ( fields[i].value == fieldObj.value ) {
+        oldPos=i;
+      }
+    }
+  }
+  if ( oldPos == -1) {
+    for(var i=0; i < fields.length && oldPos == -1; i++) {
+      if (fields[i].label == fieldObj.value) {
         oldPos=i;
       }
     }
   }
   if ( oldPos == -1) {
     oldPos=0;
-    behaviorDebug(3, "(setFormValsUsingGroup)No matching value found for "+fieldObj.name+" ("+fieldObj.value+")");
+    behaviorDebug(3, "(setFormValsUsingGroup)Did not recognize field value for "+fieldObj.name+" ("+fieldObj.value+")");
   } else {
-    behaviorDebug(3, "(setFormValsUsingGroup)Value matched for "+fieldObj.name+": ["+fields[oldPos].value+"]"+fields[oldPos].label);
+    behaviorDebug(3, "(setFormValsUsingGroup)Recognized field value for "+fieldObj.name+" as ["+fields[oldPos].value+"]"+fields[oldPos].label);
   }
   switch( fieldObj.type ) {
     case "checkbox":
