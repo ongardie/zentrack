@@ -252,7 +252,10 @@ class DB {
     // insert id for the INSERT statement about to take place... don't
     // forget to manually add the id with the insert statement in 
     // this case!
-    if( Zen::inString('mysql',$this->database_type) ) {
+    if( $this->database_type == 'mysqli' ) {
+      $id = mysqli_insert_id();
+    }
+    else if( Zen::inString('mysql',$this->database_type) ) {
       $id = mysql_insert_id();
     } else {
       $id = $this->db_link->genID($sequence);

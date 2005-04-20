@@ -15,6 +15,12 @@ abstraction, and endless possibilities for project expansion.
 
 ----- VERSION 2.5.5 (testing) -----
 
+2005-04-19, kato
+  Corrected build_postgres.sql syntax error (extra comma)
+  Corrected oracle insert problems with zentrack_group_detail (invalid field name)
+    - zentrack_2/install/build_postgres.sql
+    - zentrack_2/install/build_oracle.sql
+
 2005-04-12, kato
   Added support for 'mysqli' driver and some bug fixes in db insert calls
     - zentrack_2/includes/db.class 1.37

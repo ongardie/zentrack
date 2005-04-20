@@ -1,52 +1,27 @@
 
-
 --
-
 -- FIELD MAP WHICH DESCRIBES HOW FIELDS ARE RENDERED IN DIFFERENT VIEWS
-
 --
-
 CREATE TABLE ZENTRACK_FIELD_MAP (
-
    field_map_id NUMBER(12) CONSTRAINT fldmap_notnull NOT NULL,
-
    field_name   VARCHAR2(25) CONSTRAINT fldmap_nm_notnull NOT NULL,
-
    field_label  VARCHAR2(255) default '',
-
    is_visible   NUMBER(1) default 0,
-
    which_view   VARCHAR2(50) default 0,
-
    default_val  VARCHAR2(255),
-
    sort_order   NUMBER(4) default 0,
-
    field_type   VARCHAR2(50),
-
    num_cols     NUMBER(4) default 0,
-
    num_rows     NUMBER(2) default 0,
-
    is_required  NUMBER(1) default 0,
-
    CONSTRAINT field_map_pk PRIMARY KEY (field_map_id)
-
 );
 
-
-
 CREATE INDEX fldmap_sort ON ZENTRACK_FIELD_MAP(sort_order);
-
 CREATE INDEX fldmap_label ON ZENTRACK_FIELD_MAP(label);
-
 CREATE INDEX fldmap_both ON ZENTRACK_FIELD_MAP(sort_order,label);
 
-
-
 create sequence field_map_id_seq start with 1001 nocache;
-
-
 
 INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,which_view,default_val,sort_order,field_type,num_cols,num_rows,is_required) VALUES('2','title','Title','1','ticket_create',NULL,'2','text','200','1','1');
 INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,which_view,default_val,sort_order,field_type,num_cols,num_rows,is_required) VALUES('3','priority','Priority','1','ticket_create',NULL,'4','menu','50','1','1');
@@ -320,19 +295,11 @@ INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,w
 INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,which_view,default_val,sort_order,field_type,num_cols,num_rows,is_required) VALUES('280','hours','Hours','1','ticket_close',NULL,'30','text','6','1','0');
 INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,which_view,default_val,sort_order,field_type,num_cols,num_rows,is_required) VALUES('281','comments','Comments','1','ticket_close',NULL,'31','text','60','10','1');
 
-
-
 -- Modify the version number
 
 UPDATE ZENTRACK_SETTINGS SET value='2.5.5 PRE1' WHERE setting_id=74;
 
-
-
 -- Add new settings
-
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (108,'edit_reason_required', 'off', 'Show a mandatory edit field to explain why the ticket is being edited');
-
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (109,'email_accept', 'on', 'Send email to users in the notify list when ticket is accepted');
-
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (110, 'ctime_on_pending', 'off', 'Set this to on if you want tickets to set ctime when changed to pending');
-

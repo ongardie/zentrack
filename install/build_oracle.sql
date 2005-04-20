@@ -401,7 +401,7 @@ CREATE TABLE ZENTRACK_GROUP (
 
 CREATE TABLE ZENTRACK_GROUP_DETAIL (
   group_id NUMBER(12) CONSTRAINT grp_dtlid_notnull NOT NULL,
-  value varchar2(255),
+  field_value varchar2(255),
   sort_order NUMBER(3)
 );
 

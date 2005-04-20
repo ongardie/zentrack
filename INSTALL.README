@@ -10,7 +10,7 @@
   REQUIREMENTS
   --------------
     Basic Install
-       PHP >= 4.3 && < 5 (PHP5 will be supported in ZT 2.6)
+       PHP >= 4.3 && < 5 (PHP5 will be supported in version 2.6)
        Mysql, Oracle, Postgres, or SqlServer
        A Basic knowledge of PHP is helpful
     Email Gateway (optional)
@@ -132,10 +132,6 @@
       -Make sure you turn on email_gateway in the configuration panel.
 
       -Make sure that you have your egate scripts chmod to 755 (executable)
-
-    POSTGRES USERS
-      -Please report any postgres nuisances.  It seems to be running
-       smoothly, but we do have a postgres test box.
 
     OTHER DATABASE USERS
       -We can support, upon request, DB2, Sybase, or other
