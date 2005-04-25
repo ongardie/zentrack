@@ -19,12 +19,17 @@ abstraction, and endless possibilities for project expansion.
   Improved performance for ticket queries retrieved by contact
   Fixed minor bugs in retrieving list of tickets by contact (person or company)
   Added field map information to the contacts page (for listing tickets properly)
-    - zentrack_2/includes/zenTrack.class
-    - zentrack_2/www/contact.php
-    - zentrack_2/includes/db.class
+    - zentrack_2/includes/zenTrack.class 1.182
+    - zentrack_2/www/contact.php 1.3
+    - zentrack_2/includes/db.class 1.39
+    - zentrack_2/www/contact.php 1.3
   Improved sorting algorithm to insure that columns to sort doesn't exceed 2
   (for efficieny)
-    - zentrack_2/includes/sorting.php
+    - zentrack_2/includes/sorting.php 1.4
+  Added email test to install utils.
+    - zentrack_2/install/utils/send_email_test.php 1.0
+  Added improved array merge util
+    - zentrack_2/includes/zen.class 1.35
 
 2005-04-19, kato
   Corrected build_postgres.sql syntax error (extra comma)
