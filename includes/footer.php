@@ -51,7 +51,7 @@
      $debug_text .= "<span class='note'>\n";
      $debug_text .= "HTTP_USER_AGENT: $HTTP_USER_AGENT<br>\n";
      $debug_text .= "SCRIPT_NAME: $SCRIPT_NAME<br>\n";
-     $debug_text .= "HTTP_HOST: (".($HTTP_HOST == $rootUrl? 'matches rootUrl' : 
+     $debug_text .= "HTTP_HOST: (".(preg_match("/$HTTP_HOST/",$rootUrl)? 'matches rootUrl' : 
         '<b><span class="error">DOES NOT MATCH $rootUrl!!!</span></b>').")<br>\n";
      $debug_text .= "HTTP_COOKIE: $HTTP_COOKIE<br>\n";
      $debug_text .= "SERVER_SOFTWARE: {$_SERVER['SERVER_SOFTWARE']}<br>\n";
@@ -90,18 +90,20 @@
 
      $user = $zen->getUser($login_id);
     ?>
-    <table cellspacing='2' cellpadding='4' width='500' align='center'><tr><td class='mainContent'>
+    <table cellspacing='2' cellpadding='4' width='500' align='center'>
+    <tr><td class='mainContent' align='center'><b>DEBUG LOG</b></td></tr>
+    <tr><td class='mainContent'>
+    <p class='error'>To disable this output, set $Debug_Mode in header.php to 0.  Never leave this on in a production environment!</p>
     <form action='<?=$rootUrl?>/help/bugs.php' method='post'>
-    <input type='submit' value='Report A Bug' name='reportButton' class='submit'>
+    Report bugs by clicking here: <input type='submit' value='Report A Bug' name='reportButton' class='submit'>
     <input type='hidden' name='name' value='<?=$zen->ffv($login_name)?>'>
     <input type='hidden' name='email' value='<?=$zen->ffv($user['email'])?>'>
     <input type='hidden' name='debug_output' value='<?=urlencode($debug_text)?>'>
     <input type='hidden' name='user_info' value='<?=$zen->ffv($_SERVER['HTTP_USER_AGENT'])?>'>
     </form>
     <p>Please send us <a href='http://www.zentrack.net/feedback/?name=<?=$zen->ffv($login_name)?>&email=<?=$user['email']?>&subject=Feedback'>Feedback</a>!</p>
-    <p><b>PHPINFO:</b> <a href='<?=$rootUrl?>/phpinfo.php'>click here to view phpinfo</a></p>
-    <p><b>CACHE:</b> <a href='<?=$SCRIPT_NAME?>?clear_session_cache=1'>click here to clear session cache</a></p>
-    <p><i>To disable this output, set $Debug_Mode in header.php to 0.</i><br>
+    <p><a href='<?=$rootUrl?>/phpinfo.php'>click here to view phpinfo</a></p>
+    <p><a href='<?=$SCRIPT_NAME?>?clear_session_cache=1'>click here to clear session cache</a></p>
     </td></tr>
     <?
     // for extra security, make sure we don't pass anything sensitive out to
@@ -110,6 +112,7 @@
     $debug_text = preg_replace('/Db_Pass=[^"\' ]+/', 'Db_Pass=xxxx', $debug_text);
     $debug_text = preg_replace('/database_password=[^"\' ]+/', 'database_password=xxxx', $debug_text);
     $debug_text = preg_replace('/[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+[.][a-zA-Z0-9_.-]+/', 'xxxx@xxxx.xxx',$debug_text);
+    $debug_text = preg_replace('@(https?://|www[.])[a-zA-Z0-9_-]+[.]([a-zA-Z]{2,4})@', '\\1xxxx.\\2', $debug_text);
     print $debug_text;
     
     // used by behavior_js.php

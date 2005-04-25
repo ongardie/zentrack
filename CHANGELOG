@@ -15,11 +15,24 @@ abstraction, and endless possibilities for project expansion.
 
 ----- VERSION 2.5.5 (testing) -----
 
+2005-04-20, kato
+  Improved performance for ticket queries retrieved by contact
+  Fixed minor bugs in retrieving list of tickets by contact (person or company)
+  Added field map information to the contacts page (for listing tickets properly)
+    - zentrack_2/includes/zenTrack.class
+    - zentrack_2/www/contact.php
+    - zentrack_2/includes/db.class
+  Improved sorting algorithm to insure that columns to sort doesn't exceed 2
+  (for efficieny)
+    - zentrack_2/includes/sorting.php
+
 2005-04-19, kato
   Corrected build_postgres.sql syntax error (extra comma)
   Corrected oracle insert problems with zentrack_group_detail (invalid field name)
-    - zentrack_2/install/build_postgres.sql
-    - zentrack_2/install/build_oracle.sql
+    - zentrack_2/install/build_postgres.sql 1.19
+    - zentrack_2/install/build_oracle.sql 1.19
+    - zentrack_2/install/UPGRADE_postgres.sql 1.35
+    - zentrack-2/install/UPGRADE_oracle.sql 1.43
 
 2005-04-12, kato
   Added support for 'mysqli' driver and some bug fixes in db insert calls

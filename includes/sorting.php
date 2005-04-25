@@ -8,7 +8,7 @@
   $sm =& $zen->getSessionManager();
   $orderby  = $sm->find('ztorderby');
   if( !$orderby ) {
-    $orderby = array('status DESC','priority DESC','otime DESC');
+    $orderby = array('priority DESC','otime DESC');
     $sm->store('ztorderby', $orderby);
   }
   
@@ -25,9 +25,8 @@
   if( $newsort ) {
     // if we have a valid sorting field, drop it into our stuff.
     $ordervals = array( preg_replace('/[^0-9a-zA-Z_ ]/', '', $newsort) );
-    $count = 0;
-    foreach($orderby as $v) {
-      if( ++$count > 3 ) { break; }
+    for($i=0; $i<count($orderby) && count($ordervals)<2; $i++) {
+      $v = $orderby[$i];
       $ok = true;
       if( $v == $newsort ) { $ok = false; }
       else if( strpos($v, " DESC") > 0 ) {

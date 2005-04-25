@@ -61,12 +61,16 @@ $id = NULL;
       if($pid){
 	    	include("$templateDir/contact_personBox.php"); 
 	    	if($overview=="tickets") {
-		    	//show open tickets
-					$tickets = $zen->get_open_tickets($id,"2");
+          //collect field map info
+          $view = 'ticket_list';
+          $fields = $map->getFieldMap($view);
+		    	//sort tickets
+          include("$libDir/sorting.php");
+          // collect open tickets
+          $tickets = $zen->getTicketsByPerson($id, join(',',$orderby));
+					//$tickets = $zen->get_open_tickets($id,"2");
 					
-					if ($tickets) {
-						include("$templateDir/listTickets.php");
-					}
+          include("$templateDir/listTickets.php");
 	    	}
 	    	
       } else {
@@ -82,13 +86,16 @@ $id = NULL;
 	  				include("$templateDir/agreement_list.php");
   				}
 				} elseif ($overview=="tickets") {
+          //collect field map info
+          $view = 'ticket_list';
+          $fields = $map->getFieldMap($view);
+          // sort tickets
+          include("$libDir/sorting.php");
 					//show open tickets
-					$tickets = $zen->get_open_tickets($id,"1");
-					
+					//$tickets = $zen->get_open_tickets($id,"1");
+          $tickets = $zen->getTicketsByCompany($id,join(',',$orderby));
 					echo "<br>";
-					if ($tickets) {
-						include("$templateDir/listTickets.php");
-					}
+          include("$templateDir/listTickets.php");
 				} else {
 					//show the related contacts
 					$parms = array(1 => array(1 => "company_id", 2 => "=", 3 => $id),

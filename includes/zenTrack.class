@@ -452,7 +452,7 @@ class zenTrack extends zen {
     $query2 .= "user_id IS NULL AND ticket_id = '".$ticket_id."' ";    
    
     // get the lists of recipients and merge them
-    $list = array_merge($this->db_list($query),$this->db_list($query2));
+    $list = $this->mergeArrays($this->db_list($query),$this->db_list($query2));
     // print a debug message
     $this->addDebug("get_notify_recipients","Found ".count($list)
                     ." recipients for ticket $ticket_id",3);
@@ -5529,7 +5529,7 @@ class zenTrack extends zen {
     return $id;
   }
   
-  function get_open_tickets($id,$type) {
+/*   function get_open_tickets($id,$type,$orderby='otime DESC') {
     // get open tickets of a contact
     
     $ids2 = array(); //arry for person ids
@@ -5581,8 +5581,47 @@ class zenTrack extends zen {
     }
     
     return($tickets);
+  } */
+  
+  /**
+   * Returns a list of tickets associated with a given company
+   *
+   * @param int $company_id an id from the zentrack_company.company_id field
+   * @param string $order_by see includes/sorting.php
+   */
+  function getTicketsByCompany($company_id, $sort) {
+    // collect a list of tickets belonging to any contact within the current company
+    // (or simply belonging to the company itself)
+    $id = $this->checkNum($company_id);
+    $query = "SELECT ticket_id FROM ZENTRACK_RELATED_CONTACTS c, ZENTRACK_EMPLOYEE e"
+        ." WHERE (cp_id = '$id' AND c.type='1')"
+        ." OR (c.type='2' AND c.cp_id = e.person_id AND e.company_id = '$id')";
+    $ids = array_unique($this->db_list($query));
+    $this->addDebug("getTicketsByCompany","[".count($ids)."]".$query,3);
+    // skip query if there are no ids to retrieve
+    if( !count($ids) ) { return array(); }
+    // using our list of ids, call the get_tickets method normally 
+    return $this->get_tickets( array('id'=>$ids), $sort );
   }
    
+  /**
+   * Returns a list of tickets associated with a given contact
+   *
+   * @param int $company_id an id from the zentrack_employee.person_id field
+   * @param string $sort see includes/sorting.php
+   */
+  function getTicketsByPerson($person_id, $sort) {
+    // collect a list of tickets matching the current contact
+    $id = $this->checkNum($person_id);
+    $query = "SELECT ticket_id FROM ZENTRACK_RELATED_CONTACTS WHERE cp_id = '".$id."' AND type ='2'";
+    $ids = array_unique($this->db_list($query));
+    $this->addDebug("getTicketsByEmployee","[".count($ids)."]".$query,3);
+    // skip query if there are no ids to retrieve
+    if( !count($ids) ) { return array(); }
+    // using our list of ids, call the get_tickets method normally 
+    return $this->get_tickets( array('id'=>$ids), $sort );
+  }
+
   function get_contact_all() {
     // get all companys for the droplists
     $query = "SELECT company_id,title,office FROM ZENTRACK_COMPANY ORDER BY title asc";
