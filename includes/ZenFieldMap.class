@@ -1,4 +1,6 @@
 <?
+if( !ZT_DEFINED ) { die("Illegal Access"); }
+
 
 // define some constants for field types
 define("ZTFIELD_HIDDEN",0);

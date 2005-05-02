@@ -1,4 +1,6 @@
 <?
+if( !ZT_DEFINED ) { die("Illegal Access"); }
+
 
 if( is_array($logs) && count($logs) ) {
   

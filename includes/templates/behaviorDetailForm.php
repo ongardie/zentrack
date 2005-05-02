@@ -1,4 +1,6 @@
 <?
+if( !ZT_DEFINED ) { die("Illegal Access"); }
+
    // some elements of page are presented slightly different, although
    // data structure remains the same, when we plan to deal with groups
    // created from files

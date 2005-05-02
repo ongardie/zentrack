@@ -15,6 +15,22 @@ abstraction, and endless possibilities for project expansion.
 
 ----- VERSION 2.5.5 (testing) -----
 
+2005-04-27, kato
+  Added security to includes/ files to provide security for users who
+  do not correctly locate the includes/ files outside of the web tree.
+    - all include files
+  Added the ability to add non-standard fields such as wkd_hours to the create
+  and edit screens.
+    - zentrack_2/includes/addProjectSubmit.php
+    - zentrack_2/includes/addSubmit.php
+    - zentrack_2/includes/editTicketSubmit.php
+    - zentrack_2/includes/zen.class
+    - zentrack_2/includes/parseVarfields.php
+    - zentrack_2/includes/validateFields.php
+  Improved header/footer comments and messages
+    - zentrack_2/includes/footer.php
+    - zentrack_2/install/header.php.default
+
 2005-04-20, kato
   Improved performance for ticket queries retrieved by contact
   Fixed minor bugs in retrieving list of tickets by contact (person or company)

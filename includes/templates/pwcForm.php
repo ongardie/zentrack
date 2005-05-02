@@ -1,4 +1,6 @@
 <?
+if( !ZT_DEFINED ) { die("Illegal Access"); }
+
   $user = $zen->getUser($login_id);
   if( $user["passphrase"] == $zen->encval($user["lname"]) ) {
     print "<p class='hot'>".tr("Your passphrase is currently set to the system default.  Please change it.")."</p>\n";

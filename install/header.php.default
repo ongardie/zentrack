@@ -7,23 +7,17 @@
   /* DO NOT PUT ANYTHING, INCLUDING SPACES, OUTSIDE OF THE <? ?> marks */
 
   /*
-  **  T H E S E   T W O   M U S T    B E   S E T ! ! !
+  **  THE INCLUDES DIRECTORY
   **
-  **  OR ZENTRACK WILL NOT RUN PROPERLY
-  **  Don't use trailing slashes, use only a forward slash "/"
-  **  as a backslash "\" has special meaning in php.
+  **  Use the complete system path from the root directory
+  **  Do not use a trailing slash
+  **  Use only a forward slash "/" since a backslash "\" has special meaning in php.
+  **
+  **  Valid samples:
+  **    $libDir = "c:/private_folder/includes";
+  **    $libDir = "/var/hidden/localhost/zentrack/includes";
   */
-
-  // the directory where zentrack includes are stored
-  // use the complete system path
-  $libDir = "/web/zentrack/includes";
-
-  // the base url used to reach zentrack
-  $rootUrl = "http://www.yourhost.com/zentrack";
-
-  // the directory where the www files are stored
-  $rootWWW = dirname(__FILE__);  //this will work for most installs
-  //$rootWWW = "/web/zentrack/www"; //uncomment if the previous line fails
+  $libDir = "/not_web_directory/zentrack/includes";
 
   /*
   **
@@ -32,7 +26,8 @@
   **  Valid SQL Types:
   **     mysql
   **     mssqlpo
-  **     oci8po (oracle >= 8i)
+  **     odbc_mssql (see below)
+  **     oci8po (see below)
   **     postgres (postgres >= 7)
   **     (see http://phplens.com/lens/adodb/docs-adodb.htm#drivers for more)
   */
@@ -42,30 +37,38 @@
   $Db_Pass      = "test";       //password
   $Db_Host      = "localhost";  //host of database (localhost doesn't work with sqlserver)
 
-   // ORACLE USERS! the order of items may be changed
-   // it may be that the entry will be:
-   //      $Db_Host: "serverip:port#"
-   //      $Db_Login: "scott"
-   //      $Db_Pass:  "tiger"
-   //      $Db_Instance: "servicename"
-   // or:
-   //      $Db_Host: ""
-   //      $Db_Login: "scott"
-   //      $Db_Pass:  "tiger"
-   //      $Db_Instance: "TNSName"
-   // hints for these entries:
-   // - for Oracle 8 and later, use "oci8po" as database_type
-   // - if using an Oracle Names Server, leave database_instance blank and put
-   //   the database alias into database_host
-   // - the same applies if you want to use a whole TNS connection string
-   // - to connect to a local instance, you may leave the database_host blank
-   // also... you may need to uncomment the following for oracle to work properly:
-   //   putenv("ORACLE_SID=ORACLE"); 
-   // the database instance
-   //   putenv("ORACLE_HOME=/opt/oracle/oracle/8.0.3"); 
-   // the oracle installation directory
-   //   putenv("TNS_ADMIN=/opt/oracle/product/8.1.5/network/admin"); 
-   // the directory of the tnsnames.ora file
+  // SQL SERVER >= 2000
+  // Here is a sample config
+  //$Db_Type = "odbc_mssql"; //sql type
+  //$Db_Instance = null; //db name
+  //$Db_Login = "test"; //username
+  //$Db_Pass = "test"; //password
+  //$Db_Host = "Driver={SQL Server};Server=123.321.123.321;Database=Zentrack;";
+
+  // ORACLE USERS! the order of items may be changed
+  // it may be that the entry will be:
+  //      $Db_Host: "serverip:port#"
+  //      $Db_Login: "scott"
+  //      $Db_Pass:  "tiger"
+  //      $Db_Instance: "servicename"
+  // or:
+  //      $Db_Host: ""
+  //      $Db_Login: "scott"
+  //      $Db_Pass:  "tiger"
+  //      $Db_Instance: "TNSName"
+  // hints for these entries:
+  // - for Oracle 8 and later, use "oci8po" as database_type
+  // - if using an Oracle Names Server, leave database_instance blank and put
+  //   the database alias into database_host
+  // - the same applies if you want to use a whole TNS connection string
+  // - to connect to a local instance, you may leave the database_host blank
+  // also... you may need to uncomment the following for oracle to work properly:
+  //   putenv("ORACLE_SID=ORACLE"); 
+  // the database instance
+  //   putenv("ORACLE_HOME=/opt/oracle/oracle/8.0.3"); 
+  // the oracle installation directory
+  //   putenv("TNS_ADMIN=/opt/oracle/product/8.1.5/network/admin"); 
+  // the directory of the tnsnames.ora file
 
   /*
   ** DEMO MODE AND DEBUG OUTPUT 
@@ -83,11 +86,10 @@
   ** setup and then be sure to turn it off.  It provides
   ** information about your system that is not for public
   ** consumption.
-  **
   */
 
   //set this from 0=off, 1=errors, 2=warnings, 3=notices(all)
-  $Debug_Mode = 1;  
+  $Debug_Mode = 0;  
 
   //set this to "on" prevents users from doing anything you don't
   //want them doing on a demo site
@@ -131,10 +133,20 @@
    // setlocale(LC_TIME, "de_DE");  // german
    // setlocale(LC_TIME, "es_ES");  // spanish
 
+  // the base url used to reach zentrack
+  // you should only need to edit this if the auto-config fails
+  $rootUrl = 'http://'.$_SERVER['HTTP_HOST'] . preg_replace( '@^'.str_replace("\\", "/", realpath(strtolower($_SERVER['DOCUMENT_ROOT']))).'@', '', str_replace("\\", "/", realpath(strtolower(dirname(__FILE__)))));
+  //$rootUrl = "http://www.yourhost.com/zentrack"; //uncomment and edit if the previous line fails
+
+  // the directory where the www files are stored
+  // you should only need to edit this if the auto-config fails
+  $rootWWW = dirname(__FILE__);
+  //$rootWWW = "/web/zentrack/www"; //uncomment and edit if the previous line fails
 
   /*
   **  LEAVE THIS PART ALONE
   */
+  define('ZT_DEFINED', true);
   include_once("$libDir/headerInc.php");
   
 }?>

@@ -1,3 +1,4 @@
+<? if( !ZT_DEFINED ) { die("Illegal Access"); } ?>
 <table width='300'>
 <tr>
   <td class='titleCell' align='center'><?=tr("View Reports")?></td>

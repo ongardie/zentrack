@@ -1,4 +1,6 @@
 <?  
+if( !ZT_DEFINED ) { die("Illegal Access"); }
+
   /**
    PREREQUISITES:
      (ZenFieldMap)$map - contains properties for fields
@@ -98,7 +100,13 @@ foreach($visible_fields as $f) {
     print "<tr><td class='bars'>";
     print $map->getLabel($view, $f);
     print "</td><td class='bars'>";
-    print $map->renderTicketField($view, 'ticketForm', $f, $$f);
+    if( $td && $page_type == 'project' && $f == 'type_id' ) {
+      // do not allow type to be edited for projects
+      print $map->getTextValue($view, $f, $$f);
+    }
+    else {
+      print $map->renderTicketField($view, 'ticketForm', $f, $$f);
+    }
     print "</td></tr>\n";
   }
 }

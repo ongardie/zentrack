@@ -297,7 +297,7 @@ INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,w
 
 -- Modify the version number
 
-UPDATE ZENTRACK_SETTINGS SET value='2.5.5 PRE1' WHERE setting_id=74;
+UPDATE ZENTRACK_SETTINGS SET value='2.5.5' WHERE setting_id=74;
 
 -- Add new settings
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (108,'edit_reason_required', 'off', 'Show a mandatory edit field to explain why the ticket is being edited');

@@ -1,3 +1,4 @@
+<? if( !ZT_DEFINED ) { die("Illegal Access"); } ?>
 	<?
 	$sort = "dtime asc";
 	$parms = array(1 => array(1 => "status", 2 => "=", 3 => "1")

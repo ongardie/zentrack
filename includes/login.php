@@ -1,4 +1,6 @@
 <?
+if( !ZT_DEFINED ) { die("Illegal Access"); }
+
   
   // log user out of zentrack if $logoff
   if( isset($logoff) && $logoff > 0 ) {

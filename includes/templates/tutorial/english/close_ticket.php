@@ -1,3 +1,4 @@
+<? if( !ZT_DEFINED ) { die("Illegal Access"); } ?>
 
 <p align='center' class='bigbold'>Closing Tickets</p>
 

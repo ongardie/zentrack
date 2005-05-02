@@ -1,16 +1,20 @@
 <?
+  if( !ZT_DEFINED ) { die("Illegal access"); }
 
   /**
    PREREQUISITES:
      (ZenFieldMap)$map - contains properties for fields
      (string)$view - the current view (probably project_list or ticket_list)
-     (array)$fields - properties for fields to be rendered, obtained from ZenFieldMap::getFieldMap( view )
+     (array)$fields - [optional]properties for fields to be rendered, obtained from ZenFieldMap::getFieldMap( view )
      (string)$page_type - (optional) either 'ticket' or 'project'
      (array)$tickets - list of tickets to be displayed, as retrieved from zenTrack::get_tickets()
   **/
   
 if( !$page_type )
   $page_type = "ticket";
+  
+$fields = $map->getFieldMap($view);
+include_once("$libDir/sorting.php");
   
 if( is_array($tickets) && count($tickets) ) {
 ?>

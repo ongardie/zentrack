@@ -1,3 +1,4 @@
+<? if( !ZT_DEFINED ) { die("Illegal Access"); } ?>
 <!-- DATA MENU -->
 
 <?

@@ -24,6 +24,16 @@ REQUIREMENTS
   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 --------------------
+UPGRADE FROM 2.5.5 PRE1 or PRE2
+--------------------
+  
+  1. Delete your ZENTRACK_FIELD_MAP table.
+  2. Run the UPGRADE_yourdb.sql file
+  3. Manually copy the files from the install folder over your existing
+     includes and www directories.  (Remember to back up your header.php
+     file first and to restore it afterwards!)
+  
+--------------------
 UPGRADE FROM 2.5.0.2
 --------------------
   
@@ -31,7 +41,7 @@ UPGRADE FROM 2.5.0.2
   !!! VERY IMPORTANT NOTE !!!
   !!!!!!!!!!!!!!!!!!!!!!!!!!!
   
-  As of 2.5.0.3, there are now two ways to upgrade.  There
+  As of 2.5.5, there are now two ways to upgrade.  There
   is a patch and a manual upgrade approach.  Please select
   the method that meets your needs.
 

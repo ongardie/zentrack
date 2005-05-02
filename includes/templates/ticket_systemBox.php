@@ -1,4 +1,6 @@
 <?
+if( !ZT_DEFINED ) { die("Illegal Access"); }
+
   
   if( $action ) {   
      
@@ -13,7 +15,7 @@
        include("$templateDir/actions/$action.php");
      }
      else {
-       print "<p class='error'>".tr("Invalid action declared")."</p>\n";
+       print "<p class='error'>".tr("Invalid action declared")." (".$zen->ffv($action).")</p>\n";
      }
   
      print "<p>&nbsp;</p>\n";

@@ -1,3 +1,4 @@
+<? if( !ZT_DEFINED ) { die("Illegal Access"); } ?>
 
 
 <form action="<?=($SCRIPT_NAME)?>" name="searchCompany">

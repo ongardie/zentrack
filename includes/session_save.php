@@ -1,4 +1,6 @@
 <?
+if( !ZT_DEFINED ) { die("Illegal Access"); }
+
 
   /*
   ** Returns variables extracted to the $_SESSION array

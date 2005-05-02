@@ -1,3 +1,4 @@
+<? if( !ZT_DEFINED ) { die("Illegal Access"); } ?>
 <div class="small" align="center"><b><?=$zen->showLongDate()?></b></div>
 <div class="small" align='center'><?=tr("version")?> <?=$zen->settings["version_xx"]?></div>
   

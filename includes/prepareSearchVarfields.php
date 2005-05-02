@@ -1,4 +1,6 @@
 <?
+if( !ZT_DEFINED ) { die("Illegal Access"); }
+
  $varfieldsAll = $zen->getCustomFields(0,"","Search Screen");
  $varfieldsText = array();
  $varfieldsDates = array();

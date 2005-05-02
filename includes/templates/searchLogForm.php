@@ -1,4 +1,6 @@
 <?
+if( !ZT_DEFINED ) { die("Illegal Access"); }
+
   // create a default date
   if( !$search_date )
     $search_date = 0;

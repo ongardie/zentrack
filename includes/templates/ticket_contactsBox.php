@@ -1,4 +1,6 @@
 <?
+if( !ZT_DEFINED ) { die("Illegal Access"); }
+
 
   // security measure
   if( $login_level < $zen->settings['level_contacts'] ) {

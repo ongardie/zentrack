@@ -1,23 +1,20 @@
 <?
-//if( !$zen->checkAccess($login_id,$ticket["bin_id"],"edit_custom") ) {
-//  $errs[] = tr("You cannot edit a ticket's custom fields in this bin ");
-//} else if( !$zen->actionApplicable($id,"edit_custom",$login_id) ) {
-//  $errs[] = $zen->ptrans("Ticket #? cannot be edited in its current status",array($id));
-//}
+  if( !ZT_DEFINED ) { die("Illegal Access"); }
+  
   $page_title = tr("Ticket #?: Save Custom Fields", array($id));
   $fields = array();
   $required = array();
   // the TODO is saved, even if the save failed
   $TODO = 'SAVED';
                                 
-  if( !$errs ) {
-    $customFieldsArray = $zen->getCustomFields(0,$page_type, 'Custom Tab');
-    include("$libDir/parseVarfields.php");
-  }
+  include("$libDir/validateFields.php");
 
   if( !$errs ) {
-    // update the ticket info
-    $res = $zen->updateVarfieldVals($id,$varfield_params);
+    if( count($varfield_params) ) {
+      // update the ticket info
+      $res = $zen->updateVarfieldVals($id,$varfield_params);
+    }
+
     // check for errors
     if( !$res ) {
       $errs[] = tr("System Error").": ".tr("Ticket could not be edited.")." ".$zen->db_error;

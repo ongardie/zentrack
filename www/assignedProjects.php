@@ -9,6 +9,8 @@
   include("header.php");
 
   $page_type = "project";
+  $view = 'project_list';
+
   $params = array(
 		  "type_id"  => $zen->projectTypeIDs(),
 		  "status"  => array("OPEN","PENDING"),
@@ -22,6 +24,7 @@
   $expand_projects = 1;
   include("$libDir/nav.php");
 
+  
   if( $login_bin ) {
     $params["bin_id"] = $login_bin;
   } else {
@@ -29,6 +32,7 @@
   }
   if( is_array($params) )
     $tickets = $zen->get_tickets($params);
+    
   include("$templateDir/listTickets.php");
 
   include("$libDir/footer.php");

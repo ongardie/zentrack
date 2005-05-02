@@ -1,4 +1,6 @@
 <?
+if( !ZT_DEFINED ) { die("Illegal Access"); }
+
   /**
    * creates a form for adding entries to the contact list
    */

@@ -1,4 +1,6 @@
 <?
+if( !ZT_DEFINED ) { die("Illegal Access"); }
+
   /**
     PREREQUISITES:
       $map - (ZenFieldMap) map object which can be used to retrieve default values

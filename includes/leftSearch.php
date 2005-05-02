@@ -1,3 +1,4 @@
+<? if( !ZT_DEFINED ) { die("Illegal Access"); } ?>
 
   <tr>
   <td<?=(isset($expand_search)&&$expand_search)? " class='titleCell'" : " ".$nav_rollover_text?>>

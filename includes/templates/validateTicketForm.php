@@ -1,4 +1,6 @@
 <?  
+if( !ZT_DEFINED ) { die("Illegal Access"); }
+
   /**
    PREREQUISITES:
      (ZenFieldMap)$map - contains properties for fields

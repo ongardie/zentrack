@@ -1,4 +1,6 @@
 <?
+if( !ZT_DEFINED ) { die("Illegal Access"); }
+
   /**
    * Parses sorting data and stores in session
    * creates a single string which can be passed

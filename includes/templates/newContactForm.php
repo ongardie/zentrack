@@ -1,3 +1,4 @@
+<? if( !ZT_DEFINED ) { die("Illegal Access"); } ?>
 
 <form method="post" name="contactForm" action="<?=($skip)? "editContactSubmit.php" : "$rootUrl/addContactSubmit.php"?>">
 <input type="hidden" name="id" value="<?=strip_tags($id)?>">

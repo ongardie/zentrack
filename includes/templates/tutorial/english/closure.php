@@ -1,3 +1,4 @@
+<? if( !ZT_DEFINED ) { die("Illegal Access"); } ?>
 <p align='center' class='bigbold'>Thanks for Reading the Tutorial</p>
 
 <p>Hopefully this walkthrough has been somewhat useful to you and hasn't resulted

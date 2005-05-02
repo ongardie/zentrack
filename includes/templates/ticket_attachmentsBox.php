@@ -1,4 +1,6 @@
 <?
+if( !ZT_DEFINED ) { die("Illegal Access"); }
+
    $rollover_text = " onclick=\"mClk(this);\" "
       ."onmouseout=\"mOut(this,'".$zen->settings["color_background"]."', '');\" "
       ."onmouseover=\"mOvr(this,'".$zen->settings["color_bars"]."', '');\"";

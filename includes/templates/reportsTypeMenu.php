@@ -1,4 +1,6 @@
 <?
+if( !ZT_DEFINED ) { die("Illegal Access"); }
+
   // set a toggle
   if( $report_type )
      $report_type = $zen->checkAlphaNum($report_type,"_ ");

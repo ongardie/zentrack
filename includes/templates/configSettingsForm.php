@@ -1,3 +1,4 @@
+<? if( !ZT_DEFINED ) { die("Illegal Access"); } ?>
       <br>
       <p><b><?=tr("Changing these settings can have a severe impact on the system.  Please consider this before making modifications.")?></b></p>
       <p class='error'><?

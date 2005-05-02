@@ -1,3 +1,4 @@
+<? if( !ZT_DEFINED ) { die("Illegal Access"); } ?>
 
    
 
@@ -48,6 +49,9 @@
   
      $debug_text .= "<tr><td class='mainContent'>\n";
      $debug_text .= "<p><b>SETTINGS / SYSTEM INFO</b></p>\n";
+     if( preg_match('@'.strtolower(Zen::cleanPath($_SERVER['DOCUMENT_ROOT'])).'@', strtolower(Zen::cleanPath($libDir))) ) {
+       $debug_text .= "<b><span class='error'>\$libDir should not be a www viewable directory!</span></b><br>\n";
+     }
      $debug_text .= "<span class='note'>\n";
      $debug_text .= "HTTP_USER_AGENT: $HTTP_USER_AGENT<br>\n";
      $debug_text .= "SCRIPT_NAME: $SCRIPT_NAME<br>\n";
@@ -122,6 +126,9 @@
       </td></tr></table>
     <?
   }
+  
+  //Zen::printArray($_SERVER,'_SERVER');
+  //Zen::printArray($_ENV,'_ENV');
   
   //if( is_array($ticket) ) {
   //  Zen::printArray($ticket, "Ticket Contents");

@@ -1,4 +1,6 @@
 <?
+if( !ZT_DEFINED ) { die("Illegal Access"); }
+
   // fetch a list of bins for new bins
   $userBins = $zen->getBins();
 

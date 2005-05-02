@@ -1,5 +1,6 @@
 <?
-
+  if( !ZT_DEFINED ) { die("Illegal Access"); }
+  
   if( !$zen->checkAccess($login_id,$ticket["bin_id"],"edit") ) {
     $errs[] = tr("You cannot edit a ticket in this bin ");
   } else if( !$zen->actionApplicable($id,"edit",$login_id) ) {
@@ -20,53 +21,14 @@
      $tested = 0;
   if( !$approved )
      $approved = 0;
-  if( $type == "project" && !$type_id )
+  if( $type == "project" )
      $type_id = $zen->projectTypeID();
 
   $is_project = $type == 'project' || $zen->inProjectTypeIds($type_id);
+  $view = $is_project? 'project_edit' : 'ticket_edit';
 
-  $fields = array(
-        "title"       => "text",
-        "priority"    => "int",
-        "description" => "html",
-        "bin_id"       => "int",
-        "type_id"      => "int",
-        "user_id"      => "int",
-        "system_id"    => "int",
-        "tested"      => "int",
-        "approved"    => "int",
-        "relations"   => "text",
-        "project_id"   => "int",
-        "est_hours"   => "num",
-        "deadline"    => "int",
-        "start_date"  => "int"
-        );
- // $required = array(
-         // "title",
-         // "priority",
-         // "description",
-         // "bin_id",
-         // "type_id",
-         // "system_id"
-         // );
-
-  $customFieldsArray = false;
-  $customFieldsArray = $map->getFieldMap($type=='project'?'project_edit':'ticket_edit');
-
-  $required = array();
-  foreach($customFieldsArray as $f=>$field) {
-    if( $field['is_required'] ) {
-      $required[] = $f;
-    }
-  }
-         
-  $zen->cleanInput($fields);
-  // check for required fields
-  foreach($required as $r) {
-     if( !$$r ) {
-   $errs[] = ucfirst($r)." ".tr("is a required field");
-     }
-  }
+  include("$libDir/validateFields.php");
+  
   if( !$errs ) {
      $params = array();
      // create an array of existing fields
@@ -79,23 +41,7 @@
      if( !$res ) {
        $errs[] = tr("System Error").": ".tr("Ticket could not be edited.")." ".$zen->db_error;
      }
-     else {
-       // parse variable fields which appear in new ticket screen, 
-       // store them in $varfield_params
-       // insure that all requirements are met before proceeding
-       // with the ticket save process
-       if( !$errs ) {
-         foreach(array_keys($customFieldsArray) as $f) {
-           if (strncmp($f,"custom_",7)!=0) {
-             unset($customFieldsArray["$f"]);
-           }
-         }
-         if( $customFieldsArray && count($customFieldsArray) ) {
-           include("$libDir/parseVarfields.php");
-         }
-       }
-       
-       if( $customFieldsArray && count($varfield_params) ) {
+     else if( $varfields && count($varfield_params) ) {
          $res = $zen->updateVarfieldVals($id, $varfield_params, $login_id, $bin_id);
          if( !$res ) {
            $errs[] = tr("? updated, but variable fields could not be saved", array(tr($x)));

@@ -1,4 +1,6 @@
 <?
+if( !ZT_DEFINED ) { die("Illegal Access"); }
+
 
 /**
  *  This file contains configuration settings for variable ticket fields

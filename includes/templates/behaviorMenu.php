@@ -1,4 +1,6 @@
 <?
+if( !ZT_DEFINED ) { die("Illegal Access"); }
+
          $elnk="$rootUrl/admin/editBehavior.php";
          $llnk="$rootUrl/admin/editBehaviorDetails.php";
          $dlnk="$rootUrl/admin/deleteBehavior.php";

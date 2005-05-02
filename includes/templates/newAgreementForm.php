@@ -1,3 +1,4 @@
+<? if( !ZT_DEFINED ) { die("Illegal Access"); } ?>
 <script language='javascript' type='text/javascript'>
   function checkMyBox(fieldName, event) {
     if( !event ) { event = window.event; }

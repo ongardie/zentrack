@@ -1,3 +1,4 @@
+<? if( !ZT_DEFINED ) { die("Illegal Access"); } ?>
 
 <form method="post" action="<?=$SCRIPT_NAME?>" name='relateTicketForm'>
 <input type="hidden" name="id" value="<?=$id?>">

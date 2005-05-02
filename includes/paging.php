@@ -1,3 +1,4 @@
+<? if( !ZT_DEFINED ) { die("Illegal Access"); } ?>
 <!--- BEGIN Paging --->
 
 <table width='100%'>

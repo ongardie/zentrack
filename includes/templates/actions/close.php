@@ -1,4 +1,6 @@
 <?
+if( !ZT_DEFINED ) { die("Illegal Access"); }
+
   $view = 'ticket_close';
   $fields = $map->getFieldMap($view);
   $hidden_fields = array();

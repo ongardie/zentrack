@@ -1,4 +1,6 @@
 <?
+if( !ZT_DEFINED ) { die("Illegal Access"); }
+
 
 function color_scale($startcol, $endcol, $pct) {
    // This function returns an HTML colour scaled on a percentile

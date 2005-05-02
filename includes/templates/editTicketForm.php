@@ -1,4 +1,6 @@
 <?
+if( !ZT_DEFINED ) { die("Illegal Access"); }
+
   // if there is an ID, open it up
   // otherwise, ask for the ticket ID
   $skip = 0;

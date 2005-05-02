@@ -1,4 +1,6 @@
 <?
+if( !ZT_DEFINED ) { die("Illegal Access"); }
+
   // generate some text to display based on whether this
   // is an edit page or an add page
   $td = ($TODO == 'EDIT');

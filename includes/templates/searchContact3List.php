@@ -1,4 +1,6 @@
 <?  
+if( !ZT_DEFINED ) { die("Illegal Access"); }
+
 if( is_array($tickets) && count($tickets) ) {
  
    $link = $zen->settings["url_view_ticket"];   

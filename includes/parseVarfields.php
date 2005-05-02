@@ -1,14 +1,16 @@
 <?{
+  if( !ZT_DEFINED ) { die("Illegal Access"); }
+  
   /**
   * Parses form input and creates an array called $varfield_params which contains the values needed
   * to run $zen->updateVarfieldVals()
   *
   * Depends on the following variables to determine which custom fields are used:
-  *   $customFieldsArray - the results of $zen->getCustomFields() call
+  *   $varfields - the results of $zen->getCustomFields() call
   */
   
   $varfield_fields = array();
-  foreach($customFieldsArray as $f) {
+  foreach($varfields as $f) {
     $k = $f['field_name'];
     $v = $f['field_label'];
     $r = $f['is_required'];

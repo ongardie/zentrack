@@ -1,4 +1,6 @@
 <? /* -*- Mode: C; c-basic-indent: 3; indent-tabs-mode: nil -*- ex: set tabstop=3 expandtab: */ 
+if( !ZT_DEFINED ) { die("Illegal Access"); }
+
 
 include_once("$libDir/zenDate.class");  
   
@@ -564,12 +566,9 @@ class zen extends zenDate {
    /**
     * Prints the debug output collected by addDebug()
     */
-   function printDebugMessages() {  
+   function printDebugMessages() { 
      if( is_array($this->debugMessages) ) {
        $styles = array("","error","warning","note");
-       print "<p>--------<b>MESSAGES</b>--------<ul>\n";
-       print "<i>To disable this output, set \$Debug_Mode ";
-       print "in header.php to 0.</i><br>\n";
        if( is_array($this->debugMessages) ) {   
          foreach($this->debugMessages as $v) {
            $n = $v[2];
@@ -584,7 +583,6 @@ class zen extends zenDate {
            print "\"";
          }
        }      
-       print "</ul>------<b>MESSAGES</b>------</p>\n";
      }
    }
    
@@ -712,6 +710,13 @@ class zen extends zenDate {
      else if( is_array($arr2) ) { return $arr2; }
      else { return array(); }
    }
+   
+   /**
+    * Converts file names to an absolute path name using / characters.
+    */
+    function cleanPath( $path ) {
+      return str_replace('\\', '/', realpath($path) );
+    }
    
    /*
    **  SYSTEM METHODS

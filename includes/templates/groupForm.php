@@ -1,4 +1,6 @@
 <?
+if( !ZT_DEFINED ) { die("Illegal Access"); }
+
          $elnk="$rootUrl/admin/editGroup.php";
          $llnk="$rootUrl/admin/editGroupDetails.php";
          $dlnk="$rootUrl/admin/deleteGroup.php";

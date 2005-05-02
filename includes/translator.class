@@ -1,4 +1,6 @@
 <?php
+if( !ZT_DEFINED ) { die("Illegal Access"); }
+
 /**
  * The translation function wrapper
  *

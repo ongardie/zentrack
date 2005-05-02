@@ -1,3 +1,4 @@
+<? if( !ZT_DEFINED ) { die("Illegal Access"); } ?>
 
 <form method="post" action="<?=$rootUrl?>/misc/language.php">
 

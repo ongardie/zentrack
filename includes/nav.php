@@ -1,3 +1,4 @@
+<? if( !ZT_DEFINED ) { die("Illegal Access"); } ?>
 <html>
   <head>
   <title><?=$page_prefix.$page_title?></title>

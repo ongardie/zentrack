@@ -1,3 +1,4 @@
+<? if( !ZT_DEFINED ) { die("Illegal Access"); } ?>
 <table width="645" cellpadding="0" cellspacing="0" border="0">
 <tr> 
   <td class="ticketCell" height="300" valign="top">

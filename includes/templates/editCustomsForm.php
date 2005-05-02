@@ -1,3 +1,4 @@
+<? if( !ZT_DEFINED ) { die("Illegal Access"); } ?>
 
 
       <p class='bigBold'><?=tr('Edit Variable Fields')?></p>

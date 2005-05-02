@@ -1,3 +1,4 @@
+<? if( !ZT_DEFINED ) { die("Illegal Access"); } ?>
       <br>
       <p class='error'><?=tr("Select the items that will appear in this group and their order.")?></p>
       <ul>

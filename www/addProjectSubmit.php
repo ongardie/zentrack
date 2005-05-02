@@ -19,6 +19,7 @@
   $page_title = tr("Commit New Project");
   $expand_projects = 1;
   $page_type = "project";
+  $view = 'project_create';
   
   // initiate default values
   $otime = time();  // set time ticket opened
@@ -32,31 +33,7 @@
   $type_id = $zen->projectTypeID();
   $description = nl2br($zen->ffv($description));
   
-  $fields = array(
-  "title"       => "text",
-  "priority"    => "int",
-  "description" => "ignore",
-  "otime"       => "int",
-  "bin_id"       => "int",
-  "type_id"      => "int",
-  "user_id"      => "int",
-  "system_id"    => "int",
-  "tested"      => "int",
-  "approved"    => "int",
-  "relations"   => "text",
-  "project_id"   => "int",
-  "est_hours"   => "num",
-  "deadline"    => "int",
-  "start_date"  => "int"
-  );
-  
-  $req_fields = $map->getFieldMap('project_create');
-  $required = array();
-  foreach($req_fields as $f=>$field) {
-    if( $field['is_required'] ) {
-      $required[] = $f;
-    }
-  }
+  include("$libDir/validateFields.php");
   
   $zen->cleanInput($fields);
   // check for required fields
@@ -80,19 +57,7 @@
       $errs[] = tr("Could not create project.") . " " .$zen->db_error;
     }
     else {
-      // parse variable fields which appear in new ticket screen, 
-      // store them in $varfield_params
-      // insure that all requirements are met before proceeding
-      // with the ticket save process
-      $customFieldsArray = false;
-      if( !$errs ) {
-        $customFieldsArray = $zen->getCustomFields(0, 'Project', 'New');
-        if( $customFieldsArray && count($customFieldsArray) ) {
-          include("$libDir/parseVarfields.php");
-        }
-      }
-      
-      if( $customFieldsArray && count($varfield_params) ) {
+      if( $varfields && count($varfield_params) ) {
         $res = $zen->updateVarfieldVals($id, $varfield_params, $login_id, $bin_id);
         if( !$res ) {
           $errs[] = tr("? created, but variable fields could not be saved", array(tr('Project')));

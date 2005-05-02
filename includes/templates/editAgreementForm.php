@@ -1,4 +1,6 @@
 <?
+if( !ZT_DEFINED ) { die("Illegal Access"); }
+
   $skip = 0;
   
   $agreement = $zen->get_contact($id,"ZENTRACK_AGREEMENT","agree_id");

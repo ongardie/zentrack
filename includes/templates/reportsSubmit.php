@@ -1,3 +1,4 @@
+<? if( !ZT_DEFINED ) { die("Illegal Access"); } ?>
 <!-- SUBMIT MENU -->
 <tr>
   <td class='<?=($tf_options)? "titleCell" : "subTitle" ?>' colspan='3'>
