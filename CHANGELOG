@@ -17,6 +17,13 @@ abstraction, and endless possibilities for project expansion.
 
 ----- VERSION 2.5.5 (2005-05-02) -----
 
+2005-05-04, kato
+  Added patch files and simplified upgrade instructions
+    - zentrack_2/UPGRADE.readme 1.25
+    - zentrack_2/install/upgrade_2-5-0-1_to_2-5-5.patch 1.1
+    - zentrack_2/install/upgrade_2-5-0-2_to_2-5-5.patch 1.1
+    - zentrack_2/install/upgrade_2-5-5pre1_to_2-5-5.patch 1.1
+
 2005-04-27, kato
   Added security to includes/ files to provide security for users who
   do not correctly locate the includes/ files outside of the web tree.
