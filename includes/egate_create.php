@@ -1,4 +1,3 @@
-<? if( !ZT_DEFINED ) { die("Illegal Access"); } ?>
 #!/usr/bin/php -q
 <?{
   /*

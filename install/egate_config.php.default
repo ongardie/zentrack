@@ -1,4 +1,5 @@
 <?
+if( !ZT_DEFINED ) { die("Illegal Access"); }
 
   /*
   **  EGATE CONFIGURATION

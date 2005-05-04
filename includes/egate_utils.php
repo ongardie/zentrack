@@ -1,7 +1,6 @@
 <?{
-if( !ZT_DEFINED ) { die("Illegal Access"); }
-
-
+  define("ZT_DEFINED",true);
+  
   /*
   **  EGATE UTILS
   **  

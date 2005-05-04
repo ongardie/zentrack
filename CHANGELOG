@@ -13,7 +13,20 @@ abstraction, and endless possibilities for project expansion.
 
 ----- VERSION 2.5.6 (development) -----
 
-
+2005-05-04, kato
+  Removed unnecessary if condition in projects list
+    - zentrack_2/www/projects.php 1.13
+    
+  Fixed ZT_DEFINED for egate scripts (which are not included from www)
+    - zentrack_2/includes/egate.php 1.8
+    - zentrack_2/includes/egate_create.php 1.3
+    - zentrack_2/includes/egate_check.php 1.9
+    - zentrack_2/includes/egate_check_create.php 1.3
+    - zentrack_2/includes/egate_utils.php 1.43
+    - zentrack_2/install/egate_config.php.default 1.16
+    
+  Added missing security check to configVars template
+    - zentrack_2/install/configVars.php.default 1.12
 
 ----- VERSION 2.5.5 (2005-05-02) -----
 

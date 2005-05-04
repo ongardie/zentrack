@@ -29,12 +29,11 @@
   if( !is_array($userBins) || count($userBins) < 1 ) {
     print "<p class='hot'>" . tr("You do not have access to any existing bins") . "</p>\n";     
   } else {
-     if( $login_bin > 0 ) {
-	$params["bin_id"] = $login_bin;
-     } else {
-	$params["bin_id"] = $userBins;
-     }
-    if( is_array($params) ) 
+    if( $login_bin > 0 ) {
+      $params["bin_id"] = $login_bin;
+    } else {
+      $params["bin_id"] = $userBins;
+    }
     include("$libDir/sorting.php");
     $tickets = $zen->get_tickets($params, join(',',$orderby));
     include("$templateDir/listTickets.php");
