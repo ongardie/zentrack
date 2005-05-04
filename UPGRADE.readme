@@ -24,14 +24,18 @@ REQUIREMENTS
   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 --------------------
-UPGRADE FROM 2.5.5 PRE1 or PRE2
+UPGRADE FROM 2.5.5 PRE1
 --------------------
   
-  1. Delete your ZENTRACK_FIELD_MAP table.
+  1. Delete ZENTRACK_FIELD_MAP table from your database instance.
   2. Run the UPGRADE_yourdb.sql file
   3. Manually copy the files from the install folder over your existing
      includes and www directories.  (Remember to back up your header.php
      file first and to restore it afterwards!)
+     
+     Alternately, you can try using the patches 2-5-5-pre1_upgrade.patch or
+     in the install/ folder, but manually copying the files is recommended.  
+     (Instructions on using patches are detailed below in the 2.5.0.2 upgrade section.)
   
 --------------------
 UPGRADE FROM 2.5.0.2
@@ -42,52 +46,11 @@ UPGRADE FROM 2.5.0.2
   !!!!!!!!!!!!!!!!!!!!!!!!!!!
   
   As of 2.5.5, there are now two ways to upgrade.  There
-  is a patch and a manual upgrade approach.  Please select
-  the method that meets your needs.
-
-  QUICK UPGRADE:
-  --------------
-    
-    IMPORTANT:  If you are not comfortable with patches, and you have any love for your current
-    installation, might I recommend the manual install?  Patches are not trivial if they do
-    not go as expected.
-    
-    -> Windows Users:  Unless you have and understand cygwin, use the manual upgrade.
-    -> '/web/zentrack' refers to your current ZT installation
-    -> '/tmp/zentrack_2.5.5' refers to your newly uncompressed install files. 
-    
-    1. Make backups of your files and database by whatever means you see fit:
-       (perhaps 'mysqldump zentrack > db_backup.sql' and 'tar -zcvf file_backup.tar.gz /web/zentrack')
-
-    2. Apply the patch:
-       cd /web/zentrack
-       patch --dry-run -p2 < /tmp/zentrack_2.5.5/install/2-5-0-2_upgrade.patch (test it first)
-       patch -p2 < /tmp/zentrack_2.5.5/install/2-5-0-2_upgrade.patch
-
-    3. Upgrade database:
-       Run the sql file install/UPGRADE_[yourdb].sql file using your favorite
-       sql interface (you may also open the file and run the statements directly if
-       this is easier for you).
-
-    4. See 'After Upgrade' below
-
-    ?. If you modified the directory structure during your installion (renamed or moved
-       your www/ or includes/ folders) you can make the patch work by simulating this structure:
-
-        For instance, if your directory structure looks like this:
-          /web/my_website/htdocs/zt (location of my www/ folder)
-          /usr/lib/zentrack/zt_includes (location of my includes/ folder)
-
-        Then you could use these links to make the patch work as expected:
-          mkdir /tmp/zentrack
-          ln -s /web/my_website/htdocs/zt /tmp/zentrack/www
-          ln -s /usr/lib/zentrack/zt_includes /tmp/zentrack/includes
-
-        Then run your patch as follows:
-          cd /tmp/zentrack
-          patch --dry-run -p2 < /tmp/zentrack_2.5.0.3/install/2-5-0-3_upgrade.patch (test it first)
-          patch -p2 < /tmp/zentrack_2.5.0.3/install/2-5-0-3_upgrade.patch
-    
+  is a patch and a manual upgrade approach.
+  
+  Manual upgrades are recommended for most users.  Patches are intended
+  for users who have made minor modifications to the source code and
+  would like a simple upgrade. Please select the method that meets your needs.
 
   MANUAL UPGRADE:
   ---------------
@@ -117,6 +80,52 @@ UPGRADE FROM 2.5.0.2
        sql interface (you may also open the file and run the statements directly if
        this is easier for you).
 
+    5. See 'After Upgrade' below
+
+  USE A PATCH:
+  --------------
+    
+    IMPORTANT:  If you are not comfortable with patches, and you have any love for your current
+    installation, might I recommend the manual install?  Patches are not trivial if they do
+    not go as expected.
+    
+    -> Windows Users:  Unless you have and understand cygwin, use the manual upgrade.
+    -> '/web/zentrack' refers to your current ZT installation
+    -> '/tmp/zentrack_2.5.5' refers to your newly uncompressed install files. 
+    
+    1. Make backups of your files and database by whatever means you see fit:
+       (perhaps 'mysqldump zentrack > db_backup.sql' and 'tar -zcvf file_backup.tar.gz /web/zentrack')
+
+    2. Apply the patch:
+       cd /web/zentrack
+       patch --dry-run -p2 < /tmp/zentrack_2.5.5/install/upgrade_[your_version]_to_2-5-5.patch (test it first)
+       patch -p2 < /tmp/zentrack_2.5.5/install/upgrade_[your_version]_to_2-5-5.patch
+
+    3. Upgrade database:
+       Run the sql file install/UPGRADE_[yourdb].sql file using your favorite
+       sql interface (you may also open the file and run the statements directly if
+       this is easier for you).
+
+    4. See 'After Upgrade' below
+
+    ?. If you modified the directory structure during your installion (renamed or moved
+       your www/ or includes/ folders) you can make the patch work by simulating this structure:
+
+        For instance, if your directory structure looks like this:
+          /web/my_website/htdocs/zt (location of my www/ folder)
+          /usr/lib/zentrack/zt_includes (location of my includes/ folder)
+
+        Then you could use these links to make the patch work as expected:
+          mkdir /tmp/zentrack
+          ln -s /web/my_website/htdocs/zt /tmp/zentrack/www
+          ln -s /usr/lib/zentrack/zt_includes /tmp/zentrack/includes
+
+        Then run your patch as follows:
+          cd /tmp/zentrack
+          patch --dry-run -p2 < /tmp/zentrack_2.5.5/install/upgrade_[your_version]_to_2-5-5.patch (test it first)
+          patch -p2 < /tmp/zentrack_2.5.5/install/upgrade_[your_version]_to_2-5-5.patch
+    
+
   AFTER UPGRADE:
   --------------
 
@@ -140,7 +149,7 @@ UPGRADE FROM 2.5.0.1
   sql interface (you can open the file and run the statements directly if
   this is easier for you).  This will upgrade you to 2.5.0.2 database.
 
-  Follow instructions for 2.5.0.2
+  Follow instructions for 2.5.0.2.  If you use the patch, then substitute 2-5-0-1 for 'your_version'
  
 --------------------
 UPGRADE FROM 2.5.0
