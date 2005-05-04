@@ -1,8 +1,9 @@
 <? if( !ZT_DEFINED ) { die("Illegal Access"); } ?>
 <div class="small" align="center"><b><?=$zen->showLongDate()?></b></div>
 <div class="small" align='center'><?=tr("version")?> <?=$zen->settings["version_xx"]?></div>
-  
 <?
+  if( $zen->demo_mode == 'on' ) { print "<div class='small' align='center'>(demo mode)</div>"; }
+
   $num = 0;
   $num = $zen->getTicketCount('OPEN');
   print "<p align='center' class='small'>";

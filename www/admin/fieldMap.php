@@ -46,7 +46,10 @@
     $view = 'ticket_create';
   }
   
-  if( $TODO == 'save' ) {
+  if( $TODO == 'save' && $zen->demo_mode == "on" ) {
+    $errs[] = "Your operation was completed, but you cannot edit the field map on a demo site.";
+  }
+  else if( $TODO == 'save' ) {
     $deletes = array();
     $inserts = array();
     $vprops = getFmViewProps($view);
