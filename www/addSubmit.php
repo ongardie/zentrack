@@ -24,15 +24,7 @@
   $expand_tickets = 1;
   
   // initiate default values
-  $otime = time();  // set time ticket opened
-  if( $deadline ) {
-    $deadline = $zen->dateParse($deadline);
-  }
-  if( $start_date ) {
-    $start_date = $zen->dateParse($start_date);
-  }
-  
-  $description = $zen->ffv($description);
+  $otime = date('Y-m-d h:i:s');  // set time ticket opened
 
   include("$libDir/validateFields.php");
   

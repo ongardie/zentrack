@@ -11,12 +11,6 @@
   $expand_admin = 1;
 
   // initiate default values
-  if( $deadline ) {
-     $deadline = $zen->dateParse($deadline);
-  }
-  if( $start_date ) {
-     $start_date = $zen->dateParse($start_date);
-  } 
   if( !$tested )
      $tested = 0;
   if( !$approved )

@@ -24,7 +24,7 @@
     // don't include sections
     if( $field['field_type'] == 'section' ) { continue; }
     // parse dates
-    if( $fprops["$f"]['data_type'] == 'date' ) {
+    if( $fprops["$f"]['data_type'] == 'date' && strlen($$f) ) {
       $$f = $zen->dateParse($$f);
     }
     //if( !$field['is_visible'] ) { continue; }
