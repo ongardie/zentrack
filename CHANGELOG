@@ -13,10 +13,48 @@ abstraction, and endless possibilities for project expansion.
 
 ----- VERSION 2.5.6 (development) -----
 
+2005-05-08, kato
+  Improved date processing for field map generated fields
+    - zentrack_2/includes/ZenFieldMap.class 1.17
+    - zentrack_2/includes/templates/newTicketForm.php 1.43
+    
+  Implemented default values for the search_form (via field map)
+    - zentrack_2/includes/ZenFieldMap.class 1.18
+    - zentrack_2/includes/templates/searchForm.php 1.16
+    - zentrack_2/www/search.php 1.12
+    
+  Implemented field map on ticket details screen
+    - zentrack_2/includes/templates/ticket_detailsBox.php 1.18
+
+----- VERSION 2.5.5.1 (2005-05-08) -----
+
+2005-05-05, kato
+  Prepared install files for upgrade
+    - zentrack_2/install/UPGRADE.readme
+    - zentrack_2/install/UPGRADE_mssqlserver.sql
+    - zentrack_2/install/UPGRADE_mysql.sql
+    - zentrack_2/install/UPGRADE_oracle.sql
+    - zentrack_2/install/UPGRADE_postgres.sql
+    - zentrack_2/install/seed_mssqlserver.sql
+    - zentrack_2/install/seed_mysql.sql
+    - zentrack_2/install/seed_oracle.sql
+    - zentrack_2/install/seed_postgres.sql
+    - zentrack_2/install/seed_random_report_data.sql
+    - zentrack_2/install/previous/2.5.5.UPGRADE_mssqlserver.sql 1.1
+    - zentrack_2/install/previous/2.5.5.UPGRADE_mysql.sql 1.1
+    - zentrack_2/install/previous/2.5.5.UPGRADE_oracle.sql 1.1
+    - zentrack_2/install/previous/2.5.5.UPGRADE_postgres.sql 1.1
+    
 2005-05-05, kato
   Fixed problems with sections and saving edited/added tickets
   Improved escaping and rendering of text bodies.
-  
+    - zentrack_2/includes/ZenFieldMap.class 1.17
+    - zentrack_2/includes/templates/ticket_logBox.php 1.17
+    - zentrack_2/includes/templates/ticket_titleBox.php 1.12
+    - zentrack_2/includes/zen.class 1.37
+    - zentrack_2/includes/validateFields.php 1.2
+    - zentrack_2/includes/editTicketSubmit.php 1.16
+    - zentrack_2/includes/db.class 1.41
   
 2005-05-04, kato
   Upgraded ADODB library to 4.6.2

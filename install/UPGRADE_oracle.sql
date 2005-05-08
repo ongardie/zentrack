@@ -296,8 +296,7 @@ INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,w
 INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,which_view,default_val,sort_order,field_type,num_cols,num_rows,is_required) VALUES('281','comments','Comments','1','ticket_close',NULL,'31','text','60','10','1');
 
 -- Modify the version number
-
-UPDATE ZENTRACK_SETTINGS SET value='2.5.5' WHERE setting_id=74;
+UPDATE ZENTRACK_SETTINGS SET value='2.5.5.1' WHERE setting_id=74;
 
 -- Add new settings
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (108,'edit_reason_required', 'off', 'Show a mandatory edit field to explain why the ticket is being edited');

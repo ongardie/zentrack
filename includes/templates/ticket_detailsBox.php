@@ -1,4 +1,17 @@
-<? if( !ZT_DEFINED ) { die("Illegal Access"); } ?>
+<? 
+  /**
+   * This displays the details tab within the ticket view.
+   *
+   * Requirements:
+   *   ZenTrack $zen - zenTrack class and utils
+   *   ZenFieldMap $map - an instance of $ZenFieldMap used to obtain list of fields
+   *   String $view - a view as defined in ZenFieldMap.class, used to obtain fields and properties
+   *   int $project_id - [optional] if defined, represents the project this ticket belongs to
+   *   mixed [various] - ticket fields from ZENTRACK_TICKETS are provided to this page as $column_name
+   */
+   
+   if( !ZT_DEFINED ) { die("Illegal Access"); } 
+?>
 
   <table width="600" align="center" cellpadding="2" cellspacing="2">
    <tr>  

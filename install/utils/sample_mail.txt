@@ -1,0 +1,17 @@
+Return-Path: <#@[]>
+Delivered-To: newticket@localhost
+Received: 4 May 2005 08:34:20 +0000
+Delivered-To: newticket@localhost
+Received: 4 May 2005 08:34:20 +0000
+Date: 4 May 2005 08:34:20 +0000
+From: root@localhost
+To: newticket@localhost
+Subject: test ticket create
+
+This will create a new ticket in your ZT system if you run:
+
+cat sample_mail.txt | egate_create.php
+
+or perhaps:
+
+cat sample_mail.txt | php egate_create.php

@@ -3,12 +3,16 @@
 
   See INSTALL.README for install instructions.
 
-  Documentation
+  --------------------------------------------
+  DOCUMENTATION
+  --------------------------------------------
     Documentation is available on the website:
     http://www.zentrack.net/modules/documentation
     http://docs.zentrack.net
 	
-  Troubleshooting:
+  --------------------------------------------
+  TROUBLESHOOTING
+  --------------------------------------------
      Insure that you do not use \ characters for directories in your header.php file!
      
     Open includes/configVars.php and set $this->debug = 1,2, or 3;  
@@ -16,7 +20,9 @@
     If you have trouble, send a support request (see below) with 
     the debug output pasted at the bottom of your message.
 
-  Support
+  --------------------------------------------
+  SUPPORT
+  --------------------------------------------
 
     CRITICAL!!  When submitting a support request, always begin by setting 
                 $Debug_Mode = 3; in the www/header.php file and then pasting the
@@ -29,6 +35,10 @@
 
     mailing list - zentrack-users is a great place to get help.  Answers usually
              within an hour.  http://sourceforge.net/mail/?group_id=22724.
+
+  --------------------------------------------
+  COMMON ERRORS
+  --------------------------------------------
 
   HEADER.PHP MISSING
     -This is probably a cvs checkout.  Just go to the directory where

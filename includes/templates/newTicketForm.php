@@ -53,7 +53,7 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
   if( strlen($start_date) ) { $start_date = $zen->showDateTime($start_date); }
   if( strlen($ctime) ) { $ctime = $zen->showDateTime($ctime); }
   if( strlen($otime) && $td ) { $otime = $zen->showDateTime($otime); }
-  else { $otime = time(); }
+  if( !$td ) { $otime = time(); }
      
   //$view = $td? 'ticket_edit' : 'ticket_create';
   $fields = $map->listFieldsForView($view);
