@@ -13,6 +13,11 @@ abstraction, and endless possibilities for project expansion.
 
 ----- VERSION 2.5.6 (development) -----
 
+2005-05-05, kato
+  Fixed problems with sections and saving edited/added tickets
+  Improved escaping and rendering of text bodies.
+  
+  
 2005-05-04, kato
   Upgraded ADODB library to 4.6.2
     - zentrack_2/includes/adodb/*

@@ -12,7 +12,7 @@
 	  </tr>
 	  <tr>
 	   <td class="small"><?=$id?></td>
-	   <td colspan="2"><?=stripslashes($title)?></td>
+	   <td colspan="2"><?=$zen->ffv($title)?></td>
 	  </tr>
 	  <tr>
 	   <td class="smallTitleCell" height="<?=$height_num?>"><?=uptr("Elapsed")?></td>  

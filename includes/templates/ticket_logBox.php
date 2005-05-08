@@ -29,10 +29,6 @@
       // the log and attachments
       if( $l["entry"] ) {
 	print "<br>\n";
-//	$l["entry"] = nl2br(htmlspecialchars(stripslashes($l["entry"])));
-	if ( get_magic_quotes_runtime() ) {
-	   $l["entry"] = stripslashes($l["entry"]);
-	}
 	$l["entry"] = nl2br($zen->ffv($l["entry"]));
 	$l["entry"] = preg_replace("#\&amp;#", "&", $l["entry"]);
 //	$l["entry"] = preg_replace("#(https?://[a-zA-Z0-9_/.-]+[a-zA-Z0-9\-_]+\.[a-z]{2,3}(/[a-zA-Z/\._\?=&0-9-]+))#", "<a href='\\1' target='_blank'>\\1</a>", $l["entry"]);

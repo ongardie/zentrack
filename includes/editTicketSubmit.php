@@ -42,10 +42,9 @@
        $errs[] = tr("System Error").": ".tr("Ticket could not be edited.")." ".$zen->db_error;
      }
      else if( $varfields && count($varfield_params) ) {
-         $res = $zen->updateVarfieldVals($id, $varfield_params, $login_id, $bin_id);
-         if( !$res ) {
-           $errs[] = tr("? updated, but variable fields could not be saved", array(tr($x)));
-         }
+       $res = $zen->updateVarfieldVals($id, $varfield_params, $login_id, $bin_id);
+       if( !$res ) {
+         $errs[] = tr("? updated, but variable fields could not be saved", array(tr($x)));
        }
      }
   }

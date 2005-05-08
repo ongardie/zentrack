@@ -21,6 +21,12 @@
   $customFieldsArray = $map->getFieldMap($view);
   $fprops = getFmFieldProps($view);
   foreach($customFieldsArray as $f=>$field) {
+    // don't include sections
+    if( $field['field_type'] == 'section' ) { continue; }
+    // parse dates
+    if( $fprops["$f"]['data_type'] == 'date' ) {
+      $$f = $zen->dateParse($$f);
+    }
     //if( !$field['is_visible'] ) { continue; }
     if( $field['is_required'] || $fprops["$f"]['always_required'] ) {
       $required[] = $f;

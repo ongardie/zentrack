@@ -296,7 +296,7 @@ class DB {
       $vals = "";
       foreach($params as $k=>$v) {
         $cols .= ($cols)? ", $k" : "$k";
-        if( ereg("^(NULL|FALSE|TRUE|[0-9]+)$", $v) ) {
+        if( ereg("^(NULL|FALSE|TRUE)$", $v) ) {
           $vals .= strlen($vals)? ", $v" : "$v"; 
         } else {
           $vals .= strlen($vals)? ", ".$this->checkSlashes($v) : $this->checkSlashes($v);
@@ -307,7 +307,7 @@ class DB {
       $cols = "";
       $vals = "";
       foreach($params as $k=>$v) {
-        if( ereg("^(NULL|FALSE|TRUE|[0-9]+)$", $v) ) {
+        if( ereg("^(NULL|FALSE|TRUE)$", $v) ) {
           $vals .= strlen($vals)? ", $k = $v" : "$k = $v"; 
         } else {
           $vals .= strlen($vals)? ", $k = ".$this->checkSlashes($v) : "$k = ".$this->checkSlashes($v);

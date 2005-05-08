@@ -19,7 +19,7 @@
     <td colspan='3' <?=$rollover_text?>><a 
 	href='<?=$rootUrl?>/project.php?id=<?=$project_id?>' 
 	class='rowLink'><?=$project_id?> -  
-    	<?=stripslashes($project["title"])?></a></td>
+    	<?=$zen->ffv($project["title"])?></a></td>
     <? } ?>
     <td class='altCellInv'>&nbsp;</td>
     <td class='altCellInv'><?=($start_date)?$zen->showDateTime($start_date):"n/a"?></td>  
@@ -119,13 +119,16 @@
     $varfield_type=ereg_replace("[^a-z_]", "", $k);
     switch($varfield_type) {
       case "custom_number":
-        $cfv = strlen($varfields["$k"])? $varfields["$k"] : 'n/a';
+        $cfv = strlen($varfields["$k"])? $varfields["$k"] : '&nbsp;';
         break;
       case "custom_date":
-        $cfv = $varfields["$k"]? $zen->showDateTime($varfields["$k"]) : "n/a";
+        $cfv = $varfields["$k"]? $zen->showDateTime($varfields["$k"]) : "&nbsp;";
+        break;
+      case "custom_text":
+        $cfv = strlen($varfields["$k"])? $zen->ffvText($varfields["$k"]) : "&nbsp;";
         break;
       default:
-        $cfv = $varfields["$k"]? $zen->ffv($varfields["$k"]) : 'n/a';
+        $cfv = $varfields["$k"]? $zen->ffv($varfields["$k"]) : '&nbsp;';
         break;
     }
 ?>
@@ -135,10 +138,7 @@
    </tr>
    <tr>
       <td colspan="3"<?= $varfield_type == 'custom_text'? " class='outlined'" : '' ?>>
-      <?= 
-	 $varfield_type == 'custom_text'?
-           (get_magic_quotes_runtime()? nl2br(stripslashes($cfv)) : nl2br($cfv)) : $zen->ffv($cfv);
-      ?>
+      <?= $cfv ?>
     </td>
     <td colspan='2'>&nbsp;</td>
    </tr>
@@ -154,7 +154,7 @@
    </tr>
    <tr>
     <td colspan="5" class="outlined">
-   <?=(get_magic_quotes_runtime())?nl2br(stripslashes($description)):nl2br($description); ?>
+   <?= $zen->ffvText($description) ?>
     </td>
    </tr>  
 

@@ -79,13 +79,21 @@ class zen extends zenDate {
      }
      return $this->_ucwords;
    }
+   
+   function ffvText( $val = '', $strlen = 0 ) {
+     if( $strlen && strlen($val) > $strlen ) { $val = substr($val,0,$strlen); }
+     $val = $this->ffv($val);
+     $val = nl2br($val);
+     return $val;
+   }
 
    function ffv( $val = '', $strlen = 0 ) {
      // converts special characters to ascii codes
      // to be used in <input> fields
      if( strlen($val) ) {
        if( $strlen && strlen($val) > $strlen ) { $val = substr($val,0,$strlen); }
-       $val = htmlspecialchars(stripslashes($val),ENT_QUOTES,$this->settings["character_set"]);
+       $val = htmlspecialchars($val,ENT_QUOTES,$this->settings["character_set"]);
+       $val = str_replace('\\', '&#92;', $val);
        $val = str_replace('&amp;', '&', $val);
      }
      return $val;
@@ -315,7 +323,7 @@ class zen extends zenDate {
              $vals["$k"] = $this->checkAlphaNum($v,"_.-");
              break;
            case "text":
-             $vals["$k"] = $this->ffv("$v");
+             $vals["$k"] = $v; //$this->checkSlashes($v);
              break;
            default:
              $vals["$k"] = strip_tags("$v", $this->html_allowed);
@@ -360,7 +368,7 @@ class zen extends zenDate {
            $$k = $this->checkAlphaNum($$k, "_.-");
            break;
          case "text":
-           $$k = $this->ffv($$k);
+           //$$k = $$k;
            break;
          default:
            $$k = strip_tags($$k, $this->html_allowed);

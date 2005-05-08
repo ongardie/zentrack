@@ -142,10 +142,10 @@ function getFmTypeProps( $type = null ) {
 $ztf = array(
   "fields" => array(//       searchable,  types                 , data_type,  admin_view, multiple, always_required, default
     "id"              => array(   true,   array(1)              , 'int'    ,      null, false,  true,  false),
-    "title"           => array(   true,   array(1,2)            , 'string' ,      null, false,  true,   true),
+    "title"           => array(   true,   array(1,2)            , 'text' ,        null, false,  true,   true),
     "priority"        => array(   true,   array(1,3,4,6)        , 'int'    ,      null, false,  true,   true),
     "status"          => array(   true,   array(1,3,4,6)        , 'string' ,      null, false,  true,  false),
-    "description"     => array(   true,   array(1,2)            , 'string' ,      null, false,  false,  true),
+    "description"     => array(   true,   array(1,2)            , 'text' ,        null, false,  false,  true),
     "otime"           => array(   true,   array(1)              , 'date'   ,  array(7), false,  true,  false),
     "ctime"           => array(   true,   array(1)              , 'date'   ,  array(7), false,  false,  false),
     "bin_id"          => array(   true,   array(1,3,4,6)        , 'int'    ,      null, false,  true,   true),
@@ -157,16 +157,18 @@ $ztf = array(
     "approved"        => array(  false,   array(1,3,5,6)        , 'int'    ,      null, false,  false,  true),
     "relations"       => array(  false,   array(1,4)            , 'string' ,  array(2), true ,  false,  true),
     "project_id"      => array(  false,   array(1,3,4)          , 'int'    ,  array(2), false,  false,  true),
-    "est_hours"       => array(  false,   array(1,2)            , 'float'  ,     null, false,  false,  true),
+    "est_hours"       => array(  false,   array(1,2)            , 'float'  ,      null, false,  false,  true),
     "deadline"        => array(  false,   array(1,7)            , 'date'   ,      null, false,  false,  true),
     "start_date"      => array(  false,   array(1,7)            , 'date'   ,      null, false,  false,  true),
     "wkd_hours"       => array(  false,   array(1,2)            , 'float'  ,      null, false,  false,  true),
-    "custom_string"   => array(   true,   array(1,2)            , 'string' ,      null, false,  false,  true),
+    "custom_string"   => array(   true,   array(1,2)            , 'text' ,        null, false,  false,  true),
     "custom_number"   => array(   true,   array(1,2)            , 'int'    ,      null, false,  false,  true),
     "custom_boolean"  => array(   true,   array(1,3,5,6)        , 'boolean',      null, false,  false,  true),
     "custom_date"     => array(   true,   array(1,7)            , 'date'   ,      null, false,  false,  true),
     "custom_menu"     => array(   true,   array(1,3,6)          , 'string' ,      null, false,  false,  true),
-    "custom_text"     => array(  false,   array(1,2)            , 'string' ,      null, false,  false,  true)
+    "custom_text"     => array(  false,   array(1,2)            , 'text'   ,      null, false,  false,  true),
+    "hours"           => array(  false,   array(2)              , 'int'    ,      null, false,  false,  true),
+    "comments"        => array(  false,   array(2)              , 'text'   ,      null, false,  false,  true)
   ),
   
   "views" => array(//           disabled, view_only, has_behaviors, admin_view, multiple, sections
@@ -288,7 +290,7 @@ class ZenFieldMap {
           if( isset($vals["$value"]) ) { return $this->_zen->ffv(tr($vals["$value"])); }
           else {
             $this->_zen->addDebug("getTextValue", "Unable to find choices for {$view}->{$field_name}", 1);
-            return $this->_zen->ffv($value); 
+            return $this->_zen->ffv($value, $field['num_cols']); 
           }
         case "user_id":
         case "creator_id":
@@ -312,6 +314,10 @@ class ZenFieldMap {
         case "custom_boolean":
           $val = $value == 1? tr('Yes') : tr('No');
           return $this->_zen->ffv($val,$field['num_cols']);
+        case "details":
+        case "title":
+        case "custom_text":
+          return $this->_zen->ffvText($value);
         default:
           $val = $this->_zen->ffv($value, $field['num_cols']);
           $this->_zen->addDebug("getTextValue", "rendering default: $val", 3);
@@ -365,8 +371,15 @@ class ZenFieldMap {
     $vals['date_format'] = $this->_zen->popupDateFormat();
     $vals["field_name"] = $this->_zen->ffv(strlen($override_name)>0? $override_name : $field_name);
     
-    if( !isset($value) && ($view=="ticket_create" || $view=="project_create")) {
+    if( !isset($value) && ($view=="ticket_create" || $view=="project_create"
+         || $view == 'search_form' )) {
+      // if there is no value and this is a create page or search page then we will
+      // retrieve a default value to use instead
       $vals["field_value"] = $this->getDefaultValue($view,$field_name);
+    } else if( $typeint == ZTFIELD_DATE && !preg_match('/[^0-9]/', $value) ) {
+      // if it is a date and we have a numeric value, then we will parse it to
+      // a date right here
+      
     } else {
       $vals["field_value"] = $this->_zen->ffv($value);
     }
