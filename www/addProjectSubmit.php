@@ -22,26 +22,10 @@
   $view = 'project_create';
   
   // initiate default values
-  $otime = time();  // set time ticket opened
-  if( $deadline ) {
-    $deadline = $zen->dateParse($deadline);
-  }
-  if( $start_date ) {
-    $start_date = $zen->dateParse($start_date);
-  }
-  
+  $otime = date('Y-m-d h:i:s');  // set time ticket opened
   $type_id = $zen->projectTypeID();
-  $description = nl2br($zen->ffv($description));
-  
   include("$libDir/validateFields.php");
-  
-  $zen->cleanInput($fields);
-  // check for required fields
-  foreach($required as $r) {
-    if( !strlen($$r) ) {
-      $errs[] = tr("required field missing:") . " " . ucfirst($r);
-    }
-  }
+
   if( !$errs ) {
     // create an array of existing fields
     foreach(array_keys($fields) as $f) {
