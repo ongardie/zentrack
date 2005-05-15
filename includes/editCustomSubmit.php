@@ -6,9 +6,9 @@
   $required = array();
   // the TODO is saved, even if the save failed
   $TODO = 'SAVED';
-                                
+  
   include("$libDir/validateFields.php");
-
+  
   if( !$errs ) {
     if( count($varfield_params) ) {
       // update the ticket info
@@ -20,6 +20,8 @@
       $errs[] = tr("System Error").": ".tr("Ticket could not be edited.")." ".$zen->db_error;
     }
   }
+  
+  $setmode = 'custom';
 
   if( !$errs ) {
     add_system_messages(tr("Variable fields updated: ")." $id.");
@@ -34,6 +36,7 @@
     exit;
   } else {
      include_once("$libDir/nav.php");
+     $zen->printErrors($errs);
      if( $zen->inProjectTypeIDs($bin_id) )
        include("$templateDir/projectView.php");
      else

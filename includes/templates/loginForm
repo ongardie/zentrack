@@ -8,7 +8,7 @@
 
   <p><b><i style="color:red"><?tr("Login and passphrase are case sensitive!")?></i></b></p>
 
-  <form method="post" action="<?=$SCRIPT_NAME?><?=($id)? "?id=".strip_tags($id) : ""?>">
+  <form method="post" action="<?=$SCRIPT_NAME?><?=($id)? "?id=".$zen->checkNum($id) : ""?>">
 
   <input type=text name=username value='<?=strip_tags($zentrackUsername)?>' width=20 maxlength=20>&nbsp;<?=tr("Login Name")?>
 
@@ -17,8 +17,14 @@
   <input type="password" name="passphrase" width=20 maxlength=20>&nbsp;<?=tr("Password")?>
 
   <p>
+  
+  <? if( $zen && $zen->settingOn('allow_pwd_save') ) { ?>
+  <p>
+  <input type='checkbox' name='save_my_password' value='1'> <?=tr("In the future, log me in automatically (using a cookie)")?>
+  </p>
+  <?  }  ?>
 
-  <input type=hidden name=redirect value='<?=strip_tags($redirect)?>'>
+  <input type=hidden name=redirect value='<?=$zen->ffv($redirect)?>'>
 
   <input type=submit name=TODO value="<?=tr("Log On")?>">
 

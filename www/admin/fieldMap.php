@@ -2,26 +2,24 @@
 
   /*
   **  EDIT FIELD MAP
-  **  
+  **
   **  Edit/create/delete/sort entries in the field map
   **
   */
-  
+
   include("admin_header.php");
   $page_title = tr("Edit Field Map");
   include("$libDir/nav.php");
   function fmGetSet( $name, $key, $type = '' ) {
     // don't make updates on rows that don't exist (we may skip some fields occasionally
-    if( !array_key_exists($name, $_POST) ) {
-      return;
-    }
+    if( !array_key_exists($name, $_POST) ) { return; }
     // get the updates array
     global $updates;
     global $zen;
     // process the type
     $t = substr($type,0,1);
-    // handle fields which don't get posted (booleans which are not checked)
-    if( !array_key_exists($key, $_POST[$name]) ) { 
+    // handle fields which do not get posted (booleans which are not checked)
+    if( !array_key_exists($key, $_POST[$name]) ) {
       $updates[$name][$key] = $t == 'b'? 0 : null;
       return;
     }
@@ -41,11 +39,11 @@
     }
     $updates[$name][$key] = $v;
   }
-  
+
   if( !$view || !in_array($view, array_keys($GLOBALS['zt_field_dependencies']['views'])) ) {
     $view = 'ticket_create';
   }
-  
+
   if( $TODO == 'save' && $zen->demo_mode == "on" ) {
     $errs[] = "Your operation was completed, but you cannot edit the field map on a demo site.";
   }
@@ -58,21 +56,21 @@
     $allFields = $map->getFieldMap();
     $updates = $allFields[$view];
     unset($allFields);
-    //Zen::printArray($_POST, 'POST_VALS');
-    
+    //Zen::printArray($_POST, 'POST_VALS'); //debug
+
     $fields = $map->listFieldsForView($view);
     foreach($fields as $f) {
       // collect field properties
       $field = $map->getFieldFromMap($view, $f);
       $tprops = getFmTypeProps($field['field_type']);
-      
+
       // remove deleted sections
       if( $field['field_type'] == 'section' && !isset($_POST[$f]) ) {
         $deletes[$f] = $field['field_map_id'];
       }
       // skip rows that aren't sent
       else if( !isset($_POST[$f]) ) { continue; }
-      
+
       // field_label
       fmGetSet($f, 'field_label', 'text');
       // is_visible
@@ -80,7 +78,7 @@
 
       // num_cols
       fmGetSet($f, 'num_cols', 'int');
-      
+
       // num_rows
       if( !$tprops['multiple'] && !$vprops['multiple'] ) {
         $updates[$f]['num_rows'] = 1;
@@ -89,7 +87,7 @@
 
       // the rest does not apply to sections
       if( $field['field_type'] == 'section' ) { continue; }
-      
+
       // properties for this field
       $fprops = getFmFieldProps($view, ZenFieldMap::fieldName($f));
 
@@ -106,19 +104,18 @@
       // otherwise we post it normally
       else if( array_key_exists('field_type', $_POST[$f]) )
         { fmGetSet($f, 'field_type'); }
-      
+
       // is_required
-      if( $vprops['view_only'] ) { $updates[$f]['is_required'] = false; }
-      else if( $view == 'search_form' ) { $updates[$f]['is_required'] = false; }
+      if( $vprops['view_only'] || $view == 'search_form' ) { $updates[$f]['is_required'] = false; }
       else if( $fprops['always_required'] ) { $updates[$f]['is_required'] = true; }
       else { fmGetSet($f, 'is_required', 'boolean'); }
-      
+
       // default_val has some special considerations
       if( !$vprops['view_only'] ) {
         if( $fprops['default'] ) { fmGetSet($f, 'default_val'); }
       }
     }
-    
+
     foreach($_POST as $k=>$v) {
       if( strpos($k, 'section') === 0 && $vprops['sections'] && !array_key_exists($k,$updates) ) {
         // skip section0, it's a template
@@ -154,7 +151,7 @@
       $res = $map->updateFieldMap($view, $updates, $inserts, $deletes);
       print "<p><b>$res[0] of $res[1] updates were saved</b></p>\n";
     }
-    
+
     //cfalonso changed the following line with the next 3 because it didn't work properly:
     //$fields = $updates;
     $fields = $map->getFieldMap($view);
@@ -162,16 +159,16 @@
     //Zen::printArray($updates,'UPDATES');
     //Zen::printArray($inserts,'INSERTS');
     //Zen::printArray($deletes,'DELETES');
-    
+
   }
   else {
     $fields = $map->getFieldMap($view);
   }
-  
+
   $zen->printErrors($errs);
 
   include("$templateDir/fieldMapForm.php");
-  
+
   include("$libDir/footer.php");
 
 

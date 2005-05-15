@@ -55,6 +55,7 @@
      $debug_text .= "<span class='note'>\n";
      $debug_text .= "HTTP_USER_AGENT: $HTTP_USER_AGENT<br>\n";
      $debug_text .= "SCRIPT_NAME: $SCRIPT_NAME<br>\n";
+     $debug_text .= "QUERY_STRING: $QUERY_STRING<br>\n";
      $debug_text .= "HTTP_HOST: (".(preg_match("/$HTTP_HOST/",$rootUrl)? 'matches rootUrl' : 
         '<b><span class="error">DOES NOT MATCH $rootUrl!!!</span></b>').")<br>\n";
      $debug_text .= "HTTP_COOKIE: $HTTP_COOKIE<br>\n";

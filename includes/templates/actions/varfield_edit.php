@@ -1,5 +1,4 @@
 <?
-if( !ZT_DEFINED ) { die("Illegal Access"); }
-
-  include("$libDir/templates/ticket_systemBox.php");
+  if( !ZT_DEFINED ) { die("Illegal Access"); }
+  include("$libDir/templates/ticket_customBox.php");
 ?>

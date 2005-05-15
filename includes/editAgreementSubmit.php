@@ -4,7 +4,7 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
 
 
   // initiate default values
-     
+
   $change_time = time();  // set time ticket opened
   if( $dtime ) {
     $dtime = $zen->dateParse($dtime);
@@ -12,7 +12,7 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
   if( $stime ) {
      $stime = $zen->dateParse($stime);
   }
-  
+
   // $description = nl2br(htmlspecialchars($description));
 
   $fields = array(
@@ -50,12 +50,12 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
     if( !$res ) {
       $errs[] = tr("System Error").": ".tr("Contact could not be edited.")." ".$zen->db_error;
     } else {
-      
-      $agree_id = $id ;    
+
+      $agree_id = $id ;
       $fields = array(
 		      "agree_id"    => "int",
 		      );
-      
+
       $params = array();
       // create an array of existing fields
       foreach(array_keys($fields) as $f) {
@@ -67,15 +67,15 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
       if( !$res ) {
 	$errs[] = tr("System Error").": ".tr("Contact could not be edited.")." ".$zen->db_error;
       }
-      
+
     }
   }
 
   if( !$errs ) {
-  
-    include("../agreement.php");//test set contact(s)
+
+    include("$rootWWW/agreement.php");//test set contact(s)
     exit;
-    
+
   } else {
     $page_title = tr("Contacts");
     $page_section = "Contacts";

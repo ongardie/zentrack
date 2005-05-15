@@ -11,6 +11,55 @@ class zen extends zenDate {
    // it also extends the zenDate class to pull those
    // functions into use for the rest of zenTrack.
    
+  /**
+   * STATIC: safely check for equality of two values when type is unsure
+   *
+   * This method can accurately compare nulls, values which are not set,
+   * Objects and most other things accurately.
+   *
+   * @param mixed $val1
+   * @param mixed $val2
+   * @return boolean
+   */
+  function safeEquals( $val1, $val2 ) {
+    if( !isset($val1) xor !isset($val2) ) {
+      // if only one is set
+      return false;
+    }
+    else if( is_array($val1) && is_array($val2) ) {      
+      return Zen::arrayEquals($val1, $val2);
+    }
+    else if( $val1 != $val2 || strlen($val1) != strlen($val2) ) {
+      return false;
+    }
+    return true;
+  }
+   
+   
+  /**
+   * STATIC: Recursively checks values of two arrays for equality
+   *
+   * @param array $arr1
+   * @param array $arr2
+   * @return boolean
+   */
+  function arrayEquals( $arr1, $arr2 ) {
+    foreach( $arr1 as $key=>$val ) {
+      if( !isset($arr2[$key]) ) {
+        // don't try to test if arr2[key] isn't set or causes warnings
+        // so see if val isset
+        if( isset($val) ) {
+          return false;
+        }
+        continue;
+      }
+      if( !Zen::safeEquals($val, $arr2[$key]) ) {
+        return false;
+      }
+    }
+    return true;
+  }
+
    /*
    **  TEXT FORMATTING
    */
@@ -81,8 +130,7 @@ class zen extends zenDate {
    }
    
    function ffvText( $val = '', $strlen = 0 ) {
-     if( $strlen && strlen($val) > $strlen ) { $val = substr($val,0,$strlen); }
-     $val = $this->ffv($val);
+     $val = $this->ffv($val, $strlen);
      $val = nl2br($val);
      return $val;
    }
@@ -90,11 +138,20 @@ class zen extends zenDate {
    function ffv( $val = '', $strlen = 0 ) {
      // converts special characters to ascii codes
      // to be used in <input> fields
+     if( is_array($val) ) {
+       $vars = array();
+       foreach($val as $k=>$v) {
+         $vars[$k] = $this->ffv($v);
+       }
+       return $vars;
+     }
      if( strlen($val) ) {
        if( $strlen && strlen($val) > $strlen ) { $val = substr($val,0,$strlen); }
-       $val = htmlspecialchars($val,ENT_QUOTES,$this->settings["character_set"]);
-       $val = str_replace('\\', '&#92;', $val);
-       $val = str_replace('&amp;', '&', $val);
+       if( $val ) {
+         $val = htmlspecialchars($val,ENT_QUOTES,$this->settings["character_set"]);
+         $val = str_replace('\\', '&#92;', $val);
+         // $val = str_replace('&amp;', '&', $val);
+       }
      }
      return $val;
    }
@@ -713,7 +770,7 @@ class zen extends zenDate {
    * @return array an empty array if both values are null or empty
    */
    function mergeArrays($arr1, $arr2) {
-     if( is_array($arr1) && is_array($arr2) ) { return array_merge($arr1,$arr2); }
+     if( is_array($arr1) && is_array($arr2) ) { return $arr1 + $arr2; }
      else if( is_array($arr1) ) { return $arr1; }
      else if( is_array($arr2) ) { return $arr2; }
      else { return array(); }

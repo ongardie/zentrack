@@ -14,7 +14,6 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
   **  extracted before including this page.
   */
 ?>
- 
  <table width="640" cellspacing="1" cellpadding="2">
   <tr>
     <td width="80" valign="top"><? include("$templateDir/ticket_actionBar.php"); ?></td>

@@ -44,6 +44,9 @@
   if( in_array($basename,array_keys($zen->getActions())) ) {
     $action = $basename;
   }
+  else if( $basename == 'editcustomsubmit' ) {
+    $action = 'varfield_edit';
+  }
   else if( $basename == "editticketsubmit" || $basename == "editsubmit" ) {
     $action = "edit";
   }

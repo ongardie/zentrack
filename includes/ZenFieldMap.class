@@ -167,7 +167,7 @@ $ztf = array(
     "custom_date"     => array(   true,   array(1,7)            , 'date'   ,      null, false,  false,  true),
     "custom_menu"     => array(   true,   array(1,3,6)          , 'string' ,      null, false,  false,  true),
     "custom_text"     => array(  false,   array(1,2)            , 'text'   ,      null, false,  false,  true),
-    "hours"           => array(  false,   array(2)              , 'int'    ,      null, false,  false,  true),
+    "hours"           => array(  false,   array(2)              , 'float'  ,      null, false,  false,  true),
     "comments"        => array(  false,   array(2)              , 'text'   ,      null, false,  false,  true)
   ),
   
@@ -519,17 +519,17 @@ class ZenFieldMap {
   /**
    * Updates the database and the session with new field map values
    *
-   * @param array $newvals an array structured identical to getFieldMap() results
+   * @param array $updates an array structured identical to getFieldMap() results
    * @param array $newspacers array ( 'field_name' => array('field_label', 'is_visible', 'sort_order'), ... )
    * @param array $oldspacers array ( 'field_name'=>field_map_id, ... )
    * @return array(updates, attempts)
    */
-  function updateFieldMap( $view, $newvals, $newspacers = null, $oldspacers = null ) {
+  function updateFieldMap( $view, $updates, $newspacers = null, $oldspacers = null ) {
     $updateVals = array();
     $fullMap = $this->getFieldMap();
     foreach($fullMap[$view] as $k=>$v) {
-      if( $newvals[$k] && $newvals[$k] != $v ) {
-        $updateVals[] = $newvals[$k];
+      if( $updates[$k] && !Zen::arrayEquals($updates[$k], $v) ) {
+        $updateVals[] = $updates[$k];
       }
     }
     $i=0;
@@ -680,7 +680,8 @@ class ZenFieldMap {
     $this->_zen->addDebug('_getChoices', "Generated ".count($vals)." choices for {$view}->{$field_name}", 3);
     
     if( $view == 'search_form' && $field['num_rows'] == 1 ) {
-      $vals = array(''=>'-any-') + $vals ;
+      $vals = Zen::mergeArrays( array('' => '-any-'), $vals );
+      //$vals = array_merge(array(''=>'-any-'),$vals);
     }
     if( !isset($this->_fieldVals[$view]) ) { $this->_fieldVals[$view] = array(); }
     $this->_fieldVals[$view][$field_name] = $vals;

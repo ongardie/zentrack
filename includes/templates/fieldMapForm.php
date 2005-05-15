@@ -13,7 +13,7 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
    $str = "<a href='$rootUrl/help/find.php?s=admin&p=fieldmap'>".tr('Documentation')."</a>";
    print tr("Please refer to the ? before using this feature", array($str));
  ?></p>
- 
+
 <form method='post' action='<?=$SCRIPT_NAME?>' name='fieldMapForm'>
 <input type='hidden' name='TODO' value='save'>
 <input type='hidden' name='view' value='<?=$zen->ffv($view)?>'>
@@ -88,7 +88,7 @@ foreach($fields as $f=>$field) {
   // and get special properties for fields
   $fprops = getFmFieldProps($view, ZenFieldMap::fieldName($f));
   $tprops = $typeprops[$field['field_type']];
-  
+
   // generate row of information
   $s = $field['is_visible']? 'bold' : 'disabled';
   $class = $field['field_type'] == 'section'? "altBars $s" : "bars $s";
@@ -164,9 +164,11 @@ foreach($fields as $f=>$field) {
       //if( $f == 'custom_menu1' ) { Zen::printArray($choices); }
       if( is_array($choices) && count($choices) ) {
         $txt = "<select ".fmfName($f,'default_val').">";
-        $txt .= "<option value=''>--</option>";
+        if( $view != 'search_form' ) {
+          $txt .= "<option value=''>--</option>";
+        }
         foreach($choices as $k=>$v) {
-          $sel = $field['default_val'] == $k? " selected" : "";
+          $sel = $field['default_val'] == $k && strlen($field['default_val']) == strlen($k)? " selected" : "";
           $txt .= "<option value='$k'{$sel}>$v</option>";
         }
         $txt .= "</select>";
@@ -177,7 +179,7 @@ foreach($fields as $f=>$field) {
       }
     }
     fmfRow($txt,$class);
-    
+
     // field type, not useful for fields which only have label as type
     // or for sections
     if( count($fprops['types']) == 1 && $fprops['types'][0] == 'label' ) {
@@ -211,7 +213,7 @@ foreach($fields as $f=>$field) {
     }
     else { fmfRow('1',$class); }
   }
-  
+
   print "</tr>\n";
   $fcount++;
   $prevSection = $field['field_type'] == 'section';
@@ -294,7 +296,7 @@ function removeRow( obj ) {
 function moveRowUp( tdCell ) {
   var v1, v2;
   var thisRow = tdCell.parentNode;
-  quickHighlightRow( thisRow, 'subTitle' );  
+  quickHighlightRow( thisRow, 'subTitle' );
   var previousRow = thisRow.previousSibling;
   var parentNode = thisRow.parentNode;
   while( previousRow && previousRow.nodeName != "TR" ) {
@@ -317,7 +319,7 @@ function moveRowUp( tdCell ) {
   v1=parseFloat(document.fieldMapForm[ "orderset[" + thisRow.id + "]" ].value);
   v2=parseFloat(document.fieldMapForm[ "orderset[" + previousRow.id + "]" ].value);
   document.fieldMapForm[ "orderset[" + thisRow.id + "]" ].value=v2;
-  document.fieldMapForm[ "orderset[" + previousRow.id + "]" ].value=v1;  
+  document.fieldMapForm[ "orderset[" + previousRow.id + "]" ].value=v1;
 }
 
 function quickHighlightRow( parentObj, s ) {
@@ -334,14 +336,14 @@ function quickHighlightRow( parentObj, s ) {
       obj.setAttribute('class', obj.getAttribute('class') + ' ' + s);
       setTimeout("var x = document.getElementById('"+objName+"'); x.setAttribute('class', x.getAttribute('class').substr(0,x.getAttribute('class').indexOf(' "+s+"')));",500);
     }
-    
+
   }
 }
 
 function moveRowDown( tdCell ) {
   var v1, v2;
   var thisRow = tdCell.parentNode;
-  quickHighlightRow( thisRow, 'subTitle' );  
+  quickHighlightRow( thisRow, 'subTitle' );
   var nextRow = thisRow.nextSibling;
   var parentNode = thisRow.parentNode;
   //while( nextRow && nextRow.nodeName != "TR" ) {
@@ -363,29 +365,29 @@ function moveRowDown( tdCell ) {
     v2=parseFloat(document.fieldMapForm[ "orderset[" + nextRow.id + "]" ].value);
     document.fieldMapForm[ "orderset[" + thisRow.id + "]" ].value=v2;
     document.fieldMapForm[ "orderset[" + nextRow.id + "]" ].value=v1;
-  } 
-  parentNode.insertBefore(nextRow, thisRow);  
+  }
+  parentNode.insertBefore(nextRow, thisRow);
 }
 
 function toggleRowColor( checkBox ) {
     // navigate to the TR tag for this row
     var trTag = checkBox.parentNode.parentNode;
-    
+
     for(var i=0; i < trTag.childNodes.length; i++) {
       var obj = trTag.childNodes[i];
       if( obj.nodeName != "TD" ) { continue; }
       // perform the class switch
       if( obj.className ) {
         // determine what we are setting the style to based on checkbox
-        obj.className = checkBox.checked? 
+        obj.className = checkBox.checked?
           obj.className.substr(0, obj.className.indexOf(" ")) + " bold" :
           obj.className.substr(0, obj.className.indexOf(" ")) + " disabled";
       }
       else {
         // determine what we are setting the style to based on checkbox
         var oldStyle = obj.getAttribute('class');
-        obj.setAttribute('class', checkBox.checked? 
-          oldStyle.substr(0, oldStyle.indexOf(" "))+" bold" : 
+        obj.setAttribute('class', checkBox.checked?
+          oldStyle.substr(0, oldStyle.indexOf(" "))+" bold" :
           oldStyle.substr(0, oldStyle.indexOf(" "))+" disabled" );
       }
     }
@@ -405,7 +407,7 @@ function toggleRowColor( checkBox ) {
     }
     return true;
   }
-  
+
   function getNamePrefix( name ) {
     return name.substr(0, name.indexOf('['))
   }

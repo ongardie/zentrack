@@ -22,8 +22,7 @@
   $view = 'project_create';
   
   // initiate default values
-  $otime = date('Y-m-d h:i:s');  // set time ticket opened
-  $type_id = $zen->projectTypeID();
+  $otime = date('Y-m-d H:i:s');  // set time ticket opened
   include("$libDir/validateFields.php");
 
   if( !$errs ) {
@@ -33,6 +32,7 @@
         $params["$f"] = $$f;
       }
     }
+    $params['type_id'] = $zen->projectTypeID();
     $params["creator_id"] = $login_id;
     // add the ticket to db
     $id = $zen->add_ticket($params);

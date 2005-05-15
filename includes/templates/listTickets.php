@@ -161,13 +161,23 @@ function resortListPage( sortName ) {
           <input type="hidden" name="search_text" value="<?=$zen->ffv($search_text)?>">
           <?
            foreach($search_params as $k=>$v) {
-             print "<input type='hidden' name='search_params[$k]' value='".$zen->ffv($v)."'>\n";
+             if( is_array($v) ) {
+               foreach($v as $val) {
+                 print "<input type='hidden' name='search_params[$k][]' value='".$zen->ffv($val)."'>\n";
+               }
+             }
+             else {
+               print "<input type='hidden' name='search_params[$k]' value='".$zen->ffv($v)."'>\n";
+             }
            }
            foreach($search_dates as $k=>$v) {
              print "<input type='hidden' name='search_dates[$k]' value='".$zen->ffv($v)."'>\n";
            }
            foreach($search_fields as $k=>$v) {
              print "<input type='hidden' name='search_fields[$k]' value='".$zen->ffv($v)."'>\n";
+           }
+           if( $or_higher ) {
+             print "<input type='hidden' name='or_higher' value='1'>\n";
            }
            ?>
      </form>
@@ -176,13 +186,23 @@ function resortListPage( sortName ) {
           <input type="hidden" name="search_text" value="<?=$zen->ffv($search_text)?>">
           <?
            foreach($search_params as $k=>$v) {
-             print "<input type='hidden' name='search_params[$k]' value='".$zen->ffv($v)."'>\n";
+             if( is_array($v) ) {
+               foreach($v as $val) {
+                 print "<input type='hidden' name='search_params[$k][]' value='".$zen->ffv($val)."'>\n";
+               }
+             }
+             else {
+               print "<input type='hidden' name='search_params[$k]' value='".$zen->ffv($v)."'>\n";
+             }
            }
            foreach($search_dates as $k=>$v) {
              print "<input type='hidden' name='search_dates[$k]' value='".$zen->ffv($v)."'>\n";
            }
            foreach($search_fields as $k=>$v) {
              print "<input type='hidden' name='search_fields[$k]' value='".$zen->ffv($v)."'>\n";
+           }
+           if( $or_higher ) {
+             print "<input type='hidden' name='or_higher' value='1'>\n";
            }
          ?>
         </nobr>

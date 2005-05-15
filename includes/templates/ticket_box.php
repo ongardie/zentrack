@@ -55,6 +55,7 @@
 
   $vx = $zen->getCustomFields(1, $page_type, 'Custom');
   $counts = $zen->get_ticket_stats($id);
+    
   foreach( $tabs as $key=>$t ) {
     if( $key == 'custom' && (!$vx || !count($vx)) ) {
       // only display the custom tab if there are fields on it
@@ -76,17 +77,15 @@
     
     // Possible translations: (for the benefit of translation maintenance tools)
     // tr("Related"); tr("Notify"); tr("Tasks");
-    $txt = (isset($counts[$key]) && $counts[$key])?
-      $t." (".$counts["$key"].")" : $t;
+    $txt = (isset($counts[$key]) && $counts[$key])? $t." (".$counts["$key"].")" : $t;
     $w = ($key == "attachments")? 85 : 60;
-    print "<td class='$class' height='$height_num' width='$w'>";
-    print "<a href='$pageUrl?id=$id&setmode=$key' class='$lclass'>$txt</a></td>\n";
+    print "<td class='{$class}' height='{$height_num}' width='{$w}'>";
+    print "<a href='{$pageUrl}?id={$id}&setmode={$key}' class='{$lclass}'>{$txt}</a></td>\n";
     if( $i < count($tabs) ) {
-      print "<td width='3'><img src='$rootUrl/images/empty.gif' width='3' height='1'></td>\n";
+      print "<td width='3'><img src='{$rootUrl}/images/empty.gif' width='3' height='1'></td>\n";
     }
     $i++;
   }
-
   print "</tr></table>\n";
 
 ?></td>

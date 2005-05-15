@@ -13,6 +13,69 @@ abstraction, and endless possibilities for project expansion.
 
 ----- VERSION 2.5.6 (development) -----
 
+----- VERSION 2.5.5.2 (2005-05-15) -----
+
+2005-05-14, kato
+  Corrected issue with project ids being entered into db as null (causing
+  projects not to appear in project list after creating)
+    - zentrack_2/www/addProjectSubmit.php 1.21
+    
+  Fixed search parameter issues: bins being lost during sorting, modify search,
+  etc
+    - zentrack_2/includes/zen.class 1.38
+    - zentrack_2/includes/ZenFieldMap.class 1.18
+    - zentrack_2/includes/templates/searchResults 1.14
+    - zentrack_2/includes/templates/listTickets 1.27
+
+2005-05-13, kato
+  Improved field map defaults (on admin screen) and search_form handling
+    - zentrack_2/includes/zen.class 1.38
+    - zentrack_2/includes/ZenFieldMap.class 1.18
+    - zentrack_2/includes/ZenSessionManager.class 1.4
+    - zentrack_2/includes/ZenTemplate.class 1.10
+    - zentrack_2/includes/zenTrack.class 1.184
+    - zentrack_2/includes/templates/fieldMapForm.php 1.11
+    - zentrack_2/includes/templates/searchForm.php 1.16
+    - zentrack_2/www/admin/fieldMap.php 1.8
+
+  Completed auto-login feature
+    - zentrack_2/includes/login.php 1.28
+    - zentrack_2/includes/zenTrack.class 1.184
+
+2005-05-12, kato
+  Tested SQL Server 2000 compatability
+  Tested PHP 5 compatability
+    - zentrack_2/includes/db.class 1.42
+    
+  Fixed "Unsupported operand types" error
+    - zentrack_2/includes/ZenFieldMap.class 1.18
+    
+  Improved escaping for text areas
+    - zentrack_2/includes/zen.class 1.38
+    - zentrack_2/includes/templates/ticket_logBox.php 1.18
+    - zentrack_2/www/actions/log.php 1.9
+    
+  Fixed problem with saving custom field tab
+    - zentrack_2/www/actions/action_header.php 1.15
+    - zentrack_2/www/actions/editCustomSubmit.php 1.8
+
+2005-05-11, kato
+  Fixed date formatting bug in project create page
+    - zentrack_2/www/addProjectSubmit.php 1.20
+
+  Fixed bug in hours field (for log) which causes decimals to be dropped.
+    - zentrack_2/includes/ZenFieldMap.class 1.18
+
+2005-05-10, kato
+  Fixed bug preventing behaviors from working in project create/edit screens
+    - zentrack_2/www/newProject.php 1.11
+  
+  Added ability to auto-login users through options menu
+    - zentrack_2/includes/login.php 1.28
+    - zentrack_2/includes/zenTrack.class 1.184
+    - zentrack_2/includes/templates/optionsMenu.php 1.7
+    - zentrack_2/www/misc/autologin.php 1.1
+
 2005-05-08, kato
   Improved date processing for field map generated fields
     - zentrack_2/includes/ZenFieldMap.class 1.17

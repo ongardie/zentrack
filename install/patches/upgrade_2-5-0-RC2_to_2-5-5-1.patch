@@ -2743,8 +2743,8 @@ diff -Naur zentrack_2-5-0-RC2/includes/adodb/adodb-xmlschema.inc.php zentrack_2-
   *
   * Last Editor: $Author: phpzen $
   * @author Richard Tango-Lowy & Dan Cech
-- * @version $Revision: 1.2 $
-+ * @version $Revision: 1.2 $
+- * @version $Revision: 1.3 $
++ * @version $Revision: 1.3 $
   *
   * @package axmls
   * @tutorial getting_started.pkg
@@ -2752,8 +2752,8 @@ diff -Naur zentrack_2-5-0-RC2/includes/adodb/adodb-xmlschema.inc.php zentrack_2-
  * @tutorial getting_started.pkg
  *
  * @author Richard Tango-Lowy & Dan Cech
--* @version $Revision: 1.2 $
-+* @version $Revision: 1.2 $
+-* @version $Revision: 1.3 $
++* @version $Revision: 1.3 $
  *
  * @package axmls
  */
@@ -10771,7 +10771,7 @@ diff -Naur zentrack_2-5-0-RC2/includes/adodb/tohtml.inc.php zentrack_2-5-5-1/inc
    the BSD license will take precedence.
 diff -Naur zentrack_2-5-0-RC2/includes/configVars.php zentrack_2-5-5-1/includes/configVars.php
 --- zentrack_2-5-0-RC2/includes/configVars.php	2005-05-08 13:03:19.867811200 -0700
-+++ zentrack_2-5-5-1/includes/configVars.php	2005-05-08 13:58:09.548139200 -0700
++++ zentrack_2-5-5-1/includes/configVars.php	2005-05-08 14:18:52.164934400 -0700
 @@ -1,5 +1,6 @@
  <?{
 -
@@ -11113,8 +11113,8 @@ diff -Naur zentrack_2-5-0-RC2/includes/editCustomSubmit.php zentrack_2-5-5-1/inc
 +?>
 diff -Naur zentrack_2-5-0-RC2/includes/editTicketSubmit.php zentrack_2-5-5-1/includes/editTicketSubmit.php
 --- zentrack_2-5-0-RC2/includes/editTicketSubmit.php	2004-09-08 01:22:37.000000000 -0700
-+++ zentrack_2-5-5-1/includes/editTicketSubmit.php	2005-05-08 07:41:02.000000000 -0700
-@@ -1,12 +1,13 @@
++++ zentrack_2-5-5-1/includes/editTicketSubmit.php	2005-05-08 14:14:53.000000000 -0700
+@@ -1,61 +1,28 @@
  <?
 -
 +  if( !ZT_DEFINED ) { die("Illegal Access"); }
@@ -11130,7 +11130,13 @@ diff -Naur zentrack_2-5-0-RC2/includes/editTicketSubmit.php zentrack_2-5-5-1/inc
    $expand_admin = 1;
  
    // initiate default values
-@@ -20,42 +21,14 @@
+-  if( $deadline ) {
+-     $deadline = $zen->dateParse($deadline);
+-  }
+-  if( $start_date ) {
+-     $start_date = $zen->dateParse($start_date);
+-  } 
+   if( !$tested )
       $tested = 0;
    if( !$approved )
       $approved = 0;
@@ -11177,7 +11183,7 @@ diff -Naur zentrack_2-5-0-RC2/includes/editTicketSubmit.php zentrack_2-5-5-1/inc
    if( !$errs ) {
       $params = array();
       // create an array of existing fields
-@@ -63,30 +36,15 @@
+@@ -63,30 +30,15 @@
         $params["$f"] = $$f;
       }
       // update the ticket info
@@ -11213,7 +11219,7 @@ diff -Naur zentrack_2-5-0-RC2/includes/editTicketSubmit.php zentrack_2-5-5-1/inc
         }
       }
    }
-@@ -107,11 +65,12 @@
+@@ -107,11 +59,12 @@
      $zen->print_errors($errs);
      $TODO = 'EDIT';
      if( $is_project ) {
@@ -11232,7 +11238,7 @@ diff -Naur zentrack_2-5-0-RC2/includes/editTicketSubmit.php zentrack_2-5-5-1/inc
  ?>
 diff -Naur zentrack_2-5-0-RC2/includes/egate_config.php zentrack_2-5-5-1/includes/egate_config.php
 --- zentrack_2-5-0-RC2/includes/egate_config.php	2005-05-08 13:03:19.917883200 -0700
-+++ zentrack_2-5-5-1/includes/egate_config.php	2005-05-08 13:58:09.608225600 -0700
++++ zentrack_2-5-5-1/includes/egate_config.php	2005-05-08 14:18:52.225020800 -0700
 @@ -1,4 +1,5 @@
  <?
 +if( !ZT_DEFINED ) { die("Illegal Access"); }
@@ -12268,8 +12274,8 @@ diff -Naur zentrack_2-5-0-RC2/includes/smtp.class zentrack_2-5-5-1/includes/smtp
    * the function send() - unless you are really sure what you are doing!     *
    \**************************************************************************/
  
--  /* $Id: upgrade_2-5-0-RC2_to_2-5-5-1.patch,v 1.2 2005/05/08 21:14:54 phpzen Exp $ */
-+  /* $Id: upgrade_2-5-0-RC2_to_2-5-5-1.patch,v 1.2 2005/05/08 21:14:54 phpzen Exp $ */
+-  /* $Id: upgrade_2-5-0-RC2_to_2-5-5-1.patch,v 1.3 2005/05/15 23:44:32 phpzen Exp $ */
++  /* $Id: upgrade_2-5-0-RC2_to_2-5-5-1.patch,v 1.3 2005/05/15 23:44:32 phpzen Exp $ */
  
  # echo "<!-- *** " . basename(__FILE__) . " starts here. *** -->\n";
  
@@ -27043,7 +27049,7 @@ diff -Naur zentrack_2-5-0-RC2/includes/translator.class zentrack_2-5-5-1/include
           //check for file
 diff -Naur zentrack_2-5-0-RC2/includes/validateFields.php zentrack_2-5-5-1/includes/validateFields.php
 --- zentrack_2-5-0-RC2/includes/validateFields.php	1969-12-31 16:00:00.000000000 -0800
-+++ zentrack_2-5-5-1/includes/validateFields.php	2005-05-08 07:41:02.000000000 -0700
++++ zentrack_2-5-5-1/includes/validateFields.php	2005-05-08 14:14:53.000000000 -0700
 @@ -0,0 +1,55 @@
 +<?{
 +  
@@ -27071,7 +27077,7 @@ diff -Naur zentrack_2-5-0-RC2/includes/validateFields.php zentrack_2-5-5-1/inclu
 +    // don't include sections
 +    if( $field['field_type'] == 'section' ) { continue; }
 +    // parse dates
-+    if( $fprops["$f"]['data_type'] == 'date' ) {
++    if( $fprops["$f"]['data_type'] == 'date' && strlen($$f) ) {
 +      $$f = $zen->dateParse($$f);
 +    }
 +    //if( !$field['is_visible'] ) { continue; }
@@ -30173,8 +30179,8 @@ diff -Naur zentrack_2-5-0-RC2/www/addProjectSubmit.php zentrack_2-5-5-1/www/addP
 +?>
 diff -Naur zentrack_2-5-0-RC2/www/addSubmit.php zentrack_2-5-5-1/www/addSubmit.php
 --- zentrack_2-5-0-RC2/www/addSubmit.php	2004-09-08 01:22:42.000000000 -0700
-+++ zentrack_2-5-5-1/www/addSubmit.php	2005-05-01 23:59:39.000000000 -0700
-@@ -10,14 +10,17 @@
++++ zentrack_2-5-5-1/www/addSubmit.php	2005-05-08 14:15:03.000000000 -0700
+@@ -10,72 +10,23 @@
    include_once("./header.php");
    
    if( !$zen->checkAccess($login_id,$bin_id,"create") ) {
@@ -30194,10 +30200,14 @@ diff -Naur zentrack_2-5-0-RC2/www/addSubmit.php zentrack_2-5-5-1/www/addSubmit.p
    $expand_tickets = 1;
    
    // initiate default values
-@@ -29,53 +32,9 @@
-     $start_date = $zen->dateParse($start_date);
-   }
-   
+-  $otime = time();  // set time ticket opened
+-  if( $deadline ) {
+-    $deadline = $zen->dateParse($deadline);
+-  }
+-  if( $start_date ) {
+-    $start_date = $zen->dateParse($start_date);
+-  }
+-  
 -  $description = htmlspecialchars($description);
 -  
 -  $fields = array(
@@ -30245,13 +30255,13 @@ diff -Naur zentrack_2-5-0-RC2/www/addSubmit.php zentrack_2-5-5-1/www/addSubmit.p
 -      include("$libDir/parseVarfields.php");
 -    }
 -  }
-+  $description = $zen->ffv($description);
++  $otime = date('Y-m-d h:i:s');  // set time ticket opened
 +
 +  include("$libDir/validateFields.php");
    
    if( !$errs ) {
      // create an array of existing fields
-@@ -91,10 +50,10 @@
+@@ -91,10 +42,10 @@
      $id = $zen->add_ticket($params);
      
      // update the variable field entries for this ticket
@@ -30264,7 +30274,7 @@ diff -Naur zentrack_2-5-0-RC2/www/addSubmit.php zentrack_2-5-5-1/www/addSubmit.p
        }      
      }
      
-@@ -116,7 +75,8 @@
+@@ -116,7 +67,8 @@
      $onLoad[] = "behavior_js.php?formset=ticketForm";
      include("$libDir/nav.php");
      $zen->print_errors($errs);
@@ -32065,7 +32075,7 @@ diff -Naur zentrack_2-5-0-RC2/www/exportSearch.php zentrack_2-5-5-1/www/exportSe
 \ No newline at end of file
 diff -Naur zentrack_2-5-0-RC2/www/header.php zentrack_2-5-5-1/www/header.php
 --- zentrack_2-5-0-RC2/www/header.php	2005-05-08 13:03:19.897854400 -0700
-+++ zentrack_2-5-5-1/www/header.php	2005-05-08 13:58:09.578182400 -0700
++++ zentrack_2-5-5-1/www/header.php	2005-05-08 14:18:52.194977600 -0700
 @@ -7,18 +7,17 @@
    /* DO NOT PUT ANYTHING, INCLUDING SPACES, OUTSIDE OF THE <? ?> marks */
  

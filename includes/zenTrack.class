@@ -3162,33 +3162,63 @@ class zenTrack extends zen {
     return( $this->db_result($query) );
   }
 
+  /**
+   * Returns preferences for a user
+   *
+   * @param int $user_id the user to retrieve
+   * @param string $pref if provided, only the value of this preference is returned, otherwise an array is returned
+   * @return mixed a (string)value if $pref is specified, otherwise an array of all prefs for user
+   */
   function get_prefs( $user_id, $pref = '' ) {
     // try to retrieve from session
     $prefSet = $this->_session->getDataType('prefs');
-    if( isset($prefSet) && isset($prefSet["U$user_id"]) ) { return $prefSet["U$user_id"]; }
+    if( isset($prefSet) && isset($prefSet["U$user_id"]) ) { 
+      if( $pref ) {
+        return array_key_exists($pref, $prefSet["U$user_id"])?
+          $prefSet["U$user_id"][$pref] : null;
+      }
+      else { return $prefSet["U$user_id"]; } 
+    }
     if( !isset($prefSet) ) { $prefSet = array(); }
     
     // retrieve from database
     $user_id = $this->checkNum($user_id);
-    $query = "SELECT * FROM ".$this->table_preferences
+    $query = "SELECT prefname,prefval FROM ".$this->table_preferences
       ." WHERE user_id = $user_id";
-    if( $pref ) {
-      $query .= " AND prefname = '$prefname'";
-    }
-    $vals = array();
-    $vars = $this->db_queryIndexed($query);
-    if( is_array($vars) ) {
-      foreach($vars as $v) {
-        $n = $v["prefname"];
-        $vals["$n"] = $v["prefval"];
-      }
-    }
+    $vals = $this->db_listIndexed($query);
     
     // store in session
     $prefSet["U$user_id"] = $vals;
     $this->_session->storeDataType("prefs",$prefSet);
     
-    return $vals;
+    if( $pref ) {
+      return array_key_exists($pref, $vals)?
+        $vals[$pref] : null;
+    }
+    else { return $vals; } 
+  }
+  
+  /**
+   * Update (or add) a single preference in the database
+   *
+   * @param int $user_id
+   * @param string $pref (can only contain [a-zA-Z_ -])
+   * @param string $value the value to be inserted, null or "" should work fine
+   */
+  function update_pref( $user_id, $pref, $value ) {
+    $this->delete_prefs($user_id,$prefname);
+    $this->_session->clearDataType('prefs');
+    $vals = array(
+      'user_id'  => $this->checkNum($user_id),
+      'prefname' => $this->checkAlphaNum($pref, '_ -'),
+      'prefval'  => $value
+    );
+    list($cols,$vals) = $this->makeInsertVals($vals);
+    $query = "INSERT INTO ".$this->table_preferences
+      ." ($cols) VALUES($vals)";
+    $res = $this->db_result($query);
+    $this->addDebug('update_pref', "[$res]".$query, 3);
+    return $res;
   }
 
   function update_prefs( $user_id, $params, $prefname = '' ) {
@@ -3205,7 +3235,7 @@ class zenTrack extends zen {
     foreach($params as $p) {
       $vars = array("user_id"=>$user_id);
       foreach($p as $k=>$v) {
-        $vars["prefname"] = $k;
+        $vars["prefname"] = $this->checkAlphaNum($k,'_ -');
         $vars["prefval"] = strlen($v)? $v : "NULL";
       }
       list($cols,$vals) = $this->makeInsertVals($vars);
@@ -3225,6 +3255,7 @@ class zenTrack extends zen {
     // deletes prefs entries by user_id
     // user_id can be an array      
     $user_id = $this->checkNum($user_id);
+    $prefname = $this->checkAlphaNum($prefname, '_ -');
     $query = "DELETE FROM ".$this->table_preferences." WHERE user_id = $user_id";
     if( $prefname ) {
       $query .= " AND prefname = '$prefname'";
@@ -3366,12 +3397,13 @@ class zenTrack extends zen {
    */
 
 
-  function login_user( $username, $passphrase ) {
+  function login_user( $username, $passphrase, $from_cookie = false ) {
     // perform a login check for username and passphrase
     // returns the user's user_id
     $username = $this->checkAlphaNum($username);
+    $pass = $from_cookie? $this->checkSlashes($passphrase) : $this->checkSlashes($this->encval($passphrase));
     $query = "select user_id from ".$this->table_users
-      ." where login = '$username' and passphrase = '".$this->encval($passphrase)."' and active > 0";
+      ." where login = '$username' and passphrase = $pass and active > 0";
     $user_id = $this->db_get($query);
     $this->addDebug("zentrack.class:login_user($user_id)",$query,2);
     if( $user_id )
@@ -4606,14 +4638,6 @@ class zenTrack extends zen {
                                "egate"    => 1,
                                "level"    => $this->settings["level_view"]
                                );
-      $actions["edit"] = array(
-                               "owner"    => 0,
-                               "access"   => 1,
-                               "status"   => array('OPEN','PENDING'),
-                               "override" => 0,
-                               "egate"    => 0,
-                               "level"    => $this->settings["level_edit"]
-                               );
       $actions["varfield_edit"] = array(
                                         "owner"    => 1,
                                         "access"   => 1, 
@@ -5044,6 +5068,10 @@ class zenTrack extends zen {
     
     return($vals);
   }
+  
+  function settingOn( $setting_name ) {
+    return array_key_exists($setting_name, $this->settings) && $this->settings["$setting_name"] == "on";
+  }
 
   function getTypeName($id) {
     // retrieves the name of the type
@@ -5226,7 +5254,7 @@ class zenTrack extends zen {
     // prevent multiple queries)
     // if $language is given, it will override the value
     // from the configVars file
-
+    
     include("$file");
 
     $this->zen();

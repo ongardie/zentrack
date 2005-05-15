@@ -104,7 +104,7 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
   function clearDataType( $type ) {
     if( isset($_SESSION) ) {
       if( isset($_SESSION['ztDataTypes']) ) {
-        $this->_zen->addDebug("clearDataType", "$type: cleared");
+        $this->_zen->addDebug("clearDataType", "$type: cleared",3);
         unset($_SESSION['ztDataTypes'][$type]);
       }
     }

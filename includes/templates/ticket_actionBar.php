@@ -46,8 +46,7 @@
       print "<input type='hidden' name='setmode' value='$a'>\n";
       print "</td>\n</form>\n</tr>\n";
     }
-  }
-  
+  }  
 }?>
 </table>
 

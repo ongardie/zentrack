@@ -12,21 +12,21 @@
   
   if( $actionComplete == 1 ) {
     $input = array(
-		   "id"       => "int",
-		   "comments" => "html",
-		   "hours"    => "num",
-		   "log_action"   => "text"
-		   );
+    "id"       => "int",
+    "comments" => "text",
+    "hours"    => "num",
+    "log_action"   => "text"
+    );
     $zen->cleanInput($input);
     $required = array("id","action");
     foreach($required as $r) {
       if( !$$r ) {
-	$errs[] = tr(" ? is required", array($r));
+        $errs[] = tr(" ? is required", array($r));
       }
     }     
     if( $log_action == 'LABOR' ) {
       if( !$hours )
-	$errs[] = tr("Hours must be entered if the activity is 'LABOR'");
+      $errs[] = tr("Hours must be entered if the activity is 'LABOR'");
     } else if( !$comments ) {
       $errs[] = tr("No comments were entered.");
     }
@@ -35,17 +35,17 @@
     if( !$errs ) {
       $res = $zen->log_ticket($id, $login_id, $log_action, $hours, $comments);
       if( $res ) {
-	add_system_messages(tr("Activity has been logged."));
-	$setmode = "log";
-	include("../ticket.php");
-	exit;
-	//header("Location:$rootUrl/ticket.php?id=$id&setmode=log");
+        add_system_messages(tr("Activity has been logged."));
+        $setmode = "log";
+        include("../ticket.php");
+        exit;
+        //header("Location:$rootUrl/ticket.php?id=$id&setmode=log");
       } else {
-	$errs[] = tr("System error: Activity could not be logged.").$zen->db_error;
+        $errs[] = tr("System error: Activity could not be logged.").$zen->db_error;
       }
     }
     if( $errs )
-      add_system_messages( $errs, 'Error' );     
+    add_system_messages( $errs, 'Error' );     
   }
   
   include("$libDir/nav.php");
@@ -64,5 +64,5 @@
   }
   
   include("$libDir/footer.php");
-
+  
 }?>

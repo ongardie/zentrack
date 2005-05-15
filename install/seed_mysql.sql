@@ -381,7 +381,7 @@ INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (66,
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (67,'system_name','zenTrack','Name of the zenTrack ticketing system displayed to users');
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (68,'url_view_attachment','viewAttachment.php','Link to script which displays attachments in a secure manner (for server integrity), no leading slash');
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (70,'url_view_ticket','ticket.php','Link to script which displays ticket information, no leading slash');
-INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (71,'allow_pwd_save','off','Allows user to save passphrase (not implemented yet)');
+INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (71,'allow_pwd_save','off','Allow user to log in automatically (saves password in a cookie, do not use if password security is a concern)');
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (72,'check_pwd_simple','on','System will refuse lazy passwords');
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (73,'level_reports','1','Level required to access and view reports');
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (74,'version_xx','2.5.5.1','The version of zentrack, this cannot be edited');
@@ -509,7 +509,6 @@ INSERT INTO ZENTRACK_VARFIELD_IDX (field_name,       field_label,       sort_ord
 INSERT INTO ZENTRACK_VARFIELD_IDX (field_name,       field_label,       sort_order) 
                            VALUES ('custom_text1', 'Custom Text 1', 1         );
 
-
-
 /* CREATE AN ENTRY FOR EACH EXISTING TICKET IN THE VARFIELDS TABLE */
 INSERT INTO ZENTRACK_VARFIELD (ticket_id) SELECT id FROM ZENTRACK_TICKETS;
+

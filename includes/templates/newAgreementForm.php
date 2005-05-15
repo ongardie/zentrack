@@ -9,9 +9,9 @@
           elem.checked = elem.checked? false : true;
         }
       }
-      if( elem.parentNode ) { 
-        elem.parentNode.parentNode.oldStyle = elem.checked? 'invalidCell' : 'cell'; 
-      }    
+      if( elem.parentNode ) {
+        elem.parentNode.parentNode.oldStyle = elem.checked? 'invalidCell' : 'cell';
+      }
     }
   }
 </script>
@@ -21,28 +21,28 @@
 <input type='hidden' name='TODO' value='submit_form'>
 <?
 if(isset($creator_id)) { ?>
-<input type="hidden" name="creator_id" value="<?=$zen->ffv($creator_id)?>">	
+<input type="hidden" name="creator_id" value="<?=$zen->ffv($creator_id)?>">
 <?
 }
 if(isset($create_time)) { ?>
-<input type="hidden" name="create_time" value="<?=$zen->ffv($create_time)?>">	
+<input type="hidden" name="create_time" value="<?=$zen->ffv($create_time)?>">
 <?
 }
 ?>
-  
+
 <table width="640" align="left" cellpadding="2" cellspacing="2" bgcolor="<?=$zen->settings["color_background"]?>" border="0">
 <tr>
   <td colspan="2" width="640" class="titleCell" align="center">
      <?=tr("Agreement Information")?>
   </td>
 </tr>
-  
+
 <tr>
   <td colspan="2" class="subTitle">
     <?=tr("Global")?>
   </td>
 </tr>
-  
+
 
 <tr>
   <td class="bars" >
@@ -52,7 +52,7 @@ if(isset($create_time)) { ?>
     <input type="text" name="contractnr" size="20" maxlength="25"
       value="<?=$zen->ffv($contractnr)?>">
   </td>
-</tr>  
+</tr>
 <?
 $company = $zen->get_contact_all();
 	if (is_array($company)) {
@@ -75,8 +75,8 @@ $company = $zen->get_contact_all();
 	</td>
 	</tr>
 	<?
-	}   
- ?>   
+	}
+ ?>
 <tr>
   <td class="bars" >
     <?=tr("Title")?>:
@@ -85,7 +85,7 @@ $company = $zen->get_contact_all();
     <input type="text" name="title" size="30" maxlength="50"
 value="<?=$zen->ffv($title)?>">
   </td>
-</tr>          
+</tr>
 
 <tr>
   <td class="bars" >
@@ -94,7 +94,7 @@ value="<?=$zen->ffv($title)?>">
   <td class="bars">
     <input type="text" name="stime" size="12" maxlength="10"
 value="<?=($stime)?$zen->showDate($zen->ffv($stime)):""?>">
-    <img name="date_button" src='<?=$rootUrl?>/images/cal.gif' 
+    <img name="date_button" src='<?=$rootUrl?>/images/cal.gif'
   onClick="popUpCalendar(this,document.agreementForm.stime, '<?=$zen->popupDateFormat()?>')"
   alt="Select a Date">
     &nbsp;(<?=tr("optional")?>)
@@ -108,7 +108,7 @@ value="<?=($stime)?$zen->showDate($zen->ffv($stime)):""?>">
   <td class="bars">
     <input type="text" name="dtime" size="12" maxlength="10"
 value="<?=($dtime)?$zen->showDate($dtime):""?>">
-    <img name="date_button" src='<?=$rootUrl?>/images/cal.gif' 
+    <img name="date_button" src='<?=$rootUrl?>/images/cal.gif'
       onClick="popUpCalendar(this,document.agreementForm.dtime, '<?=$zen->popupDateFormat()?>')"
       alt="Select a Date">
     &nbsp;(<?=tr("optional")?>)
@@ -119,17 +119,17 @@ value="<?=($dtime)?$zen->showDate($dtime):""?>">
     <?=tr("Description")?>:
   </td>
 </tr>
-  
+
 <tr>
   <td colspan="2" class="bars">
-    <textarea cols="60" rows="5" name="description"><?= 
+    <textarea cols="60" rows="5" name="description"><?=
 	    $zen->ffv($description)
     ?></textarea>
   </td>
 </tr>
 
 
-	     
+
 <tr>
   <td class="titleCell" colspan="2" align="center">
   <?=tr("Click button to")?> <?=($td)? tr("save your changes"):tr("create your agreement")?>.
@@ -158,17 +158,17 @@ value="<?=($dtime)?$zen->showDate($dtime):""?>">
 	  $parms = array(1 => array(1 => "agree_id", 2 => "=", 3 => $id)
 		);
   }
-  
+
 	$sort = "item_id asc";
 	$contacts = $zen->get_contacts($parms,"ZENTRACK_AGREEMENT_ITEM",$sort);
 
   if (is_array($contacts)) {
-	 //print_r($contacts); 
-	
+	 //print_r($contacts);
+
 	 foreach($contacts as $t) {
       ?>
    <tr class='cell'
-       onmouseover='mClassX(this, "altCellInv", "hand")' 
+       onmouseover='mClassX(this, "altCellInv", "hand")'
        onmouseout='mClassX(this)'
        onclick='checkMyBox("drops_<?=$t['item_id']?>", event)'>
    <td height="25" width="20" valign="middle">
@@ -180,28 +180,28 @@ value="<?=($dtime)?$zen->showDate($dtime):""?>">
    <td height="25"  width="400" valign="middle">
    <pre><?=$zen->ffv($t["description1"])?></pre>
    </td>
-   <td><input id='drops_<?=$t['item_id']?>' 
-          type='checkbox' name='drops[]' 
-          value='<?=$t['item_id']?>'></td>
-   </tr>   
-   <?   
+   <td><input id='drops_<?=$t['item_id']?>'
+          type='checkbox' name='drops[]'
+          value='<?=$zen->ffv($t['item_id'])?>'></td>
+   </tr>
+   <?
    } ?>
    <tr>
 	<td colspan="2">
-         <input type="submit" 
-	  value=" <?=tr("Drop Items")?> " 
+         <input type="submit"
+	  value=" <?=tr("Drop Items")?> "
           class="actionButton"
           onClick='return rerouteAgreementForm("removeItems")'
-         > 
+         >
 	</td>
 	</tr>
 	<?
   } else {
 	 echo "No items are set" ;
   }
-  
+
   ?>
- 
+
    </table>
   </td>
 </tr>
@@ -214,16 +214,16 @@ value="<?=($dtime)?$zen->showDate($dtime):""?>">
 <tr>
 <td class="bars" colspan="2">
 	<?=tr("Name")?>:
-    <input type="text" name="name1" size="30" maxlength="40" value="<?=strip_tags($name1)?>">
+    <input type="text" name="name1" size="30" maxlength="40" value="<?=$zen->ffv($name1)?>">
 
 	<?=tr("Description")?>:
-    <textarea cols="22" rows="2" name="description1"><?=stripslashes($description1)?></textarea>
+    <textarea cols="22" rows="2" name="description1"><?=$zen->ffv($description1)?></textarea>
 
 	</td>
 </tr>
 <tr>
 <td>
-<input type="submit" value=" <?=tr("Add Item")?> " 
+<input type="submit" value=" <?=tr("Add Item")?> "
    onClick='return rerouteAgreementForm("addItems")'
    class="actionButton">
 </td>

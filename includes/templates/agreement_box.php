@@ -2,57 +2,58 @@
 if( !ZT_DEFINED ) { die("Illegal Access"); }
 
 
-/* 
+/*
 *Show the contacts that are connected to a company
 */
 //echo($company_id);
 if ($company_id>"0") {
-$company = $zen->get_contact($company_id,"ZENTRACK_COMPANY","company_id");	
+$company = $zen->get_contact($company_id,"ZENTRACK_COMPANY","company_id");
 }
 
 if (is_array($company)) {
 
-$name ="<A HREF='".$rootUrl."/contact.php?cid=".$company['company_id']."'>".ucfirst($company["title"])." ".ucfirst($company["office"])."</A>";	
+$name ="<A HREF='".$rootUrl."/contact.php?cid=".$company['company_id']."'>".ucfirst($company["title"])." ".ucfirst($company["office"])."</A>";
 }
 
 ?>
    <table cellpadding="0" cellspacing="0" border="0">
   <tr>
    <td class="ticketCell">
-   <table align="center" width='570' border="0">     
+   <table align="center" width='570' border="0">
      <tr>
        <td valign="top"><table border="0"
           width="430" cellpadding="0" cellspacing="1">
-          
+
     <tr>
-	   <td class="titleCell" colspan="4"><p align="center"><?=$contractnr?></p></td>  
+	   <td class="titleCell" colspan="4"><p align="center"><?=$contractnr?></p></td>
 	  </tr>
 	  <tr>
 	   <td class="smallTitleCell" colspan="2" ><?=uptr("Info")?></td>
 	   <td class="smallTitleCell"  colspan="2" width="50%"><?=uptr("Dates")?></td>
 	  </tr>
 	  <tr>
-	   <td class="small" width="20%" colspan="2"><p align="center"><?=$title?></p></td> 
-	   <td class="small" width="20%"><?=tr("Start Date")?>:</td> 	   
+     <td class="small" width="20%"><?=tr("Title")?>:</td>
+	   <td class="small" width="30%"><?=$title?></td>
+	   <td class="small" width="20%"><?=tr("Start Date")?>:</td>
 	   <td class="small" width="30%"><?if($stime){echo $zen->showDate($stime);}?></td>
 	  </tr>
 	  <tr>
-	   <td class="small" width="20%"><?=tr("Company")?>:</td> 
-	   <td class="small" width="30%"><?=$name?></td>  
-	   <td class="small" width="20%"><?=tr("Expiration Date")?>:</td>  
+	   <td class="small" width="20%"><?=tr("Company")?>:</td>
+	   <td class="small" width="30%"><?=$name?></td>
+	   <td class="small" width="20%"><?=tr("Expiration Date")?>:</td>
 	   <td class="small" width="30%"><?if($dtime){echo $zen->showDate($dtime);}?></td>
 	  </tr>
 	  <tr>
-	   <td class="small" width="20%"></td> 
-	   <td class="small" width="30%"></td> 
-	   <td class="small" width="20%"></td> 
-	   <td class="small" width="30%"></td> 
+	   <td class="small" width="20%"></td>
+	   <td class="small" width="30%"></td>
+	   <td class="small" width="20%"></td>
+	   <td class="small" width="30%"></td>
 	  </tr>
 <?
  if(!empty($description)) {
-?>	  
+?>
 	  <tr>
-	   <td class="smallTitleCell" colspan="4"><?=uptr("Description")?></td>  
+	   <td class="smallTitleCell" colspan="4"><?=uptr("Description")?></td>
 	  </tr>
 	  <tr>
 	   <td class="small" colspan="4"><?=(get_magic_quotes_runtime())?nl2br(stripslashes($description)):nl2br($description); ?></td>
@@ -67,13 +68,13 @@ $sort = "item_id asc";
 $items = $zen->get_contacts($parms,"ZENTRACK_AGREEMENT_ITEM",$sort);
 ?>
 <tr>
-	   <td class="smallTitleCell" colspan="4"><?=uptr("Items")?></td> 
+	   <td class="smallTitleCell" colspan="4"><?=uptr("Items")?></td>
 </tr>
-<tr><td colspan="4"> 
+<tr><td colspan="4">
 <table>
 <?
 if (is_array($items)) {
-  
+
   $class = '';
   foreach($items as $t) {
     $class = $class == 'bars'? 'cell' : 'bars';
@@ -86,23 +87,23 @@ if (is_array($items)) {
     <td height="25" width="50%" align="middle" >
     <?=strtolower($t["description1"])?>
     </td>
-    </tr>   
-    <?   
-  } 
-  
+    </tr>
+    <?
+  }
+
 } else {
   echo "<tr><td colspan='4'>No items are set</td></tr>" ;
 }?>
 </table>
-</td</tr>  	
+</td</tr>
 
 <?//end items
 ?>
 	 </table>
-	 
+
 	 </td>
    <td valign="top" width='75'>
-       
+
 <table width="120" cellpadding="0" cellspacing="0" border="0">
 <?
 print "<tr>\n<form name='edit_form' action='$rootUrl/actions/agreement_edit.php'>\n";
@@ -134,7 +135,7 @@ print "</td>\n</form>\n</tr>\n";
 print "<tr>\n<form name='delete_form' action='$rootUrl/actions/agreement_delete.php'>\n";
 print "<td>\n";
 print "<input type='submit' class='actionButtonContact'  value='".uptr('delete')."'";
-print " onClick='return confirm(\"Are you sure you want to permanently delete this contact\")'";
+print " onClick='return confirm(\"".tr("Are you sure you want to permanently delete this agreement?")."\")'";
 print ">\n";
 print "<input type='hidden' name='id' value='$agree_id'>\n";
 print "</td>\n</form>\n</tr>\n";

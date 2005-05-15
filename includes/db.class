@@ -69,7 +69,7 @@ class DB {
     // returns an array of results
     // from $query
     $this->switchQueryMode(0);
-    $recordSet = &$this->db_link->Execute($query);
+    $recordSet = $this->db_link->Execute($query);
     if( $recordSet ) {
       $vars = $recordSet->getArray();
       if( is_array($vars) && count($vars) > 0 )
@@ -165,7 +165,7 @@ class DB {
     $query = "INSERT INTO $table ($cols) VALUES($vals)";
     $res = $this->db_link->Execute($query);
     $this->addDebug("db_insert","[$res]".$query,3);
-    if( !$res && strpos($this->database_type,"mssql")===0 ) {
+    if( !$res && strlen(strpos($this->database_type,"mssql")) ) {
       // deal with sql server id issues by automagically
       // incrementing the counter when a problem occurs
       $query = "SELECT max($id_field) FROM $table";

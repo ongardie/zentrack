@@ -26,7 +26,7 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
   // organize the search params
   if( is_array($search_params) ) {
     foreach($search_params as $k=>$v) {
-      if( !strlen($v) || is_array($v) && count($v) == 0 ) { continue; }
+      if( !strlen($v) || (is_array($v) && count($v) == 0) ) { continue; }
       if( is_array($v) && count($v) == 1 && !strlen($v[0]) ) { continue; }
       
       $props = getFmFieldProps($view, $k);
@@ -36,7 +36,7 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
       $type = $props['data_type'];
       $zen->addDebug('searchResults.php', "Including search_param[$k] ($type)", 3);
       if( $type == 'boolean' && $field['num_rows'] == 1 ) {
-        $params[] = array($k, ($v? "=":"!="), 1, 1);
+        $params[] = array($k, ($v? "=":"<"), 1, 1);
         continue;
       }
       else if( $type == 'date' ) {
@@ -95,14 +95,13 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
             break;
           case "bin_id":
             if( is_array($v) ) {
-              $ok = true;
+              $binvals = array();
               foreach($v as $val) {
-                if( !in_array($val, $userBins) ) {
-                  $ok = false;
-                  break;
+                if( in_array($val, $userBins) ) {
+                  $binvals[] = $val;
                 }
               }
-              $params[] = array($k, 'IN', $v, 1);
+              $params[] = array($k, 'IN', $binvals, 1);
             }
             else if( in_array($v, $userBins) ) {
               $params[] = array($k, '=', $v, 1);
