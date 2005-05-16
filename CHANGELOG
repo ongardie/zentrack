@@ -15,6 +15,26 @@ abstraction, and endless possibilities for project expansion.
 
 ----- VERSION 2.5.5.2 (2005-05-15) -----
 
+2005-05-15, kato
+  Prepared install/upgrade docs and scripts
+    - zentrack_2/install/UPGRADE.readme
+    - zentrack_2/install/UPGRADE_mssqlserver.sql
+    - zentrack_2/install/UPGRADE_mysql.sql
+    - zentrack_2/install/UPGRADE_oracle.sql
+    - zentrack_2/install/UPGRADE_postgres.sql
+    - zentrack_2/install/seed_mssqlserver.sql
+    - zentrack_2/install/seed_mysql.sql
+    - zentrack_2/install/seed_oracle.sql
+    - zentrack_2/install/seed_postgres.sql
+    - zentrack_2/install/seed_random_report_data.sql
+    - zentrack_2/install/previous/2.5.5.1.UPGRADE_mssqlserver.sql 1.1
+    - zentrack_2/install/previous/2.5.5.1.UPGRADE_mysql.sql 1.1
+    - zentrack_2/install/previous/2.5.5.1.UPGRADE_oracle.sql 1.1
+    - zentrack_2/install/previous/2.5.5.1.UPGRADE_postgres.sql 1.1
+    - zentrack_2/install/patches/upgrade_2-5-0-3_to_2-5-5-2.patch 1.1
+    - zentrack_2/install/patches/upgrade_2-5-5_to_2-5-5-2.patch 1.1
+    - zentrack_2/install/patches/upgrade_2-5-5-1_to_2-5-5-2.patch 1.1
+    
 2005-05-14, kato
   Corrected issue with project ids being entered into db as null (causing
   projects not to appear in project list after creating)

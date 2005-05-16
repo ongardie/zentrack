@@ -158,7 +158,7 @@
    print "    ADD TO CHANGELOG\n";
    print "\n---------------------------------\n";
    print date('Y-m-d').", kato\n";
-   print "  Prepared install files for upgrade\n";
+   print "  Prepared install/upgrade docs and scripts\n";
    print "    - zentrack_2/install/UPGRADE.readme \n";
    foreach($upgrade_files as $f) {
      print "    - zentrack_2/install/$f \n";
