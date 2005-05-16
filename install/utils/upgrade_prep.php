@@ -94,7 +94,7 @@
      
      // create the file
      $fh = fopen("$dir/$file", 'w');
-     fputs($fh, "$base_text\n-- Modify the version number\nUPDATE ZENTRACK_SETTINGS SET value='2.5.5.1' WHERE setting_id=74;\n");
+     fputs($fh, "$base_text\n-- Modify the version number\nUPDATE ZENTRACK_SETTINGS SET value='$new_version' WHERE setting_id=74;\n");
      fclose($fh);
    }
    
@@ -124,7 +124,7 @@
    if( file_exists("$dir/upgrade_base.sql") ) {
      $base_text = file_get_contents("$dir/upgrade_base.sql");
    }
-   else { $base_text = ''; }
+   else { $base_text = false; }
    
    $upgrade_files = array();
    $seed_files = array();

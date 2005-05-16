@@ -10,7 +10,7 @@
   REQUIREMENTS
   --------------
     Basic Install
-       PHP >= 4.3 && < 5 (PHP5 will be supported in version 2.6)
+       PHP >= 4.3 or PHP >= 5.0
        Mysql, Oracle, Postgres, or SqlServer
        A Basic knowledge of PHP is helpful
     Email Gateway (optional)

@@ -1,4 +1,31 @@
 
+----- 2.5.5.2 Minor Release -----
+
+NEW FEATURES / ENHANCEMENTS
+
+  Added auto-login feature (via cookie)
+  
+  Added PHP5 support
+  
+  Added SQL Server 2000 support (via odbc_mssql)
+  
+BUG FIXES / MINOR CHANGES
+  
+  Search screen improvements
+    - fixed default values
+    - fixed the -any- choice to default correctly
+    - fixed loss of bin names during search sorting/modification
+  
+  Fixed bug preventing save of the custom tab
+  
+  Fixed bugs in the create/edit process
+  
+  Improved text field formatting (problems with &#...; display and
+  formatting issues)
+  
+  Corrected problem with project ids entered as null (causing new projects
+  to not be displayed in project list)
+
 ----- 2.5.5.1 Maintenance Release -----
 
 NEW FEATURES / MAJOR ENHANCEMENTS

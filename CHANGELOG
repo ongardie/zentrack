@@ -86,7 +86,7 @@ abstraction, and endless possibilities for project expansion.
     - zentrack_2/includes/templates/searchForm.php 1.16
     - zentrack_2/www/search.php 1.12
     
-  Implemented field map on ticket details screen
+  Implemented field map on ticket details screen (won't be enabled until 2.6 release)
     - zentrack_2/includes/templates/ticket_detailsBox.php 1.18
 
 ----- VERSION 2.5.5.1 (2005-05-08) -----
