@@ -15,6 +15,10 @@ abstraction, and endless possibilities for project expansion.
 
 ----- VERSION 2.5.5.2 (2005-05-15) -----
 
+2005-05-19, cfalonso
+  Added automatic email notifier for overdue tickets
+    - zentrack_2/includes/zenNotifier.php 1.1
+
 2005-05-15, kato
   Prepared install/upgrade docs and scripts
     - zentrack_2/install/UPGRADE.readme
