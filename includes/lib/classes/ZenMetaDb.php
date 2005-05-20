@@ -95,6 +95,10 @@ class ZenMetaDb extends Zen {
       $table = strtoupper($f['col_table']);
       // merge in the xml info for fields, now that we have
       // the correct sorting order in place
+      if( !array_key_exists($table, $xmlFields) || !array_key_exists($field, $xmlFields[$table]) ) { 
+        $xmlFields[$table] = array();
+        ZenUtils::safeDebug($this, '_load', "xmlFields[$table][$field] not found", 122, LVL_DEBUG); //todo fix error code here
+      }
       $this->_tables[$table]['fields'][$field] = $xmlFields[$table][$field];
       foreach( $f as $key=>$val ) {
         if( $key == 'col_criteria' ) {

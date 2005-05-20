@@ -82,11 +82,11 @@
         switch($key) {
         case "rsort":
           if( !is_array($val) ) { $val = explode(',',$val); }
-          $query->sort( $val, true );
+          foreach($val as $v) { $query->sort( $v, true ); }
           break;
         case "sort":
           if( !is_array($val) ) { $val = explode(',',$val); }
-          $query->sort( $val );
+          foreach($val as $v) { $query->sort( $v ); }
           break;
         case "match":
         case "exclude":

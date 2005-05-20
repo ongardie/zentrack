@@ -95,74 +95,71 @@ class Test {
    * @param string $class is a reference to the class name
    * @param string $xml is an xml data file to get test data from
    */
-  function run($class, $xml = false) {
-    global $ERROR_FOUND, $ERROR_CRITICAL, $TESTS_COMPLETED,
-      $TESTS_SKIPPED, $TESTS_TOTAL; // Yikes!
-    if (strlen($class) > 4 && strtolower(substr($class, -4)) == 'test')
-      {
-	$class = substr($class, 0, strlen($class) - 4);
-      }
-    echo "\t<tr>\n";
-    echo "\t  <th colspan=2><b>$class</b></th>\n";
-    echo "\t</tr>\n";
-    $ERROR_CRITICAL = false;
-    $flipCss        = false;
-    $methods        = get_class_methods($this);
-
-    $xmlnode = null;
-    if( $xml ) {
-      $parser = new ZenXMLParser();
-      $xmlnode =& $parser->parse($xml);
-    }
-    if( method_exists($this, "load") ) {
-      $this->load($xmlnode->child('setup',0));
-    }
-
-    foreach ($methods as $method) {
-      // Don't continue running tests if something really bad happened.
-      // That is, if Assert::assert evaluated to true.
-      if ($ERROR_CRITICAL) {
-	break;
-      }
-      // Run a test if this method applies
-      if (strlen($method) > 4 && substr($method, 0, 4) == 'test') {
-	$ERROR_FOUND = false;
-	$node = null;
-	if( $xmlnode ) {
-	  $n = $xmlnode->child($method); 
-	  if( $n ) {
-	    $node = $n[0];
-	  }
-	}
-	if( $node ) {
-	  $sets = $node->children();
-	  foreach( $sets as $testname=>$valset ) {
-	    foreach( $valset as $val ) {
-	      $ERROR_FOUND = false;
-	      $TESTS_TOTAL++;
-	      $children = $val->child('param');
-	      $parms = ZenXMLParser::getParmSet( $children );
-	      $this->_openRow( substr($method,4).": <i>$testname</i>" );
-	      $this->$method( $parms );
-	      if( !$ERROR_FOUND ) { $TESTS_COMPLETED++; }
-	      $this->_closeRow( $ERROR_FOUND );
-	    }
-	  }
-	}
-	else {
-	  $TESTS_TOTAL++;
-	  $this->_openRow( substr($method, 4) );
-	  $this->$method();
-	  if( !$ERROR_FOUND ) { $TESTS_COMPLETED++; }
-	  $this->_closeRow( $ERROR_FOUND );
-	}
-      }
-    }
-
-    if( method_exists($this, "unload") ) {
-      $this->unload();
-    }
-  }
+   function run($class, $xml = false) {
+     global $ERROR_FOUND, $ERROR_CRITICAL, $TESTS_COMPLETED,
+     $TESTS_SKIPPED, $TESTS_TOTAL; // Yikes!
+     if (strlen($class) > 4 && strtolower(substr($class, -4)) == 'test')
+     {
+       $class = substr($class, 0, strlen($class) - 4);
+     }
+     echo "\t<tr>\n";
+     echo "\t  <th colspan=2><b>$class</b></th>\n";
+     echo "\t</tr>\n";
+     $ERROR_CRITICAL = false;
+     $flipCss        = false;
+     $methods        = get_class_methods($this);
+     
+     $xmlnode = null;
+     if( $xml ) {
+       $parser = new ZenXMLParser();
+       $xmlnode =& $parser->parse($xml);
+     }
+     if( method_exists($this, "load") ) {
+       $this->load($xmlnode->child('setup',0));
+     }
+     
+     foreach ($methods as $method) {
+       // Don't continue running tests if something really bad happened.
+       // That is, if Assert::assert evaluated to true.
+       if ($ERROR_CRITICAL) {
+         break;
+       }
+       // Run a test if this method applies
+       if (strlen($method) > 4 && substr($method, 0, 4) == 'test') {
+         $ERROR_FOUND = false;
+         $node = null;
+         if( $xmlnode ) {
+           $node = $xmlnode->child($method, 0); 
+         }
+         if( $node ) {
+           $sets = $node->children();
+           foreach( $sets as $testname=>$valset ) {
+             foreach( $valset as $val ) {
+               $ERROR_FOUND = false;
+               $TESTS_TOTAL++;
+               $children = $val->child('param');
+               $parms = ZenXMLParser::getParmSet( $children );
+               $this->_openRow( substr($method,4).": <i>$testname</i>" );
+               $this->$method( $parms );
+               if( !$ERROR_FOUND ) { $TESTS_COMPLETED++; }
+               $this->_closeRow( $ERROR_FOUND );
+             }
+           }
+         }
+         else {
+           $TESTS_TOTAL++;
+           $this->_openRow( substr($method, 4) );
+           $this->$method();
+           if( !$ERROR_FOUND ) { $TESTS_COMPLETED++; }
+           $this->_closeRow( $ERROR_FOUND );
+         }
+       }
+     }
+     
+     if( method_exists($this, "unload") ) {
+       $this->unload();
+     }
+   }
     
   /** Print html for a new table row */
   function _openRow( $name ) {

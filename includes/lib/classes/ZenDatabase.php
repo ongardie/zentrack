@@ -11,7 +11,6 @@
  *
  * @package DB
  * @author Mike Lively <mike@digitalsandwich.com>
- * @version 1.0
  */
 class ZenDatabase extends Zen {
 
@@ -256,6 +255,14 @@ class ZenDatabase extends Zen {
    * @return string
    */
   function quote( $text, $type = '' ) {
+    
+    if( !$type ) {
+      // attempt to guess the type
+      if( preg_match('/^[0-9]+$/', $text) ) {
+        $type == 'integer';
+      }
+    }
+    
     switch( strtolower($type) ) {
     case "integer":
     case "shortint":

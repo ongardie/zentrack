@@ -11,6 +11,9 @@
 
   // initialize all session data
   session_start();
+  
+  //todo add check to user agent and anything else useful here to prevent impersonation attacks
+  //todo create random site keys during install and add to header files.. append to important security elements
 
   // set the zen variable
   if( !isset($_SESSION['zen']) ) { $_SESSION['zen'] = null; }

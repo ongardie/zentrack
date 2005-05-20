@@ -52,6 +52,8 @@
 
   // check magic_quotes runtime and magic_quotes_gpc
   @set_magic_quotes_runtime(0);
+  
+  //todo set magic_quotes_gpc here?
 
   // setup develop mode params
   if( getIni('debug','develop_mode') > 0 ) {    

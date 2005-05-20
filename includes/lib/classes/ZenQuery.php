@@ -222,7 +222,7 @@ class ZenQuery extends Zen {
     if( $table )
       $field = $this->_fixName($table,$field);
     if ($whereClause = $this->_basicWhere($table, $field, $value, $operator)) {
-      $this->_wheres[] = '!(' . $whereClause . ')';
+      $this->_wheres[] = 'NOT(' . $whereClause . ')';
       return true;
     }
     else {

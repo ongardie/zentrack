@@ -1060,6 +1060,22 @@ class ZenUtils {
     return $dir;
   }
   
+  /**
+   * Merges two arrays into a single array.  Does not throw a warning if one
+   * of the arrays is null.  If the arrays are indexed, values from the second
+   * array will overwrite the first when the keys are equal.
+   *
+   * @param array $arr1
+   * @param array $arr2
+   * @return array an empty array if both values are null or empty
+   */
+   function mergeArrays($arr1, $arr2) {
+     if( is_array($arr1) && is_array($arr2) ) { return array_merge($arr1,$arr2); }
+     else if( is_array($arr1) ) { return $arr1; }
+     else if( is_array($arr2) ) { return $arr2; }
+     else { return array(); }
+   }
+  
 }
 
 ?>

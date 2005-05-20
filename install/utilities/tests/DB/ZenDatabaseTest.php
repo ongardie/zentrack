@@ -137,6 +137,7 @@
       }
       $offset = isset($vals['offset'])? $vals['offset'] : 0;
       $this->_dbo->setFetchMode(false);
+      print "query: $query<br>\n";//debug
       $recordSet = $this->_dbo->execute($query, $vals['cache'], $vals['limit'], $offset );
       // check pass or fail results
       if( $vals['passfail'] ) {

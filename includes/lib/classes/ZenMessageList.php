@@ -381,9 +381,8 @@ class ZenMessageList extends Zen {
     // create an xml parser and parse data
     $parser = new ZenXMLParser();
     $nodes =& $parser->parse($data); 
-    $vals = $nodes->toArray();
     // set some debugging (since we can't add messages to this List yet)
-    $msgs = $this->_processNodes($vals);
+    $msgs = $this->_processNodes($nodes);
     // do some debugging checks
     if( !isset($this->_levels["default"]) ) {
       $msgs[] = array(LVL_ERROR, 143, "The &lt;root&gt; node was not found.  A root node is required");
@@ -402,28 +401,29 @@ class ZenMessageList extends Zen {
   /**
    * Runs through each node and parses contents, performs basic validation
    *
-   * @param array $vals the nodes to check
+   * @param ZenXNode $rootnode the nodes to check
    * @return array containing any errors (returns empty array if no errors)
    */
-  function _processNodes( $vals ) {
+  function _processNodes( $rootnode ) {
     //    ZenUtils::printArray($vals);
     $msgs = array();
     // run through the xml output
-    foreach($vals["children"] as $cat=>$vars) {
-      if( $cat == 'root' ) {
+    foreach($rootnode->children() as $name=>$vars) {
+      if( $name == 'root' ) {
         $v = $vars[0];
-        if( isset($v["properties"]["level"]) ) {
+        $l = $v->prop('level');
+        if( isset($l) ) {
           $this->_levels["default"] = 
-            array("default"=>$this->_parseLevelText($v["properties"]["level"]));
+            array("default"=>$this->_parseLevelText($v->prop('level')));
         } 
       }
-      else if( $cat == 'class' ) {
+      else if( $name == 'class' ) {
         foreach($vars as $v) {
           $r = $this->_processClassNode( $v );
           $msgs = array_merge($msgs,$r);
         }
       }
-      else if( $cat == "format" ) {
+      else if( $name == "format" ) {
         foreach($vars as $v) {
           $r = $this->_processFormatNode($v);
           $msgs = array_merge($msgs,$r);
@@ -439,25 +439,27 @@ class ZenMessageList extends Zen {
   /**
    * Takes care of class nodes in the xml file
    *
-   * @param array $node and children
+   * @param ZenXNode $node
    * @return array containing any errors
    */
   function _processClassNode( $node ) {
     $msgs = array();
-    $n = $node["properties"]["name"];
+    $n = $node->prop('name');
     if( !isset($this->_levels[$n]) ) {
       $this->_levels[$n] = array();
-      if( isset($node["properties"]["level"]) )
-        $this->_levels[$n]["default"] = $this->_parseLevelText($node["properties"]["level"]);
+      $l = $node->prop('level');
+      if( isset($l) ) {
+        $this->_levels[$n]["default"] = $this->_parseLevelText($node->prop('level'));
+      }
     }
-    foreach($node["children"] as $name=>$vals) {
+    foreach($node->children() as $name=>$vals) {
       if( $name == "method" ) {
         foreach($vals as $c) {
-          $cn = $c["properties"]["name"];
-          $this->_levels[$n][$cn] = $this->_parseLevelText($c["properties"]["level"]);
+          $cn = $c->prop('name');
+          $this->_levels[$n][$cn] = $this->_parseLevelText($c->prop('level'));
         }
       }
-      else { $msgs[] = array(2, 141, "{$n}->{$c['name']} invalid - ignored"); }
+      else { $msgs[] = array(2, 141, "{$n}->{$name} ignored"); }
     }
     return $msgs;
   }
@@ -470,20 +472,22 @@ class ZenMessageList extends Zen {
    */
   function _processFormatNode( $node ) {
     $msgs = array();
-    foreach($node["children"] as $n=>$vals) {
-      $c = $vals[0];
+    foreach($node->childSet() as $n=>$c) {
+      $open = $c->child("open",0);
+      $close = $c->child("close",0);
+      $data = array($open->data(), $close->data());
       if( $n == "block" ) {
-        $this->_blockformat = array($c["children"]["open"][0]["data"], $c["children"]["close"][0]["data"]);
+        $this->_blockformat = $data;
       }
       else if( strpos($n, "LVL_") === 0 ) {
         $m = constant($n);
-        $this->_msgformat[$m] = array($c["children"]["open"][0]["data"], $c["children"]["close"][0]["data"]);
+        $this->_msgformat[$m] = $data;
       }
       else if( preg_match("/^level([0-9]+)$/", $n, $matches) ) {
         $m = $matches[1];
-        $this->_msgformat[$m] = array($c["children"]["open"][0]["data"], $c["children"]["close"][0]["data"]);
+        $this->_msgformat[$m] = $data;
       }
-      else { $msgs[] = array(2, 141, "{$node['name']}->{$n} invalid - ignored"); }
+      else { $msgs[] = array(2, 141, $node->name()."->{$n} invalid - ignored"); }
     }
     return $msgs;
   }
