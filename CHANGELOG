@@ -16,6 +16,8 @@ abstraction, and endless possibilities for project expansion.
 ----- VERSION 2.5.5.2 (2005-05-15) -----
 
 2005-05-23, cfalonso
+  Include default_access of the user in evaluation for retaining the ticket's owner
+    - zentrack_2/includes/zenTrack.class 1.185
   Fixed a bug that created a wrong page immediately after project creation
     - zentrack_2/includes/templates/projectView.php 1.5
     - zentrack_2/includes/templates/ticket_actionBar.php 1.13
