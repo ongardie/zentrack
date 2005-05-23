@@ -2320,13 +2320,8 @@ class zenTrack extends zen {
       $params["user_id"] = NULL;
     } else {
       $currentOwner=$this->checkNum($t['user_id']);
-      $ownerAccess = $this->get_access($currentOwner,0);
-      if( ! (strlen($ownerAccess["$newBin"]) > 0) ) {
+      if ( ! $this->checkAccess($currentOwner,$newBin,'level_user') ) {
         $params["user_id"] = NULL;
-      } else {
-        if( $ownerAccess["$newBin"] < $this->settings["level_user"] ) {
-          $params["user_id"] = NULL;
-        }
       }
     }
     $res = $this->update_ticket($id, $params);
