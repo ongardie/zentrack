@@ -3,7 +3,6 @@
 
 <!-- BEGIN ACTION BAR -->
 
-
 <table width="80" cellpadding="0" cellspacing="0">
 <?{
   // array of action buttons to create

@@ -84,7 +84,11 @@
     print "<p class='hot'>" . tr("You are not allowed to view the following in this bin") . ": {$page_type}s</p>\n";
   } else {
     if( is_array($ticket) ) {
+      if (count($ticket)==1) {
+        extract($ticket[$id]);
+      } else {
       extract($ticket);
+     }
       if( $type_id == $zen->projectTypeID() ) {
         include("$templateDir/projectView.php");
       } else {

@@ -51,7 +51,7 @@
   }
   
   if( !$errs ) {
-    $setmode = "tasks";
+    $setmode = "details";
     include("project.php");
     exit;
   } else {
