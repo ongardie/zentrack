@@ -22,7 +22,7 @@ abstraction, and endless possibilities for project expansion.
     - zentrack_2/includes/templates/projectView.php 1.5
     - zentrack_2/includes/templates/ticket_actionBar.php 1.13
     - zentrack_2/www/addProjectSubmit.php 1.22
-    - zentrack_2/www/ticket.php 1.25
+    - zentrack_2/www/ticket.php 1.25 , 1.26
 
 2005-05-19, cfalonso
   Added automatic email notifier for overdue tickets
