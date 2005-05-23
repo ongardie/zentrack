@@ -87,8 +87,8 @@
       if (count($ticket)==1) {
         extract($ticket[$id]);
       } else {
-      extract($ticket);
-     }
+        extract($ticket);
+      }
       if( $type_id == $zen->projectTypeID() ) {
         include("$templateDir/projectView.php");
       } else {
