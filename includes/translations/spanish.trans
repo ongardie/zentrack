@@ -1,6 +1,42 @@
 # This is the translation template file. It is automatically generated from developers/tr-parser.php
 # If you have any questions on how to create a translation file please direct them to zentrack support
 
+#file "/home/ired/zentrack_2/includes/templates/ticket_logBox.php"
+#args ""
+msgid "EDIT"
+msgstr "EDITADO"
+
+msgid "CREATED"
+msgstr "CREADO"
+
+msgid "PENDING"
+msgstr "PENDIENTE"
+
+msgid "TESTED"
+msgstr "TESTEADO"
+
+msgid "APPROVED"
+msgstr "APROBADO"
+
+msgid "CLOSED"
+msgstr "CERRADO"
+
+msgid "OPEN"
+msgstr "ABIERTO"
+
+msgid "MOVED"
+msgstr "MOVIDO"
+
+msgid "ACCEPTED"
+msgstr "ACEPTADO"
+
+msgid "ASSIGNED"
+msgstr "ASIGNADO"
+
+msgid "YANKED"
+msgstr "CAPTURADO"
+
+
 #file "/home/ired/zentrack_2/www/actions/assign.php"
 #args "array($r)"
 msgid " ? is required"

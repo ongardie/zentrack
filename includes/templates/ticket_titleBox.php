@@ -25,7 +25,7 @@
 	   <td class="small"><?=($deadline)?$zen->showDateTime($deadline):"n/a"?></td>
 	  </tr>
 	  <tr>
-	   <td rowspan="2"><span class="bigBold"><?=strtoupper($status)?></span></td>
+	   <td rowspan="2"><span class="bigBold"><?=uptr(strtoupper($status))?></span></td>
 	   <td class="smallTitleCell" height="<?=$height_num?>"><?=uptr("Priority")?></td> 
 	   <td class="smallTitleCell"><?=uptr("Owner")?></td>
 	  </tr>

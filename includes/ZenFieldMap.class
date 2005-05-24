@@ -641,7 +641,7 @@ class ZenFieldMap {
         }
         break;
       case "status":
-        $vals = array('OPEN'=>"Open",'PENDING'=>"Pending",'CLOSED'=>"Closed");
+        $vals = array('OPEN'=>tr("Open"),'PENDING'=>tr("Pending"),'CLOSED'=>tr("Closed"));
         break;
       case "id":
       case "title":
@@ -658,7 +658,7 @@ class ZenFieldMap {
       case "tested":
       case "approved":
         $vals = $vprops["admin_view"]?
-          array('0'=>'n/a', '2'=>'Yes', '1'=>'No') : array('1'=>'Yes', '2'=>'No');
+          array('0'=>tr('n/a'), '2'=>tr('Yes'), '1'=>tr('No')) : array('1'=>tr('Yes'), '2'=>tr('No'));
         break;
       default:
         if( strncmp("custom_menu",$this->fieldName($field_name),11)==0 ) {

@@ -21,7 +21,7 @@ if( is_array($logs) && count($logs) > 0) {
     print "<tr>\n";
     print "<td class='$style' style='color:".$zen->settings["color_text"]."'>";
     print $zen->showDateTime($l["created"]);
-    print $sep.$l["action"];
+    print $sep.uptr($l["action"]);
     print "<br>".$zen->getBinName($l["bin_id"]);
     print $sep.$zen->formatName($l["user_id"],2);
     print (strlen($l["hours"]))? $sep.$l["hours"]." hrs":"";
