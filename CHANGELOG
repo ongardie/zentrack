@@ -13,7 +13,13 @@ abstraction, and endless possibilities for project expansion.
 
 ----- VERSION 2.5.6 (development) -----
 
------ VERSION 2.5.5.2 (2005-05-15) -----
+2005-05-24, cfalonso
+  Included some new translations
+    - zentrack_2/includes/ZenFieldMap.class 1.19
+    - zentrack_2/includes/templates/ticket_logBox.php 1.19
+    - zentrack_2/includes/templates/ticket_titleBox.php 1.14
+    - zentrack_2/includes/translations/spanish.trans 1.9
+    - zentrack_2/www/search.php 1.12
 
 2005-05-23, cfalonso
   Include default_access of the user in evaluation for retaining the ticket's owner
@@ -27,6 +33,8 @@ abstraction, and endless possibilities for project expansion.
 2005-05-19, cfalonso
   Added automatic email notifier for overdue tickets
     - zentrack_2/includes/zenNotifier.php 1.1
+
+----- VERSION 2.5.5.2 (2005-05-15) -----
 
 2005-05-15, kato
   Prepared install/upgrade docs and scripts
