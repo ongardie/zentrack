@@ -62,7 +62,7 @@
        ." value='".$zen->ffv($v['field_label'])."' size='20' maxlength='50'>$te";
 	     print "$t<input type='text' name='newSortOrder[$j]' "
        ." value='".$zen->ffv($v['sort_order'])."' size='5' maxlength='5'>$te";
-	     if( strpos($i, 'menu') > 0 ) {
+	     if( strpos($i, 'menu') > 0 || strpos($i, 'multi') ) {
 	       print "$t<select name='newFieldValue[$j]'>\n";
 	       if( isset($_SESSION['data_groups']) && count($_SESSION['data_groups']) ) {
            print "<option value=''>-none-</option>\n";

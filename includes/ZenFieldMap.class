@@ -166,6 +166,7 @@ $ztf = array(
     "custom_boolean"  => array(   true,   array(1,3,5,6)        , 'boolean',      null, false,  false,  true),
     "custom_date"     => array(   true,   array(1,7)            , 'date'   ,      null, false,  false,  true),
     "custom_menu"     => array(   true,   array(1,3,6)          , 'string' ,      null, false,  false,  true),
+    "custom_multi"    => array(   true,   array(1,3)            , 'string' ,      null, true ,  false,  true),
     "custom_text"     => array(  false,   array(1,2)            , 'text'   ,      null, false,  false,  true),
     "hours"           => array(  false,   array(2)              , 'float'  ,      null, false,  false,  true),
     "comments"        => array(  false,   array(2)              , 'text'   ,      null, false,  false,  true)
@@ -185,8 +186,8 @@ $ztf = array(
     "project_title"   => array(     true,     true,     false, false, false, false ),
     "ticket_detail"   => array(     true,     true,     false, false, false, true  ),
     "project_detail"  => array(     true,     true,     false, false, false, true  ),
-    "ticket_custom"   => array(     true,    false,      true, false, false, true  ),
-    "project_custom"  => array(     true,    false,      true, false, false, true  )
+    "ticket_custom"   => array(    false,    false,      true, false, false, true  ),
+    "project_custom"  => array(    false,    false,      true, false, false, true  )
   ),
   
   "types" => array(//   choices| multirows
@@ -318,10 +319,18 @@ class ZenFieldMap {
         case "title":
         case "custom_text":
           return $this->_zen->ffvText($value);
+        case "custom_multi":
+          $tok=strtok($value,"\t");
+          $val=array();
+          while ($tok !== false) {
+            $val[] = $this->_zen->ffv($tok, $field['num_cols']);
+            $tok = strtok("\t");
+          }
+          return ($val);
         default:
-          $val = $this->_zen->ffv($value, $field['num_cols']);
+          $val = $this->_zen->ffvText(str_replace("\t",";",$value), $field['num_cols']);
           $this->_zen->addDebug("getTextValue", "rendering default: $val", 3);
-          return $this->_zen->ffv($value, $field['num_cols']);
+          return $val;
       }
     }
     // it's hidden, return nothing
@@ -395,8 +404,12 @@ class ZenFieldMap {
     else { $vals['field_cols'] = $field['num_cols'] > 50? 50 : $field['num_cols']; }
     $vals['field_rows'] = $field['num_rows'];
     
-    $vals['field_multiple'] = $view == 'search_form' && $typeint == ZTFIELD_MENU && $field['num_rows'] > 1? "multiple" : "";
-    if( $vals['field_multiple'] && $typename == 'menu' ) {
+//    $vals['field_multiple'] = $view == 'search_form' && $typeint == ZTFIELD_MENU && $field['num_rows'] > 1? "multiple" : "";
+    $vals['field_multiple'] = (
+                                ( $view == 'search_form' || strpos($field_name,'custom_multi')===0 )
+                                && $typeint == ZTFIELD_MENU && $field['num_rows'] > 1
+                              ) ? "multiple" : "";
+    if( strpos($vals['field_multiple'],"multiple")===0 && $typename == 'menu' ) {
       $vals['field_name'] .= "[]";
     }
 
@@ -481,6 +494,9 @@ class ZenFieldMap {
      $templateFile = "$templateDir/fields/$typename.template";
      $template = new zenTemplate($templateFile);
      $template->values($vals);
+//print "<pre>";
+//print_r($vals);
+//print "</pre>";
      return $template->process();     
    }
   
@@ -505,7 +521,12 @@ class ZenFieldMap {
     $set = array();
     for($i=0; $i<count($vals); $i++) {
       $v = $vals[$i];
-      if( !array_key_exists($v['which_view'], $set) ) { $set[ $v['which_view'] ] = array(); }
+      if ( !array_key_exists($v['which_view'], $set) ) {
+        $set[ $v['which_view'] ] = array();
+      }
+//      if (strpos($v['field_name'],"custom_multi")===0) {
+//        $v['field_name'].="[]";
+//      }
       $set[ $v['which_view'] ] [ $v['field_name'] ] = $v;
     }
     $this->_zen->addDebug("getFieldMap", "Loaded $i rows into field_map from database",3);
@@ -661,7 +682,8 @@ class ZenFieldMap {
           array('0'=>tr('n/a'), '2'=>tr('Yes'), '1'=>tr('No')) : array('1'=>tr('Yes'), '2'=>tr('No'));
         break;
       default:
-        if( strncmp("custom_menu",$this->fieldName($field_name),11)==0 ) {
+        if(  strncmp("custom_menu",$this->fieldName($field_name),11)==0 
+          || strncmp("custom_multi",$this->fieldName($field_name),12)==0 ) {
           $pts = explode("_", $view, 2);
 //          $vars = $this->_zen->getCustomField($field_name);
 //          $set = genDataGroupChoices($vars['field_value']);

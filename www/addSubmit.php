@@ -27,7 +27,7 @@
   $otime = date('Y-m-d H:i:s');  // set time ticket opened
 
   include("$libDir/validateFields.php");
-  
+
   if( !$errs ) {
     // create an array of existing fields
     // to be inserted for the ticket
@@ -43,6 +43,9 @@
     
     // update the variable field entries for this ticket
     if( $id && $varfields && count($varfield_params) ) {
+print "<pre>";
+print_r($varfield_params);
+print "</pre>";
       $res = $zen->updateVarfieldVals($id, $varfield_params);
       if( !$res ) {
         $errs[] = tr("? created, but variable fields could not be saved", array(tr('Ticket')));

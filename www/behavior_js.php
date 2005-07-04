@@ -322,8 +322,12 @@ function executeBehavior( formObj, behaviorId, setid ) {
 
   var fieldObj = formObj[ behavior.field ];
   if( !fieldObj ) {
-    behaviorDebug(1, "(executeBehavior)Behavior field invalid: "+formObj.name+"."+behavior.field);
-    return false;
+    behavior.field = behavior.field + "[]";
+    fieldObj = formObj[ behavior.field ];
+    if( !fieldObj ) {
+      behaviorDebug(1, "(executeBehavior)Behavior field invalid: "+formObj.name+"."+behavior.field);
+      return false;
+    }
   }
 
   // note that this behavior was executed
@@ -460,17 +464,27 @@ function setFormValsUsingGroup( fieldObj, group, setid ) {
     case "hidden":
       var labelText = document.getElementById(fieldObj.name+"LabelText");
       if( labelText ) {
-        labelText.innerHTML = fields[oldPos].label;
+        labelText.innerHTML = fields.length>0?fields[oldPos].label : "";
+        if (fields.length>0) {
+          labelText.innerHTML = fields[oldPos].value;
+        } else {
+          behaviorDebug(3, "(setFormValsUsingGroup) Empty string forced for "+fieldObj.name+"LabelText.innerHTML");
+          labelText.innerHTML = "";
+        }
       }
     case "button":
     case "submit":
     case "text":
     case "textarea":
-      fieldObj.value = fields[oldPos].value;
+      if (fields.length>0) {
+        fieldObj.value = fields[oldPos].value;
+      } else {
+        behaviorDebug(3, "(setFormValsUsingGroup) Empty string forced for "+fieldObj.name+".value");
+        fieldObj.value = "";
+      }
       break;
     case "select":
     case "select-one":
-    case "select-multiple":
       if( fieldObj.selectedIndex && fieldObj.options && fieldObj.options.length > 0 ) {
         // store the currently selected value and try to reproduce in a minute
         var oldValue = fieldObj.options[ fieldObj.selectedIndex ].value;
@@ -488,6 +502,32 @@ function setFormValsUsingGroup( fieldObj, group, setid ) {
         if( f.value == oldValue ) {
 //          fieldObj.options[i].selected = true;
           fieldObj.selectedIndex=i;
+        }
+      }
+      break;
+    case "select-multiple":
+      var oldValues = new Array();
+      if( fieldObj.options && fieldObj.options.length > 0 ) {
+        // store the currently selected value and try to reproduce in a minute
+        for (var i=0; i< fieldObj.options.length; i++) {
+          if (fieldObj.options[i].selected) {
+            oldValues[fieldObj.options[i].value]=1;
+            behaviorDebug(3, "(setFormValsUsingGroup)storing oldValues["+fieldObj.options[i].value+"] = 1");
+          }
+        }
+      }
+
+      fieldObj.length = 0;
+      for(var i=0; i < fields.length; i++) {
+        var f = fields[i];
+        behaviorDebug(3, "(setFormValsUsingGroup)Setting option "+i+" to ["+f.value+"]"+f.label);
+        fieldObj.options[i] = new Option();
+        fieldObj.options[i].text = f.label;
+        fieldObj.options[i].value = f.value;
+        // try to set to the same value if possible
+        if( oldValues[f.value]==1 ) {
+          fieldObj.options[i].selected = true;
+//          fieldObj.selectedIndex=i;
         }
       }
       break;

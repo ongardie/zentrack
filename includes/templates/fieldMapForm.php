@@ -154,7 +154,7 @@ foreach($fields as $f=>$field) {
     // default value (text)
     $txt = "n/a";
     if( $fprops['default'] && !$vprops['view_only'] ) {
-      if( strpos($f,'custom_menu')===0 ) {
+      if( strpos($f,'custom_menu')===0 || strpos($f,'custom_multi')===0 ) {
         // custom menus use the data groups as a selector, not a list of values
         $choices = $zen->getDataGroups();
       }

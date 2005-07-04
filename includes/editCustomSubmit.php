@@ -6,7 +6,12 @@
   $required = array();
   // the TODO is saved, even if the save failed
   $TODO = 'SAVED';
-  
+
+  if( $zen->inProjectTypeIDs($bin_id) ) {
+    $view="project_custom";
+  } else {
+    $view="ticket_custom";
+  }
   include("$libDir/validateFields.php");
   
   if( !$errs ) {
@@ -14,13 +19,26 @@
       // update the ticket info
       $res = $zen->updateVarfieldVals($id,$varfield_params);
     }
-
     // check for errors
     if( !$res ) {
       $errs[] = tr("System Error").": ".tr("Ticket could not be edited.")." ".$zen->db_error;
     }
   }
-  
+
+/*
+  if( !$errs ) {
+      $varfields = $zen->getCustomFields(0,$page_type, 'Custom Tab'); 	 
+      include("$libDir/parseVarfields.php"); 	 
+    }
+  if( !$errs ) {
+    // update the ticket info
+    $res = $zen->updateVarfieldVals($id,$varfield_params);
+    // check for errors
+    if( !$res ) {
+      $errs[] = tr("System Error").": ".tr("Ticket could not be edited.")." ".$zen->db_error;
+    }
+  }
+*/  
   $setmode = 'custom';
 
   if( !$errs ) {
