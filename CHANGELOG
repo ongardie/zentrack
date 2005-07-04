@@ -13,6 +13,19 @@ abstraction, and endless possibilities for project expansion.
 
 ----- VERSION 2.5.6 (development) -----
 
+2005-07-04, cfalonso
+  Added support for custom_multi field types (multiselect)
+    - zentrack_2/includes/ZenFieldMap.class 1.20
+    - zentrack_2/includes/ZenSessionManager.class 1.5
+    - zentrack_2/includes/editCustomSubmit.php 1.9
+    - zentrack_2/includes/parseVarfields.php 1.5
+    - zentrack_2/includes/validateFields.php 1.4
+    - zentrack_2/includes/zenTemplate.class 1.11
+    - zentrack_2/includes/templates/editCustomsForm.php 1.10
+    - zentrack_2/includes/templates/fieldMapForm.php 1.12
+    - zentrack_2/www/addSubmit.php 1.28
+    - zentrack_2/www/behavior_js.php 1.30
+
 2005-05-24, cfalonso
   Included some new translations
     - zentrack_2/includes/ZenFieldMap.class 1.19
