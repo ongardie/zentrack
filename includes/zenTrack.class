@@ -328,6 +328,31 @@ class zenTrack extends zen {
     //return( $this->db_queryIndexed($query) );
   }      
 
+  /**
+   * retrieves the count of tickets
+   *
+   * $params can contain:
+   *     bins  - string/array of bins to retrieve for
+   *     users - string/array of users to retrieve for
+   *     id    - an array of specific ticket ids to retrieve
+   * the default columns returned can be overriden by using $columns to
+   * specify what should be returned from this function.  Note that the
+   * sort must correspond to the $columns values for SQL compatibility
+   * @param array $params see description
+   */
+  function count_tickets( $params = '',
+                          $archive_flag = 0 ) {
+    $tables = $this->table_tickets." t";
+
+    if( is_array($params) ) {
+      $where = $this->simpleWhere($params);
+    }
+
+    $v = $this->db_getrowcount($tables, $where);
+    $this->addDebug("count_tickets","records = ".$v." where = ".$query,3);
+    return $v;
+  }
+
   function get_user( $user_id ) {
     // returns a specific user
     // by the user id

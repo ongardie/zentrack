@@ -15,8 +15,40 @@ if( !$page_type )
   
 $fields = $map->getFieldMap($view);
 include_once("$libDir/sorting.php");
-  
+
 if( is_array($tickets) && count($tickets) ) {
+  $c = count($tickets);
+  $cols = 0;
+  foreach($fields as $f=>$field) {
+    if ( $field['is_visible'] ) {
+     $cols++;
+    }
+  }
+
+  $numtoshow = $zen->settings['paging_max_rows'];
+  $pageNumber = array_key_exists('pageNumber', $_GET)?
+                $zen->checkNum($_GET['pageNumber']) : 0;
+
+  $ata = NULL;
+  if ( strpos($view,"search_list")===0 ) {
+    $ata = $zen->search_tickets($params, "AND", "0", join(',',$orderby), 0) ;
+    if (is_array($ata)) {
+      $atc = count($ata);
+      unset($ata);
+    } else {
+      $atc= 0;
+    }
+  } else {
+    $atc = $zen->count_tickets($params);
+  }
+  if ( $atc > 0 ) {
+    $t_from = $pageNumber*$numtoshow+1;
+    $t_to = $t_from + $c -1;
+  } else {
+    $t_from = 0;
+    $t_to = 0;
+  }
+  
 ?>
 <script type='text/javascript'>
 function resortListPage( sortName ) {
@@ -33,6 +65,13 @@ function resortListPage( sortName ) {
 }
 </script>
 <table width="100%" cellspacing='1' cellpadding='2' bgcolor='<?=$zen->settings["color_alt_background"]?>'>
+<?
+if ($atc>0) {
+?>
+   <tr><td class='titleCell' colspan="<?=$cols?>" align='center'><?=($atc>1)? tr("? Matches",array($atc))." (".$t_from." - ".$t_to.")" : tr("1 Match");?></td></tr>
+<?
+}
+?>
    <tr bgcolor="<?=$zen->settings["color_title_background"]?>">
 <?
   // print some table headings
