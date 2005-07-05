@@ -13,6 +13,11 @@ abstraction, and endless possibilities for project expansion.
 
 ----- VERSION 2.5.6 (development) -----
 
+2005-07-05, cfalonso
+ Added ticket totals and paging info in listings
+    - zentrack_2/includes/zenTrack.class 1.186
+    - zentrack_2/includes/templates/listTickets.php 1.28
+
 2005-07-04, cfalonso
   Added support for custom_multi field types (multiselect)
     - zentrack_2/includes/ZenFieldMap.class 1.20
