@@ -180,7 +180,26 @@ if( is_array($behaviors) ) {
       print ','.$zen->fixJsVal($group['eval_type']);
       // encode the eval text to prevent corrupting
       // the javascript syntax
+//      print ", '".rawurlencode($group['eval_text'])."'";
+$temp_code = $group['eval_text'];
+$temp_code_error = 0;
+$open_tag="&lt;?=$";
+$close_tag="?&gt;";
+while ( ($start_pos=strpos($temp_code, $open_tag)) > 0 && $temp_code_error==0) {
+  if ( ($end_pos=strpos($temp_code, $close_tag, $start_pos)) > 0 ) {
+    $temp_prev=substr($temp_code, 0, ($start_pos));
+    $temp_eval=substr($temp_code, ($start_pos+strlen($open_tag)), ($end_pos-$start_pos-strlen($open_tag)));
+    $temp_rest=substr($temp_code, ($end_pos+strlen($close_tag)));
+    $temp_code=$temp_prev.$$temp_eval.$temp_rest;
+  } else {
+    $temp_code_error=1;
+  }
+}
+if ( $temp_code_error == 0 ) {
+      print ", '".rawurlencode($temp_code)."'";
+} else {
       print ", '".rawurlencode($group['eval_text'])."'";
+}
       print ");\n";
     }
 

@@ -43,9 +43,6 @@
     
     // update the variable field entries for this ticket
     if( $id && $varfields && count($varfield_params) ) {
-print "<pre>";
-print_r($varfield_params);
-print "</pre>";
       $res = $zen->updateVarfieldVals($id, $varfield_params);
       if( !$res ) {
         $errs[] = tr("? created, but variable fields could not be saved", array(tr('Ticket')));
