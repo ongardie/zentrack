@@ -111,7 +111,39 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
             }
             break;  
           default:
-            $params[] = array($k, $op, $v, 1);
+            if ( strpos($k,"custom_multi") === false ) {
+              $params[] = array($k, $op, $v, 1);
+            } else {
+              switch ($srch_opt[$k]) {
+                case "EXACT":
+                  $multi_params = "";
+                  foreach ($v as $mv) {
+                    $multi_params.=(strlen($multi_params)==0)?$mv : "\t$mv";
+                  }
+                  $params[] = array($k, "=", $multi_params, 1);
+                  break;
+                case "AND":
+                  foreach($v as $mv) {
+                    $multi_params = array();
+                    $multi_params[] = array($k, 'LIKE', "$mv");
+                    $multi_params[] = array($k, 'LIKE', "%\\t$mv");
+                    $multi_params[] = array($k, 'LIKE', "$mv\\t%");
+                    $multi_params[] = array($k, 'LIKE', "%\\t$mv\\t%");
+                    $params[] = array("OR",$multi_params);
+                  }
+                  break;
+                case "OR":
+                  $multi_params = array();
+                  foreach($v as $mv) {
+                    $multi_params[] = array($k, 'LIKE', "$mv");
+                    $multi_params[] = array($k, 'LIKE', "%\\t$mv");
+                    $multi_params[] = array($k, 'LIKE', "$mv\\t%");
+                    $multi_params[] = array($k, 'LIKE', "%\\t$mv\\t%");
+                  }
+                  $params[] = array("OR",$multi_params);
+                  break;
+              }
+            }
             break;
         }
       }

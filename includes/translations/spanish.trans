@@ -5493,25 +5493,30 @@ msgstr "Log"
 
 #file "/home/ired/zentrack_2/www/help/english/admin/behaviors.php"
 #args ""
-msgid 'Match All'
-msgstr "Coincidir todos (ALL)"
+msgid "Exact Match"
+msgstr "Coincidencia exacta"
+
+#file "/home/ired/zentrack_2/www/help/english/admin/behaviors.php"
+#args ""
+msgid "Match All"
+msgstr "Coincidir todos (AND)"
 
 
 #file "/home/ired/zentrack_2/www/help/english/admin/behaviors.php"
 #args ""
-msgid 'Match Any'
+msgid "Match Any"
 msgstr "Coincidir al menos uno (OR)"
 
 
 #file "/home/ired/zentrack_2/www/help/english/admin/behaviors.php"
 #args ""
-msgid 'Match Type'
+msgid "Match Type"
 msgstr "Tipo de Coincidencia"
 
 
 #file "/home/ired/zentrack_2/www/help/english/admin/data_groups.php"
 #args ""
-msgid 'Matches'
+msgid "Matches"
 msgstr "Coincidencias"
 
 

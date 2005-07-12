@@ -126,6 +126,12 @@ if( count($other_fields) ) {
     print $map->renderTicketField($view, 'searchForm', $f, $search_params["$f"], "search_params[$f]");
     if( $f == 'priority' ) {
       print "&nbsp;<input type='checkbox' name='or_higher' checked value='1'> or higher";
+    } else if( strpos($f, "multi")>0 ) {
+      print "&nbsp;<select name='srch_opt[$f]'>";
+      print "<option value='EXACT' selected='selected'>".tr("Exact Match")."</option>";
+      print "<option value='AND'>".tr("Match All")."</option>";
+      print "<option value='OR'>".tr("Match Any")."</option>";
+      print "</selected>";
     }
     print "</td></tr>\n";
   }
