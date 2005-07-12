@@ -36,10 +36,10 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
   }
 
   // set the form name
-  if (strpos($view,"custom")>=0) {
-    $form_name = "ticket_customForm";
-  } else {
+  if ( strpos($view,'custom') === false ) {
     $form_name = "ticketForm";
+  } else {
+    $form_name = "ticket_customForm";
   }
 
   // blow up if this user does not have proper access to any bins
