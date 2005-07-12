@@ -1,6 +1,7 @@
 <?
   include("action_header.php");
 
+
   if( !$zen->checkAccess($login_id, $bin_id, 'varfield_edit') ) {
     $errs[] = tr("You cannot edit a ticket's custom fields in this bin");
   }

@@ -1,154 +1,50 @@
-<? 
+<?
 if( !ZT_DEFINED ) { die("Illegal Access"); }
 
-if( $TODO == 'SAVED' ) {
-  $zen->print_errors($errs); 
+/*if( $TODO == 'SAVED' ) {
+  $zen->print_errors($errs);
   if( $save_message ) {
     print "<p class='bold'>".tr($save_message)."</p>";
   }
-}
+}*/
 
-  $editMode = $zen->checkAccess($login_id, $bin_id, 'varfield_edit');
-
-  if( $editMode ) {
-
-?><form name="ticket_customForm" action="<?=$rootUrl?>/actions/editCustomSubmit.php" method='POST'><?
-  }
-?>
-  <table width="600" align="center" cellpadding="2" cellspacing="2">
-<?
-  $sfd=$zen->getBehaviorDestinationFieldsArray();
-  $cfd=$zen->getCustomFields(0,$page_type,"C");
-  $rc = 0;
-  if( $editMode ) { 
-    foreach($cfd as $f) {
-      $k = $f['field_name'];
-      $l = $f['field_label'];
-      if ( isset($sfd["$l"]) ) {
-        unset($sfd["$l"]);
+  // if there is an ID, open it up
+  // otherwise, ask for the ticket ID
+  $skip = 0;
+  if( $id ) {
+    // run a whole bunch of error checks before
+    // letting the user edit the ticket
+    $ticket = $zen->get_ticket($id);
+    if( !is_array($ticket) ) {
+      $errs[] = tr("Ticket #? could not be found",array($id));
+    } else if( !$zen->checkAccess($login_id,$ticket["bin_id"],"edit") ) {
+      $errs[] = tr("You cannot edit a ticket in this bin");
+    } else if( !$zen->actionApplicable($id,"edit",$login_id) ) {
+      $errs[] = tr("Ticket #? cannot be edited in its current status",array($id));
+    } else {
+      $skip = 1;
+      $TODO = 'EDIT_CUSTOM';
+      $varfields = $zen->getVarfieldVals($id);
+      extract($varfields);
+      extract($ticket);
+      $description = preg_replace("@<br ?/?>@","\n",$description);
+      if( $zen->inProjectTypeIDs($ticket["type_id"]) ) {
+        $view = "project_custom";
+      } else {
+        $view = "ticket_custom";
       }
-      $v = $varfields["$k"];
-      if( $v == 'NULL' ) { $v = ''; }
-?>
-  <tr>
-    <td class='bars'><?=tr($f['field_label'])?></td>
-    <td class='bars'>
-    <?= genVarfield('ticket_customForm', $f, $v) ?>
-    </td>
-  </tr>
-<?   
-    }
-    foreach($sfd as $k=>$f) {
-      $v = isset($ticket["$f"])? $ticket["$f"] : ( isset($varfields["$f"]) ? $varfields["$f"] : NULL );
-      if( $v == 'NULL' ) { $v = ''; }
-      //If it is a date field it has to be formatted
-      switch ($f) {
-        case "ctime":
-        case "deadline":
-        case "otime":
-        case "start_date":
-          if( $v == 0 ) { $v = ""; }
-          if( strlen($v) && preg_match("/^[0-9]+$/", $v) ) {
-            $v = $zen->showDateTime($v);
-          }
-          break;
-      }
-?>
-         <input type="hidden" name="<?=$f?>" value="<?=strip_tags($v)?>">
-<?
-    }
-  } 
-  else {
-    foreach($cfd as $f) {
-      $k = $f['field_name'];
-      $v = $varfields["$k"];
-      if( $v == 'NULL' || $v == '' ) { $v = 'n/a'; }
-?>
-  <tr>
-     <td class='smallTitleCell'><?=tr($f['field_label'])?></td>
-  </tr>
-  <tr>
-     <td><?=$v?></td>
-  </tr>
-<?
+      include("$templateDir/newTicketForm.php");
     }
   }
-
-  if( $editMode ) {
-?>
-    <tr>
-         <td align="right">
-         <input type="hidden" name="id" value="<?=strip_tags($id)?>">
-   <?
-    $button = "submit";
-    $color = $zen->settings["color_highlight"];
+  if( !$skip ) {
+    $zen->printErrors($errs);
    ?>
-   <input type="<?=$button?>" value=" <?=uptr("Save")?> " class="actionButton" style="width:125;color:<?=$color?>">
-         </td>
-     </tr>
-<? 
-  } 
-
-  print "</table>\n";
-  if( $editMode ) { 
-?>
- <script language='Javascript' type='text/javascript'>
-
- function validateCustomForm() {
-   var errs = new Array();   
-<?
- if( is_array($cfd) && count($cfd) ) {
-    foreach($cfd as $v) {
-      $k = $v['field_name'];
-      $l = $v['field_label'];
-      if( $v['js_validation'] ) {
-	      print preg_replace('/\{form\}/', 'document.ticket_customForm', $v['js_validation']);
-      }
-      else {
-        $f = "document.ticket_customForm.{$k}";
-        $e = 'errs[ errs.length ]';
-        switch( getVarfieldDataType($k) ) {
-          case "menu":
-            // if the value of the menu selection is '', then
-            // the required status is significant
-            if( $v['is_required'] ) {
-              print "if( {$f}.options[ {$f}.selectedIndex ].value == '' )"
-                . " { {$e} = '{$l} is required'; }\n";
-            }
-          case "boolean":
-            // no validation for checkboxes
-            break;
-          case "number":
-            // make sure it is a valid number
-            print "if( {$f}.value.match( /[^0-9.]/ ) ) { {$e} = '"
-              .tr('? is not a valid number',array(tr($l)))."'; }\n";
-          default:
-            // nothing to do for dates or strings, just
-            // check the required status
-            // numbers fall through to here also
-            if( $v['is_required'] ) {
-              print "if( !{$f}.value ) { {$e} = '"
-                .tr('? is required',array(tr($l)))."'; }\n";
-            }
-        }
-      }
-   }
- }
-?>
-   if( errs.length > 0 ) {
-     var str = "<?=tr("Please correct the following errors:")?>\n----------\n";
-     for( var i=0; i < errs.length; i++ ) {
-       str += errs[i]+"\n";
-     }
-     alert(str);
-     return false;
-   }
-   return true;
- }
-  </script>
-
-  </form>
-<?
+   <br><blockquote>
+      <b><?=tr("Please enter a ticket ID")?></b>
+   <form action='<?=$SCRIPT_NAME?>'>
+    <input type="text" name="id" size="8" maxlength="12">
+   </form>
+   <?
   }
-
 ?>
+

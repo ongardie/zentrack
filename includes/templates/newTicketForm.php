@@ -10,7 +10,7 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
 
 
   unset($users);
-  $td = ($TODO == 'EDIT');
+  $td = ($TODO == 'EDIT' || $TODO == 'EDIT_CUSTOM');
   
   // determine what type of page we are looking at and create some useful labels
   if( !isset($page_type) ) { 
@@ -21,7 +21,11 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
   
   // calculate the bins which this user can access
   if( $td ) {
-    $userBins = $zen->getUsersBins($login_id,"level_edit");  
+    if (strpos($view,"custom")>=0) {
+      $userBins = $zen->getUsersBins($login_id,"level_edit_varfields");  
+    } else {
+      $userBins = $zen->getUsersBins($login_id,"level_edit");  
+    }
   }
   else {
     $level = $page_type=='project'? 'level_create_proj' : "level_create";
@@ -30,7 +34,14 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
     $creator_id = $login_id;
     $status = 'OPEN';
   }
-  
+
+  // set the form name
+  if (strpos($view,"custom")>=0) {
+    $form_name = "ticket_customForm";
+  } else {
+    $form_name = "ticketForm";
+  }
+
   // blow up if this user does not have proper access to any bins
   if( !is_array($userBins) || !count($userBins) ) {
     print "<span class='error'>";
@@ -71,13 +82,17 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
   
   // calculate the destination of our form results
   if( $td ) {
-    $formDest = $page_type == 'project'? 'editProjectSubmit.php' : 'editTicketSubmit.php';
+    if (strpos($view,"custom")>=0) {
+      $formDest = "actions/editCustomSubmit.php";
+    } else {
+      $formDest = $page_type == 'project'? 'editProjectSubmit.php' : 'editTicketSubmit.php';
+    }
   }
   else {
     $formDest = $page_type == 'project'? 'addProjectSubmit.php' : 'addSubmit.php';
   }
 ?>
-<form method="post" name="ticketForm" action="<?=$formDest?>" onSubmit='return validateTicketForm()'>
+<form method="post" name="<?=$form_name?>" action="<?=$formDest?>" onSubmit='return validateTicketForm()'>
 <table width="640" align="left" cellpadding="2" cellspacing="2" bgcolor="<?=$zen->settings["color_background"]?>">
 <tr>
   <td colspan="2" width="640" class="titleCell" align="center">
@@ -87,7 +102,7 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
 <?
 foreach($hidden_fields as $f) {
   //$view, $form_name, $field_name, $value = null, $prefix = ''
-  print $map->renderTicketField($view, 'ticketForm', $f, $$f);
+  print $map->renderTicketField($view, $form_name, $f, $$f);
 }
 
 foreach($visible_fields as $f) {
@@ -118,7 +133,7 @@ foreach($visible_fields as $f) {
   </td>
 </tr>
 <?
-  if ($td && $zen->settings['edit_reason_required']=='on' && $zen->settings['log_edit']=='on') {
+  if ($TODO == 'EDIT' && $zen->settings['edit_reason_required']=='on' && $zen->settings['log_edit']=='on') {
     $er_vals=array('field_cols'   => '60',
                    'field_rows'   => '5',
                    'field_name'   => 'edit_reason',

@@ -1576,7 +1576,7 @@ msgstr "Editar Tickets"
 #file "/home/ired/zentrack_2/includes/templates/adminMenu.php"
 #args ""
 msgid "Edit Types"
-msgstr "Editar Tipos de Problema"
+msgstr "Editar Tipos"
 
 
 #file "/home/ired/zentrack_2/www/admin/editUserSubmit.php"
@@ -2902,7 +2902,7 @@ msgstr "Proceso finalizado satisfactoriamente. Las Tareas no fueron actualizadas
 #file "/home/ired/zentrack_2/www/admin/types.php"
 #args ""
 msgid "Process completed successfully.  Types were not updated since this is a demo site."
-msgstr "Proceso finalizado satisfactoriamente. Los Tipos de Problema no fueron actualizados porque &eacute;ste es un sitio de demostraci&oacute;n"
+msgstr "Proceso finalizado satisfactoriamente. Los Tipos no fueron actualizados porque &eacute;ste es un sitio de demostraci&oacute;n"
 
 
 #file "/home/ired/zentrack_2/www/admin/editBehaviorDetails.php"
@@ -4090,7 +4090,7 @@ msgstr "El t&iacute;tulo del contacto"
 #file "/home/ired/zentrack_2/includes/templates/listTickets_workFormat.php"
 #args ""
 msgid "The type of ticket"
-msgstr "El tipo de problema en el ticket"
+msgstr "El tipo de ticket"
 
 
 #file "/home/ired/zentrack_2/www/actions/upload.php"
@@ -4420,7 +4420,7 @@ msgtr "Comunidad"
 #file "/home/ired/zentrack_2/includes/zenTrack.class"
 #args ""
 msgid "Type"
-msgtr "Tipo de Problema"
+msgtr "Tipo"
  
      
 #file "/home/ired/zentrack_2/includes/zenTrack.class"
@@ -4516,13 +4516,13 @@ msgstr "Tipo de ticket"
 #file "/home/ired/zentrack_2/includes/templates/groupForm.php"
 #args ""
 msgid "Type"
-msgstr "Tipo de Problema"
+msgstr "Tipo"
 
 
 #file "/home/ired/zentrack_2/includes/templates/adminMenu.php"
 #args ""
 msgid "Types represent the type of ticket activity."
-msgstr "Los Tipos de Problema representan por qu&eacute; se gener&oacute; el ticket."
+msgstr "Los Tipos representan por qu&eacute; se gener&oacute; el ticket."
 
 
 #file "/home/ired/zentrack_2/includes/templates/userAdd.php"
@@ -5044,7 +5044,7 @@ msgstr "ning&uacute;n sistema"
 #file "/home/ired/zentrack_2/www/helpers/ticketSearchbox.php"
 #args ""
 msgid "no types"
-msgstr "ning&uacute;n tipo de problema"
+msgstr "ning&uacute;n tipo"
 
 
 #file "/home/ired/zentrack_2/includes/templates/userSearchList.php"
@@ -5860,7 +5860,7 @@ msgstr "T&iacute;tulo"
 #file "/home/ired/zentrack_2/includes/templates/tutorial/english/create_ticket.php"
 #args ""
 msgid 'Type'
-msgstr "Tipo de Problema"
+msgstr "Tipo"
 
 
 #file "/home/ired/zentrack_2/includes/templates/configForm.php"

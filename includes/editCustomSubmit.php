@@ -13,7 +13,6 @@
     $view="ticket_custom";
   }
   include("$libDir/validateFields.php");
-  
   if( !$errs ) {
     if( count($varfield_params) ) {
       // update the ticket info
