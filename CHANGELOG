@@ -13,6 +13,13 @@ abstraction, and endless possibilities for project expansion.
 
 ----- VERSION 2.5.6 (development) -----
 
+2005-07-13, cfalonso
+ More work on the custom page managed through the field map:
+    - zentrack_2/includes/ZenFieldMap.class 1.21
+    - zentrack_2/includes/editCustomSubmit.php 1.11
+    - zentrack_2/includes/templates/newTicketForm.php 1.46
+    - zentrack_2/includes/templates/ticket_customBox.php 1.11
+
 2005-07-12, cfalonso
  Added search functionality for custom_multi fields
     - zentrack_2/includes/templates/searchForm.php 1.16
