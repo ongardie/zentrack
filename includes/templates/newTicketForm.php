@@ -35,11 +35,15 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
     $status = 'OPEN';
   }
 
-  // set the form name
+  $override_as_label = null;
+  // set the form name and the override as label if appropriate
   if ( strpos($view,'custom') === false ) {
     $form_name = "ticketForm";
   } else {
     $form_name = "ticket_customForm";
+    if( !$zen->checkAccess($login_id, $bin_id, 'varfield_edit') || !$zen->actionApplicable($id, 'varfield_edit', $login_id) ) {
+      $override_as_label = 1;
+    }
   }
 
   // blow up if this user does not have proper access to any bins
@@ -108,7 +112,7 @@ foreach($hidden_fields as $f) {
 foreach($visible_fields as $f) {
   if( in_array($f, $sections) ) {
     print "<tr><td colspan='2' class='subTitle'>";
-    print $map->renderTicketField($view, 'ticketForm', $f);
+    print $map->renderTicketField($view, $form_name, $f);
     print "</td></tr>\n";
   }
   else {
@@ -120,7 +124,7 @@ foreach($visible_fields as $f) {
       print $map->getTextValue($view, $f, $$f);
     }
     else {
-      print $map->renderTicketField($view, 'ticketForm', $f, $$f);
+      print $map->renderTicketField($view, $form_name, $f, $$f, null, $override_as_label);
     }
     print "</td></tr>\n";
   }

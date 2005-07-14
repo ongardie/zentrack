@@ -347,8 +347,8 @@ class ZenFieldMap {
    * @param $override_name if provided, will override the name=".." property of this input field 
    * @return string containing html to render
    */
-  function renderTicketField( $view, $form_name, $field_name, $value = null, $override_name = null ) {
-//    $this->_zen->addDebug("renderTicketField", "rendering $view, $form_name, $field_name, $value, $override_name", 1);//debug
+  function renderTicketField( $view, $form_name, $field_name, $value = null, $override_name = null, $override_as_label = null ) {
+//    $this->_zen->addDebug("renderTicketField", "rendering $view, $form_name, $field_name, $value, $override_name, $override_as_label", 1);//debug
     global $templateDir;
     global $rootUrl;
     
@@ -356,6 +356,11 @@ class ZenFieldMap {
     $field = $this->getFieldFromMap($view,$field_name);
     $typeint = $this->getTypeInt($field['field_type']);
     $typename = $field['field_type'];
+
+    if ($typeint != ZTFIELD_SECTION && $typeint != ZTFIELD_HIDDEN && $override_as_label == 1) {
+      $typeint = ZTFIELD_LABEL;
+      $typename =  "label";
+    }
     
     // don't waste time on spacers
     if( $typeint == ZTFIELD_SECTION ) {

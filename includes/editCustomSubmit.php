@@ -7,7 +7,7 @@
   // the TODO is saved, even if the save failed
   $TODO = 'SAVED';
 
-  if( $zen->inProjectTypeIDs($bin_id) ) {
+  if( $zen->inProjectTypeIDs($type_id) ) {
     $view="project_custom";
   } else {
     $view="ticket_custom";
@@ -45,7 +45,7 @@
     $save_message = tr("Fields updated successfully");
      //header("Location:$rootUrl/ticket.php?id=$id&setmode=Custom");
     $setmode = "custom";
-    if( $zen->inProjectTypeIDs($bin_id) ) {
+    if( $zen->inProjectTypeIDs($type_id) ) {
       include("../project.php");
     } else {
       include("../ticket.php");
@@ -54,7 +54,7 @@
   } else {
      include_once("$libDir/nav.php");
      $zen->printErrors($errs);
-     if( $zen->inProjectTypeIDs($bin_id) )
+     if( $zen->inProjectTypeIDs($type_id) )
        include("$templateDir/projectView.php");
      else
        include("$templateDir/ticketView.php");

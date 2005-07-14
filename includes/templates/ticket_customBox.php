@@ -13,14 +13,12 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
   $skip = 0;
   if( $id ) {
     // run a whole bunch of error checks before
-    // letting the user edit the ticket
+    // letting the user edit the varfields of ticket
     $ticket = $zen->get_ticket($id);
     if( !is_array($ticket) ) {
       $errs[] = tr("Ticket #? could not be found",array($id));
-    } else if( !$zen->checkAccess($login_id,$ticket["bin_id"],"edit") ) {
-      $errs[] = tr("You cannot edit a ticket in this bin");
-    } else if( !$zen->actionApplicable($id,"edit",$login_id) ) {
-      $errs[] = tr("Ticket #? cannot be edited in its current status",array($id));
+    } else if( !$zen->checkAccess($login_id,$ticket["bin_id"],"varfield_edit") ) {
+      $errs[] = tr("You cannot edit the varfields of a ticket in this bin");
     } else {
       $skip = 1;
       $TODO = 'EDIT_CUSTOM';
