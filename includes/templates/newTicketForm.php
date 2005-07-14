@@ -130,6 +130,7 @@ foreach($visible_fields as $f) {
   }
 }
 
+if (!$override_as_label) {
 ?>
 <tr>
   <td class="titleCell" colspan="2" align="center">
@@ -137,6 +138,7 @@ foreach($visible_fields as $f) {
   </td>
 </tr>
 <?
+}
   if ($TODO == 'EDIT' && $zen->settings['edit_reason_required']=='on' && $zen->settings['log_edit']=='on') {
     $er_vals=array('field_cols'   => '60',
                    'field_rows'   => '5',
@@ -159,12 +161,16 @@ foreach($visible_fields as $f) {
 </tr>
 <?
   }
+  if (!$override_as_label) {
 ?>
 <tr>
   <td colspan="2" class="bars">
    <input type="submit" value=" <?=tr(($td)?"Save":"Create")?> " class="submit">
   </td>
 </tr>
+<?
+  }
+?>
 </table>
 </form>
 
