@@ -320,13 +320,7 @@ class ZenFieldMap {
         case "custom_text":
           return $this->_zen->ffvText($value);
         case "custom_multi":
-          $tok=strtok($value,"\t");
-          $val=array();
-          while ($tok !== false) {
-            $val[] = $this->_zen->ffv($tok, $field['num_cols']);
-            $tok = strtok("\t");
-          }
-          return ($val);
+          return str_replace("\t", "; ", $value);
         default:
           $val = $this->_zen->ffvText(str_replace("\t",";",$value), $field['num_cols']);
           $this->_zen->addDebug("getTextValue", "rendering default: $val", 3);
@@ -393,7 +387,13 @@ class ZenFieldMap {
     } else if( $typeint == ZTFIELD_DATE && !preg_match('/[^0-9]/', $value) ) {
       // if it is a date and we have a numeric value, then we will parse it to
       // a date right here
-      
+    } else if( strpos($vals["field_name"], 'custom_multi') !== false ) {
+      $tok=strtok($value,"\t");
+      $vals["field_value"]=array();
+      while ($tok !== false) {
+        $vals["field_value"][] = $this->_zen->ffv($tok, $field['num_cols']);
+        $tok = strtok("\t");
+      }
     } else {
       $vals["field_value"] = $this->_zen->ffv($value);
     }
@@ -410,11 +410,17 @@ class ZenFieldMap {
     $vals['field_rows'] = $field['num_rows'];
     
 //    $vals['field_multiple'] = $view == 'search_form' && $typeint == ZTFIELD_MENU && $field['num_rows'] > 1? "multiple" : "";
+//    $vals['field_multiple'] = (
+//                                ( $view == 'search_form' || strpos($field_name,'custom_multi')===0 )
+//                                && $typeint == ZTFIELD_MENU && $field['num_rows'] > 1
+//                              ) ? "multiple" : "";
     $vals['field_multiple'] = (
-                                ( $view == 'search_form' || strpos($field_name,'custom_multi')===0 )
-                                && $typeint == ZTFIELD_MENU && $field['num_rows'] > 1
+                                ( $view == 'search_form' && $typeint == ZTFIELD_MENU && $field['num_rows'] > 1 )
+                                || 
+                                ( strpos($field_name,'custom_multi')===0 )
                               ) ? "multiple" : "";
-    if( strpos($vals['field_multiple'],"multiple")===0 && $typename == 'menu' ) {
+
+    if( strpos($field_name,'custom_multi')===0 ) {
       $vals['field_name'] .= "[]";
     }
 
@@ -484,6 +490,11 @@ class ZenFieldMap {
           $this->_zen->addDebug("renderTicketField", "Required field is hidden and has no value: $view, $field_name", 1);
         }
       }
+    }
+
+    if ( $typeint == ZTFIELD_LABEL && strpos($field_name,"multi")>0 ) {
+      $typename = "multilabel";
+      $vals["field_choices"] = $this->getChoices($view,$field_name);
     }
     
     // parse and return 

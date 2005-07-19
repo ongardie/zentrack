@@ -5122,7 +5122,6 @@ class zenTrack extends zen {
       
       // store in session
       $this->_session->storeDataType('types',$vals);
-      
       return($vals);
     } else {
       $where = ($active)? " WHERE active = $active" : "";

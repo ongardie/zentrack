@@ -86,7 +86,7 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
   
   // calculate the destination of our form results
   if( $td ) {
-    if (strpos($view,"custom")>=0) {
+    if (strpos($view,"custom")!== false) {
       $formDest = "actions/editCustomSubmit.php";
     } else {
       $formDest = $page_type == 'project'? 'editProjectSubmit.php' : 'editTicketSubmit.php';

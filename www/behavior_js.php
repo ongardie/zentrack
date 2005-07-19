@@ -549,6 +549,28 @@ function setFormValsUsingGroup( fieldObj, group, setid ) {
 //          fieldObj.selectedIndex=i;
         }
       }
+
+      var labelText = document.getElementById(fieldObj.name+"LabelText");
+      if( labelText ) {
+        labelText.innerHTML = fields.length>0?fields[oldPos].label : "";
+        if (fields.length>0) {
+          if( fieldObj.options && fieldObj.options.length > 0 ) {
+            // store the currently selected value and try to reproduce in a minute
+            separator = "";
+            labelText.innerHTML = "";
+            for (var i=0; i< fieldObj.options.length; i++) {
+              if (fieldObj.options[i].selected) {
+                labelText.innerHTML = labelText.innerHTML + separator + fieldObj.options[i].value;
+                separator = "; ";
+                behaviorDebug(3, "(setFormValsUsingGroup)added "+fieldObj.options[i].value+"to "+fieldObj.name+"LabelText.innerHTML");
+              }
+            }
+          }
+        } else {
+          behaviorDebug(3, "(setFormValsUsingGroup) Empty string forced for "+fieldObj.name+"LabelText.innerHTML");
+          labelText.innerHTML = "";
+        }
+      }
       break;
     //case "radio":
     //case "file":
