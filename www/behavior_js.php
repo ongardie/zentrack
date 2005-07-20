@@ -10,7 +10,7 @@
   include_once(dirname(__FILE__)."/header.php");  
   $behaviors = $zen->getBehaviorList();
   $groups = $_SESSION['data_groups'];
-  
+
   /**
    * Generate field info for behaviors
    *
@@ -145,6 +145,21 @@ function GroupMapField(value, label) {
   this.label = label;
 }
 
+<?
+  // Generate an array of possible values that can be accessed from Javascript
+  $possible_variables=array('login_id',
+                            'login_name',
+                            'login_language',
+                            'login_inits',
+                            'username');
+  print "var jsVarNames = new Array();\n";
+  print "var jsVarValues = new Array();\n";
+  foreach ($possible_variables as $vn) {
+    $vv=$$vn;
+    print "  jsVarNames[ jsVarNames.length ] = ".$zen->fixJsVal( $vn ).";\n";
+    print "  jsVarValues[ ".$zen->fixJsVal( $vn )." ] = ".$zen->fixJsVal( $vv ).";\n";
+  }
+?>
 var groupMap = new Array();
 var behaviorMap = new Array();
 <?
@@ -180,26 +195,7 @@ if( is_array($behaviors) ) {
       print ','.$zen->fixJsVal($group['eval_type']);
       // encode the eval text to prevent corrupting
       // the javascript syntax
-//      print ", '".rawurlencode($group['eval_text'])."'";
-$temp_code = $group['eval_text'];
-$temp_code_error = 0;
-$open_tag="&lt;?=$";
-$close_tag="?&gt;";
-while ( ($start_pos=strpos($temp_code, $open_tag)) > 0 && $temp_code_error==0) {
-  if ( ($end_pos=strpos($temp_code, $close_tag, $start_pos)) > 0 ) {
-    $temp_prev=substr($temp_code, 0, ($start_pos));
-    $temp_eval=substr($temp_code, ($start_pos+strlen($open_tag)), ($end_pos-$start_pos-strlen($open_tag)));
-    $temp_rest=substr($temp_code, ($end_pos+strlen($close_tag)));
-    $temp_code=$temp_prev.$$temp_eval.$temp_rest;
-  } else {
-    $temp_code_error=1;
-  }
-}
-if ( $temp_code_error == 0 ) {
-      print ", '".rawurlencode($temp_code)."'";
-} else {
       print ", '".rawurlencode($group['eval_text'])."'";
-}
       print ");\n";
     }
 
@@ -420,6 +416,15 @@ function setFormValsUsingGroup( fieldObj, group, setid ) {
     var f = 'window.document.'+fieldObj.form.getAttribute('name');
     var fn = f+'.'+fieldObj.name
     var s = unescape(group.evalText);
+    behaviorDebug(3, "(setFormValsUsingGroup)initial evalText: "+s);
+    var myReplaceText;
+    var myRegExp;
+    for (var i=0; i < jsVarNames.length; i++) {
+      myReplaceText = '\{'+jsVarNames[i]+'\}';
+      myRegExp = new RegExp(myReplaceText, "ig")  
+      s = s.replace( myRegExp, jsVarValues[jsVarNames[i]] );
+      behaviorDebug(3, '(setFormValsUsingGroup)replacing evalText ('+myRegExp+' by '+jsVarValues[jsVarNames[i]]+') results in : '+s);
+    }
     s = s.replace( /\{form\}.\{field\}/ig, "{field}" );
     s = s.replace( /{form}/ig, f);
     var vals = evalJsString( s.replace(/{field}/ig, fn) );
@@ -823,6 +828,7 @@ function pageLoadedBehavior() {
   // clear the behavior flags from any previous uses
   clearBehaviorFlags();
 
+
   var behaviorFormSet = new Array(<?
     if( $_GET['formset'] ) {
       $sep = false;
@@ -944,6 +950,7 @@ function evalJsString( s ) {
   eval( s );
   return x;
 }
+
 
 window.onload = mergeFunctions( window.onload, pageLoadedBehavior );
 

@@ -1,6 +1,5 @@
 <?
 if( !ZT_DEFINED ) { die("Illegal Access"); }
-
 /*if( $TODO == 'SAVED' ) {
   $zen->print_errors($errs);
   if( $save_message ) {
