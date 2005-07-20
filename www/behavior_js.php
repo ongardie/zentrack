@@ -509,7 +509,7 @@ function setFormValsUsingGroup( fieldObj, group, setid ) {
       break;
     case "select":
     case "select-one":
-      if( fieldObj.selectedIndex && fieldObj.options && fieldObj.options.length > 0 ) {
+      if( fieldObj.selectedIndex != -1 && fieldObj.options && fieldObj.options.length > 0 ) {
         // store the currently selected value and try to reproduce in a minute
         var oldValue = fieldObj.options[ fieldObj.selectedIndex ].value;
         behaviorDebug(3, "(setFormValsUsingGroup)storing oldValue="+oldValue);
