@@ -6,7 +6,7 @@
   **
   */
   
-  
+  define("ZT_SECTION","tickets");
   include("header.php");
 
   $page_title = tr("Create a New Ticket");

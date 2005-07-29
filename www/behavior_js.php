@@ -206,14 +206,14 @@ if( is_array($behaviors) ) {
         $sets = $zen->getBehaviorFileSet( $b, $group, $userBins, $mode );
         if( $sets && count($sets) ) {
           foreach($sets as $setid=>$vals) {
-            genBehaviorFields($bid, $vals['matches'], &$fieldMap, $setid); 
+            genBehaviorFields($bid, $vals['matches'], $fieldMap, $setid); 
             genGroupFields($group['group_id'], $vals['values'], $setid);
           }
         }
       }
       else {
         // if this is not a file group, then we have a simple match pattern here
-        genBehaviorFields($bid, $b['fields'], &$fieldMap);
+        genBehaviorFields($bid, $b['fields'], $fieldMap);
         genGroupFields($group['group_id'], $group['fields']);
       }
     }

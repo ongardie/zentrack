@@ -1,4 +1,4 @@
-<?
+.<?
   include_once(dirname(__FILE__)."/header.php");  
   header("Content-Type: text/css");
 ?>
@@ -26,8 +26,8 @@
   }
   
   FORM {
-     margin-top: 0px;
-     margin-bottom: 0px;
+     margin: 0px;
+     padding: 0px;
   }
   
   
@@ -42,7 +42,11 @@
 
   .mainContent {
       background: <?=$zen->settings["color_bars"]?>;
-      padding: 5px;
+      /* padding: 5px; */
+  }
+  
+  .padded {
+    padding: 5px;
   }
   
   /*** LINK PROPERTIES ***/
@@ -88,8 +92,8 @@
   A.rowLink:Hover {
      color:           <?=$zen->settings["color_text"]?>;
      text-decoration: none;
-  } 
-
+  }
+  
   A.tabsOn {
      color:           <?=$zen->settings["color_text"]?>;
      text-decoration: none;     
@@ -183,18 +187,13 @@
   }
 
   .subTitle {
-     color:          <?=$zen->settings["color_alt_text"]?>;
-     background:     <?=$zen->settings["color_alt_background"]?>;
-     <?
-       if( $page_browser != "ns" ) {
-     print "padding-top: 2px;";
-     print "padding-bottom: 2px;";
-       }
-     ?>     
+     color:          <?=$zen->settings["color_bar_text"]?>;
+     background:     <?=$zen->settings["color_bar_darker"]?>;  
      padding-left:   2px;
-     font-weight:    Bold;     
+     font-weight:    Bold;
+     border: 1px solid <?=$zen->settings['color_bar_text']?>;
   }
-
+  
   .menuCell {
      color:      <?=$zen->settings["color_title_txt"]?>;
      background: <?=$zen->settings["color_title_background"]?>;
@@ -230,35 +229,87 @@
      border:         1px solid <?=$zen->settings["color_title_background"]?>;
      background:     <?=$zen->settings["color_background"]?>;
   }
-
-  .tabOn {
-     color:          <?=$zen->settings["color_alt_text"]?>;
-     background:     <?=$zen->settings["color_alt_background"]?>;
+  
+  .tab {
      font-weight:    bold;
      font-size:      <?=$zen->settings["font_size_small"]?>px;
-     <?
-       if( $page_browser != "ns" ) {
-     print "padding-top: 2px;";
-     print "padding-bottom: 2px;";
-       }
-     ?>     
      padding-left:   5px;
      padding-right:  5px;
+     border-top: 2px outset <?=$zen->settings['color_bar_darker']?>;
+     border-left: 2px outset <?=$zen->settings['color_bar_darker']?>;
+     border-right: 2px outset <?=$zen->settings['color_bar_darker']?>;
+  }
+  
+  A.tab { border: none; }
+
+  .on {
+     color:          <?=$zen->settings["color_alt_text"]?>;
+     background:     <?=$zen->settings["color_alt_background"]?>;
   }
 
-  .tabOff {
+  .off {
      color:          <?=$zen->settings["color_title_text"]?>;
      background:     <?=$zen->settings["color_title_background"]?>;
-     font-weight:    bold;     
-     font-size:      <?=$zen->settings["font_size_small"]?>px;
-     <?
-       if( $page_browser != "ns" ) {
-     print "padding-top: 2px;";
-     print "padding-bottom: 2px;";
-       }
-     ?>     
-     padding-left:   5px;
-     padding-right:  5px;     
+  }
+  
+  A.navOn, A.navOn:Hover {
+    text-decoration: none;
+    color: <?=$zen->settings["color_title_text"]?>;
+    background: none;
+  }
+  
+  A.navOff, A.navOff:Hover {
+    text-decoration: none;
+    color: <?=$zen->settings["color_title_text"]?>;
+    background: none;
+  }
+
+  A.leftNavLink, A.leftNavLink:Hover {
+    text-decoration: none;
+    color: <?=$zen->settings["color_alt_text"]?>;
+    background: none;
+  }
+  
+
+  .navTab {
+     font-weight:    bold;
+     font-size: <?=$zen->settings['font_size']?>;
+     padding: 5px;
+     border-top: 1px outset <?=$zen->settings['color_bar_darker']?>;
+     border-left: 1px outset <?=$zen->settings['color_bar_darker']?>;
+     border-right: 1px outset <?=$zen->settings['color_bar_darker']?>;
+  }
+  
+  .hotKeyHelp {
+    position: absolute;
+    left: 300px;
+    top: 120px;
+  }
+  
+  .hotKeyCell {
+    background: <?=$zen->settings['color_highlight']?>;
+    color: <?=$zen->settings['color_hot']?>;
+    border: 1px solid <?=$zen->settings['color_title_background']?>;
+  }
+  
+  .invisible {
+    visibility: hidden;
+  }
+  
+  .accesskeys {
+   border: 0; width: 0px; height: 0px;    
+  }
+  
+  A.navTab { border: none; }
+
+  .navOn {
+     color:          <?=$zen->settings["color_title_text"]?>;
+     background:     <?=$zen->settings["color_title_background"]?>;
+  }
+
+  .navOff {
+     color:          <?=$zen->settings["color_title_text"]?>;
+     background:     <?=$zen->settings["color_bar_darker"]?>;
   }
 
   /*** TEXT PROPERTIES ***/
@@ -288,6 +339,10 @@ TD.bigger { font-size: 50px; }
    font-weight: bold;
    background:  <?=$zen->settings["color_highlight"]?>;
    color:       <?=$zen->settings["color_bar_text"]?>;
+}
+
+.mark {
+   background:  <?=$zen->settings["color_highlight"]?>;  
 }
 
 .hot {
@@ -388,7 +443,31 @@ TD.bigger { font-size: 50px; }
   }
 
   .searchbox {
-     color:      <?=$zen->settings["color_alt_text"]?>;
-     background: <?=$zen->settings["color_alt_background"]?>;
+     background: <?=$zen->settings["color_bar_darker"]?>;
+  }
+  
+  
+  .leftNavCell, .leftNavMenu {
+    border: 1px inset <?=$zen->settings['color_bar_darker']?>;
+    background: <?=$zen->settings['color_bar_darker']?>;
+    font-size:  <?=$zen->settings['font_size_small']?>px;
+  }
+  
+  .leftNavMenu {
+    border: 1px outset <?=$zen->settings['color_bar_darker']?>;
+    font-weight: bold;
+    font-size:  <?=$zen->settings['font_size']?>px;
+  }
+  
+  .leftNavTitle {
+    color: <?=$zen->settings['color_title_text']?>;
+    text-align: center;
+    font-weight: bold;
+    font-size:  <?=$zen->settings['font_size']?>px;
+  }
+  
+  .navpad {
+    padding-top: 3px;
+    padding-bottom: 3px;
   }
 -->

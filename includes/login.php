@@ -40,8 +40,8 @@ if( $autologin && !$login_id && $zentrackUsername && $zentrackKey ) {
       $login_name  = $zen->user["fname"]." ".$zen->user["lname"];
       $login_inits = $zen->user["initials"];
       $login_bin   = $zen->user["homebin"];
-      $prefs = $zen->get_prefs($login_id, "language");
-      if(isset($prefs["language"])) { $login_language = $prefs["language"]; }
+      $language = $zen->get_prefs($login_id, "language");
+      if($language) { $login_language = $language; }
       setcookie("zentrackUsername", $zentrackUsername, time()+2592000);
       setcookie("zentrackKey", $zentrackKey, time()+2592000);
       $skip = 1;
@@ -59,7 +59,8 @@ if( $autologin && !$login_id && $zentrackUsername && $zentrackKey ) {
 }
 
 if( !$login_id ) {
-  if( isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW']) ) {
+  if( $zen->settingOn('use_system_auth') && 
+      isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW']) ) {
     // use htaccess authentication
     $username = $_SERVER['PHP_AUTH_USER'];
     $passphrase = $_SERVER['PHP_AUTH_PW'];

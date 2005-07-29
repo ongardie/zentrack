@@ -2,7 +2,7 @@
   /*
   **  Action: edit ticket
   */
-  include_once("../header.php");
+  include_once("../contact_header.php");
   $expand_agreement = 1;
   
   

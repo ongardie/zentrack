@@ -7,7 +7,7 @@
   */
   
   
-  include("header.php");
+  include("contact_header.php");
 
   // security measure
   if( $login_level < $zen->settings['level_contacts'] ) {
@@ -33,8 +33,8 @@ if ($mode2==1){
 <ul>
   <b><?=tr("Contacts Administration")?></b>
   <ul>
-    <b><a href='<?=$rootUrl?>/newContact.php?mode2=1'><?=tr("New Company")?></a></b>
-    <br><b><a href='<?=$rootUrl?>/newContact.php?mode2=2'><?=tr("New Person")?></a></b>
+    <b><a href='<?=$rootUrl?>/newContact.php?mode2=1' title="<?=$hotkeys->tt("New Company")?>"><?=$hotkeys->ll("New Company")?></a></b>
+    <br><b><a href='<?=$rootUrl?>/newContact.php?mode2=2' title="<?=$hotkeys->tt("New Person")?>"><?=$hotkeys->ll("New Person")?></a></b>
   </ul>
   
 </ul>

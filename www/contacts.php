@@ -6,7 +6,7 @@
   **
   */
   
-  include("header.php");
+  include("contact_header.php");
 
   // security measure
   if( $login_level < $zen->settings['level_contacts'] ) {
@@ -21,12 +21,12 @@
           $page_section = tr("Contact list - Company");
         $ie = NULL;
         break;
-    case "extern":
+    case "external":
         $tabel = "ZENTRACK_EMPLOYEE"; 
         $title = "lname"; 
           $page_section = tr("Contact list - Persons Extern");
         break;
-    case "intern":
+    case "internal":
         $tabel = "ZENTRACK_EMPLOYEE";
         $title = "lname";  
           $page_section = tr("Contact list - Persons Intern");

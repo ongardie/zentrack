@@ -6,7 +6,7 @@
   **
   */
     
-  include("header.php");
+  include("contact_header.php");
 
   // security measure
   if( $login_level < $zen->settings['level_contacts'] ) {

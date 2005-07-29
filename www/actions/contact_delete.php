@@ -3,7 +3,7 @@
   **  Action: delete contact
   */
   $id = NULL;
-  include_once("../header.php");
+  include_once("../contact_header.php");
   $page_title = tr("Contacts");
   $page_section = "Contacts";
   $expand_contacts = 1;

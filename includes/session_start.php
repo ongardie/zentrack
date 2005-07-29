@@ -13,6 +13,7 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
   */
 
 // start the session
+session_cache_limiter('public'); 
 session_start();     
 
 if( $_GET['clear_session_cache'] ) {

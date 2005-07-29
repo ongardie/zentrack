@@ -7,12 +7,7 @@
   */
   
   // include the header file
-  if( file_exists("header.php") ) {
-    include_once("header.php");
-  }
-  else if( file_exists("../header.php") ) {
-    include_once("../header.php");
-  }
+  include_once("contact_header.php");
 
   // security measure
   if( $login_level < $zen->settings['level_contacts'] ) {
@@ -23,10 +18,12 @@
 $id = NULL;
   
   if($pid){
+    $ctype = 'employee';
 		$table = "ZENTRACK_EMPLOYEE";
 		$col = "person_id";
 		$id = $pid;
 	} elseif($cid) {
+    $ctype = 'company';
 		$table = "ZENTRACK_COMPANY";
 		$col = "company_id";
 		$id = $cid;
@@ -45,6 +42,10 @@ $id = NULL;
   */
   
   $contacts = $zen->get_contact($id,$table,$col);
+  $history =& $zen->getHistoryManager();
+  
+  // place record into history of recently viewed items
+  $history->storeItem($ctype, $id, $zen->getDataTypeLabel($table, $contacts));
 
   
   $page_section = "Contact $id";

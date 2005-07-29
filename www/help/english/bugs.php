@@ -36,8 +36,8 @@
     
     <p><b>2. Report Your Bug</b>: Please report bugs <a href="http://sourceforge.net/tracker/?group_id=22724&atid=376336">here</a>.
     
-    <p>If Source Forge is not running, then you can report them via our 
-    <a href='http://www.zentrack.net/feedback/?subject=Bugs' target='_blank'>contact form</a>.</p>  
+    <p>If Source Forge is not running, then you can report them via our user forum:
+    <a href='http://www.zentrack.net/modules/newbb/' target='_blank'>forum link</a>.</p>  
   </blockquote>
 <?
   include("$libDir/footer.php");

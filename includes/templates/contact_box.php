@@ -35,10 +35,10 @@
   foreach( $tabs as $t ) {
     $lt = strtolower($t);
     if( $page_mode == $lt ) {
-      $class = 'tabOn';
+      $class = 'tab on';
       $lclass = "tabsOn";
     } else {
-      $class = 'tabOff';
+      $class = 'tab off';
       $lclass = 'tabsOff';
     }
     

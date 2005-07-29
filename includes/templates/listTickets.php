@@ -72,7 +72,7 @@ if ($atc>0) {
 <?
 }
 ?>
-   <tr bgcolor="<?=$zen->settings["color_title_background"]?>">
+   <tr>
 <?
   // print some table headings
   $custom_field_list = array(); //store these for later
@@ -82,11 +82,11 @@ if ($atc>0) {
 
     $tf = tr($map->getLabel($view,$f));
     $sn = in_array($f, $orderby)? "$f DESC" : $f;
-    print "<td width='32' height='25' valign='middle' ";
+    print "<td width='32' height='15' valign='middle' ";
     if( getFmFieldProps($view, $f) ) {
-      print "onclick='resortListPage(\"$sn\")' $nav_rollover_eff ";
+      print "onclick='resortListPage(\"$sn\")' $heading_rollover ";
     }
-    print " title='".$zen->ffv($tf)."' class='titleCell'><span class='small'>$tf</span></td>\n";
+    print " title='".$zen->ffv($tf)."' class='subTitle'><span class='small'>$tf</span></td>\n";
     
     // store information about field types
     if( strpos($f, 'custom_') === 0 && $field['is_visible'] ) {
@@ -134,7 +134,7 @@ if ($atc>0) {
     }
   }
 
-   $td_ttl = "title='".tr("Click here to view the ?", array($page_type))."'";
+   $td_ttl = "title='".tr("Click here to view the ?", array(tr(ucfirst($page_type))))."'";
    foreach($tickets as $t) {
       $row = $zen->settings["color_background"];
       

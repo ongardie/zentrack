@@ -70,7 +70,9 @@
     $page_title = tr("? Settings", array($zen->settings["system_name"]));
     include("$libDir/nav.php");
     $zen->printErrors($errs);
+    print "<blockquote>\n";
     include("$templateDir/configSettingsForm.php");
+    print "</blockquote>\n";
   } else {
     $page_title = "Admin Menu";
     include("$libDir/nav.php");

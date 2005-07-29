@@ -7,8 +7,8 @@
   **
   */
 
+  define('ZT_SECTION','tickets');
   include("header.php");
-  
   
   $page_title = tr("Search Tickets");
   $page_section = $page_title;

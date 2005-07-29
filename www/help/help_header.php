@@ -1,6 +1,7 @@
 <?
   
   $b = dirname(__FILE__);
+  define('ZT_SECTION', 'help');
   include(dirname($b)."/header.php");
 
   $page_prefix = tr("zenTrack Help | ");

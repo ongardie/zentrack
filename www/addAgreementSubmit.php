@@ -6,7 +6,7 @@
   **
   */
     
-  include_once("header.php");
+  include_once("contact_header.php");
 
   // security measure
   if( $login_level < $zen->settings['level_contacts'] ) {
@@ -68,6 +68,8 @@
      if( !$id ) {
 	$errs[] = tr("Could not create agreement.") . " " .$zen->db_error;
      } else {
+       
+       
 	    
 	$agree_id = $id ;    
   $fields = array(

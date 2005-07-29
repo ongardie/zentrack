@@ -16,7 +16,7 @@
 
 
 $sort = $title." asc";
-$ie=($overview=="intern")?2:1;
+$ie=($overview=="internal")?2:1;
   
   if ($overview=="company") {  
 		$tickets = $zen->get_contacts("",$tabel,$sort);

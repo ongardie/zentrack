@@ -32,22 +32,12 @@
   }
 
   include("$libDir/nav.php");
-?>
-  <table width="600" align="center">
-  <tr><td>
-<?
+
   if( is_array($errs) ) {
     $zen->printErrors($errs);
   }
-  if( isset($skip) && $skip ) {
-    include("$templateDir/optionsMenu.php");
-  } else {
-    include("$templateDir/homebinForm.php");
-  }
-?>
-  </td></tr>
-  </table>
-<?
+  include("$templateDir/optionsMenu.php");
+
   include("$libDir/footer.php");
 
 }?>

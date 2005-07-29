@@ -131,6 +131,16 @@ function checkMyBox(fieldName, event) {
   }
 }
 
+function quickHighlight( fieldName ) {
+  var fieldObject = eval(fieldName);
+  mClassX(fieldObject, 'mark');
+  setTimeout("mClassX("+fieldName+")", 1000);
+}
+
+function undoHighlight( fieldObject ) {
+  if( fieldObject.style ) { fieldObject.style.backgroundColor = ''; }  
+}
+
 function toggleField( fieldObj, disabledBoolean ) {
   fieldObj.disabled = disabledBoolean;
   if( !disabledBoolean ) {

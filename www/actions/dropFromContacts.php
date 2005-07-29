@@ -3,7 +3,7 @@
 
   // get action properties
   $action = "contacts";  
-  include("../header.php");
+  include("../contact_header.php");
   
   // check to insure that this user has access
   // and this ticket allows the requested action

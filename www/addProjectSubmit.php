@@ -46,6 +46,9 @@
         if( !$res ) {
           $errs[] = tr("? created, but variable fields could not be saved", array(tr('Project')));
         }
+      }
+      if( in_array($params["type_id"],$zen->noteTypeIDs()) ) {
+        $zen->close_ticket($id,null,null,'Notes closed automatically');
       }      
     }
   }
@@ -58,7 +61,6 @@
     $onLoad[] = "behavior_js.php?formset=ticketForm";
     include("$libDir/nav.php");
     $zen->print_errors($errs);
-    $view = "project_create";
     include("$templateDir/newTicketForm.php");
     include("$libDir/footer.php");
   }

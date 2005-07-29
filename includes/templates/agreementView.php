@@ -74,3 +74,7 @@ $td_ttl = "title='".tr("Click here to view the Agreement")."'";
 </table>
 <?
 }
+else {
+  print "&nbsp;<blockquote>There are no agreements to view.</blockquote>\n";
+}
+?>

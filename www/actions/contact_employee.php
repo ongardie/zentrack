@@ -1,8 +1,8 @@
 <?
   /*
-  **  Action: edit ticket
+  **  Action: add an employee to a contact
   */
-  include_once("../header.php");
+  include_once("../contact_header.php");
   $page_title = tr("Contact #?", $id);
   $expand_contact = 1;
   

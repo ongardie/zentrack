@@ -30,9 +30,10 @@
   } else {
     $params["bin_id"] = $zen->getUsersBins($login_id);
   }
-  if( is_array($params) )
-    $tickets = $zen->get_tickets($params);
     
+  include_once("$libDir/sorting.php");
+  if( is_array($params) )
+    $tickets = $zen->get_tickets($params, join(',',$orderby));
   include("$templateDir/listTickets.php");
 
   include("$libDir/footer.php");

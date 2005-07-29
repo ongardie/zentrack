@@ -7,6 +7,7 @@
   */
   
   
+  define("ZT_SECTION","projects");
   include("header.php");
 
   $page_title = tr("Create a New Project");

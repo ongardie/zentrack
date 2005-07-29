@@ -1522,15 +1522,12 @@
       $from = $egate_user["email"];
       $bcc = $egate_bcc_address? "Bcc:$egate_bcc_address\r\n" : "";
       foreach($recipients as $r) {
-	if( is_array($r) && count($r) && $r["email"] != $egate_user["email"] ) {
-	  $to = ($r["name"])? "\"{$r['name']}\" <{$r['email']}>" : $r['email'];
-	  $res = mail($to,$subject,$txt,"From:$from\r\nReply-to:$from\r\n$bcc");
-	  if( $res )
-	    $i++;
-	}
-	else {
-	  egate_log("return recipient was blank, skipping reply email");
-	}
+        if( is_array($r) && count($r) && $r["email"] != $egate_user["email"] ) {
+        $to = ($r["name"])? "\"{$r['name']}\" <{$r['email']}>" : $r['email'];
+        $res = mail($to,$subject,$txt,"From:$from\r\nReply-to:$from\r\n$bcc");
+        if( $res )
+          $i++;
+        }
       }
       return $i;
     }

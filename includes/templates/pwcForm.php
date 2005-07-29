@@ -8,7 +8,6 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
 ?>
 
 <form method="post" action="<?=$rootUrl?>/misc/pwc.php">
-<blockquote>
 <table width="300" cellpadding="5">
 <tr>
   <td colspan="2" class="titleCell" align="center" height="20">
@@ -43,17 +42,11 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
   </td>
 </tr>
 <tr>
-  <td class="titleCell" colspan="2">
-    <?=tr("Please keep track of your new passphrase.")?>
-  </td>
-</tr>
-<tr>
   <td class="bars" colspan="2">
     <input type="submit" value="<?=tr("Set Password")?>" class="submit">
   </td>
 </tr>
 </table>
-</blockquote>
 
 <input type="hidden" name="TODO" value="SET">
 </form>

@@ -2,7 +2,7 @@
   /*
   **  Action: edit agreement
   */
-  include_once("../header.php");
+  include_once("../contact_header.php");
   $page_title = tr("Agreement #?", array($id));
   $expand_agreement = 1;
 

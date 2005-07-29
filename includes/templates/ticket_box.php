@@ -68,10 +68,10 @@
       continue;
     }
     if( $page_mode == $key ) {
-      $class = 'tabOn';
+      $class = 'tab on';
       $lclass = "tabsOn";
     } else {
-      $class = 'tabOff';
+      $class = 'tab off';
       $lclass = 'tabsOff';
     }
     

@@ -67,9 +67,11 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
   include_once("$libDir/zenTrack.class");
   include_once("$libDir/ZenFieldMap.class");
   include_once("$libDir/zenTemplate.class");
+  include_once("$libDir/ZenHotKeys.class");
   
   $zen = new zenTrack( $configFile );
   $map =& new ZenFieldMap($zen);
+  $hotkeys =& new ZenHotKeys($zen);
   
   /**
   * Translator Object Initialization (mlively)
@@ -322,6 +324,58 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
     return $vals;
   }
   
+  /**
+   * Determines the current section based on the page being viewed:
+   * <ul>
+   *  <li>projects - in projects section
+   *  <li>tickets - in tickets section
+   *  <li>contacts - a contact related page
+   *  <li>help - in help section
+   *  <li>admin - in admin section
+   *  <li>options - in options section
+   *  <li>css - this is a css script
+   *  <li>js - this is a javascript
+   * </ul>
+   */
+   function getZtSection() {
+     if( !defined('ZT_SECTION') ) { 
+       $section = 'undefined';
+        // check for the page_type variable
+        global $page_type;
+        if( isset($page_type) ) { $section = $page_type."s"; }
+        else {
+          // try to decipher the url for clues
+          global $SCRIPT_NAME;
+          global $rootUrl;
+          $ext = preg_replace("@^$rootUrl@", '', $SCRIPT_NAME);
+          $base = basename($SCRIPT_NAME);
+          if( preg_match('@styles[.]php@', $ext) ) {
+            $section = 'css';
+          }
+          else if( preg_match('@javascript[.]php@', $ext) ) {
+            $section = 'js';
+          }
+          else if( preg_match('@/help/@', $ext) ) {
+            $section = 'help';
+          }
+          else if( preg_match('@options.php@', $ext) || preg_match('@/misc/@', $ext) ) {
+            $section = 'options';
+          }
+          else if( preg_match('@(tickets?|index)[.]php@', $ext) ) {
+            $section = 'tickets';
+          }
+          else if( preg_match('@projects?[.]php@', $ext) ) {
+            $section = 'projects';
+          }
+          else if( preg_match('@options[.]php@', $ext) ) {
+            $section = 'options';
+          }
+        }
+       define('ZT_SECTION',$section);
+     }
+     return ZT_SECTION;
+   }
+  
   /*
   **  TICKET NAVIGATION TABS
   */
@@ -367,15 +421,34 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
     .$zen->settings["color_background"]."', '');\" "
     ."onmouseover=\"mOvr(this,'"
     .$zen->settings["color_highlight"]."', '');\"";
-  
-  $nav_rollover_eff = " onmouseout=\"mOut(this,'"
-    .$zen->settings["color_title_background"]."','"
-    .$zen->settings["color_title_txt"]."');\" onmouseover=\"mOvr(this,'"
+    
+  $heading_rollover = " onmouseout=\"mOut(this,'"
+    .$zen->settings["color_bar_darker"]."','"
+    .$zen->settings["color_alt_text"]."');\" onmouseover=\"mOvr(this,'"
     .$zen->settings["color_alt_background"]."','"
     .$zen->settings["color_alt_text"]."');\" ";
+
+  
+  $nav_rollover_eff = " onmouseout=\"mOut(this,'"
+    .$zen->settings["color_bar_darker"]."');\" onmouseover=\"mOvr(this,'"
+    .$zen->settings["color_alt_background"]."');\" ";
     
   $nav_rollover_text = " onclick=\"mClk(this);\" ".$nav_rollover_eff;
   
+  
+  /**
+   * Returns true if a login is required to view the current page.
+   *
+   * Currently this returns false under the following conditions:
+   * <ul>
+   *  <li>ZT_HELP is defined
+   *  <li>$SCRIPT_NAME matches styles.php or behavior_js.php
+   * </ul>
+   */
+  function ztLoginRequired() {
+    $section = getZtSection();
+    return $section != 'help' && $section != 'js' && $section != 'css';
+  }
   
   /*
   **  USER AUTHENTICATION
@@ -383,7 +456,7 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
   **  determine if a login is required
   */
   
-  if( !eregi("(/help/|styles[.]php|behavior_js[.]php)",$SCRIPT_NAME) ) {
+  if( ztLoginRequired() ) {
     include_once("$libDir/login.php");
   }     
   

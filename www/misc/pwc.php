@@ -50,20 +50,14 @@
   }
   
   include("$libDir/nav.php");
-  ?>
-  <table width="600" align="center">
-  <tr><td>
-  <?
+
   $zen->printErrors($errs);
   if( $skip ) {
     include("$templateDir/optionsMenu.php");
   } else {
     include("$templateDir/pwcForm.php");
   }
-  ?>
-  </td></tr>
-  </table>
-  <?
+
   include("$libDir/footer.php");
 }?>
 

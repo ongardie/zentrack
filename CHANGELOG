@@ -11,7 +11,30 @@ and user experience, internationalization, platform and database
 abstraction, and endless possibilities for project expansion. 
 --------------------
 
------ VERSION 2.5.6 (development) -----
+----- VERSION 2.6 (development) -----
+
+2005-07-09, kato
+  Login now works correctly if ZT is installed under a subdirectory of /help/
+    - zentrack_2/includes/headerInc.php 1.59
+    - zentrack_2/www/help/help_header.php 1.9
+  
+2005-05-23, kato
+  Made option to use apache or windows authentication for auto-login a configurable
+  administration setting.
+    - zentrack_2/includes/zenTrack.class 1.185
+  
+  Corrected problem with user language preferences.
+    - zentrack_2/includes/login.php 1.29
+    
+  Fixed error with https builds not viewing attachments correctly in IE
+    - zentrack_2/includes/session_start.php 1.26
+    
+  Removed auto-login key from visible text in debug messages (for better security)
+    - zentrack_2/includes/footer.php 1.36
+    
+2005-05-21, kato
+  Corrected translation of page_type (Project/Ticket) in ticket lists
+    - zentrack_2/includes/templates/listTickets.php 1.28
 
 2005-07-20, cfalonso
  Fixed minor bug

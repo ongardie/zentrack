@@ -2,7 +2,6 @@
 
 <form method="post" action="<?=$rootUrl?>/misc/language.php">
 
-<blockquote>
 <table width="300" cellpadding="5">
 <tr>
   <td colspan="2" class="titleCell" align="center" height="20">
@@ -27,17 +26,11 @@
   </td>
 </tr>
 <tr>
-  <td class="titleCell" colspan="2">
-    <?=tr("Click 'Update' to change your language")?>
-  </td>
-</tr>
-<tr>
   <td class="bars" colspan="2">
-    <input type="submit" value="<?=tr("Update")?>" class="submit">
+    <input type="submit" value="<?=tr("Update Language")?>" class="submit">
   </td>
 </tr>
 </table>
-</blockquote>
 
 <input type="hidden" name="TODO" value="LANG">
 </form>

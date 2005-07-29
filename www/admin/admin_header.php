@@ -1,5 +1,6 @@
 <?
 
+  define('ZT_SECTION', 'admin');
   include_once("../header.php");
   
   $expand_admin = 1;

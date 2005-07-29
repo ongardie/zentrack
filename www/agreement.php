@@ -7,12 +7,7 @@
   */
   
   // include the header file
-  if( file_exists("header.php") ) {
-    include_once("header.php");
-  }
-  else if( file_exists("../header.php") ) {
-    include_once("../header.php");
-  }
+  include_once("contact_header.php");
 
   // security measure
   if( $login_level < $zen->settings['level_contacts'] ) {
@@ -31,6 +26,10 @@
   
   $agree = $zen->get_contact($id,"ZENTRACK_AGREEMENT","agree_id");
 
+    
+  // place record into history of recently viewed items
+  $history =& $zen->getHistoryManager();
+  $history->storeItem('agreement', $id, $zen->getDataTypeLabel('ZENTRACK_AGREEMENT', $agree));
   
   $page_section = "Agreement $id";
   $expand_agreement = 1;

@@ -7,8 +7,8 @@
    **  to a ticket's notify list
    */
   
-  $action = "contacts";  
-  include_once("../header.php");
+  $action = "contacts";
+  include_once("../contact_header.php");
   
     // check to insure that this user has access
   // and this ticket allows the requested action

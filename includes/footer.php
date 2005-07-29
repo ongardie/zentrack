@@ -3,17 +3,18 @@
    
 
    <!--- BEGIN FOOTER --->
-  
-  
+   
+   </td></tr></table>
   
   </td>
   </tr>
   <tr>
-    <td class="titleCell" height="25"><img src="<?=$imageUrl?>/empty.gif" width="2" height="25"></td>
+    <td class="titleCell" height="<?=$nav_bar_height?>" colspan='<?=$nav_col_span?>'><img src="<?=$imageUrl?>/empty.gif" width="1" height="1"></td>
 </tr>
 </table>
 
 <br clear="all">
+<? $hotkeys->renderAccessKeys(); ?>
 
 <!--
 <p>&nbsp;</p>
@@ -63,6 +64,7 @@
      $debug_text .= "PHP Version: ".phpversion()."<br>\n";
      $debug_text .= "zenTrack Version: ".$zen->settings["version_xx"]."<br>\n";
      $debug_text .= "rootUrl: $rootUrl<br>\n";
+     $debug_text .= "section: ".getZtSection()."<br>\n";
      $debug_text .= "database: ".$zen->database_type."/".$zen->database_host."<br>\n";
      $debug_text .= "settings count: ".count($zen->settings)."<br>\n";
      $debug_text .= "bins: ".(count($zen->bins)? join(",",$zen->bins) : 'NO BINS FOUND, DID YOU RUN THE SEED_YOURDB.SQL SCRIPT?')."<br>\n";
@@ -118,6 +120,8 @@
     $debug_text = preg_replace('/database_password=[^"\' ]+/', 'database_password=xxxx', $debug_text);
     $debug_text = preg_replace('/[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+[.][a-zA-Z0-9_.-]+/', 'xxxx@xxxx.xxx',$debug_text);
     $debug_text = preg_replace('@(https?://|www[.])[a-zA-Z0-9_-]+[.]([a-zA-Z]{2,4})@', '\\1xxxx.\\2', $debug_text);
+    $debug_text = preg_replace('@(https?://)[0-9]{1,3}[.][0-9]{1,3}[.][0-9]{1,3}[.][0-9]{1,3}@', '\\1xxx.xxx.xxx.xxx', $debug_text);
+    $debug_text = preg_replace('/zentrackKey=([^, "\']+)/', 'zentrackKey=xxxxx', $debug_text);
     print $debug_text;
     
     // used by behavior_js.php
@@ -135,6 +139,8 @@
   //  Zen::printArray($ticket, "Ticket Contents");
   //}
 ?>
+
+<div id='hotKeyHelp'  class='hotKeyHelp invisible'><?=$hotkeys->renderHelp()?></div>
 
 </body>
 </html>

@@ -23,7 +23,8 @@
     $params["bin_id"] = $login_bin;
   }
 
-  $tickets = $zen->get_tickets($params);
+  include_once("$libDir/sorting.php");
+  $tickets = $zen->get_tickets($params, join(',',$orderby));
   include("$templateDir/listTickets.php");
   include("$libDir/paging.php"); //Addition for paging
 

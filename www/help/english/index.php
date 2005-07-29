@@ -40,16 +40,16 @@
     
     &nbsp;<br><b>Help and Support</b>
     <ul>
-      <a href='<?=$helpUrl?>/support.php'>Support & Community</a>
+      <a href='http://www.zentrack.net/modules/support/'>Community</a>
+      <br><a href='http://www.zentrack.net/modules/newbb/'>Forums</a>
       <br><a href='<?=$helpUrl?>/bugs.php'>Reporting Bugs</a>
-      <br><a href='http://www.zentrack.net'>Zentrack Website</a>
     </ul>
     
     &nbsp;<br><b>About Us</b>
     <ul>
       <a href='<?=$helpUrl?>/about.php'>About <?=$zen->settings["system_name"]?></a>
-      <br><a href='<?=$helpUrl?>/gpl.php'>License Agreement</a>
-      <br><a href='http://www.zentrack.net'>The zenTrack Project</a>
+      <br><a href='<?=$helpUrl?>/gpl.php'>License</a>
+      <br><a href='http://www.zentrack.net'>Website</a>
     </ul>
     
     &nbsp;<br><b>Send Us Feedback!</b>

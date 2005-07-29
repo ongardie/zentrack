@@ -1,26 +1,44 @@
 <? if( !ZT_DEFINED ) { die("Illegal Access"); } ?>
 
-<br>
-<ul>
-  <b><?=tr("Account Options")?></b>
-  <ul>
-    <b><a href="<?=$rootUrl?>/misc/pwc.php"><?=tr("Change Password")?></a></b>
-    <? if( $zen->settings["allow_pwd_save"] == "on" ) {
-         if( $zen->get_prefs($login_id,'autologin') ) {
-           print "<p><b><a href='$rootUrl/misc/autologin.php?setauto=off'>".tr("Disable Auto-Login")."</a></b>";
-         }
-         else {
-           print "<p><b><a href='$rootUrl/misc/autologin.php?setauto=on'>".tr("Enable Auto-Login")."</a></b>";
-         } 
-       }
-     ?>
-    <p><b><a href="<?=$rootUrl?>/misc/homebin.php"><?=tr("Change Default Bin")?></a></b>
-    <p><b><a href="<?=$rootUrl?>/misc/language.php"><?=tr("Change Language")?></a></b>
-  </ul>
-</ul>
+<?
+  include("$templateDir/pwcForm.php");
+  
+  print "<p>";
+  if( $zen->settings["allow_pwd_save"] == "on" ) {
+     if( $zen->get_prefs($login_id,'autologin') ) {
+       $txt = "Disable Auto-Login";
+       $val = "off";
+     }
+     else {
+       $txt = "Enable Auto-Login";
+       $val = "on";
+     } 
 
-<? 
-  if( $page_title == tr("Change Password") ) {
+?>
+<form method="get" action="<?=$rootUrl?>/misc/autologin.php">
+
+<table width="300" cellpadding="5">
+<tr>
+  <td colspan="2" class="titleCell" align="center" height="20">
+    <b><?=tr("Auto Login Setting")?></b>
+  </td>
+</tr>
+<tr>
+  <td class="bars" colspan="2">
+    <input type="submit" value="<?=tr($txt)?>" class="submit">
+  </td>
+</tr>
+</table>
+
+<input type="hidden" name="setauto" value="<?=$val?>">
+</form>
+<?
+  }
+   
+   print "<p>";
+   include("$templateDir/languageForm.php");
+
+   if( $page_title == tr("Change Password") ) {
     $link = "<a href='$helpUrl/tutorial.php'>".tr('Tutorial')."</a>";
     print "<p><span class='error'>";
     print tr("If this is your first time logging in, please read the ?!", array($link));

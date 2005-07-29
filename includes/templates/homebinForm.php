@@ -1,8 +1,7 @@
 <? if( !ZT_DEFINED ) { die("Illegal Access"); } ?>
 
-<form method="post" action="<?=$SCRIPT_NAME?>">
+<form method="post" action="<?=$rootUrl?>/misc/homebin.php">
 
-<blockquote>
 <table width="300" cellpadding="5">
 <tr>
   <td colspan="2" class="titleCell" align="center" height="20">
@@ -37,17 +36,11 @@
   </td>
 </tr>
 <tr>
-  <td class="titleCell" colspan="2">
-    <?=tr("Click 'Update' to change your default bin")?>
-  </td>
-</tr>
-<tr>
   <td class="bars" colspan="2">
-    <input type="submit" value="<?=tr("Update")?>" class="submit">
+    <input type="submit" value="<?=tr("Update Bin")?>" class="submit">
   </td>
 </tr>
 </table>
-</blockquote>
 
 <input type="hidden" name="TODO" value="BIN">
 </form>

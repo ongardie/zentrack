@@ -14,6 +14,8 @@
     include_once("../header.php");
   }
   
+  $hotkeys->loadSection('ticket_view');
+  
   if( $page_type != "project" )
   $page_type = "ticket";
   $page = $page_type;
@@ -66,6 +68,10 @@
     exit;
   }
   
+  // place record into history of recently viewed items
+  $history =& $zen->getHistoryManager();
+  $history->storeItem($page_type, $id, $ticket['title']);  
+
   // allow creator of ticket to view (if setting is on) even if no access
   $is_creator = $zen->checkCreator($login_id, $id);
   

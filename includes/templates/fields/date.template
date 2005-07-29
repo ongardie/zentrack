@@ -3,4 +3,4 @@
   hascalendar="{field_name}-calendar_icon" {field_events}>
   <img name="date_button" src='{rooturl}/images/cal.gif' 
     onClick="popUpCalendar(this, document.{form_name}['{field_name}'], '{date_format}')"
-    alt="Select a Date" id="{field_name}-calendar_icon">
+    alt="Select a Date" id="{field_name}-calendar_icon" border='0'>
