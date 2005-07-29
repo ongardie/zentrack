@@ -13,6 +13,85 @@ abstraction, and endless possibilities for project expansion.
 
 ----- VERSION 2.6 (development) -----
 
+2005-07-30, kato
+  New UI checked in (not complete, some bugs)
+  Keyboard shortcuts added
+  Minor bugs fixes to search and contacts sections
+  Added missing custom_date fields to field map
+   - zentrack_2/includes/ZenFieldMap.class 1.23
+   - zentrack_2/includes/egate_utils.php 1.44
+   - zentrack_2/includes/footer.php 1.36
+   - zentrack_2/includes/headerInc.php 1.59
+   - zentrack_2/includes/login.php 1.29
+   - zentrack_2/includes/nav.php 1.14
+   - zentrack_2/includes/session_start.php 1.26
+   - zentrack_2/includes/zenTrack.class 1.188
+   - zentrack_2/includes/ZenHistoryManager.class 1.1
+   - zentrack_2/includes/ZenHotKeys.class 1.1
+   - zentrack_2/includes/templates/adminMenu.php 1.13
+   - zentrack_2/includes/templates/agreementView.php 1.3
+   - zentrack_2/includes/templates/contact_allBox.php 1.3
+   - zentrack_2/includes/templates/contact_box.php 1.3
+   - zentrack_2/includes/templates/homebinForm.php 1.12
+   - zentrack_2/includes/templates/languageForm.php 1.4
+   - zentrack_2/includes/templates/listTickets.php 1.29
+   - zentrack_2/includes/templates/optionsMenu.php 1.8
+   - zentrack_2/includes/templates/pwcForm.php 1.8
+   - zentrack_2/includes/templates/ticket_box.php 1.19
+   - zentrack_2/includes/templates/nav_admin.php 1.1
+   - zentrack_2/includes/templates/nav_contacts.php 1.1
+   - zentrack_2/includes/templates/nav_help.php 1.1
+   - zentrack_2/includes/templates/nav_options.php 1.1
+   - zentrack_2/includes/templates/nav_projects.php 1.1
+   - zentrack_2/includes/templates/nav_tickets.php 1.1
+   - zentrack_2/includes/templates/fields/date.template 1.5
+   - zentrack_2/install/seed_mysql.sql 1.57
+   - zentrack_2/install/upgrade_base.sql 1.1
+   - zentrack_2/www/actions/accept.php 1.6
+   - zentrack_2/www/actions/addToContacts.php 1.2
+   - zentrack_2/www/actions/agreement_archive.php 1.2
+   - zentrack_2/www/actions/agreement_delete.php 1.2
+   - zentrack_2/www/actions/agreement_edit.php 1.5
+   - zentrack_2/www/actions/contact_agreement.php 1.2
+   - zentrack_2/www/actions/contact_delete.php 1.2
+   - zentrack_2/www/actions/contact_edit.php 1.3
+   - zentrack_2/www/actions/contact_employee.php 1.2
+   - zentrack_2/www/actions/dropFromContacts.php 1.2
+   - zentrack_2/www/actions/editAgreementSubmit.php 1.2
+   - zentrack_2/www/actions/editContactSubmit.php 1.2
+   - zentrack_2/www/actions/editContacteSubmit.php 1.2
+   - zentrack_2/www/addAgreementSubmit.php 1.5
+   - zentrack_2/www/addContactSubmit.php 1.4
+   - zentrack_2/www/addContacteSubmit.php 1.4
+   - zentrack_2/www/addProjectSubmit.php 1.23
+   - zentrack_2/www/agreement.php 1.3
+   - zentrack_2/www/agreements.php 1.3
+   - zentrack_2/www/assignedProjects.php 1.10
+   - zentrack_2/www/assignedTickets.php 1.13
+   - zentrack_2/www/behavior_js.php 1.35
+   - zentrack_2/www/contact.php 1.4
+   - zentrack_2/www/contacts.php 1.3
+   - zentrack_2/www/javascript.js 1.16
+   - zentrack_2/www/newAgreement.php 1.4
+   - zentrack_2/www/newContact.php 1.3
+   - zentrack_2/www/newProject.php 1.12
+   - zentrack_2/www/newTicket.php 1.10
+   - zentrack_2/www/search.php 1.13
+   - zentrack_2/www/searchContacts.php 1.3
+   - zentrack_2/www/styles.php 1.25
+   - zentrack_2/www/ticket.php 1.27
+   - zentrack_2/www/viewAttachment.php 1.6
+   - zentrack_2/www/contact_header.php 1.1
+   - zentrack_2/www/keyevent.js 1.1
+   - zentrack_2/www/admin/admin_header.php 1.14
+   - zentrack_2/www/admin/config.php 1.11
+   - zentrack_2/www/help/english/bugs.php 1.3
+   - zentrack_2/www/help/english/index.php 1.5
+   - zentrack_2/www/help/help_header.php 1.9
+   - zentrack_2/www/misc/homebin.php 1.7
+   - zentrack_2/www/misc/language.php 1.5
+   - zentrack_2/www/misc/pwc.php 1.12  
+
 2005-07-09, kato
   Login now works correctly if ZT is installed under a subdirectory of /help/
     - zentrack_2/includes/headerInc.php 1.59
