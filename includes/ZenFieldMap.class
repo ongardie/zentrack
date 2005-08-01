@@ -22,6 +22,7 @@ define("ZTFIELD_SECTION",8);
  *  <li>admin_view - (boolean)this is an admin screen
  *  <li>multiple - (boolean)this view allows multiple selections (overrides field->multiple)
  *  <li>sections - (boolean)true if this view can support sections
+ *  <li>any_option - (boolean)true if menus should include -any- option (for searching, etc)
  * </ul>
  *
  * @param string $view if omitted, all views are returned
@@ -56,7 +57,6 @@ function getFmViewProps( $view = null ) {
  *  <li>always_required - (boolean)true if this field is required by system
  *  <li>default - (boolean)true if this field can use default values
  *  <li>data_type - (string) contains 'int', 'string', 'date', 'boolean', or 'float'
- *  <li>any_option - (boolean)true if menus should include -any- option (for searching, etc)
  * </ul>
  *
  * @param string $view
@@ -80,7 +80,7 @@ function getFmFieldProps( $view, $field = null ) {
   $vars = array();
   // the distance between "types" and "admin_view" is important for
   // the details listed below
-  $indices = array("searchable", "types", "data_type", "admin_view", "multiple", "always_required", "default", "any_option");
+  $indices = array("searchable", "types", "data_type", "admin_view", "multiple", "always_required", "default");
   for($i=0; $i < count($indices); $i++) {
     if( $indices[$i] == 'admin_view' ) { continue; }
     else if( $indices[$i] == 'types' ) {
