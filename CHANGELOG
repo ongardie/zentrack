@@ -13,6 +13,10 @@ abstraction, and endless possibilities for project expansion.
 
 ----- VERSION 2.6 (development) -----
 
+2005-08-01, cfalonso
+  In create page, list only the bins that the user can create tickets in
+   - zentrack_2/includes/ZenFieldMap.class 1.24
+
 2005-07-30, kato
   New UI checked in (not complete, some bugs)
   Keyboard shortcuts added
