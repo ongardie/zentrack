@@ -14,6 +14,9 @@ abstraction, and endless possibilities for project expansion.
 ----- VERSION 2.6 (development) -----
 
 2005-08-02, cfalonso
+  Fixed a bug in dateParse function
+   - zentrack_2/includes/zenDate.class 1.15
+
   Fixed problem when multi fields were hidden and were subject of a behavior change
    - zentrack_2/includes/ZenFieldMap.class 1.27
    - zentrack_2/includes/ZenFieldMap.class 1.26
