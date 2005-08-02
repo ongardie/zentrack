@@ -392,7 +392,8 @@ class ZenFieldMap {
     } else if( $typeint == ZTFIELD_DATE && !preg_match('/[^0-9]/', $value) ) {
       // if it is a date and we have a numeric value, then we will parse it to
       // a date right here
-      $vals['field_value'] = $this->_zen->showDate($value);
+      //$vals['field_value'] = $this->_zen->showDate($value);
+      $vals["field_value"] = strlen($value)? $this->_zen->showDateTime($value) : '';
     } else if( strpos($vals["field_name"], 'custom_multi') !== false ) {
       $tok=strtok($value,"\t");
       $vals["field_value"]=array();
