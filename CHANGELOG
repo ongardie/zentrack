@@ -13,6 +13,16 @@ abstraction, and endless possibilities for project expansion.
 
 ----- VERSION 2.6 (development) -----
 
+2005-08-02, cfalonso
+  Fixed problem when multi fields were hidden and were subject of a behavior change
+   - zentrack_2/includes/ZenFieldMap.class 1.27
+   - zentrack_2/includes/ZenFieldMap.class 1.26
+   - zentrack_2/includes/templates/fields/multihidden.template 1.1
+
+2005-08-01, kato
+  Moved "any_field" option to appropriate spot
+   - zentrack_2/includes/ZenFieldMap.class 1.25
+
 2005-08-01, cfalonso
   In create page, list only the bins that the user can create tickets in
    - zentrack_2/includes/ZenFieldMap.class 1.24

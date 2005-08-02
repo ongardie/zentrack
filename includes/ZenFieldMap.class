@@ -23,6 +23,7 @@ define("ZTFIELD_SECTION",8);
  *  <li>multiple - (boolean)this view allows multiple selections (overrides field->multiple)
  *  <li>sections - (boolean)true if this view can support sections
  *  <li>any_option - (boolean)true if menus should include -any- option (for searching, etc)
+ *  <li>access_level - (string)the level required to access a bin in this view
  * </ul>
  *
  * @param string $view if omitted, all views are returned
