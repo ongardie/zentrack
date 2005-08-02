@@ -298,6 +298,12 @@ class zenDate extends DB {
      // and returns the unix timestamp for
      // that date
      $ctime = trim($ctime);
+
+     //Prevent parsing an already parsed date:
+     if (strval(intval($ctime))==$ctime) {
+       return $ctime;
+     }
+
      if( !$ctime )
        $ctime = $this->currTime;
      // separator to parse euro date
@@ -309,7 +315,7 @@ class zenDate extends DB {
        // break up date
        list($day, $month, $year) = split($sep, $date);
        // break up time
-       list($hours, $mins, $seconds) = explode('[.,:-]', $time);
+       list($hours, $mins, $seconds) = split('[.,:-]', $time);
        // create a unix timestamp and return
        return mktime($hours, $mins, $seconds, $month, $day, $year);
      }
