@@ -341,7 +341,8 @@ class ZenFieldMap {
    * @param string $view corresponds to which_view field
    * @param string $field_name the field's name
    * @param mixed $value the field's current value
-   * @param $override_name if provided, will override the name=".." property of this input field 
+   * @param mixed $override_name if provided, will override the name=".." property of this input field
+   * @param boolean $override_as_label forces this field to be shown as label
    * @return string containing html to render
    */
   function renderTicketField( $view, $form_name, $field_name, $value = null, $override_name = null, $override_as_label = null ) {
@@ -500,7 +501,12 @@ class ZenFieldMap {
       $typename = "multilabel";
       $vals["field_choices"] = $this->getChoices($view,$field_name);
     }
-    
+
+    if ( $typename == "hidden" && strpos($field_name,"multi")>0 ) {
+      $typename = "multihidden";
+      $vals["field_choices"] = $this->getChoices($view,$field_name);
+    }    
+     
     // parse and return 
     return $this->_template($templateDir, $typename, $vals);
   }
