@@ -499,7 +499,7 @@ class ZenFieldMap {
       }
     }
 
-    if ( $typeint == ZTFIELD_LABEL && strpos($field_name,"multi")>0 ) {
+    if ( $typename == 'label' && strpos($field_name,"multi")>0 ) {
       $typename = "multilabel";
       $vals["field_choices"] = $this->getChoices($view,$field_name);
     }
