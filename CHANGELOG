@@ -14,6 +14,9 @@ abstraction, and endless possibilities for project expansion.
 ----- VERSION 2.6 (development) -----
 
 2005-08-03, cfalonso
+  Prevent loosing current values in hidden fields
+   - zentrack_2/includes/ZenFieldMap.class 1.30
+
   Fixed bug for multi fields when hidden and set as label
    - zentrack_2/includes/ZenFieldMap.class 1.29
   
