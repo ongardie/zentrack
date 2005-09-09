@@ -13,6 +13,20 @@ abstraction, and endless possibilities for project expansion.
 
 ----- VERSION 2.6 (development) -----
 
+2005-09-07, kato
+  Added new ticket view screens, cleaned up ticket views for new UI
+   - zentrack_2/includes/templates/ticket_actions.php 1.0
+   - zentrack_2/includes/templates/ticket_box.php 1.20
+   - zentrack_2/includes/templates/ticket_load_contacts.php 1.0
+   - zentrack_2/includes/templates/ticket_load_custom.php 1.0
+   - zentrack_2/includes/templates/ticket_load_details.php 1.0
+   - zentrack_2/includes/templates/ticket_load_log.php 1.0
+   - zentrack_2/includes/templates/ticket_load_summary.php 1.0
+   - zentrack_2/includes/templates/ticket_tabs.php 1.0
+   - zentrack_2/includes/templates/ticketView.php 1.5
+   - zentrack_2/www/ticket.php 1.28
+   - zentrack_2/www/project.php 1.6
+
 2005-09-05, kato
   Reworked get_users, should work with all possible access configurations
    - zentrack_2/includes/zenTrack.class 1.188
