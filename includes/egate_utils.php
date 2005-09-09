@@ -200,7 +200,7 @@
   include_once('Mail/mimeDecode.php');
   
   // make sure we are using the email interface
-  if( $zen->settings["email_interface_enabled"] != "on" ) {
+  if( !$zen->settingOn("email_interface_enabled") ) {
     egate_log("ERROR: email ignored, email_interface_enabled = off",1);
     egate_log_write();
     exit;
@@ -444,7 +444,7 @@
     } else {
       // try to divine the action anyways, even though the format wasn't correct
       // start by removing [zenBot] tag
-      $test = preg_replace("/\[".$zen->settings['bot_name']."]/","",$params->headers["subject"]);
+      $test = preg_replace("/\[".$zen->getSetting('bot_name')."]/","",$params->headers["subject"]);
       if( strlen($test) ) {
 	// look for an id
 	if( preg_match("/#([0-9]+)/", $subject, $matches) ) {
@@ -656,7 +656,7 @@
 	// add user to notify list if they create
 	// a ticket through the egate system
 	// and default_notify_creator == "on"
-	if( $user_id == $egate_user["user_id"] && $zen->settings["default_notify_creator"] == "on" ) {
+	if( $user_id == $egate_user["user_id"] && $zen->settingOn("default_notify_creator") ) {
 	  $zen->add_to_notify_list( $id, array("name"=>$name,"email"=>$email) );
 	}
 	return $id;
@@ -1515,7 +1515,7 @@
 	$txt .= $temp->process();
       }
 
-      $subject = "[".$zen->settings["bot_name"]."] ".$subject;
+      $subject = "[".$zen->getSetting("bot_name")."] ".$subject;
 
       // send messages
       $i=0;
@@ -1523,8 +1523,7 @@
       $bcc = $egate_bcc_address? "Bcc:$egate_bcc_address\r\n" : "";
       foreach($recipients as $r) {
         if( is_array($r) && count($r) && $r["email"] != $egate_user["email"] ) {
-        $to = ($r["name"])? "\"{$r['name']}\" <{$r['email']}>" : $r['email'];
-        $res = mail($to,$subject,$txt,"From:$from\r\nReply-to:$from\r\n$bcc");
+        $res = mail($r['email'],$subject,$txt,"From:$from\r\nReply-to:$from\r\n$bcc");
         if( $res )
           $i++;
         }

@@ -4,7 +4,7 @@
   include("$templateDir/pwcForm.php");
   
   print "<p>";
-  if( $zen->settings["allow_pwd_save"] == "on" ) {
+  if( $zen->settingOn("allow_pwd_save") ) {
      if( $zen->get_prefs($login_id,'autologin') ) {
        $txt = "Disable Auto-Login";
        $val = "off";
@@ -19,7 +19,7 @@
 
 <table width="300" cellpadding="5">
 <tr>
-  <td colspan="2" class="titleCell" align="center" height="20">
+  <td colspan="2" class="subTitle" align="center" height="20">
     <b><?=tr("Auto Login Setting")?></b>
   </td>
 </tr>

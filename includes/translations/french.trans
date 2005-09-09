@@ -44,7 +44,7 @@ msgstr "? résultats."
 
 
 #file "D:\zentrack\zentrack/www/admin/config.php"
-#args "array($zen->settings["system_name"])"
+#args "array($zen->getSetting("system_name"))"
 msgid "? Settings"
 msgstr "Réglages (?)"
 
@@ -140,7 +140,7 @@ msgstr "ATC"
 
 
 #file "D:\zentrack\zentrack/www/help/install.php"
-#args "array($zen->settings["system_name"])"
+#args "array($zen->getSetting("system_name"))"
 msgid "About ?"
 msgstr "À propos de ?"
 

@@ -11,7 +11,7 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
 <form method="post" action="<?=$rootUrl?>/admin/<?=$url?>BehaviorSubmit.php">
 <? if( $td ) { print "<input type='hidden' name='behavior_id' value='".strip_tags($behavior_id)."'>\n"; } ?>
   
-<table width="640" align="left" cellpadding="2" cellspacing="2" bgcolor="<?=$zen->settings["color_background"]?>">
+<table width="640" align="left" cellpadding="2" cellspacing="2" bgcolor="<?=$zen->getSetting("color_background")?>">
 <tr>
   <td colspan="2" width="640" class="titleCell" align="center">
   <?=$blurb?>

@@ -8,10 +8,10 @@
        <?
          if( $zen->checkAccess($login_id,$ticket["bin_id"],"create") ) {
 	    $button = "submit";
-	    $color = $zen->settings["color_highlight"];
+	    $color = $zen->getSetting("color_highlight");
 	 } else {
 	    $button = "button";
-	    $color = $zen->settings["color_alt_background"];
+	    $color = $zen->getSetting("color_alt_background");
 	 }
        ?>
        <input type="<?=$button?>" value=" <?=$zen->ttl("Add ticket to project")?> " class="actionButton" style="width:125;color:<?=$color?>">  
@@ -25,10 +25,10 @@
        <?
          if( $zen->checkAccess($login_id,$ticket["bin_id"],"create") ) {
 	    $button = "submit";
-	    $color = $zen->settings["color_highlight"];
+	    $color = $zen->getSetting("color_highlight");
 	 } else {
 	    $button = "button";
-	    $color = $zen->settings["color_alt_background"];
+	    $color = $zen->getSetting("color_alt_background");
 	 }
        ?>
        <input type="<?=$button?>" value=" <?=tr("Create Sub-Project")?> " class="actionButton" style="width:125;color:<?=$color?>">  

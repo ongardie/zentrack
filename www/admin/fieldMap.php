@@ -40,8 +40,8 @@
     $updates[$name][$key] = $v;
   }
 
-  if( !$view || !in_array($view, array_keys($GLOBALS['zt_field_dependencies']['views'])) ) {
-    $view = 'ticket_create';
+  if( $view && !$map->getViewProps($view) ) {
+    $view = '';
   }
 
   if( $TODO == 'save' && $zen->demo_mode == "on" ) {
@@ -50,7 +50,6 @@
   else if( $TODO == 'save' ) {
     $deletes = array();
     $inserts = array();
-    $vprops = getFmViewProps($view);
 
     // copy values for editing
     $allFields = $map->getFieldMap();
@@ -80,7 +79,7 @@
       fmGetSet($f, 'num_cols', 'int');
 
       // num_rows
-      if( !$tprops['multiple'] && !$vprops['multiple'] ) {
+      if( !$tprops['multiple'] && !$map->getViewProp($view,'multiple') ) {
         $updates[$f]['num_rows'] = 1;
       }
       else { fmGetSet($f, 'num_rows', 'int'); }
@@ -92,7 +91,7 @@
       $fprops = getFmFieldProps($view, ZenFieldMap::fieldName($f));
 
       // field_type is automagic for view_only
-      if( $vprops['view_only'] ) { $updates[$f]['field_type'] = 'label'; }
+      if( $map->getViewProp($view,'view_only') ) { $updates[$f]['field_type'] = 'label'; }
       // we don't give the user an option on the form, so don't bother here either
       else if( count($fprops['types']) == 1 ) { $updates[$f]['field_type'] = $fprops['types'][0]; }
       else if( array_key_exists('field_type', $_POST[$f]) &&
@@ -106,18 +105,18 @@
         { fmGetSet($f, 'field_type'); }
 
       // is_required
-      if( $vprops['view_only'] || $view == 'search_form' ) { $updates[$f]['is_required'] = false; }
+      if( $map->getViewProp($view,'view_only') || $view == 'search_form' ) { $updates[$f]['is_required'] = false; }
       else if( $fprops['always_required'] ) { $updates[$f]['is_required'] = true; }
       else { fmGetSet($f, 'is_required', 'boolean'); }
 
       // default_val has some special considerations
-      if( !$vprops['view_only'] ) {
+      if( !$map->getViewProp($view, 'view_only') ) {
         if( $fprops['default'] ) { fmGetSet($f, 'default_val'); }
       }
     }
 
     foreach($_POST as $k=>$v) {
-      if( strpos($k, 'section') === 0 && $vprops['sections'] && !array_key_exists($k,$updates) ) {
+      if( strpos($k, 'section') === 0 && $map->getViewProp($view,'sections') && !array_key_exists($k,$updates) ) {
         // skip section0, it's a template
         if( $k == 'section0' ) { continue; }
         // add the style

@@ -75,7 +75,7 @@ function printpopup(variable)
            value='<?=$zen->ffv($unreg_email)?>'>
   </td>
 </tr>
-  <? if( $zen->settings['allow_contacts'] == 'on' ) { ?>
+  <? if( $zen->settingOn('allow_contacts') ) { ?>
 <tr>
   <td class="titleCell">
      <?=tr("Or add a contact")?>
@@ -127,7 +127,7 @@ function printpopup(variable)
     <br><br>
 <?
   } //if( is_array($company).. )
-  } //if( $zen->settings['allow_contacts']... )
+  } //if( $zen->getSetting('allow_contacts')... )
 ?>
 	
 </td>

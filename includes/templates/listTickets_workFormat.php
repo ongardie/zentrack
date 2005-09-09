@@ -5,34 +5,34 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
 if( is_array($tickets) ) {
  
       ?>
-        <table width="100%" cellspacing='1' cellpadding='2' bgcolor='<?=$zen->settings["color_alt_background"]?>'>
-   <tr bgcolor="<?=$zen->settings["color_title_background"]?>">
+        <table width="100%" cellspacing='1' cellpadding='2' bgcolor='<?=$zen->getSetting("color_alt_background")?>'>
+   <tr bgcolor="<?=$zen->getSetting("color_title_background")?>">
    <td width="32" height="25" valign="middle" title="<?=tr("ID of the ?",array($page_type))?>">
-     <div align="center"><span style="color:<?=$zen->settings["color_title_txt"]?>"><b><span class="small"><?=tr("ID")?></span></b></span></div>
+     <div align="center"><span style="color:<?=$zen->getSetting("color_title_txt")?>"><b><span class="small"><?=tr("ID")?></span></b></span></div>
    </td>
    <td height="25" valign="middle" title="<?=tr("Name of the ?",array($page_type))?>">
-     <div align="center"><span style="color:<?=$zen->settings["color_title_txt"]?>"><b><span class="small"><?=tr("Title")?></span></b></span></div>
+     <div align="center"><span style="color:<?=$zen->getSetting("color_title_txt")?>"><b><span class="small"><?=tr("Title")?></span></b></span></div>
    </td>
    <td width="32" height="25" valign="middle" title="<?=tr("Importance of the ?",array($page_type))?>">
-     <div align="center"><span style="color:<?=$zen->settings["color_title_txt"]?>"><b><span class="small"><?=tr("Pri")?></span></b></span></div>
+     <div align="center"><span style="color:<?=$zen->getSetting("color_title_txt")?>"><b><span class="small"><?=tr("Pri")?></span></b></span></div>
    </td>
    <td width="32" height="25" valign="middle" title="<?=tr("The type of ticket")?>">
-     <div align="center"><span style="color:<?=$zen->settings["color_title_txt"]?>"><b><span class="small"><?=tr("Type")?></span></b></span></div>
+     <div align="center"><span style="color:<?=$zen->getSetting("color_title_txt")?>"><b><span class="small"><?=tr("Type")?></span></b></span></div>
    </td>
    <td width="40" height="25" valign="middle" title="<?=tr("Who the ? belongs to",array($page_type))?>">
-     <div align="center"><span style="color:<?=$zen->settings["color_title_txt"]?>"><b><span class="small"><?=tr("Owner")?></span></b></span></div>
+     <div align="center"><span style="color:<?=$zen->getSetting("color_title_txt")?>"><b><span class="small"><?=tr("Owner")?></span></b></span></div>
    </td>
         <td width="40" height="25" valign="middle" title="<?=tr("Estimated time to complete")?>">
-     <div align="center"><span style="color:<?=$zen->settings["color_title_txt"]?>"><b><span class="small"><?=tr("Status")?></span></b></span></div>
+     <div align="center"><span style="color:<?=$zen->getSetting("color_title_txt")?>"><b><span class="small"><?=tr("Status")?></span></b></span></div>
         </td>     
         <td width="40" height="25" valign="middle" title="The estimated time to complete this <?=$page_type?>">
-     <div align="center"><span style="color:<?=$zen->settings["color_title_txt"]?>"><b><span class="small"><?=tr("Est Hrs")?></span></b></span></div>
+     <div align="center"><span style="color:<?=$zen->getSetting("color_title_txt")?>"><b><span class="small"><?=tr("Est Hrs")?></span></b></span></div>
         </td>
         <td width="40" height="25" valign="middle" title="<?=tr("Amount of time worked")?>">
-     <div align="center"><span style="color:<?=$zen->settings["color_title_txt"]?>"><b><span class="small"><?=tr("Worked")?></span></b></span></div>     
+     <div align="center"><span style="color:<?=$zen->getSetting("color_title_txt")?>"><b><span class="small"><?=tr("Worked")?></span></b></span></div>     
         </td>     
         <td width="40" height="25" valign="middle" title="<?=tr("Percent completed")?>">
-          <div align="center"><span style="color:<?=$zen->settings["color_title_txt"]?>"><b><span class="small"><?=tr("%")?></span></b></span></div>     
+          <div align="center"><span style="color:<?=$zen->getSetting("color_title_txt")?>"><b><span class="small"><?=tr("%")?></span></b></span></div>     
         </td>
    </tr>
       <?      
@@ -52,7 +52,7 @@ if( is_array($tickets) ) {
       if( $t["status"] == 'CLOSED' ) {
         $classxText = "class='bars' onclick='ticketClk(\"{$link}?id={$t['id']}\")' $rollover_greytext";
       }
-      else if( $zen->settings["priority_medium"] ) {
+      else if( $zen->getSetting("priority_medium") ) {
         $classxText = "class='priority{$t['priority']}' "
          ."onclick='ticketClk(\"{$link}?id={$t['id']}\")' "
          ."onMouseOver='mClassX(this, \"priority{$t['priority']}Over\", true)' "
@@ -127,13 +127,13 @@ if( is_array($tickets) ) {
      $p = round($p,1);
      $pp = round($pp,1);
      $ttl_per = round($ttl_per,1);
-     print "<tr style='background:".$zen->settings["color_bars"].";color:".$zen->settings["color_bar_text"].";'>\n";
+     print "<tr style='background:".$zen->getSetting("color_bars").";color:".$zen->getSetting("color_bar_text").";'>\n";
      print "<td colspan='6' align='right'><b>".tr("Actual Hours").":</b>&nbsp;&nbsp;</td>\n";
      print "<td align='right'><b>$ttl_est</b></td>\n";
      print "<td align='right'><b>".($ttl_ext+$ttl_wkd)."</b></td>\n";
      print "<td align='right'><b>$p%</b></td>\n";
      print "</tr>\n";            
-     print "<tr style='background:".$zen->settings["color_bars"].";color:".$zen->settings["color_bar_text"].";'>\n";
+     print "<tr style='background:".$zen->getSetting("color_bars").";color:".$zen->getSetting("color_bar_text").";'>\n";
      print "<td colspan='6' align='right'><b>".tr("Hours over 100%").":</b>&nbsp;&nbsp;</td>\n";
      print "<td align='right'><b>&nbsp;</b></td>\n";
      print "<td align='right'><b>&#150; $ttl_ext</b></td>\n";
@@ -142,7 +142,7 @@ if( is_array($tickets) ) {
    }
    
    // totals summary
-   print "<tr style='background:".$zen->settings["color_title_background"].";color:".$zen->settings["color_title_text"].";'>\n";
+   print "<tr style='background:".$zen->getSetting("color_title_background").";color:".$zen->getSetting("color_title_text").";'>\n";
    print "<td colspan='6' align='right'><b>".tr("Totals").":</b>&nbsp;&nbsp;</td>\n";
    print "<td align='center'><b>$ttl_est</b></td>\n";
    print "<td align='center'><b>$ttl_wkd</b></td>\n";

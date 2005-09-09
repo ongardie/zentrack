@@ -2,22 +2,22 @@
   <td class='leftNavTitle' height='25' valign='middle'><?=tr("Contacts")?></td>
 </tr>
 <tr>
-  <td class='leftNavMenu' <?=$nav_rollover_text?> title='<?=$hotkeys->tt("Contacts")?>'>
+  <td class='leftNavMenu outset' <?=$nav_rollover_text?> title='<?=$hotkeys->tt("Contacts")?>'>
     <a href='<?=$rootUrl?>/contacts.php' class='leftNavLink'><?=$hotkeys->ll("Contacts","Browse")?></a>
   </td>
 </tr>
 <tr>
-  <td class='leftNavMenu' <?=$nav_rollover_text?> title='<?=$hotkeys->tt("New Contact")?>'>
+  <td class='leftNavMenu outset' <?=$nav_rollover_text?> title='<?=$hotkeys->tt("New Contact")?>'>
     <a href='<?=$rootUrl?>/newContact.php' class='leftNavLink'><?=$hotkeys->ll("New Contact")?></a>
   </td>
 </tr>
 <tr>
-  <td class='leftNavMenu' <?=$nav_rollover_text?> title="<?=$hotkeys->tt('Search')?>">
+  <td class='leftNavMenu outset' <?=$nav_rollover_text?> title="<?=$hotkeys->tt('Search')?>">
     <a href='<?=$rootUrl?>/searchContacts.php' class='leftNavLink'><?=$hotkeys->ll("Search")?></a>
   </td>
 </tr>
 <tr>
-  <td class='leftNavCell' height='25%' valign='top'>
+  <td class='leftNavCell inset' height='25%' valign='top'>
     <div class='recentHistory'><?=tr("Recent Companies")?></div>
     <?
       $history =& $zen->getHistoryManager();
@@ -51,17 +51,17 @@
   <td class='leftNavTitle' height='25' valign='middle'><?=tr("Agreements")?></td>
 </tr>
 <tr>
-  <td class='leftNavMenu' <?=$nav_rollover_text?> title="<?=$hotkeys->tt('Browse')?>">
+  <td class='leftNavMenu outset' <?=$nav_rollover_text?> title="<?=$hotkeys->tt('Browse')?>">
     <a href='<?=$rootUrl?>/agreements.php' class='leftNavLink'><?=$hotkeys->ll("Browse")?></a>
   </td>
 </tr>
 <tr>
-  <td class='leftNavMenu' <?=$nav_rollover_text?> title="<?=$hotkeys->tt('New Agreement')?>">
+  <td class='leftNavMenu outset' <?=$nav_rollover_text?> title="<?=$hotkeys->tt('New Agreement')?>">
     <a href='<?=$rootUrl?>/newAgreement.php' class='leftNavLink'><?=$hotkeys->ll("New Agreement")?></a>
   </td>
 </tr>
 <tr>
-  <td class='leftNavCell' height='100%' valign='top'>
+  <td class='leftNavCell inset' height='100%' valign='top'>
     <div class='recentHistory'><?=tr("Recent Agreements")?></div>
     <?
       $history =& $zen->getHistoryManager();

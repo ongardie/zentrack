@@ -8,10 +8,10 @@
   <?
   if( $zen->checkAccess($login_id,$ticket["bin_id"],"notify") ) {
     $button = "submit";
-    $color = $zen->settings["color_highlight"];
+    $color = $zen->getSetting("color_highlight");
   } else {
     $button = "button";
-    $color = $zen->settings["color_alt_background"];
+    $color = $zen->getSetting("color_alt_background");
   }
   ?>
   <input type="<?=$button?>"
@@ -68,10 +68,10 @@
     <?
     if( $zen->checkAccess($login_id,$ticket["bin_id"],"notify_set") ) {
 	    $button = "submit";
-	    $color = $zen->settings["color_highlight"];
+	    $color = $zen->getSetting("color_highlight");
     } else {
 	    $button = "button";
-	    $color = $zen->settings["color_alt_background"];
+	    $color = $zen->getSetting("color_alt_background");
     }
     ?>
     <input type="<?=$button?>" 

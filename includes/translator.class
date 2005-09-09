@@ -164,7 +164,7 @@ class Translator {
       if (!array_key_exists($translationFile, $this->_translationCache)) {
          //check for file
          if (!is_file($translationFile)) {
-            $this->_zenObj->addDebug("Translator->trans", "Translation File Does Not Exist: '$translationFile'\n", 2);
+            $this->_zenObj->addDebug("Translator->trans", "Translation File Does Not Exist: '$translationFile'\n", 1);
             $error = true;
          }
          else {

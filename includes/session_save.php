@@ -8,16 +8,25 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
   ** in every place that we call one of these values
   */
 
+  $vals = array();
   if( is_array($_SESSION) ) {
     foreach($session_vars as $s) {
-      $x = $$s;
-      $_SESSION["$s"] = $x;
+      $vals[$s] = $$s;
+    }
+    if( $vals ) {
+      foreach($vals as $k=>$v) {
+        $_SESSION[$k] = $v;
+      }
     }
   }
   else if( is_array($HTTP_SESSION_VARS) ) {
     foreach($session_vars as $s) {
-      $x = $$s;
-      $HTTP_SESSION_VARS["$s"] = $x;
+      $vals[$s] = $$s;
+    }
+    if( $vals ) {
+      foreach($vals as $k=>$v) {
+        $_SESSION[$k] = $v;
+      }
     }
   }
 

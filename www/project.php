@@ -2,10 +2,9 @@
   /*
   **  PROJECT REDIRECT
   **  
-  **  Just here for integrity, redirects to ticket.php
-  **  which takes care of both tickets and projects
+  **  Redirects to ticket.php which takes care of both tickets and projects
   **
   */
-  $page_type = "project";  
+  $view = "project_view";  
   include("ticket.php");
 ?>

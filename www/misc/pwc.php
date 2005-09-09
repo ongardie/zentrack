@@ -18,9 +18,9 @@
     } else if( $newPass1 != $newPass2 ) {
       $errs[] = tr("Your passwords did not match");
     } else {
-      if( $zen->settings["check_pwd_simple"] == "on" && strlen($newPass1) < 6 ) 
+      if( $zen->settingOn("check_pwd_simple") && strlen($newPass1) < 6 ) 
       $errs[] = tr("Your passphrase must be at least 6 digits long");
-      if( $zen->settings["check_pwd_simple"] == "on" && !ereg("[^a-zA-Z]", $newPass1) )
+      if( $zen->settingOn("check_pwd_simple") && !ereg("[^a-zA-Z]", $newPass1) )
       $errs[] = tr("Your new passphrase must contain at least 1 non-letter character");
     }
     $user = $zen->getUser($login_id);

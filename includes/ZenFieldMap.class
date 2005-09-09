@@ -13,42 +13,6 @@ define("ZTFIELD_RADIO",6);
 define("ZTFIELD_DATE",7);
 define("ZTFIELD_SECTION",8);
 
-/** 
- * Returns properties for a view
- * <ul>
- *  <li>disabled - (boolean)this view doesn't use field_map yet
- *  <li>view_only - (boolean)this view does not have input fields, just text
- *  <li>has_behaviors - (boolean)this view has behaviors
- *  <li>admin_view - (boolean)this is an admin screen
- *  <li>multiple - (boolean)this view allows multiple selections (overrides field->multiple)
- *  <li>sections - (boolean)true if this view can support sections
- *  <li>any_option - (boolean)true if menus should include -any- option (for searching, etc)
- *  <li>access_level - (string)the level required to access a bin in this view
- * </ul>
- *
- * @param string $view if omitted, all views are returned
- */
-function getFmViewProps( $view = null ) {
-  if( !$view ) {
-    // return the entire set
-    $set = array();
-    $list = array_keys($GLOBALS['zt_field_dependencies']['views']);
-    foreach($list as $l) {
-      $set[$l] = getFmViewProps($l);
-    }
-    return $set;
-  }
-  // fetch an individual view
-  $vals = $GLOBALS['zt_field_dependencies']['views'][$view];
-  if( !is_array($vals) ) { return false; }
-  $vars = array();
-  $indices = array("disabled", "view_only", "has_behaviors", "admin_view", "multiple", "sections", "any_option", "access_level");
-  for($i=0; $i < count($vals); $i++) {
-    $vars[ $indices[$i] ] = $vals[$i];
-  }
-  return $vars;
-}
-
 /**
  * Returns properties for a field:
  * <ul>
@@ -64,6 +28,7 @@ function getFmViewProps( $view = null ) {
  * @param string $field if omitted, returns all fields formatted for a given view
  */
 function getFmFieldProps( $view, $field = null ) {
+  global $map;
   $field = ZenFieldMap::fieldName($field);
   if( !$field ) {
     // return all fields for a view
@@ -75,7 +40,6 @@ function getFmFieldProps( $view, $field = null ) {
     return $set;
   }
   // return a single field
-  $vprops = getFmViewProps($view);
   $vals = $GLOBALS['zt_field_dependencies']['fields'][$field];
   if( !is_array($vals) ) { return false; }
   $vars = array();
@@ -90,14 +54,14 @@ function getFmFieldProps( $view, $field = null ) {
       foreach($vals[$i] as $v) {
         $set[] = ZenFieldMap::getTypeString($v);
       }
-      if( $vprops['admin_view'] && $vals[$i+2] ) {
+      if( $map->getViewProp($view,'admin_view') && $vals[$i+2] ) {
         foreach($vals[$i+2] as $v) {
           $set[] = ZenFieldMap::getTypeString($v);
         }
       }
       $vars[ $indices[$i] ] = $set;
     }
-    else if( $vprops['multiple'] && $indices[$i] == 'multiple' ) {
+    else if( $map->getViewProp($view,'multiple') && $indices[$i] == 'multiple' ) {
       $vars[ $indices[$i] ] = true;
     }
     else {
@@ -174,25 +138,31 @@ $ztf = array(
     "comments"        => array(  false,   array(2)              , 'text'   ,      null, false,  false,  true)
   ),
   
-  "views" => array(//           disabled, view_only, has_behaviors, admin_view, multiple, sections, any_option, access_level
-    "ticket_create"   => array(    false,    false,      true, false, false, true,  false, 'level_create' ), 
-    "project_create"  => array(    false,    false,      true, false, false, true,  false, 'level_create' ),
-    "ticket_edit"     => array(    false,    false,      true,  true, false, true,  false, 'level_edit' ), 
-    "project_edit"    => array(    false,    false,      true,  true, false, true,  false, 'level_edit' ),
-    "ticket_list"     => array(    false,     true,     false, false, false, false, false, 'level_view' ),
-    "project_list"    => array(    false,     true,     false, false, false, false, false, 'level_view' ),
-    "search_form"     => array(    false,    false,      true,  true, true , false, true , 'level_view' ),
-    "search_list"     => array(    false,     true,     false, false, false, false, false, 'level_view' ),
-    "ticket_close"    => array(    false,    false,      true, false, false, true,  false, 'level_user' ), 
-    "ticket_title"    => array(     true,     true,     false, false, false, false, false, 'level_view' ),
-    "project_title"   => array(     true,     true,     false, false, false, false, false, 'level_view' ),
-    "ticket_detail"   => array(     true,     true,     false, false, false, true,  false, 'level_view' ),
-    "project_detail"  => array(     true,     true,     false, false, false, true,  false, 'level_view' ),
-    "ticket_custom"   => array(    false,    false,      true, false, false, true,  false, 'level_view' ),
-    "project_custom"  => array(    false,    false,      true, false, false, true,  false, 'level_view' ),
-    "ticket_options"  => array(    false,    false,     false, false, false, false, true , 'level_view' ),
-    "project_options" => array(    false,    false,     false, false, false, false, true , 'level_view' )
-  ),
+  // "views" => array(//           disabled, view_only, has_behaviors, admin_view, multiple, sections, any_option, access_level
+    // "ticket_close"    => array(    false,    false,      true, false, false, true,  false, 'level_user' ), 
+    // "ticket_create"   => array(    false,    false,      true, false, false, true,  false, 'level_create' ), 
+    // "ticket_custom"   => array(    false,    false,      true, false, false, true,  false, 'level_view' ),
+    // "ticket_edit"     => array(    false,    false,      true,  true, false, true,  false, 'level_edit' ), 
+    // "ticket_list"     => array(    false,     true,     false, false, false, false, false, 'level_view' ),
+    // "ticket_options"  => array(    false,    false,     false, false, false, false, true , 'level_view' ),
+    // "ticket_view_top" => array(    false,     true,     false, false, false,  true, false, 'level_view' ),
+    // "ticket_tab_1"    => array(    false,     true,     false, false, false,  true, false, 'level_view' ),
+    // "ticket_tab_2"    => array(    false,     true,     false, false, false,  true, false, 'level_view' ),
+    // "ticket_tab_3"    => array(    false,     true,     false, false, false,  true, false, 'level_view' ),
+    // "ticket_tab_4"    => array(    false,     true,     false, false, false,  true, false, 'level_view' ),
+    // "ticket_tab_5"    => array(    false,     true,     false, false, false,  true, false, 'level_view' ),
+    // "ticket_tab_6"    => array(    false,     true,     false, false, false,  true, false, 'level_view' ),
+    // "ticket_tab_7"    => array(    false,     true,     false, false, false,  true, false, 'level_view' ),
+    // "ticket_tab_8"    => array(    false,     true,     false, false, false,  true, false, 'level_view' ),
+    // "project_close"   => array(    false,    false,      true, false, false, true,  false, 'level_user' ), 
+    // "project_create"  => array(    false,    false,      true, false, false, true,  false, 'level_create_proj' ),
+    // "project_custom"  => array(    false,    false,      true, false, false, true,  false, 'level_view' ),
+    // "project_edit"    => array(    false,    false,      true,  true, false, true,  false, 'level_edit' ),
+    // "project_list"    => array(    false,     true,     false, false, false, false, false, 'level_view' ),
+    // "project_options" => array(    false,    false,     false, false, false, false, true , 'level_view' ),
+    // "search_form"     => array(    false,    false,      true,  true, true , false, true , 'level_view' ),
+    // "search_list"     => array(    false,     true,     false, false, false, false, false, 'level_view' )
+  // ),
   
   "types" => array(//   choices| multirows
     "hidden"   => array(  false, false ),
@@ -226,6 +196,66 @@ class ZenFieldMap {
     $this->_fieldVals = array();
   }
   
+  /**
+   * Return name and properties of each tab in the ticket view
+   */
+  function getTabs( $type, $login_id, $bin_id ) {
+    $tabs = array();
+    foreach($this->getViewProps() as $k=>$v) {
+      if( !preg_match("@^{$type}_tab_[0-9]$@", $k) ) { continue; }
+      if( $this->_zen->checkAccess($login_id, $bin_id, $this->getViewProp($k,'access_level')) ) {
+        $tabs["$k"] = array();
+        foreach($v as $key=>$val) {
+          $tabs["$k"]["$key"] = $this->getViewProp($k,$key);
+        }
+      }
+    }
+    return $tabs;
+  }
+  
+  /** 
+   * Returns properties for a view
+   * <ul>
+   *  <li>disabled - (boolean)this view doesn't use field_map yet
+   *  <li>view_only - (boolean)this view does not have input fields, just text
+   *  <li>has_behaviors - (boolean)this view has behaviors
+   *  <li>admin_view - (boolean)this is an admin screen
+   *  <li>multiple - (boolean)this view allows multiple selections (overrides field->multiple)
+   *  <li>sections - (boolean)true if this view can support sections
+   *  <li>any_option - (boolean)true if menus should include -any- option (for searching, etc)
+   * </ul>
+   *
+   * @param string $view if omitted, all views are returned
+   */
+  function getViewProps( $view = null ) {
+    if( !$this->_viewProps ) {
+      // attempt to retrieve from session
+      $vp = $this->_session->find('view_map');
+      if( is_array($vp) ) {
+        $this->_zen->addDebug('ZenFieldMap->getViewProps', "Loading from session[".count($vp)."]", 3);
+        $this->_viewProps = $vp;
+      }
+      else {
+        // if not in session, load from database
+        $query = "SELECT * FROM ZENTRACK_VIEW_MAP ORDER BY which_view, vm_order";
+        $this->_viewProps = array();
+        $vals = $this->_zen->db_queryIndexed($query);
+        $this->_zen->addDebug('ZenFieldMap->getViewProps', "Loading from db[".count($vals)."]: ".$query, 3);
+        foreach($vals as $v) {
+          $view = $v['which_view'];
+          $field = $v['vm_name'];
+          if( !array_key_exists($view, $this->_viewProps) ) {
+            // intialize the view array
+            $this->_viewProps["$view"] = array();
+          }
+          $this->_viewProps["$view"]["$field"] = $v;
+        }
+        $this->_session->store('view_map', $this->_viewProps);
+      }
+    }
+    return $view? $this->_viewProps["$view"] : $this->_viewProps;
+  }
+
   /**
    * Consults the field map and constructs a list of (String)field_name which
    * represents all of the fields which exist in this view. (note that some
@@ -284,7 +314,8 @@ class ZenFieldMap {
   function getTextValue( $view, $field_name, $value ) {
     $this->_zen->addDebug("getTextValue", "rendering $view, $field_name, $value", 3);
     $field = $this->getFieldFromMap($view,$field_name);
-    if( strlen($value) && $field['is_visible'] && $field['field_type'] != 'hidden' ) {
+    if( $field['is_visible'] && $field['field_type'] != 'hidden' ) {
+      if( !strlen($value) ) { return '&nbsp;'; }
       switch($this->fieldName($field_name)) {
         case "priority":
         case "status":
@@ -315,7 +346,7 @@ class ZenFieldMap {
           }
           if( $value == 'NULL' ) { $value = ''; }
           if( $value == 0 ) { $value = ""; }
-          return strlen($value)? $this->_zen->showDateTime($value) : '';
+          return $this->_zen->showDateTime($value);
         case "custom_boolean":
           $val = $value == 1? tr('Yes') : tr('No');
           return $this->_zen->ffv($val,$field['num_cols']);
@@ -369,11 +400,10 @@ class ZenFieldMap {
 
     // collect system properties
     $fprops = getFmFieldProps($view, $field_name);
-    $vprops = getFmViewProps($view);
     $tprops = getFmTypeProps($typename);
     
     // see if this is a 'viewonly' screen, if so, no form fields needed
-    if( $vprops["view_only"] ) { return $this->getTextValue($view,$field_name,$value); }
+    if( $this->getViewProp($view, 'view_only') ) { return $this->getTextValue($view,$field_name,$value); }
     
     // collect template props
     $vals = array();
@@ -461,7 +491,7 @@ class ZenFieldMap {
       }
       $vals["search_url"] = $rootUrl."/helpers/{$s}Searchbox.php?"
         ."return_form=$form_name&return_field={$vals['field_name']}";
-      if( !$fprops["multiple"] && !$vprops["multiple"] ) {
+      if( !$fprops["multiple"] && !$this->getViewProp($view,'multiple') ) {
         $vals['search_url'] .= "&onechoice=1";
       }
     }
@@ -684,8 +714,7 @@ class ZenFieldMap {
       
     $field = $this->getFieldFromMap($view, $field_name);
     $fprops = getFmFieldProps($view, $field_name);
-    $vprops = getFmViewProps($view);
-    $bins = $this->_zen->getUsersBins($_SESSION['login_id'], $vprops['access_level']);
+    $bins = $this->_zen->getUsersBins($_SESSION['login_id'], $this->getViewProp($view, 'access_level'));
     
     switch( $this->fieldName($field_name) ) {
       case "bin_id":
@@ -713,7 +742,7 @@ class ZenFieldMap {
         break;      
       case "tested":
       case "approved":
-        $vals = $vprops["admin_view"]?
+        $vals = $this->getViewProp($view, 'admin_view')?
           array('0'=>tr('n/a'), '2'=>tr('Yes'), '1'=>tr('No')) : array('1'=>tr('Yes'), '2'=>tr('No'));
         break;
       default:
@@ -736,9 +765,12 @@ class ZenFieldMap {
     
     $this->_zen->addDebug('_getChoices', "Generated ".count($vals)." choices for {$view}->{$field_name}", 3);
     
-    if( $vprops['any_option'] && $field['num_rows'] == 1 ) {
+    if( $this->getViewProp($view, 'any_option') && $field['num_rows'] == 1 ) {
       $vals = Zen::mergeArrays( array('' => '-any-'), $vals );
       //$vals = array_merge(array(''=>'-any-'),$vals);
+    }
+    else if( !$field['is_required'] && $field['num_rows'] == 1 ) {
+      $vals = array_merge(array(''=>'-----'), $vals);
     }
     if( !isset($this->_fieldVals[$view]) ) { $this->_fieldVals[$view] = array(); }
     $this->_fieldVals[$view][$field_name] = $vals;
@@ -826,6 +858,27 @@ class ZenFieldMap {
          return null;
      }     
    }
+   
+   /**
+    * Returns the value (from fmx_val) for a given view property
+    *
+    * @param string $view
+    * @param string $prop
+    * @return mixed value of the property (boolean, string or array)
+    */
+   function getViewProp( $view, $prop ) {
+     $vals = $this->getViewProps($view);
+     if( !$vals ) {
+       $this->_zen->addDebug('getViewProp', "Invalid view $view", 1);
+       return null;
+     }
+     $val = array_key_exists($prop, $vals)? $vals["$prop"]["vm_val"] : null;
+     if( $prop == 'preload' || $prop == 'postload' ) {
+       // preload and postload are special cases, always return an array
+       $val = $val? explode(",",$val) : array();
+     }
+     return $val;
+   }
   
   /** @var array $_map an array of (string)view -> array( (string)field_name->(array)values... ) */
   var $_map;
@@ -838,6 +891,9 @@ class ZenFieldMap {
   
   /** @var zenTrack $_zen */
   var $_zen;
+  
+  /** @var array $_viewProps properties for all views */
+  var $_viewProps;
   
 }
 

@@ -66,10 +66,10 @@ function priority_color($priority) {
 $lowp = 99999;
 $hip = -1;
 
-$lc = $zen->settings["color_priority_low"];
-$mc = $zen->settings["color_priority_med"];
-$hc = $zen->settings["color_priority_hi"];
-$mp = $zen->settings["priority_medium"];
+$lc = $zen->getSetting("color_priority_low");
+$mc = $zen->getSetting("color_priority_med");
+$hc = $zen->getSetting("color_priority_hi");
+$mp = $zen->getSetting("priority_medium");
 
 $pri_list = $zen->getPriorities(1);
 foreach ($pri_list as $v) {

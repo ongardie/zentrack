@@ -6,43 +6,43 @@ if( is_array($users) && count($users) ) {
  
    $c = count($users);
       ?>
-        <table width="100%" cellspacing='1' cellpadding='2' bgcolor='<?=$zen->settings["color_alt_background"]?>'>
+        <table width="100%" cellspacing='1' cellpadding='2' bgcolor='<?=$zen->getSetting("color_alt_background")?>'>
         <tr><td class='titleCell' colspan="8" align='center'><?=($c>1)? "$c ".tr("matches") : "1 ".tr("match");?></td></tr>
-   <tr bgcolor="<?=$zen->settings["color_title_background"]?>">
+   <tr bgcolor="<?=$zen->getSetting("color_title_background")?>">
    <td width="32" height="25" valign="middle" title="<?=tr("Users System ID")?>">
-     <div align="center"><span style="color:<?=$zen->settings["color_title_txt"]?>"><b><span class="small"><?=tr("ID")?></span></b></span></div>
+     <div align="center"><span style="color:<?=$zen->getSetting("color_title_txt")?>"><b><span class="small"><?=tr("ID")?></span></b></span></div>
    </td>
    <td height="25" valign="middle" title="<?=tr("The name of the user")?>">
-     <div align="center"><span style="color:<?=$zen->settings["color_title_txt"]?>">
+     <div align="center"><span style="color:<?=$zen->getSetting("color_title_txt")?>">
         <b><span class="small"><?=tr("Name")?></span></b></span></div>
    </td>
    <td height="25" valign="middle" title="<?=tr("Users Initials")?>">
-     <div align="center"><span style="color:<?=$zen->settings["color_title_txt"]?>">
+     <div align="center"><span style="color:<?=$zen->getSetting("color_title_txt")?>">
         <b><span class="small"><?=tr("Initials")?></span></b></span></div>
    </td>
    <td width="32" height="25" valign="middle" title="<?=tr("Default Access Level")?>">
-     <div align="center"><span style="color:<?=$zen->settings["color_title_txt"]?>"><b><span class="small"><?=tr("Access")?></span></b></span></div>
+     <div align="center"><span style="color:<?=$zen->getSetting("color_title_txt")?>"><b><span class="small"><?=tr("Access")?></span></b></span></div>
    </td>
    <td height="25" valign="middle" title="<?=tr("Users email address")?>">
-     <div align="center"><span style="color:<?=$zen->settings["color_title_txt"]?>">
+     <div align="center"><span style="color:<?=$zen->getSetting("color_title_txt")?>">
         <b><span class="small"><?=tr("Email")?></span></b></span></div>
    </td>
      <td width="32" height="25" valign="middle" title="<?=tr("Account is Active")?>">
-     <div align="center"><span style="color:<?=$zen->settings["color_title_txt"]?>">
+     <div align="center"><span style="color:<?=$zen->getSetting("color_title_txt")?>">
              <b><span class="small"><?=tr("Active")?></span></b></span></div>
      </td>
      <td width="32" height="25" valign="middle" title="<?=tr("Users Default Bin")?>">
-     <div align="center"><span style="color:<?=$zen->settings["color_title_txt"]?>">
+     <div align="center"><span style="color:<?=$zen->getSetting("color_title_txt")?>">
              <b><span class="small"><?=tr("Home")?></span></b></span></div>
      </td>
      <td width="32" height="25" valign="middle" title="<?=tr("Administrative Options")?>">
-     <div align="center"><span style="color:<?=$zen->settings["color_title_txt"]?>">
+     <div align="center"><span style="color:<?=$zen->getSetting("color_title_txt")?>">
              <b><span class="small"><?=tr("Options")?></span></b></span></div>
      </td>
    </tr>
       <?      
 
-   $text = $zen->settings["color_bar_text"];
+   $text = $zen->getSetting("color_bar_text");
    $elnk = "$rootUrl/admin/editUser.php";
    $dlnk = "$rootUrl/admin/deleteUser.php";
    $alnk = "$rootUrl/admin/access.php";
@@ -52,8 +52,8 @@ if( is_array($users) && count($users) ) {
       unset($txt);
       unset($tx);
       unset($est);
-      $row = ($row == $zen->settings["color_bars"])?
-   $zen->settings["color_background"] : $zen->settings["color_bars"];
+      $row = ($row == $zen->getSetting("color_bars"))?
+   $zen->getSetting("color_background") : $zen->getSetting("color_bars");
       $name = $zen->formatName($u,1);
       if( $search_text && ($search_fields["lname"] || $search_fields["fname"] ) ) {
    $name = $zen->highlight($name,$search_text);

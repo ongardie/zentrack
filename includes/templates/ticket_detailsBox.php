@@ -1,4 +1,4 @@
-<? 
+<? if( !ZT_DEFINED ) { die("Illegal Access"); } 
   /**
    * This displays the details tab within the ticket view.
    *
@@ -9,11 +9,19 @@
    *   int $project_id - [optional] if defined, represents the project this ticket belongs to
    *   mixed [various] - ticket fields from ZENTRACK_TICKETS are provided to this page as $column_name
    */
-   
-   if( !ZT_DEFINED ) { die("Illegal Access"); } 
+  
+   /**
+    * Creates a bordered box containing large bodies of text
+    */
+   function genBorderBox( $title, $text ) {
+     global $zen;
+     $title = tr($zen->ffv($title));
+     $text = $zen->ffv($text);
+     print "border box: $title<p>$text</p>";
+   }
 ?>
 
-  <table width="600" align="center" cellpadding="2" cellspacing="2">
+  <table width="600" cellpadding="2" cellspacing="2">
    <tr>  
    <? if( $project_id ) { 
        $project = $zen->get_ticket($project_id); 
@@ -27,7 +35,7 @@
     <td width="30">&nbsp;</td>
     <td class="smallTitleCell"><?=uptr("Start Date")?></td>
   </tr>
-  <tr style='background:<?=$zen->settings["color_background"]?>'>
+  <tr style='background:<?=$zen->getSetting("color_background")?>'>
    <? if( $project_id ) { ?>  
     <td colspan='3' <?=$rollover_text?>><a 
 	href='<?=$rootUrl?>/project.php?id=<?=$project_id?>' 
@@ -75,7 +83,7 @@
       <form method="post" action="'.$rootUrl.'/actions/estimate.php">
 		  <input type="hidden" name="id" value="'.$id.'">
 		  <td><input type="button" class="actionButton"
-      style="color:'.$zen->settings["color_alt_background"].'"
+      style="color:'.$zen->getSetting("color_alt_background").'"
       value="'.$set.'"></td>
       </form>');
     }

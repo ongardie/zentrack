@@ -4,14 +4,15 @@
     global $keyRegisterEvents;
     global $nav_rollover_text;
     global $hotkeys;
+    global $rootUrl;
     $keyRegisterEvents[] = array($name, $page);
-    
+
     $key = $hotkeys->find($name);
     $title = $hotkeys->tooltip($key);
 
     $txt = "<td height='25' title='$title' valign='middle'";
     if( getZtSection() == strtolower($name) ) {
-      $class = "navTab navOn"; 
+      $class = "navTab navOn";
     }
     else {
       $class = "navTab navOff";
@@ -23,17 +24,17 @@
     return $txt;
 
   }
-  
+
   // number of columns in nav table
   $nav_col_span = 4;
-  
+
   // height of the separator between nav tabs and main content
   $nav_bar_height = 12;
-  
+
   $nav_tabs =  renderNavTab('Projects', 'projects.php');
   $nav_tabs .= renderNavTab('Tickets', 'index.php');
   if ($login_level != 'first_login' &&
-    $login_level >= $zen->settings["level_contacts"] &&
+    $login_level >= $zen->getSetting("level_contacts") &&
     $zen->settingOn('allow_contacts') ) {
     $nav_tabs .= renderNavTab('Contacts','contacts.php');
   }
@@ -41,10 +42,10 @@
     $nav_tabs .= renderNavTab('Options','options.php');
   }
   $nav_tabs .= renderNavTab('Help','help/index.php');
-  if( $zen->checkNum($login_level) >= $zen->settings["level_settings"] ) {
+  if( $zen->checkNum($login_level) >= $zen->getSetting("level_settings") ) {
     $nav_tabs .= renderNavTab('Admin', 'admin/index.php');
   }
-  
+
   // load hot key selections
   $sect = getZtSection();
   $load_section = $sect != 'undefined' && file_exists("$templateDir/nav_$sect.php");
@@ -88,13 +89,13 @@
   </script>
 
   </head>
-  
+
 <body>
 <table width="100%" cellpadding="0" cellspacing="0">
   <tr>
   <td valign="bottom" width="140" height="30">
-<a href="<?=$rootUrl?>"><img 
-  src="<?=$imageUrl?>/zenTrack_logo.jpg" 
+<a href="<?=$rootUrl?>"><img
+  src="<?=$imageUrl?>/zenTrack_logo.jpg"
   border="0" width="140" height="30" alt="logo"></a>
   </td>
   <td valign='bottom' align='left'><table cellpadding='0' cellspacing='0' border='0'>
@@ -102,15 +103,15 @@
   <td align='right'>
      <form action="<?=$rootUrl?>/ticket.php" name='quickIdForm'>
       <?=$hotkeys->ll("Ticket ID")?>:</span>&nbsp;
-      <input class="searchbox" type="text" name="id" 
+      <input class="searchbox" type="text" name="id"
         size="6" maxlength="12" title="<?=$hotkeys->tt("Ticket ID")?>">
         &nbsp;&nbsp;&nbsp;
-    </form>  
+    </form>
   </td>
   <td>
     <div class='small' align='center'><b><?=$zen->showLongDate()?></b></div>
     <div class='small' align='center'><?=tr("version")?>
-      <?=$zen->settings["version_xx"]?>
+      <?=$zen->getSetting("version_xx")?>
       <? if( $zen->demo_mode == 'on' ) { print "<div class='small' align='center'>(demo mode)</div>"; } ?>
     </div>
   </td>
@@ -121,37 +122,39 @@
   </tr>
   <tr>
   <td valign="top" height="400" colspan='<?=$nav_col_span?>' class='mainContent'>
-  
-  <? 
+
+  <?
     // include left nav menu if one is appropriate
-    $footer_close_left = false;
     print "<table width='100%' cellpadding='0' cellspacing='0' class='navpad'><tr>\n";
     if( $load_section ) {
       ?>
+
+      <!-- ********* \LEFT NAV MENU\ ********* -->
+
       <td height='400' width='110' valign='top' align='center' class='titleCell'>
       <table width='106' height='100%' cellpadding='3' cellspacing='3'>
       <?
       include("$templateDir/nav_$sect.php");
-      print "</td>\n";
-      $footer_close_left = true;
       print "</table>\n";
+      print "</td>\n";
+      print "\n      <!-- ********* /LEFT NAV MENU/ ********* -->\n\n";
     }
+
     print "<td valign='top' height='400' class='padded'>\n";
- 
+
     // print out any system messages
     // which are queued up for display
     if( $msg && !is_array($msg) ) {
        $msg = array($msg);
     }
-    if( is_array($msg) && count($msg) ) { 
+    if( is_array($msg) && count($msg) ) {
        print "&nbsp;<p><b>\n";
        foreach($msg as $m) {
-          print "$m<br>";   
+          print "$m<br>";
        }
        print "</b></p>\n";
        $msg = array();
     }
   ?>
-  
+
   <!-- END OF NAVIGATION -->
- 

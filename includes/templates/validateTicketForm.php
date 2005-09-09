@@ -7,6 +7,7 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
      (string)$view - the current view (probably project_create or ticket_create)
      (string)$page_type - (optional) either 'ticket' or 'project'
   **/
+  $fields = $map->getFieldMap($view);
 ?>
 
 <script language='Javascript' type='text/javascript'>
@@ -34,13 +35,13 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
       default:
         return false;
     }
+    return true;
  }
 
  function validateTicketForm() {
    var errs = new Array();
 <?
-foreach($fields as $f) {
-  $field = $map->getFieldFromMap($view,$f['field_name']);
+foreach($fields as $f=>$field) {
   // we don't want to validate any hidden fields using javascript, this is
   // a potential problem.
   if( $field['is_required'] && $field['is_visible'] && $field['field_type'] != 'label' ) {
@@ -49,7 +50,7 @@ foreach($fields as $f) {
     print "\tif( !validateField(document.ticketForm.$f) ) { errs[errs.length] = $tr; }\n";
   }
 }
-if ($td && $zen->settings['edit_reason_required']=='on' && $zen->settings['log_edit']=='on') {
+if ($td && $zen->settingOn('edit_reason_required') && $zen->settingOn('log_edit') ) {
     $tr = $zen->fixJSVal(tr("? is required",array(tr("Edit Reason"))));
     print "\tif( !validateField(document.ticketForm.edit_reason) ) { errs[errs.length] = $tr; }\n";
 }

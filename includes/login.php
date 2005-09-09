@@ -59,7 +59,7 @@ if( $autologin && !$login_id && $zentrackUsername && $zentrackKey ) {
 }
 
 if( !$login_id ) {
-  if( $zen->settingOn('use_system_auth') && 
+  if( $zen->settingOn('use_system_auth') &&
       isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW']) ) {
     // use htaccess authentication
     $username = $_SERVER['PHP_AUTH_USER'];
@@ -97,8 +97,8 @@ if( !$login_id ) {
       $login_name  = $zen->user["fname"]." ".$zen->user["lname"];
       $login_inits = $zen->user["initials"];
       $login_bin   = $zen->user["homebin"];
-      $prefs = $zen->get_prefs($login_id, "language");
-      if(isset($prefs["language"])) { $login_language = $prefs["language"]; }
+      $lang_pref = $zen->get_prefs($login_id, "language");
+      if( $lang_pref ) { $login_language = $lang_pref; }
       setcookie("zentrackUsername", $username, time()+2592000);
       if( $autologin && $save_my_password ) {
         // if the user checks the log me in automagically box, we will set a userpref

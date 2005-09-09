@@ -44,7 +44,7 @@
        $recipients = explode(",", $custom_email_addresses);
      }  
      
-     $subject = "[{$zen->settings['system_name']}] ".$zen->getTypeName($ticket["type_id"])." $id";
+     $subject = "[".$zen->getSetting('system_name')."] ".$zen->getTypeName($ticket["type_id"])." $id";
      unset($params);
      if( $comments )
      $params["message"] = $comments;
@@ -62,7 +62,7 @@
      if( !$errs ) {
        $err = $zen->sendEmail($recipients, $subject, $message, $login_id);
        if( !$err ) {
-         if( $zen->settings["log_email"] == 'on' ) {
+         if( $zen->settingOn("log_email") ) {
            $name = $zen->formatName($user,1);
            $logParams = array(
              "action"   =>  'EMAIL',

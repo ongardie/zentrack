@@ -14,71 +14,74 @@
     include_once("../header.php");
   }
   
-  $hotkeys->loadSection('ticket_view');
-  
-  if( $page_type != "project" )
-  $page_type = "ticket";
-  $page = $page_type;
+  // determine if we are viewing a project or a ticket
+  if( !isset($view) || $view != 'project_view' ) {
+    $view = 'ticket_view';
+  }
   
   // redirect to somewhere user can pick a ticket if no id was recieved
   if( !$id ) {
-    $pt = $page_type == 'project'? 'projects.php' : 'index.php';
+    $pt = $view == 'project_view'? 'projects.php' : 'index.php';
     include("$rootWWW/$pt");
     exit;
     //header("Location: $rootUrl/index.php\n");
   }
   
-  /*
-  **  GET TICKET INFORMATION
-  */
-  $page_title = tr("Ticket") . " #$id";
-  $varfields = $zen->getVarfieldVals($id);
-  if ( !is_array($varfields) ) {
-    $varfields=array();
-  }
-  
-  /*
-  **  GET PARAMS FOR A PROJECT
-  */
-  if( $page_type == "project" ) {
+  // load the ticket info, validate it, and switch 
+  // to the project view if needed
+  if( $view == "project_view" ) {
     $ticket = $zen->get_project($id);
-    $page_section = "Project $id";
-    $expand_projects = 1;
   } else {
     $ticket = $zen->get_ticket($id);
     if( is_array($ticket) ) {
       if( $zen->inProjectTypeIDs($ticket["type_id"]) ) {
-        unset($ticket);
         $ticket = $zen->get_project($id);
-        $page_section = "Project $id";
-        $expand_projects = 1;
-        $page_type = "project";
-      } else {
-        $page_type = "ticket";
-        $page_section = $zen->types["$ticket[type_id]"]." #$id";
-        $expand_tickets = 1;     
+        $view = 'project_view';
       }
     }
   }
   
+  // set the page type now that we have decided on a view
+  preg_match('@^(project|ticket)_view$@', $view, $matches);
+  $page_type = $matches[1];
+  
+  // if there is no ticket for this id, then load the list and
+  // inform the user of the bad choice
   if( !is_array($ticket) || !count($ticket) ) {
     $pt = $page_type == 'project'? 'projects.php' : 'index.php';
     $msg = tr("Invalid ? id requested", array(tr($page_type)));
     include("$rootWWW/$pt");
     exit;
-  }
+  }  
+  
+  // load hot keys for page
+  $hotkeys->loadSection($view);
   
   // place record into history of recently viewed items
   $history =& $zen->getHistoryManager();
   $history->storeItem($page_type, $id, $ticket['title']);  
 
+  /*
+  **  Collect information for displaying nav and UI elements
+  */
+  $page_title = $zen->getTypeName($ticket['type_id'])." #$id";
+  
   // allow creator of ticket to view (if setting is on) even if no access
   $is_creator = $zen->checkCreator($login_id, $id);
   
+  // determine which page we will view
+  if( $setmode ) {
+    $page_mode = preg_replace('@[^0-9a-zA-Z_]@', '', $setmode);
+  }
+  if( !$page_mode ) {
+    $page_mode = "{$page_type}_tab_1";
+  }
+  
   // load behavior js if needed
-  if( (isset($setmode) && strtolower($setmode) == 'custom') 
-  || (!isset($setmode) && isset($ticket_mode) && strtolower($ticket_mode) == 'custom') ) {
-    $onLoad[] = "behavior_js.php?formset=ticket_customForm";
+  if( preg_match("@^{$page_type}_tab_[0-9]$@", $page_mode) ) {
+    if( $map->getViewProp($page_mode, 'editable') ) {
+      $onLoad[] = "behavior_js.php?formset=$page_mode";
+    }
   }
   
   /*
@@ -87,22 +90,9 @@
   include_once("$libDir/nav.php");
   
   if( !$is_creator && !$zen->checkAccess($login_id,$ticket["bin_id"]) ) {
-    print "<p class='hot'>" . tr("You are not allowed to view the following in this bin") . ": {$page_type}s</p>\n";
+    print "<p class='hot'>" . tr("You are not allowed to view ? in this bin", array(tr($page_type."s"))) ."</p>";
   } else {
-    if( is_array($ticket) ) {
-      if (count($ticket)==1) {
-        extract($ticket[$id]);
-      } else {
-        extract($ticket);
-      }
-      if( $type_id == $zen->projectTypeID() ) {
-        include("$templateDir/projectView.php");
-      } else {
-        include("$templateDir/ticketView.php");     
-      }
-    } else {
-      print "<p class='error'>" . tr("That ticket doesn't exist") . "</p>\n";
-    }    
+    include("$templateDir/ticketView.php");
   }
   
   include("$libDir/footer.php");

@@ -8,6 +8,7 @@ function KeyEvent( e ) {
   this.ctrl = e && e.ctrlKey? true : false;
   this.alt = e && e.altKey? true : false;
   this.shift = e && e.shiftKey? true : false;
+  this.source = KeyEvent.getSourceElement(e);
 
   // determine key which was pressed
   this.keyCode = e.which? e.which : e.keyCode;
@@ -73,6 +74,14 @@ KeyEvent.prototype.run = function() { alert("No run method has been declared for
 KeyEvent.prototype.equals = function( k ) {
   if( !KeyEvent.isKeyEvent(k) ) { k = KeyEvent.valueOf( k ); }
   return k.key == this.key && k.alt == this.alt && k.shift == this.shift && k.ctrl == this.ctrl;
+}
+
+/**
+ * Determine if there was a meta key pressed or if this is a straight keyboard
+ * entry (which must be ignored in certain cases)
+ */
+KeyEvent.prototype.isMetaKey = function() {
+  return this.alt || this.ctrl;
 }
 
 /** true if the object passed is not null, is an object, and has the className attribute of "KeyEvent" */
@@ -142,6 +151,15 @@ KeyEvent.getKey = function(keyPress) {
 KeyEvent.keyPress = function(keyPress) {
   var k = new KeyEvent(keyPress? keyPress : window.event);
   if( debugOn ) { window.status = 'Caught key ['+k.keyCode+']'+k.toString(); }
+  
+  if( KeyEvent.targetsFormField(k) && !k.isMetaKey()) {
+    // determine if we are in a form field and this is not a meta key
+    // (if so, we ignore the event, because the user must be able to
+    // type into the field)
+    return true;
+  }
+  
+  // determine if we have a key event registered
   var runKey = KeyEvent.findKey(k);
   if( runKey ) {
     if( debugOn ) { window.status = 'Matched key '+runKey.toString(); }
@@ -189,6 +207,26 @@ KeyEvent.findKey = function( k ) {
   }
   return false;
 }
+
+KeyEvent.getSourceElement = function( e ) {
+  if( e.target ) {
+    return e.target;
+  }
+  else if( e.srcElement ) {
+    return e.srcElement;
+  }
+}
+
+KeyEvent.targetsFormField = function( keyEvent ) {
+  var s = keyEvent.source;
+  //alert('keyEvent.type|keyEvent.parent: '+s.type+"|"+s.parent);
+  //alert('keyEvent.parent.type: '+s.parent.type);//debug
+  if( s && s.parent && s.parent.type && s.parent.type == "form" ) {
+    return true;
+  }
+  return false;
+}
+
 
 /** 
  * Generates a refresh event stored in a function

@@ -1,6 +1,6 @@
 <? if( !ZT_DEFINED ) { die("Illegal Access"); } ?>
 <div class="small" align="center"><b><?=$zen->showLongDate()?></b></div>
-<div class="small" align='center'><?=tr("version")?> <?=$zen->settings["version_xx"]?></div>
+<div class="small" align='center'><?=tr("version")?> <?=$zen->getSetting("version_xx")?></div>
 <?
   if( $zen->demo_mode == 'on' ) { print "<div class='small' align='center'>(demo mode)</div>"; }
 
@@ -25,7 +25,7 @@
 ?>
   
   
-<table width="100%" border=1 cellspacing=0 cellpadding=2 bgcolor='<?=$zen->settings["color_title_background"]?>'>
+<table width="100%" border=1 cellspacing=0 cellpadding=2 bgcolor='<?=$zen->getSetting("color_title_background")?>'>
   <? if( $login_id ) { include("$libDir/leftBins.php"); } ?>
   <tr>
   <td class="altCell" align=center>
@@ -39,8 +39,8 @@
   if ($login_level=="first_login" ) $err = 1;
 	  
   if ($login_level != 'first_login' &&
-      $login_level >= $zen->settings["level_contacts"] &&
-      $zen->settings['allow_contacts'] == 'on' ) {
+      $login_level >= $zen->getSetting("level_contacts") &&
+      $zen->settingOn('allow_contacts') ) {
   ?>
     <tr>
       <td class="altCell" align=center>
@@ -79,12 +79,12 @@
   </tr>  
   <? 
 //we check also if login_level is a number because in first login it will be 'first_login' what would give access to all.
-     if( $zen->checkNum($login_level) >= $zen->settings["level_reports"] ) {
+     if( $zen->checkNum($login_level) >= $zen->getSetting("level_reports") ) {
    include("$libDir/leftReports.php");
       } 
   ?>
   <? 
-     if( $zen->checkNum($login_level) >= $zen->settings["level_settings"] ) {
+     if( $zen->checkNum($login_level) >= $zen->getSetting("level_settings") ) {
    include("$libDir/leftAdmin.php");
       } 
   ?>

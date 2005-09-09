@@ -8,7 +8,7 @@
 
   <p><b><i style="color:red"><?tr("Login and passphrase are case sensitive!")?></i></b></p>
 
-  <form method="post" action="<?=$SCRIPT_NAME?><?=($id)? "?id=".$zen->checkNum($id) : ""?>">
+  <form method="post" name="loginForm" action="<?=$SCRIPT_NAME?><?=($id)? "?id=".$zen->checkNum($id) : ""?>">
 
   <input type=text name=username value='<?=strip_tags($zentrackUsername)?>' width=20 maxlength=20>&nbsp;<?=tr("Login Name")?>
 
@@ -32,13 +32,18 @@
 
 </blockquote>
 
-
-
-
-
-
-
-
-
-
-
+<script type='text/javascript'>
+  var f = function() {
+    var f = window.document.loginForm;
+    if( f.username.value == "" ) {
+      f.username.focus();
+    }
+    else if( f.passphrase.value == "" ) {
+      f.passphrase.focus();
+    }
+    else {
+      f.TODO.focus();
+    }  
+  }
+  addToOnload( f );
+</script>

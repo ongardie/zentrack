@@ -17,18 +17,16 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
 <form method='post' action='<?=$SCRIPT_NAME?>' name='fieldMapForm'>
 <input type='hidden' name='TODO' value='save'>
 <input type='hidden' name='view' value='<?=$zen->ffv($view)?>'>
-
 <p>
 <nobr>
 <b>Screen to Edit:</b>
 &nbsp;
 <select name='view'>
 <?
-foreach( getFmViewProps() as $k=>$v ) {
-  if( !$v['disabled'] ) {
-    $sel = $view == $k? " selected" : "";
-    print "<option value='$k'$sel>$k</option>\n";
-  }
+foreach( $map->getViewProps() as $k=>$v ) {
+  $sel = $view == $k? " selected" : "";
+  $l = $map->getViewProp($k,'label')? $k." (".$map->getViewProp($k,'label').")" : $k;
+  print "<option value='$k'$sel>$l</option>\n";
 }
 ?>
 </select>
@@ -37,6 +35,22 @@ foreach( getFmViewProps() as $k=>$v ) {
 </nobr>
 <br><span class='note'><?=tr("Do not switch views without saving changes!")?></span>
 </p>
+
+<?
+if( !$view ) {
+  print "<div class='heading'>Please choose a view to edit</div>";
+}
+else {
+?>
+<table cellpadding='4' cellspacing='1' class='cell' border='0'>
+  <tr><td colspan='2' class='titleCell'>View Properties</td></tr>
+<?
+foreach($map->getViewProps($view) as $v) {
+  if( $v['vm_type'] == 'hidden' ) { continue; }
+  print "<tr class='bars'><td>".$zen->ffv($v['vm_name'])."</td><td>".$zen->ffv($v['vm_val'])."</td></tr>\n";
+}
+?>
+</table>
 
 <table cellpadding="4" cellspacing="1" class='cell' border=0>
 <tr toofar="toofar">
@@ -76,7 +90,6 @@ function fmfVal( $field, $key ) {
   return $zen->ffv($field[$key]);
 }
 
-$vprops = getFmViewProps($view);
 $fcount=0;
 $prevSection = false;
 $typeprops = getFmTypeProps();
@@ -107,7 +120,7 @@ foreach($fields as $f=>$field) {
     $txt .= " width='16' height='16' alt='Move Down' title='Move Down' border='0'></a>";
     // control sort ordering by tracking what order these hidden fields arrive
     $txt .= "<input type='hidden' name='orderset[$f]' value='$fcount'>";
-  if( $vprops['sections'] ) {
+  if( $map->getViewProp($view, 'sections') ) {
     if( $field['field_type'] == 'section' && $field['field_name'] != 'elapsed' ) {
       // remove sections
       $txt .= "<a href='#' onClick='removeRow(this);return false;'";
@@ -138,7 +151,7 @@ foreach($fields as $f=>$field) {
     print "<td class='altBars $s' colspan='5'>&nbsp;</td>";
   }
   else {
-    if( $vprops['view_only'] ) {
+    if( $map->getViewProp($view,'view_only') ) {
       fmfRow(tr('n/a'),$class);
     }
     else if( $view == 'search_form' ) {
@@ -153,7 +166,7 @@ foreach($fields as $f=>$field) {
     }
     // default value (text)
     $txt = "n/a";
-    if( $fprops['default'] && !$vprops['view_only'] ) {
+    if( $fprops['default'] && !$map->getViewProp($view,'view_only') ) {
       if( strpos($f,'custom_menu')===0 || strpos($f,'custom_multi')===0 ) {
         // custom menus use the data groups as a selector, not a list of values
         $choices = $zen->getDataGroups();
@@ -237,6 +250,9 @@ foreach($fields as $f=>$field) {
 <? } ?>
 
 </table>
+<? 
+  } //end if( !$view ) { ... } else { ...
+?>
 </form>
 
 <script type='text/javascript'>

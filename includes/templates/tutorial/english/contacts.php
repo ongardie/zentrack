@@ -11,7 +11,7 @@ this?  Move on already!
 <p>The Contact List is essentially an address book.
 
 <p>Contacts represent companies and employees (both internal and external to your
-organization) which do not have a login account for <?=$zen->settings['system_name']?>.
+organization) which do not have a login account for <?=$zen->getSetting('system_name')?>.
 
 <p>Contacts may be used simply as a record of the responsible parties or people
 associated with a ticket or to add people to the notify lists for tickets.

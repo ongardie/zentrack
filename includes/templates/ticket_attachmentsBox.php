@@ -2,9 +2,9 @@
 if( !ZT_DEFINED ) { die("Illegal Access"); }
 
    $rollover_text = " onclick=\"mClk(this);\" "
-      ."onmouseout=\"mOut(this,'".$zen->settings["color_background"]."', '');\" "
-      ."onmouseover=\"mOvr(this,'".$zen->settings["color_bars"]."', '');\"";
-   $row = "background:".$zen->settings["color_background"];
+      ."onmouseout=\"mOut(this,'".$zen->getSetting("color_background")."', '');\" "
+      ."onmouseover=\"mOvr(this,'".$zen->getSetting("color_bars")."', '');\"";
+   $row = "background:".$zen->getSetting("color_background");
 ?>
   <table width="600" align="center" cellpadding="2" cellspacing="2">
   <tr> 
@@ -14,10 +14,10 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
        <?
          if( $zen->actionApplicable($id,"upload",$login_id) ) {
 	    $button = "submit";
-	    $color = $zen->settings["color_highlight"];
+	    $color = $zen->getSetting("color_highlight");
 	 } else {
 	    $button = "button";
-	    $color = $zen->settings["color_alt_background"];
+	    $color = $zen->getSetting("color_alt_background");
 	 }
        ?>
        <input type="<?=$button?>" value=" <?=uptr("Add Attachment")?> " class="actionButton" style="width:125;color:<?=$color?>">
@@ -49,11 +49,11 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
 	?>
 	  <tr style="<?=$row?>">
 	  <td <?=$rollover_text?>>
-	    <a href='<?=$zen->settings["url_view_attachment"]?>?aid=<?=$a["attachment_id"]?>' 
+	    <a href='<?=$zen->getSetting("url_view_attachment")?>?aid=<?=$a["attachment_id"]?>' 
 	    class='rowLink' target='_blank'><?=$a[name]?></a></td>
 	  <td <?=($a["log_id"])? $rollover_text:"";?>>
 	    <?= ($a["log_id"])?
-	         "<a href='".$zen->settings["url_view_log"]
+	         "<a href='".$zen->getSetting("url_view_log")
                     ."?lid=$a[log_id]' class='rowLink'>$a[log_id]</a>" :
 	         "n/a";
 	    ?>

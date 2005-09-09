@@ -44,7 +44,7 @@ msgstr "? Treffer"
 
 
 #file "D:\zentrack\zentrack/www/admin/config.php"
-#args "array($zen->settings["system_name"])"
+#args "array($zen->getSetting("system_name"))"
 msgid "? Settings"
 msgstr "? Einstellungen"
 
@@ -146,7 +146,7 @@ msgstr "Ueber"
 
 
 #file "D:\zentrack\zentrack/www/help/install.php"
-#args "array($zen->settings["system_name"])"
+#args "array($zen->getSetting("system_name"))"
 msgid "About ?"
 msgstr "Über ?"
 
@@ -3435,7 +3435,8 @@ msgid "yes"
 msgstr "ja"
 
 
-msgid "This grants the user the specified level of  	access to all bins not otherwise indicated by 'user access'."
+msgid "This grants the user the specified level of 
+ 	access to all bins not otherwise indicated by 'user access'."
 msgstr ""
 
 
@@ -3447,7 +3448,8 @@ msgid "Tickets"
 msgstr ""
 
 
-msgid "Your passphrase must be at least 6 characters long and      contain at least 1 non-letter character."
+msgid "Your passphrase must be at least 6 characters long and 
+     contain at least 1 non-letter character."
 msgstr ""
 
 

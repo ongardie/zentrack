@@ -4,41 +4,41 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
 
 if( is_array($logs) && count($logs) ) {
   
-  $link = $zen->settings["url_view_ticket"];
+  $link = $zen->getSetting("url_view_ticket");
   $c = count($logs);
   $pageNumber = array_key_exists('pageNumber', $_GET)?
   $zen->checkNum($_GET['pageNumber']) : 0;
-  $first = ($zen->settings['paging_max_rows'] * $pageNumber) + 1; //added line
+  $first = ($zen->getSetting('paging_max_rows') * $pageNumber) + 1; //added line
   $last = $c + $ll - 1; //added line
   if( $last > $zen->total_records ) { $last = $zen->total_records; }
   $c = tr("Matches ?-? of ?", array($first,$last,$zen->total_records)); //added line
   ?>
-  <table width="100%" cellspacing='1' cellpadding='2' bgcolor='<?=$zen->settings["color_alt_background"]?>'>
+  <table width="100%" cellspacing='1' cellpadding='2' bgcolor='<?=$zen->getSetting("color_alt_background")?>'>
   <tr><td class='titleCell' colspan="8" align='center'><?=$c?></td></tr>
-  <tr bgcolor="<?=$zen->settings["color_title_background"]?>">
+  <tr bgcolor="<?=$zen->getSetting("color_title_background")?>">
   <td width="32" height="25" valign="middle" title="<?=tr("ID of the ticket")?>">
-  <div align="center"><span style="color:<?=$zen->settings["color_title_txt"]?>"><b><span class="small"><?=tr("ID")?></span></b></span></div>
+  <div align="center"><span style="color:<?=$zen->getSetting("color_title_txt")?>"><b><span class="small"><?=tr("ID")?></span></b></span></div>
   </td>
   <td width="32" height="25" valign="middle" title="<?=tr("Date log was created")?>">
-  <div align="center"><span style="color:<?=$zen->settings["color_title_txt"]?>">
+  <div align="center"><span style="color:<?=$zen->getSetting("color_title_txt")?>">
   <b><span class="small"><?=tr("Date")?></span></b></span>
   </div>
   </td>
   <? if( !$search_params["action"] || is_array($search_params["action"]) ) { ?>
     <td width="32" height="25" valign="middle" title="<?=tr("Action Taken")?>">
-    <div align="center"><span style="color:<?=$zen->settings["color_title_txt"]?>">
+    <div align="center"><span style="color:<?=$zen->getSetting("color_title_txt")?>">
     <b><span class="small"><?=tr("Action")?></span></b></span></div>
     </td>
   <? } ?>
   <? if( !$search_params["user_id"] || is_array($search_params["user_id"]) ) { ?>
     <td width="32" height="25" valign="middle" title="<?=tr("Person ticket is assigned to")?>">
-    <div align="center"><span style="color:<?=$zen->settings["color_title_txt"]?>">
+    <div align="center"><span style="color:<?=$zen->getSetting("color_title_txt")?>">
     <b><span class="small"><?=tr("User")?></span></b></span></div>
     </td>
   <? } ?>
   <? if( !$search_params["bin_id"] || is_array($search_params["bin_id"]) ) { ?>
     <td width="32" height="25" valign="middle" title="<?=tr("Bin ticket is located in")?>">
-    <div align="center"><span style="color:<?=$zen->settings["color_title_txt"]?>">
+    <div align="center"><span style="color:<?=$zen->getSetting("color_title_txt")?>">
     <b><span class="small"><?=tr("Bin")?></span></b></span></div>
     </td>
   <? } ?>
@@ -50,14 +50,14 @@ if( is_array($logs) && count($logs) ) {
     unset($txt);
     unset($est);
     
-    if( $row == $zen->settings["color_background"] ) {
-      $row = $zen->settings["color_bars"];
+    if( $row == $zen->getSetting("color_background") ) {
+      $row = $zen->getSetting("color_bars");
       $txt = $hotrollover_greytext;
-      $text = $zen->settings["color_bar_text"]; 
+      $text = $zen->getSetting("color_bar_text"); 
     } else {
-      $row = $zen->settings["color_background"];
+      $row = $zen->getSetting("color_background");
       $txt = $hotrollover_text;
-      $text = $zen->settings["color_text"];
+      $text = $zen->getSetting("color_text");
     }
     ?>
     <tr style="background:<?=$row?>;color:<?=$text?>" 

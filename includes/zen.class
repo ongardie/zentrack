@@ -782,6 +782,18 @@ class zen extends zenDate {
     function cleanPath( $path ) {
       return str_replace('\\', '/', realpath($path) );
     }
+    
+   /**
+    * Adds a variable to a url appropriately
+    *
+    * @static
+    */
+   function addToUrl( $url, $key, $val ) {
+     $key = urlencode($key);
+     $val = urlencode($val);
+     $tf = strpos($url, '?') > 0;
+     return $url . ($tf? "&$key=$val" : "?$key=$val");
+   }
    
    /*
    **  SYSTEM METHODS

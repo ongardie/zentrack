@@ -22,12 +22,12 @@
   foreach($actions as $a=>$v) {
     $flag = 1;
     if( $zen->actionApplicable($ticket, $a, $login_id) ) {
-      $style = "style='color:".$zen->settings["color_highlight"]."'";
+      $style = "style='color:".$zen->getSetting("color_highlight")."'";
       $button = "submit";
     } else {
       if( !$v )
       $flag = 0;
-      $style = "style='color:".$zen->settings["color_alt_background"]."'";
+      $style = "style='color:".$zen->getSetting("color_alt_background")."'";
       $button = "button";
     }
     if( $flag ) {

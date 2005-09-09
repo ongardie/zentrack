@@ -44,18 +44,21 @@ class ZenHotKeys {
       $this->assign('ALT+V',  'Behaviors',       "KeyEvent.createLoadUrl('{rootUrl}/admin/behaviors.php')");
       $this->assign('ALT+O',  'Configuration',   "KeyEvent.createLoadUrl('{rootUrl}/admin/config.php')");
     }
+    else if( $sect == 'login' ) {
+      $this->assign('ALT+L',   'Log On',         "window.document.loginForm.submit()");
+    }
     else if( $sect == 'tickets' ) {
       $this->assign('ALT+S',        'Search',      "KeyEvent.createLoadUrl('{rootUrl}/search.php')");
     }
-    else if( $sect == 'ticket_view' ) {
-      $this->assign('ALT+SHIFT+1',  'Details',     "KeyEvent.createLoadUrl('{rootUrl}/ticket.php?id={id}&setmode=details')");
-      $this->assign('ALT+SHIFT+2',  $this->_zen->getSetting('varfield_tab_name'),   "KeyEvent.createLoadUrl('{rootUrl}/ticket.php?id={id}&setmode=custom')");
-      $this->assign('ALT+SHIFT+3',  'Log',         "KeyEvent.createLoadUrl('{rootUrl}/ticket.php?id={id}&setmode=log')");
-      $this->assign('ALT+SHIFT+4',  'Notify',      "KeyEvent.createLoadUrl('{rootUrl}/ticket.php?id={id}&setmode=notify')");
-      $this->assign('ALT+SHIFT+5',  'Contacts_',    "KeyEvent.createLoadUrl('{rootUrl}/ticket.php?id={id}&setmode=contacts')");
-      $this->assign('ALT+SHIFT+6',  'Related',     "KeyEvent.createLoadUrl('{rootUrl}/ticket.php?id={id}&setmode=related')");
-      $this->assign('ALT+SHIFT+7',  'Attachments', "KeyEvent.createLoadUrl('{rootUrl}/ticket.php?id={id}&setmode=attachments')");
-      $this->assign('ALT+SHIFT+8',  'System',      "KeyEvent.createLoadUrl('{rootUrl}/ticket.php?id={id}&setmode=system')");
+    else if( $sect == 'ticket_view' || $sect == 'project_view' ) {
+      $map = $GLOBALS['zt_map'];
+      preg_match('@(ticket|project)@', $sect, $matches);
+      $t = $matches[1];
+      for($i=1; $i<=8; $i++) {
+        $view = "{$t}_tab_{$i}";
+        $label = $map->getViewProp($view,'label');
+        $this->assign("ALT+SHIFT+$i", $label, "KeyEvent.createLoadUrl('{rootUrl}/ticket.php?id={id}&setmode=$view')");
+      }
     }
     else if( $sect == 'contacts' ) {
       $this->assign('ALT+Y',  'New Company',    "KeyEvent.createLoadUrl('{rootUrl}/newContact.php?mode2=1')");
@@ -63,6 +66,9 @@ class ZenHotKeys {
       $this->assign('ALT+S',  'Search',         "KeyEvent.createLoadUrl('{rootUrl}/searchContacts.php')");
       $this->assign('ALT+B',  'Browse',         "KeyEvent.createLoadUrl('{rootUrl}/agreements.php')");
       $this->assign('ALT+A',  'New Agreement',  "KeyEvent.createLoadUrl('{rootUrl}/newAgreement.php')");
+    }
+    else if( $sect == 'options' ) {
+      $this->assign('ALT+L',  'Log Off',        "KeyEvent.createLoadUrl('{rootUrl}/index.php?logoff=1')", "Log out of ".$this->_zen->getSetting('system_name'));
     }
   }
   

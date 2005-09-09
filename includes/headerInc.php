@@ -10,14 +10,14 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
   ** IS THE header.php FILE IN THE www VIEWABLE DIRECTORY
   ** AND THE configVars.php FILE IN THE includes DIRECTORY
   **
-  ** abstracts advanced header functions from the 
+  ** abstracts advanced header functions from the
   ** configuration portion, for easier upgrades and
   ** less headaches
   **
   ** This page contains functions and variables which are universal
   ** to the site
   */
-  
+
   /**
   * ERROR REPORTING (security)
   */
@@ -25,42 +25,43 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
   if( !$Debug_Mode ) {
     ini_set("display_errors", false);
   }
-  
+
   // fix problems with array indices and case of table columns
   define('ADODB_ASSOC_CASE',0);
-  
+
   /*
   ** SESSION MANAGEMENT
   */
   include_once("$libDir/session_start.php");
-  
+
   /*
   **  URL DETERMINATIONS
   */
-  
+
   $templateDir = "$libDir/templates";
   $listDir     = "$libDir/lists";
   $imageUrl    = "$rootUrl/images";
   $ticketUrl   = "$rootUrl/ticket.php";
   $projectUrl  = "$rootUrl/project.php";
-  
+
   /*
   **  BROWSER DETERMINATIONS
   */
-  
+
+  $page_browser = 'unkown';
   if( eregi("(\[en\]|netscape)", $HTTP_USER_AGENT) ) {
     $page_browser = "ns";
-  } else if( eregi("(Gecko)", $HTTP_USER_AGENT) ) {
+  } else if( eregi("Mozilla", $HTTP_USER_AGENT) ) {
     $page_browser = "mz";
   } else if( eregi("ie", $HTTP_USER_AGENT) ){
     $page_browser = "ie";
   }
-  
-  
+
+
   /*
   **  CLASS OBJECTS
   */
-  
+
   // if these change, they will need to be changed
   // in egate_utils.php as well!
   include_once("$libDir/translator.class");
@@ -68,19 +69,23 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
   include_once("$libDir/ZenFieldMap.class");
   include_once("$libDir/zenTemplate.class");
   include_once("$libDir/ZenHotKeys.class");
-  
+
   $zen = new zenTrack( $configFile );
   $map =& new ZenFieldMap($zen);
   $hotkeys =& new ZenHotKeys($zen);
   
+  $GLOBALS['zt_zen'] = $zen;
+  $GLOBALS['zt_map'] = $map;
+  $GLOBALS['zt_hotkeys'] = $hotkeys;
+
   /**
   * Translator Object Initialization (mlively)
   */
-  // set language to default if unspecified 
+  // set language to default if unspecified
   if( !$login_language ) {
-    $login_language = $zen->settings["language_default"];
+    $login_language = $zen->getSetting("language_default");
   }
-  
+
   //Create the initialization array for the translator object
   //this data set also appears in the egate_utils.php script
   $translator_init = array(
@@ -92,7 +97,7 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
   tr($translator_init);
   //save a bit on memory
   unset($translator_init);
-  
+
   function uptr($string, $vals = '') {
     $specials = array(
     '&AACUTE;' => '&Aacute;',
@@ -103,21 +108,19 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
     '&NTILDE;' => '&Ntilde;'
     );
     $trad=strtoupper(tr($string,$vals));
-    foreach ($specials as $k => $v) {
-      $trad=str_replace($k,$v,$trad);
-    }
+    $trad = strtr($string, $specials);
     return $trad;
   }
-  
+
   /*
   **  SOME FUNCTIONS FOR USE IN
   **  PAGE CONTENT
-  **  
+  **
   **  These are functions for tracking
   **  sessions and for system screen
   **  in the ticket viewing mode
   */
-  
+
   function add_system_messages( $msg, $code = 'Bold' ) {
     // stores the system messages
     // in a session variable so that they
@@ -126,12 +129,12 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
     // if $code is set to Error, Highlight, or Bold
     // then the message will be formatted
     // according to the stylesheet .small[Error|Highlight|Bold] entries
-    
+
     if( !is_array($msg) )
     $msg = array($msg);
-    global $login_messages;     
+    global $login_messages;
     global $system_message_limit;
-    
+
     if( count($msg) >= $system_message_limit ) {
       unset($login_messages);
     }
@@ -141,11 +144,11 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
       $login_messages = array_slice( $login_messages,0,
       ($system_message_limit - count($msg)) );
     }
-    foreach( $msg as $m ) {  
+    foreach( $msg as $m ) {
       array_unshift($login_messages, array($m,time(),$code) );
     }
   }
-  
+
   function print_system_messages($flag = '') {
     // prints all the system messages to
     // the screen
@@ -153,7 +156,7 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
     // up until the first greyed entry (only print new entries)
     global $login_messages;
     global $zen;
-    
+
     if( is_array($login_messages) ) {
       $i = 0;
       foreach( $login_messages as $v ) {
@@ -168,47 +171,47 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
         print "<br><span class='$style'>";
         print "[".$zen->showTime($v[1])."] ";
         print $v[0]."</span>\n";
-      }  
+      }
     } else {
       print "<span class='smallGrey'>No system messages</span>";
     }
   }
-  
+
   function clear_system_messages() {
     // deletes all system messages
     global $login_messages;
     unset($login_messages);
   }
-  
+
   function getVarfieldDataType( $varfieldName ) {
     $varfieldName = strtolower($varfieldName);
     if( preg_match('/^custom_([a-z]+)[0-9]+$/', $varfieldName, $matches) ) {
       return isset($matches[1])? $matches[1] : null;
     }
   }
-  
+
   function genVarfield( $formName, $varfield, $value = '' ) {
     // generates html form element to represent
     // the variable field array
     global $zen;
     global $rootUrl;
-    
+
     // clean data
     $value = $zen->ffv($value);
-    
+
     // determine the data type
     $type = getVarfieldDataType($varfield['field_name']);
-    
+
     $onblur = "";
     if( $varfield['js_validation'] ) {
       $onblur = " onblur='{$varfield['js_validation']}'";
     }
-    
+
     $key = $varfield['field_name'];
-    
+
     $zen->addDebug('headerInc', "genVarfield( '$formName', "
        +"'$varfield', '$value' ) using type=$type and key=$key", 3);
-    
+
     switch( $type ) {
       case "boolean":
         $inp = "<input type='checkbox' name='{$key}' "
@@ -227,8 +230,8 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
         // format for use in date
         if( $value == 'NULL' ) { $value = ''; }
         if( $value == 0 ) { $value = ""; }
-        if( strlen($value) && preg_match("/^[0-9]+$/", $value) ) { 
-          $value = $zen->showDateTime($value); 
+        if( strlen($value) && preg_match("/^[0-9]+$/", $value) ) {
+          $value = $zen->showDateTime($value);
         }
         // create input field and date picker
         $inp = "<input type='text' name='{$key}' "
@@ -242,7 +245,7 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
       case "number":
         if( $value == 'NULL' ) { $value = ''; }
         $inp = "<input type='text' name='{$key}' "
-        ." value='{$value}' size='10' maxlength='100'{$onblur}>\n";      
+        ." value='{$value}' size='10' maxlength='100'{$onblur}>\n";
         break;
       case "menu":
         $opts = genDataGroupChoices($varfield['field_value']);
@@ -270,7 +273,7 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
     }
     return $inp;
   }
-  
+
   function genDataGroupChoices( $group_id, $use_default = true ) {
     if( isset($_SESSION['data_groups']["$group_id"]) ) {
       // get the fields for our group
@@ -281,7 +284,7 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
         }
       }
     }
-    
+
     // generate a mock field
     if( $use_default ) {
       return array( array('field_value'=>'', 'label'=>'---') );
@@ -290,13 +293,13 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
       return array();
     }
   }
-  
+
   if( isset($newbin) && $newbin == 'all' ) {
     unset($login_bin);
   } else if( isset($newbin) && $newbin && $zen->bins["$newbin"] && $zen->checkAccess($login_id,$newbin) ) {
     $login_bin = $newbin;
   }
-  
+
   // security
   $onLoad = array();
   $vars = array();
@@ -306,12 +309,12 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
   if( isset($id) ) {
     $id = ereg_replace("[^0-9]", "", $id);
   }
-  
+
   // used to set table cell padding (since netscape cant handle padding-top/bottom)
-  $height_num = $zen->settings["font_size"] + 4;
-  
-  // function to retrieve the available languages from the translations/ dir  
-  function get_languages_available() { 
+  $height_num = $zen->getSetting("font_size") + 4;
+
+  // function to retrieve the available languages from the translations/ dir
+  function get_languages_available() {
     global $libDir;
     $dir = opendir("$libDir/translations");
     $vals = array();
@@ -323,7 +326,7 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
     closedir($dir);
     return $vals;
   }
-  
+
   /**
    * Determines the current section based on the page being viewed:
    * <ul>
@@ -338,8 +341,8 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
    * </ul>
    */
    function getZtSection() {
-     if( !defined('ZT_SECTION') ) { 
-       $section = 'undefined';
+     if( !defined('ZT_SECTION') ) {
+       $section = null;
         // check for the page_type variable
         global $page_type;
         if( isset($page_type) ) { $section = $page_type."s"; }
@@ -371,71 +374,51 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
             $section = 'options';
           }
         }
-       define('ZT_SECTION',$section);
+       if( $section ) {
+         define('ZT_SECTION',$section);
+       }
      }
      return ZT_SECTION;
    }
-  
-  /*
-  **  TICKET NAVIGATION TABS
-  */
-  
-  // these are for the ticket_box.php page.  They appear here so that
-  // individual pages may alter the specific tabs displayed by editing
-  // this array of values before running ticket_box.php
-  //
-  // $tabs are the nav boxes that will appear, and must correspond
-  // to a file called ticket_[name]Box.php which is included in
-  // includes/templates dir
-  $tabs = array(
-    "details"     => tr("Details"),
-    "custom"      => tr($zen->settings['varfield_tab_name']),
-    "log"         => tr("Log"),
-    "notify"      => tr("Notify"),
-    "contacts"    => tr("Contacts"),
-    "related"     => tr("Related"),     
-    "attachments" => tr("Attachments"),
-    "system"      => tr("System")
-  );
-  
+
   /*
   **  ROLLOVER EFFECTS
   */
-  
-  $rollover_text = " onclick=\"mClk(this);\" onmouseout=\"mOut(this,'"
-    .$zen->settings["color_background"]."', '');\" "
-    ."onmouseover=\"mOvr(this,'"
-    .$zen->settings["color_bars"]."', '');\"";
-  
-  $rollover_greytext = " onclick=\"mClk(this);\" onmouseout=\"mOut(this,'"
-    .$zen->settings["color_bars"]."', '');\" "
-    ."onmouseover=\"mOvr(this,'"
-    .$zen->settings["color_background"]."', '');\"";
-  
-  $hotrollover_greytext = " onclick=\"mClk(this);\" onmouseout=\"mOut(this,'"
-    .$zen->settings["color_bars"]."', '');\" "
-    ."onmouseover=\"mOvr(this,'"
-    .$zen->settings["color_highlight"]."', '');\"";
-  
-  $hotrollover_text = "onclick=\"mClk(this);\" onmouseout=\"mOut(this,'"
-    .$zen->settings["color_background"]."', '');\" "
-    ."onmouseover=\"mOvr(this,'"
-    .$zen->settings["color_highlight"]."', '');\"";
-    
-  $heading_rollover = " onmouseout=\"mOut(this,'"
-    .$zen->settings["color_bar_darker"]."','"
-    .$zen->settings["color_alt_text"]."');\" onmouseover=\"mOvr(this,'"
-    .$zen->settings["color_alt_background"]."','"
-    .$zen->settings["color_alt_text"]."');\" ";
 
-  
+  $rollover_text = " onclick=\"mClk(this);\" onmouseout=\"mOut(this,'"
+    .$zen->getSetting("color_background")."', '');\" "
+    ."onmouseover=\"mOvr(this,'"
+    .$zen->getSetting("color_bars")."', '');\"";
+
+  $rollover_greytext = " onclick=\"mClk(this);\" onmouseout=\"mOut(this,'"
+    .$zen->getSetting("color_bars")."', '');\" "
+    ."onmouseover=\"mOvr(this,'"
+    .$zen->getSetting("color_background")."', '');\"";
+
+  $hotrollover_greytext = " onclick=\"mClk(this);\" onmouseout=\"mOut(this,'"
+    .$zen->getSetting("color_bars")."', '');\" "
+    ."onmouseover=\"mOvr(this,'"
+    .$zen->getSetting("color_highlight")."', '');\"";
+
+  $hotrollover_text = "onclick=\"mClk(this);\" onmouseout=\"mOut(this,'"
+    .$zen->getSetting("color_background")."', '');\" "
+    ."onmouseover=\"mOvr(this,'"
+    .$zen->getSetting("color_highlight")."', '');\"";
+
+  $heading_rollover = " onmouseout=\"mOut(this,'"
+    .$zen->getSetting("color_bar_darkest")."','"
+    .$zen->getSetting("color_alt_text")."');\" onmouseover=\"mOvr(this,'"
+    .$zen->getSetting("color_alt_background")."','"
+    .$zen->getSetting("color_alt_text")."');\" ";
+
+
   $nav_rollover_eff = " onmouseout=\"mOut(this,'"
-    .$zen->settings["color_bar_darker"]."');\" onmouseover=\"mOvr(this,'"
-    .$zen->settings["color_alt_background"]."');\" ";
-    
+    .$zen->getSetting("color_bar_darker")."');\" onmouseover=\"mOvr(this,'"
+    .$zen->getSetting("color_alt_background")."');\" ";
+
   $nav_rollover_text = " onclick=\"mClk(this);\" ".$nav_rollover_eff;
-  
-  
+
+
   /**
    * Returns true if a login is required to view the current page.
    *
@@ -449,17 +432,17 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
     $section = getZtSection();
     return $section != 'help' && $section != 'js' && $section != 'css';
   }
-  
+
   /*
   **  USER AUTHENTICATION
   **
   **  determine if a login is required
   */
-  
+
   if( ztLoginRequired() ) {
     include_once("$libDir/login.php");
-  }     
-  
+  }
+
   /**
   * Generate group info, since it takes several queries
   * This array is reset when a logoff occurs, so make sure this
@@ -468,12 +451,12 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
   if( !array_key_exists('data_groups', $_SESSION) || !$_SESSION['data_groups'] ) {
     $_SESSION['data_groups'] = $zen->generateDataGroupInfo();
   }
-  
+
   /**
   * The list of valid log action types
   */
   $log_actions = $zen->getActivities();
-  
+
   // help links
   // determine which directory contains
   // our current translation (if one exists)
@@ -487,6 +470,6 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
   }
   $helpUrl = "$helpBase/$helpLang";
   $helpDir = "$rootWWW/help/$helpLang";
-  
+
   // you can't have any spaces after this closing tag!
 }?>

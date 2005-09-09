@@ -10,7 +10,7 @@ as spreadsheets or pdf forms.
 
 <p>The type of items which can be attached to a ticket are determined by
 your administrator.  Currently, the system is configured to accept the 
-following attachments: <?=$zen->settings['attachment_types_allowed']?>
+following attachments: <?=$zen->getSetting('attachment_types_allowed')?>
 
 <p><b>Viewing Attachments</b></p>
 

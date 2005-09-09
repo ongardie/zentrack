@@ -48,10 +48,10 @@ To create a new ticket, simply reply to this email, and fill in the following in
 @Deadline:
 {*optional: the date can be any standard format, you may also use +1 week, +2 months, etc*}
 
-@Testing Required: [<?=($zen->settings["default_test_checked"]=="on")?"x":" "?>]
+@Testing Required: [<?=$zen->settingOn("default_test_checked")?"x":" "?>]
 {*place an x in the box if testing will be needed before closing*}
 
-@Approval Required: [<?=($zen->settings["default_aprv_checked"]=="on")?"x":" "?>]
+@Approval Required: [<?=$zen->settingOn("default_aprv_checked")?"x":" "?>]
 {*place an x in the box if approval will be required before closing*}
 
 @Details:

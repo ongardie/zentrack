@@ -10,12 +10,12 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
 <form method="post" action="<?=$rootUrl?>/misc/pwc.php">
 <table width="300" cellpadding="5">
 <tr>
-  <td colspan="2" class="titleCell" align="center" height="20">
+  <td colspan="2" class="subTitle" align="center" height="20">
     <b><?=tr("Change User Password")?></b>
   </td>
 </tr>
 <?
-  if( $zen->settings["check_pwd_simple"] == "on" ) {
+  if( $zen->settingOn("check_pwd_simple") ) {
 ?>
 <tr>
   <td colspan="2" class="bars">

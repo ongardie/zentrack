@@ -62,7 +62,7 @@
      $debug_text .= "HTTP_COOKIE: $HTTP_COOKIE<br>\n";
      $debug_text .= "SERVER_SOFTWARE: {$_SERVER['SERVER_SOFTWARE']}<br>\n";
      $debug_text .= "PHP Version: ".phpversion()."<br>\n";
-     $debug_text .= "zenTrack Version: ".$zen->settings["version_xx"]."<br>\n";
+     $debug_text .= "zenTrack Version: ".$zen->getSetting("version_xx")."<br>\n";
      $debug_text .= "rootUrl: $rootUrl<br>\n";
      $debug_text .= "section: ".getZtSection()."<br>\n";
      $debug_text .= "database: ".$zen->database_type."/".$zen->database_host."<br>\n";

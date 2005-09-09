@@ -45,7 +45,7 @@
 	print "</select>\n";
       } else {
 	print "<input type='text' style='font-size:"
-	   .$zen->settings["font_size_small"]."px' name='newSettings[$k]' "
+	   .$zen->getSetting("font_size_small")."px' name='newSettings[$k]' "
            ." size='20' maxlength='100' value='".$zen->ffv($s["value"])."'>";
       }
       print "</td>";

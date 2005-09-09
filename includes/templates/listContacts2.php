@@ -7,29 +7,29 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
 
 if( is_array($tickets) ) {
       ?>
-        <table width="100%" cellspacing='1' cellpadding='2' bgcolor='<?=$zen->settings["color_alt_background"]?>'>
+        <table width="100%" cellspacing='1' cellpadding='2' bgcolor='<?=$zen->getSetting("color_alt_background")?>'>
       <?   
     //show title bar  
     if ($setmode=="all"){
 	    ?>
 		<td width="32" height="25" valign="middle" title="<?=tr("ID of the contact")?>" class="titleCell" >
-		<div align="center"><span style="color:<?=$zen->settings["color_title_txt"]?>"><b><span><?=tr("ID")?></span></b></span></div>
+		<div align="center"><span style="color:<?=$zen->getSetting("color_title_txt")?>"><b><span><?=tr("ID")?></span></b></span></div>
 		</td>
 
 		<td height="25" valign="middle" title="<?=tr("The name of the contact")?>" class="titleCell">
-		<div align="center"><span style="color:<?=$zen->settings["color_title_txt"]?>"><b><span><?=tr("Name")?></span></b></span></div>
+		<div align="center"><span style="color:<?=$zen->getSetting("color_title_txt")?>"><b><span><?=tr("Name")?></span></b></span></div>
 		</td>
 		<?if ($overview=="extern") { ?>
 		<td height="25" valign="middle" title="<?=tr("The company of the contact")?>" class="titleCell">
-		<div align="center"><span style="color:<?=$zen->settings["color_title_txt"]?>"><b><span><?=tr("Company")?></span></b></span></div>
+		<div align="center"><span style="color:<?=$zen->getSetting("color_title_txt")?>"><b><span><?=tr("Company")?></span></b></span></div>
 		</td>
 		<?}?>
 		<td height="25" valign="middle" title="<?=tr("The e-mail of the contact")?>" class="titleCell">
-		<div align="center"><span style="color:<?=$zen->settings["color_title_txt"]?>"><b><span><?=tr("E-mail")?></span></b></span></div>
+		<div align="center"><span style="color:<?=$zen->getSetting("color_title_txt")?>"><b><span><?=tr("E-mail")?></span></b></span></div>
 		</td>
 
 		<td height="25" valign="middle" title="<?=tr("The telephone of the contact")?>" class="titleCell">
-		<div align="center"><span style="color:<?=$zen->settings["color_title_txt"]?>"><b><span><?=tr("Telephone Nr.")?></span></b></span></div>
+		<div align="center"><span style="color:<?=$zen->getSetting("color_title_txt")?>"><b><span><?=tr("Telephone Nr.")?></span></b></span></div>
 		</td>
 	    <?
     }

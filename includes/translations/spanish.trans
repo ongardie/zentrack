@@ -86,7 +86,7 @@ msgstr "? Coincidencias"
 
 
 #file "/home/ired/zentrack_2/www/admin/config.php"
-#args "array($zen->settings["system_name"])"
+#args "array($zen->getSetting("system_name"))"
 msgid "? Settings"
 msgstr "Configuraciones de ?"
 

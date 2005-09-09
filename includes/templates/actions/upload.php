@@ -1,7 +1,7 @@
 <? if( !ZT_DEFINED ) { die("Illegal Access"); } ?>
 
 <form enctype="multipart/form-data" action="<?=$SCRIPT_NAME?>" method="post">
-  <input type="hidden" name="MAX_FILE_SIZE" value="<?=$zen->settings["attachment_max_size"]?>">
+  <input type="hidden" name="MAX_FILE_SIZE" value="<?=$zen->getSetting("attachment_max_size")?>">
   <input type="hidden" name="id" value="<?=$id?>">
   <input type="hidden" name="log_id" value="<?=strip_tags($log_id)?>">
   <input type="hidden" name="actionComplete" value="1">

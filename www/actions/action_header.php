@@ -61,7 +61,7 @@
 
   // find out if this is the ticket's creator (special conditions apply)
   $tf_creator = (($action=="view"||$action == "print"||$action == "email")
-	&&$zen->settings["allow_cview"]=="on"
+	&&$zen->settingOn("allow_cview")
 	&&$zen->checkCreator($login_id,$tid));
 
 

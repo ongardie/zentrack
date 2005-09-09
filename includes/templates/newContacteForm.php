@@ -14,7 +14,7 @@ if(isset($create_time)) { ?>
 
 <input type="hidden" name="id" value="<?=strip_tags($person_id)?>">
   
-<table width="640" align="left" cellpadding="2" cellspacing="2" bgcolor="<?=$zen->settings["color_background"]?>">
+<table width="640" align="left" cellpadding="2" cellspacing="2" bgcolor="<?=$zen->getSetting("color_background")?>">
 <tr>
   <td colspan="2" width="640" class="titleCell" align="center">
      <?=tr("Contact Information")?>

@@ -25,7 +25,7 @@ if( is_array($tickets) && count($tickets) ) {
     }
   }
 
-  $numtoshow = $zen->settings['paging_max_rows'];
+  $numtoshow = $zen->getSetting('paging_max_rows');
   $pageNumber = array_key_exists('pageNumber', $_GET)?
                 $zen->checkNum($_GET['pageNumber']) : 0;
 
@@ -64,7 +64,7 @@ function resortListPage( sortName ) {
 <? } ?>
 }
 </script>
-<table width="100%" cellspacing='1' cellpadding='2' bgcolor='<?=$zen->settings["color_alt_background"]?>'>
+<table width="100%" cellspacing='1' cellpadding='2' bgcolor='<?=$zen->getSetting("color_alt_background")?>'>
 <?
 if ($atc>0) {
 ?>
@@ -136,7 +136,7 @@ if ($atc>0) {
 
    $td_ttl = "title='".tr("Click here to view the ?", array(tr(ucfirst($page_type))))."'";
    foreach($tickets as $t) {
-      $row = $zen->settings["color_background"];
+      $row = $zen->getSetting("color_background");
       
       // create special url for projects
       if( $zen->inProjectTypeIDs($t["type_id"]) ) {
@@ -149,7 +149,7 @@ if ($atc>0) {
       if( $t["status"] == 'CLOSED' ) {
         $classxText = "class='bars' onclick='ticketClk(\"{$link}?id={$t['id']}\"); return false;' $rollover_greytext";
       }
-      else if( $zen->settings["priority_medium"] ) {
+      else if( $zen->getSetting("priority_medium") ) {
         $classxText = "class='priority{$t['priority']}' "
          ."onclick='ticketClk(\"{$link}?id={$t['id']}\"); return false;' "
          ."onMouseOver='mClassX(this, \"priority{$t['priority']}Over\", true)' "

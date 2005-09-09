@@ -4,6 +4,29 @@
    *  - copying current upgrade files into the install/previous directory
    *  - creating new upgrade files with an updated version number
    *  - adjusting version number in seed files
+   *
+   * Properties are added as follows:
+   *  - CREATE TABLE { .. use mysql specification .. }
+   *  - PRIMARY KEY (see below)
+   *  - CREATE SEQUENCE sequence_name start_number (see below)
+   *  - CREATE INDEX name ON table(fields);
+   *
+   * Escaping quotes:
+   *  - use \' to escape, this will be converted according to the db
+   *
+   * Comments:
+   *  -- my comment here (do not use /* my comment ...)
+   *
+   * Primary Keys:
+   *  - ???
+   *
+   * Create Sequence:
+   *  - place auto_increment into the column and add a CREATE SEQUENCE.
+   *  - this script will decide which one to use in the final version based on database
+   *
+   * Other Limitations:
+   *  - do not create indexes in tables, do them all as CREATE INDEX statements
+   *  - do not attempt alter table or modify column statements
    */
    
    /**
@@ -57,6 +80,10 @@
     $sql_replacements['mssqlserver'][1][] = '';
     $sql_replacements['mssqlserver'][0][] = '/CREATE SEQUENCE.*/';
     $sql_replacements['mssqlserver'][1][] = '';
+    $sql_replacements['mssqlserver'][0][] = "/\\\\'/";
+    $sql_replacements['mssqlserver'][1][] = "''";
+    $sql_replacements['mssqlserver'][0][] = ' auto_increment';
+    $sql_replacements['mssqlserver'][1][] = '';
     
     $sql_replacements['oracle'][0][] = '/int[(]([0-9,]+)[)]/i';
     $sql_replacements['oracle'][1][] = 'NUMBER(\\1)';
@@ -70,6 +97,10 @@
     $sql_replacements['oracle'][1][] = '';
     $sql_replacements['oracle'][0][] = '/CREATE SEQUENCE ([a-zA-Z0-9_]+) ([0-9]+)/';
     $sql_replacements['oracle'][1][] = 'CREATE SEQUENCE \\1 start with \\2 nocache';
+    $sql_replacements['oracle'][0][] = "/\\\\'/";
+    $sql_replacements['oracle'][1][] = "''";
+    $sql_replacements['oracle'][0][] = ' auto_increment';
+    $sql_replacements['oracle'][1][] = '';
 
     $sql_replacements['postgres'][0][] = '/ *INDEX.*/i';
     $sql_replacements['postgres'][1][] = '';

@@ -1,6 +1,6 @@
 <? if( !ZT_DEFINED ) { die("Illegal Access"); } ?>
 
-<table width="640" align="left" cellpadding="2" cellspacing="2" bgcolor="<?=$zen->settings["color_background"]?>">
+<table width="640" align="left" cellpadding="2" cellspacing="2" bgcolor="<?=$zen->getSetting("color_background")?>">
 <tr>
   <td colspan="2" width="640" class="titleCell" align="center">
     <?=tr("Search For Users")?>

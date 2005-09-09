@@ -97,7 +97,7 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
   }
 ?>
 <form method="post" name="<?=$form_name?>" action="<?=$formDest?>" onSubmit='return validateTicketForm()'>
-<table width="640" align="left" cellpadding="2" cellspacing="2" bgcolor="<?=$zen->settings["color_background"]?>">
+<table width="640" align="left" cellpadding="2" cellspacing="2" bgcolor="<?=$zen->getSetting("color_background")?>">
 <tr>
   <td colspan="2" width="640" class="titleCell" align="center">
      <?=tr("$ucfirst Information")?>
@@ -139,7 +139,7 @@ if (!$override_as_label) {
 </tr>
 <?
 }
-  if ($TODO == 'EDIT' && $zen->settings['edit_reason_required']=='on' && $zen->settings['log_edit']=='on') {
+  if ($TODO == 'EDIT' && $zen->settingOn('edit_reason_required') && $zen->settingOn('log_edit') ) {
     $er_vals=array('field_cols'   => '60',
                    'field_rows'   => '5',
                    'field_name'   => 'edit_reason',

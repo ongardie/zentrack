@@ -13,7 +13,7 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
 <form action="<?=$SCRIPT_NAME?>">
 <input type="hidden" name="TODO" value="SEARCH">
   
-<table width="640" align="left" cellpadding="2" cellspacing="2" bgcolor="<?=$zen->settings["color_background"]?>">
+<table width="640" align="left" cellpadding="2" cellspacing="2" bgcolor="<?=$zen->getSetting("color_background")?>">
 <tr>
   <td colspan="2" width="640" class="titleCell" align="center">
      <?=tr("Search For Logs")?>
@@ -84,7 +84,7 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
        <option value="">----</option>
 <?
   $userBins = $zen->getUsersBins($login_id);
-  if( is_array($userBins) && $zen->settings["allow_assign"] == "on" ) {
+  if( is_array($userBins) && $zen->settingOn("allow_assign") ) {
     $users = $zen->get_users($userBins);
     if( is_array($users) ) {
       asort($users);

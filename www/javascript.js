@@ -1,7 +1,7 @@
 <!--
 
 function placeFocus(newFocalPoint) {
-	eval(newFocalPoint.focus());
+	newFocalPoint.focus();
 }
 
 function eLink(address, domain) {
@@ -151,6 +151,26 @@ function toggleField( fieldObj, disabledBoolean ) {
     fieldObj.setAttribute('class', 'inputDisabled');
     fieldObj.className = 'inputDisabled';
   }       
+}
+
+/**
+ * Admin Functions
+ */
+function addToOnload( newFxn ) {
+  window.onload = mergeFunctions( newFxn, window.onload );
+}
+
+/**
+ * Merges two functions
+ */
+function mergeFunctions( fxn1, fxn2 ) {
+  return function() {
+    var res = fxn1();
+    if( res === false ) { return false; }
+    res = fxn2();
+    if( res === false ) { return false; }
+    if( res === true ) { return true; }
+  }
 }
 
 //-->

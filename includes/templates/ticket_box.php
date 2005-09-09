@@ -1,116 +1,113 @@
-<? if( !ZT_DEFINED ) { die("Illegal Access"); } ?>
-<table width="645" cellpadding="0" cellspacing="0" border="0">
-<tr> 
-  <td valign="bottom"><?
+<? if( !ZT_DEFINED ) { die("Illegal Access"); }
 
-  /*
-  **  TICKET BOX
-  **
-  **  Includes the correct html to display
-  **  whatever is currently going on with the
-  **  ticket.
-  **
-  **  sets up the tabs at the top as well
-  **  $login_mode is set up in the headerInc.php file
-  **  in accordance with incoming form data and 
-  **  is a session variable
+ /**
+  * A tab or block of information in the ticket view
+  *
+  * REQUIREMENTS:
+  *   $map - instance of ZenFieldMap
+  *   $zen - instance of ZenTrack
+  *   $boxview - (string)view to be loaded from field map
+  *   $ticket - values for all columns in the ticket we are viewing
   */
-
-  /*
-  ** CHECK THE PAGE MODE
-  */
-
-  if( !$project_mode ) {
-    $project_mode = "tasks";
-  }
-  if( !$ticket_mode ) {
-    $ticket_mode = "details";
-  }
-
-  // set the page mode, for viewing tickets
-  if( $setmode ) {    
-    if( $page_type == "project" )
-      $project_mode = strtolower($setmode);
-    else
-      $ticket_mode = strtolower($setmode);
-  }
-  if( $page_type == "project" ) {
-    $page_mode = $project_mode;
-    $pageUrl = $projectUrl;
-  } else {
-    $page_mode = $ticket_mode;
-    $pageUrl = $ticketUrl;
-  }
-
-  /*
-  ** SHOW THE NAVIGATION TABS
-  */
-
-  // the navigation tabs are set in headerInc.php
   
-  print "<table cellpadding='0' cellspacing='0'><tr>\n";
-  print "<td width='3'><img src='$rootUrl/images/empty.gif' width='3' height='1'></td>\n";
+  $id = $ticket['id'];
+  $varfields = $zen->getVarfieldVals($id);
 
-  $i = 1;
-
-  $vx = $zen->getCustomFields(1, $page_type, 'Custom');
-  $counts = $zen->get_ticket_stats($id);
-    
-  foreach( $tabs as $key=>$t ) {
-    if( $key == 'custom' && (!$vx || !count($vx)) ) {
-      // only display the custom tab if there are fields on it
-      continue;
-    }
-    if( $key == 'contacts' && 
-	($zen->settings['allow_contacts'] != 'on' ||
-	 !$zen->checkAccess($login_id, $bin_id, 'level_contacts')) ) {
-      // do not show contacts if this is off
-      continue;
-    }
-    if( $page_mode == $key ) {
-      $class = 'tab on';
-      $lclass = "tabsOn";
-    } else {
-      $class = 'tab off';
-      $lclass = 'tabsOff';
-    }
-    
-    // Possible translations: (for the benefit of translation maintenance tools)
-    // tr("Related"); tr("Notify"); tr("Tasks");
-    $txt = (isset($counts[$key]) && $counts[$key])? $t." (".$counts["$key"].")" : $t;
-    $w = ($key == "attachments")? 85 : 60;
-    print "<td class='{$class}' height='{$height_num}' width='{$w}'>";
-    print "<a href='{$pageUrl}?id={$id}&setmode={$key}' class='{$lclass}'>{$txt}</a></td>\n";
-    if( $i < count($tabs) ) {
-      print "<td width='3'><img src='{$rootUrl}/images/empty.gif' width='3' height='1'></td>\n";
-    }
-    $i++;
+  if( !$zen->checkAccess($login_id, $bin_id, $map->getViewProp($boxview,'access_level')) ) {
+    print("Illegal access");
+    exit;
   }
-  print "</tr></table>\n";
 
-?></td>
-</tr>
-<tr> 
-  <td class="ticketCell" height="300" valign="top">
-  <br>  
-<?
+  $fields = $map->listFieldsForView($boxview);
 
-  /*
-  ** DETERMINE WHICH SCREEN TO SHOW AND SHOW IT
-  */
-  $name = "ticket_".$page_mode."Box.php";
-  $name = ereg_replace("[.]{2}", "", $name);
-
-  // check for valid filename
-  if( !file_exists("$templateDir/$name") ) {
-    if( !file_exists("$templateDir/actions/$page_mode.php") ) {
-      $zen->addDebug("ticket_box","Invalid filename $name declared... redirecting",1);
+  // load special items marked as shown first
+  $pre = $map->getViewProp($boxview,'preload');
+  if( $pre ) {
+    foreach($pre as $l) { 
+      include("$templateDir/ticket_load_$l.php");
     }
-    $name = "ticket_systemBox.php";
   }
-  include("$templateDir/$name");
+
+  // print fields first
+  $columns = $map->getViewProp($boxview,'columns');
+  $width = $map->getViewProp($boxview,'width');
+  
+  if( !$columns ) { print "No columns specified for view."; $fields = array(); }
+  
+  $i = 0;
+  while( $i < count($fields) ) {
+    // collect items for this row
+    $vals = array();
+    for($j = 0; $j < $columns && $i < count($fields); ) {
+      // collect field info
+      $f = $fields[$i];
+      $field = $map->getFieldFromMap($boxview, $f);
+      
+      // skip hidden fields but don't add a column
+      if( !$field['is_visible'] ) { $i++; continue; }
+      
+      if( $field['field_type'] == 'section' && $f != 'elapsed' ) {
+        // sections become gaps here
+        $label = '';
+        $value = '';
+      }
+      else if( $f == 'elapsed' ) {
+        $label = $map->getLabel($boxview, $f);
+        $value = $zen->showTimeElapsed($otime,$ctime,1,0);
+      }
+      else {
+        $label = $map->getLabel($boxview, $f);
+        $val = array_key_exists($f, $varfields)? $varfields[$f] : $ticket[$f];
+        $value = $map->getTextValue($boxview, $f, $val);
+      }
+      $vals[] = array('label'=>$label, 'value'=>$value);
+
+      // increment values if we make it this far
+      $j++;
+      $i++;
+    }
+    
+    // open row
+    print "<table class='boxpad' cellpadding='0' cellspacing='0'>\n";
+    
+    // print headings
+    print "<tr>";
+    foreach($vals as $v) {
+      if( $v['label'] == '' && $v['value'] == '' ) {
+        // this is a gap
+        print "<td rowspan='2' width='5'>&nbsp;</td>\n";
+      }
+      else {
+        $w = $width? "width=$width" : "";
+        print "<td class='propLabel' $w><nobr>".$zen->ffv($v['label'])."</nobr></td>\n";
+        print "<td width='2'><img src='$imageUrl/empty.gif' width='2' height='1'></td>\n";
+      }
+    }
+    print "</tr>";
+    
+    // print cells
+    print "<tr>";
+    foreach($vals as $v) {
+      if( $v['label'] == '' && $v['value'] == '' ) {
+        // this is a gap
+        continue;
+      }
+      else {
+        print "<td class='propContent'>{$v['value']}</td>";
+        print "<td width='2'><img src='$imageUrl/empty.gif' width='2' height='1'></td>\n";
+      }
+    }
+    print "</tr>";
+    
+    // close row
+    print "</table>\n";
+  }
+  
+  // load specialty items marked as last
+  $post = $map->getViewProp($boxview,'postload');
+  if( $post ) {
+    foreach($post as $l) {
+      include("$templateDir/ticket_load_$l.php"); 
+    }
+  }
 ?>
-   <br>
-  </td>
-</tr>
-</table>

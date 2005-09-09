@@ -2,17 +2,17 @@
   <td class='leftNavTitle' height='25' valign='middle'><?=tr("Projects")?></td>
 </tr>
 <tr>
-  <td class='leftNavMenu' <?=$nav_rollover_text?> title='<?=$hotkeys->tt("Projects")?>'>
+  <td class='leftNavMenu outset' <?=$nav_rollover_text?> title='<?=$hotkeys->tt("Projects")?>'>
     <a href='<?=$rootUrl?>/projects.php' class='leftNavLink'><?=$hotkeys->ll("Projects","Browse")?></a>
   </td>
 </tr>
 <tr>
-  <td class='leftNavMenu' <?=$nav_rollover_text?> title='<?=$hotkeys->tt("New Project")?>'>
+  <td class='leftNavMenu outset' <?=$nav_rollover_text?> title='<?=$hotkeys->tt("New Project")?>'>
     <a href='<?=$rootUrl?>/newProject.php' class='leftNavLink'><?=$hotkeys->ll("New Project")?></a>
   </td>
 </tr>
 <tr>
-  <td class='leftNavCell' height='100%' valign='top'>
+  <td class='leftNavCell inset' height='100%' valign='top'>
     <div class='recentHistory'><?=tr("Recent Projects")?></div>
     <?
       $history =& $zen->getHistoryManager();

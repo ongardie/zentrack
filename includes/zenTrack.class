@@ -423,54 +423,88 @@ class zenTrack extends zen {
   /**
    * grabs all users matching the priviledges given for the bins designated
    *
-   * @param array $bins the bin ids to match
-   * @param string $level the access level to match to each bin
+   * @param array $bins only return users with access to the bins listed
+   * @param string $level only return users with at least $level access
    * @param integer $active 1-active members, 0-active and inactive members
    * @return array indexed, containing all fields from each row matched
    */
   function get_users( $bins = '', $level = 'level_view', $active = 1 ) {
     // get our level
     $lvl = $level? $this->getSetting($level) : 0;
+    
+    $binlist = '';
+    for($i=0; $i<count($bins); $i++) {
+      if( $i > 0 ) { $query .= ","; }
+      $binlist .= $this->checkNum($bins[$i]);
+    }
+    
 
-    // get a list from the access table
+    // get a list from the access table of invalid bins
+    // and map them to user_ids
     $outs = array();  //ones to skip
     $ins  = array();   //ones to keep
-    if( $bins ) {      
-      $query = "SELECT user_id,bin_id,lvl FROM ".$this->table_access;      
-      $query .= " WHERE bin_id IN(";
-      for($i=0; $i<count($bins); $i++) {
-        if( $i > 0 ) { $query .= ","; }
-        $query .= $this->checkNum($bins[$i]);
+    $outlist = '';
+    $query  = "SELECT user_id,bin_id FROM ".$this->table_access;
+    $query .= " WHERE lvl IS NOT NULL AND lvl < $lvl";
+    if( $active ) { $query .= " AND active = 1"; }
+    $vals = $this->db_query($query);
+    for($i=0; $i<count($vals); $i++) {
+      list($k,$v) = $vals[$i];
+      if( array_key_exists($k, $outs) ) {
+        $outs[$k][] = $v;
       }
-      $query .= ")";
-      $query .= " AND lvl IS NOT NULL";
-      $vals = $this->db_query($query);
-      for($i=0; $i<count($vals); $i++) {
-        $v = $vals[$i];
-        if( $v[2] < $lvl )
-          $outs[] = $v[0];
-        else
-          $ins[] = $v[0];
+      else {
+        $outs[$k] = array($v);
       }
     }
 
-    // set the query for users
-    $query = "SELECT * FROM ".$this->table_users;
-    $query .= " WHERE (access_level >= $lvl";
-    // add the users with bin specific access
-    $query .= count($ins)? " OR user_id IN(".join(',',$ins)."))" : ")";    
-    // remove the users with bin specific overrides
-    if( count($outs) ) {
-      $query .= " AND user_id NOT IN(".join(",",$outs).")";
+    // select all users who appear to have some sort of access to one of the bins
+    $query  = "SELECT u.*, bin_id as bins ";
+    $query .= " FROM {$this->table_users} u LEFT JOIN {$this->table_access} a";
+    $query .= " ON (u.user_id = a.user_id)";
+    $query .= " WHERE access_level >= $lvl";
+    if( $binlist ) {
+      $query .= " OR (a.bin_id IN($binlist) AND a.lvl >= $lvl)";
     }
-    // set the ordering
+    else {
+      $query .= " OR (a.bin_id IS NOT NULL AND a.lvl >= $lvl)";
+    }
+    if( $active ) { $query .= " AND active = 1"; }
     $query .= " ORDER BY lname,fname";
-    // query
     $vals = $this->db_queryIndexed($query);
+    
+    // create the users array, filter out items from our outs list
+    $users = array();
+    $usermap = array();
+    $count = 0;
+    for($i=0; $i<count($vals); $i++) {
+      $user = $vals[$i];
+      $id = $user['user_id'];
+      $bin = $user['bins'];
+      if( $bin && array_key_exists($id, $outs) && in_array($bin, $outs[$id]) ) {
+        // skip invalid entries
+        continue;
+      }
+      if( array_key_exists($id, $usermap) ) {
+        // add our bin to the list of bins for this user
+        $index = $usermap[$id];
+        if( !in_array($bin, $users[$index]['bins']) ) {
+          $users[$index]['bins'][] = $bin;
+        }
+      }
+      else {
+        // create the user, store the location of the user in our temp map
+        // create the special bins array to store valid bins
+        $user['bins'] = array($user['bins']);
+        $users[$count++] = $user;
+        $usermap[$id] = $count;
+      }
+    }
+    
     // debug
     $this->addDebug("get_users","results: ".count($vals)."/$query",3);
     // return
-    return $vals;
+    return $users;  
   }
 
   /*
@@ -3248,6 +3282,7 @@ class zenTrack extends zen {
     $pref = $this->checkAlphaNum($pref, '_ -');
     $query = "DELETE FROM ".$this->table_preferences." WHERE user_id = $user_id "
       ." AND prefname = '$pref'";
+    $res = $this->db_result($query);
     
     // add new pref
     $vals = array(
@@ -3342,6 +3377,7 @@ class zenTrack extends zen {
   function add_setting( $params ) {
     // add a new setting into the db
     $this->_session->clearDataType('settings');
+    $this->_settings = false;
     return( $this->db_insert($this->table_settings, $params) );
   }
 
@@ -3400,6 +3436,7 @@ class zenTrack extends zen {
     $query = "UPDATE ".$this->table_settings." SET $set WHERE setting_id = $setting_id";
     $this->addDebug("update_setting()Query",$query,2);
     $this->_session->clearDataType('settings');
+    $this->_settings = false;
     return( $this->db_result($query) );
   }
 
@@ -4860,7 +4897,7 @@ class zenTrack extends zen {
   }
   
   /**
-   * returns whether a zen->settings["field"] is an On/Off type
+   * returns whether a zen->getSetting("field") is an On/Off type
    *
    * the main reason for this method is that we will be updating
    * the structure of the settings before long to become more rigid.
@@ -5098,8 +5135,12 @@ class zenTrack extends zen {
     
     // attempt to retrieve from the session if possible
     if( !$flag ) {
+      if( $this->_settings ) { return $this->_settings; }
       $settings = $this->_session->getDataType('settings');
-      if( $settings ) { return $settings; }
+      if( $settings ) { 
+        $this->_settings = $settings;
+        return $settings;
+      }
     }
     
     // load from the database
@@ -5134,9 +5175,9 @@ class zenTrack extends zen {
       $vals["font_size_small"] = $vals["font_size"] - 2;
       $vals["font_size_large"] = $vals["font_size"] + 4;
       $vals["color_title_txt"] = $vals["color_title_text"];
-      $this->_session->storeDataType('settings',$vals);      
+      $this->_session->storeDataType('settings',$vals);
+      $this->_settings = $vals;
     }
-    
     return($vals);
   }
   
@@ -5148,7 +5189,7 @@ class zenTrack extends zen {
     // retrieves the name of the type
     // with the given id
     $types = $this->getTypes();
-    return( (isset($types["$id"]))? $types["$id"] : "" );
+    return( array_key_exists("$id", $types)? $types["$id"] : "" );
   }
 
   function getTypes($flag = 0, $active = 1) {
@@ -5335,7 +5376,8 @@ class zenTrack extends zen {
     $this->bins        = $this->getBins();
     $this->systems     = $this->getSystems();
     //$this->strings     = $this->getStrings($this->language);
-    $this->settings    = $this->getSettings();
+    $this->getSettings();
+    $this->_settings = false;
 
     $this->types       = $this->getTypes();
     $this->priorities  = $this->getPriorities();
@@ -5936,7 +5978,7 @@ class zenTrack extends zen {
   var $date_format_short;
 
   // settings vars
-  var $settings;
+  var $_settings;
 
   var $bins;
   var $priorities;

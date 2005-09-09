@@ -3,7 +3,7 @@
 
 <table width='100%'>
 <tr>
-   <td  align="right" valign='bottom' style="background:<?=$zen->settings["color_bars"]?>;">
+   <td  align="right" valign='bottom' style="background:<?=$zen->getSetting("color_bars")?>;">
      <?
        $links = $zen->get_links("all", "off");
        for ($y = 0; $y < count($links); $y++) {
