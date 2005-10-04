@@ -16,11 +16,19 @@
   preg_match("@^(project|ticket)_view$@", $view);
   $page_type = $matches[1];
   $id = $ticket['id'];
+  $type_id = $ticket['type_id'];
   $pageUrl = $page_type == 'project'? $projectUrl : $ticketUrl;
+  $viewProps = $map->getViewProps($view);
 ?>
 <table class='barborder' width='100%' height='100%' cellpadding="0" cellspacing="0">
 <tr>
-  <td class='tbar indent boxpad'><?=$zen->ffv(tr($zen->getTypeName($type_id)))?> #<?=$id?></td>
+  <td class='tbar indent boxpad'><?=$zen->ffv(tr($zen->getTypeName($type_id)))?> #<?=$id?>
+  <?
+  if( $map->getViewProp('ticket_options','show_summary_inline') ) {
+    print ": ".$zen->ffvText($ticket['title']);
+  }
+  ?>
+  </td>
 </tr>
 <tr>
   <td class='indent boxpad'>
@@ -34,13 +42,13 @@
   <td class='tbar indent tabpad'><? include("$templateDir/ticket_tabs.php") ?></td>
 </tr>
 <tr>
-  <td class='indent boxpad' height='100%'><?
+  <td class='indent boxpad' valign='top' height='100%'><?
     if( file_exists("$templateDir/actions/$page_mode.php") ) {
       include("$templateDir/ticket_action.php");
     }
     else if( preg_match("/^{$page_type}_tab_[0-9]$/", $page_mode) ) {
       $boxview = $page_mode;
-      if( $map->getViewProp($page_mode, 'editable') ) {
+      if( !$map->getViewProp($page_mode, 'view_only') ) {
         include("$templateDir/ticket_editBox.php");
       }
       else {

@@ -71,7 +71,9 @@
   include("$libDir/nav.php");
   $zen->printErrors($errs);
   if( !$skip ) {    
-    include("$templateDir/binForm.php");
+    $type = "bin";
+    $id_type = $zen->getTableId('bins');
+    include("$templateDir/configForm.php");
   } else {
     include("$templateDir/adminMenu.php");
   }

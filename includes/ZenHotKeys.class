@@ -70,6 +70,9 @@ class ZenHotKeys {
     else if( $sect == 'options' ) {
       $this->assign('ALT+L',  'Log Off',        "KeyEvent.createLoadUrl('{rootUrl}/index.php?logoff=1')", "Log out of ".$this->_zen->getSetting('system_name'));
     }
+    else if( $sect == 'log' ) {
+      $this->assign('ALT+D',  'Display System Entries',  "window.document.getElementById('systemLogFilterCheckbox').click()");
+    }
   }
   
   function newFxn( $name, $code ) {

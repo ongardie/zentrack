@@ -29,6 +29,8 @@
   $tabs = $map->getTabs($page_type, $login_id, $bin_id);
   print "<table cellpadding='0' cellspacing='0'><tr>";
   foreach($tabs as $k=>$v) {
+    $viewProps = $map->getViewProps($k);
+    if( !$viewProps['visible'] ) { continue; }
     $loads = array();
     if( $v['preload'] ) { $loads = $v['preload']; }
     if( $v['postload'] ) { $loads = array_merge($loads, $v['postload']); }

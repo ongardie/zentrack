@@ -488,7 +488,7 @@ class zenTrack extends zen {
       if( array_key_exists($id, $usermap) ) {
         // add our bin to the list of bins for this user
         $index = $usermap[$id];
-        if( !in_array($bin, $users[$index]['bins']) ) {
+        if( array_key_exists($index, $users) && !in_array($bin, $users[$index]['bins']) ) {
           $users[$index]['bins'][] = $bin;
         }
       }
@@ -1082,7 +1082,7 @@ class zenTrack extends zen {
     $ticket_id = $this->checkNum($ticket_id);
     $user_id = $this->checkNum($user_id);
     $a = $this->getSetting('varfield_tab_name');
-    $log_entry = $a? "Updated ".ucfirst(strtolower($a))." fields\n" : "Updated Custom Fields";
+    $log_entry = $a? "Updated ".ucfirst(strtolower($a))." fields" : "Updated Custom Fields";
     $oldVals = $this->getVarfieldVals($ticket_id);
     foreach($field_values as $key=>$val) {
       $v1=$oldVals["$key"];
@@ -1114,7 +1114,7 @@ class zenTrack extends zen {
         }
       }
       // find out if value was updated, check strlen so that 0 != '', and so forth
-      if( $v1 != $v2 ) { $log_entry .= "{$label} changed from [$v1] to [$v2]\n"; }
+      if( $v1 != $v2 ) { $log_entry .= "\n - {$label} changed from [$v1] to [$v2]"; }
     }
     $res = $this->db_update( $this->table_varfield, "ticket_id", $ticket_id, $field_values );
     if( $res && $this->settingOn('log_edit') ) {
@@ -2000,7 +2000,7 @@ class zenTrack extends zen {
     return( $res );
   }
 
-  function assign_ticket( $id, $recipient, $user_id = '', $comments = '' ) {
+  function assign_ticket( $id, $recipient, $user_id = 0, $comments = '' ) {
     // set the user_id for the ticket to another person
     // the recipient recieves the ticket, the user_id is for the 
     // sender
@@ -2225,7 +2225,7 @@ class zenTrack extends zen {
      * @param float $hours Amount of time to be added to the ticket's worked hours
      * @param string $comments Comments to add in the tickets log.
      **/
-  function close_ticket( $id, $user_id = '', $hours = '', $comments = '' ) {
+  function close_ticket( $id, $user_id = 0, $hours = '', $comments = '' ) {
     $id = $this->checkNum($id);
     if( $user_id ) { $user_id = $this->checkNum($user_id); }
 
@@ -2377,7 +2377,7 @@ class zenTrack extends zen {
     return $res;
   }
 
-  function move_ticket( $id, $newBin, $user_id = '', $comments = '' ) {
+  function move_ticket( $id, $newBin, $user_id = 0, $comments = '' ) {
     // moves the ticket to a new bin location
     // if comments field is set to 'skip_log' then
     // no log will be generated (assumed to have 
@@ -2435,18 +2435,29 @@ class zenTrack extends zen {
     $id = $this->checkNum($id);
     $user_id = $this->checkNum($user_id);
     $sender = $this->getTicketSender($id);
-    if( $sender["bin_id"] )
-      $res = $this->move_ticket( $id, $sender["bin_id"], $user_id );
-    if( $sender["user_id"] )
-      $res = $this->assign_ticket($id,$sender["user_id"],$user_id);
+    $sender_id = ($sender && array_key_exists('user_id',$sender))? $sender['user_id'] : false;
     $t = $this->get_ticket($id);
+    if( $sender && array_key_exists('bin_id',$sender) ) {
+      $res = $this->move_ticket( $id, $sender["bin_id"] );
+    }
+    if( $sender_id ) {
+      $res = $this->assign_ticket($id, $sender_id);
+    }
     if( $res && $this->settingOn("log_reject") ) {
       $logParams["action"] = "REJECTED";
       $logParams["bin_id"] = $t["bin_id"];
       $logParams["user_id"] = $user_id;
       $logParams["ticket_id"] = $t["id"];
-      if( $comments )
-      $logParams["entry"] = $comments;
+      if( $comments || $sender_id ) {
+        $logParams['entry'] = '';
+        if( $sender_id ) {
+          $logParams['entry'] .= tr("Returned to ?", array($this->formatName($sender_id)));
+          if( $comments ) { $logParams['entry'] .= "\n"; }
+        }
+        if( $comments ) {
+          $logParams["entry"] .= $comments;
+        }
+      }
       $this->add_log($id,$logParams);
     }
     if( $res && $this->settingOn("email_reject") ) {
@@ -2488,7 +2499,7 @@ class zenTrack extends zen {
     return($res);
   }
 
-  function relate_ticket( $id, $relations, $user_id = '', $comments = '' ) {
+  function relate_ticket( $id, $relations, $user_id = 0, $comments = '' ) {
     // takes either a comma delimited string
     // or an array of ticket ids
     // checks to insure they exist before performing
@@ -2541,7 +2552,7 @@ class zenTrack extends zen {
     return( $res );
   }
 
-  function reopen_ticket( $id, $user_id = 'NULL', $comments = '' ) {
+  function reopen_ticket( $id, $user_id = 0, $comments = '' ) {
     // opens a ticket that has been closed
     // this can be used to reopen tickets
     // closed in error, or to make modifications
@@ -2682,7 +2693,7 @@ class zenTrack extends zen {
       if( $t["status"] == 'CLOSED' ) {
         $tested = ($t["tested"] == 2)? 1:0;
         $approved = ($t["approved"] == 2)? 1:0;
-        $this->reopen_ticket($id, $user_id, $tested, $approved, $comments);
+        $this->reopen_ticket($id, 0, $tested, $approved, $comments);
       }
       $this->assign_ticket($id,$user_id);
       return( 1 );
@@ -2745,16 +2756,20 @@ class zenTrack extends zen {
       $this->set_notify_list($id,$notify_list);
 
       // create a log entry
-      $log_entry=$params["user_id"]?tr("Assigned to [?-?]",array($params["user_id"],$this->formatName($params["user_id"])))
-                                   :tr("Unassigned");
       $lParams = array(
                        "action"   =>   "CREATED",
                        "user_id"   =>   $params["creator_id"],
-                       "bin_id"    =>   $params["bin_id"],
-                       "entry"     =>   $log_entry
+                       "bin_id"    =>   $params["bin_id"]
                        );
-      if( $log_notes ) {
-        $lParams["entry"] = $log_notes;
+      if( $log_notes || $params['user_id'] ) {
+        $lParams['entry'] = '';
+        if( $params['user_id'] ) {
+          $lParams['entry'] = tr("Assigned to [?-?]",array($params["user_id"],$this->formatName($params["user_id"])));
+          if( $log_notes ) { $lParams['entry'] .= "\n"; }
+        }
+        if( $log_notes ) {
+          $lParams["entry"] .= $log_notes;
+        }
       }
       $this->add_log($id,$lParams);
 
@@ -2853,7 +2868,7 @@ class zenTrack extends zen {
     $this->addDebug("update_ticket",$query,3);
     $this->_session->clearDataCache('tickets',$id);
     return $this->db_result($query);
-  }      
+  }
 
   function edit_ticket( $id, $user_id, $params, $reason="" ) {
     if( is_array($id) ) {
@@ -2903,11 +2918,11 @@ class zenTrack extends zen {
                                }
                                break;
           }
-          if (strlen($d1)>0) $d1="-".$d1;
-          if (strlen($d2)>0) $d2="-".$d2;
+          if (strlen($d1)>0) $d1=": ".$d1;
+          if (strlen($d2)>0) $d2=": ".$d2;
           $fm =& new ZenFieldMap($this);
           $label = $fm->getLabel("ticket_edit",$key);
-          $log_entry .= "{$label} changed from [$v1$d1] to [$v2$d2]\n";
+          $log_entry .= " - {$label} changed from [$v1$d1] to [$v2$d2]\n";
         }
       }
       if(strlen($reason)) {

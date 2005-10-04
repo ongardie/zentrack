@@ -73,7 +73,6 @@
   <script type='text/javascript'>
     var isIE = navigator.appName.indexOf('Microsoft') >= 0;
     var debugOn = <?=$Debug_Mode > 0? 'true' : 'false'?>;
-    <?=$hotkeys->renderFunctions()?>
     window.onload = function() {
       <?=$hotkeys->renderKeys()?>
       if( isIE ) {

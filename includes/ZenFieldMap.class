@@ -242,20 +242,68 @@ class ZenFieldMap {
         $vals = $this->_zen->db_queryIndexed($query);
         $this->_zen->addDebug('ZenFieldMap->getViewProps', "Loading from db[".count($vals)."]: ".$query, 3);
         foreach($vals as $v) {
-          $view = $v['which_view'];
+          $vw = $v['which_view'];
           $field = $v['vm_name'];
-          if( !array_key_exists($view, $this->_viewProps) ) {
+          if( !array_key_exists($vw, $this->_viewProps) ) {
             // intialize the view array
-            $this->_viewProps["$view"] = array();
+            $this->_viewProps["$vw"] = array();
           }
-          $this->_viewProps["$view"]["$field"] = $v;
+          $this->_viewProps["$vw"]["$field"] = $v;
         }
         $this->_session->store('view_map', $this->_viewProps);
       }
     }
     return $view? $this->_viewProps["$view"] : $this->_viewProps;
   }
-
+  
+  /**
+   * Update the properties of a view (in the view map).  This will insure that
+   * only fields which should be editable have been updated.
+   *
+   * @param array updates (String)field_name => (mixed)vm_val
+   */
+  function updateViewProps($view, $updates) {
+    $props = $this->getViewProps($view);
+    $res = array(0,0);
+    foreach($updates as $k=>$v) {
+      // if the field is invalid, skip it
+      if( !array_key_exists($k, $props) ) {
+        $this->_zen->addDebug('ZenFieldMap::updateViewProps', "Invalid field specified: $k", 1);
+        continue;
+      }
+      // get some vals
+      $id = $props[$k]['view_map_id'];
+      $type = $props[$k]['vm_type'];
+      $val = $this->getViewProp($view,$k,'vm_val');
+      // if the field cannot be updated, skip it
+      if( $type == 'hidden' || $type == 'label' ) { continue; }
+      // if the value hasn't changed, don't bother
+      if( $v == $val ) { continue; }
+      // otherwise, check for 'load' and set an appropriate value
+      if( $type == 'load' ) {
+        // all of this is to avoid errors caused by trying to call
+        // join() on an array
+        if( $v && $val && join(',',$v) == join(',',$val) ) {
+          continue;
+        }
+        if( !$v ) { $vals = array('vm_val'=>null); }
+        else { $vals = array('vm_val'=> join(",",$v)); }
+      }
+      else {
+        $vals = array('vm_val'=>$v);
+      }
+      $set = $this->_zen->makeInsertVals($vals, 1);
+      $query = "UPDATE ZENTRACK_VIEW_MAP SET $set WHERE view_map_id = {$id}";
+      $r = $this->_zen->db_result($query);
+      $this->_zen->addDebug('ZenFieldMap::updateViewProps', "$id[$r]: $query", $res? 3 : 1);
+      $res[1]++;
+      if( $r ) { $res[0]++; }
+    }
+    $this->_session->clear('view_map');
+    $this->_viewProps = false;
+    return $res;
+  }
+  
   /**
    * Consults the field map and constructs a list of (String)field_name which
    * represents all of the fields which exist in this view. (note that some
@@ -770,7 +818,8 @@ class ZenFieldMap {
       //$vals = array_merge(array(''=>'-any-'),$vals);
     }
     else if( !$field['is_required'] && $field['num_rows'] == 1 ) {
-      $vals = array_merge(array(''=>'-----'), $vals);
+      $vals = Zen::mergeArrays( array(''=>'-----'), $vals );
+      //$vals = array_merge(array(''=>'-----'), $vals);
     }
     if( !isset($this->_fieldVals[$view]) ) { $this->_fieldVals[$view] = array(); }
     $this->_fieldVals[$view][$field_name] = $vals;
@@ -879,6 +928,24 @@ class ZenFieldMap {
      }
      return $val;
    }
+   
+   /**
+    * Returns a list of possible choices for preload/postload options
+    *
+    * @static
+    * @param $libDir includes directory
+    * @return array of (String)name values
+    */
+  function getLoadOptions( $templateDir ) {
+    $opts = array();
+    $dh = opendir($templateDir);
+    while( $file = readdir($dh) ) {
+      if( preg_match('@^ticket_load_([a-zA-Z0-9]+)[.]php$@', $file, $matches) ) {
+        $opts[] = $matches[1];
+      }
+    }
+    return $opts;
+  }
   
   /** @var array $_map an array of (string)view -> array( (string)field_name->(array)values... ) */
   var $_map;

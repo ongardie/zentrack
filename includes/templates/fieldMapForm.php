@@ -1,12 +1,61 @@
-<?
-if( !ZT_DEFINED ) { die("Illegal Access"); }
+<? if( !ZT_DEFINED ) { die("Illegal Access"); }
 
-  /**
-    PREREQUISITES:
-      $map - (ZenFieldMap) map object which can be used to retrieve default values
-      $fields - (array) values from $map->getFieldMap($view);
-      $zen - (ZenTrack)
-  **/
+/**
+  PREREQUISITES:
+    $map - (ZenFieldMap) map object which can be used to retrieve default values
+    $zen - (ZenTrack)
+**/
+ 
+ $loads = ZenFieldMap::getLoadOptions($templateDir);
+ $fields = $map->getFieldMap($view);
+ 
+/**
+ * Generate a pulldown menu containing valid choices for pre/post load options
+ */
+ function renderViewPropField( $view, $vals ) {
+   global $libDir;
+   global $zen;
+   global $loads;
+   global $map;
+   $field = $vals['vm_name'];
+   $val = $map->getViewProp($view, $field);
+   $type = $vals['vm_type'];
+   switch( $type ) {
+     case "load":
+       print "<select name='{$field}[]' multiple size=5>";
+       foreach($loads as $o) {
+         $c = $val && in_array($o,$val)? ' selected' : '';
+         print "<option value='$o'$c>".tr(ucfirst($o))."</option>";
+       }
+       print "</select>";
+       break;       
+     case "access":
+       print "<select name='$field'>";
+       foreach( array('level_view','level_user','level_edit',
+                      'level_edit_varfields','level_test','level_approve',
+                      'level_super','level_contacts') as $l ) {
+         $c = $l == $val? ' selected' : '';
+         print "<option value='$l'$c>$l</option>";
+       }
+       print "</select>";
+       break;
+     case "text":
+       print "<input type='text' name='$field' value='".$zen->ffv($val)."' size='20'>";
+       break;
+     case "label":
+       if( $val == 1 || $val === 0 ) { $val = $val? 'Yes' : 'No'; }
+       print $zen->ffv($val);
+       break;
+     case "checkbox":
+       print "<input type='checkbox' name='$field' value='1'";
+       if( $val ) { print " checked"; }
+       print ">";
+       break;
+     default:
+       print "&nbsp;";
+   }
+ }
+
 ?>
 <br>
 <p class='error'><?
@@ -23,9 +72,10 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
 &nbsp;
 <select name='view'>
 <?
-foreach( $map->getViewProps() as $k=>$v ) {
+$vp = $map->getViewProps(null);
+foreach( $vp as $k=>$v ) {
   $sel = $view == $k? " selected" : "";
-  $l = $map->getViewProp($k,'label')? $k." (".$map->getViewProp($k,'label').")" : $k;
+  $l = $map->getViewProp($k,'label')? $k." (".tr($map->getViewProp($k,'label')).")" : $k;
   print "<option value='$k'$sel>$l</option>\n";
 }
 ?>
@@ -43,24 +93,24 @@ if( !$view ) {
 else {
 ?>
 <table cellpadding='4' cellspacing='1' class='cell' border='0'>
-  <tr><td colspan='2' class='titleCell'>View Properties</td></tr>
+  <tr><td colspan='10' align='center' class='titleCell'><?=tr("Properties for ?", $view)?></td></tr>
 <?
 foreach($map->getViewProps($view) as $v) {
   if( $v['vm_type'] == 'hidden' ) { continue; }
-  print "<tr class='bars'><td>".$zen->ffv($v['vm_name'])."</td><td>".$zen->ffv($v['vm_val'])."</td></tr>\n";
+  print "<tr class='bars'><td colspan='2'>".$zen->ffv($v['vm_name'])."</td><td colspan='8'>";
+  renderViewPropField($view, $v);
+  print "</td></tr>\n";
 }
 ?>
-</table>
-
-<table cellpadding="4" cellspacing="1" class='cell' border=0>
 <tr toofar="toofar">
   <td class='titleCell' align='center' colspan='10'>
-    <b><?=tr("Edit field map for ?", $view)?></b>
+    <b><?=tr("Fields for ?", $view)?></b>
   </td>
 </tr>
 <?
 if( !is_array($fields) || !count($fields) || !$map || !$view ){
-  print "<tr><td colspan='10' class='cell'>This view has no properties to configure</td></tr>\n";
+  print "<tr><td colspan='10' class='bars'>".
+     tr("This view has no fields")."</td></tr>\n";
 }
 else {
 ?>
@@ -139,8 +189,14 @@ foreach($fields as $f=>$field) {
   // the field name (read only)
   fmfRow($field['field_name'],$class);
   // the label (text)
-  fmfRow("<input type='text' ".fmfName($f,'field_label')
-        ."value='".fmfVal($field,'field_label')."' size=15 maxlength=200>",$class);
+  if( $field['field_type'] == 'section' && 
+      ($view == 'ticket_view_top' || preg_match('@^(ticket|project)_tab_@', $view)) ) {
+    fmfRow(fmfVal($field,'field_label'),$class);
+  }
+  else {
+    fmfRow("<input type='text' ".fmfName($f,'field_label')
+          ."value='".fmfVal($field,'field_label')."' size=15 maxlength=200>",$class);
+  }
   // visibility (checkbox)
   $sel = $field['is_visible']? ' checked' : '';
   fmfRow("<input type='checkbox' ".fmfName($f, 'is_visible')
@@ -177,9 +233,6 @@ foreach($fields as $f=>$field) {
       //if( $f == 'custom_menu1' ) { Zen::printArray($choices); }
       if( is_array($choices) && count($choices) ) {
         $txt = "<select ".fmfName($f,'default_val').">";
-        if( $view != 'search_form' ) {
-          $txt .= "<option value=''>--</option>";
-        }
         foreach($choices as $k=>$v) {
           $sel = $field['default_val'] == $k && strlen($field['default_val']) == strlen($k)? " selected" : "";
           $txt .= "<option value='$k'{$sel}>$v</option>";
@@ -195,8 +248,8 @@ foreach($fields as $f=>$field) {
 
     // field type, not useful for fields which only have label as type
     // or for sections
-    if( count($fprops['types']) == 1 && $fprops['types'][0] == 'label' ) {
-      fmfRow($field['field_type']=='section'?'&nbsp;':fmfVal($field,'field_type'),$class);
+    if( $map->getViewProp($view,'view_only') || count($fprops['types']) == 1 && $fprops['types'][0] == 'label' ) {
+      fmfRow(fmfVal($field,'field_type'),$class);
     }
     else {
       $txt = "<select style='width:80px;' ".fmfName($f, 'field_type').">";

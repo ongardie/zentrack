@@ -109,12 +109,9 @@ KeyEvent.cancelKey = function(keyPress) {
     return; 
   }
   // ignore control keys
-  if( c == 18 ) { 
-    if( KeyEvent.showHelpOn > 0 ) {
-      window.clearTimeout(KeyEvent.showHelpOn);
-      KeyEvent.hideHelp();
-    }
-    return; 
+  if( c == 18 ) {
+    KeyEvent.hideHelp();
+    return;
   }
   
   // prevent toolbars from loading over hot keys
@@ -125,6 +122,9 @@ KeyEvent.cancelKey = function(keyPress) {
 }
 
 KeyEvent.hideHelp = function() {
+  if( KeyEvent.showHelpOn > 0 ) {
+    window.clearTimeout(KeyEvent.showHelpOn);
+  }
   mClassX(window.document.getElementById('hotKeyHelp'),'hotKeyHelp invisible');
   KeyEvent.showHelpOn = false;
 }
@@ -190,12 +190,16 @@ KeyEvent.checkKey = function(keyPress) {
   }
   else if( c == 18 ) {
     if( !KeyEvent.showHelpOn ) {
-      KeyEvent.showHelpOn = window.setTimeout('KeyEvent.showHelp()', 400);
+      KeyEvent.showHelpOn = window.setTimeout('KeyEvent.showHelp()', 1000);
     }
     if( debugOn ) { window.status = 'Prepping showhelp: '+KeyEvent.showHelpOn; }
     return;
-  }  
+  }
   return true;
+}
+
+window.onblur = function() {
+  if( KeyEvent.hideHelp ) { KeyEvent.hideHelp(); }
 }
 
 KeyEvent.findKey = function( k ) {

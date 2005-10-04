@@ -15,6 +15,9 @@
 
 <br clear="all">
 <? $hotkeys->renderAccessKeys(); ?>
+<script type='text/javascript'>
+<?=$hotkeys->renderFunctions()?>
+</script>
 
 <!--
 <p>&nbsp;</p>

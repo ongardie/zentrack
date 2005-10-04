@@ -21,6 +21,10 @@
   $chart_options = $params["chart_options"];
 
   $graph = new zenGraph( "$libDir/reportConfig.php" );
+  
+  // if this is set to 1-3 and then the image is viewed directly, this will
+  // produce copious amounts of debug information which can be used to troubleshoot
+  // errors.
   $graph->debug = 0; // set this only if viewing the image directly
 
   // create headings and labels

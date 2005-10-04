@@ -27,13 +27,18 @@ class zenGraph extends Zen {
     // When finished inputting the layers
     // and system settings, call this function
     // to produce a graphical image
+    
+    if( $this->debug > 0 ) {
+      error_reporting(E_ALL ^ E_NOTICE);
+      ini_set("display_errors", false);
+    }
 
     // initialize the image
     if( $this->trueColorEnabled ) {
-      $this->img = @ImageCreateTrueColor( $this->imageWidth, $this->imageHeight );
+      $this->img = ImageCreateTrueColor( $this->imageWidth, $this->imageHeight );
       ImageAlphaBlending( $this->img, TRUE );
     } else {
-      $this->img = @imageCreate( $this->imageWidth, $this->imageHeight );
+      $this->img = imageCreate( $this->imageWidth, $this->imageHeight );
     }
     if( !$this->img ) {
       $this->addDebug("zenGraph", "imageCreate() failed", 1, TRUE);
@@ -3282,8 +3287,7 @@ class zenGraph extends Zen {
     // this function is called automatically through printString
     // if ttf is installed, then print a text
     // box using the installed font
-    // $angle is a degree angle from 3 o'clock position  
-
+    // $angle is a degree angle from 3 o'clock position
     if( !$font )
       $font = $this->ttfDefault;
     $fontfile = $this->libDir."/fonts/$font";
@@ -3292,6 +3296,7 @@ class zenGraph extends Zen {
       $this->textStart($x,$y,$text,$size,$angle,$font,$adjust_x, $adjust_y);
       $this->addDebug("ttfPrintString(".$this->img
 		      .",$size,$angle,$x,$y,$color,$fontfile,$text)",$text,3);
+      if( !$color ) { $color = $this->colorForeground; }
       imageTtfText( $this->img, $size, $angle, $x, $y, $color, $fontfile, $text );
     } else {
       $this->addDebug("ttfPrintString","fontfile: $fontfile not found, text skipped!",1);
