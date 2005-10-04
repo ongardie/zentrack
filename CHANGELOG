@@ -13,6 +13,28 @@ abstraction, and endless possibilities for project expansion.
 
 ----- VERSION 2.6 (development) -----
 
+2005-10-04, kato
+  Ticket view tabs completed
+  Added properties to field map
+  Added view map table
+  Added sorting to data types
+   - zentrack_2/includes/ZenFieldMap.class 1.32
+   - zentrack_2/includes/ZenHotKeys.class 1.3
+   - zentrack_2/includes/footer.php 1.38
+   - zentrack_2/includes/nav.php 1.16
+   - zentrack_2/includes/zenGraph.class 1.10
+   - zentrack_2/includes/zenTrack.class 1.190
+   - zentrack_2/includes/templates/adminMenu.php 1.14
+   - zentrack_2/includes/templates/fieldMapForm.php 1.14
+   - zentrack_2/includes/templates/ticketView.php 1.6
+   - zentrack_2/includes/templates/ticket_load_log.php 1.2
+   - zentrack_2/includes/templates/ticket_tabs.php 1.2
+   - zentrack_2/install/upgrade_base.sql 1.3
+   - zentrack_2/www/admin/bins.php 1.7
+   - zentrack_2/www/admin/fieldMap.php 1.10
+   - zentrack_2/www/keyevent.js 1.3
+   - zentrack_2/www/reports/view_image.php 1.13  
+
 2005-09-07, kato
   Added new ticket view screens, cleaned up ticket views for new UI
    - zentrack_2/includes/templates/ticket_actions.php 1.0
