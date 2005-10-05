@@ -13,6 +13,11 @@ abstraction, and endless possibilities for project expansion.
 
 ----- VERSION 2.6 (development) -----
 
+2005-10-05, cfalonso
+  Commiting CVS merges
+    - zentrack_2/includes/ZenFieldMap.class 1.34
+    - zentrack_2/includes/nav.php 1.17
+
 2005-10-05, kato
   Fixes for hot keys, field map, data type sorting, and ticket tabs.
     - zentrack_2/includes/templates/binForm.php [deleted]
