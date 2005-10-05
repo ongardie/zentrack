@@ -28,16 +28,18 @@
 
   $tabs = $map->getTabs($page_type, $login_id, $bin_id);
   print "<table cellpadding='0' cellspacing='0'><tr>";
+  $n = 1;
   foreach($tabs as $k=>$v) {
+    $key = "ALT+SHIFT+".$n++;
     $viewProps = $map->getViewProps($k);
     if( !$viewProps['visible'] ) { continue; }
     $loads = array();
     if( $v['preload'] ) { $loads = $v['preload']; }
     if( $v['postload'] ) { $loads = array_merge($loads, $v['postload']); }
     $class = $page_mode == $k? "class='tab on'" : "class='tab off' $nav_rollover_text";
-    print "<td $class height='15' title='".$hotkeys->tt($v['label'])."'>";
+    print "<td $class height='15' title='".$hotkeys->tooltip($key)."'>";
     $class = $page_mode == $k? "tab on" : "tab off";
-    print "<a href='$rootUrl/$page_type.php?id=$id&setmode=$k'>".$hotkeys->ll($v['label']);
+    print "<a href='$rootUrl/$page_type.php?id=$id&setmode=$k'>".$hotkeys->label($key);
     print getTabCounts($zen,$id,$loads)."</a></td>";
     print "<td width='3'><img src='$imageUrl/empty.gif' width='3' height='1'></td>\n";
   }

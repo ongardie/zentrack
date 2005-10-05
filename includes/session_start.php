@@ -17,7 +17,7 @@ session_cache_limiter('public');
 session_start();     
 
 if( $_GET['clear_session_cache'] ) {
-  $_SESSION = array(); 
+  session_unset();
 }
 
 // ... except the following list
@@ -93,6 +93,9 @@ else if( is_array($HTTP_SESSION_VARS) ) {
 else {
   die("Sessions are not enabled properly on this system.  zenTrack is exiting.");
 }
+
+header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
+header("Expires: Mon, 26 Jul 1997 05:00:00 GMT"); // Date in the past
 
 // you can't have any spaces after this closing tag!
 ?>

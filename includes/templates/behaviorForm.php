@@ -23,7 +23,7 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
   </td>
 </tr>  
 <tr>
-  <td class="bars">
+  <td class="bars" width='125'>
     <?=tr("Behavior Name")?>*
   </td>
   <td class="bars">
@@ -32,7 +32,7 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
 </tr>
 <tr>
   <td class="bars">
-    <?=tr("Active")?>*
+    <?=tr("Active")?>
   </td>
     <?
          $t = "\t<td class='bars'>";
@@ -62,10 +62,11 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
 </tr>
 <tr>
   <td class="bars">
-    <?=tr("Sort Order")?>*
+    <?=tr("Sort Order")?>
   </td>
   <td class="bars">
     <input type="text" name="NewSortOrder" value="<?=strip_tags($behavior['sort_order'])?>" size="40" maxlength="255">
+    <div class='note'><?=tr("The sort order is critical.  If two behaviors conflict, the sort order decides which one gets to run and which one is ignored.")?></div>
   </td>
 </tr>
 <tr>
@@ -86,15 +87,15 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
 </tr>
 <tr>
   <td class="bars">
-    <?=tr("Field is enabled")?>*
+    <?=tr("Field is enabled")?>
   </td>
-    <?
-         $t = "\t<td class='bars'>";
-         $te = "</td>\n";
+  <td class='bars'>
+  <?
          $sel = !$td || $behavior['field_enabled']? ' checked' : '';
-         print "$t<input type='checkbox' value='1' name='NewFieldEnabled'$sel>\n";
-         print "$te";
+         print "<input type='checkbox' value='1' name='NewFieldEnabled'$sel>\n";
     ?>
+    <div class='note'><?=tr("If the behavior runs, the field will be 
+    disabled/enabled based on this checkbox")?></div>
   </td>
 </tr>
 <tr>

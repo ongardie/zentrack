@@ -11,12 +11,9 @@ function KeyEvent( e ) {
   this.source = KeyEvent.getSourceElement(e);
 
   // determine key which was pressed
-  this.keyCode = e.which? e.which : e.keyCode;
-  if( this.keyCode > 32 && this.keyCode < 42 && this.shift ) {
-    // these are the symbols above the numbers... convert these to numbers
-    this.keyCode += 16;
-  }
-  this.key = String.fromCharCode(this.keyCode).toUpperCase();
+  k = e.which? e.which : e.keyCode;
+  this.keyCode = KeyEvent.generateKeyCode(k,this.shift);
+  this.key = KeyEvent.generateKeyChar(this.keyCode);
 }
 
 KeyEvent.prototype.className = "KeyEvent";
@@ -42,12 +39,36 @@ KeyEvent.valueOf = function(s) {
     else { k = parts[i]; }
   }
   evt = new KeyEvent(null);
-  evt.keyCode = k.charCodeAt(0);
-  evt.key = k.toUpperCase();
+  evt.keyCode = KeyEvent.generateKeyCode(k.charCodeAt(0), s);
+  evt.key = KeyEvent.generateKeyChar(evt.keyCode);
   evt.ctrl = c;
   evt.alt = a;
   evt.shift = s;
   return evt;
+}
+
+KeyEvent.keyCodeTranslations = {
+  "41": 48, // ) to 0
+  "33": 49, // ! to 1
+  "64": 50, // @ to 2
+  "35": 51, // # to 3
+  "36": 52, // $ to 4
+  "37": 53, // % to 5
+  "94": 54, // ^ to 6
+  "38": 55, // & to 7
+  "42": 56, // * to 8
+  "40": 57  // ( to 9
+};
+
+KeyEvent.generateKeyCode = function( keyCode, shift ) {
+  if( KeyEvent.keyCodeTranslations[keyCode] ) {
+    return KeyEvent.keyCodeTranslations[keyCode];
+  }
+  return keyCode;
+}
+
+KeyEvent.generateKeyChar = function( keyCode ) {
+  return String.fromCharCode(keyCode).toUpperCase();
 }
 
 /** Convert a key event into a string, such as 'X', or 'CTRL+Y' or 'ALT+SHIFT+C' */

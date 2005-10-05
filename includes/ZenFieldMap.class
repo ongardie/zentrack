@@ -318,6 +318,10 @@ class ZenFieldMap {
        return null;
      }
      $map = $this->getFieldMap($view);
+     if( !$map ) {
+       $this->_zen->addDebug('listFieldForView', "Invalid view: ".$view, 1);
+       return array(); 
+     }
      $this->_zen->addDebug('listFieldsForView', "Found ".count($map)." entries for view '$view'", 3);
      return array_keys($map);
    }

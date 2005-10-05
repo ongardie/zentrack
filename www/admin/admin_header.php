@@ -61,6 +61,10 @@
     $cache_pulldown = array($max,$sel,$text);
     return $text;
   }
+  
+  function getPriCount( $current, $lowest ) {
+    return 1 + ($current - $lowest);
+  }
 
   /*
   ** SETTINGS ADMINISTRATION COMMON FIELDS
@@ -72,5 +76,7 @@
 			   "description" => "html"
 			   );
   $settings_required = array("name","value");
+  
+  if( !isset($TODO) ) { $TODO = null; }
 
 ?>

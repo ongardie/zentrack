@@ -31,17 +31,16 @@
       return true;
     }
   </script>
-<? } else if( $type == 'priority' ) {?>
-   <p><?=tr("The priority order fields should all be filled in and should "
-           ."be consecutive (for proper coloring).")?>
-   <br><?=tr("Any fields which are disabled should have the order set to 0")?></p>
 <? } ?>
       <ul>
       <form name='configForm' action='<?=$SCRIPT_NAME?>' <?=$type=='type'? " onsubmit='return checkPriType(this)'":""?> method='post'>
       <table cellpadding="2" cellspacing="1" class='plainCell'>
 	 <tr toofar="toofar">
 	 <td class='titleCell' align='center' colspan='5'>
-	   <b><?=tr("Edit the Active ?s",array(ucfirst($type)))?></b>
+     <?
+       $plural_type = tr($type == 'priority'? 'Priorities' : ucfirst($type)."s");
+     ?>
+	   <b><?=tr("Edit the Active ?",array($plural_type))?></b>
 	 </td>
 	 </tr>
 	 <tr toofar="toofar">
@@ -51,11 +50,9 @@
 	 <td width="30" class='cell' align='center'><b>&nbsp;</b></td>
 	 </tr>
     <? 
-         $js_vals = array();
-         $num = count($vars) + $more;
+   $j = count($vars)-1;
 	 if( is_array($vars) ) {
 	   $newtext = "-".tr("new")."-";
-	   $j = 0;
 	   $t = "\t<td class='bars'>";
 	   $te = "</td>\n";
 	   foreach($vars as $v) {
@@ -78,43 +75,52 @@
        
        // priority cell
        $txt = $t;
-          // up arrow
-          $txt .= "<a href='#' onClick='moveRowUp(this.parentNode);return false;'";
-          $txt .= " border='0' alt='Move Up' title='Move Up'><img src='$rootUrl/images/icon_arrow_up.gif'";
-          $txt .= " width='16' height='16' alt='Move Up' title='Move Up' border='0'></a>";
-          // down arrow
-          $txt .= "<a href='#' onClick='moveRowDown(this.parentNode);return false;'";
-          $txt .= " border='0' alt='Move Down' title='Move Down'><img src='$rootUrl/images/icon_arrow_down.gif'";
-          $txt .= " width='16' height='16' alt='Move Down' title='Move Down' border='0'></a>";
-          // control sort ordering by tracking what order these hidden fields arrive
-          $txt .= "<input type='hidden' name='newPri[$j]' value='$j'>";
-          
-          // add new rows
-          $txt .= "<a href='#' onClick='addRow(this);return false;'";
-          $txt .= " border='0' alt='Add Section' title='Add Section'><img src='$rootUrl/images/icon_add.gif'";
-          $txt .= " width='16' height='16' alt='Add Section' title='Add Section' border='0'></a>";
-          $txt .= $te;
+         //$txt .= '['.$v['priority'].':'.$j.']';//debug
+        // up arrow
+        $txt .= "<a href='#' onClick='moveRowUp(this.parentNode);return false;'";
+        $txt .= " border='0' alt='Move Up' title='Move Up'><img src='$rootUrl/images/icon_arrow_up.gif'";
+        $txt .= " width='16' height='16' alt='Move Up' title='Move Up' border='0'></a>";
+        // down arrow
+        $txt .= "<a href='#' onClick='moveRowDown(this.parentNode);return false;'";
+        $txt .= " border='0' alt='Move Down' title='Move Down'><img src='$rootUrl/images/icon_arrow_down.gif'";
+        $txt .= " width='16' height='16' alt='Move Down' title='Move Down' border='0'></a>";
+        // control sort ordering by tracking what order these hidden fields arrive
+        $txt .= "<input type='hidden' name='newPri[$j]' value='".($j+1)."'>";
+        
+        // add new rows
+        $txt .= "<a href='#' onClick='addRow(this);return false;'";
+        $txt .= " border='0' alt='Add Section' title='Add Section'><img src='$rootUrl/images/icon_add.gif'";
+        $txt .= " width='16' height='16' alt='Add Section' title='Add Section' border='0'></a>";
+        $txt .= $te;
        print $txt;
 
 	     print "</tr>\n";
-	     $js_vals[] = ($v["priority"])? $v["priority"] : 0;
-	     $j++;
+	     $j--;
 	   }
 	 }
-	 for( $i=0; $i<$more; $i++ ) { 
-	   print "<tr>\n";
-	   print $t.$newtext.$te;
-	   print "<input type='hidden' name='newID[$j]' value=''>\n";
-	   print "$t<input type='text' name='newName[$j]' "
-	     ." value='' size='20' maxlength='25'>$te";
-	   print "$t<input name='newPri[$j]' value='0' size='4' maxlength='4'>$te\n";
-	   print "$t<input type='checkbox' name='newActive[$j]' value='1' checked>$te";
-	   print "</tr>\n";	   
-	   $js_vals[] = 0;
-	   $j++;
-	 }
-
+   
+   // this cannot change from here out, it has to remain as-is
+   $sampleRowId = count($vars);
+   
     ?>
+<tr id='aSampleRow' style="display:none;">
+  <td class='bars'><?=$newtext?></td>
+  <input type='hidden' name='newID[<?=$sampleRowId?>]' value=''>
+  <td class='bars'><input type='text' name='newName[<?=$sampleRowId?>]' value='' size='20' maxlength='25'></td>
+  <td class='bars'><input type='checkbox' name='newActive[<?=$sampleRowId?>]' value='1' checked></td>
+  <td class='bars'>
+    <input type='hidden' name='newPri[<?=$sampleRowId?>]' value='<?=$sampleRowId?>'>
+    <a href='#' onClick='moveRowUp(this.parentNode);return false;'
+      border='0' alt='Move Up' title='Move Up'><img src='<?=$rootUrl?>/images/icon_arrow_up.gif'
+      width='16' height='16' alt='Move Up' title='Move Up' border='0'></a>
+    <a href='#' onClick='moveRowDown(this.parentNode);return false;' 
+      border='0' alt='Move Down' title='Move Down'><img src='<?=$rootUrl?>/images/icon_arrow_down.gif'
+      width='16' height='16' alt='Move Down' title='Move Down' border='0'></a>
+    <a href='#' onClick='addRow(this);return false;'
+      border='0' alt='Add Section' title='Add Section'><img src='<?=$rootUrl?>/images/icon_add.gif'
+      width='16' height='16' alt='Add Section' title='Add Section' border='0'></a>
+  </td>
+</tr>    
 <tr toofar="toofar" id="submitRow">
   <td class="titleCell" colspan="5">
     <?=tr("Press Save to save changes")?>
@@ -133,13 +139,11 @@
       </table>
       </ul>
 
-      <input type='hidden' name='more' value='<?=$more?>'>
       </form>
 <script language='javascript'>
 var i;
 var ci;
-var rowCount = <?=$j?>;
-var bin = [ <?=join(",",$js_vals)?> ];
+var rowCount = <?=$sampleRowId+1?>;
 function setToDo(val) {
   document.configForm.TODO.value = val;
   return true;
@@ -147,29 +151,31 @@ function setToDo(val) {
 
 function addRow( obj ) {
   var newName = rowCount++;
-  var newSection = document.getElementById("section0").cloneNode(true);
+  var newSection = document.getElementById("aSampleRow").cloneNode(true);
   newSection.setAttribute("id",newName);
   for(var i=0; i < newSection.childNodes.length; i++) {
     var sect = newSection.childNodes[i];
-    if( sect.hasChildNodes() && sect.childNodes[0] ) {
-      var c = sect.childNodes[0];
-      if( c.type == 'text' || c.type == 'checkbox' || c.type == 'hidden' ) {
-        c.setAttribute('name', c.getAttribute('name').replace('section0',newName));
-        s += " - new name: "+c.name+"\n";
-        if ( c.type == 'hidden' ) {
-          var v1, v2;
-          v1=parseFloat(document.configForm[ "newPri[" + obj.parentNode.parentNode.id + "]" ].value);
-          var previousRow = obj.parentNode.parentNode.previousSibling;
-          while( previousRow && previousRow.nodeName != "TR" ) {
-            previousRow = previousRow.previousSibling;
+    if( sect.hasChildNodes() && sect.childNodes.length > 0 ) {
+      for(var j=0; j < sect.childNodes.length; j++) {
+        var c = sect.childNodes[j];
+        if( c.type == 'text' || c.type == 'checkbox' || c.type == 'hidden' ) {
+          c.setAttribute('name', c.getAttribute('name').replace('<?=$sampleRowId?>',newName));
+          s += " - new name: "+c.name+"\n";
+          if ( c.name.indexOf('newPri') == 0 ) {
+            var v1, v2;
+            v1=parseFloat(document.configForm[ "newPri[" + obj.parentNode.parentNode.id + "]" ].value);
+            var previousRow = obj.parentNode.parentNode.previousSibling;
+            while( previousRow && previousRow.nodeName != "TR" ) {
+              previousRow = previousRow.previousSibling;
+            }
+            if( !previousRow || previousRow.getAttribute("toofar") ) {
+              v2=-1.0;
+            } else {
+              v2=parseFloat(document.configForm[ "newPri[" + previousRow.id + "]" ].value);
+            }
+            v=(v1 + v2) / 2.0;
+            c.setAttribute('value',v);
           }
-          if( !previousRow || previousRow.getAttribute("toofar") ) {
-            v2=-1.0;
-          } else {
-            v2=parseFloat(document.configForm[ "newPri[" + previousRow.id + "]" ].value);
-          }
-          v=(v1 + v2) / 2.0;
-          c.setAttribute('value',v);
         }
       }
     }
@@ -200,9 +206,9 @@ function moveRowUp( tdCell ) {
     while( (previousRow && previousRow.nodeName != "TR") || (previousRow && previousRow.id === "section0") ) {
       previousRow = previousRow.previousSibling;
     }
-    //And set the current row's orderset value to it's previous row orderset value + 1
+    //And set the current row's orderset value to it's previous row orderset value - 1
     v1=parseFloat(document.configForm[ "newPri[" + previousRow.id + "]" ].value);
-    document.configForm[ "newPri[" + thisRow.id + "]" ].value=v1+1;
+    document.configForm[ "newPri[" + thisRow.id + "]" ].value=v1-1;
     return;
   }
   parentNode.insertBefore(thisRow, previousRow);
@@ -247,9 +253,9 @@ function moveRowDown( tdCell ) {
     while( thisRow.nodeName != "TR" || thisRow.getAttribute("toofar") ) {
       thisRow = thisRow.nextSibling;
     }
-    //We set the current row's orderset value to the first row's orderset -1
+    //We set the current row's orderset value to the first row's orderset + 1
     v1=parseFloat(document.configForm[ "newPri[" + thisRow.id + "]" ].value);
-    document.configForm[ "newPri[" + nextRow.id + "]" ].value=v1-1;
+    document.configForm[ "newPri[" + nextRow.id + "]" ].value=v1+1;
   } else {
     //We swap the orderset values:
     v1=parseFloat(document.configForm[ "newPri[" + thisRow.id + "]" ].value);

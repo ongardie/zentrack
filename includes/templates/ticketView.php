@@ -24,7 +24,7 @@
 <tr>
   <td class='tbar indent boxpad'><?=$zen->ffv(tr($zen->getTypeName($type_id)))?> #<?=$id?>
   <?
-  if( $map->getViewProp('ticket_options','show_summary_inline') ) {
+  if( $map->getViewProp('ticket_view_top','show_summary_inline') ) {
     print ": ".$zen->ffvText($ticket['title']);
   }
   ?>
@@ -47,12 +47,18 @@
       include("$templateDir/ticket_action.php");
     }
     else if( preg_match("/^{$page_type}_tab_[0-9]$/", $page_mode) ) {
-      $boxview = $page_mode;
-      if( !$map->getViewProp($page_mode, 'view_only') ) {
-        include("$templateDir/ticket_editBox.php");
+      $tabs = $map->getTabs($page_type, $login_id, $bin_id);
+      if( !array_key_exists($page_mode, $tabs) ) {
+        print tr("You cannot cannot view this feature.");
       }
       else {
-        include("$templateDir/ticket_box.php");
+        $boxview = $page_mode;
+        if( !$map->getViewProp($page_mode, 'view_only') ) {
+          include("$templateDir/ticket_editBox.php");
+        }
+        else {
+          include("$templateDir/ticket_box.php");
+        }
       }
     }
     else {

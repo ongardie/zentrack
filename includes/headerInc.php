@@ -69,7 +69,7 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
   include_once("$libDir/ZenFieldMap.class");
   include_once("$libDir/zenTemplate.class");
   include_once("$libDir/ZenHotKeys.class");
-
+  
   $zen = new zenTrack( $configFile );
   $map =& new ZenFieldMap($zen);
   $hotkeys =& new ZenHotKeys($zen);

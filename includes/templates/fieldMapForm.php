@@ -72,7 +72,7 @@
 &nbsp;
 <select name='view'>
 <?
-$vp = $map->getViewProps(null);
+$vp = $map->getViewProps();
 foreach( $vp as $k=>$v ) {
   $sel = $view == $k? " selected" : "";
   $l = $map->getViewProp($k,'label')? $k." (".tr($map->getViewProp($k,'label')).")" : $k;
@@ -93,7 +93,7 @@ if( !$view ) {
 else {
 ?>
 <table cellpadding='4' cellspacing='1' class='cell' border='0'>
-  <tr><td colspan='10' align='center' class='titleCell'><?=tr("Properties for ?", $view)?></td></tr>
+  <tr toofar="toofar"><td colspan='10' align='center' class='titleCell'><?=tr("Properties for ?", $view)?></td></tr>
 <?
 foreach($map->getViewProps($view) as $v) {
   if( $v['vm_type'] == 'hidden' ) { continue; }
@@ -114,7 +114,7 @@ if( !is_array($fields) || !count($fields) || !$map || !$view ){
 }
 else {
 ?>
-<tr toofar="toofar">
+<tr toofar="toofar" id="beforeFirstRow">
   <td class='subTitle' align='center'><b><?=tr("Options")?></b></td>
   <td class='subTitle' align='center'><b><?=tr("Name")?></b></td>
   <td class='subTitle' align='center'><b><?=tr("Label")?></b></td>
@@ -125,7 +125,6 @@ else {
   <td class='subTitle' align='center'><b><?=tr("Columns")?></b></td>
   <td class='subTitle' align='center'><b><?=tr("Rows")?></b></td>
 </tr>
-
 <?
 function fmfRow( $text, $class ) {
   print "<td class='$class'>{$text}</td>";
@@ -292,8 +291,19 @@ foreach($fields as $f=>$field) {
   <td class='highlight'><input type='checkbox'  name='section0[is_visible]' value='1' onclick='return checkVisible(this)' checked></td>
   <td class='highlight' colspan='5'>&nbsp;</td>
 </tr>
-<tr id="submitRow" toofar="toofar">
-  <td class='cell' colspan='4'>
+<tr id="afterLastRow" toofar="toofar">
+  <td class='subTitle' align='center'><b><?=tr("Options")?></b></td>
+  <td class='subTitle' align='center'><b><?=tr("Name")?></b></td>
+  <td class='subTitle' align='center'><b><?=tr("Label")?></b></td>
+  <td class='subTitle' align='center'><b><?=tr("Show")?></b></td>
+  <td class='subTitle' align='center'><b><?=tr("Required")?></b></td>
+  <td class='subTitle' align='center'><b><?=tr("Default")?></b></td>
+  <td class='subTitle' align='center'><b><?=tr("Type")?></b></td>
+  <td class='subTitle' align='center'><b><?=tr("Columns")?></b></td>
+  <td class='subTitle' align='center'><b><?=tr("Rows")?></b></td>
+</tr>
+<tr toofar="toofar">
+  <td class='titleCell' colspan='10'>
     <input type='submit' value='<?=uptr('save')?>' onClick="return setTodo('save');">
     &nbsp;
     <input type='submit' class='submitPlain' value='<?=tr('Reset')?>' onClick="return setTodo('reset');">
@@ -372,7 +382,7 @@ function moveRowUp( tdCell ) {
     previousRow = previousRow.previousSibling;
   }
   if( !previousRow || previousRow.getAttribute("toofar") ) {
-    parentNode.insertBefore(thisRow, document.getElementById("submitRow"));
+    parentNode.insertBefore(thisRow, document.getElementById("afterLastRow"));
     //As this is now the last row, we can get the orderset value of it's new previous row
     previousRow = thisRow.previousSibling;
     while( (previousRow && previousRow.nodeName != "TR") || (previousRow && previousRow.id === "section0") ) {
@@ -421,10 +431,11 @@ function moveRowDown( tdCell ) {
   }
   if( !nextRow || nextRow.getAttribute("toofar") ) {
     nextRow = thisRow;
-    thisRow = parentNode.firstChild;
+    thisRow = window.document.getElementById("beforeFirstRow");
     while( thisRow.nodeName != "TR" || thisRow.getAttribute("toofar") ) {
       thisRow = thisRow.nextSibling;
     }
+    alert(thisRow.id+": "+document.fieldMapForm["orderset["+thisRow.id+"]"]);//debug
     //We set the current row's orderset value to the first row's orderset -1
     v1=parseFloat(document.fieldMapForm[ "orderset[" + thisRow.id + "]" ].value);
     document.fieldMapForm[ "orderset[" + nextRow.id + "]" ].value=v1-1;

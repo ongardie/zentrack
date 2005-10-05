@@ -105,9 +105,12 @@ class ZenHotKeys {
       $this->_zen->addDebug('ZenHotKeys->assign', "The key '$key' already exists", 1);
       return;
     }
+
     if( array_key_exists($label, $this->_idx) ) {
-      $this->_zen->addDebug('ZenHotKeys->assign', "The label '$label' already exists for key '".$this->_idx["$label"]."'", 1);
-      return;
+      $this->_zen->addDebug('ZenHotKeys->assign', "The label '$label' already exists for key '".$this->_idx["$label"]."', this hotkey cannot be looked up by label accurately", 2);
+    }
+    else {
+      $this->_idx["$label"] = $key;
     }
     
     if( !$description ) { $description = $label; }
@@ -116,7 +119,6 @@ class ZenHotKeys {
     
     $this->_zen->addDebug('ZenHotKeys->assign', "Added key '$key' for label '$label' and fxn '$fxn'", 3);
     $this->_keys["$key"] = array('label'=>$label, 'fxn'=>$fxn, 'description'=>$description, 'global'=>$global);
-    $this->_idx["$label"] = $key;
   }
   
   /**
