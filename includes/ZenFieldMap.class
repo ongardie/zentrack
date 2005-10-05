@@ -818,8 +818,10 @@ class ZenFieldMap {
     $this->_zen->addDebug('_getChoices', "Generated ".count($vals)." choices for {$view}->{$field_name}", 3);
     
     if( $this->getViewProp($view, 'any_option') && $field['num_rows'] == 1 ) {
-      $vals = Zen::mergeArrays( array('' => '-any-'), $vals );
+      $vals = Zen::mergeArrays( array('' => tr('-any-')), $vals );
       //$vals = array_merge(array(''=>'-any-'),$vals);
+    } else if ( $field['is_required']==0 && $field['field_type'] == 'menu') {
+      $vals = Zen::mergeArrays( array('' => tr('-none-')), $vals );
     }
     else if( !$field['is_required'] && $field['num_rows'] == 1 ) {
       $vals = Zen::mergeArrays( array(''=>'-----'), $vals );
