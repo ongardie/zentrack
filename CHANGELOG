@@ -15,8 +15,13 @@ abstraction, and endless possibilities for project expansion.
 
 2005-10-05, kato
   Fixes for hot keys, field map, data type sorting, and ticket tabs.
-    - zentrack_2/includes/templates/configForm.php 1.13
     - zentrack_2/includes/templates/binForm.php [deleted]
+    - zentrack_2/includes/templates/configForm.php 1.13
+    - zentrack_2/includes/templates/ticket_contactsBox.php [deleted]
+    - zentrack_2/includes/templates/ticket_customBox.php [deleted]
+    - zentrack_2/includes/templates/ticket_detailsBox.php [deleted]
+    - zentrack_2/includes/templates/ticket_logBox.php [deleted]
+    - zentrack_2/includes/templates/ticket_notifyBox.php [deleted]
     - zentrack_2/includes/ZenFieldMap.class 1.33
     - zentrack_2/includes/ZenHotKeys.class 1.4
     - zentrack_2/www/keyevent.js 1.4
