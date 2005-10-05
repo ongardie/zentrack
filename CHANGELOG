@@ -13,6 +13,20 @@ abstraction, and endless possibilities for project expansion.
 
 ----- VERSION 2.6 (development) -----
 
+2005-10-05, kato
+  Fixes for hot keys, field map, data type sorting, and ticket tabs.
+    - zentrack_2/includes/templates/configForm.php 1.13
+    - zentrack_2/includes/templates/binForm.php [deleted]
+    - zentrack_2/includes/ZenFieldMap.class 1.33
+    - zentrack_2/includes/ZenHotKeys.class 1.4
+    - zentrack_2/www/keyevent.js 1.4
+    - zentrack_2/www/admin/admin_header.php 1.15
+    - zentrack_2/www/admin/bins.php 1.8
+    - zentrack_2/www/admin/priorities.php 1.6
+    - zentrack_2/www/admin/systems.php 1.9
+    - zentrack_2/www/admin/tasks.php 1.7
+    - zentrack_2/www/admin/types.php 1.7
+
 2005-10-04, kato
   Ticket view tabs completed
   Added properties to field map
