@@ -5,6 +5,7 @@
     global $nav_rollover_text;
     global $hotkeys;
     global $rootUrl;
+    global $imageUrl;
     $keyRegisterEvents[] = array($name, $page);
 
     $key = $hotkeys->find($name);
@@ -20,7 +21,7 @@
     }
     $txt .= "class='$class'>";
     $txt .= "<a class='$class' href='$rootUrl/$page'>".$hotkeys->label($key)."</a>\n";
-    $txt .= "</td><td width='4'><img src='$imgUrl/empty.gif' width='1' height='1' border='0'></td>\n";
+    $txt .= "</td><td width='4'><img src='{$imageUrl}/empty.gif' width='1' height='1' border='0'></td>\n";
     return $txt;
 
   }
@@ -157,3 +158,7 @@
   ?>
 
   <!-- END OF NAVIGATION -->
+<<<<<<< nav.php
+ 
+=======
+>>>>>>> 1.16
