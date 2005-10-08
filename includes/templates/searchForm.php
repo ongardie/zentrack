@@ -41,6 +41,11 @@ foreach($hidden_fields as $f=>$field) {
      <?=tr("Search For Tickets")?>
   </td>
 </tr>
+<tr>
+  <td class="bars" colspan="2">
+     <input type="submit" class="submit" value="<?=tr("Search")?>">
+  </td>
+</tr>
 
 <?
 if( count($text_fields) ) {

@@ -114,35 +114,24 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
             if ( strpos($k,"custom_multi") === false ) {
               $params[] = array($k, $op, $v, 1);
             } else {
+              $qry = "SELECT ticket_id, count(*) FROM $zen->table_varfield_multi "
+                    ."WHERE field_name = '$k' AND field_value IN ('" . implode("','",$v) . "') "
+                    ."GROUP BY ticket_id ";
               switch ($srch_opt[$k]) {
                 case "EXACT":
-                  $multi_params = "";
-                  foreach ($v as $mv) {
-                    $multi_params.=(strlen($multi_params)==0)?$mv : "\t$mv";
-                  }
-                  $params[] = array($k, "=", $multi_params, 1);
+                  $qry.="HAVING count(*)=".count($v);
                   break;
                 case "AND":
-                  foreach($v as $mv) {
-                    $multi_params = array();
-                    $multi_params[] = array($k, 'LIKE', "$mv");
-                    $multi_params[] = array($k, 'LIKE', "%\\t$mv");
-                    $multi_params[] = array($k, 'LIKE', "$mv\\t%");
-                    $multi_params[] = array($k, 'LIKE', "%\\t$mv\\t%");
-                    $params[] = array("OR",$multi_params);
-                  }
-                  break;
-                case "OR":
-                  $multi_params = array();
-                  foreach($v as $mv) {
-                    $multi_params[] = array($k, 'LIKE', "$mv");
-                    $multi_params[] = array($k, 'LIKE', "%\\t$mv");
-                    $multi_params[] = array($k, 'LIKE', "$mv\\t%");
-                    $multi_params[] = array($k, 'LIKE', "%\\t$mv\\t%");
-                  }
-                  $params[] = array("OR",$multi_params);
+                  $qry.="HAVING count(*)>=".count($v);
                   break;
               }
+              $zen->addDebug("searchResults.php", "Query for multi field: $qry", 3);
+              $vals = $zen->db_queryIndexed($qry);
+              $tids = array('0');
+              for($i=0; $i<count($vals); $i++) {
+                $tids[] = $vals[$i][ticket_id];
+              }
+              $params[] = array($zen->table_tickets.".id", 'IN', $tids, 1);
             }
             break;
         }

@@ -1037,7 +1037,15 @@ class zenTrack extends zen {
   function getVarfieldVals( $ticket_id ) { 
     $ticket_id = $this->checkNum($ticket_id);
     $query = "SELECT * FROM ".$this->table_varfield." WHERE ticket_id = $ticket_id";
-    return $this->db_quickIndexed($query);
+//    return $this->db_quickIndexed($query);
+    $res =  $this->db_quickIndexed($query);
+    $fm =& new ZenFieldMap($this);
+    $multi_fields = $fm->listMultiFields();
+    foreach ($multi_fields as $v) {
+      $query = "SELECT field_value FROM ".$this->table_varfield_multi." WHERE ticket_id = $ticket_id AND field_name='".$v."'";
+      $res[$v] = $this->db_list($query);
+    }
+    return ($res);
   }
   
   /**
@@ -1052,9 +1060,18 @@ class zenTrack extends zen {
      $skip_id = $columns && !in_array('ticket_id',$columns);
      if( $columns ) {
        $cols = !$skip_id? '' : 'ticket_id';
+       $mcols = array();
+       $fm =& new ZenFieldMap($this);
+       $multi_fields = $fm->listMultiFields();
        foreach($columns as $c) {
-         if( $cols ) { $cols .= ','; }
-         $cols .= $c;
+         if ( strpos($c,'custom_multi')===false ) {
+           if( $cols ) { $cols .= ','; }
+           $cols .= $c;
+         } else {
+           if ( in_array($c,$multi_fields) ) {
+             $mcols[]=$c;
+           }
+         }
        }
      }
      else { $cols = "*"; }
@@ -1063,6 +1080,10 @@ class zenTrack extends zen {
      $vars = array();
      for($i=0; $i < count($vals); $i++) {
        $k = $vals[$i]['ticket_id'];
+       foreach ($mcols as $mc) {
+         $query = "SELECT field_value FROM ".$this->table_varfield_multi." WHERE ticket_id = $k AND field_name='".$mc."'";
+         $vals[$i][$mc] = $this->db_list($query);
+       }
        if( $skip_id ) { unset($vals[$i]['ticket_id']); }
        $vars["$k"] = $vals[$i];
      }
@@ -1084,6 +1105,8 @@ class zenTrack extends zen {
     $a = $this->getSetting('varfield_tab_name');
     $log_entry = $a? "Updated ".ucfirst(strtolower($a))." fields" : "Updated Custom Fields";
     $oldVals = $this->getVarfieldVals($ticket_id);
+    $field_values_std = array();
+    $field_values_multi = array();
     foreach($field_values as $key=>$val) {
       $v1=$oldVals["$key"];
       $v2=$val;
@@ -1112,11 +1135,39 @@ class zenTrack extends zen {
         } else {
           $v2 = $val;
         }
+      } else if ( strpos($key, 'custom_multi') !== false ) {
+        if ( count($oldVals[$key]) ) {
+          $v1 = 'NULL';
+        } else {
+          $v1 = implode('; ', $oldVals[$key]);
+        }
+        if ( count($val) ) {
+          $v2 = 'NULL';
+        } else {
+          $v2 = implode('; ', $val);
+        }
       }
       // find out if value was updated, check strlen so that 0 != '', and so forth
       if( $v1 != $v2 ) { $log_entry .= "\n - {$label} changed from [$v1] to [$v2]"; }
+      //split the multi fields appart so that we can call the db_update function for all the other fields:
+      if ( strpos($key, 'custom_multi') == false ) {
+        $field_values_std[$key] = $value;
+      } else {
+        $field_values_multi[$key] = $value;
+      }
     }
-    $res = $this->db_update( $this->table_varfield, "ticket_id", $ticket_id, $field_values );
+    $res = $this->db_update( $this->table_varfield, "ticket_id", $ticket_id, $field_values_std );
+    if ($res) {
+      foreach($field_values_multi as $key=>$val) {
+        $query = "DELETE FROM ".$this->table_varfield_multi." WHERE ticket_id = ".$ticket_id." AND field_name = ".$key;
+        $res_del = $this->db_result($query);
+        foreach ($val as $element) {
+          $multi_entry = array('ticket_id' => $ticket_id,
+                               $key => $element);
+          $res_ins = db_insert($this->table_varfield_multi,$multi_entry);
+        }
+      }
+    }
     if( $res && $this->settingOn('log_edit') ) {
       // add a log entry
       $this->add_log( $ticket_id, array('user_id'   => $user_id,
@@ -6085,7 +6136,7 @@ class zenTrack extends zen {
   var $table_attachments;
   var $actions;
   var $table_bins;
-  var $table_feild_map;
+  var $table_field_map;
   var $table_logs;   
   var $table_logs_archived;
   var $table_preferences;

@@ -407,7 +407,8 @@ class ZenFieldMap {
         case "custom_text":
           return $this->_zen->ffvText($value);
         case "custom_multi":
-          return str_replace("\t", "; ", $value);
+//          return str_replace("\t", "; ", $value);
+          return implode("; ", $value);
         default:
           $val = $this->_zen->ffvText(str_replace("\t",";",$value), $field['num_cols']);
           $this->_zen->addDebug("getTextValue", "rendering default: $val", 3);
@@ -477,11 +478,21 @@ class ZenFieldMap {
       //$vals['field_value'] = $this->_zen->showDate($value);
       $vals["field_value"] = strlen($value)? $this->_zen->showDateTime($value) : '';
     } else if( strpos($vals["field_name"], 'custom_multi') !== false ) {
+/*
       $tok=strtok($value,"\t");
       $vals["field_value"]=array();
       while ($tok !== false) {
         $vals["field_value"][] = $this->_zen->ffv($tok, $field['num_cols']);
         $tok = strtok("\t");
+      }
+*/
+      $vals["field_value"]=array();
+      if ( is_array($value) ) {
+        foreach($value as $element) {
+          $vals["field_value"][] = $this->_zen->ffv($element, $field['num_cols']);
+        }
+      } else {
+        $vals["field_value"][] = $this->_zen->ffv($value, $field['num_cols']);
       }
     } else {
       $vals["field_value"] = $this->_zen->ffv($value);
@@ -951,6 +962,10 @@ class ZenFieldMap {
       }
     }
     return $opts;
+  }
+
+  function listMultiFields() {
+    return array ('custom_multi1', 'custom_multi2');
   }
   
   /** @var array $_map an array of (string)view -> array( (string)field_name->(array)values... ) */
