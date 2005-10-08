@@ -6,9 +6,14 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
      (ZenFieldMap)$map - contains properties for fields
      (string)$view - the current view (probably project_create or ticket_create)
      (string)$page_type - (optional) either 'ticket' or 'project'
+     (array)$ticket - the ticket to be displayed (if any)
   **/
 
 
+  ///////////////////////////////////////////////////
+  // determine which page we are looking at and
+  // validate access priviledges
+  //////////////////////////////////////////////////
   unset($users);
   $td = ($TODO == 'EDIT' || $TODO == 'EDIT_CUSTOM');
   
@@ -19,71 +24,43 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
   $plural = $page_type == 'project'? 'projects' : 'tickets';
   $ucfirst = ucfirst($page_type);
   
-  // calculate the bins which this user can access
-  if( $td ) {
-    if (strpos($view,"custom")>=0) {
-      $userBins = $zen->getUsersBins($login_id,"level_edit_varfields");  
-    } else {
-      $userBins = $zen->getUsersBins($login_id,"level_edit");  
-    }
-  }
-  else {
-    $level = $page_type=='project'? 'level_create_proj' : "level_create";
-    $userBins = $zen->getUsersBins($login_id,$level);
+  if( !$td ) {
     $id = 0;
     $creator_id = $login_id;
     $status = 'OPEN';
   }
 
-  $override_as_label = null;
   // set the form name and the override as label if appropriate
-  if ( strpos($view,'custom') === false ) {
-    $form_name = "ticketForm";
-  } else {
-    $form_name = "ticket_customForm";
-    if( !$zen->checkAccess($login_id, $bin_id, 'varfield_edit') || !$zen->actionApplicable($id, 'varfield_edit', $login_id) ) {
-      $override_as_label = 1;
-    }
-  }
-
+  $form_name = "ticketForm";
+  
   // blow up if this user does not have proper access to any bins
+  $userBins = $zen->getUsersBins($login_id, $map->getViewProp($view,'access_level'));
   if( !is_array($userBins) || !count($userBins) ) {
     print "<span class='error'>";
     if( $td ) {
-      print tr("You do not have permission to edit ?.", array($plural));
+      print tr("You do not have permission to edit ? in at least 1 bin.", array($plural));
     }
     else {
-      print tr("You do not have permission to create ?.", array($plural));
+      print tr("You do not have permission to create ? in at least 1 bin.", array($plural));
     }
     print "</span>\n";
     include("$libDir/footer.php");
     exit;
   }
+  
+  
+  ///////////////////////////////////////////////////
+  // set default values as needed
+  ///////////////////////////////////////////////////
+  
+  // set deadline and start date on create screens
   if( !$deadline && !$td )
      $deadline = $zen->getDefaultValue("default_deadline");
   if( !$start_date && !$td )
      $start_date = $zen->getDefaultValue("default_start_date");
      
-  if( strlen($deadline) ) { $deadline = $zen->showDateTime($deadline); }
-  if( strlen($start_date) ) { $start_date = $zen->showDateTime($start_date); }
-  if( strlen($ctime) ) { $ctime = $zen->showDateTime($ctime); }
-  if( strlen($otime) && $td ) { $otime = $zen->showDateTime($otime); }
   if( !$td ) { $otime = time(); }
      
-  //$view = $td? 'ticket_edit' : 'ticket_create';
-  $fields = $map->listFieldsForView($view);
-  $hidden_fields = array();
-  $visible_fields = array();
-  $sections = array();
-  foreach($fields as $f) {
-    $field = $map->getFieldFromMap($view,$f);
-    if( !$field['is_visible'] ) { $hidden_fields[] = $f; }
-    else { 
-      $visible_fields[] = $f;
-      if( $field['field_type'] == 'section' ) { $sections[] = $f; }
-    }
-  }
-  
   // calculate the destination of our form results
   if( $td ) {
     if (strpos($view,"custom")!== false) {
@@ -104,42 +81,24 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
   </td>
 </tr>
 <?
-foreach($hidden_fields as $f) {
-  //$view, $form_name, $field_name, $value = null, $prefix = ''
-  print $map->renderTicketField($view, $form_name, $f, $$f);
-}
-
-foreach($visible_fields as $f) {
-  if( in_array($f, $sections) ) {
-    print "<tr><td colspan='2' class='subTitle'>";
-    print $map->renderTicketField($view, $form_name, $f);
-    print "</td></tr>\n";
-  }
-  else {
-    print "<tr><td class='bars'>";
-    print $map->getLabel($view, $f);
-    print "</td><td class='bars'>";
-    if( $td && $page_type == 'project' && $f == 'type_id' ) {
-      // do not allow type to be edited for projects
-      print $map->getTextValue($view, $f, $$f);
-    }
-    else {
-      print $map->renderTicketField($view, $form_name, $f, $$f, null, $override_as_label);
-    }
-    print "</td></tr>\n";
-  }
-}
-
-if (!$override_as_label) {
+  ///////////////////////////////////////
+  // print the ticket fields
+  ///////////////////////////////////////
+  $formview = $view;
+  include("$templateDir/form_fields.php");
+  
+  ////////////////////////////////////////
+  // include the reason required box
+  ////////////////////////////////////////
+  if ($TODO == 'EDIT' && $zen->settingOn('edit_reason_required') && $zen->settingOn('log_edit') ) {
 ?>
 <tr>
-  <td class="titleCell" colspan="2" align="center">
-  <?=tr("Click button to")?> <?=($td)? tr("save your changes"):tr("create your $page_type")?>.
+  <td class="bars">
+    <?=tr("Edit Reason")?><br>
+    (<?=tr("Required")?>)
   </td>
-</tr>
+  <td class="bars">
 <?
-}
-  if ($TODO == 'EDIT' && $zen->settingOn('edit_reason_required') && $zen->settingOn('log_edit') ) {
     $er_vals=array('field_cols'   => '60',
                    'field_rows'   => '5',
                    'field_name'   => 'edit_reason',
@@ -147,30 +106,23 @@ if (!$override_as_label) {
                    'field_value'  => '');
     $er_template=new zenTemplate("$templateDir/fields/textarea.template");
     $er_template->values($er_vals);
-?>
-<tr>
-  <td class="bars">
-    <?=tr("Edit Reason")?><br>
-    (<?=tr("Mandatory")?>)
-  </td>
-  <td class="bars">
-<?
     print $er_template->process();
 ?>
   </td>
 </tr>
 <?
   }
-  if (!$override_as_label) {
 ?>
+<tr>
+  <td class="titleCell" colspan="2" align="center">
+  <?=tr("Click button to")?> <?=($td)? tr("save your changes"):tr("create your $page_type")?>.
+  </td>
+</tr>
 <tr>
   <td colspan="2" class="bars">
    <input type="submit" value=" <?=tr(($td)?"Save":"Create")?> " class="submit">
   </td>
 </tr>
-<?
-  }
-?>
 </table>
 </form>
 

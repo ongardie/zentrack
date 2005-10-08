@@ -12,12 +12,29 @@ abstraction, and endless possibilities for project expansion.
 --------------------
 
 ----- VERSION 2.6 (development) -----
+2005-10-07, kato
+  Added new icon set for ticket actions
+  Added fix for pngs in IE
+  Added action icons to tickets
+  
+  Expanded search box and added advanced link
+  
+  Added log filter
+  
+  Added missing load modules (attachments, notify, contacts)
+  
+  Cleaned up navigation alignment/colors
+  Improved spacing/eye tracking for ticket view
+  
 
 2005-10-05, cfalonso
   Commiting CVS merges
     - zentrack_2/includes/ZenFieldMap.class 1.34
     - zentrack_2/includes/nav.php 1.18
     - zentrack_2/includes/nav.php 1.17
+
+2005-10-05, kato
+  Fixed mOvr error message in mozilla
 
 2005-10-05, kato
   Fixes for hot keys, field map, data type sorting, and ticket tabs.

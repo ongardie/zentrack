@@ -1,3 +1,4 @@
+<?  if( !ZT_DEFINED ) { die("Illegal Access"); } ?>
 <tr>
   <td class='leftNavTitle' height='25' valign='middle'><?=tr("Help")?></td>
 </tr>

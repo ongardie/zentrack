@@ -19,10 +19,9 @@
   $type_id = $ticket['type_id'];
   $pageUrl = $page_type == 'project'? $projectUrl : $ticketUrl;
   $viewProps = $map->getViewProps($view);
-?>
-<table class='barborder' width='100%' height='100%' cellpadding="0" cellspacing="0">
+?><table class='barborder' width='100%' height='100%' cellpadding="0" cellspacing="0">
 <tr>
-  <td class='tbar indent boxpad'><?=$zen->ffv(tr($zen->getTypeName($type_id)))?> #<?=$id?>
+  <td class='tbar indent boxpad ridge'><?=$zen->ffv(tr($zen->getTypeName($type_id)))?> #<?=$id?>
   <?
   if( $map->getViewProp('ticket_view_top','show_summary_inline') ) {
     print ": ".$zen->ffvText($ticket['title']);
@@ -39,7 +38,7 @@
   </td>
 </tr>
 <tr>
-  <td class='tbar indent tabpad'><? include("$templateDir/ticket_tabs.php") ?></td>
+  <td class='tbar indent tabpad lip'><? include("$templateDir/ticket_tabs.php") ?></td>
 </tr>
 <tr>
   <td class='indent boxpad' valign='top' height='100%'><?
@@ -53,12 +52,7 @@
       }
       else {
         $boxview = $page_mode;
-        if( !$map->getViewProp($page_mode, 'view_only') ) {
-          include("$templateDir/ticket_editBox.php");
-        }
-        else {
-          include("$templateDir/ticket_box.php");
-        }
+        include("$templateDir/ticket_box.php");
       }
     }
     else {
@@ -67,6 +61,6 @@
   ?></td>
 </tr>
 <tr>
-  <td class='tbar indent'><? include("$templateDir/ticket_actions.php")?></td>
+  <td class='tbar padded ridge'><? include("$templateDir/ticket_actions.php")?></td>
 </tr>
 </table>

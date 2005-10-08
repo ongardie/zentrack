@@ -64,7 +64,7 @@ function resortListPage( sortName ) {
 <? } ?>
 }
 </script>
-<table width="100%" cellspacing='1' cellpadding='2' bgcolor='<?=$zen->getSetting("color_alt_background")?>'>
+<table width="100%" cellspacing='1' cellpadding='2'>
 <?
 if ($atc>0) {
 ?>
@@ -199,6 +199,7 @@ if ($atc>0) {
           <input type='hidden' name='newsort' value=''>
           <input type="hidden" name="search_text" value="<?=$zen->ffv($search_text)?>">
           <?
+          if( is_array($search_params) ) {
            foreach($search_params as $k=>$v) {
              if( is_array($v) ) {
                foreach($v as $val) {
@@ -218,12 +219,14 @@ if ($atc>0) {
            if( $or_higher ) {
              print "<input type='hidden' name='or_higher' value='1'>\n";
            }
+          }
            ?>
      </form>
      <form method="post" action="exportSearch.php" style="display: inline; margin: 0px;">
           <input type="submit" class="smallSubmit" value="<?=tr("Export Results")?>">
           <input type="hidden" name="search_text" value="<?=$zen->ffv($search_text)?>">
           <?
+          if( is_array($search_params) ) {
            foreach($search_params as $k=>$v) {
              if( is_array($v) ) {
                foreach($v as $val) {
@@ -234,15 +237,20 @@ if ($atc>0) {
                print "<input type='hidden' name='search_params[$k]' value='".$zen->ffv($v)."'>\n";
              }
            }
+         }
+         if( is_array($search_dates) ) { 
            foreach($search_dates as $k=>$v) {
              print "<input type='hidden' name='search_dates[$k]' value='".$zen->ffv($v)."'>\n";
            }
+         }
+         if( is_array($search_fields) ) {
            foreach($search_fields as $k=>$v) {
              print "<input type='hidden' name='search_fields[$k]' value='".$zen->ffv($v)."'>\n";
            }
-           if( $or_higher ) {
-             print "<input type='hidden' name='or_higher' value='1'>\n";
-           }
+         }
+         if( $or_higher ) {
+           print "<input type='hidden' name='or_higher' value='1'>\n";
+         }
          ?>
         </nobr>
        </form>

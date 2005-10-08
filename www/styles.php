@@ -6,6 +6,10 @@
  
   /*** PAGE PROPERTIES ***/
   
+  IMG {
+    behavior: url("<?=$rootUrl?>/pngbehavior.htc");
+  }
+
   BODY {
      background:       <?=$zen->getSetting("color_background")?>;
      color:            <?=$zen->getSetting("color_text")?>;
@@ -28,6 +32,7 @@
   FORM {
      margin: 0px;
      padding: 0px;
+     display: inline;
   }
   
   
@@ -46,11 +51,41 @@
   }
   
   .padded {
-    padding: 5px;
+    padding: 3px;
+  }
+  
+  .ridge {
+    border-top: 2px outset <?=$zen->getSetting('color_bars')?>;
+    border-bottom: 2px outset <?=$zen->getSetting('color_bars')?>;
+  }
+  
+  .lip {
+    border-top: 2px inset <?=$zen->getSetting('color_bar_darker')?>;
+  }
+  
+  .gutter {
+    padding-left: 3px;
+  }
+  
+  .navpad {
+    padding-top: 3px;
+    padding-bottom: 3px;
+  }
+  
+  .indent {
+    padding-left: 10px;
+  }
+  
+  .boxpad {
+    padding-top: 5px;
+    padding-bottom: 5px;
+  }
+  
+  .tabpad {
+    padding-top: 5px;
   }
   
   /*** LINK PROPERTIES ***/
-
 
   A {
      text-decoration: none;
@@ -197,7 +232,6 @@
   .subTitle {
      color:          <?=$zen->getSetting("color_bar_text")?>;
      background:     <?=$zen->getSetting("color_bar_darkest")?>;  
-     padding-left:   2px;
      font-weight:    Bold;
      border: 1px solid <?=$zen->getSetting('color_bar_text')?>;
   }
@@ -241,7 +275,7 @@
   .tab {
      font-weight:    bold;
      font-size:      <?=$zen->getSetting("font_size")?>px;
-     padding:   2px 5px;
+     padding:   4px 10px;
      border-top: 2px outset <?=$zen->getSetting('color_bar_darker')?>;
      border-left: 2px outset <?=$zen->getSetting('color_bar_darker')?>;
      border-right: 2px outset <?=$zen->getSetting('color_bar_darker')?>;
@@ -435,11 +469,13 @@ TD.bigger { font-size: 50px; }
   .actionButton {
      font-face:      Courier;
      color:          <?=$zen->getSetting("color_highlight")?>;
-     background:     <?=$zen->getSetting("color_bar_text")?>;
+     background:     <?=$zen->getSetting("color_alt_text")?>;
      font-size:      <?=$zen->getSetting("font_size_small")?>px;
-     padding-left:   8px;
-     text-align:     left;
-     width:          80px;
+     padding-left:   4px;
+     padding-right:  4px;
+     padding-top: 2px;
+     padding-bottom: 2px;
+     text-align:     center;
   }
 
   .actionButtonContact {
@@ -457,12 +493,12 @@ TD.bigger { font-size: 50px; }
   }
   
   .leftNavCell {
-    background: <?=$zen->getSetting('color_bar_darkest')?>;
+    background: <?=$zen->getSetting('color_bars')?>;
     font-size:  <?=$zen->getSetting('font_size_small')?>px;
   }
   
   .leftNavMenu {
-    background: <?=$zen->getSetting('color_bar_darkest')?>;
+    background: <?=$zen->getSetting('color_bars')?>;
     font-weight: bold;
     font-size:  <?=$zen->getSetting('font_size')?>px;
   }
@@ -480,24 +516,6 @@ TD.bigger { font-size: 50px; }
   
   .outset {
     border: 1px outset <?=$zen->getSetting('color_bar_border')?>;
-  }
-  
-  .navpad {
-    padding-top: 3px;
-    padding-bottom: 3px;
-  }
-  
-  .indent {
-    padding-left: 10px;
-  }
-  
-  .boxpad {
-    padding-top: 5px;
-    padding-bottom: 5px;
-  }
-  
-  .tabpad {
-    padding-top: 5px;
   }
   
   .tbar {
@@ -562,6 +580,42 @@ TD.bigger { font-size: 50px; }
   }
   
   .barborder {
-    border: 1px solid <?=$zen->getSetting('color_bar_border')?>;
+    border-left: 1px solid <?=$zen->getSetting('color_bar_border')?>;
+    border-right: 1px solid <?=$zen->getSetting('color_bar_border')?>;
   }
+  
+  .icon {
+    border:   2px outset <?=$zen->getSetting('color_bar_darkest')?>;
+    background: <?=$zen->getSetting('color_bar_darker')?>;
+    color: <?=$zen->getSetting('color_bar_text')?>;
+    text-align: center;
+    font-size: <?=$zen->getSetting('font_size_small')?>;
+    padding: 2px;
+    height: 42px;
+    width: 42px;
+  }
+  
+  .iconDown {
+    border: 2px inset <?=$zen->getSetting('color_bar_darkest')?>;
+    background: <?=$zen->getSetting('color_bar_darkest')?>;
+  }
+  
+  .iconOff {
+    border: 1px outset <?=$zen->getSetting('color_bar_border')?>;
+    filter:alpha(opacity=30);
+    opacity: 0.30;
+    -moz-opacity:0.30;
+  }
+  
+  .helpBox {
+    text-align: left;
+    display: none;
+    position: absolute;
+    padding: 4px;
+    border: 2px solid <?=$zen->getSetting('color_title_background')?>;
+    background: <?=$zen->getSetting('color_alt_background')?>;
+    color: <?=$zen->getSetting('color_alt_text')?>;
+    overflow: auto;
+  }
+  
 -->

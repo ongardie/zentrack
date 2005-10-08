@@ -2,23 +2,18 @@
 if( !ZT_DEFINED ) { die("Illegal Access"); }
 
 ?>
-<table width="600" align="center" cellpadding="2" cellspacing="2">
-<tr>     
-<td align="right">
-     <form action="<?=$rootUrl?>/actions/addToContacts.php" name='contactForm'>
-     <input type="hidden" name="id" value="<?=$zen->checkNum($id)?>">
-     <input type="submit"
-         value=" <?=tr("Add Contacts")?> " class="actionButton" 
-         style="width:125;color:#CCFFCC">  
-     </form>
-     </td>
-   </tr>   
+<table width="600" cellpadding="2" cellspacing="2">
 	 <tr>  
-     <td class='titleCell'>
+     <td class='subTitle indent' width='100%'>
        <?=tr("Related Contacts", array($page_type))?>    
      </td>
+      <td align="right">
+      <form action="<?=$rootUrl?>/actions/addToContacts.php" name='contactForm'>
+      <input type="hidden" name="id" value="<?=$zen->checkNum($id)?>">
+      <input type="submit" value=" <?=tr("Add Contacts")?> " class="actionButton">  
+      </form>
+      </td>
    </tr>
-     
    <tr>
      <td valign="top">
      <form action="<?=$rootUrl?>/actions/dropFromContacts.php" method="post">

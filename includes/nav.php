@@ -59,6 +59,7 @@
   <title><?=$page_prefix.$page_title?></title>
   <LINK HREF="<?=$rootUrl?>/styles.php" REL="STYLESHEET" TYPE="text/css">
   <script language="javascript">
+    function mOvr() { }//just a placeholder to remove js errors
     var imageUrl = "<?=$imageUrl?>";
   </script>
 
@@ -86,6 +87,7 @@
         window.document.onkeyup = KeyEvent.cancelKey;
       }
     }
+    
   </script>
 
   </head>
@@ -101,11 +103,14 @@
   <td valign='bottom' align='left'><table cellpadding='0' cellspacing='0' border='0'>
     <tr><?= $nav_tabs ?></tr></table></td>
   <td align='right'>
-     <form action="<?=$rootUrl?>/ticket.php" name='quickIdForm'>
-      <?=$hotkeys->ll("Ticket ID")?>:</span>&nbsp;
-      <input class="searchbox" type="text" name="id"
-        size="6" maxlength="12" title="<?=$hotkeys->tt("Ticket ID")?>">
-        &nbsp;&nbsp;&nbsp;
+     <form action="<?=$rootUrl?>/quickSearch.php" name='quickIdForm'>
+      <?=$hotkeys->ll("Search")?>:</span>&nbsp;
+      <input class="searchbox" type="text" name="idText"
+        size="15" maxlength="255" onfocus='openHelpBox(window.document.getElementById("searchBoxHelp"),this)' title="<?=$hotkeys->tt("Search")?>">
+        &nbsp;(<a class='small' href='<?=$rootUrl?>/search.php' title='<?=$hotkeys->tt('Advanced Search')?>'>
+          <?=$hotkeys->ll('Advanced Search', 'Advanced')?></a>)&nbsp;&nbsp;
+       <div id='searchBoxHelp' style='width:100px;height:100px;display:none;' class='helpBox'>
+       <?=tr("Enter a ticket ID or text to search for")?></div>
     </form>
   </td>
   <td>
@@ -121,17 +126,17 @@
       src='<?=$imageUrl?>/empty.gif' width='1' height='1'></td>
   </tr>
   <tr>
-  <td valign="top" height="400" colspan='<?=$nav_col_span?>' class='mainContent'>
+  <td valign="top" height="400" colspan='<?=$nav_col_span?>' class='mainContent navpad'>
 
   <?
     // include left nav menu if one is appropriate
-    print "<table width='100%' cellpadding='0' cellspacing='0' class='navpad'><tr>\n";
+    print "<table width='100%' cellpadding='0' cellspacing='0'><tr>\n";
     if( $load_section ) {
       ?>
 
       <!-- ********* \LEFT NAV MENU\ ********* -->
 
-      <td height='400' width='110' valign='top' align='center' class='titleCell'>
+      <td height='400' width='110' valign='top' align='center' class='subTitle'>
       <table width='106' height='100%' cellpadding='3' cellspacing='3'>
       <?
       include("$templateDir/nav_$sect.php");
@@ -140,7 +145,7 @@
       print "\n      <!-- ********* /LEFT NAV MENU/ ********* -->\n\n";
     }
 
-    print "<td valign='top' height='400' class='padded'>\n";
+    print "<td valign='top' height='400' class='gutter'>\n";
 
     // print out any system messages
     // which are queued up for display

@@ -68,7 +68,7 @@ if( is_array($logs) && count($logs) > 0) {
   <div class='borderLabel'><span><?=uptr("Log History")?></span></div>
   <form>
   <input type='checkbox' id='systemLogFilterCheckbox' value='1' onclick='toggleLogs(this.checked);'>
-  <label for="systemLogFilterCheckbox" title="<?=$hotkeys->tt("Display System Entries")?>"><?=$hotkeys->ll("Display System Entries");?></label>
+  <label for="systemLogFilterCheckbox" title="<?=$hotkeys->tt("Show All Logs")?>"><?=$hotkeys->ll("Show All Logs");?></label>
   <span class='note'>
   &nbsp;&nbsp;&nbsp;&nbsp;<?=tr("Log Entries: ").$num_logs?>
   &nbsp;&nbsp;&nbsp;&nbsp;<?=tr("Hours Worked: ").$total_hours?>

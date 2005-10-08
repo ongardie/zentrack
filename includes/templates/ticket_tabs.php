@@ -37,7 +37,7 @@
     if( $v['preload'] ) { $loads = $v['preload']; }
     if( $v['postload'] ) { $loads = array_merge($loads, $v['postload']); }
     $class = $page_mode == $k? "class='tab on'" : "class='tab off' $nav_rollover_text";
-    print "<td $class height='15' title='".$hotkeys->tooltip($key)."'>";
+    print "<td $class height='20' width='60' title='".$hotkeys->tooltip($key)."'>";
     $class = $page_mode == $k? "tab on" : "tab off";
     print "<a href='$rootUrl/$page_type.php?id=$id&setmode=$k'>".$hotkeys->label($key);
     print getTabCounts($zen,$id,$loads)."</a></td>";

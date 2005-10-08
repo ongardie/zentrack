@@ -1,4 +1,7 @@
-
+<? 
+  if( !ZT_DEFINED ) { die("Illegal Access"); }
+  $hotkeys->loadSection('login');
+?>
 
 <blockquote><br>
 
@@ -9,24 +12,28 @@
   <p><b><i style="color:red"><?tr("Login and passphrase are case sensitive!")?></i></b></p>
 
   <form method="post" name="loginForm" action="<?=$SCRIPT_NAME?><?=($id)? "?id=".$zen->checkNum($id) : ""?>">
+  
+  <input type='hidden' name='TODO' value='Log On'>
 
-  <input type=text name=username value='<?=strip_tags($zentrackUsername)?>' width=20 maxlength=20>&nbsp;<?=tr("Login Name")?>
+  <input type=text name=username value='<?=strip_tags($zentrackUsername)?>' width=20 maxlength=20 title="<?=$hotkeys->tt("Login Name")?>">&nbsp;<?=$hotkeys->ll("Login Name")?>
 
   <br>
 
-  <input type="password" name="passphrase" width=20 maxlength=20>&nbsp;<?=tr("Password")?>
+  <input type="password" name="passphrase" width=20 maxlength=20 title="<?=$hotkeys->tt("Password")?>">&nbsp;<?=$hotkeys->ll("Password")?>
 
   <p>
   
   <? if( $zen && $zen->settingOn('allow_pwd_save') ) { ?>
   <p>
-  <input type='checkbox' name='save_my_password' value='1'> <?=tr("In the future, log me in automatically (using a cookie)")?>
+  <input type='checkbox' name='save_my_password' value='1'> <?=$hotkeys->ll("In the future, log me in automatically (using a cookie)")?>
   </p>
   <?  }  ?>
 
   <input type=hidden name=redirect value='<?=$zen->ffv($redirect)?>'>
-
-  <input type=submit name=TODO value="<?=tr("Log On")?>">
+  
+  <div style='padding: 5px; width: 100px; text-align: center;' class='leftNavMenu outset' onclick='window.document.loginForm.submit()' <?=$nav_rollover_text?>>
+    <?=$hotkeys->ll("Log On")?>
+  </div>
 
   </form>
 

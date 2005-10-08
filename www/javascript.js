@@ -131,7 +131,7 @@ function checkMyBox(fieldName, event) {
   }
 }
 
-function quickHighlight( fieldName ) {
+function quickHighlight( fieldName, divToShow ) {
   var fieldObject = eval(fieldName);
   mClassX(fieldObject, 'mark');
   setTimeout("mClassX("+fieldName+")", 1000);
@@ -172,5 +172,38 @@ function mergeFunctions( fxn1, fxn2 ) {
     if( res === true ) { return true; }
   }
 }
+
+function openHelpBox(divObj, relativeElement, offsetY) {
+  if( typeof(offsetY) == 'undefined' ) { offsetY = 25; }
+  var pos = getAbsolutePos(relativeElement);
+  divObj.style.left = pos.x;
+  divObj.style.top = pos.y + 25;
+  divObj.style.display = 'block';
+  //divObj.style.position = 'absolute';
+  setTimeout("closeHelpBox('"+divObj.id+"')", 3000);
+}
+
+function closeHelpBox(divObjName) {
+  var divObj = window.document.getElementById(divObjName);
+  if( divObj.style.display == 'block' ) {
+    divObj.style.display = 'none';
+  }
+}
+
+function getAbsolutePos(el) {
+	var SL = 0, ST = 0;
+	var is_div = /^div$/i.test(el.tagName);
+	if (is_div && el.scrollLeft)
+		SL = el.scrollLeft;
+	if (is_div && el.scrollTop)
+		ST = el.scrollTop;
+	var r = { x: el.offsetLeft - SL, y: el.offsetTop - ST };
+	if (el.offsetParent) {
+		var tmp = this.getAbsolutePos(el.offsetParent);
+		r.x += tmp.x;
+		r.y += tmp.y;
+	}
+	return r;
+};
 
 //-->

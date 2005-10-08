@@ -1,8 +1,8 @@
 <? if( !ZT_DEFINED ) { die("Illegal Access"); } ?>
 
-  <table width="600" align="center" cellpadding="2" cellspacing="2">
+  <table width="600" cellpadding="2" cellspacing="2">
    <tr>  
-     <td class='titleCell'>
+     <td class='subTitle'>
        <?=tr("Related ?s", array($page_type))?>    
      </td>
    </tr>  
@@ -25,7 +25,7 @@
   if( is_array($tickets) && count($tickets) ) {
      include("$templateDir/listTickets.php");
   } else {
-     print tr("No tickets have been associated with this ticket.");
+     print tr("No related ?s", $page_type);
   }
 ?>
      </td>

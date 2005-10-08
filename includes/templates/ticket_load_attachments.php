@@ -6,27 +6,10 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
       ."onmouseover=\"mOvr(this,'".$zen->getSetting("color_bars")."', '');\"";
    $row = "background:".$zen->getSetting("color_background");
 ?>
-  <table width="600" align="center" cellpadding="2" cellspacing="2">
-  <tr> 
-     <form action="<?=$rootUrl?>/actions/upload.php">
-     <input type="hidden" name="id" value="<?=strip_tags($id)?>">
-     <td align="right">
-       <?
-         if( $zen->actionApplicable($id,"upload",$login_id) ) {
-	    $button = "submit";
-	    $color = $zen->getSetting("color_highlight");
-	 } else {
-	    $button = "button";
-	    $color = $zen->getSetting("color_alt_background");
-	 }
-       ?>
-       <input type="<?=$button?>" value=" <?=uptr("Add Attachment")?> " class="actionButton" style="width:125;color:<?=$color?>">
-     </td>
-     </form>
-   </tr>  
+  <table width="600" cellpadding="2" cellspacing="2">
    <tr>  
-     <td class="titleCell">
-        <?=tr("Attachments on ? #?",array($page_type,$id))?>
+     <td class="subTitle indent">
+        <?=tr("Attachments")?>
      </td>
   </tr>
    <tr>
@@ -44,7 +27,7 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
          <td class='bars' width='50'><?=tr("Type")?></td>
          <td class='bars'><?=tr("Description")?></td>
        </tr>
-     <?
+  <?
      foreach($attachments as $a) {
 	?>
 	  <tr style="<?=$row?>">
@@ -74,5 +57,15 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
 ?>
     </td>
    </tr>
+  <? if( $zen->actionApplicable($id,"upload",$login_id) ) { ?>
+  <tr> 
+     <form action="<?=$rootUrl?>/actions/upload.php">
+     <input type="hidden" name="id" value="<?=strip_tags($id)?>">
+     <td align="right">
+       <input type="submit" value="<?=uptr("Add Attachment")?>" class="actionButton">
+     </td>
+     </form>
+   </tr>  
+    <? } ?>
    </table>
 

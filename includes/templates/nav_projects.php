@@ -1,14 +1,15 @@
+<?  if( !ZT_DEFINED ) { die("Illegal Access"); } ?>
 <tr>
   <td class='leftNavTitle' height='25' valign='middle'><?=tr("Projects")?></td>
 </tr>
 <tr>
-  <td class='leftNavMenu outset' <?=$nav_rollover_text?> title='<?=$hotkeys->tt("Projects")?>'>
-    <a href='<?=$rootUrl?>/projects.php' class='leftNavLink'><?=$hotkeys->ll("Projects","Browse")?></a>
+  <td class='leftNavMenu outset' <?=$nav_rollover_text?> title='<?=$hotkeys->tt("New Project")?>'>
+    <a href='<?=$rootUrl?>/newProject.php' class='leftNavLink'><?=$hotkeys->ll("New Project")?></a>
   </td>
 </tr>
 <tr>
-  <td class='leftNavMenu outset' <?=$nav_rollover_text?> title='<?=$hotkeys->tt("New Project")?>'>
-    <a href='<?=$rootUrl?>/newProject.php' class='leftNavLink'><?=$hotkeys->ll("New Project")?></a>
+  <td class='leftNavMenu outset' <?=$nav_rollover_text?> title="<?=$hotkeys->tt("Advanced Search")?>">
+    <a href='<?=$rootUrl?>/search.php' class='leftNavLink'><?=$hotkeys->ll("Advanced Search", "Search")?></a>
   </td>
 </tr>
 <tr>

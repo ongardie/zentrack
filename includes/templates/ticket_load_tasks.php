@@ -1,6 +1,6 @@
 <? if( !ZT_DEFINED ) { die("Illegal Access"); } ?>
 
-  <table width="600" align="center" cellpadding="2" cellspacing="2">
+  <table width="600" cellpadding="2" cellspacing="2">
   <tr> 
      <td align="right">
      <form action="<?=$rootUrl?>/newTicket.php">
@@ -36,7 +36,7 @@
      </td>
    </tr>    
    <tr>  
-     <td class='titleCell'>
+     <td class='Subtitle'>
        <?=tr("Tasks for this project")?>
      </td>
    </tr>  

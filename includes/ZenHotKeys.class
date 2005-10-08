@@ -1,4 +1,4 @@
-<?
+<? if( !ZT_DEFINED ) { die("Illegal Access"); }
 
 class ZenHotKeys {
   
@@ -20,8 +20,9 @@ class ZenHotKeys {
     $this->assign('ALT+T', 'New Ticket',  "KeyEvent.createLoadUrl('{rootUrl}/newTicket.php')", '', true);  
     $this->assign('ALT+C', 'New Contact', "KeyEvent.createLoadUrl('{rootUrl}/newContact.php')", '', true);
     
-    $this->newFxn('quickFocus', 'window.document.quickIdForm.id.focus(); quickHighlight("window.document.quickIdForm.id");', '', true);
-    $this->assign('ALT+I', 'Ticket ID',   "quickFocus", 'Type a ticket ID and press enter', true);
+    $this->newFxn('quickFocus', 'window.document.quickIdForm.idText.focus(); quickHighlight("window.document.quickIdForm.idText","searchHelpBox");', '', true);
+    $this->assign('ALT+S', 'Search',   "quickFocus()", 'Enter a ticket id or summary', true);
+    $this->assign('ALT+V', 'Advanced Search', "KeyEvent.createLoadUrl('{rootUrl}/search.php')", "Advanced ticket search", true);
   }
   
   /** Prepares hot keys for a given section of the app */
@@ -41,14 +42,15 @@ class ZenHotKeys {
       $this->assign('ALT+A',  'Tasks',           "KeyEvent.createLoadUrl('{rootUrl}/admin/tasks.php')");
       $this->assign('ALT+Y',  'Types',           "KeyEvent.createLoadUrl('{rootUrl}/admin/types.php')");
       $this->assign('ALT+G',  'Data Groups',     "KeyEvent.createLoadUrl('{rootUrl}/admin/groups.php')");
-      $this->assign('ALT+V',  'Behaviors',       "KeyEvent.createLoadUrl('{rootUrl}/admin/behaviors.php')");
+      $this->assign('ALT+H',  'Behaviors',       "KeyEvent.createLoadUrl('{rootUrl}/admin/behaviors.php')");
       $this->assign('ALT+O',  'Configuration',   "KeyEvent.createLoadUrl('{rootUrl}/admin/config.php')");
     }
     else if( $sect == 'login' ) {
+      $this->newFxn("loginAutoCheck", "window.document.loginForm.save_my_password.checked = !window.document.loginForm.save_my_password.checked;");
       $this->assign('ALT+L',   'Log On',         "window.document.loginForm.submit()");
-    }
-    else if( $sect == 'tickets' ) {
-      $this->assign('ALT+S',        'Search',      "KeyEvent.createLoadUrl('{rootUrl}/search.php')");
+      $this->assign('ALT+A',   "In the future, log me in automatically (using a cookie)", "loginAutoCheck()");
+      $this->assign('ALT+N',   'Login Name',     "window.document.loginForm.username.select()");
+      $this->assign('ALT+W',   'Password',       "window.document.loginForm.passphrase.select()");
     }
     else if( $sect == 'ticket_view' || $sect == 'project_view' ) {
       $map = $GLOBALS['zt_map'];
@@ -63,7 +65,7 @@ class ZenHotKeys {
     else if( $sect == 'contacts' ) {
       $this->assign('ALT+Y',  'New Company',    "KeyEvent.createLoadUrl('{rootUrl}/newContact.php?mode2=1')");
       $this->assign('ALT+N',  'New Person',     "KeyEvent.createLoadUrl('{rootUrl}/newContact.php?mode2=2')");
-      $this->assign('ALT+S',  'Search',         "KeyEvent.createLoadUrl('{rootUrl}/searchContacts.php')");
+      $this->assign('ALT+D',  'Find',           "KeyEvent.createLoadUrl('{rootUrl}/searchContacts.php')");
       $this->assign('ALT+B',  'Browse',         "KeyEvent.createLoadUrl('{rootUrl}/agreements.php')");
       $this->assign('ALT+A',  'New Agreement',  "KeyEvent.createLoadUrl('{rootUrl}/newAgreement.php')");
     }
@@ -71,7 +73,7 @@ class ZenHotKeys {
       $this->assign('ALT+L',  'Log Off',        "KeyEvent.createLoadUrl('{rootUrl}/index.php?logoff=1')", "Log out of ".$this->_zen->getSetting('system_name'));
     }
     else if( $sect == 'log' ) {
-      $this->assign('ALT+D',  'Display System Entries',  "window.document.getElementById('systemLogFilterCheckbox').click()");
+      $this->assign('ALT+L',  'Show All Logs',  "window.document.getElementById('systemLogFilterCheckbox').click()");
     }
   }
   
@@ -194,7 +196,7 @@ class ZenHotKeys {
     }
     else if( $pos > 0 && $pos == $len-1 ) {
       // matched at end of string
-      return substr($label,0,$len-2)."<u>{$char}</u>";
+      return substr($label,0,$len-1)."<u>{$char}</u>";
     }
     else if( $pos > 0 ) {
       // matched inside the string
@@ -202,6 +204,7 @@ class ZenHotKeys {
     }
     else {
       // no match, just return the label
+      //return $label."<sub class='note'>$char</sub>";
       return $label;
     }
   }
@@ -250,7 +253,6 @@ class ZenHotKeys {
     foreach($keys as $k=>$v) {
       $fxn_parsed = str_replace('<', '&lt;', str_replace('>', '&gt;', str_replace('"', '&quot;', $v['fxn'])));
       $fxn_parsed = str_replace('KeyEvent.createLoadUrl', 'KeyEvent.loadUrl', $fxn_parsed);
-      $fxn_parsed = str_replace('quickFocus', 'quickFocus()', $fxn_parsed);
       print "<input type='button' name='accessKeyButton{$v['accesskey']}' value='' accesskey='{$v['accesskey']}' class='accesskeys' onclick=\"$fxn_parsed\">";
     }
     //print "</form>";
@@ -265,6 +267,10 @@ class ZenHotKeys {
   /** Splits a key and returns the letter to be used */
   function _getChar( $key ) {
     return preg_replace('@^.*[+]@', '', $key);
+  }
+  
+  function getChar( $key ) {
+    return $this->_getChar($key);
   }
   
   /** Creates html output to display help info */

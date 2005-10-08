@@ -4421,7 +4421,7 @@ class zenTrack extends zen {
     // this should check the enabled field
     // for the action instead
     $n = "allow_$action";
-    if( !$this->settingOn("$n") ) {
+    if( $this->hasSetting("$n") && !$this->settingOn("$n") ) {
       $this->addDebug('actionApplicable', "Setting '$n' is off: disqualified",3);
       return false;
     }
@@ -4579,6 +4579,9 @@ class zenTrack extends zen {
                                  "status"   => array('OPEN'),
                                  "override" => 0,
                                  "egate"    => 1,
+                                 "img"      => 'arrow_green_down.png',
+                                 "label"    => tr('Accept'),
+                                 "button"   => 1,
                                  "level"    => $this->getSetting("level_accept")
                                  );
       $actions["approve"] = array( 
@@ -4587,6 +4590,9 @@ class zenTrack extends zen {
                                   "status"   => array('PENDING'),
                                   "override" => 0,
                                   "egate"    => 1,
+                                  "img"      => 'flag_green.png',
+                                  "label"    => tr('Approve'),
+                                  "button"   => 1,
                                   "level"    => $this->getSetting("level_approve")
                                   );
       $actions["assign"] = array(
@@ -4595,6 +4601,9 @@ class zenTrack extends zen {
                                  "status"   => array('OPEN'),
                                  "override" => 0,
                                  "egate"    => 1,
+                                 "img"      => 'two_people.png',
+                                 "label"    => tr('Assign'),
+                                 "button"   => 1,
                                  "level"    => $this->getSetting("level_assign")
                                  );
       $actions["close"] = array(
@@ -4603,6 +4612,9 @@ class zenTrack extends zen {
                                 "status"   => array('OPEN'),
                                 "override" => 1,
                                 "egate"    => 1,
+                                "img"      => 'box_gold.png',
+                                "label"    => tr('Close'),
+                                "button"   => 1,
                                 "level"    => $this->getSetting("level_user")
                                 );
       $actions["create"] = array(
@@ -4611,6 +4623,9 @@ class zenTrack extends zen {
                                  "status"   => null,
                                  "override" => 0,
                                  "egate"    => 1,
+                                 "img"      => "",
+                                 "label"    => tr('Create'),
+                                 "button"   => 0,
                                  "level"    => $this->getSetting("level_create")
                                  );
       $actions["edit"] = array(
@@ -4619,6 +4634,9 @@ class zenTrack extends zen {
                                "status"   => array('OPEN','PENDING'),
                                "override" => 0,
                                "egate"    => 0,
+                               "img"      => "pin_blue.png",
+                               "label"    => tr('Edit'),
+                               "button"   => 1,
                                "level"    => $this->getSetting("level_edit")
                                );
       $actions["email"] = array(
@@ -4627,6 +4645,9 @@ class zenTrack extends zen {
                                 "status"   => null,
                                 "override" => 0,
                                 "egate"    => 1,
+                                "img"      => "mail.png",
+                                "label"    => tr('Email'),
+                                "button"   => 1,
                                 "level"    => $this->getSetting("level_view")
                                 );
       $actions["estimate"] = array(
@@ -4635,6 +4656,9 @@ class zenTrack extends zen {
                                    "status"   => array('OPEN'),
                                    "override" => 1,
                                    "egate"    => 1,
+                                   "img"      => "clock.png",
+                                   "label"    => tr('Estimate'),
+                                   "button"   => 0,
                                    "level"    => $this->getSetting("level_user")
                                    );
       $actions["log"] = array(
@@ -4643,6 +4667,9 @@ class zenTrack extends zen {
                               "status"   => array('OPEN','PENDING'),
                               "override" => 1,
                               "egate"    => 1,
+                              "img"      => "book_blue.png",
+                              "label"    => tr('Log'),
+                              "button"   => 0,
                               "level"    => $this->getSetting("level_user")
                               );
       $actions["move"] = array(
@@ -4651,6 +4678,9 @@ class zenTrack extends zen {
                                "status"   => array('OPEN','PENDING'),
                                "override" => 1,
                                "egate"    => 1,
+                               "img"      => "arrow_blue_right.png",
+                               "label"    => tr('Move'),
+                               "button"   => 1,
                                "level"    => $this->getSetting("level_move")
                                );
       // add an entry to notify list
@@ -4662,6 +4692,9 @@ class zenTrack extends zen {
                                      "status"   => array('OPEN','PENDING'),
                                      "override" => 0,
                                      "egate"    => 1,
+                                     "img"      => "",
+                                     "label"    => tr('Add to Notify'),
+                                     "button"   => 0,
                                      "level"    => $this->getSetting("level_view")
                                      );
       // drop an entry from the notify list
@@ -4673,6 +4706,9 @@ class zenTrack extends zen {
                                       "status"   => array('OPEN','PENDING'),
                                       "override" => 0,
                                       "egate"    => 1,
+                                      "img"      => "",
+                                      "label"    => tr('Drop From Notify'),
+                                      "button"   => 0,
                                       "level"    => $this->getSetting("level_view")
                                       );
       // used to modify the list of recipients in
@@ -4683,6 +4719,9 @@ class zenTrack extends zen {
                                  "status"   => array('OPEN','PENDING'),
                                  "override" => 1,
                                  "egate"    => 0,
+                                 "img"      => "",
+                                 "label"    => tr('Notify List'),
+                                 "button"   => 0,
                                  "level"    => $this->getSetting("level_user")
                                  );
       $actions["print"] = array(
@@ -4691,14 +4730,31 @@ class zenTrack extends zen {
                                 "status"   => null,
                                 "override" => 0,
                                 "egate"    => 0,
+                                "img"      => "printer.png",
+                                "label"    => tr('Print'),
+                                "button"   => 1,
                                 "level"    => $this->getSetting("level_view")
                                 );
+      $actions["yank"] = array(
+                               "owner"    => 4,
+                               "access"   => 1,
+                               "status"   => null,
+                               "override" => 0,
+                               "egate"    => 0,
+                               "img"      => "arrow_blue_up.png",
+                               "label"    => tr('Pull'),
+                               "button"   => 1,
+                               "level"    => $this->getSetting("level_yank")
+                               );
       $actions["reject"] = array(
                                  "owner"    => 1,
                                  "access"   => 1,
                                  "status"   => array('OPEN','PENDING'),
                                  "override" => 0,
                                  "egate"    => 1,
+                                 "img"      => "flag_red.png",
+                                 "label"    => tr('Reject'),
+                                 "button"   => 1,
                                  "level"    => $this->getSetting("level_user")
                                  );
       $actions["relate"] = array(
@@ -4707,6 +4763,9 @@ class zenTrack extends zen {
                                  "status"   => null,
                                  "override" => 0,
                                  "egate"    => 0,
+                                 "img"      => "tree.png",
+                                 "label"    => tr('Relate'),
+                                 "button"   => 0,
                                  "level"    => $this->getSetting("level_user")
                                  );
       $actions["reopen"] = array(
@@ -4715,6 +4774,9 @@ class zenTrack extends zen {
                                  "status"   => array('PENDING','CLOSED'),
                                  "override" => 0,
                                  "egate"    => 0,
+                                 "img"      => "arrow_blue_left.png",
+                                 "label"    => tr('Reopen'),
+                                 "button"   => 1,
                                  "level"    => $this->getSetting("level_user")
                                  );
       $actions["test"] = array(
@@ -4723,6 +4785,9 @@ class zenTrack extends zen {
                                "status"   => array('PENDING'),
                                "override" => 1,
                                "egate"    => 1,
+                               "img"      => "flag_blue.png",
+                               "label"    => tr('Test'),
+                               "button"   => 1,
                                "level"    => $this->getSetting("level_test")
                                );
       $actions["upload"] = array(
@@ -4731,6 +4796,9 @@ class zenTrack extends zen {
                                  "status"   => null,
                                  "override" => 1,
                                  "egate"    => 0,
+                                 "img"      => "arrow_blue_up.png",
+                                 "label"    => tr('Upload'),
+                                 "button"   => 0,
                                  "level"    => $this->getSetting("level_user")
                                  );
       $actions["view"] = array(
@@ -4739,6 +4807,9 @@ class zenTrack extends zen {
                                "status"   => null,
                                "override" => 0,
                                "egate"    => 1,
+                               "img"      => "magnify.png",
+                               "label"    => tr('View'),
+                               "button"   => 0,
                                "level"    => $this->getSetting("level_view")
                                );
       $actions["varfield_edit"] = array(
@@ -4747,16 +4818,11 @@ class zenTrack extends zen {
                                         "status"   => array('OPEN','PENDING'),
                                         "override" => 1,
                                         "egate"    => 0,
+                                        "img"      => "pn_blue.png",
+                                        "label"    => tr('Edit'),
+                                        "button"   => 0,
                                         "level"    => $this->getSetting("level_edit_varfields")
                                         );
-      $actions["yank"] = array(
-                               "owner"    => 4,
-                               "access"   => 1,
-                               "status"   => null,
-                               "override" => 0,
-                               "egate"    => 0,
-                               "level"    => $this->getSetting("level_yank")
-                               );
       $this->actions = $actions;
     }
     return $this->actions;
@@ -5198,6 +5264,10 @@ class zenTrack extends zen {
   
   function settingOn( $setting_name ) {
     return $this->getSetting($setting_name) == "on";
+  }
+  
+  function hasSetting( $setting_name ) {
+    return strlen($this->getSetting($setting_name));
   }
 
   function getTypeName($id) {
