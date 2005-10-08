@@ -13,19 +13,157 @@ abstraction, and endless possibilities for project expansion.
 
 ----- VERSION 2.6 (development) -----
 2005-10-07, kato
-  Added new icon set for ticket actions
   Added fix for pngs in IE
   Added action icons to tickets
+   - zentrack_2/www/empty.gif 1.1
+   - zentrack_2/www/pngbehavior.htc 1.1
+   - zentrack_2/www/actions/empty.gif 1.1
+   - zentrack_2/www/admin/empty.gif 1.1
+   - zentrack_2/www/javascript.js 1.18
+   - zentrack_2/www/styles.php 1.27
+   - zentrack_2/includes/templates/ticketView.php 1.8
+   - zentrack_2/includes/templates/ticket_actions.php 1.2
   
   Expanded search box and added advanced link
-  
+   - zentrack_2/www/javascript.js 1.18
+   - zentrack_2/www/quickSearch.php 1.1
+   - zentrack_2/includes/nav.php 1.19
+   
   Added log filter
+   - zentrack_2/includes/templates/ticket_load_contacts.php 1.2  
   
   Added missing load modules (attachments, notify, contacts)
+   - zentrack_2/includes/zenTrack.class 1.191
+   - zentrack_2/includes/templates/ticket_load_attachments.php 1.1
+   - zentrack_2/includes/templates/ticket_load_notify.php 1.1
+   - zentrack_2/includes/templates/ticket_load_related.php 1.1
+   - zentrack_2/includes/templates/ticket_load_tasks.php 1.1
+   - zentrack_2/includes/templates/ticket_tabs.php 1.4
+   - zentrack_2/includes/templates/form_fields.php 1.1
   
   Cleaned up navigation alignment/colors
   Improved spacing/eye tracking for ticket view
-  
+  Improved hot keys
+   - zentrack_2/includes/ZenHotKeys.class 1.5
+   - zentrack_2/includes/nav.php 1.19
+   - zentrack_2/includes/templates/listTickets.php 1.31
+   - zentrack_2/includes/templates/loginForm 1.17
+   - zentrack_2/includes/templates/nav_admin.php 1.3
+   - zentrack_2/includes/templates/nav_contacts.php 1.3
+   - zentrack_2/includes/templates/nav_help.php 1.3
+   - zentrack_2/includes/templates/nav_options.php 1.3
+   - zentrack_2/includes/templates/nav_projects.php 1.3
+   - zentrack_2/includes/templates/nav_tickets.php 1.3
+   - zentrack_2/includes/templates/newTicketForm.php 1.50
+   - zentrack_2/includes/templates/ticketView.php 1.8
+   - zentrack_2/includes/templates/ticket_actions.php 1.2
+   - zentrack_2/includes/templates/ticket_box.php 1.21
+   - zentrack_2/includes/templates/ticket_load_log.php 1.3
+   - zentrack_2/includes/templates/ticket_fields_editable.php 1.1
+   - zentrack_2/includes/templates/ticket_fields_viewable.php 1.1
+   - zentrack_2/includes/templates/ticket_actionBar.php 1.58 [deleted]
+   - zentrack_2/includes/templates/ticket_attachmentsBox.php 1.9 [deleted]
+   - zentrack_2/includes/templates/ticket_relatedBox.php 1.7 [deleted]
+   - zentrack_2/includes/templates/ticket_tasksBox.php 1.7 [deleted]
+   - zentrack_2/includes/templates/ticket_titleBox.php 1.15 [deleted]
+   - zentrack_2/www/javascript.js 1.18
+   - zentrack_2/www/styles.php 1.27
+   
+  Improved search_form values to avoid common search mistakes
+   - zentrack_2/install/upgrade_base.sql 1.5
+   - zentrack_2/install/seed_mysql.sql (still need to do others)
+
+  Added new icon set for ticket actions
+   - zentrack_2/www/images/24x24/arrow_blue_down.png 1.1
+   - zentrack_2/www/images/24x24/arrow_blue_left.png 1.1
+   - zentrack_2/www/images/24x24/arrow_blue_right.png 1.1
+   - zentrack_2/www/images/24x24/arrow_blue_up.png 1.1
+   - zentrack_2/www/images/24x24/arrow_green_down.png 1.1
+   - zentrack_2/www/images/24x24/arrow_green_left.png 1.1
+   - zentrack_2/www/images/24x24/arrow_green_right.png 1.1
+   - zentrack_2/www/images/24x24/arrow_green_up.png 1.1
+   - zentrack_2/www/images/24x24/arrow_grey_down.png 1.1
+   - zentrack_2/www/images/24x24/arrow_grey_left.png 1.1
+   - zentrack_2/www/images/24x24/arrow_grey_right.png 1.1
+   - zentrack_2/www/images/24x24/arrow_grey_up.png 1.1
+   - zentrack_2/www/images/24x24/book.png 1.1
+   - zentrack_2/www/images/24x24/book_blue.png 1.1
+   - zentrack_2/www/images/24x24/book_pile.png 1.1
+   - zentrack_2/www/images/24x24/box.png 1.1
+   - zentrack_2/www/images/24x24/box_gold.png 1.1
+   - zentrack_2/www/images/24x24/cd.png 1.1
+   - zentrack_2/www/images/24x24/cd_gold.png 1.1
+   - zentrack_2/www/images/24x24/clock.png 1.1
+   - zentrack_2/www/images/24x24/flag.png 1.1
+   - zentrack_2/www/images/24x24/flag_blue.png 1.1
+   - zentrack_2/www/images/24x24/flag_green.png 1.1
+   - zentrack_2/www/images/24x24/flag_orange.png 1.1
+   - zentrack_2/www/images/24x24/flag_red.png 1.1
+   - zentrack_2/www/images/24x24/flag_yellow.png 1.1
+   - zentrack_2/www/images/24x24/hierarchy.png 1.1
+   - zentrack_2/www/images/24x24/hierarchy_blue.png 1.1
+   - zentrack_2/www/images/24x24/key.png 1.1
+   - zentrack_2/www/images/24x24/key_gold.png 1.1
+   - zentrack_2/www/images/24x24/keychain.png 1.1
+   - zentrack_2/www/images/24x24/keychain_blue.png 1.1
+   - zentrack_2/www/images/24x24/keyhole.png 1.1
+   - zentrack_2/www/images/24x24/lock.png 1.1
+   - zentrack_2/www/images/24x24/magnify.png 1.1
+   - zentrack_2/www/images/24x24/mail.png 1.1
+   - zentrack_2/www/images/24x24/pawn.png 1.1
+   - zentrack_2/www/images/24x24/person.png 1.1
+   - zentrack_2/www/images/24x24/pin_blue.png 1.1
+   - zentrack_2/www/images/24x24/pin_green.png 1.1
+   - zentrack_2/www/images/24x24/pin_red.png 1.1
+   - zentrack_2/www/images/24x24/pin_yellow.png 1.1
+   - zentrack_2/www/images/24x24/tree.png 1.1
+   - zentrack_2/www/images/24x24/tree_blue.png 1.1
+   - zentrack_2/www/images/24x24/two_people.png 1.1
+   - zentrack_2/www/images/48x48/arrow_blue_down.png 1.1
+   - zentrack_2/www/images/48x48/arrow_blue_left.png 1.1
+   - zentrack_2/www/images/48x48/arrow_blue_right.png 1.1
+   - zentrack_2/www/images/48x48/arrow_blue_up.png 1.1
+   - zentrack_2/www/images/48x48/arrow_green_down.png 1.1
+   - zentrack_2/www/images/48x48/arrow_green_left.png 1.1
+   - zentrack_2/www/images/48x48/arrow_green_right.png 1.1
+   - zentrack_2/www/images/48x48/arrow_green_up.png 1.1
+   - zentrack_2/www/images/48x48/arrow_grey_down.png 1.1
+   - zentrack_2/www/images/48x48/arrow_grey_left.png 1.1
+   - zentrack_2/www/images/48x48/arrow_grey_right.png 1.1
+   - zentrack_2/www/images/48x48/arrow_grey_up.png 1.1
+   - zentrack_2/www/images/48x48/book.png 1.1
+   - zentrack_2/www/images/48x48/book_blue.png 1.1
+   - zentrack_2/www/images/48x48/book_pile.png 1.1
+   - zentrack_2/www/images/48x48/box.png 1.1
+   - zentrack_2/www/images/48x48/box_gold.png 1.1
+   - zentrack_2/www/images/48x48/cd.png 1.1
+   - zentrack_2/www/images/48x48/cd_gold.png 1.1
+   - zentrack_2/www/images/48x48/clock.png 1.1
+   - zentrack_2/www/images/48x48/flag_blue.png 1.1
+   - zentrack_2/www/images/48x48/flag_green.png 1.1
+   - zentrack_2/www/images/48x48/flag_orange.png 1.1
+   - zentrack_2/www/images/48x48/flag_purple.png 1.1
+   - zentrack_2/www/images/48x48/flag_red.png 1.1
+   - zentrack_2/www/images/48x48/flag_yellow.png 1.1
+   - zentrack_2/www/images/48x48/hierarchy.png 1.1
+   - zentrack_2/www/images/48x48/hierarchy_blue.png 1.1
+   - zentrack_2/www/images/48x48/key.png 1.1
+   - zentrack_2/www/images/48x48/key_gold.png 1.1
+   - zentrack_2/www/images/48x48/keychain.png 1.1
+   - zentrack_2/www/images/48x48/keychain_blue.png 1.1
+   - zentrack_2/www/images/48x48/keyhole.png 1.1
+   - zentrack_2/www/images/48x48/lock.png 1.1
+   - zentrack_2/www/images/48x48/magnify.png 1.1
+   - zentrack_2/www/images/48x48/mail.png 1.1
+   - zentrack_2/www/images/48x48/pawn.png 1.1
+   - zentrack_2/www/images/48x48/person.png 1.1
+   - zentrack_2/www/images/48x48/pin_blue.png 1.1
+   - zentrack_2/www/images/48x48/pin_green.png 1.1
+   - zentrack_2/www/images/48x48/pin_red.png 1.1
+   - zentrack_2/www/images/48x48/pin_yellow.png 1.1
+   - zentrack_2/www/images/48x48/tree.png 1.1
+   - zentrack_2/www/images/48x48/tree_blue.png 1.1
+   - zentrack_2/www/images/48x48/two_people.png 1.1  
 
 2005-10-05, cfalonso
   Commiting CVS merges
