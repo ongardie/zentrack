@@ -12,6 +12,15 @@ abstraction, and endless possibilities for project expansion.
 --------------------
 
 ----- VERSION 2.6 (development) -----
+2005-10-08, cfalonso
+  Moved custom_multi fields from ZENTRACK_VARFIELD to ZENTRACK_VARFIELD_MULTI table:
+   - zentrack_2/includes/ZenFieldMap.class 1.35
+   - zentrack_2/includes/zenTrack.class 1.192
+   - zentrack_2/includes/templates/searchForm.php 1.18
+   - zentrack_2/includes/templates/searchResults.php 1.16
+   - zentrack_2/install/configVars.php.default 1.13
+   - zentrack_2/install/upgrade_base.sql 1.6
+
 2005-10-07, kato
   Added fix for pngs in IE
   Added action icons to tickets
