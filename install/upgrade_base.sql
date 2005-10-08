@@ -765,3 +765,10 @@ INSERT INTO ZENTRACK_VIEW_MAP (view_map_id, which_view, vm_name, vm_val, vm_type
 INSERT INTO ZENTRACK_VIEW_MAP (view_map_id, which_view, vm_name, vm_val, vm_type, vm_order) VALUES(200, 'project_tab_8', 'columns', '10', 'text', 0);
 INSERT INTO ZENTRACK_VIEW_MAP (view_map_id, which_view, vm_name, vm_val, vm_type, vm_order) VALUES(201, 'project_tab_8', 'width', '50', 'text', 0);
 
+CREATE TABLE `ZENTRACK_VARFIELD_MULTI` (
+  `multi_id` int(12) NOT NULL auto_increment,
+  `ticket_id` int(12) NOT NULL default '0',
+  `field_name` varchar(25) NOT NULL default '',
+  `field_value` varchar(255) default NULL,
+  PRIMARY KEY  (`multi_id`)
+) ;
