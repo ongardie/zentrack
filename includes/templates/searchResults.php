@@ -119,10 +119,8 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
                     ."GROUP BY ticket_id ";
               switch ($srch_opt[$k]) {
                 case "EXACT":
-                  $qry.="HAVING count(*)=".count($v);
-                  break;
                 case "AND":
-                  $qry.="HAVING count(*)>=".count($v);
+                  $qry.="HAVING count(*)=".count($v);
                   break;
               }
               $zen->addDebug("searchResults.php", "Query for multi field: $qry", 3);
@@ -130,6 +128,13 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
               $tids = array('0');
               for($i=0; $i<count($vals); $i++) {
                 $tids[] = $vals[$i][ticket_id];
+              }
+              if ($srch_opt[$k] == "EXACT") {
+                $qry = "SELECT ticket_id FROM $zen->table_varfield_multi "
+                      ."WHERE field_name = '$k' AND field_value NOT IN ('" . implode("','",$v) . "') ";
+                $zen->addDebug("searchResults.php", "Query for multi field exclusion: $qry", 3);
+                $tids_not = $zen->db_list($qry);
+                $tids = array_diff($tids, $tids_not);
               }
               $params[] = array($zen->table_tickets.".id", 'IN', $tids, 1);
             }
