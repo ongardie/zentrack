@@ -338,6 +338,26 @@ class ZenFieldMap {
       return $map[$view][$field_name];
     }
     
+    /**
+     * Returns a single property from a field in the map
+     */
+   function getFieldProp( $view, $field, $prop ) {
+     $map = $this->getFieldMap($view);
+     if( !$map ) {
+       $this->_zen->addDebug('getFieldProp', "Invalid view: {$view}->{$field}->{$prop}", 1);
+       return null;
+     }
+     if( !array_key_exists($field, $map) ) {
+       $this->_zen->addDebug('getFieldProp', "Invalid field: {$view}->{$field}->{$prop}", 1);
+       return null;
+     }
+     if( !array_key_exists($prop, $map[$field]) ) {
+       $this->_zen->addDebug('getFieldProp', "Invalid prop: {$view}->{$field}->{$prop}", 1);
+       return null;
+     }
+     return $map[$field][$prop];
+   }
+    
   /**
    * Returns the label specified for the field in question
    */
@@ -620,6 +640,9 @@ class ZenFieldMap {
      $this->_zen->addDebug("_template", "Rendering $templateDir/fields/$typename.template", 3);
      $templateFile = "$templateDir/fields/$typename.template";
      $template = new zenTemplate($templateFile);
+     
+     $vals['field_value'] = $this->_zen->ffv($vals['field_value']);
+     
      $template->values($vals);
 //print "<pre>";
 //print_r($vals);
@@ -935,7 +958,7 @@ class ZenFieldMap {
    function getViewProp( $view, $prop ) {
      $vals = $this->getViewProps($view);
      if( !$vals ) {
-       $this->_zen->addDebug('getViewProp', "Invalid view $view", 1);
+       $this->_zen->addDebug('getViewProp', "Invalid view $view, unable to retrieve $prop", 1);
        return null;
      }
      $val = array_key_exists($prop, $vals)? $vals["$prop"]["vm_val"] : null;

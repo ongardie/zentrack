@@ -8,29 +8,41 @@
    */
   
   $action = "contacts";
-  include_once("../contact_header.php");
+  include_once("action_header.php");
   
     // check to insure that this user has access
   // and this ticket allows the requested action
   // to be completed
   $ticket = $zen->get_ticket($id);
   $tid = $ticket["type_id"];
+  $type_id = $tid;
   if( in_array($tid,$zen->projectTypeIDs()) ) {
     $ticket["children"] = $zen->getProjectChildren($id, 
 	    array("id,title,status,est_hours,wkd_hours"));
     list($ticket["est_hours"],$ticket["wkd_hours"]) = $zen->getProjectHours($id);
     $page_type = "project";
+    $view = 'project_view';
   }  else {
     $page_type = "ticket";
+    $view = 'ticket_view';
   }
-  $page_mode = "system";
-
   
   $page_title = tr("Ticket #?", array($id));
   $page_section = "Ticket #$id";
-  $expand_tickets = 1;
   
   if( $actionComplete == 1 ) {
+    // check user acces
+    if( !$zen->checkAccess($login_id,$ticket['bin_id'],$map->getViewProp($setmode,'access_level')) ) {
+      $errs[] = tr("You cannot access this area");
+    }
+    
+    // check to make sure the contacts appear on the tab
+    $p1 = $map->getViewProp($setmode,'preload');
+    $p2 = $map->getViewProp($setmode,'postload');
+    if( (!$p1 || !in_array('contacts',$p1)) && (!$p2 || !in_array('contacts',$p2)) ) {
+      $errs[] = tr("You cannot access this area");
+    }
+    
     $priority = 1;
     // clean input vars
     $cp_id = null;
@@ -41,47 +53,37 @@
     }
     
     if($company_id) {
-    $cp_id = $company_id;
-	  $type = "1";  
+      $cp_id = $company_id;
+      $type = "1";  
 	  }
 	  
 	  if($person_id) {
-    $cp_id = $person_id;
-	  $type = "2";  
+      $cp_id = $person_id;
+      $type = "2";  
 	  }
 
     if( !$errs ) {
-      
       $params = array("type"   => $type,
           "cp_id"  => $cp_id,
           "ticket_id" => $id);
-          
       $res = $zen->add_contact( $params,"ZENTRACK_RELATED_CONTACTS");
-
+      if( $res ) {
+        $msg = tr("Contact added successfully");
+      }
+      else {
+        $errs[] = tr("Unable to add contact due to system error");
+      }
     }
   }
 
-      if( !empty($res)) {
-  				add_system_messages(tr("? contact added to #?.", array($i, $id)));
-  				$setmode = "contacts";
-				}
-    if( $errs ){
-      add_system_messages( $errs, 'Error' );     
-  }
   
   include("$libDir/nav.php");
-  
-  $page_mode="system";
-  $setmode = 'system';
-  
-  extract($ticket);
+  $zen->printErrors($errs);
   if( strtolower($zen->types["$type_id"]) == "project" ) {
-	  
     include("$templateDir/projectView.php");
   } else {
     include("$templateDir/ticketView.php");     
   }
-  
   include("$libDir/footer.php");
 
 }?>

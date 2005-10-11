@@ -122,17 +122,19 @@ KeyEvent.cancelKey = function(keyPress) {
     return; 
   }
   
+  KeyEvent.hideHelp();
+  ZenTabs.singleton.hide();
+  
+  // ignore control keys
+  if( c == 18 ) { return; }
+
   // collect the keycode for validation
   var c = e.which? e.which : e.keyCode;
+
   // ignore keys without codes
   if( !c ) { 
     if( debugOn ) { window.status = 'No keycode, keyup ignored'; }
     return; 
-  }
-  // ignore control keys
-  if( c == 18 ) {
-    KeyEvent.hideHelp();
-    return;
   }
   
   // prevent toolbars from loading over hot keys
@@ -210,17 +212,14 @@ KeyEvent.checkKey = function(keyPress) {
     return;
   }
   else if( c == 18 ) {
+    ZenTabs.singleton.start();
     if( !KeyEvent.showHelpOn ) {
-      KeyEvent.showHelpOn = window.setTimeout('KeyEvent.showHelp()', 1000);
+      KeyEvent.showHelpOn = window.setTimeout('KeyEvent.showHelp()', 8000);
     }
     if( debugOn ) { window.status = 'Prepping showhelp: '+KeyEvent.showHelpOn; }
     return;
   }
   return true;
-}
-
-window.onblur = function() {
-  if( KeyEvent.hideHelp ) { KeyEvent.hideHelp(); }
 }
 
 KeyEvent.findKey = function( k ) {
@@ -257,7 +256,10 @@ KeyEvent.targetsFormField = function( keyEvent ) {
  * Generates a refresh event stored in a function
  */
 KeyEvent.createLoadUrl = function( url ) {
-  return function() { window.location = url; return false; }
+  return function() {
+    window.location = url; 
+    return false;
+  }
 }
 
 /**
@@ -280,4 +282,39 @@ KeyEvent.register = function(fxn, keyName) {
 
 KeyEvent.listedEvents = new Array();
 
+function ZenTabs() {
+  this.entries = new Array();
+  this.visible = false;
+  this.timeout = false;
+}
+
+ZenTabs.prototype.start = function() {
+  if( this.visible ) { return; }
+  if( this.timeout ) { return; }
+  this.timeout = window.setTimeout('ZenTabs.singleton.show()', 1500);
+}
+
+ZenTabs.prototype.show = function() {
+  if( this.visible ) { return; }
+  if( this.timeout ) { window.clearTimeout(this.timeout); this.timeout = false; } 
+  this.visible = true;
+  for(var i=0; i < this.entries.length; i++) {
+    window.document.getElementById(this.entries[i]).style.display = 'inline';
+  }
+}
+
+ZenTabs.prototype.register = function(subToRegister) {
+  this.entries[this.entries.length] = subToRegister;
+}
+
+ZenTabs.prototype.hide = function() {
+  if( this.timeout ) { window.clearTimeout(this.timeout); this.timeout = false; }
+  if( !this.visible ) { return; }
+  this.visible = false;
+  for(var i=0; i < this.entries.length; i++) {
+    window.document.getElementById(this.entries[i]).style.display = 'none';
+  }  
+}
+
+ZenTabs.singleton = new ZenTabs();
 //-->

@@ -26,25 +26,27 @@
     if( !$errs ) {
       $res = $zen->reject_ticket($id, $login_id, $comments);
       if( $res ) {
-        add_system_messages(tr("Ticket ? was rejected.", array($id)));
-        $setmode = "details";
+        $ticket = $zen->get_ticket($id);
+        $to = $ticket['user_id']? $zen->formatName($ticket['user_id']) : '';
+        if( $ticket['bin_id'] ) {
+          $to = $ticket['user_id']? $to . '(' . $zen->getBinName($ticket['bin_id']) . ')' :
+             $zen->getBinName($ticket['bin_id']);
+        }
+        $msg = tr("Ticket was rejected to ?", array($to));
+        $setmode = null;
+        $action = null;
         include("../ticket.php");
         exit;
-        //header("Location:$rootUrl/ticket.php?id=$id&setmode=details");
       } else {
         $errs[] = tr("System error: Ticket ? could not be rejected", array($id)).$zen->db_error;
       }
     }
-    if( $errs )
-    add_system_messages( $errs, 'Error' );     
   }
 
   include("$libDir/nav.php");
-
-  if( $actionComplete == 1 )
-     $ticket = $zen->get_ticket($id);
-  extract($ticket);
-  if( strtolower($zen->types["$type_id"]) == "project" ) {
+  $zen->printErrors($errs);
+  $ticket = $zen->get_ticket($id);
+  if( $zen->inProjectTypeIDs($ticket['type_id']) ) {
      include("$templateDir/projectView.php");
   } else {
      include("$templateDir/ticketView.php");     

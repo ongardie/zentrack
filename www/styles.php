@@ -85,6 +85,14 @@
     padding-top: 5px;
   }
   
+  .formtable {
+    background: <?=$zen->getSetting('color_background')?>;
+  }
+  
+  .formtable TD {
+    padding: 3px;
+  }
+  
   /*** LINK PROPERTIES ***/
 
   A {
@@ -329,6 +337,9 @@
     position: absolute;
     left: 300px;
     top: 120px;
+    max-height: 400px;
+    height: expression(this.scrollHeight > 400? "400px" : "auto");
+    overflow: auto;
   }
   
   .hotKeyCell {
@@ -339,6 +350,13 @@
   
   .invisible {
     visibility: hidden;
+  }
+  
+  .nodisplay {
+    width: 0px;
+    height: 0px;
+    border: none;
+    position: absolute;
   }
   
   .accesskeys {
@@ -445,20 +463,6 @@ TD.bigger { font-size: 50px; }
      background: <?=$zen->getSetting("color_background")?>;
   }
 
-  BUTTON, .navButtons {
-     color:      <?=$zen->getSetting("color_bars")?>;
-     background: <?=$zen->getSetting("color_bar_text")?>;
-  }
-
-  .submit {
-     color:      <?=$zen->getSetting("color_highlight")?>;
-     background: <?=$zen->getSetting("color_alt_text")?>;
-  }  
-  .submitPlain {
-     color:      <?=$zen->getSetting("color_background")?>;
-     background: <?=$zen->getSetting("color_alt_text")?>;
-  }  
-
   .smallSubmit {
      color:      <?=$zen->getSetting("color_highlight")?>;
      background: <?=$zen->getSetting("color_alt_text")?>;
@@ -466,9 +470,9 @@ TD.bigger { font-size: 50px; }
      font-size:  <?=$zen->getSetting("font_size_small")?>px;
   }
 
-  .actionButton {
+  BUTTON, SUBMIT, .submit, .actionButton, .actionButtonDiv {
      font-face:      Courier;
-     color:          <?=$zen->getSetting("color_highlight")?>;
+     color:          <?=$zen->getSetting("color_alt_background")?>;
      background:     <?=$zen->getSetting("color_alt_text")?>;
      font-size:      <?=$zen->getSetting("font_size_small")?>px;
      padding-left:   4px;
@@ -477,19 +481,32 @@ TD.bigger { font-size: 50px; }
      padding-bottom: 2px;
      text-align:     center;
   }
-
-  .actionButtonContact {
-     font-face:      Courier;
-     color:          <?=$zen->getSetting("color_highlight")?>;
-     background:     <?=$zen->getSetting("color_bar_text")?>;
+  
+  .submit, SUBMIT {
+    font-weight: bold;
+  }
+  
+  .actionButtonDiv {
+    border: outset 2px <?=$zen->getSetting("color_alt_text")?>;
+  }
+  
+  .actionButtonDiv A, .actionButtonDiv A:hover, .actionButtonDiv A:visited {
+    text-decoration: none;
+     color:          <?=$zen->getSetting("color_alt_background")?>;
+     background:     <?=$zen->getSetting("color_alt_text")?>;
      font-size:      <?=$zen->getSetting("font_size_small")?>px;
-     padding-left:   8px;
-     text-align:     left;
-     width:          122px;
   }
 
-  .searchbox {
-     background: <?=$zen->getSetting("color_bar_darkest")?>;
+  .actionButtonDiv A, .actionButtonDiv A:hover, .actionButtonDiv A:visited {
+    text-decoration: none;
+     color:          <?=$zen->getSetting("color_alt_background")?>;
+     background:     <?=$zen->getSetting("color_alt_text")?>;
+     font-size:      <?=$zen->getSetting("font_size_small")?>px;
+  }
+  
+  .abdDown, .abdDown A, .abdDown A:hover, .abdDown A:visited {
+    background: <?=$zen->getSetting("color_alt_background")?> !important;
+    color: <?=$zen->getSetting("color_alt_text")?> !important;
   }
   
   .leftNavCell {
@@ -616,6 +633,35 @@ TD.bigger { font-size: 50px; }
     background: <?=$zen->getSetting('color_alt_background')?>;
     color: <?=$zen->getSetting('color_alt_text')?>;
     overflow: auto;
+  }
+  
+  .keySubLow, .keySubHigh {
+    display:   none;
+    position:  absolute;
+    padding: 1px;
+    border-style: solid;
+    font-size: <?=$zen->getSetting('font_size_small')-1?>px;
+    border-color: <?=$zen->getSetting('color_title_background')?>;
+    border-width: 0 0 0 4px;
+    background: <?=$zen->getSetting('color_title_background')?>;
+    color: <?=$zen->getSetting('color_background')?>;
+    filter:alpha(opacity=80);
+    opacity: 0.80;
+    -moz-opacity:0.80;
+    text-align: left;
+    text-decoration: none;
+    font-weight: bold;
+    font-style: none;
+  }
+  
+  .keySubLow {
+    margin-left: -20px;
+    margin-top: 10px;
+  }
+  
+  .keySubHigh {
+    margin-left: -20px;
+    margin-top: -10px;
   }
   
 -->

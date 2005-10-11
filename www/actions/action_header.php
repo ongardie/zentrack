@@ -20,7 +20,7 @@
   $id = ereg_replace("[^0-9]", "", $id);
   if( !$id ) {
     $zen->addDebug("action_header","No ticket id, redirecting",1);
-    include("../index.php");
+    include("$rootWWW/index.php");
     exit;
   }
   
@@ -34,8 +34,10 @@
 	    array("id,title,status,est_hours,wkd_hours"));
     list($ticket["est_hours"],$ticket["wkd_hours"]) = $zen->getProjectHours($id);
     $page_type = "project";
+    $view = 'project_view';
   }  else {
     $page_type = "ticket";
+    $view = 'ticket_view';
   }
   
   // use the filename to 
@@ -52,13 +54,14 @@
   }
   else if( $basename == "addtonotify" || $basename == "dropfromnotify" ) {
     $action = "notify";
-  } 
+  }
+  else if( $basename == 'addtocontacts' || $basename == 'dropfromcontacts' ) {
+    $action = 'contacts';
+  }
   else if( !$action ) {
     $action = "view";
   }
   
-  $setmode = "system";
-
   // find out if this is the ticket's creator (special conditions apply)
   $tf_creator = (($action=="view"||$action == "print"||$action == "email")
 	&&$zen->settingOn("allow_cview")
@@ -67,16 +70,18 @@
 
   // find out if user can do this action, if not, redirect them
   if( !$zen->actionApplicable( $id, $action, $login_id ) && !$tf_creator ) {
-    $setmode = "details";
+    $setmode = "";
+    $action = '';
     $zen->addDebug("action_header.php","Action was not applicable, redirecting",1);
-    include("../ticket.php");
+    include("$rootWWW/ticket.php");
     exit;
   }
 
   // set up page paremeters
   $page_title = $page_type == "project"? tr("Project #?", array($id)) : tr("Ticket #?", array($id));
   $page_section = "Ticket #$id";
-  if( $page_type == 'project' ) { $expand_projects = 1; }
-  else { $expand_tickets = 1; }
+  $page_mode = $action;
+  $hotkeys->loadSection($view);
+  $hotkeys->loadSection("action_$action");
 
 ?>

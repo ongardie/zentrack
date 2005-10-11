@@ -37,6 +37,12 @@
 
   $zen->cleanInput($fields);
   
+  // insure that the user/bin combination provided is allowed
+  if( $user_id && !$zen->checkAccess($user_id, $bin_id, 'level_user') ) {
+    $errs[] = tr('The user assigned to this ticket does not have '.
+                 'level_user priviledges for the selected bin (?)', $zen->getBinName($bin_id));
+  }
+  
   // check for required fields
   foreach($required as $r) {
     if( !strlen($$r) ) {

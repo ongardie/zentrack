@@ -14,6 +14,8 @@
     print "Illegal access.  You do not have permission to access contacts.";
     exit;
   }
+  
+  $hotkeys->loadSection('contacts_new_menu');
 
   $page_title = tr("Create a new Contact");
   $page_section =  tr("Create a new Contact");

@@ -25,10 +25,13 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
   $ucfirst = ucfirst($page_type);
   
   if( !$td ) {
-    $id = 0;
-    $creator_id = $login_id;
-    $status = 'OPEN';
+    $ticket = array();
+    $ticket['id'] = 0;
+    $ticket['creator_id'] = $login_id;
+    $ticket['status'] = 'OPEN';
   }
+  
+  $id = $ticket['id'];
 
   // set the form name and the override as label if appropriate
   $form_name = "ticketForm";
@@ -54,10 +57,10 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
   ///////////////////////////////////////////////////
   
   // set deadline and start date on create screens
-  if( !$deadline && !$td )
-     $deadline = $zen->getDefaultValue("default_deadline");
-  if( !$start_date && !$td )
-     $start_date = $zen->getDefaultValue("default_start_date");
+  if( !$ticket['deadline'] && !$td )
+     $ticket['deadline'] = $zen->getDefaultValue("default_deadline");
+  if( !$ticket['start_date'] && !$td )
+     $ticket['start_date'] = $zen->getDefaultValue("default_start_date");
      
   if( !$td ) { $otime = time(); }
      
@@ -73,8 +76,8 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
     $formDest = $page_type == 'project'? 'addProjectSubmit.php' : 'addSubmit.php';
   }
 ?>
-<form method="post" name="<?=$form_name?>" action="<?=$formDest?>" onSubmit='return validateTicketForm()'>
-<table width="640" align="left" cellpadding="2" cellspacing="2" bgcolor="<?=$zen->getSetting("color_background")?>">
+<form method="post" name="<?=$form_name?>" action="<?=$formDest?>" onSubmit='return validateTicketForm(this)'>
+<table width="640" align="left" cellpadding="2" cellspacing="2" class='formTable'>
 <tr>
   <td colspan="2" width="640" class="titleCell" align="center">
      <?=tr("$ucfirst Information")?>
@@ -95,7 +98,7 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
 <tr>
   <td class="bars">
     <?=tr("Edit Reason")?><br>
-    (<?=tr("Required")?>)
+    <span class='note'>(<?=tr("Required")?>)</note>
   </td>
   <td class="bars">
 <?
@@ -127,5 +130,6 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
 </form>
 
 <?
+  $formview = $view;
   include_once("$libDir/templates/validateTicketForm.php");
 ?>

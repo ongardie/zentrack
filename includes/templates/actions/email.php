@@ -17,22 +17,21 @@
 
 <table width="450" cellpadding="4" cellspacing="1" border="0">
 <tr>
- <td>
-   <span class="bigBold"><?=tr("Email Ticket")?></span>
-   <br>
-   <span class="small">(<?=tr("Send ticket to specified recipients")?>)</span>
+ <td class='titleCell'><?=tr("Email Ticket")?>
+   &nbsp;&nbsp;<span class='note'>(<?=tr("Send ticket to specified recipients")?>)</span>
  </td>
 </tr>
 <tr>
- <td class="titleCell">
+ <td class="subTitle">
    <input type='radio' name='emethod' value='1' 
    <?=(!isset($emethod) || $emethod == 1)? 'CHECKED' : ''?>
-   > <?=tr("Select a User")?>
+   > <?=$hotkeys->ll("Select a User")?>
  </td>
 </tr>
 <tr>
  <td>
 <select name="users_to_email[]" multiple size=4
+  title="<?=$hotkeys->tt("Select a User")?>"
   onFocus="checkAbox(document.emailForm.emethod[0])"
   >
 <?
@@ -52,54 +51,49 @@
   </td>			     
 </tr>
 <tr>
- <td class="titleCell">
+ <td class="subTitle">
    <input type='radio' name='emethod' value='2' 
    <?=($emethod == 2)? 'CHECKED' : ''?>
-   > <?=tr("OR manually enter email addresses, seperated by commas")?>
+   > <?=$hotkeys->ll("Manually Enter Addresses", "OR manually enter email addresses, seperated by commas")?>
  </td>
 </tr>
 <tr>
  <td>
    <input type="text" onFocus="checkAbox(document.emailForm.emethod[1])"
-   name="custom_email_addresses" value="<?=strip_tags($custom_email_addresses)?>" 
-   size="50" maxlength="500">
+   name="custom_email_addresses" value="<?=$zen->ffv($custom_email_addresses)?>" 
+   size="50" maxlength="500" title="<?=$hotkeys->tt("Manually Enter Addresses")?>">
   </td>			     
 </tr>
 <tr>
-  <td class="titleCell">
-   <?=tr("Comments or Instructions")?>
+  <td class="subTitle">
+   <?=$hotkeys->ll("Comments or Instructions")?>
     &nbsp;<span class="small">(<?=tr("optional")?>)</span>
   </td>
 </tr>
 <tr>
   <td>
-    <textarea cols="50" rows="4" name="comments"><?=
-      strip_tags($comments)?></textarea>
+    <textarea cols="50" rows="4" name="comments" title="<?=$hotkeys->tt('Comments or Instructions')?>"><?=
+      $zen->ffvText($comments)?></textarea>
   </td>
 </tr>
 <tr>
-  <td class="titleCell">
+  <td class="subTitle">
     <?=tr("Choose one of the following options")?>
   </td>
 </tr>
 <tr>
   <td>
    <input type="radio" name="method" value="1" <?=($method == 1)? "checked" : "";?>>
-   &nbsp;<?=tr("Send a link to this ticket only")?><br>
+   &nbsp;<?=$hotkeys->ll('send option: link', "Send a link to this ticket only")?><br>
    <input type="radio" name="method" value="2" <?=($method == 2 || !isset($method))? "checked" : "";?>>
-   &nbsp;<?=tr("Send a summary of the ticket")?><br>
+   &nbsp;<?=$hotkeys->ll('send option: summary', "Send a summary of the ticket")?><br>
    <input type="radio" name="method" value="3" <?=($method == 3)? "checked" : "";?>>
-   &nbsp;<?=tr("Send a summary, and the ticket's log")?>
+   &nbsp;<?=$hotkeys->ll('send option: log', "Send a summary, and the ticket's log")?>
   </td>
 </tr>
 <tr>
-  <td class="titleCell">
-    <?=tr("Click button to send email")?>
-  </td>
-</tr>
-<tr>
-  <td>
-    <input type="submit" value=" <?=uptr("Email")?> " class="submit">
+  <td class="subTitle">
+  <? renderDivButton($hotkeys->find('Send Email'), "window.document.forms['emailForm'].submit()"); ?>
   </td>
 </tr>
 <tr>

@@ -8,7 +8,6 @@
   }
 
   $page_title = tr("Commit Edited Ticket");
-  $expand_admin = 1;
 
   // initiate default values
   if( !$tested )
@@ -27,6 +26,9 @@
      $params = array();
      // create an array of existing fields
      foreach(array_keys($fields) as $f) {
+       // can't edit the status
+       if( $f == 'status' ) { continue; }
+       // put the value into the updates array
        $params["$f"] = $$f;
      }
      // update the ticket info
@@ -44,9 +46,9 @@
   }
   
   if( !$errs ) {
-    add_system_messages(tr("Edited ticket #?", array($id)));
+    $msg = tr("Edited ticket #?", array($id));
     //header("Location:$rootUrl/ticket.php?id=$id&setmode=Details");
-    $setmode = "Details";
+    $setmode = "";
     if( $is_project ) {
       include("../project.php");
     } else {

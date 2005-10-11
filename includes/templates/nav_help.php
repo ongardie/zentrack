@@ -3,17 +3,17 @@
   <td class='leftNavTitle' height='25' valign='middle'><?=tr("Help")?></td>
 </tr>
 <tr>
-  <td class='leftNavMenu outset' <?=$nav_rollover_text?>>
+  <td class='leftNavMenu outset' <?=$lnav_rollover?>>
     <a href='<?=$helpUrl?>/tutorial.php' class='leftNavLink'><?=tr("Tutorial")?></a>
   </td>
 </tr>
 <tr>
-  <td class='leftNavMenu outset' <?=$nav_rollover_text?>>
+  <td class='leftNavMenu outset' <?=$lnav_rollover?>>
     <a href='<?=$helpUrl?>/users/index.php' class='leftNavLink'><?=tr("User's Guide")?></a>
   </td>
 </tr>
 <tr>
-  <td class='leftNavMenu outset' <?=$nav_rollover_text?>>
+  <td class='leftNavMenu outset' <?=$lnav_rollover?>>
     <a href='<?=$helpUrl?>/admin/index.php' class='leftNavLink'><?=tr("Admin Guide")?></a>
   </td>
 </tr>

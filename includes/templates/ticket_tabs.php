@@ -8,10 +8,12 @@
   *   $zen - instance of ZenTrack
   *   $hotkeys - instance of ZenHotKeys
   *   $page_type - 'ticket' or 'project'
-  *   $bin_id - bin we are viewing currently
+  *   $id - id of the ticket
+  *   $ticket - values of the ticket
   */
-  function getTabCounts( $zen, $id, $loads ) {
+  function getTabCounts( $id, $loads ) {
     static $stats;
+    $zen = $GLOBALS['zt_zen'];
     if( !$loads || !count($loads) ) { return ''; }
     if( !$stats ) { $stats = $zen->get_ticket_stats($id); }
     $tf = false;
@@ -26,7 +28,7 @@
     return '';
   }
 
-  $tabs = $map->getTabs($page_type, $login_id, $bin_id);
+  $tabs = $map->getTabs($page_type, $login_id, $ticket['bin_id']);
   print "<table cellpadding='0' cellspacing='0'><tr>";
   $n = 1;
   foreach($tabs as $k=>$v) {
@@ -37,10 +39,11 @@
     if( $v['preload'] ) { $loads = $v['preload']; }
     if( $v['postload'] ) { $loads = array_merge($loads, $v['postload']); }
     $class = $page_mode == $k? "class='tab on'" : "class='tab off' $nav_rollover_text";
-    print "<td $class height='20' width='60' title='".$hotkeys->tooltip($key)."'>";
+    print "<td $class height='20' title='".$hotkeys->tooltip($key)."'>";
     $class = $page_mode == $k? "tab on" : "tab off";
-    print "<a href='$rootUrl/$page_type.php?id=$id&setmode=$k'>".$hotkeys->label($key);
-    print getTabCounts($zen,$id,$loads)."</a></td>";
+    print "<a href='$rootUrl/$page_type.php?id=$id&setmode=$k'>".$hotkeys->label($key,'');
+    print getTabCounts($id,$loads)."</a>";
+    print "</td>";
     print "<td width='3'><img src='$imageUrl/empty.gif' width='3' height='1'></td>\n";
   }
   print "</tr></table>";

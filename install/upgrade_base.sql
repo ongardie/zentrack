@@ -707,7 +707,6 @@ INSERT INTO ZENTRACK_VIEW_MAP (view_map_id, which_view, vm_name, vm_val, vm_type
 INSERT INTO ZENTRACK_VIEW_MAP (view_map_id, which_view, vm_name, vm_val, vm_type, vm_order) VALUES(142, 'ticket_tab_8', 'postload', '', 'load', 0);
 INSERT INTO ZENTRACK_VIEW_MAP (view_map_id, which_view, vm_name, vm_val, vm_type, vm_order) VALUES(143, 'ticket_tab_8', 'columns', '10', 'text', 0);
 INSERT INTO ZENTRACK_VIEW_MAP (view_map_id, which_view, vm_name, vm_val, vm_type, vm_order) VALUES(144, 'ticket_tab_8', 'width', '50', 'text', 0);
-INSERT INTO ZENTRACK_VIEW_MAP (view_map_id, which_view, vm_name, vm_val, vm_type, vm_order) VALUES(145, 'project_view_top', 'show_summary_inline', '1', 'checkbox', 0);
 INSERT INTO ZENTRACK_VIEW_MAP (view_map_id, which_view, vm_name, vm_val, vm_type, vm_order) VALUES(146, 'project_view_top', 'view_only', '1', 'label', 0);
 INSERT INTO ZENTRACK_VIEW_MAP (view_map_id, which_view, vm_name, vm_val, vm_type, vm_order) VALUES(147, 'project_view_top', 'sections', '1', 'hidden', 0);
 INSERT INTO ZENTRACK_VIEW_MAP (view_map_id, which_view, vm_name, vm_val, vm_type, vm_order) VALUES(148, 'project_view_top', 'access_level', 'level_view', 'label', 0);
@@ -764,6 +763,8 @@ INSERT INTO ZENTRACK_VIEW_MAP (view_map_id, which_view, vm_name, vm_val, vm_type
 INSERT INTO ZENTRACK_VIEW_MAP (view_map_id, which_view, vm_name, vm_val, vm_type, vm_order) VALUES(199, 'project_tab_8', 'postload', '', 'load', 0);
 INSERT INTO ZENTRACK_VIEW_MAP (view_map_id, which_view, vm_name, vm_val, vm_type, vm_order) VALUES(200, 'project_tab_8', 'columns', '10', 'text', 0);
 INSERT INTO ZENTRACK_VIEW_MAP (view_map_id, which_view, vm_name, vm_val, vm_type, vm_order) VALUES(201, 'project_tab_8', 'width', '50', 'text', 0);
+INSERT INTO ZENTRACK_VIEW_MAP (view_map_id, which_view, vm_name, vm_val, vm_type, vm_order) VALUES(202, 'ticket_view_top', 'move_actions_up', '0', 'checkbox', 0);
+INSERT INTO ZENTRACK_VIEW_MAP (view_map_id, which_view, vm_name, vm_val, vm_type, vm_order) VALUES(203, 'project_view_top', 'move_actions_up', '0', 'checkbox', 0);
 
 CREATE TABLE `ZENTRACK_VARFIELD_MULTI` (
   `multi_id` int(12) NOT NULL auto_increment,

@@ -1,25 +1,21 @@
 <? if( !ZT_DEFINED ) { die("Illegal Access"); } ?>
 
-<form method="post" action="<?=$SCRIPT_NAME?>">
+<form name='assignForm' method="post" action="<?=$SCRIPT_NAME?>">
 <input type="hidden" name="id" value="<?=$id?>">
 <input type="hidden" name="actionComplete" value="1">
 
-<table width="450" cellpadding="4" cellspacing="1" border="0">
+<table class='formTable' cellpadding="4" cellspacing="1" border="0">
 <tr>
- <td>
-   <span class="bigBold"><?=uptr("Assign Ticket")?></span>
-   <br>
-   <span class="small">(<?=tr("Assign the ticket to a new user")?>)</span>
+ <td class='subTitle' colspan='2'><?=uptr("Assign Ticket")?>
+   &nbsp;&nbsp;<span class="note">(<?=tr("Assign this ticket to a new user")?>)</span>
  </td>
 </tr>
 <tr>
- <td class="titleCell">
-   <?=tr("Select a Recipient")?>
+ <td class="bars">
+   <?=$hotkeys->ll("Recipient")?>
  </td>
-</tr>
-<tr>
- <td>
-<select name="user_id">
+ <td class='bars'>
+<select name="user_id" title="<?=$hotkeys->tt("Recipient")?>">
 <?
   //$bins = $zen->getUsersBins($login_id,"level_assign");
   // ticket can only be assigned to users who may access
@@ -29,8 +25,8 @@
   if( is_array($bins) && is_array($users) ) {
     foreach($users as $v) {
       if( $v["user_id"] != $login_id ) {
-	$sel = ($v["user_id"] == $user_id)? "selected" : "";
-	print "<option value='$v[user_id]' $sel>".$zen->formatName($v,1)."</option>\n";
+        $sel = ($v["user_id"] == $user_id)? "selected" : "";
+        print "<option value='$v[user_id]' $sel>".$zen->formatName($v,1)."</option>\n";
       }
     }
   }
@@ -39,31 +35,24 @@
   }
 ?>
 </select>
-  </td>			     
-</tr>
-<tr>
-  <td class="titleCell">
-     <?=tr("Comments or Instructions")?> <span class="small">(<?=tr("optional")?>)</span>
   </td>
 </tr>
 <tr>
-  <td>
-    <textarea cols="50" rows="4" name="comments"><?=
-      strip_tags($comments)?></textarea>
+  <td class="bars">
+     <?=$hotkeys->ll("Comments or Instructions")?><div class="small">(<?=tr("optional")?>)</div>
+  </td>
+  <td class='bars'>
+    <textarea cols="50" rows="4" name="comments" title='<?=$hotkeys->tt("Comments or Instructions")?>'><?=
+      $zen->ffvText($comments)?></textarea>
   </td>
 </tr>
 <tr>
-  <td class="titleCell">
-    <?=tr("Click button to assign")?>
-  </td>
-</tr>
-<tr>
-  <td>
-    <input type="submit" value=" ASSIGN " class="submit">
-<p class='note'><?=tr("Note").":".tr("Only users who have permission to work on tickets in the current bin are listed.")?></p>
+  <td class="subTitle" colspan='2'>
+  <? renderDivButton($hotkeys->find('Assign'), "window.document.forms['assignForm'].submit()"); ?>
   </td>
 </tr>
 <tr>
 </table>
+<p class='note'><?=tr("Note").":".tr("Only users who have permission to work on tickets in the current bin are listed.")?></p>
 
 </form>			     

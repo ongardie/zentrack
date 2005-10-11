@@ -29,21 +29,20 @@
   
   // load the ticket info, validate it, and switch 
   // to the project view if needed
+  $page_type = 'ticket';
   if( $view == "project_view" ) {
     $ticket = $zen->get_project($id);
+    $page_type = 'project';
   } else {
     $ticket = $zen->get_ticket($id);
     if( is_array($ticket) ) {
       if( $zen->inProjectTypeIDs($ticket["type_id"]) ) {
         $ticket = $zen->get_project($id);
         $view = 'project_view';
+        $page_type = 'project';
       }
     }
   }
-  
-  // set the page type now that we have decided on a view
-  preg_match('@^(project|ticket)_view$@', $view, $matches);
-  $page_type = $matches[1];
   
   // if there is no ticket for this id, then load the list and
   // inform the user of the bad choice
@@ -69,18 +68,98 @@
   // allow creator of ticket to view (if setting is on) even if no access
   $is_creator = $zen->checkCreator($login_id, $id);
   
+  if( !$is_creator && !$zen->checkAccess($login_id,$ticket["bin_id"]) ) {
+    include_once("$libDir/nav.php");
+    print "<p class='hot'>" . tr("You are not allowed to view ? in this bin", array(tr($page_type."s"))) ."</p>";
+    include_once("$libDir/footer.php");
+    exit;
+  }
+
+  if( $ticketTabAction == 1 ) {
+    $setmode = $_POST['currentMode'];
+    
+    // check access and make sure user is allowed to make this edit
+    if( $map->getViewProp($setmode, 'view_only') ) {
+      $errs[] = "Fields cannot be edited in this view";
+    }
+    else if( !$zen->checkAccess($login_id, $ticket['bin_id'], 
+                $map->getViewProp($setmode, 'access_level')) ) {
+      $errs[] = "You do not have sufficient access for this area";
+    }
+    
+    // we have to switch the view temporarily to call validateFields,
+    // unfortunately, so we hack it here
+    // we validate the input fields here
+    if( !$errs ) {
+      $OV = $view;
+      $view = $setmode;
+      include("$libDir/validateFields.php");
+      $view = $OV;
+    }
+    
+    // now that everything is valid, we will try to save information
+    if( !$errs ) {
+      $fields = $map->getFieldMap($setmode);
+      // create an array of existing fields
+      // to be inserted for the ticket
+      $params = array();
+      foreach($fields as $f=>$field) {
+        // only include fields the user could have edited
+        if( !$field['is_visible'] || $field['field_type'] == 'section' ) { continue; }
+        // filter out custom fields, we do them seperately
+        // can't edit the status
+        if( strpos($f, 'custom_') === 0 || $f == 'status' ) { continue; }
+        // add field to the parm list for update
+        $params[$f] = $$f;
+      }
+      
+      // edit the ticket's fields
+      $res = $zen->edit_ticket($id, $login_id, $params);
+      
+      // update the variable field entries for this ticket
+      if( !$res ) {
+        $errs[] = tr("Unable to edit ticket due to system error"). " ".$zen->db_error;
+      }
+      else {
+        if( in_array($params["type_id"],$zen->noteTypeIDs()) && $ticket['status'] == 'OPEN' ) {
+          $zen->close_ticket($id,null,null,'Notes closed automatically');
+        }
+        $msg = array('All fields updated successfully');        
+        if( $varfields && count($varfield_params) ) {
+          $vp = array();
+          foreach($varfield_params as $k=>$v) {
+            if( $map->getFieldProp($setmode,$k,'is_visible') ) {
+              $vp[$k] = $v;
+            }
+          }
+          $res = $zen->updateVarfieldVals($id, $vp);
+          if( !$res ) {
+            $errs[] = tr("? created, but variable fields could not be saved due to system error", array(tr('Ticket')));
+          }
+          else {
+            $msg = array('All fields updated successfully');
+          }
+        }
+      }
+    }
+    $ticket = $zen->get_ticket($id);
+    if( $errs ) {
+      foreach($params as $k=>$v) {
+        $ticket[$k] = $v;
+      }
+    }
+  }
+  
   // determine which page we will view
+  $page_mode = "{$page_type}_tab_1";
   if( $setmode ) {
     $page_mode = preg_replace('@[^0-9a-zA-Z_]@', '', $setmode);
-  }
-  if( !$page_mode ) {
-    $page_mode = "{$page_type}_tab_1";
   }
   
   // load behavior js if needed
   if( preg_match("@^{$page_type}_tab_[0-9]$@", $page_mode) ) {
-    if( $map->getViewProp($page_mode, 'editable') ) {
-      $onLoad[] = "behavior_js.php?formset=$page_mode";
+    if( !$map->getViewProp($page_mode, 'view_only') ) {
+      $onLoad[] = "behavior_js.php?formset=ticketTabForm";
     }
   }
   
@@ -88,12 +167,7 @@
   ** PRINT OUT THE PAGE
   */ 
   include_once("$libDir/nav.php");
-  
-  if( !$is_creator && !$zen->checkAccess($login_id,$ticket["bin_id"]) ) {
-    print "<p class='hot'>" . tr("You are not allowed to view ? in this bin", array(tr($page_type."s"))) ."</p>";
-  } else {
-    include("$templateDir/ticketView.php");
-  }
-  
+  $zen->printErrors($errs);
+  include("$templateDir/ticketView.php");
   include("$libDir/footer.php");
 }?>

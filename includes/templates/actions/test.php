@@ -1,47 +1,47 @@
 <? if( !ZT_DEFINED ) { die("Illegal Access"); } ?>
 
-<form method="post" action="<?=$SCRIPT_NAME?>">
+<form name='testForm' method="post" action="<?=$SCRIPT_NAME?>">
 <input type="hidden" name="id" value="<?=$id?>">
 <input type="hidden" name="actionComplete" value="1">
 
-<table width="450" cellpadding="4" cellspacing="1" border="0">
+<table class='formTable' cellpadding="4" cellspacing="1" border="0">
 <tr>
- <td>
-   <span class="bigBold"><?=uptr("Test Ticket")?></span>
-   <br>
-   <span class="small">(<?=tr("Set testing to completed on ticket")?>)</span>
+ <td colspan='2' class='subTitle'><?=tr("Test Ticket")?>
+   &nbsp;&nbsp;
+   <?
+   print "<span class='note'>";
+   if( $ticket['approved'] == 1 ) {
+     print tr("Ticket will be sent for approval");
+   }
+   else {
+     print tr("Ticket status will be changed to closed");
+   }
+   print "</span>";
+   ?>
  </td>
 </tr>
 <tr>
- <td class="titleCell">
-   <?=tr("Enter hours worked")?>
+ <td class="bars">
+   <?=$hotkeys->ll("Hours Worked")?>
  </td>
-</tr>
-<tr>
- <td>
-   <input type="text" name="hours" size="4" maxlength="8" value="<?=strip_tags($hours)?>">
+ <td class='bars'>
+   <input type="text" name="hours" size="4" maxlength="8" value="<?=$zen->ffv($hours)?>"
+    title="<?=$hotkeys->tt("Hours Worked")?>">
   </td>			     
 </tr>
 <tr>
-  <td class="titleCell">
-     <?=tr("Comments or Instructions")?>
-	&nbsp;<span class="small">(<?=tr("optional")?>)</span>
+  <td class="bars">
+     <?=$hotkeys->ll("Comments or Instructions")?>
+	   <div class="note">(<?=tr("optional")?>)</div>
+  </td>
+  <td class='bars'>
+    <textarea cols="50" rows="4" name="comments" title="<?=$hotkeys->tt("Comments or Instructions")?>"><?=
+      $zen->ffvText($comments)?></textarea>
   </td>
 </tr>
 <tr>
-  <td>
-    <textarea cols="50" rows="4" name="comments"><?=
-      strip_tags($comments)?></textarea>
-  </td>
-</tr>
-<tr>
-  <td class="titleCell">
-    Click button to complete testing
-  </td>
-</tr>
-<tr>
-  <td>
-    <input type="submit" value=" <?=tr("Tested")?> " class="submit">
+  <td class="subTitle" colspan='2'>
+  <? renderDivButton($hotkeys->find('Testing Complete'), "window.document.testForm.submit()", 150); ?>
   </td>
 </tr>
 <tr>

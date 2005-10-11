@@ -75,9 +75,10 @@
            foreach ($recipients as $v) {
              if ($zen->checkNum($v) >0) {
                $user_info=$zen->get_user($v);
-               $v1="[".$v." - ".$user_info["email"]."]";
+               $v1= $zen->formatName($user_info);
+               $v1 .= "(".($user_info['email']? $user_info['email'] : '-no email-').")";
              } else {
-               $v1=$v;
+               $v1 = $v;
              }
              $entry .= $v1 . ", ";
            }
@@ -88,8 +89,9 @@
            $zen->add_log($id, $logParams);
            $zen->addDebug("www/actions/email.php", "Ticket emailed by $login_id", 3);
          }
-         add_system_messages(tr("Ticket ? emailed to selected recipients", array($id)));
-         $setmode = "system";
+         $msg = tr("Ticket ? emailed to selected recipients", array($id));
+         $setmode = "";
+         $action = "";
          include("$rootWWW/ticket.php");
          exit;
          //header("Location:$rootUrl/ticket.php?id=$id&setmode=system");
@@ -99,13 +101,11 @@
          $errs[] = tr("Ticket ? not mailed: ?", array($id, tr($err)));
        }
      }
-     if( $errs )
-     add_system_messages( $errs, 'Error' );
    }
    
    include("$libDir/nav.php");
+   $zen->printErrors($errs);
    
-   extract($ticket);
    if( strtolower($zen->types["$type_id"]) == "project" ) {
      include("$templateDir/projectView.php");
    } else {

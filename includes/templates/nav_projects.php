@@ -3,12 +3,12 @@
   <td class='leftNavTitle' height='25' valign='middle'><?=tr("Projects")?></td>
 </tr>
 <tr>
-  <td class='leftNavMenu outset' <?=$nav_rollover_text?> title='<?=$hotkeys->tt("New Project")?>'>
+  <td class='leftNavMenu outset' <?=$lnav_rollover?> title='<?=$hotkeys->tt("New Project")?>'>
     <a href='<?=$rootUrl?>/newProject.php' class='leftNavLink'><?=$hotkeys->ll("New Project")?></a>
   </td>
 </tr>
 <tr>
-  <td class='leftNavMenu outset' <?=$nav_rollover_text?> title="<?=$hotkeys->tt("Advanced Search")?>">
+  <td class='leftNavMenu outset' <?=$lnav_rollover?> title="<?=$hotkeys->tt("Advanced Search")?>">
     <a href='<?=$rootUrl?>/search.php' class='leftNavLink'><?=$hotkeys->ll("Advanced Search", "Search")?></a>
   </td>
 </tr>

@@ -23,7 +23,6 @@
     $txt .= "<a class='$class' href='$rootUrl/$page'>".$hotkeys->label($key)."</a>\n";
     $txt .= "</td><td width='4'><img src='{$imageUrl}/empty.gif' width='1' height='1' border='0'></td>\n";
     return $txt;
-
   }
 
   // number of columns in nav table
@@ -52,7 +51,6 @@
   $load_section = $sect != 'undefined' && file_exists("$templateDir/nav_$sect.php");
   if( $load_section ) { $hotkeys->loadSection($sect); }
 
-
 ?>
 <html>
   <head>
@@ -61,6 +59,8 @@
   <script language="javascript">
     function mOvr() { }//just a placeholder to remove js errors
     var imageUrl = "<?=$imageUrl?>";
+    var rootUrl = "<?=$rootUrl?>";
+    var id = "<?=$id?>";
   </script>
 
   <script language="javascript" src="<?=$rootUrl?>/javascript.js"></script>
@@ -76,7 +76,10 @@
     var isIE = navigator.appName.indexOf('Microsoft') >= 0;
     var debugOn = <?=$Debug_Mode > 0? 'true' : 'false'?>;
     window.onload = function() {
-      <?=$hotkeys->renderKeys()?>
+      loadRenderKeys();
+      window.onblur = function() {
+        if( KeyEvent.hideHelp ) { KeyEvent.hideHelp(); }
+      }
       if( isIE ) {
         window.document.onkeydown = KeyEvent.getKey;
         window.document.onkeyup = KeyEvent.cancelKey;
@@ -109,7 +112,7 @@
         size="15" maxlength="255" onfocus='openHelpBox(window.document.getElementById("searchBoxHelp"),this)' title="<?=$hotkeys->tt("Search")?>">
         &nbsp;(<a class='small' href='<?=$rootUrl?>/search.php' title='<?=$hotkeys->tt('Advanced Search')?>'>
           <?=$hotkeys->ll('Advanced Search', 'Advanced')?></a>)&nbsp;&nbsp;
-       <div id='searchBoxHelp' style='width:100px;height:100px;display:none;' class='helpBox'>
+       <div id='searchBoxHelp' style='width:110px;height:75px;display:none;' class='helpBox'>
        <?=tr("Enter a ticket ID or text to search for")?></div>
     </form>
   </td>
@@ -153,11 +156,9 @@
        $msg = array($msg);
     }
     if( is_array($msg) && count($msg) ) {
-       print "&nbsp;<p><b>\n";
        foreach($msg as $m) {
-          print "$m<br>";
+          print "<div class='highlight'>$m</div>";
        }
-       print "</b></p>\n";
        $msg = array();
     }
   ?>

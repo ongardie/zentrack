@@ -2891,6 +2891,7 @@ class zenTrack extends zen {
       $t = $this->get_ticket($id);
     }
     $id = $this->checkNum($id);
+    $this->_session->clearDataCache('tickets',$id);
     foreach($params as $k=>$v) {
       if( !strlen($v) ) {
         switch($k) {
@@ -4624,6 +4625,18 @@ class zenTrack extends zen {
     // this array is sorted by key
     if( !$this->actions ) {
       $actions = array();
+      $actions['contacts'] = array(
+                                 "owner"    => 0, 
+                                 "access"   => 0, 
+                                 "status"   => null,
+                                 "override" => 0,
+                                 "egate"    => 0,
+                                 "img"      => null,
+                                 "label"    => null,
+                                 "button"   => null,
+                                 "key"      => null,
+                                 "level"    => $this->getSetting("level_view")
+                                 );                                  
       $actions["accept"] = array( 
                                  "owner"    => 3, 
                                  "access"   => 1, 
@@ -4633,6 +4646,7 @@ class zenTrack extends zen {
                                  "img"      => 'arrow_green_down.png',
                                  "label"    => tr('Accept'),
                                  "button"   => 1,
+                                 "key"      => 'A',
                                  "level"    => $this->getSetting("level_accept")
                                  );
       $actions["approve"] = array( 
@@ -4644,6 +4658,7 @@ class zenTrack extends zen {
                                   "img"      => 'flag_green.png',
                                   "label"    => tr('Approve'),
                                   "button"   => 1,
+                                  "key"      => 'V',
                                   "level"    => $this->getSetting("level_approve")
                                   );
       $actions["assign"] = array(
@@ -4655,6 +4670,7 @@ class zenTrack extends zen {
                                  "img"      => 'two_people.png',
                                  "label"    => tr('Assign'),
                                  "button"   => 1,
+                                 "key"      => 'S',
                                  "level"    => $this->getSetting("level_assign")
                                  );
       $actions["close"] = array(
@@ -4666,6 +4682,7 @@ class zenTrack extends zen {
                                 "img"      => 'box_gold.png',
                                 "label"    => tr('Close'),
                                 "button"   => 1,
+                                "key"      => 'C',
                                 "level"    => $this->getSetting("level_user")
                                 );
       $actions["create"] = array(
@@ -4677,8 +4694,21 @@ class zenTrack extends zen {
                                  "img"      => "",
                                  "label"    => tr('Create'),
                                  "button"   => 0,
+                                 "key"      => null,
                                  "level"    => $this->getSetting("level_create")
                                  );
+      $actions["delete"] = array(
+                               "owner"    => 0,
+                               "access"   => 1,
+                               "status"   => null,
+                               "override" => 0,
+                               "egate"    => 0,
+                               "img"      => "trash.png",
+                               "label"    => tr("Delete"),
+                               "button"   => 0,
+                               "key"      => 'D',
+                               "level"    => $this->getSetting('level_settings')
+                               );
       $actions["edit"] = array(
                                "owner"    => 0,
                                "access"   => 1,
@@ -4688,6 +4718,7 @@ class zenTrack extends zen {
                                "img"      => "pin_blue.png",
                                "label"    => tr('Edit'),
                                "button"   => 1,
+                               "key"      => 'E',
                                "level"    => $this->getSetting("level_edit")
                                );
       $actions["email"] = array(
@@ -4699,6 +4730,7 @@ class zenTrack extends zen {
                                 "img"      => "mail.png",
                                 "label"    => tr('Email'),
                                 "button"   => 1,
+                                "key"      => 'I',
                                 "level"    => $this->getSetting("level_view")
                                 );
       $actions["estimate"] = array(
@@ -4710,6 +4742,7 @@ class zenTrack extends zen {
                                    "img"      => "clock.png",
                                    "label"    => tr('Estimate'),
                                    "button"   => 0,
+                                   "key"      => null,
                                    "level"    => $this->getSetting("level_user")
                                    );
       $actions["log"] = array(
@@ -4721,6 +4754,7 @@ class zenTrack extends zen {
                               "img"      => "book_blue.png",
                               "label"    => tr('Log'),
                               "button"   => 0,
+                              "key"      => 'L',
                               "level"    => $this->getSetting("level_user")
                               );
       $actions["move"] = array(
@@ -4732,6 +4766,7 @@ class zenTrack extends zen {
                                "img"      => "arrow_blue_right.png",
                                "label"    => tr('Move'),
                                "button"   => 1,
+                               "key"      => 'M',
                                "level"    => $this->getSetting("level_move")
                                );
       // add an entry to notify list
@@ -4746,6 +4781,7 @@ class zenTrack extends zen {
                                      "img"      => "",
                                      "label"    => tr('Add to Notify'),
                                      "button"   => 0,
+                                     "key"      => null,
                                      "level"    => $this->getSetting("level_view")
                                      );
       // drop an entry from the notify list
@@ -4760,6 +4796,7 @@ class zenTrack extends zen {
                                       "img"      => "",
                                       "label"    => tr('Drop From Notify'),
                                       "button"   => 0,
+                                      "key"      => null,
                                       "level"    => $this->getSetting("level_view")
                                       );
       // used to modify the list of recipients in
@@ -4773,6 +4810,7 @@ class zenTrack extends zen {
                                  "img"      => "",
                                  "label"    => tr('Notify List'),
                                  "button"   => 0,
+                                 "key"      => null,
                                  "level"    => $this->getSetting("level_user")
                                  );
       $actions["print"] = array(
@@ -4784,6 +4822,7 @@ class zenTrack extends zen {
                                 "img"      => "printer.png",
                                 "label"    => tr('Print'),
                                 "button"   => 1,
+                                "key"      => 'P',
                                 "level"    => $this->getSetting("level_view")
                                 );
       $actions["yank"] = array(
@@ -4795,6 +4834,7 @@ class zenTrack extends zen {
                                "img"      => "arrow_blue_up.png",
                                "label"    => tr('Pull'),
                                "button"   => 1,
+                               "key"      => 'U',
                                "level"    => $this->getSetting("level_yank")
                                );
       $actions["reject"] = array(
@@ -4806,6 +4846,7 @@ class zenTrack extends zen {
                                  "img"      => "flag_red.png",
                                  "label"    => tr('Reject'),
                                  "button"   => 1,
+                                 "key"      => 'R',
                                  "level"    => $this->getSetting("level_user")
                                  );
       $actions["relate"] = array(
@@ -4817,6 +4858,7 @@ class zenTrack extends zen {
                                  "img"      => "tree.png",
                                  "label"    => tr('Relate'),
                                  "button"   => 0,
+                                 "key"      => '',
                                  "level"    => $this->getSetting("level_user")
                                  );
       $actions["reopen"] = array(
@@ -4828,6 +4870,7 @@ class zenTrack extends zen {
                                  "img"      => "arrow_blue_left.png",
                                  "label"    => tr('Reopen'),
                                  "button"   => 1,
+                                 "key"      => 'O',
                                  "level"    => $this->getSetting("level_user")
                                  );
       $actions["test"] = array(
@@ -4839,6 +4882,7 @@ class zenTrack extends zen {
                                "img"      => "flag_blue.png",
                                "label"    => tr('Test'),
                                "button"   => 1,
+                               "key"      => 'T',
                                "level"    => $this->getSetting("level_test")
                                );
       $actions["upload"] = array(
@@ -4850,6 +4894,7 @@ class zenTrack extends zen {
                                  "img"      => "arrow_blue_up.png",
                                  "label"    => tr('Upload'),
                                  "button"   => 0,
+                                 "key"      => '',
                                  "level"    => $this->getSetting("level_user")
                                  );
       $actions["view"] = array(
@@ -4861,6 +4906,7 @@ class zenTrack extends zen {
                                "img"      => "magnify.png",
                                "label"    => tr('View'),
                                "button"   => 0,
+                               "key"      => '',
                                "level"    => $this->getSetting("level_view")
                                );
       $actions["varfield_edit"] = array(
@@ -4872,6 +4918,7 @@ class zenTrack extends zen {
                                         "img"      => "pn_blue.png",
                                         "label"    => tr('Edit'),
                                         "button"   => 0,
+                                        "key"      => '',
                                         "level"    => $this->getSetting("level_edit_varfields")
                                         );
       $this->actions = $actions;

@@ -17,6 +17,9 @@
 <? $hotkeys->renderAccessKeys(); ?>
 <script type='text/javascript'>
 <?=$hotkeys->renderFunctions()?>
+function loadRenderKeys() {
+  <?=$hotkeys->renderKeys()?>
+}
 </script>
 
 <!--

@@ -7,17 +7,9 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
      <td class='subTitle indent' width='100%'>
        <?=tr("Related Contacts", array($page_type))?>    
      </td>
-      <td align="right">
-      <form action="<?=$rootUrl?>/actions/addToContacts.php" name='contactForm'>
-      <input type="hidden" name="id" value="<?=$zen->checkNum($id)?>">
-      <input type="submit" value=" <?=tr("Add Contacts")?> " class="actionButton">  
-      </form>
-      </td>
    </tr>
    <tr>
      <td valign="top">
-     <form action="<?=$rootUrl?>/actions/dropFromContacts.php" method="post">
-     <input type="hidden" name="id" value="<?=$zen->checkNum($id)?>">
 <?
   
    $parms = array(1 => array(1 => "ticket_id", 2 => "=", 3 => $id),);
@@ -28,6 +20,9 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
 
 if ($tickets){
 ?>
+     <form action="<?=$rootUrl?>/actions/dropFromContacts.php" method="post">
+     <input type="hidden" name="id" value="<?=$zen->checkNum($id)?>">
+     <input type='hidden' name='setmode' value='<?=$zen->ffv($page_mode)?>'>
 <table width='500' border="0">
 <tr>
   <td class='subTitle' width='10%' ><?=tr("ID")?></td>	
@@ -74,22 +69,32 @@ if ($tickets){
 <?
     }
 ?>
-</table> 
-<table width='600'>
+</table>
+</td>
+</tr>
 <tr>
-<td align="right">
+<td align="right" class='subTitle'>
          <input type="<?=$zen->ffv($button)?>" 
 	  value=" <?=tr("Drop Contacts")?> " 
-	  class="actionButton" style="width:125;color:<?=$zen->ffv($color)?>"> 
+	  class="actionButton"> 
 </td>
 </tr>
 </table>
 </form>
 <?
   } else {
-	   print "<b>".tr("No related contacts")."</b>";
+	   print "<b>".tr("No contacts found")."</b>";
   }
 ?>     
   </td>
+</tr>
+<tr>
+<td align="right">
+  <form action="<?=$rootUrl?>/actions/addToContacts.php" name='contactForm'>
+  <input type="hidden" name="id" value="<?=$zen->checkNum($id)?>">
+  <input type="submit" value=" <?=tr("Add Contacts")?> " class="actionButton">
+  <input type='hidden' name='setmode' value='<?=$zen->ffv($page_mode)?>'>
+</form>
+</td>
 </tr>
 </table>

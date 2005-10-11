@@ -12,6 +12,12 @@ abstraction, and endless possibilities for project expansion.
 --------------------
 
 ----- VERSION 2.6 (development) -----
+
+2005-10-10, kato
+  Finished/enhanced hot keys (added hints)
+  Finished tab_edit mode
+  Worked on load_contacts screen (access bug to fix)
+  
 2005-10-08, cfalonso
   Moved custom_multi fields from ZENTRACK_VARFIELD to ZENTRACK_VARFIELD_MULTI table:
    - zentrack_2/includes/ZenFieldMap.class 1.35

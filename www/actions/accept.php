@@ -13,22 +13,16 @@
 
    $res = $zen->accept_ticket($id, $login_id);
    if( $res ) {
-      add_system_messages(tr("Ticket ? was accepted by ?", array($id, $login_name)));
-      $setmode = "details";
-      include("../ticket.php");
-      exit;	   
-      //header("Location:$rootUrl/ticket.php?id=$id&setmode=details");
+      $msg = tr("Ticket ? was accepted by ?", array($id,$login_name));
    } else {
       $errs[] = tr("System error: Ticket ? could not be accepted", array($id)).$zen->db_error;
    }
-   if( $errs )
-     add_system_messages( $errs, 'Error' );     
+  $setmode = null;
+  $action = null;
    
    include("$libDir/nav.php");
-
+   $zen->printErrors($errs);
    $ticket = $zen->get_ticket($id);
-   extract($ticket);
-   unset($action);
    if( $zen->inProjectTypeIDs($type_id) ) {
       include("$templateDir/projectView.php");
    } else {

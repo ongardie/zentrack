@@ -30,7 +30,7 @@
         if( is_array($children) ) {
           foreach($children as $c) {
             if( $c["status"] != "CLOSED" ) {
-              $errs[] = tr("? ? is not completed.", array($zen->types[$c['type_id']], $c['id']));
+              $errs[] = tr("? ? must be closed before this project may close", array($zen->getTypeName($c['type_id']), $c['id']));
             }
           }
         }
@@ -50,25 +50,26 @@
         // update the variable field entries for this ticket
         $res = $zen->updateVarfieldVals($id, $varfield_params);
         if( !$res ) {
-          add_system_mesages(tr("? ? closed, but variable fields could not be saved", array(tr('Ticket'),$id)));
+          $msg = tr("? ? closed, but variable fields could not be saved", array(tr('Ticket'),$id));
         } else {
-          add_system_messages(tr("Ticket ? has been closed", array($id)));
+          $msg = tr("Ticket ? has been closed", array($id));
         }
       }
-      $setmode="details";
-    }
-    if( $errs ) {
-      add_system_messages( $errs, 'Error' );
+      $setmode = "";
+      $action = "";
+      include("$rootWWW/ticket.php");
+      exit;
     }
   }
 
+  $onLoad[] = "behavior_js.php?formset=ticketTabForm";
   include("$libDir/nav.php");
-
+  $zen->printErrors($errs);
   $ticket = $zen->get_ticket($id);
   $varfields = $zen->getVarfieldVals($id);
   extract($varfields);
   extract($ticket);
-  if( strtolower($zen->types["$type_id"]) == "project" ) {
+  if( $zen->inProjectTypeIDs($type_id) ) {
      include("$templateDir/projectView.php");
   } else {
     include("$templateDir/ticketView.php");     

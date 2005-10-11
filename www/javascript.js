@@ -206,4 +206,11 @@ function getAbsolutePos(el) {
 	return r;
 };
 
+function printWindow() {
+  popupWindowScrolls(rootUrl+"/actions/print.php?id="+id,'printWindow', 700, 500);
+  return false;
+}
+
+function doNothing() { return false; }
+
 //-->

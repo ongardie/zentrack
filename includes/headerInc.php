@@ -326,6 +326,26 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
     closedir($dir);
     return $vals;
   }
+  
+  /**
+   * Generate a div layer that imitates a submit button, but can have
+   * a hot key affect applied to it.
+   */
+   function renderDivButton($key, $onclick, $width=100) {
+     $hotkeys = $GLOBALS['zt_hotkeys'];
+     $clickmouse = " onclick=\"{$onclick}; return false;\"";
+     print "<div style='width: {$width}px; text-align: center;' class='actionButtonDiv'"; 
+     print $clickmouse;
+     print " onmouseover='mClassX(this, \"actionButtonDiv abdDown\", true)'";
+     print " onmouseout='mClassX(this, \"actionButtonDiv\")'";
+     print " title='".$hotkeys->tooltip($key)."'>";
+     print "<a href='#' $clickmouse";
+     print " onfocus='mClassX(this.parentNode, \"actionButtonDiv abdDown\", true)'";
+     print " onblur='mClassX(this.parentNode, \"actionButtonDiv\")'";
+     print ">".$hotkeys->label($key)."</a>";
+     print "</div>";
+     print "<input type='submit' class='nodisplay'>";
+   }
 
   /**
    * Determines the current section based on the page being viewed:
@@ -418,6 +438,10 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
 
   $nav_rollover_text = " onclick=\"mClk(this);\" ".$nav_rollover_eff;
 
+  $lnav_rollover = " onmouseout=\"mOut(this,'"
+    .$zen->getSetting("color_bars")."');\" onmouseover=\"mOvr(this,'"
+    .$zen->getSetting("color_alt_background")."');\" "
+    ." onclick=\"mClk(this);\" ";
 
   /**
    * Returns true if a login is required to view the current page.

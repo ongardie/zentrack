@@ -1,9 +1,26 @@
-<?
-if( !ZT_DEFINED ) { die("Illegal Access"); }
-
+<? if( !ZT_DEFINED ) { die("Illegal Access"); }
   /**
    * creates a form for adding entries to the contact list
    */
+
+  // collect contact data
+	$companies = $zen->get_contact_all();	
+	if (empty($company_id)) {
+		$parms = array(1 => array(1 => "company_id", 2 => "=", 3 => "0"),
+		);
+	} else {
+		$parms = array(1 => array(1 => "company_id", 2 => "=", 3 => $company_id),
+		);
+	}
+	$sort = "lname asc";
+	$people = $zen->get_contacts($parms,"ZENTRACK_EMPLOYEE",$sort);
+
+  $company_title = $company_id;
+  // determine column span
+  $colspan = 1;
+  if( $companies || $people ) {
+    $colspan = 2;
+  } 
 ?>
 
 
@@ -18,49 +35,21 @@ location.href ="<?=$_SERVER['SCRIPT_NAME']?>?id=<?=$id?>&company_id="+varialbe
 <input type='hidden' name='id' value='<?=$id?>'>
 <input type='hidden' name='actionComplete' value='1'>
 
-<table width="50%" cellpadding="4" cellspacing="1" border="0">
+<table cellpadding="4" width='300' cellspacing="1" border="0">
 <tr>
- <td>
-   <span class="bigBold"><?=tr("Add a Contact")?></span>
- </td>
+ <td class='subTitle' colspan='<?=$colspan?>'><?=tr("Add a Contact")?></td>
 </tr>
-<?
-  // collect contact data
-	$companies = $zen->get_contact_all();	
-	if (empty($company_id)) {
-		$parms = array(1 => array(1 => "company_id", 2 => "=", 3 => "0"),
-		);
-	} else {
-		$parms = array(1 => array(1 => "company_id", 2 => "=", 3 => $company_id),
-		);
-	}
-	$sort = "lname asc";
-	$people = $zen->get_contacts($parms,"ZENTRACK_EMPLOYEE",$sort);
-
-  $company_title = $company_id;
-  
-  // determine column span
-  $colspan = 1;
-  if( $companies || $people ) {
-    $colspan = 2;
-  }
-  
-  
+ 
+  <?
 	if (is_array($companies)||count($companies)) {
 	?>
 <tr>
-<td class='titleCell' colspan='<?=$colspan?>'>
-<?
-echo tr("Select a contact");
-?>
-</td>
-</tr>
-<tr>
-
-   <td class='bars'><?=tr("Company")?></td>
+   <td class='bars'><?=$hotkeys->ll("Field: company_id","Company")?></td>
     <td class='bars'>
 
-		<select name="company_id" onChange="printpopup(document.forms['ContactsAddForm'].company_id.value)">
+		<select name="company_id" 
+      title="<?=$hotkeys->tt("Field: company_id")?>"
+      onChange="printpopup(document.forms['ContactsAddForm'].company_id.value)">
   	<option value=''>--<?=tr("none")?>--</option>
 		<?
 		foreach($companies as $p) {
@@ -78,16 +67,16 @@ echo tr("Select a contact");
 	</select>
   
     </td>
+</tr>
 	<?
 	}
 	
 	if (is_array($people)||count($people)) {
   ?>
-  </tr>
   <tr>
-    <td class='bars'><?= tr("Person") ?></td>
+    <td class='bars'><?= $hotkeys->ll("Field: person_id","Person") ?></td>
     <td class='bars'>
-		<select name="person_id">
+		<select name="person_id" title="<?=$hotkeys->tt("Field: person_id")?>">
   	<option value=''>--<?=tr("none")?>--</option>
 		<?
 		foreach($people as $p) {
@@ -100,6 +89,7 @@ echo tr("Select a contact");
     if( $company_id ) { print '<br>'.tr("(Employees of '?' only)", $company_title); } 
   ?>
     </td>
+  </tr>
 	<?
 	}
   else if( $company_id ) {
@@ -117,23 +107,13 @@ echo tr("Select a contact");
   }
   
   if( !$people && !$companies ) {
-    print tr("There are no contacts to add.");
+    print "<tr><td>". tr("There are no contacts to add.") ."</td></tr>";
   }
+  else {
 	?>
-  
-  <br>&nbsp;
-</td>
-</tr>
-
-<? if( $people || $companies ) { ?>
 <tr>
-  <td class="titleCell" colspan='<?=$colspan?>'>
-    <?=tr("Click button to add contact")?>
-  </td>
-</tr>
-<tr>
-  <td>
-    <input type="submit" value="<?=uptr("Add")?>" class="submit" >
+  <td class="subTitle" colspan='<?=$colspan?>'>
+    <? renderDivButton($hotkeys->find('Add Contact'), "window.document.forms['ContactsAddForm'].submit()"); ?>
   </td>
 </tr>
 <? } ?>
@@ -142,6 +122,6 @@ echo tr("Select a contact");
 </form>
 
 <p>&nbsp;
-<form action='<?=$rootUrl?>/newContact.php' target="_BLANK">
-  <input type='submit' class='actionButtonContact' value=' <?=tr("Create New Contact")?> '>
+<form action='<?=$rootUrl?>/newContact.php' target="_BLANK" name='newContactForm'>
+  <? renderDivButton($hotkeys->find('Create New Contact'), "window.document.forms['newContactForm'].submit()"); ?>
 </form>

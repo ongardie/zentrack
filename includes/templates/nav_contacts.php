@@ -3,12 +3,12 @@
   <td class='leftNavTitle' height='25' valign='middle'><?=tr("Contacts")?></td>
 </tr>
 <tr>
-  <td class='leftNavMenu outset' <?=$nav_rollover_text?> title='<?=$hotkeys->tt("New Contact")?>'>
+  <td class='leftNavMenu outset' <?=$lnav_rollover?> title='<?=$hotkeys->tt("New Contact")?>'>
     <a href='<?=$rootUrl?>/newContact.php' class='leftNavLink'><?=$hotkeys->ll("New Contact")?></a>
   </td>
 </tr>
 <tr>
-  <td class='leftNavMenu outset' <?=$nav_rollover_text?> title="<?=$hotkeys->tt('Find')?>">
+  <td class='leftNavMenu outset' <?=$lnav_rollover?> title="<?=$hotkeys->tt('Find')?>">
     <a href='<?=$rootUrl?>/searchContacts.php' class='leftNavLink'><?=$hotkeys->ll("Find")?></a>
   </td>
 </tr>
@@ -47,12 +47,12 @@
   <td class='leftNavTitle' height='25' valign='middle'><?=tr("Agreements")?></td>
 </tr>
 <tr>
-  <td class='leftNavMenu outset' <?=$nav_rollover_text?> title="<?=$hotkeys->tt('Browse')?>">
+  <td class='leftNavMenu outset' <?=$lnav_rollover?> title="<?=$hotkeys->tt('Browse')?>">
     <a href='<?=$rootUrl?>/agreements.php' class='leftNavLink'><?=$hotkeys->ll("Browse")?></a>
   </td>
 </tr>
 <tr>
-  <td class='leftNavMenu outset' <?=$nav_rollover_text?> title="<?=$hotkeys->tt('New Agreement')?>">
+  <td class='leftNavMenu outset' <?=$lnav_rollover?> title="<?=$hotkeys->tt('New Agreement')?>">
     <a href='<?=$rootUrl?>/newAgreement.php' class='leftNavLink'><?=$hotkeys->ll("New Agreement")?></a>
   </td>
 </tr>

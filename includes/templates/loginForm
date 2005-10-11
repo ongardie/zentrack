@@ -29,11 +29,7 @@
   </p>
   <?  }  ?>
 
-  <input type=hidden name=redirect value='<?=$zen->ffv($redirect)?>'>
-  
-  <div style='padding: 5px; width: 100px; text-align: center;' class='leftNavMenu outset' onclick='window.document.loginForm.submit()' <?=$nav_rollover_text?>>
-    <?=$hotkeys->ll("Log On")?>
-  </div>
+  <? renderDivButton( $hotkeys->find('Log On'), 'window.document.loginForm.submit()' ); ?>
 
   </form>
 
