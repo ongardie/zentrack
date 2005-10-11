@@ -13,6 +13,10 @@ abstraction, and endless possibilities for project expansion.
 
 ----- VERSION 2.6 (development) -----
 
+2005-10-11, cfalonso
+  Fixed a problem with the multi fields search
+   - zentrack_2/includes/templates/searchResults.php 1.17
+
 2005-10-10, kato
   Finished/enhanced hot keys (added hints)
    - zentrack_2/includes/ZenHotKeys.class 1.6
