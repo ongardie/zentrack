@@ -53,16 +53,7 @@
     $zen->cleanInput($varfield_fields);
     // create an array of existing fields
     foreach(array_keys($varfield_fields) as $f) {
-      if ( ! is_array($$f) )   {
-        $varfield_params["$f"] = $$f;
-      } else {
-        $tab = "";
-        $varfield_params["$f"] = "";
-        foreach ($$f as $cmitem) {
-          $varfield_params["$f"] .= $tab.$cmitem;
-          $tab="\t";
-        }
-      }
+      $varfield_params["$f"] = $$f;
     }    
   }
   

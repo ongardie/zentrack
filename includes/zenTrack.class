@@ -1042,7 +1042,8 @@ class zenTrack extends zen {
     $fm =& new ZenFieldMap($this);
     $multi_fields = $fm->listMultiFields();
     foreach ($multi_fields as $v) {
-      $query = "SELECT field_value FROM ".$this->table_varfield_multi." WHERE ticket_id = $ticket_id AND field_name='".$v."'";
+      $query = "SELECT field_value FROM ".$this->table_varfield_multi." WHERE ticket_id = $ticket_id AND field_name='".$v."'"
+              ." ORDER BY multi_id";
       $res[$v] = $this->db_list($query);
     }
     return ($res);
@@ -1150,21 +1151,23 @@ class zenTrack extends zen {
       // find out if value was updated, check strlen so that 0 != '', and so forth
       if( $v1 != $v2 ) { $log_entry .= "\n - {$label} changed from [$v1] to [$v2]"; }
       //split the multi fields appart so that we can call the db_update function for all the other fields:
-      if ( strpos($key, 'custom_multi') == false ) {
-        $field_values_std[$key] = $value;
+      if ( strpos($key, 'custom_multi') === false ) {
+        $field_values_std[$key] = $val;
       } else {
-        $field_values_multi[$key] = $value;
+        $field_values_multi[$key] = $val;
       }
     }
     $res = $this->db_update( $this->table_varfield, "ticket_id", $ticket_id, $field_values_std );
     if ($res) {
       foreach($field_values_multi as $key=>$val) {
-        $query = "DELETE FROM ".$this->table_varfield_multi." WHERE ticket_id = ".$ticket_id." AND field_name = ".$key;
+        $query = "DELETE FROM ".$this->table_varfield_multi." WHERE ticket_id = ".$ticket_id." AND field_name = '".$key."'";
         $res_del = $this->db_result($query);
+        $this->addDebug("updateVarfieldVals - db_result", "[$res_del]".$query, 3);
         foreach ($val as $element) {
           $multi_entry = array('ticket_id' => $ticket_id,
-                               $key => $element);
-          $res_ins = db_insert($this->table_varfield_multi,$multi_entry);
+                               'field_name' => $key,
+                               'field_value' => $element);
+          $res_ins = $this->db_insert($this->table_varfield_multi,$multi_entry);
         }
       }
     }
