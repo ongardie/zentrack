@@ -13,6 +13,10 @@ abstraction, and endless possibilities for project expansion.
 
 ----- VERSION 2.6 (development) -----
 
+2005-10-17, cfalonso
+  Fixing logging issue for multi fields
+   - zentrack_2/includes/zenTrack.class 1.195
+   
 2005-10-14, cfalonso
   Fixed errors for custom_multi fields
    - zentrack_2/includes/parseVarfields.php 1.6
