@@ -1137,12 +1137,12 @@ class zenTrack extends zen {
           $v2 = $val;
         }
       } else if ( strpos($key, 'custom_multi') !== false ) {
-        if ( count($oldVals[$key]) ) {
+        if ( count($oldVals[$key])==0 ) {
           $v1 = 'NULL';
         } else {
           $v1 = implode('; ', $oldVals[$key]);
         }
-        if ( count($val) ) {
+        if ( count($val)==0 ) {
           $v2 = 'NULL';
         } else {
           $v2 = implode('; ', $val);
