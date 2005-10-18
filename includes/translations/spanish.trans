@@ -2368,7 +2368,7 @@ msgstr "Guardado de Nuevo Grupo"
 #file "/home/ired/zentrack_2/includes/templates/languageForm.php"
 #args ""
 msgid "New Language"
-msgstr "Nuevo Usuario"
+msgstr "Nuevo Idioma"
 
 
 #file "/home/ired/zentrack_2/includes/templates/pwcForm.php"
