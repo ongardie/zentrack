@@ -7,8 +7,8 @@
   $section = "Admin";
   $page_title = tr("Administration");
 
-  $system_name = $zen->settings["system_name"];
-  if( $zen->checkNum($login_level) < $zen->settings["level_settings"] ) {
+  $system_name = $zen->getSetting("system_name");
+  if( $zen->checkNum($login_level) < $zen->getSetting("level_settings") ) {
      $page_title = "Access Error";    
      $msg = "<p class='hot'>" . tr("You do not have access to administrate zenTrack.") . "</p>\n"; 
      include("$libDir/nav.php");     

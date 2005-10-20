@@ -52,6 +52,24 @@
       $errs[] = tr("You must select a Company or Person.");
     }
     
+    $dups = false;
+    $parms = array(array("ticket_id", "=", $id));
+    $currentContacts = $zen->get_contacts($parms,"ZENTRACK_RELATED_CONTACTS");
+    if( $currentContacts ) {
+      foreach($currentContacts as $c) {
+        if( !$person_id && $c['type'] == 1 && $company_id && $c['cp_id'] == $company_id ) { 
+          $msg[] = tr("Company already in contact list");
+          $dups = true;
+          break;
+        }
+        else if( $person_id && $c['type'] != 1 && $c['cp_id'] == $person_id ) { 
+          $msg[] = tr("Employee already exists in contact list");
+          $dups = true;
+          break;
+        }
+      }
+    }
+    
     if($company_id) {
       $cp_id = $company_id;
       $type = "1";  
@@ -62,13 +80,12 @@
       $type = "2";  
 	  }
 
-    if( !$errs ) {
-      $params = array("type"   => $type,
-          "cp_id"  => $cp_id,
-          "ticket_id" => $id);
+    if( !$errs && !$dups ) {
+      $params = array("type" => $type, "cp_id"  => $cp_id, "ticket_id" => $id);
       $res = $zen->add_contact( $params,"ZENTRACK_RELATED_CONTACTS");
       if( $res ) {
-        $msg = tr("Contact added successfully");
+        $msg[] = tr("Contact added successfully");
+        $action = '';
       }
       else {
         $errs[] = tr("Unable to add contact due to system error");

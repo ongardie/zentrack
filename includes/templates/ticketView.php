@@ -43,12 +43,10 @@
   ?></td>
 </tr>
 <tr>
-  <td class='indent boxpad'>
-  <?
+  <td class='indent boxpad'><?
     $boxview = 'ticket_view_top';
     include("$templateDir/ticket_box.php"); 
-  ?>
-  </td>
+  ?></td>
 </tr>
 <tr>
   <td class='tbar indent tabpad lip'><? include("$templateDir/ticket_tabs.php") ?></td>
@@ -57,11 +55,13 @@
   <td class='indent boxpad' valign='top' height='225'><?
     if( isset($action) ) { $action = preg_replace('@[^0-9a-zA-Z_-]@', '', $action); }
     if( isset($action) && file_exists("$templateDir/actions/$action.php") ) {
+      print "<div class='actionFormBox'>";
       include("$templateDir/ticket_action.php");
+      print "</div>";
     }
     else if( preg_match("/^{$page_type}_tab_[0-9]$/", $page_mode) ) {
       $tabs = $map->getTabs($page_type, $login_id, $bin_id);
-      if( !array_key_exists($page_mode, $tabs) ) {
+      if( !array_key_exists($page_mode, $tabs) || !$map->getViewProp($page_mode,'visible') ) {
         print "<div class='error'>".tr("Invalid page mode requested: ?", $zen->ffv($page_mode))."</div>";
       }
       else {

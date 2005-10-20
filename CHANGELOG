@@ -13,6 +13,23 @@ abstraction, and endless possibilities for project expansion.
 
 ----- VERSION 2.6 (development) -----
 
+2005-10-20, kato
+  Added filters to listTickets.php
+  Finished contacts loader
+  Finished notify loader
+   - zentrack_2/includes/templates/listTickets.php 1.32
+   - zentrack_2/includes/listFilters.php 1.0
+
+  Added bin_id/type_id checks and filtering for project vs. tickets
+   - zentrack_2/includes/ZenFieldMap.class 1.37
+   - zentrack_2/includes/templates/listTickets.php 1.32
+  
+  Added filter to debug output in footer
+   - zentrack_2/includes/footer.php 1.40
+  
+  Fixed caching of getUsersBins
+   - zentrack_2/includes/zenTrack.class 1.196
+  
 2005-10-18, cfalonso
   Minor translation issue
    - zentrack_2/includes/translations/spanish.trans 1.13

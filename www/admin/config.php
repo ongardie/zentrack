@@ -67,7 +67,7 @@
   }
 
   if( !$skip ) {
-    $page_title = tr("? Settings", array($zen->settings["system_name"]));
+    $page_title = tr("? Settings", array($zen->getSetting("system_name")));
     include("$libDir/nav.php");
     $zen->printErrors($errs);
     print "<blockquote>\n";

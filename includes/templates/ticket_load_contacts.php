@@ -1,18 +1,18 @@
 <?
 if( !ZT_DEFINED ) { die("Illegal Access"); }
 
+$hotkeys->loadSection('tab_contacts');
+
 ?>
-<table width="600" cellpadding="2" cellspacing="2">
+<table width="600" cellpadding="0" class='formtable' cellspacing="1">
 	 <tr>  
-     <td class='subTitle indent' width='100%'>
+     <td colspan='5' class='subTitle indent' width='100%'>
        <?=tr("Related Contacts", array($page_type))?>    
      </td>
    </tr>
-   <tr>
-     <td valign="top">
 <?
   
-   $parms = array(1 => array(1 => "ticket_id", 2 => "=", 3 => $id),);
+   $parms = array(array("ticket_id", "=", $id));
    $sort = "ticket_id asc";
    
   $tickets = $zen->get_contacts($parms,"ZENTRACK_RELATED_CONTACTS",$sort);
@@ -20,17 +20,16 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
 
 if ($tickets){
 ?>
-     <form action="<?=$rootUrl?>/actions/dropFromContacts.php" method="post">
-     <input type="hidden" name="id" value="<?=$zen->checkNum($id)?>">
-     <input type='hidden' name='setmode' value='<?=$zen->ffv($page_mode)?>'>
-<table width='500' border="0">
-<tr>
-  <td class='subTitle' width='10%' ><?=tr("ID")?></td>	
-  <td class='subTitle' align='center'><?=tr("Name")?></td>
-  <td class='subTitle' align='center'><?=tr("Telephone")?></td>
-  <td class='subTitle' align='center'><?=tr("E-mail")?></td>
-  <td class='subTitle' width='5%' align='center'><?=tr("Delete")?></td>
-</tr>
+ <form name='dropContactsForm' action="<?=$rootUrl?>/actions/dropFromContacts.php" method="post">
+ <input type="hidden" name="id" value="<?=$zen->checkNum($id)?>">
+ <input type='hidden' name='setmode' value='<?=$zen->ffv($page_mode)?>'>
+ <tr>
+  <td class='headerCell'><?=tr("ID")?></td>	
+  <td class='headerCell' width='50%'><?=tr("Name")?></td>
+  <td class='headerCell'><?=tr("Telephone")?></td>
+  <td class='headerCell'><?=tr("E-mail")?></td>
+  <td class='headerCell'><?=tr("Delete")?></td>
+ </tr>
 <?  
 //print_r($tickets);
     foreach($tickets as $n) {
@@ -46,55 +45,64 @@ if ($tickets){
 	   	 $table = "ZENTRACK_EMPLOYEE";
 		 	 $col = "person_id";
 		   $cpid = $n["cp_id"];
-		 	 $c1 = "pid"	;
+		 	 $c1 = "pid";
 		 	 $n1 = "lname";
 		   $n2 = "fname";
 		 }
 		 
   	$u=$zen->get_contact($n["cp_id"],$table,$col);
     $cpid = $zen->checkNum($cpid);
-    $tc = "onclick='ticketClk(\"$rootUrl/contact.php?$c1=$cpid\")'";
+    $tc = "onclick='checkMyBox(\"drops_".$zen->ffv($n['clist_id'])."\", event)' ";
+    $img = "<div style='float:right'><a href='#' onclick='ticketClk(\"$rootUrl/contact.php?$c1=$cpid\",this,event);return false;'>";
+    $img .= "<img src='$imageUrl/24x24/magnify.png' border='0' width='24' height='24'></a></div>";
 ?>	
-      <tr class='bars' onMouseOver='mClassX(this, "cell", "hand")' onMouseOut='mClassX(this)'>
-      <td <?=$tc?>><?=$zen->ffv($cpid)?></td>
-      <td <?=$tc?>><?= $zen->ffv(ucfirst($u[$n1]))." ".$zen->ffv($u[$n2]) ?></td>
-      <td <?=$tc?>><?= $zen->ffv($u["telephone"]) ?></td>
-      <td <?
-        if( !$u['email'] ) { print $tc; }
-      ?>><A id='link_<?=$cpid?>' HREF="mailto:<?=$zen->ffv($u['email'])?>"><?=$zen->ffv($u["email"])?></A></td>
-      <td onClick='checkMyBox("drops_<?=$zen->ffv($n['clist_id'])?>", event)'><input 
-          id='drops_<?=$zen->ffv($n['clist_id'])?>' type='checkbox' name='drops[]' 
-          value='<?=$zen->ffv($n['clist_id'])?>'></td>
-      </tr>
+    <tr class='bars' <?=$row_rollover_eff?>>
+    <td <?=$tc?>><?=$zen->ffv($cpid)?></td>
+    <td <?=$tc?>><?= $img." ".$zen->ffv(ucfirst($u[$n1]))." ".$zen->ffv($u[$n2]) ?></td>
+    <td <?=$tc?>><?= $u['telephone']? $zen->ffv($u["telephone"]) : '&nbsp;' ?></td>
+    <td <?=$tc?>><?
+      if( $email ) {
+      ?><A id='link_<?=$cpid?>' HREF="mailto:<?=$zen->ffv($u['email'])?>"><?=$zen->ffv($u["email"])?></A>
+      <? } else { ?>&nbsp;<? } ?></td>
+    <td <?=$tc?>><input 
+        id='drops_<?=$zen->ffv($n['clist_id'])?>' type='checkbox' name='drops[]' 
+        value='<?=$zen->ffv($n['clist_id'])?>'></td>
+    </tr>
 <?
     }
 ?>
-</table>
-</td>
-</tr>
 <tr>
-<td align="right" class='subTitle'>
-         <input type="<?=$zen->ffv($button)?>" 
-	  value=" <?=tr("Drop Contacts")?> " 
-	  class="actionButton"> 
-</td>
-</tr>
-</table>
+<td class='subTitle' colspan='5'>
+  </div>
+  <div style='float:right'>
+  <? renderDivButton($hotkeys->find('Drop Contacts'), "window.document.forms['dropContactsForm'].submit()"); ?>
+  </div>
 </form>
-<?
-  } else {
-	   print "<b>".tr("No contacts found")."</b>";
-  }
-?>     
-  </td>
-</tr>
-<tr>
-<td align="right">
-  <form action="<?=$rootUrl?>/actions/addToContacts.php" name='contactForm'>
+  <div style='float:left'>
+  <form action="<?=$rootUrl?>/actions/addToContacts.php" name='ContactsAddForm'>
   <input type="hidden" name="id" value="<?=$zen->checkNum($id)?>">
-  <input type="submit" value=" <?=tr("Add Contacts")?> " class="actionButton">
+  <? renderDivButton($hotkeys->find('Add Contact'), "window.document.forms['ContactsAddForm'].submit()"); ?>
   <input type='hidden' name='setmode' value='<?=$zen->ffv($page_mode)?>'>
-</form>
+  </form>
 </td>
 </tr>
+<? } else { ?>
+<tr><td valign='top' colspan='5' class='bars'>
+<b><?=tr("No contacts found")?></b>
+</td></tr>
+<tr>
+<td colspan='5' class='subTitle'>
+  <form action="<?=$rootUrl?>/actions/addToContacts.php" name='ContactsAddForm'>
+  <input type="hidden" name="id" value="<?=$zen->checkNum($id)?>">
+  <? renderDivButton($hotkeys->find('Add Contact'), "window.document.forms['ContactsAddForm'].submit()"); ?>
+  <input type='hidden' name='setmode' value='<?=$zen->ffv($page_mode)?>'>
+  </form>
+</td>
+</tr>
+<? } ?>     
 </table>
+<p>&nbsp;
+<form action='<?=$rootUrl?>/newContact.php' target="_BLANK" name='newContactForm'>
+  <input type='hidden' name='setmode' value='<?=$zen->ffv($page_mode)?>'>
+  <? renderDivButton($hotkeys->find('Create New Contact'), "window.document.forms['newContactForm'].submit()", 150); ?>
+</form>

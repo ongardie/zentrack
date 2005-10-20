@@ -32,9 +32,9 @@
   print "<table cellpadding='0' cellspacing='0'><tr>";
   $n = 1;
   foreach($tabs as $k=>$v) {
-    $key = "ALT+SHIFT+".$n++;
+    $key = $n++;
     $viewProps = $map->getViewProps($k);
-    if( !$viewProps['visible'] ) { continue; }
+    if( !$viewProps['visible']['vm_val'] ) { continue; }
     $loads = array();
     if( $v['preload'] ) { $loads = $v['preload']; }
     if( $v['postload'] ) { $loads = array_merge($loads, $v['postload']); }

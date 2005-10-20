@@ -54,8 +54,7 @@
               $i++;
             }
             else if( $res && $res == "duplicate" ) {
-              add_system_messages(tr("user_id ? already on notify "
-              ."list for #?", array($u, $ticket_id)));        
+              $msg[] = tr("User ? already on notify list", $u);        
             }
           }
         }
@@ -70,16 +69,32 @@
           $i++;
         }
         else if( $res && $res == "duplicate" ) {
-          add_system_messages(tr("email ? already on notify "
-          ."list for #?", array($unreg_email, $ticket_id)));        
+          $msg[] = tr("Email ? already on notify list", $unreg_email);        
         }
       }
       if(strlen($company_id) || strlen($person_id)) {
         
-        $params = array('ticket_id'   =>   $ticket_id,
-                        'priority'    =>   $priority);
-        
-        if( !$errs ) {
+        $dups = false;
+        $parms = array(array("ticket_id", "=", $id));
+        $currentContacts = $zen->get_contacts($parms,"ZENTRACK_RELATED_CONTACTS");
+        if( $currentContacts ) {
+          foreach($currentContacts as $c) {
+            if( !$person_id && $c['type'] == 1 && $company_id && $c['cp_id'] == $company_id ) { 
+              $msg[] = tr("Company already in contact list");
+              $dups = true;
+              break;
+            }
+            else if( $person_id && $c['type'] != 1 && $c['cp_id'] == $person_id ) { 
+              $msg[] = tr("Employee already exists in contact list");
+              $dups = true;
+              break;
+            }
+          }
+        }
+    
+        if( !$errs && !$dups ) {
+          $params = array('ticket_id'   =>   $ticket_id,
+                          'priority'    =>   $priority);
           if($company_id) {
             $data = $zen->get_contact($company_id,'ZENTRACK_COMPANY','company_id');
             $params['name'] = $data['title']." ".$data['office'];
@@ -105,17 +120,26 @@
       
       
       if( $i > 0 ) {
-        add_system_messages(tr("? entries added to #? notification.", array($i, $ticket_id)));
-        $setmode = "notify";
-      } else {
-        $errs[] = tr("System error: Notify list could not be updated ").$zen->db_error;
+        $msg[] = tr("? recipients added", $i);
+        $action = '';
+        $page_mode = $setmode;
       }
     }
-    if( $errs ) { add_system_messages( $errs, 'Error' ); }     
   }
   
   include("$libDir/nav.php");
-  
-  include("$rootWWW/ticket.php");
+  $zen->printErrors($errs);  
+  if( $actionComplete == 1 && $page_type == "project" ) {
+    $ticket = $zen->get_project($id);
+  }
+  else if( $actionComplete ) {
+    $ticket = $zen->get_ticket($id);
+  }
+  if( $page_type == "project" ) {
+    include("$templateDir/projectView.php");
+  } else {
+    include("$templateDir/ticketView.php");     
+  }
+  include("$libDir/footer.php");
 
 }?>

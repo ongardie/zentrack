@@ -1,11 +1,11 @@
 <?{
-
+  
   /**
-   **  ADD ENTRIES TO NOTIFY LIST
-   **  
-   **  Checks for duplicates and adds users/email addresses
-   **  to a ticket's notify list
-   */
+  **  ADD ENTRIES TO NOTIFY LIST
+  **  
+  **  Checks for duplicates and adds users/email addresses
+  **  to a ticket's notify list
+  */
   
   // get action properties
   $action = "notify";  
@@ -18,33 +18,32 @@
       // clean up numbers just in case
       $n = $zen->checkNum($drops[$i]);
       if( strlen($n) ) {
-	// do the drop
-	$res = $zen->delete_from_notify_list($n);
-	// calculate the number of results
-	if( $res ) {
-	  $num += 1;
-	}
+        // do the drop
+        $res = $zen->delete_from_notify_list($n);
+        // calculate the number of results
+        if( $res ) {
+          $num += 1;
+        }
       }
     }
-    add_system_messages(tr("? recipients dropped from the notify list", array($num)),"Bold");
-    $setmode = "notify";
+    $msg = tr("? recipients dropped from the notify list", $num);
+    $action = '';
   }
   else {
     // create an error message
     $msg = tr("No recipients were selected to drop");
-    add_system_messages( $msg, 'Error' );
+    $action = '';
   }
-
+  
   
   // display the results
   include("$libDir/nav.php");
-  unset($action);
-  extract($ticket);
+  $zen->printErrors($errs);
   if( $zen->inProjectTypeIDs($type_id) ) {
     include("$templateDir/projectView.php");
   } else {
     include("$templateDir/ticketView.php");     
   }  
   include("$libDir/footer.php");    
-
+  
 }?>

@@ -58,6 +58,9 @@
   else if( $basename == 'addtocontacts' || $basename == 'dropfromcontacts' ) {
     $action = 'contacts';
   }
+  else if( $basename == 'dropattachments' ) {
+    $action = 'upload';
+  }
   else if( !$action ) {
     $action = "view";
   }
@@ -72,6 +75,7 @@
   if( !$zen->actionApplicable( $id, $action, $login_id ) && !$tf_creator ) {
     $setmode = "";
     $action = '';
+    $ticketTabAction = false;
     $zen->addDebug("action_header.php","Action was not applicable, redirecting",1);
     include("$rootWWW/ticket.php");
     exit;
@@ -80,7 +84,7 @@
   // set up page paremeters
   $page_title = $page_type == "project"? tr("Project #?", array($id)) : tr("Ticket #?", array($id));
   $page_section = "Ticket #$id";
-  $page_mode = $action;
+  $page_mode = $setmode? $setmode : $action;
   $hotkeys->loadSection($view);
   $hotkeys->loadSection("action_$action");
 

@@ -11,6 +11,7 @@ if( isset($logoff) && $logoff > 0 ) {
   $_SESSION['data_groups'] = null;
   $autologin = false;
   setcookie("zentrackKey", "", time());
+  $_SESSION['login_id'] = null;
 }
 
 // auto-login via cookie
@@ -35,6 +36,7 @@ if( $autologin && !$login_id && $zentrackUsername && $zentrackKey ) {
     // automatically log in users based on cookie values
     $login_id = $zen->login_user($zentrackUsername, $zentrackKey, true);
     if( $login_id ) {
+      $_SESSION['login_id'] = $login_id;
       // user login was valid so set session variables
       $login_level = $zen->user["access_level"];
       $login_name  = $zen->user["fname"]." ".$zen->user["lname"];
@@ -74,6 +76,7 @@ if( !$login_id ) {
       // to a login screen where they can
       // change their passphrase, since it is
       // set to the default
+      $_SESSION['login_id'] = $login_id;
       $login_level = 'first_login';
       $login_name  = $zen->user["fname"]." ".$zen->user["lname"];
       setcookie("zentrackUsername", $username, time()+2592000);
@@ -93,6 +96,7 @@ if( !$login_id ) {
       // and generate session variables, as well
       // as a cookie to save time logging in
       // in the future
+      $_SESSION['login_id'] = $login_id;
       $login_level = $zen->user["access_level"];
       $login_name  = $zen->user["fname"]." ".$zen->user["lname"];
       $login_inits = $zen->user["initials"];

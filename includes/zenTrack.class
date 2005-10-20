@@ -1,7 +1,6 @@
 <? /* -*- Mode: C; c-basic-indent: 3; indent-tabs-mode: nil -*- ex: set tabstop=3 expandtab: */ 
 if( !ZT_DEFINED ) { die("Illegal Access"); }
 
-
 /* 
 **  zenTrack Class
 **
@@ -127,7 +126,7 @@ class zenTrack extends zen {
     return( $this->db_queryIndexed($query) );
   }  
 
-  function get_project( $pid, $archive_flag = 0 ) {
+  function get_project( $pid, $reload = false ) {
     // retrieves all properties from database for given
     // project.  Also returns the following:
     //    children -  an array of tickets that belong to this project 
@@ -137,29 +136,27 @@ class zenTrack extends zen {
     //    percent_hours - is the percentage completion based on est_ and wkd_
     // if $archive_flag = 1, then will look in archived tickets instead of 
     // active tickets table
-
+    
     // check the cached data
-    $t = $this->_session->getDataCache('tickets',$id);
+    $t = $reload? false : $this->_session->getDataCache('tickets',$pid);
     if( $t ) { return $t; }
 
-    $table = ($archive_flag)? 
-      $this->table_tickets_archived : $this->table_tickets;
+    $table = $this->table_tickets;
     $pid = $this->checkNum($pid);
     $query = "SELECT * FROM $table WHERE id = $pid";
     $vars = $this->db_quickIndexed($query);
     if( is_array($vars) && count($vars) ) {
-      list($vars["est_hours"], $vars["wkd_hours"]) = 
-        $this->getProjectHours($pid, $archive_flag);
-        $vars["children"] = $this->getProjectChildren($pid, NULL, $archive_flag);
+      $vars["children"] = $this->getProjectChildren($pid);
+      $vars['total_children'] = count($vars['children']);
     }
     
     // store in data cache
-    $this->_session->storeDataCache('tickets',$id,$vars);
+    $this->_session->storeDataCache('tickets',$pid,$vars);
     
     return($vars);
   }
 
-  function get_projects( $params, $sort = 'priority, otime desc', $archive_flag =0 ) {
+  function get_projects( $params, $sort = 'priority, otime desc' ) {
     // retrieves a list of projects
     // see get_tickets() for a list of valid params
     // (with the exception of 'type_id' which is set to
@@ -170,10 +167,10 @@ class zenTrack extends zen {
     // if $archive_flag = 1, then retrieves from archive table
 
     $params["type_id"] = $this->projectTypeID();
-    return( $this->get_tickets($params, $sort, NULL, $archive_flag) );
+    return( $this->get_tickets($params, $sort) );
   }
 
-  function get_ticket( $id, $archive_flag = 0 ) {
+  function get_ticket( $id, $reload = 0 ) {
     // retrieves the properties for a 
     // specific ticket by id
     // use get_project() instead for projects
@@ -181,9 +178,9 @@ class zenTrack extends zen {
     // to a project and all it's children
     // $archive_flag retrieves tickets from archive db instead
     // of the ticket db
-
+    
     // check the cached data
-    $t = $this->_session->getDataCache('tickets',$id);
+    $t = $reload? false : $this->_session->getDataCache('tickets',$id);
     if( $t ) { return $t; }
     
     // load from database
@@ -197,7 +194,7 @@ class zenTrack extends zen {
                     
     // add to the cache
     $this->_session->storeDataCache('tickets',$id,$vals);
-                    
+    
     return( $vals );
   }
   
@@ -273,18 +270,49 @@ class zenTrack extends zen {
    * @param string $columns [optional] comma separated list of columns to select 
    */
   function get_tickets( $params = '', $sort = 'priority desc, otime desc', 
-                        $columns = '', $archive_flag = 0 ) {
+                        $columns = '', $pageNumber = null ) {
+    // sorting by priority is a special case... we don't want to sort
+    // by the priority_id, we want the sort order, so we will include
+    // the priority table and alter the processing slightly to get the
+    // desired effect
     $tf_pri = preg_match("/priority/", $sort);
 
+    // parse fields and deal with special values such as custom fields, which
+    // mean that we need to include the custom table
+    foreach($params as $k=>$v) {
+      if( strpos($k, 'custom_') === 0 ) {
+        // if we have custom fields in the search criteria, we must include the table
+        $tf_vf = true;
+        break;
+      }
+    }
+    
+    // if we are using the priority table and the priority appears in the where
+    // clause, then the priority fields are ambiguous, so we will deal with
+    // this case by providing a special name for the priority field.
+    if( $tf_pri && array_key_exists('priority', $params) ) {
+      $params['t.priority'] = $params['priority'];
+      unset($params['priority']);
+    }
+    
+    // if we have custom fields in the sort criteria, we must include the table
+    if( !$tf_vf ) { $tf_vf = strpos($sort, 'custom_') === 0; }
+
     //added for paging feature
-    $pageNumber = array_key_exists('pageNumber', $_GET)? 
-                $this->checkNum($_GET['pageNumber']) : 0;
+    if( !strlen($pageNumber) ) {
+      $pageNumber = array_key_exists('pageNumber', $_GET)? 
+                  $this->checkNum($_GET['pageNumber']) : 0;
+    }
     
     $tables = $this->table_tickets." t";
     if( $tf_pri ) {
       $tblpri = $this->table_priorities;
       $tables .= ", $tblpri p";
       $sort = str_replace("priority", "ppri", $sort);
+    }
+    
+    if( $tf_vf ) {
+      $tables .= ", ".$this->table_varfield." vf";
     }
 
     if( !is_array($columns) ) {
@@ -310,6 +338,9 @@ class zenTrack extends zen {
     else {
       $where = $where? "WHERE $where" : '';
     }
+    if( $tf_vf ) {
+      $where .= $where? " AND t.id = vf.ticket_id " : " WHERE t.id = fv.ticket_id ";
+    }
       
     $query = "SELECT ".join(",",$columns)." FROM $tables $where";
 
@@ -326,7 +357,7 @@ class zenTrack extends zen {
     $this->addDebug("get_tickets","count(vals)=".count($vals).",numtoshow=".$numtoshow.",start=".$start.",total_records=".$this->total_records.",query=".$query,3);    
     return $vals;
     //return( $this->db_queryIndexed($query) );
-  }      
+  }
 
   /**
    * retrieves the count of tickets
@@ -1158,7 +1189,7 @@ class zenTrack extends zen {
       }
     }
     $res = $this->db_update( $this->table_varfield, "ticket_id", $ticket_id, $field_values_std );
-    if ($res) {
+    if ($res && count($field_values_multi) ) {
       foreach($field_values_multi as $key=>$val) {
         $query = "DELETE FROM ".$this->table_varfield_multi." WHERE ticket_id = ".$ticket_id." AND field_name = '".$key."'";
         $res_del = $this->db_result($query);
@@ -3098,18 +3129,28 @@ class zenTrack extends zen {
   function delete_attachment( $access_id ) { 
     // deletes attachments by attachment_id
     // can be an array
-
-    $access_id = $this->checkNum($access_id);
+    $c = 0;
     if( !is_array($access_id) )
       $access_id = array($access_id);
+    $ids = array();
     for( $i=0; $i<count($access_id); $i++ ) {
-      $att = $this->get_attachment($access_id[$i]);
-      $file = $this->attachmentDir."/$att[name]";
-      unlink($file);   
+      $aid = $this->checkNum($access_id[$i]);
+      $att = $this->get_attachment($aid);
+      if( !$att || !count($att) ) {
+        $this->addDebug('delete_attachment', "Attachment not found: "+$access_id);
+        continue;
+      }
+      $ids[] = $aid;
+      $file = $this->libDir."/attachments/{$att['filename']}";
+      unlink($file);
+      $c++;
     }
-    $query = "DELETE FROM ".$this->table_attachments
-      ." WHERE attachment_id IN(".join(",",$id).")";
-    return( $this->db_result($query) );
+    if( count($ids) ) {
+      $query = "DELETE FROM ".$this->table_attachments
+        ." WHERE attachment_id IN(".join(",",$ids).")";
+      if( $this->db_result($query) ) { return $c; }
+    }
+    return false;
   }
 
   function delete_all_attachments( $ids ) {
@@ -3118,6 +3159,7 @@ class zenTrack extends zen {
 
     if( !is_array($ids) )
       $ids = array($ids);
+    $access_id = array();
     foreach($ids as $id) {
       $id = $this->checkNum($id);
       $att = $this->get_attachments($id, $flag);
@@ -4286,6 +4328,10 @@ class zenTrack extends zen {
         $tickets = $this->get_tickets(
           array('type_id'=>$this->projectTypeIds(),'bin_id'=>$validBins)
         );
+        for($i=0; $i<count($tickets); $i++) {
+          $t = $tickets[$i];
+          $vals["{$t['id']}"] = $t['title'];
+        }
         break;
       default:
         return null;
@@ -4361,7 +4407,16 @@ class zenTrack extends zen {
     $userBins = $this->_session->getDataType('userbins');
     if( !isset($userBins) ) { $userBins = array(); }
     if( !isset($userBins["U$user_id"]) ) { $userBins["U$user_id"] = array(); }
-    if( isset($userBins["U$user_id"]["L$level"]) ) { return $userBins["U$user_id"]["L$level"]; }
+    if( isset($userBins["U$user_id"]["L$level"]) ) { 
+      $vars = $userBins["U{$user_id}"]["L$level"];
+      if( $this->debug > 2 ) {
+        // don't waste resources if it is not going to be printed
+        $adp = (is_array($vars))? 
+          join(",",$vars) : "-none-";
+          $this->addDebug("getUsersBins", $this->formatName($user_id)." loaded from session: ".$adp,3);
+      }
+      return $vars;
+    }
     
     // insure that our session cache doesn't become excessive
     if( count($userBins) > 5 ) {
@@ -4393,9 +4448,12 @@ class zenTrack extends zen {
     $this->_session->storeDataType('userbins', $userBins);
 
     // debug and return results
-    $adp = (is_array($vars))? 
-      join(",",$vars) : "-none-";
-    $this->addDebug("getUsersBins", "user bins loaded from database: ".$adp,3);
+    if( $this->debug > 2 ) {
+      // don't waste resources if it is not going to be printed
+      $adp = (is_array($vars))? 
+        join(",",$vars) : "-none-";
+        $this->addDebug("getUsersBins", $this->formatName($user_id)." loaded from database: ".$adp,3);
+    }
     return $vars;
   }
   
@@ -4709,7 +4767,7 @@ class zenTrack extends zen {
                                "img"      => "trash.png",
                                "label"    => tr("Delete"),
                                "button"   => 0,
-                               "key"      => 'D',
+                               "key"      => null,
                                "level"    => $this->getSetting('level_settings')
                                );
       $actions["edit"] = array(
@@ -4721,7 +4779,7 @@ class zenTrack extends zen {
                                "img"      => "pin_blue.png",
                                "label"    => tr('Edit'),
                                "button"   => 1,
-                               "key"      => 'E',
+                               "key"      => 'D',
                                "level"    => $this->getSetting("level_edit")
                                );
       $actions["email"] = array(
@@ -4733,7 +4791,7 @@ class zenTrack extends zen {
                                 "img"      => "mail.png",
                                 "label"    => tr('Email'),
                                 "button"   => 1,
-                                "key"      => 'I',
+                                "key"      => 'E',
                                 "level"    => $this->getSetting("level_view")
                                 );
       $actions["estimate"] = array(
@@ -4756,7 +4814,7 @@ class zenTrack extends zen {
                               "egate"    => 1,
                               "img"      => "book_blue.png",
                               "label"    => tr('Log'),
-                              "button"   => 0,
+                              "button"   => 1,
                               "key"      => 'L',
                               "level"    => $this->getSetting("level_user")
                               );
@@ -4860,8 +4918,8 @@ class zenTrack extends zen {
                                  "egate"    => 0,
                                  "img"      => "tree.png",
                                  "label"    => tr('Relate'),
-                                 "button"   => 0,
-                                 "key"      => '',
+                                 "button"   => 1,
+                                 "key"      => 'X',
                                  "level"    => $this->getSetting("level_user")
                                  );
       $actions["reopen"] = array(
@@ -5408,7 +5466,7 @@ class zenTrack extends zen {
     }
   }
 
-  function getProjectChildren( $pid, $columns = '', $archive_flag = 0 ) {
+  function getProjectChildren( $pid, $columns = '', $archive_flag = 0, $sort = "status desc, t.priority desc, otime desc" ) {
     // returns array of tickets for the project by its pid ($pid)
     // this is seperated from the get_tickets() for abstraction
     // (i.e. future expansion compatability)
@@ -5417,8 +5475,11 @@ class zenTrack extends zen {
 
     $pid = $this->checkNum($pid);
     $params = array("project_id"=>$pid);
-    $sort = "status desc, priority desc, otime desc";
-    $vars = $this->get_tickets($params, $sort, $columns, $archive_flag);
+    $page = 0;
+    $vars = $this->get_tickets($params, $sort, $columns,$page++);
+    while( count($vars) < $this->total_records ) {
+      $vars = array_merge($vars,$this->get_tickets($params,$sort,$columns,$page++));
+    }
     return( $vars );
   }
 
@@ -5430,21 +5491,25 @@ class zenTrack extends zen {
     $id = $this->checkNum($id);
     $ticket = $this->get_ticket($id);
     $est_hours = $ticket["est_hours"];
-    $wkd_hours = $ticket["wkd_hours"];
+    $ext_hours = $ticket['wkd_hours'];
+    $wkd_hours = $ext_hours>$est_hours? $est_hours : $ext_hours;
 
     // get the children for this project
-    $columns = array("id","est_hours","wkd_hours","type_id");
-    $children = $this->getProjectChildren($id,$columns,$archive_flag);
-    if( is_array($children) ) {
-      for( $i=0; $i<count($children); $i++ ) {
-        list($e,$w) = $this->getTicketHours($children[$i]["id"]);
-        $est_hours += $e;
-        $wkd_hours += $w;
+    if( $this->inProjectTypeIDs($ticket['type_id']) ) {
+      $columns = array("id","est_hours","wkd_hours","type_id");
+      $children = $this->getProjectChildren($id,$columns,$archive_flag);
+      if( is_array($children) ) {
+        for( $i=0; $i<count($children); $i++ ) {
+          list($e,$w,$x) = $this->getTicketHours($children[$i]["id"]);
+          $est_hours += $e;
+          $wkd_hours += $w;
+          $ext_hours += $x;
+        }
       }
     }
     $this->addDebug("getTicketHours","Retrieving hours for $id, with ".count($children)
-                    ." children: $est_hours, $wkd_hours",3);
-    return( array($est_hours,$wkd_hours) );   
+                    ." children: $est_hours, $wkd_hours, $ext_hours",3);
+    return( array($est_hours,$wkd_hours,$ext_hours) );   
   }
 
   function getProjectHours( $pid, $archive_flag = 0 ) {
@@ -5516,6 +5581,15 @@ class zenTrack extends zen {
   }
 
   function inProjectTypeIDs($type_id) {
+    if( is_array($type_id) ) {
+      // handle arrays by checking each value seperately
+      foreach($type_id as $t) {
+        if( !$this->inProjectTypeIDs($t) ) {
+          return false;
+        }
+      }
+      return true;
+    }
     // determines whether the id provided
     // is a valid project id
     // and returns true or false
@@ -5977,16 +6051,16 @@ class zenTrack extends zen {
     return( $this->db_result($query) );
   }
   
-  function get_contacts( $params,$tabel ,$sort, $columns = '') {
+  function get_contacts( $params,$tabel ,$sort = '', $columns = '') {
     //get contacts
     $columns =  array("*");
     
-    if(count($params)&&!empty($params)){
+    if(is_array($params) && count($params)){
       foreach($params as $a) {
         if(!isset($where)) {
-          $where = "WHERE lower(".$a[1].")".$a[2]."'".$a[3]."'";  
+          $where = "WHERE lower(".$a[0].")".$a[1].$this->checkSlashes($a[2]);
         } else {
-          $where.= " AND lower(".$a[1].")".$a[2]."'".$a[3]."'";    
+          $where.= " AND lower(".$a[0].")".$a[1].$this->checkSlashes($a[2]);
         }  
       }
     }
@@ -6063,22 +6137,24 @@ class zenTrack extends zen {
   // $show_blank parameter (default to "off") :
   //  . "off" - don't show the "Next" or "Previous" when it is not needed
   //  . "on"  - show the "Next" or "Previous" strings as plain text when it is not needed
-  function get_links($option = "all", $show_blank = "off") {
-
+  function get_links($option = "all", $show_blank = "off", $total_rows = null) {
+     $hk = $GLOBALS['zt_hotkeys'];
      $numtoshow = $this->getSetting("paging_max_rows");
      list($extra_vars, $file) = $this->build_geturl();
      $pageNumber = array_key_exists('pageNumber', $_GET)? 
                  $this->checkNum($_GET['pageNumber']) : 0;
-     $activePages = 10;
-     $number_of_pages = ceil($this->total_records/ $numtoshow);
-     $subscript = 0;
-     $backnos = intval($activePages/2);
-     $prev = tr('Prev');
-     $next = tr('Next');
      
      $array = array();
-     if( $this->total_records == 0 ) { return $array; }
+     if( !$total_rows && !$this->total_records ) { return $array; }
+     else if( !$total_rows ) { $total_rows = $this->total_records; }
        
+     $activePages = 10;
+     $number_of_pages = ceil($total_rows/ $numtoshow);
+     $subscript = 0;
+     $backnos = intval($activePages/2);
+     $prev = $hk->ll('Prev');
+     $next = $hk->ll('Next');
+
      if( $number_of_pages > $activePages ) {
        // we have more pages than we will display at once
        if( $pageNumber - $backnos > 0 ) {
@@ -6107,7 +6183,8 @@ class zenTrack extends zen {
      if( $number_of_pages == 1 ) { return array(); }
      if ( ($option == "all") || ($option == "sides") ) {
        if($pageNumber != 0) {
-         $array[] = '<A HREF="' . $file . '?pageNumber=' . ($pageNumber - 1) . $extra_vars . '">'.$prev.'</A>';
+         $array[] = '<A title="'.$hk->tt('Prev').'" id="pagingPrevLink" HREF="' . $file 
+          . '?pageNumber=' . ($pageNumber - 1) . $extra_vars . '">'.$prev.'</A>';
        }
        elseif ($pageNumber == 0 && $show_blank == "on") {
          $array[] = $prev;
@@ -6124,7 +6201,7 @@ class zenTrack extends zen {
        }
      }
      if ( ($option == "all" || $option == "sides") && $pageNumber != ($maxrow - 1) ) {
-       $array[] = '<A HREF="' . $file . '?pageNumber=' . ($pageNumber + 1) . $extra_vars . '">' . $next . '</A>';
+       $array[] = '<A title="'.$hk->tt('Next').'" id="pagingNextLink" HREF="' . $file . '?pageNumber=' . ($pageNumber + 1) . $extra_vars . '">' . $next . '</A>';
      }
      else if (($option == "all" || $option == "sides") && $pageNumber == $maxrow-1 && $show_blank == 'on') {
        $array[] = $next;

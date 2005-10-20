@@ -22,9 +22,11 @@
   
   if( preg_match('@^[0-9]+$@', $idText) ) {
     // this is a ticket id, so try to pull it up
-    $id = $zen->checkNum($idText);
+    $id = $idText;
     $ticket = $zen->get_ticket($id);
-    if( $ticket ) {
+    if( is_array($ticket) ) {
+      $page_type = $zen->inProjectTypeIDs($ticket['type_id'])? 'project' : 'ticket';
+      $view = "{$page_type}_view";
       include("$rootWWW/ticket.php");
       exit;
     }

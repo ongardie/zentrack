@@ -1,59 +1,36 @@
-<? if( !ZT_DEFINED ) { die("Illegal Access"); } ?>
+<? if( !ZT_DEFINED ) { die("Illegal Access"); }
+  include_once("$libDir/sorting.php");
+  $tickets = $zen->get_tickets(array('project_id'=>$id),$sortstring);
+  $total_children = $zen->total_records;
+  $hotkeys->loadSection('project_tasks');
 
-  <table width="600" cellpadding="2" cellspacing="2">
-  <tr> 
-     <td align="right">
-     <form action="<?=$rootUrl?>/newTicket.php">
-     <input type="hidden" name="project_id" value="<?=$zen->checkNum($id)?>">
-       <?
-         if( $zen->checkAccess($login_id,$ticket["bin_id"],"create") ) {
-	    $button = "submit";
-	    $color = $zen->getSetting("color_highlight");
-	 } else {
-	    $button = "button";
-	    $color = $zen->getSetting("color_alt_background");
-	 }
-       ?>
-       <input type="<?=$button?>" value=" <?=$zen->ttl("Add ticket to project")?> " class="actionButton" style="width:125;color:<?=$color?>">  
-     </form>
-     </td>
-   </tr>  
-  <tr> 
-     <td align="right">
-     <form action="<?=$rootUrl?>/newProject.php">
-     <input type="hidden" name="project_id" value="<?=$zen->checkNum($id)?>">
-       <?
-         if( $zen->checkAccess($login_id,$ticket["bin_id"],"create") ) {
-	    $button = "submit";
-	    $color = $zen->getSetting("color_highlight");
-	 } else {
-	    $button = "button";
-	    $color = $zen->getSetting("color_alt_background");
-	 }
-       ?>
-       <input type="<?=$button?>" value=" <?=tr("Create Sub-Project")?> " class="actionButton" style="width:125;color:<?=$color?>">  
-     </form>
-     </td>
-   </tr>    
-   <tr>  
-     <td class='Subtitle'>
-       <?=tr("Tasks for this project")?>
-     </td>
-   </tr>  
-   <tr>
-     <td valign="top">
-<?
-  if( is_array($children) && count($children) > 0) {
-     $tickets = $children;
-     unset($children);
-     include("$templateDir/listTickets_workFormat.php");
+  if( is_array($tickets) && count($tickets) > 0) {
+    $master_view = $view;
+    $view = 'project_tasks';
+    include("$templateDir/listTickets.php");
+    $view = $master_view;
   } else {
      print tr("No tickets have been added to this Project.");
   }
 ?>
+  <table width="100%" cellpadding="2" cellspacing="2">
+  <tr>
+     <td width='100%'>&nbsp;</td>
+     <td align="right">
+     <form style='display:inline' name='newTicketHotkey' action="<?=$rootUrl?>/newTicket.php">
+     <input type="hidden" name="project_id" value="<?=$zen->checkNum($id)?>">
+     <? renderDivButtonFind('Add Ticket to Project'); ?>
+     </form>
      </td>
-   </tr>
+     <td align='left'>
+     <form style='display:inline' name='newProjectHotkey' action="<?=$rootUrl?>/newProject.php">
+     <input type="hidden" name="project_id" value="<?=$zen->checkNum($id)?>">
+     <? renderDivButtonFind('Create Sub-Project'); ?>
+     </form>
+     </td>
+   </tr>    
    </table>
+
 
 
 

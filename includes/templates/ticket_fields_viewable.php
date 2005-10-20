@@ -52,14 +52,14 @@
     }
     
     // open row
-    print "<table class='boxpad' cellpadding='0' cellspacing='0'>\n";
+    print "<table cellpadding='0' cellspacing='0'>\n";
     
     // print headings
     print "<tr>";
     foreach($vals as $v) {
       if( $v['label'] == '' && $v['value'] == '' ) {
         // this is a gap
-        print "<td rowspan='2' width='5'>&nbsp;</td>\n";
+        print "<td rowspan='2' class='propSpace'>&nbsp;</td>\n";
       }
       else {
         $w = $width? "width=$width" : "";

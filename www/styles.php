@@ -18,7 +18,7 @@
      margin-left:      4px;
      margin-top:       4px;
   }
-
+  
   TD {
      font-family:      <?=$zen->getSetting("font_face")?>;
      font-size:        <?=$zen->getSetting("font_size")?>px;
@@ -30,9 +30,9 @@
   }
   
   FORM {
+     display: inline;
      margin: 0px;
      padding: 0px;
-     display: inline;
   }
   
   
@@ -51,7 +51,7 @@
   }
   
   .padded {
-    padding: 3px;
+    padding: 3px !important;
   }
   
   .ridge {
@@ -63,22 +63,28 @@
     border-top: 2px inset <?=$zen->getSetting('color_bar_darker')?>;
   }
   
+  .bottom {
+    border-bottom: 1px solid <?=$zen->getSetting('color_bar_border')?>;
+  }
+
   .gutter {
     padding-left: 3px;
   }
   
-  .navpad {
+  TD.navpad {
     padding-top: 3px;
     padding-bottom: 3px;
+    padding-left: 0px;
+    padding-right: 0px;
   }
   
-  .indent {
+  .indent, .indented {
     padding-left: 10px;
+    padding-right: 10px;
   }
   
   .boxpad {
-    padding-top: 5px;
-    padding-bottom: 5px;
+    padding: 10px;
   }
   
   .tabpad {
@@ -101,7 +107,6 @@
   }
 
   A:hover {
-     color:           <?=$zen->getSetting("color_hover")?>;
      text-decoration: underline;
   }
 
@@ -166,6 +171,7 @@
      color:       <?=$zen->getSetting("color_alt_background")?>;
      background:  <?=$zen->getSetting("color_alt_text")?>;
      padding: 2px;
+     border:  1px solid <?=$zen->getSetting('color_alt_background')?>;
   }
 
   .altCellInv {
@@ -192,18 +198,29 @@
     color:       <?=$zen->getSetting('color_hot')?>;
   }
 
-  .bars, .bar {
+  .bars, .bar, .invalidBars {
      color:       <?=$zen->getSetting("color_bar_text")?>;
      background:  <?=$zen->getSetting("color_bars")?>;
      padding: 2px;
+     border: 1px solid <?=$zen->getSetting('color_bars')?>;
+  }
+  
+  .invalidBars TD {
+    color:    <?=$zen->getSetting('color_hot')?>;
+    border: 1px solid <?=$zen->getSetting('color_hot')?>;
+    padding: 2px;
+  }
+  
+  .lighter {
+    background: <?=$zen->getSetting('color_bars')?> !important;
   }
   
   .darker {
-    background: <?=$zen->getSetting('color_bar_darker')?>;
+    background: <?=$zen->getSetting('color_bar_darker')?> !important;
   }
   
   .darkest {
-    background: <?=$zen->getSetting('color_bar_darkest')?>;
+    background: <?=$zen->getSetting('color_bar_darkest')?> !important;
   }
 
   .disabled, .disabled INPUT, .disabled BUTTON, .disabled SUBMIT, 
@@ -213,8 +230,8 @@
   }
   
   .altBars {
-     color:       <?=$zen->getSetting("color_bars")?>;
-     background:  <?=$zen->getSetting("color_bar_text")?>;
+     color:       <?=$zen->getSetting("color_alt_text")?>;
+     background:  <?=$zen->getSetting("color_alt_background")?>;
      padding: 2px;
   }
 
@@ -241,7 +258,42 @@
      color:          <?=$zen->getSetting("color_bar_text")?>;
      background:     <?=$zen->getSetting("color_bar_darkest")?>;  
      font-weight:    Bold;
-     border: 1px solid <?=$zen->getSetting('color_bar_text')?>;
+     padding: 2px;
+     /* border: 1px solid <?=$zen->getSetting('color_bar_text')?>; */
+     border-left: 1px solid <?=$zen->getSetting('color_title_background')?>;
+     border-top: 1px solid <?=$zen->getSetting('color_title_background')?>;
+     border-right: 1px solid <?=$zen->getSetting('color_bar_text')?>;
+     border-bottom: 1px solid <?=$zen->getSetting('color_bar_text')?>;
+  }
+  
+  .navCell {
+     color:          <?=$zen->getSetting("color_bar_text")?>;
+     background:     <?=$zen->getSetting("color_bar_darkest")?>;  
+     font-weight:    Bold;
+     border: 1px solid <?=$zen->getSetting('color_bar_border')?>;
+     padding: 3px;
+  }
+  
+  TABLE.slimPad {
+    border-spacing: 0px 3px;
+  }
+  
+  .slimPad TD {
+    padding-left: 10px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    padding-right: 2px;
+  }
+  
+  .headerCell, TD.headerCell {
+     font-size: <?=$zen->getSetting('font_size_small')?>px;
+     background: <?=$zen->getSetting('color_bar_darker')?>;
+     border: 1px dotted <?=$zen->getSetting('color_bar_border')?>;
+     text-align: center;
+     padding-left: 3px;
+     padding-right: 3px;
+     padding-top: 0px;
+     padding-bottom: 0px;
   }
   
   .menuCell {
@@ -360,7 +412,7 @@
   }
   
   .accesskeys {
-   border: 0; width: 0px; height: 0px;    
+   border: 0; width: 0px; height: 0px; display:inline; position:absolute;
   }
   
   A.navTab { border: none; }
@@ -376,6 +428,13 @@
   }
 
   /*** TEXT PROPERTIES ***/
+  
+.heading {
+  font-size:   <?=$zen->getSetting('font_size_large')?>;
+  font-weight: bold;
+  color:       <?=$zen->getSetting('color_alt_text')?>;
+  margin: 10px;
+}
 
 .alttext {
    color:       <?=$zen->getSetting("color_alt_text")?>;
@@ -510,21 +569,26 @@ TD.bigger { font-size: 50px; }
   }
   
   .leftNavCell {
-    background: <?=$zen->getSetting('color_bars')?>;
+    background: <?=$zen->getSetting('color_bar_darker')?>;
     font-size:  <?=$zen->getSetting('font_size_small')?>px;
+    border: 1px inset <?=$zen->getSetting('color_bar_border')?>;
   }
   
   .leftNavMenu {
     background: <?=$zen->getSetting('color_bars')?>;
     font-weight: bold;
     font-size:  <?=$zen->getSetting('font_size')?>px;
+    font-size:  <?=$zen->getSetting('font_size')?>px;
+    border: 1px outset <?=$zen->getSetting('color_bar_border')?>;
   }
   
-  .leftNavTitle {
+  .leftNavTitle, TD.leftNavTitle {
     color: <?=$zen->getSetting('color_title_text')?>;
-    text-align: center;
     font-weight: bold;
     font-size:  <?=$zen->getSetting('font_size')?>px;
+    border-left: 5px solid <?=$zen->getSetting('color_title_background')?>;
+    border-top: 1px solid <?=$zen->getSetting('color_title_background')?>;
+    padding-top: 4px;
   }
   
   .inset {
@@ -579,21 +643,27 @@ TD.bigger { font-size: 50px; }
   
   .propContent, .propLabel {
     color:      <?=$zen->getSetting('color_text')?>;
-    font-size:  <?=$zen->getSetting('font_size')?>;
+    /* font-size:  <?=$zen->getSetting('font_size')?>; */
+    font-size:  <?=$zen->getSetting('font_size_small')?>;
   }
   
   .propContent {
     background: <?=$zen->getSetting('color_background')?>;
     border:     1px solid <?=$zen->getSetting('color_bar_darkest')?>;
-    padding: 5px;
+    /* padding: 5px; */
+    padding: 3px;
   }
   
   .propLabel {
+    /* font-weight: bold; */
     background: <?=$zen->getSetting('color_bar_darkest')?>;
     border:     1px solid <?=$zen->getSetting('color_bar_darkest')?>;
-    font-weight: bold;
-    padding: 2px 5px;
+    padding: 1px 3px;
     white-space: nowrap;
+  }
+  
+  .propSpace {
+     width: 8px;
   }
   
   .barborder {
@@ -661,7 +731,69 @@ TD.bigger { font-size: 50px; }
   
   .keySubHigh {
     margin-left: -20px;
-    margin-top: -10px;
+    margin-top: -5px;
+  }
+  
+  .actionFormBox {
+    padding-left: 15px;
+    padding-top: 15px;
+  }
+  
+  .menuBox {
+    border-top: 1px solid <?=$zen->getSetting('color_bar_darker');?>;
+    border-left: 15px solid <?=$zen->getSetting('color_bar_darker');?>;
+    padding-left: 5px;
+    /* width: 80%; */
+    margin-top: 40px;
+    margin-left: 30px;
+  }
+  
+  .menuBox P.note, .menuBox P.note:hover {
+    font-weight: bold;
+    font-size:  <?=$zen->getSetting('font_size')?>;
+    background: none;
+  }
+  
+  .menuBox P.note A, .menuBox P.note A:hover {
+    background: none;
+    padding: 0px;
+  }
+  
+  .menuBox P {     
+    margin-top: 8px;
+    margin-bottom: 5px;
+    margin-left: 8px;
+  }
+  
+  .menuBox P:hover {
+    background: <?=$zen->getSetting('color_background');?>;
+  }
+  
+  .menuBox A {
+    background-image: url(<?=$imageUrl?>/16x16/arrow_grey_right.png);
+    background-repeat: no-repeat;
+    background-position: 0 0px;
+    padding-left: 25px;
+    font-weight: bold;
+  }
+  
+  .menuBox A:hover {
+    background: <?=$zen->getSetting('color_background');?>;
+    background-image: url(<?=$imageUrl?>/16x16/arrow_green_right.png);
+    background-repeat: no-repeat;
+    background-position: 0 0px;
+  }
+  
+  .menuBox DIV {
+    margin-left: -20px;
+    margin-top:  -25px;
+    font-weight: bold;
+    font-size:   <?=$zen->getSetting('font_size_large')?>;
+    color:       <?=$zen->getSetting('color_bar_border')?>;
+  }
+  
+  A.pinIcon:hover {
+    background: <?=$zen->getSetting('color_highlight')?>;
   }
   
 -->

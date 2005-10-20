@@ -5,7 +5,7 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
 if( is_array($tickets) ) {
  
       ?>
-        <table width="100%" cellspacing='1' cellpadding='2' bgcolor='<?=$zen->getSetting("color_alt_background")?>'>
+        <table width="100%" class='formtable' cellspacing='1'>
    <tr bgcolor="<?=$zen->getSetting("color_title_background")?>">
    <td width="32" height="25" valign="middle" title="<?=tr("ID of the ?",array($page_type))?>">
      <div align="center"><span style="color:<?=$zen->getSetting("color_title_txt")?>"><b><span class="small"><?=tr("ID")?></span></b></span></div>
@@ -55,8 +55,8 @@ if( is_array($tickets) ) {
       else if( $zen->getSetting("priority_medium") ) {
         $classxText = "class='priority{$t['priority']}' "
          ."onclick='ticketClk(\"{$link}?id={$t['id']}\")' "
-         ."onMouseOver='mClassX(this, \"priority{$t['priority']}Over\", true)' "
-         ."onMouseOut='mClassX(this, \"priority{$t['priority']}\", false)'";
+         ."onMouseOver='if(window.document.body && mClassX){mClassX(this, \"priority{$t['priority']}Over\", true);}' "
+         ."onMouseOut='if(window.document.body && mClassX){mClassX(this, \"priority{$t['priority']}\", false);}'";
       }
       else {
         $classxText = "class='cell' onclick='ticketClk(\"{$link}?id={$t['id']}\")' $rollover_text";
@@ -69,16 +69,16 @@ if( is_array($tickets) ) {
       $ttl_wkd += ($wkd > $est)? $est : $wkd;
       $ttl_ext += ($wkd > $est)? $wkd - $est : 0;
       if( !strlen($est) )
-   $est = "n/a";
+      $est = "n/a";
       if( $wkd <= 0 )
-   $wkd = 0;
+      $wkd = 0;
       if( $zen->inProjectTypeIDs($t["type_id"]) ) {   
-   $link = $projectUrl;
+        $link = $projectUrl;
       } else {
-   $link = $ticketUrl;
+        $link = $ticketUrl;
       }
       if( $est > 0 )
-   $per = round($zen->percentWorked($est,$wkd),1)."%";
+      $per = round($zen->percentWorked($est,$wkd),1)."%";
    ?>
    <tr <?=$classxText?>>
    <td height="25" valign="middle" <?=$td_ttl?> <?=$txt?>>

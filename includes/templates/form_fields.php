@@ -22,6 +22,7 @@
   if( strlen($ticket['otime']) && $td ) { $ticket['otime'] = $zen->showDateTime($ticket['otime']); }
 
   //$formview = $td? 'ticket_edit' : 'ticket_create';
+  $context_vals = array('view' => $formview, 'form' => $form_name);
   $fields = $map->listFieldsForView($formview);
   $hidden_fields = array();
   $visible_fields = array();
@@ -35,14 +36,21 @@
     }
   }
   
+  $context = new ZenFieldMapRenderContext($context_vals);
   foreach($hidden_fields as $f) {
-    print $map->renderTicketField($formview, $form_name, $f, $ticket[$f]);
+    $context->set('field', $f);
+    $context->set('value', $ticket[$f]);
+    print $map->renderTicketField($context);
   }
   
+  $context = new ZenFieldMapRenderContext($context_vals);
+  $context->set('force_label', $override_as_label);
   foreach($visible_fields as $f) {
+    $context->set('field', $f);
+    $context->set('value', $ticket[$f]);
     if( in_array($f, $sections) ) {
-      print "<tr><td colspan='2' class='subTitle indent'>";
-      print $map->renderTicketField($formview, $form_name, $f);
+      print "<tr><td colspan='2' class='headerCell indent'>";
+      print $map->renderTicketField($context);
       print "</td></tr>\n";
     }
     else {
@@ -54,7 +62,7 @@
         print $map->getTextValue($formview, $f, $ticket[$f]);
       }
       else {
-        print $map->renderTicketField($formview, $form_name, $f, $ticket[$f], null, $override_as_label);
+        print $map->renderTicketField($context);
       }
       print "</td></tr>\n";
     }

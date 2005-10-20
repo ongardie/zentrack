@@ -1,4 +1,6 @@
-<? if( !ZT_DEFINED ) { die("Illegal Access"); } ?>
+<? if( !ZT_DEFINED ) { die("Illegal Access"); } 
+  $hotkeys->loadSection('agreement_form');
+?>
 <script language='javascript' type='text/javascript'>
   function checkMyBox(fieldName, event) {
     if( !event ) { event = window.event; }
@@ -10,7 +12,7 @@
         }
       }
       if( elem.parentNode ) {
-        elem.parentNode.parentNode.oldStyle = elem.checked? 'invalidCell' : 'cell';
+        elem.parentNode.parentNode.oldStyle = elem.checked? 'invalidBars' : 'bars';
       }
     }
   }
@@ -32,24 +34,18 @@ if(isset($create_time)) { ?>
 
 <table width="640" align="left" cellpadding="2" cellspacing="2" bgcolor="<?=$zen->getSetting("color_background")?>" border="0">
 <tr>
-  <td colspan="2" width="640" class="titleCell" align="center">
+  <td colspan="2" width="640" class="subTitle" align="center">
      <?=tr("Agreement Information")?>
   </td>
 </tr>
 
 <tr>
-  <td colspan="2" class="subTitle">
-    <?=tr("Global")?>
-  </td>
-</tr>
-
-
-<tr>
   <td class="bars" >
-    <?=tr("Agreement ID")?>:
+    <?=$hotkeys->ll("Agreement ID")?>:
   </td>
   <td class="bars">
-    <input type="text" name="contractnr" size="20" maxlength="25"
+    <input title='<?=$hotkeys->tt("Agreement ID")?>' type="text" 
+      name="contractnr" size="20" maxlength="25"
       value="<?=$zen->ffv($contractnr)?>">
   </td>
 </tr>
@@ -116,32 +112,23 @@ value="<?=($dtime)?$zen->showDate($dtime):""?>">
 </tr>
 <tr>
   <td colspan="2" class="bars">
-    <?=tr("Description")?>:
+    <?=$hotkeys->ll("Description")?>:
   </td>
 </tr>
 
 <tr>
   <td colspan="2" class="bars">
-    <textarea cols="60" rows="5" name="description"><?=
+    <textarea cols="60" rows="5" name="description" title="<?=$hotkeys->tt("Description")?>"><?=
 	    $zen->ffv($description)
     ?></textarea>
   </td>
 </tr>
-
-
-
 <tr>
-  <td class="titleCell" colspan="2" align="center">
-  <?=tr("Click button to")?> <?=($td)? tr("save your changes"):tr("create your agreement")?>.
+  <td colspan="2" valign='middle' class="headerCell padded" style='text-align:left'>
+   <? renderDivButtonFind("Create", $skip? "Save":null); ?>
   </td>
 </tr>
-<tr>
-  <td colspan="2" class="bars">
-   <input type="submit" value=" <?=($skip)?"Save":"Create"?> " class="submit">
-   <br>
-  </td>
-</tr>
-
+<tr><td class='bars' colspan='2'>&nbsp;</td></tr>
 <tr>
   <td colspan="2" class="subTitle">
     <?=tr("Items")?>
@@ -149,14 +136,12 @@ value="<?=($dtime)?$zen->showDate($dtime):""?>">
 </tr>
 <tr>
   <td colspan="2" class="bars">
-  <table>
+  <table cellspacing='1' class='formtable'>
   <?
   if (!$id){
-	  $parms = array(1 => array(1 => "agree_id", 2 => "=", 3 => "0")
-		);
+	  $parms = array(array("agree_id", "=", "0"));
   } else {
-	  $parms = array(1 => array(1 => "agree_id", 2 => "=", 3 => $id)
-		);
+	  $parms = array(array("agree_id", "=", $id));
   }
 
 	$sort = "item_id asc";
@@ -167,18 +152,14 @@ value="<?=($dtime)?$zen->showDate($dtime):""?>">
 
 	 foreach($contacts as $t) {
       ?>
-   <tr class='cell'
-       onmouseover='mClassX(this, "altCellInv", "hand")'
-       onmouseout='mClassX(this)'
-       onclick='checkMyBox("drops_<?=$t['item_id']?>", event)'>
-   <td height="25" width="20" valign="middle">
-    <?=$t["item_id"]?>
-   </td>
-   <td height="25" width="200" valign="middle">
+   <tr class='bars' <?=$row_rollover_eff?>
+     onclick='checkMyBox("drops_<?=$t['item_id']?>", event)'>
+   <td  width="20"><?=$t["item_id"]?></td>
+   <td width="200">
     <?=$zen->ffv($t["name1"])?>
    </td>
-   <td height="25"  width="400" valign="middle">
-   <pre><?=$zen->ffv($t["description1"])?></pre>
+   <td width="400">
+   <?=$zen->ffv($t["description1"], 200)?>
    </td>
    <td><input id='drops_<?=$t['item_id']?>'
           type='checkbox' name='drops[]'
@@ -187,7 +168,7 @@ value="<?=($dtime)?$zen->showDate($dtime):""?>">
    <?
    } ?>
    <tr>
-	<td colspan="2">
+	<td class='headerCell' style='text-align:right' colspan='4'>
          <input type="submit"
 	  value=" <?=tr("Drop Items")?> "
           class="actionButton"
@@ -212,7 +193,7 @@ value="<?=($dtime)?$zen->showDate($dtime):""?>">
   </td>
 </tr>
 <tr>
-<td class="bars" colspan="2">
+<td class="bars" colspan="2" valign='top'>
 	<?=tr("Name")?>:
     <input type="text" name="name1" size="30" maxlength="40" value="<?=$zen->ffv($name1)?>">
 
@@ -222,10 +203,8 @@ value="<?=($dtime)?$zen->showDate($dtime):""?>">
 	</td>
 </tr>
 <tr>
-<td>
-<input type="submit" value=" <?=tr("Add Item")?> "
-   onClick='return rerouteAgreementForm("addItems")'
-   class="actionButton">
+<td class='subTitle' colspan='2'>
+<? renderDivButtonFind('Add Item'); ?>
 </td>
 </tr>
 </form>
@@ -234,8 +213,8 @@ value="<?=($dtime)?$zen->showDate($dtime):""?>">
 
 <script language='javascript'>
   function rerouteAgreementForm( action ) {
-    document.agreementForm.action = '<?=$_SERVER['PHP_SELF'];?>';
-    document.agreementForm.TODO.value = action;
-    return true;
+    window.document.forms['agreementForm'].action = '<?=$zen->ffv($SCRIPT_NAME)?>';
+    window.document.forms['agreementForm'].elements['TODO'].value = action;
+    window.document.forms['agreementForm'].submit();
   }
 </script>

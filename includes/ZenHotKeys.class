@@ -8,7 +8,9 @@ class ZenHotKeys {
     $this->_fxns = array();
     $this->_idx = array();
     $this->_tabs = array();
+    $this->_keysRendered = array();
     $this->_lh = '';
+    $this->_alternate = $zen->getSetting('hotkeys_alternate_hints');
     $this->_alreadyLoaded = array();
     
     //todo load registered hot keys from database for the 'all' section
@@ -35,6 +37,8 @@ class ZenHotKeys {
       $this->_zen->addDebug('loadSection', "$sect already loaded", 3);
       return;
     }
+    $this->_alreadyLoaded[] = $section;
+    
     //todo load registered hot keys from database and assign here
     $this->_zen->addDebug('loadSection', "Attempting to load section: $sect", 3);
     
@@ -58,10 +62,10 @@ class ZenHotKeys {
       foreach($actions as $k=>$v) {
         if( $v['button'] && $v['key'] ) {
           if( $k == 'print' ) {
-            $this->assign("CTRL+SHIFT+{$v['key']}", "Action: {$v['label']}", "printWindow");
+            $this->assign($v['key'], "Action: {$v['label']}", "printWindow");
             continue;
           }
-          $this->assign("CTRL+SHIFT+{$v['key']}", "Action: {$v['label']}", 
+          $this->assign($v['key'], "Action: {$v['label']}", 
             "KeyEvent.createLoadUrl('{rootUrl}/actions/$k.php?id={id}')", $v['label']);
         }
       }
@@ -74,7 +78,7 @@ class ZenHotKeys {
     else if( $sect == 'action_assign' ) {
       $f = "window.document.forms['assignForm']";
       $this->assign('ALT+R', "Recipient", "{$f}.elements['user_id'].focus()");
-      $this->assign('ALT+I', "Comments or Instructions", "{$f}.elements['comments'].select()");
+      $this->assign('ALT+O', "Comments or Instructions", "{$f}.elements['comments'].select()");
       $this->assign('ALT+A', "Assign", "{$f}.submit()");
     }
     else if( $sect == 'action_close' ) {
@@ -84,9 +88,17 @@ class ZenHotKeys {
     }
     else if( $sect == 'action_contacts' ) {
       $this->assign('ALT+N', 'Create New Contact', "window.document.forms['newContactForm'].submit()");
-      $this->assign('ALT+O', 'Add Contact', "window.document.forms['ContactsAddForm'].submit()");
+      $this->assign('ALT+A', 'Add Contact', "window.document.forms['ContactsAddForm'].submit()");
+      $this->assign('ALT+D', 'Drop Contacts', "window.document.forms['dropContactsForm'].submit()");
       $this->assign('ALT+Y', 'Field: company_id', "window.document.forms['ContactsAddForm'].elements['company_id'].focus()", "Company");
       $this->assign('ALT+E', 'Field: person_id', "window.document.forms['ContactsAddForm'].elements['person_id'].focus()", "Person");
+    }
+    else if( $sect == 'action_notify' ) {
+      $f = "window.document.forms['notifyAddForm']";
+      $this->assign('ALT+R', "Enter Registered Users", "{$f}.elements['user_accts'].select()");
+      $this->assign('ALT+U', "Add an Unregistered User", "{$f}.elements['unreg_name'].select()");
+      $this->assign('ALT+O', "Add a Contact", "{$f}.elements['company_id'].focus()");
+      $this->assign('ALT+A', "Add Recipients", "{$f}.submit()");
     }
     else if( $sect == 'action_email' ) {
       $f = "window.document.forms['emailForm']";
@@ -99,42 +111,107 @@ class ZenHotKeys {
       $this->assign('ALT+E', 'Send Email', "{$f}.submit()");
       $this->assign('ALT+L', 'send option: link',  "emailFormToggle(1)");
       $this->assign('ALT+Y', 'send option: summary', "emailFormToggle(2)");
-      $this->assign('ALT+A', 'send option: log',  "emailFormToggle(3)");
+      $this->assign('ALT+G', 'send option: log',  "emailFormToggle(3)");
+    }
+    else if( $sect == 'action_log' ) {
+      $f = "window.document.forms['logForm']";
+      $this->assign('ALT+Y', 'Select an Activity', "{$f}.elements['log_action'].focus()");
+      $this->assign('ALT+H', 'Enter Hours Worked', "{$f}.elements['hours'].select()");
+      $this->assign('ALT+O', 'Log Entry / Comments', "{$f}.elements['comments'].select()");
+      $this->assign('ALT+A', 'Save Log', "{$f}.submit()");
     }
     else if( $sect == 'action_move' ) {
       $f = "window.document.forms['moveForm']";
       $this->assign('ALT+B',  'New Bin', "{$f}.elements['newBin'].focus()");
       $this->assign('ALT+O',  'Comments', "{$f}.elements['comments'].select()");
-      $this->assign('ALT+M',  'Move',  "alert(arguments[0]+','+window.event+','+event);{$f}.submit()");
+      $this->assign('ALT+M',  'Move',  "{$f}.submit()");
     }
     else if( $sect == 'action_reject' ) {
       $f = "window.document.forms['rejectForm']";
-      $this->assign('ALT+N', 'Reason', "{$f}.elements['comments'].select()");
+      $this->assign('ALT+O', 'Reason', "{$f}.elements['comments'].select()");
       $this->assign('ALT+R', 'Reject', "{$f}.submit()");
+    }
+    else if( $sect == 'action_relate' ) {
+      $f = "window.document.forms['relateTicketForm']";
+      $this->assign('ALT+I', 'Enter Ticket IDs', "{$f}.elements['relations'].select()");
+      $this->assign('ALT+O', 'Comments', "{$f}.elements['comments'].select()");
+      $this->assign('ALT+R', 'Relate', "{$f}.submit()");
     }
     else if( $sect == 'action_reopen' ) {
       $f = "window.document.forms['reopenForm']";
-      $this->assign('ALT+I', 'Comments or Instructions', "{$f}.elements['comments'].select()");
+      $this->assign('ALT+O', 'Comments or Instructions', "{$f}.elements['comments'].select()");
       $this->assign('ALT+R', 'Reopen', "{$f}.submit()");
     }
     else if( $sect == 'action_test' ) {
       $f = "window.document.forms['testForm']";
       $this->assign('ALT+H', 'Hours Worked', "{$f}.elements['hours'].select()");
-      $this->assign('ALT+I', 'Comments or Instructions', "{$f}.elements['comments'].select()");
+      $this->assign('ALT+O', 'Comments or Instructions', "{$f}.elements['comments'].select()");
       $this->assign('ALT+E', 'Testing Complete', "{$f}.submit()");
     }
+    else if( $sect == 'action_upload' ) {
+      $f = "window.document.forms['addAttachmentForm']";
+      $this->assign('ALT+U', 'Select a File to Upload', "{$f}.elements['userfile'].focus()");
+      $this->assign('ALT+E', 'Description of Attachment', "{$f}.elements['comments'].select()");
+      $this->assign('ALT+A', 'Add Attachment', "{$f}.submit()");
+    }
     else if( $sect == 'action_yank' ) {
-      $this->assign('ALT+R', 'Reason', "window.document.forms['pullForm'].elements['comments'].select()");
+      $this->assign('ALT+O', 'Reason', "window.document.forms['pullForm'].elements['comments'].select()");
       $this->assign('ALT+U', 'Pull', "window.document.forms['pullForm'].submit()");
     }
+    else if( $sect == 'agreement_view' ) {
+      $this->assign('ALT+E', 'Edit', "window.document.forms['editAgreementForm'].submit()");
+      $msg = Zen::fixJsHtml(tr("Are you sure you want to archive this agreement?"),"'");
+      $this->assign('ALT+A', 'Archive', "confirmSubmit(window.document.forms['archiveAgreementForm'],$msg)");
+      $msg = Zen::fixJsHtml(tr("Are you sure you want to delete this agreement?"),"'");
+      $this->assign('ALT+D', 'Delete', "confirmSubmit(window.document.forms['deleteAgreementForm'],$msg)");
+    }
+    else if( $sect == 'agreement_form' ) {
+      $f = "window.document.forms['agreementForm']";
+      $this->assign('ALT+A', "Add Item",     "rerouteAgreementForm('addItems')");
+      $this->assign('ALT+O', "Drop Items",   "rerouteAgreementForm('removeItems')");
+      $this->assign('ALT+R', "Create",       "{$f}.submit()");
+      $this->assign('ALT+M', "Agreement ID", "{$f}.elements['contractnr'].select()");
+      $this->assign('ALT+E', "Description",  "{$f}.elements['description'].select()");
+    }
     else if( $sect == 'contacts' ) {
-      $this->assign('ALT+D',  'Find',           "KeyEvent.createLoadUrl('{rootUrl}/searchContacts.php')");
+      $this->assign('ALT+N',  'Find',           "KeyEvent.createLoadUrl('{rootUrl}/searchContacts.php')");
       $this->assign('ALT+B',  'Browse',         "KeyEvent.createLoadUrl('{rootUrl}/agreements.php')");
-      $this->assign('ALT+A',  'New Agreement',  "KeyEvent.createLoadUrl('{rootUrl}/newAgreement.php')");
+      $this->assign('ALT+G',  'New Agreement',  "KeyEvent.createLoadUrl('{rootUrl}/newAgreement.php')");
     }
     else if( $sect == 'contacts_new_menu' ) {
       $this->assign('ALT+Y',  'New Company',    "KeyEvent.createLoadUrl('{rootUrl}/newContact.php?mode2=1')");
       $this->assign('ALT+N',  'New Person',     "KeyEvent.createLoadUrl('{rootUrl}/newContact.php?mode2=2')");
+    }
+    else if( $sect == 'contacts_view' ) {
+      $this->assign('ALT+D',  'Edit',    "KeyEvent.createLoadUrl('{rootUrl}/actions/contact_edit.php?cid={id}')");
+      $this->assign('ALT+L',  'Delete',  "KeyEvent.createLoadUrl('{rootUrl}/actions/contact_delete.php?cid={id}')");
+      $this->assign('ALT+E',  'Add Employee',  "KeyEvent.createLoadUrl('{rootUrl}/actions/contact_employee.php?cid={id}')");
+      $this->assign('ALT+A',  'Add Agreement',  "KeyEvent.createLoadUrl('{rootUrl}/actions/contact_agreement.php?cid={id}')");
+      $this->assign('ALT+I',  'View Tickets', "KeyEvent.createLoadUrl('{rootUrl}/contact.php?overview=tickets&cid={id}')");
+      $this->assign('ALT+Y',  'View Employees',  "KeyEvent.createLoadUrl('{rootUrl}/contact.php?cid={id}&overview=contact')");
+      $this->assign('ALT+M',  'View Agreements',  "KeyEvent.createLoadUrl('{rootUrl}/contact.php?cid={id}&overview=agreement')");
+    }
+    else if( $sect == 'contacts_view_employee' ) {
+      $this->assign('ALT+E',  'Edit',         "window.document.forms['edit_form'].submit()");
+      $msg = Zen::fixJsVal(tr("Are you sure you want to delete this contact?"));
+      $this->assign('ALT+D',  'Delete',       "confirmSubmit(window.document.forms['delete_form'],$msg)");
+      $this->assign('ALT+I',  'View Tickets', "window.document.forms['view_form'].submit()");
+    }
+    else if( $sect == 'contacts_list' ) {
+      $tabs = array('all',"abc","def","ghi","jkl","mno","pqrs","tuv","wxyz","!19");
+      foreach($tabs as $t) {
+        $c = 0;
+        $k = false;
+        while(!$k || (array_key_exists($k,$this->_keys) && $c < strlen($t))) {
+          $k = strtoupper(substr($t,$c,1));
+          if( $k == '!' ) { $k = false; }
+          $c++;
+        }
+        $this->assign($k, $t, "updateUrl('setmode','$t')");
+      }
+      $this->assign('ALT+O', "Company",  "updateUrl('overview', 'company')"  );
+      $this->assign('ALT+E', "External", "updateUrl('overview', 'external')" );
+      $this->assign('ALT+I', "Internal", "updateUrl('overview', 'internal')" );
     }
     else if( $sect == 'log' ) {
       $this->assign('ALT+L',  'Show All Logs',  "window.document.getElementById('systemLogFilterCheckbox').click()");
@@ -150,6 +227,36 @@ class ZenHotKeys {
     else if( $sect == 'options' ) {
       $this->assign('ALT+L',  'Log Off',        "KeyEvent.createLoadUrl('{rootUrl}/index.php?logoff=1')", "Log out of ".$this->_zen->getSetting('system_name'));
     }
+    else if( $sect == 'paging' ) {
+      $this->assign('ALT+E',  "Prev",           "window.location = window.document.getElementById('pagingPrevLink').href");
+      $this->assign('ALT+X',  "Next",           "window.location = window.document.getElementById('pagingNextLink').href");
+    }
+    else if( $sect == 'project_tasks' ) {
+      $this->assign('ALT+A', "Add Ticket to Project", "window.document.forms['newTicketHotkey'].submit()");
+      $this->assign('ALT+R', "Create Sub-Project", "window.document.forms['newProjectHotkey'].submit()");
+    }
+    else if( $sect == 'search_form' ) {
+      $f = "window.document.forms['searchForm']";
+      $this->assign('ALT+E', "Search",  "{$f}.submit()");
+      $this->assign('ALT+O', "Containing", "{$f}.elements['search_text'].select()");
+      $this->assign('ALT+U', "Summary", "{$f}.elements['search_fields[title]'].click()");
+      $this->assign('ALT+D', "Description", "{$f}.elements['search_fields[description]'].click()");
+    }
+    else if( $sect == 'tab_attachments' ) {
+      $this->assign('ALT+D', 'Delete Attachments', "window.document.forms['deleteAttachmentForm'].submit()");
+      $this->assign('ALT+A', 'Add Attachment', "window.document.forms['addAttachmentForm'].submit()");
+    }
+    else if( $sect == 'tab_contacts' ) {
+      $this->assign('ALT+N', 'Create New Contact', "window.document.forms['newContactForm'].submit()");
+      $this->assign('ALT+A', 'Add Contact', "window.document.forms['ContactsAddForm'].submit()");
+      $this->assign('ALT+D', 'Drop Contacts', "window.document.forms['dropContactsForm'].submit()");
+      $this->assign('ALT+Y', 'Field: company_id', "window.document.forms['ContactsAddForm'].elements['company_id'].focus()", "Company");
+      $this->assign('ALT+E', 'Field: person_id', "window.document.forms['ContactsAddForm'].elements['person_id'].focus()", "Person");
+    }
+    else if( $sect == 'tab_notify' ) {
+      $this->assign('ALT+D', "Drop Recipients", "window.document.forms['dropNotifyForm'].submit()");
+      $this->assign('ALT+A', "Add Recipients", "window.document.forms['notifyAddForm'].submit()");
+    }    
     else if( $sect == 'ticket_fields_editable' ) {
       $this->assign('ALT+A', 'Save', "window.document.forms['ticketTabForm'].submit()");
     }
@@ -159,8 +266,10 @@ class ZenHotKeys {
       $t = $matches[1];
       for($i=1; $i<=8; $i++) {
         $view = "{$t}_tab_{$i}";
-        $label = $map->getViewProp($view,'label');
-        $this->assign("ALT+SHIFT+$i", $label, "KeyEvent.createLoadUrl('{rootUrl}/ticket.php?id={id}&setmode=$view')");
+        if( $map->getViewProp($view, 'visible') ) {
+          $label = $map->getViewProp($view,'label');
+          $this->assign($i, $label, "KeyEvent.createLoadUrl('{rootUrl}/ticket.php?id={id}&setmode=$view')");
+        }
       }
     }
   }
@@ -172,6 +281,10 @@ class ZenHotKeys {
     }
     $this->_zen->addDebug('ZenHotKeys->assign', "Added fxn '$name'", 3);
     $this->_fxns["$name"] = $code;
+  }
+  
+  function getFxnName($key) {
+    return str_replace('KeyEvent.createLoadUrl', 'KeyEvent.loadUrl', $this->_keys[$key]['fxn']);
   }
 
   /** 
@@ -239,13 +352,13 @@ class ZenHotKeys {
   }
   
   /** Returns a parsed/translated label for a given label */
-  function ll( $label, $override_text = '' ) {
+  function ll( $label, $override_text = '', $supress_key = false ) {
     $key = $this->find($label);
     if( !$key ) {
       $this->_zen->addDebug('ZenHotKeys->ll', "Invalid label '$label'", 1);
       return $override_text? $override_text : $label;
     }
-    return $this->label($key, $override_text);
+    return $this->label($key, $override_text, $supress_key);
   }
   
   /** 
@@ -273,7 +386,7 @@ class ZenHotKeys {
    * Return a label for a given key, this will be translated
    * and the hot key will be underlined if possible
    */
-  function label( $key, $override_text = '', $supress_sup = false ) {
+  function label( $key, $override_text = '' ) {
     $key = strtoupper($key);
     $char = $this->_getChar($key);
     $lchar = strtolower($char);
@@ -283,7 +396,7 @@ class ZenHotKeys {
     $pos = strpos($label, $char);
     if( $pos === false ) { $pos = strpos($label, $lchar); $char = $lchar; }
     $len = strlen($label);
-    if( $pos === 0 || $len == 0) {
+    if( $pos === 0 ) {
       // matched at beginning of string
       $txt = "<u>{$char}</u>".substr($label,1);
     }
@@ -300,7 +413,9 @@ class ZenHotKeys {
       //return $label."<sub class='note'>$char</sub>";
       $txt = $label;
     }
-    return $txt . ($supress_sup? '' : $this->addZenTab($key));
+    //if( !$supress_key ) { $txt .= $this->renderAccessKey($key); }
+    //$txt .= $this->addZenTab($key);
+    return $txt;
   }
   
   /**
@@ -324,11 +439,13 @@ class ZenHotKeys {
   function renderKeys() {
     if( !count($this->_keys) ) { return; }
     foreach( $this->_keys as $k=>$v ) {
-      if( $this->_getAccessKey($k) ) { continue; }
+      if( $this->_getAccessKey($k) || array_key_exists($k,$this->_keysRendered) ) { continue; }
+      $this->_keysRendered[$k] = 1;
       $f = $v['fxn'];
+      if( strpos($f,'KeyEvent.createLoadUrl')===false ) { $f = Zen::fixJsVal($f); }
       print "\tKeyEvent.register($f, '$k');\n";
     }
-    foreach( $this->_tabs as $t=>$x ) {
+    foreach( $this->_tabs as $t=>$k ) {
       print "\tZenTabs.singleton.register('keySub_$t');\n";
     }
   }
@@ -340,19 +457,24 @@ class ZenHotKeys {
   function renderAccessKeys() {
     $keys = array();
     foreach($this->_keys as $k=>$v) {
-      if( $key = $this->_getAccessKey($k) ) {
-        $keys["$k"] = $v;
-        $keys["$k"]['accesskey'] = $key;
-      }
+      print $this->renderAccessKey($k);
     }
-    if( !count($keys) ) { return; }
-    //print "<form>";
-    foreach($keys as $k=>$v) {
-      $fxn_parsed = str_replace('<', '&lt;', str_replace('>', '&gt;', str_replace('"', '&quot;', $v['fxn'])));
+  }
+  
+  /**
+   * Render a single access key, done this way so that they will focus near
+   * the appropriate field, when possible
+   */
+  function renderAccessKey( $k ) {
+    $v = $this->_keys[$k];
+    if( array_key_exists($k,$this->_keysRendered) ) { return; }
+    if( $key = $this->_getAccessKey($k) ) {
+      $this->_keysRendered[$k] = 1;
+      $fxn_parsed = Zen::fixJsHtml($v['fxn']);
       $fxn_parsed = str_replace('KeyEvent.createLoadUrl', 'KeyEvent.loadUrl', $fxn_parsed);
-      print "<input type='button' name='accessKeyButton{$v['accesskey']}' value='' accesskey='{$v['accesskey']}' class='accesskeys' onclick=\"$fxn_parsed\">";
+      return "<input type='button' name='accessKeyButton{$key}' value='' accesskey='{$key}' class='accesskeys' onclick=$fxn_parsed>";
     }
-    //print "</form>";
+    return null;
   }
   
   /** Returns letter used to access this key if it is an accesskey */
@@ -373,26 +495,32 @@ class ZenHotKeys {
   /** Creates html output to display help info */
   function renderHelp() {
     print "<table width='300' border='0' cellspacing='1' cellpadding='2'><tr><td class='titleCell'>Hot Key</td><td class='titleCell'>Function</td></tr>";
-    foreach( $this->_keys as $k=>$v ) {
+    $keys = $this->_keys;
+    uasort($keys, 'sortHotKeyTable');
+    foreach( $keys as $k=>$v ) {
       print "<tr><td class='hotKeyCell'>$k</td><td class='hotKeyCell'>"
-        .$this->label($k)."</td></tr>";
+      .$this->label($k)."</td></tr>";
     }
     print "</table>\n";
   }
   
   /** Store a key that will be used to display subtext on tabs */
   function addZenTab( $key ) {
-    if( !array_key_exists($key,$this->_tabs) ) {
-      $this->_tabs[$key] = 1;
+    $count = 1;
+    $id = $key.$count++;
+    while( array_key_exists($id, $this->_tabs) ) {
+      $id = $key.$count++;
     }
-    $this->_lh = $this->_lh == 'High'? 'Low' : 'High';
-    return "<div id='keySub_$key' class='keySub{$this->_lh}'>$key</div>";
+    $this->_tabs[$id] = $key;
+    $this->_lh = $this->_alternate? $this->_lh == 'High'? 'Low' : 'High' : "High";
+    return "<div id='keySub_$id' class='keySub{$this->_lh}'>$key</div>";
   }
   
   function addZenTabByLabel($label) {
     $this->addZenTab($this->find($label));
   }
   
+  var $_alternate;
   var $_lh;
   var $_fxns;
   var $_zen;
@@ -400,6 +528,14 @@ class ZenHotKeys {
   var $_idx;
   var $_alreadyLoaded;
   var $_tabs;
+  var $_keysRendered;
+}
+
+/** Must be declared outside of class to work with php */
+function sortHotKeyTable( $a, $b ) {
+  $a['label'] = preg_replace('@^(Action|Field): @', '', $a['label']);
+  $b['label'] = preg_replace('@^(Action|Field): @', '', $b['label']);
+  return strnatcmp($a['label'], $b['label']);
 }
 
 ?>

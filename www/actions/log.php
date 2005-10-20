@@ -35,34 +35,36 @@
     if( !$errs ) {
       $res = $zen->log_ticket($id, $login_id, $log_action, $hours, $comments);
       if( $res ) {
-        add_system_messages(tr("Activity has been logged."));
-        $setmode = "log";
-        include("../ticket.php");
-        exit;
-        //header("Location:$rootUrl/ticket.php?id=$id&setmode=log");
+        $msg = tr("Log entry has been added");
       } else {
         $errs[] = tr("System error: Activity could not be logged.").$zen->db_error;
       }
     }
-    if( $errs )
-    add_system_messages( $errs, 'Error' );     
+
+    if( !$errs ) { 
+      $action = null;
+      $tabs = $map->getTabs($page_type, $login_id, $ticket['bin_id']);
+      foreach($tabs as $k=>$v) {
+        if( $v['preload'] && in_array('log',$v['preload']) ) {
+          $setmode = $k;
+          break;
+        }
+        else if( $v['postload'] && in_array('log',$v['postload']) ) {
+          $setmode = $k;
+          break;
+        }
+      }
+    }
   }
-  
+
   include("$libDir/nav.php");
-  
-  if( $actionComplete == 1 && $page_type == "project" ) {
-    $ticket = $zen->get_project($id);
-  }
-  else if( $actionComplete ) {
-    $ticket = $zen->get_ticket($id);
-  }
-  extract($ticket);
+  $zen->printErrors($errs);  
+  $page_mode = $setmode;
   if( $page_type == "project" ) {
     include("$templateDir/projectView.php");
   } else {
     include("$templateDir/ticketView.php");     
   }
-  
   include("$libDir/footer.php");
   
 }?>

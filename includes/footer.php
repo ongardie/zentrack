@@ -45,12 +45,44 @@ function loadRenderKeys() {
       if( $zen->debug ) {
         $debug_text .= "<tr><td class='mainContent'>\n";
         $debug_text .= "<p><b>MESSAGES</b></p>\n";
-         $debug_text .= "<span class='note'>\n";
+        $debug_text .= "<table align='center'><tr>";
+        $c = '';//isset($_SESSION['check_error'])? 'checked' : '';
+        $debug_text .= "<td><input type='radio' id='debugFilterChoice1' "
+                      ."name='debugFilter' $c onclick='toggleDebug(\"error\")'>"
+                      ."&nbsp;<label for='debugFilterChoice1'>"
+                      .tr("Errors")."</label></td>";
+        if( $Debug_Mode > 1 ) {
+          $c = '';//isset($_SESSION['check_warning'])? 'checked' : '';
+          $debug_text .= "<td><input type='radio' id='debugFilterChoice2' "
+                        ."name='debugFilter' $c onclick='toggleDebug(\"warning\")'>"
+                        ."&nbsp;<label for='debugFilterChoice2'>"
+                        .tr("Warnings")."</label></td>";
+        }
+        else {
+          $debug_text .= "<td><input type='radio' name='debugFilter' disabled='disabled' class='disabled'>&nbsp;<span class='note'>".tr("Warnings")."</span></td>";
+        }
+        if( $Debug_Mode > 2 ) {
+          $c = '';//isset($_SESSION['check_note'])? 'checked' : '';
+          $debug_text .= "<td><input type='radio' id='debugFilterChoice3' "
+                        ."name='debugFilter' $c onclick='toggleDebug(\"note\")'>"
+                        ."&nbsp;<label for='debugFilterChoice3'>"
+                        .tr("Notes")."</label></td>";
+        }
+        else {
+          $debug_text .= "<td><input type='radio' name='debugFilter' disabled='disabled' class='disabled'>&nbsp;<span class='note'>".tr("Notes")."</span></td>";
+        }
+        $c = 'checked';
+        $debug_text .= "<td><input type='radio' id='debugFilterChoice4' "
+                      ."name='debugFilter' $c onclick='toggleDebug(\"all\")'>"
+                      ."&nbsp;<label for='debugFilterChoice4'>"
+                      .tr("All")."</label></td>";
+        $debug_text .= "</tr></table>";
+         $debug_text .= "<div class='note' id='debugContent'>\n";
          ob_start();
          $zen->printDebugMessages();
          $debug_text .= ob_get_contents();
          ob_clean();
-         $debug_text .= "</span>\n";
+         $debug_text .= "</div>\n";
          $debug_text .= "</td></tr>\n";
       }
   

@@ -8,6 +8,7 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
   **/  
   
   $view = 'search_form';
+  $hotkeys->loadSection('search_form');
   $fields = $map->getFieldMap($view);
   $text_fields = array();
   $other_fields = array();
@@ -30,8 +31,13 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
 <form action="<?=$SCRIPT_NAME?>" name="searchForm" method='POST'>
 <input type="hidden" name="TODO" value="SEARCH">
 <?
+$context = new ZenFieldMapRenderContext(
+  array('view' => $view, 'form' => 'searchForm')
+);
 foreach($hidden_fields as $f=>$field) {
-  $map->renderTicketField($view, 'searchForm', $f, $$f);
+  $context->set('field', $f);
+  $context->set('value', $$f);
+  $map->renderTicketField($context);
 }
 ?>
   
@@ -57,7 +63,7 @@ if( count($text_fields) ) {
 </tr>
 <tr>
   <td class="bars">
-     <?=tr("Containing")?>
+     <?=$hotkeys->ll("Containing")?>
   </td>
   <td class="bars">
    <input type="text" name="search_text" 
@@ -78,7 +84,9 @@ if( count($text_fields) ) {
       if( $c > 0 && !$switch) { print "<br>"; }
       $switch = false;
       $checked = is_array($search_fields) && array_key_exists($t, $search_fields) && $search_fields["$t"] > 0? " checked" : "";
-      print "<input type='checkbox' name='search_fields[$t]' value='1'$checked>&nbsp;".$map->getLabel($view, $t)."\n";
+      $label = ( $t == 'title' || $t == 'description' )?
+        $hotkeys->ll($t=='title'?'Summary':'Description') : $map->getLabel($view, $t);
+      print "<input type='checkbox' name='search_fields[$t]' value='1'$checked>&nbsp;$label\n";
       if( count($text_fields) > 3 && ++$c == ceil(count($text_fields)/2) ) {
         $switch = true;
         print "</td><td valign='top'>\n";
@@ -99,16 +107,25 @@ if( count($date_fields) ) {
   </td>
 </tr>
 <?
+  $context = new ZenFieldMapRenderContext(
+    array('view' => $view, 'form' => 'searchForm')
+  );
   foreach( $date_fields as $f=>$field ) {
       print "<tr><td class='bars'>";
       print $map->getLabel($view, $f);
       print "</td><td class='bars'>";
       print "<span class='note'>between ";
       $name = "{$f}_begin";
-      print $map->renderTicketField($view, 'searchForm', $f, $search_params["$name"], "search_params[$name]");
+      $context->set('field', $f);
+      $context->set('value', $search_parms["$name"]);
+      $context->set('name',  "search_parms[$name]");
+      print $map->renderTicketField($context);
       print " and ";
       $name = "{$f}_end";
-      print $map->renderTicketField($view, 'searchForm', $f, $search_params["$name"], "search_params[$name]");
+      $context->set('field', $f);
+      $context->set('value', $search_parms["$name"]);
+      $context->set('name',  "search_parms[$name]");
+      print $map->renderTicketField($context);
       print "</span>";
       print "</td></tr>\n";
   }
@@ -123,12 +140,17 @@ if( count($other_fields) ) {
   </td>
 </tr>
 <?
-  
+  $context = new ZenFieldMapRenderContext(
+    array('view' => $view, 'form' => 'searchForm')
+  );
   foreach( $other_fields as $f=>$field ) {
     print "<tr><td class='bars'>";
     print $map->getLabel($view,$f);
     print "</td><td class='bars'>";
-    print $map->renderTicketField($view, 'searchForm', $f, $search_params["$f"], "search_params[$f]");
+    $context->set('field', $f);
+    $context->set('value', $search_parms["$f"]);
+    $context->set('name',  "search_parms[$f]");
+    print $map->renderTicketField($context);
     if( $f == 'priority' ) {
       print "&nbsp;<input type='checkbox' name='or_higher' checked value='1'> or higher";
     } else if( strpos($f, "multi")>0 ) {

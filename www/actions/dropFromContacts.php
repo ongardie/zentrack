@@ -3,7 +3,7 @@
 
   // get action properties
   $action = "contacts";  
-  include("../contact_header.php");
+  include("action_header.php");
   
   // check to insure that this user has access
   // and this ticket allows the requested action
@@ -18,12 +18,11 @@
   }  else {
     $page_type = "ticket";
   }
-  $page_mode = "system";
+  $page_mode = $setmode;
 
   
   $page_title = tr("Ticket #?", array($id));
   $page_section = "Ticket #$id";
-  $expand_tickets = 1;
   
   if( is_array($drops) ) {
     // drop items in list
@@ -32,28 +31,34 @@
       // clean up numbers just in case
       $n = $zen->checkNum($drops[$i]);
       if( strlen($n) ) {
-	// do the drop
-	$res = $zen->delete_contact( $n,"ZENTRACK_RELATED_CONTACTS","clist_id");
-	// calculate the number of results
-	if( $res ) {
-	  $num += 1;
-	}
+        // do the drop
+        $res = $zen->delete_contact( $n,"ZENTRACK_RELATED_CONTACTS","clist_id");
+        // calculate the number of results
+        if( $res ) {
+          $num++;
+        }
+        else {
+          $errs[] = tr("Contact #? could not be removed",$n);
+        }
       }
     }
-    add_system_messages(tr("? are dropped from the contact list", array($num)),"Bold");
-    $setmode = "contacts";
+    if( !$errs ) { 
+      $action = ''; 
+      $msg = $num > 1?
+        tr("? contacts were removed", array($num)) :
+        tr("One contact was removed");
+    }
   }
   else {
     // create an error message
-    $msg = tr("No contacts were selected to drop");
-    add_system_messages( $msg, 'Error' );
+    $errs[] = tr("No contacts were selected to drop");
+    $action = '';
   }
 
   
   // display the results
   include("$libDir/nav.php");
-  unset($action);
-  extract($ticket);
+  $zen->printErrors($errs);
   if( $zen->inProjectTypeIDs($type_id) ) {
     include("$templateDir/projectView.php");
   } else {

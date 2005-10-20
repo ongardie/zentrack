@@ -9,7 +9,7 @@
 
   $tid = $ticket["type_id"];
   $user_id = $ticket["user_id"];
-  $title = ($zen->types["$tid"] == "Project")? strtoupper($zen->settings["system_name"]). " PROJECT REPORT" : strtoupper($zen->settings["system_name"])." ".strtoupper($zen->types["$tid"]). " REPORT";
+  $title = ($zen->types["$tid"] == "Project")? strtoupper($zen->getSetting("system_name")). " PROJECT REPORT" : strtoupper($zen->getSetting("system_name"))." ".strtoupper($zen->types["$tid"]). " REPORT";
   $ticketroj = ($zen->types["$tid"] == "Project")? 1 : '';
   if( $ticket["project_id"] ) {
      $parent = $zen->get_ticket($ticket["project_id"] );

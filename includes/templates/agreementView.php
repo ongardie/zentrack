@@ -1,36 +1,35 @@
 <? if( !ZT_DEFINED ) { die("Illegal Access"); } ?>
 	<?
 	$sort = "dtime asc";
-	$parms = array(1 => array(1 => "status", 2 => "=", 3 => "1")
-);
-
+	$parms = array(array("status", "=", "1"));
 	$tickets = $zen->get_contacts($parms,"ZENTRACK_AGREEMENT",$sort);
-	
+	$img = $image? 
+    "&nbsp;<IMG SRC='$imageUrl/".$zen->ffv($image)."' border='0'>" : '';
 	
 if( is_array($tickets) && count($tickets) ) {
  
    ?>
-<table width="100%" cellspacing='1' cellpadding='2' bgcolor='<?=$zen->getSetting("color_alt_background")?>' border="0">
-<tr bgcolor="<?=$zen->getSetting("color_title_background")?>" >
-
-<td width="32" height="25" valign="middle" title="<?=tr("ID of the agreement")?>">
-<div align="center"><span style="color:<?=$zen->getSetting("color_title_txt")?>"><b><span class="small"><?=tr("ID")?><?if (!empty($image)) {?>&nbsp;<IMG SRC="<?echo $imageUrl,$image ;?>" border="0"><?}?></span></b></span></div>
+<table width="100%" cellspacing='1' cellpadding='2' class='formtable'>
+<tr><td class='subTitle' align='center' colspan='5'><?=tr("Agreements")?></td></tr>
+<tr>
+<td class='headerCell' title="<?=tr("ID of the agreement")?>">
+<?=tr("ID") . $img ?>
 </td>
 
-<td height="25" valign="middle" title="<?=tr("The nr of the agreement")?>">
-<div align="center"><span style="color:<?=$zen->getSetting("color_title_txt")?>"><b><span class="small"><?=tr("Nr")?><?if (!empty($image)) {?>&nbsp;<IMG SRC="<?echo $imageUrl,$image ;?>" border="0"><?}?></span></b></span></div>
+<td class='headerCell' title="<?=tr("The nr of the agreement")?>">
+<?=tr("Nr") . $img ?>
 </td>
 
-<td height="25" valign="middle" title="<?=tr("The title of the agreement")?>">
-<div align="center"><span style="color:<?=$zen->getSetting("color_title_txt")?>"><b><span class="small"><?=tr("Title")?><?if (!empty($image)) {?>&nbsp;<IMG SRC="<?echo $imageUrl,$image ;?>" border="0"><?}?></span></b></span></div>
+<td class='headerCell' title="<?=tr("The title of the agreement")?>">
+<?=tr("Title") . $img ?>
 </td>
 
-<td height="25" valign="middle" title="<?=tr("The company of the agreement")?>">
-<div align="center"><span style="color:<?=$zen->getSetting("color_title_txt")?>"><b><span class="small"><?=tr("Company")?><?if (!empty($image)) {?>&nbsp;<IMG SRC="<?echo $imageUrl,$image ;?>" border="0"><?}?></span></b></span></div>
+<td class='headerCell' title="<?=tr("The company of the agreement")?>">
+<?=tr("Company") . $img ?>
 </td>
 
-<td height="25" valign="middle" title="<?=tr("The expiration date of the agreement")?>">
-<div align="center"><span style="color:<?=$zen->getSetting("color_title_txt")?>"><b><span class="small"><?=tr("Expiration Date")?><?if (!empty($image)) {?>&nbsp;<IMG SRC="<?echo $imageUrl,$image ;?>" border="0"><?}?></span></b></span></div>
+<td class='headerCell' title="<?=tr("The expiration date of the agreement")?>">
+<?=tr("Expires") . $img ?>
 </td>
 
 </tr>
@@ -41,26 +40,27 @@ $td_ttl = "title='".tr("Click here to view the Agreement")."'";
    foreach($tickets as $t) {    
 
       ?>
-   <tr  class='priority6' onclick='ticketClk("<?=$link?>?id=<?=$t["agree_id"]?>")' onMouseOver='mClassX(this, "priority6Over", true)' onMouseOut='mClassX(this, "priority6", false)'>
+   <tr  class='bars' onclick='ticketClk("<?=$link?>?id=<?=$t["agree_id"]?>")' 
+      <?=$row_rollover_eff?>>
    <td height="25" width="5%" valign="middle" <?=$td_ttl?>>
-    <?=$t["agree_id"]?>
+    <?=$zen->ffv($t["agree_id"])?>
    </td>
    <td height="25" width="25%" valign="middle" <?=$td_ttl?>>
-    <?=$t["contractnr"]?>
+    <?=$zen->ffv($t["contractnr"])?>
    </td>
    <td height="25" width="35%" valign="middle" <?=$td_ttl?>>
-   <?=$t["title"]?>
+   <?=$zen->ffv($t["title"])?>
    </td>
       <td height="25" width="25%" valign="middle" <?=$td_ttl?>><?
-   	 if ( !empty($t["company_id"])) {
-	 $contact = $zen->get_contact($t["company_id"],"ZENTRACK_COMPANY","company_id");
-	  if( is_array($contact) ) {
-      echo strtoupper($contact['title']);
-      if ($contact['title']){
-	      echo " " .strtolower($contact['office']);
+      if ( !empty($t["company_id"])) {
+        $contact = $zen->get_contact($t["company_id"],"ZENTRACK_COMPANY","company_id");
+        if( is_array($contact) ) {
+          echo strtoupper($contact['title']);
+          if($contact['title']){
+            print " " .$zen->ffv($contact['office']);
+          }
+        }	  
       }
-    }	  
-  }
    ?>
    </td>
    <td width="20%" valign="middle" <?=$td_ttl?>>

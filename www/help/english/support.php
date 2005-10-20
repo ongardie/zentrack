@@ -13,7 +13,7 @@
 
   <br>
   <blockquote>
-  <span class='bigBold'>Support for <?=$zen->settings["system_name"]?></span>
+  <span class='bigBold'>Support for <?=$zen->getSetting("system_name")?></span>
   <p>If the solution to your problem is not to be found in the manual, it is worthwhile trying one
   of the following places for some help:</p>
   

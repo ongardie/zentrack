@@ -155,12 +155,28 @@ class zen extends zenDate {
      }
      return $val;
    }
+   
+   function fhv( $val = '', $strlen = 0 ) {
+     $val = Zen::ffv($val,$strlen);
+     return strlen($val)? $val : '&nbsp;';
+   }
+   
+   function fixJsHtml( $val, $char = '"' ) {
+     $val = str_replace($char, ($char == '"'? '&quot;' : '&#39;'), $val);
+     $val = str_replace('<', '&lt;', $val);
+     $val = str_replace('>', '&gt;', $val);
+     return $char.$val.$char;
+   }
 
-   function fixJsVal( $val ) {
+   function fixJsVal( $val, $char = '"' ) {
      // escape any js sensitive characters for use in strings
      if( is_null($val) ) { return "null"; }
-     if( strlen($val) == 0 ) { return "''"; }
-     return "'".str_replace("'", "\\'", str_replace("\\", "\\\\", $val))."'";
+     if( preg_match('@^[0-9]+$@', $val) ) {
+       return $val;
+     }
+     if( strlen($val) == 0 ) { return "$char$char"; }
+     $val = str_replace($char, "\\$char", str_replace("\\", "\\\\", $val));
+     return $char.$val.$char;
    }
    
    function checkAlpha( $val = '', $special = '_' ) {
@@ -576,12 +592,10 @@ class zen extends zenDate {
       // prints an array of errors
       // in red, as a formatted list
       if( is_array($errs) ) {
-    print "<span class='error'><b>Errors Detected</b>";
-    print "<br>If problems persist, contact your "
-      ."<a href='{$this->settings['admin_email']}'>Administrator</a>\n<ul>\n";
-    foreach($errs as $e)
-      print "<li class='error'>$e</li>\n";
-    print "</ul></span>";
+        print "<span class='error'><b>Errors Detected</b><ul>\n";
+        foreach($errs as $e)
+        print "<li class='error'>".$this->ffv($e)."</li>\n";
+        print "</ul></span>";
       }
    }
    
@@ -793,6 +807,85 @@ class zen extends zenDate {
      $val = urlencode($val);
      $tf = strpos($url, '?') > 0;
      return $url . ($tf? "&$key=$val" : "?$key=$val");
+   }
+   
+   /**
+    * Return a value for use in debugging.  This will handle arrays, objects,
+    * numbers, and strings intelligently, printing out a representative
+    * value for them.
+    *
+    * @static
+    * @param mixed $val the value to print
+    * @param boolean $dump_contents if true, dumps all values of arrays or objects
+    * @param boolean $format include line breaks
+    * @return string
+    */
+   function dval( $val, $format = true, $dump_contents = true ) {
+     $indent = func_num_args() > 3? func_get_arg(3) : 0;
+     $char = "   ";
+     $tabs = $indent? str_repeat($char,$indent) : "";
+     if( is_object($val) ) {
+       $txt = "Object(".get_class($val).")";
+       if( $dump_contents ) {
+         $txt .= $format? " {\n" : " {";
+         $i=0;
+         foreach( get_object_vars($val) as $k=>$v ) {
+           if( $format ) { $txt .= $tabs.$char; }
+           $txt .= $k."=>".Zen::dval($v,$dump_contents,$format,$indent+1)
+              .($i++ < count($val)-1? ', ' : '');
+           if( $format ) { $txt .= "\n"; }
+         }
+         $txt .= $format? "$tabs}\n" : "}";
+       }
+       return $txt;
+     }
+     else if( is_array($val) ) {
+       $txt = "Array";
+       if( $dump_contents ) {
+         $txt .= $format? " [\n" : " [";
+         foreach($val as $k=>$v) {
+           if( $format ) { $txt .= $tabs.$char; }
+           $txt .= "{$k}=>";
+           $txt .= Zen::dval($v,$dump_contents,$format,$indent+1);
+           $txt .= $i++ < count($val)-1? ($format? ",\n" : ",") : ($format? "\n":'');
+         }
+         $txt .= $format? "$tabs]\n" : "]";
+       }
+       return $txt;
+     }
+     else if( is_bool($val) ) {
+       $txt = $val? 'true' : 'false';
+     }
+     else if( is_null($val) ) {
+       return 'null';
+     }
+     else if( preg_match('/[^0-9]/', $val) ) {
+       return "'".Zen::ffv($val)."'";
+     }
+     else {
+       return $val;
+     }
+   }
+   
+   /**
+    * Print a value for use in debugging.  This will handle arrays, objects,
+    * numbers, and strings intelligently, printing out a representative
+    * value for them.
+    *
+    * @static
+    * @param mixed $val the value to print
+    * @param boolean $format include line breaks
+    * @param boolean $dump_contents if true, dumps all values of arrays or objects
+    */
+   function dprint( $val, $format = true, $dump_contents = true ) {
+     print Zen::dval( $val, $dump_contents );
+   }
+   
+   /**
+    * Print a value as in Zen::dprint(), but set it up to display in html
+    */
+   function dprintf( $val, $dump_contents = true ) {
+     print "<pre>".Zen::dval($val, $dump_contents, true)."</pre>";
    }
    
    /*

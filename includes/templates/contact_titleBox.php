@@ -1,64 +1,63 @@
-<? if( !ZT_DEFINED ) { die("Illegal Access"); } ?>
-<table cellpadding="0" cellspacing="0">
+<? if( !ZT_DEFINED ) { die("Illegal Access"); } 
+   $hotkeys->loadSection('contacts_view');
+?>
+<table cellpadding="0" width='600' cellspacing="1">
   <tr>
-   <td class="ticketCell"><table 
-     align="center" width='570'>     
+   <td><table
+     align="center" width='100%'>     
      <tr>
        <td valign="top"><table border="0"
-          width="440" cellpadding="2" cellspacing="1">
+          width='100%' class='formtable' cellpadding="0" cellspacing="1">
           
     <tr>
-	   <td class="titleCell" colspan="3"><p align="center"><? echo strtoupper($title)." "; if(!empty($office)){ echo stripslashes($office);}?> </p></td>  
+	   <td class="subTitle" colspan="3"><p align="center"><? echo $zen->ffv($title)." "; if(!empty($office)){ echo "[".$zen->ffv($office)."]";}?> </p></td>  
 	  </tr>
 	  <tr>
-	   <td class="smallTitleCell" colspan="2" width="50%"><?=uptr("Info")?></td>
-	   <td class="smallTitleCell"  width="50%"><?=uptr("Address")?></td>
+	   <td class="headerCell" colspan="2" width="50%"><?=uptr("Info")?></td>
+	   <td class="headerCell"  width="50%"><?=uptr("Address")?></td>
 	  </tr>
 	  <tr>
-	   <td class="small" colspan="2">
+	   <td class="bars indent boxpad" colspan="2">
 	   <? 
-	   if(!empty($office)){ echo stripslashes($office)."<br>";}
-	   if(!empty($email)){?><A HREF="mailto:<?=stripslashes($email)?>"><?=stripslashes($email)?></A><br><?}
+	   if(!empty($office)){ echo $zen->ffv($office)."<br>";}
+	   if(!empty($email)){?><A HREF="mailto:<?=$zen->ffv($email)?>"><?=$zen->ffv($email)?></A><br><?}
 	   if ($website == "http://" or $website == "") {
 		 echo "<br>";  
 		 } else {
-	   if(!empty($website)){?><A TARGET="_blank" HREF="<?=stripslashes($website)?>"><?=stripslashes($website)?></A><?}}?>
+	   if(!empty($website)){?><A TARGET="_blank" HREF="<?=$zen->ffv($website)?>"><?=$zen->ffv($website)?></A><?}}?>
 	   </td>
-	   <td class="small" rowspan="4">
+	   <td class="bars small" rowspan="4">
 	   <?
-	   if(!empty($address1)){ echo stripslashes($address1)."<br>";}
-	   if(!empty($address2)){ echo stripslashes($address2)."<br>";}
-	   if(!empty($address3)){ echo stripslashes($address3)."<br>";}
-	   if(!empty($postcode)){ echo stripslashes($postcode)."<br>";}
-	   if(!empty($place)){ echo stripslashes($place)."<br>";}
-	   if(!empty($pobox)){ echo stripslashes($pobox)."<br>";}
-	   if(!empty($postcode2)){ echo stripslashes($postcode2)."<br>";}
-	   if(!empty($country)){ echo stripslashes($country);}
+	   if(!empty($address1)){ echo $zen->ffv($address1)."<br>";}
+	   if(!empty($address2)){ echo $zen->ffv($address2)."<br>";}
+	   if(!empty($address3)){ echo $zen->ffv($address3)."<br>";}
+	   if(!empty($postcode)){ echo $zen->ffv($postcode)."<br>";}
+	   if(!empty($place)){ echo $zen->ffv($place)."<br>";}
+	   if(!empty($pobox)){ echo $zen->ffv($pobox)."<br>";}
+	   if(!empty($postcode2)){ echo $zen->ffv($postcode2)."<br>";}
+	   if(!empty($country)){ echo $zen->ffv($country);}
 	   ?>
 	   </td>
 	  </tr>
 	  <tr>
-	   <td class="smallTitleCell" colspan="2"><?=uptr("Numbers")?></td> 
-	   <td class="small"></td>
+	   <td class="headerCell" colspan="2"><?=uptr("Numbers")?></td> 
 	  </tr>
 	  <tr>
-	   <td class="small" width="100"><?=tr("Telephone no")?>:</td>  
-	   <td class="small"><?=stripslashes($telephone)?></td>
-	   <td class="small"></td>
+	   <td class="bars small" width="20%"><?=tr("Telephone no")?>:</td>  
+	   <td class="bars small" width='30%'><?=$telephone? $zen->ffv($telephone) : '&nbsp;'?></td>
 	  </tr>
 	  <tr>
-	   <td class="small"><?=tr("Fax no")?>:</td> 
-	   <td class="small"><?=stripslashes($fax)?></td> 
-	   <td class="small"></td>
+	   <td class="bars small"><?=tr("Fax no")?>:</td> 
+	   <td class="bars small"><?=$fax? $zen->ffv($fax) : '&nbsp;'?></td> 
 	  </tr>
 	  <?
  if(!empty($description)) {
 ?>	  
 	  <tr>
-	   <td class="smallTitleCell" colspan="3"><?=uptr("Comments")?></td>  
+	   <td class="headerCell" colspan="3"><?=uptr("Comments")?></td>  
 	  </tr>
 	  <tr>
-	   <td class="small" colspan="3"><?=(get_magic_quotes_runtime())?nl2br(stripslashes($description)):nl2br($description); ?></td>
+	   <td class="bars small" colspan="3"><?= $zen->ffvText($description) ?></td>
 	  </tr>
 <?
 }
@@ -66,54 +65,40 @@
 	 </table></td>
        <td valign="top" width='75'>
        
-<table width="120" cellpadding="0" cellspacing="0" border="0">
+<table width="120" cellpadding="0" cellspacing="3" border="0">
 <?
 			
 	//1=show ADD 0=don't show ADD
       
-      $actions = array(
-			"edit"  => 0,			
-			"delete"  => 0,		     
+  //button to show open tickets
+  		print "<tr><td>";
+      renderDivButtonFind("View Tickets");
+      print "</td></tr>";
+
+   if ($overview != "agreement") {
+  	  print "<tr><td>";
+      renderDivButtonFind("View Agreements");
+      print "</td></tr>";
+	} else {
+  	  print "<tr><td>";
+      renderDivButtonFind("View Employees");
+      print "</td></tr>";
+	}
+
+  $actions = array(
 			"employee"  => 1,
-			"agreement"    => 1,
+			"agreement" => 1,
+			"edit"      => 0,			
+			"delete"    => 0
 			);	
 	//show the buttons
 	foreach($actions as $a=>$v) {
-		$value = ($v == 1)? uptr("add")." ".uptr(ucfirst($a)) : uptr(ucfirst($a));
-		
-			print "<tr>\n<form name='".$a."_form' action='$rootUrl/actions/contact_$a.php'>\n";
-			print "<td>\n";
-			print "<input type='submit' class='actionButtonContact' value='$value'"; 
-			if ($a=="delete") {print " onClick='return confirm(\"".tr('Are you sure you want to permanently delete this contact')."\")'";}
-			print ">\n";
-			print "<input type='hidden' name='cid' value='$id'>\n";
-			print "</td>\n</form>\n</tr>\n";
+		$value = ($v == 1)? "Add ".ucfirst($a) : ucfirst($a);
+		print "<tr><td>";
+    renderDivButtonFind($value);
+    print "</td></tr>";
   }
-  //button to show open tickets
-  		print "<tr>\n<form name='tickets_form' action='$rootUrl/contact.php'>\n<td>\n";
-			print "<input type='submit' class='actionButtonContact' value='".uptr('view')." ".uptr('Tickets')."'>\n"; 
-			print "<input type='hidden' name='cid' value='$id'>\n";
-			print "<input type='hidden' name='overview' value='tickets'>\n";
-			print "</td>\n</form>\n</tr>\n";
   
-  //button to show the contacts or agreements
-  if (empty($overview)&&!isset($pid)) $overview = "contact";
-  
-  if ($overview=="contact") {
-  	  print "<tr>\n<form name='contact_form' action='$rootUrl/contact.php'>\n<td>\n";
-			print "<input type='submit' class='actionButtonContact' value='".uptr('view')." ".uptr('Agreements')."'>\n"; 
-			print "<input type='hidden' name='cid' value='$id'>\n";
-			print "<input type='hidden' name='overview' value='agreement'>\n";
-			print "</td>\n</form>\n</tr>\n";
-	} else {
-			print "<tr>\n<form name='agreement_form' action='$rootUrl/contact.php'>\n<td>\n";
-			print "<input type='submit' class='actionButtonContact' value='".uptr('view')." ".uptr('Contacts')."'>\n"; 
-			print "<input type='hidden' name='cid' value='$id'>\n";
-			print "<input type='hidden' name='overview' value='contact'>\n";
-			print "</td>\n</form>\n</tr>\n";
-	}
-
-       
 ?>
 </table>
      </td>
@@ -121,4 +106,5 @@
     </table></td>
   </tr>
 </table>
+<br>
 

@@ -10,56 +10,60 @@
   include("$libDir/nav.php");
 
 ?>
-  <br>
-  <blockquote>
-  <b>Welcome to <?=$zen->settings["system_name"]?> Help!</b>
-  <ul>
-    <b>Tutorial</b>
-    <ul>
-      New to <?=$zen->settings['system_name']?>?  Try out the tutorial, which
-      will explain everything you need to know... except for the stuff it doesn't.
-      
-      <p><a href='<?=$helpUrl?>/tutorial.php'>View the Tutorial</a></p>
-    </ul>
+  <div class='heading'><?=tr("Welcome to ? Help!",$zen->getSetting('system_name'))?></div>
+
+  <div class='menubox'>
+    <div><?=tr("Tutorial")?></div>
+    <p onclick='mClk(this)'>
+    <a href='<?=$helpUrl?>/tutorial.php'><?=tr("View the Tutorial")?></a>
+    &nbsp;&nbsp;<span class='note'>
+    <?=tr("New to ??  Try out the tutorial, which will explain everything you "
+      ."need to know... except for the stuff it doesn't.", $zen->getSetting('system_name'));?>
+    </span></p>
+  </div>
     
-    &nbsp;<br><b>User's Manual</b>
+  <div class='menubox'>
+    <div><?=tr("User's Manual");?></div>
     <?
       // prints out an index of the user's manual
       // do not try to manually replace the values here, just
       // edit the labels in the appropriate language file!    
       renderTOC( 'users', true ); 
     ?>
+  </div>
 
-    &nbsp;<br><b>Administrator's Manual</b>
+  <div class='menubox'>
+    <div><?=tr("Administrator's Manual")?></div>
     <?
       // prints out an index of the administrator's manual
       // do not try to manually replace the values here, just
       // edit the labels in the appropriate language file!    
       renderTOC( 'admin', true ); 
     ?>
+  </div>
     
-    &nbsp;<br><b>Help and Support</b>
-    <ul>
-      <a href='http://www.zentrack.net/modules/support/'>Community</a>
-      <br><a href='http://www.zentrack.net/modules/newbb/'>Forums</a>
-      <br><a href='<?=$helpUrl?>/bugs.php'>Reporting Bugs</a>
-    </ul>
+  <div class='menubox'>
+    <div><?=tr("Help and Support")?></div>
+    <p onclick='mClk(this)'><a href='http://www.zentrack.net/modules/support/'><?=tr("Community")?></a></p>
+    <p onclick='mClk(this)'><a href='http://www.zentrack.net/modules/newbb/'><?=tr("Forums")?></a></p>
+    <p onclick='mClk(this)'><a href='<?=$helpUrl?>/bugs.php'><?=tr("Reporting Bugs")?></a></p>
+  </div>
     
-    &nbsp;<br><b>About Us</b>
-    <ul>
-      <a href='<?=$helpUrl?>/about.php'>About <?=$zen->settings["system_name"]?></a>
-      <br><a href='<?=$helpUrl?>/gpl.php'>License</a>
-      <br><a href='http://www.zentrack.net'>Website</a>
-    </ul>
-    
-    &nbsp;<br><b>Send Us Feedback!</b>
-    <ul>
-      <p>Be sure to give us some <a href='http://www.zentrack.net/feedback/?subject=Feedback' target='_blank'>feedback</a> about the the 
-        the documentation, software, or the latest <a href='http://kato.was-here.org/funnies/catattack.mpeg' target='_blank'>cat attack</a>.
-    </ul>
+  <div class='menubox'>
+    <div>About Us</div>
+    <p onclick='mClk(this)'><a href='<?=$helpUrl?>/about.php'>
+      About <?=$zen->getSetting('system_name');?></a></p>
+    <p onclick='mClk(this)'><a href='<?=$helpUrl?>/gpl.php'><?=tr("License")?></a></p>
+    <p onclick='mClk(this)'><a href='http://www.zentrack.net'><?=tr("Website")?></a></p>
+    <p onclick='mClk(this)'><a href='http://www.zentrack.net/feedback/?subject=Feedback' 
+      target='_blank'><?=tr("Feedback")?></a>
+     &nbsp;&nbsp;<span class='note'><?=tr("Be sure to give us some feedback about the the "
+      ."the documentation, software, or the latest ?.", 
+        "<a href='http://kato.was-here.org/funnies/catattack.mpeg' 
+          target='_blank'>".tr("cat attack")."</a>")?></span>
+    </p>
+  </div>
 
-  </ul>
-  </blockquote>
 <?
   include("$libDir/footer.php");
 ?>

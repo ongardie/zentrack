@@ -545,7 +545,7 @@
 	      egate_log("could not locate owner by id '$v', skipped",2);
 	    }
 	  }
-	  else if( strpos('@', $v) > 0 ) {
+	  else if( strpos($v, '@') > 0 ) {
 	    $user = find_user_id('',$v);
 	    if( $user ) {
 	      $vals['user_id'] = $user['user_id'];

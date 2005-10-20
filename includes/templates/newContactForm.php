@@ -15,13 +15,13 @@ if(isset($create_time)) { ?>
   
 <table width="640" align="left" cellpadding="2" cellspacing="2" bgcolor="<?=$zen->getSetting("color_background")?>">
 <tr>
-  <td colspan="2" width="640" class="titleCell" align="center">
+  <td colspan="2" width="640" class="subTitle" align="center">
      <?=tr("Contact Information")?>
   </td>
 </tr>
   
 <tr>
-  <td colspan="2" class="subTitle">
+  <td colspan="2" class="headerCell">
     <?=tr("Details")?>
   </td>
 </tr>
@@ -181,12 +181,7 @@ value="<?=strip_tags($postcode)?>">
   </td>
 </tr>
 <tr>
-  <td class="titleCell" colspan="2" align="center">
-  <?=tr("Click button to")?> <?=($td)? tr("save your changes"):tr("create your contact")?>.
-  </td>
-</tr>
-<tr>
-  <td colspan="2" class="bars">
+  <td colspan="2" class="subTitle indent">
    <input type="submit" value=" <?=($skip)?"Save":"Create"?> " class="submit">
   </td>
 </tr>

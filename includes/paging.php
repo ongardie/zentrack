@@ -1,4 +1,6 @@
-<? if( !ZT_DEFINED ) { die("Illegal Access"); } ?>
+<? if( !ZT_DEFINED ) { die("Illegal Access"); } 
+   $hotkeys->loadSection('paging');
+?>
 <!--- BEGIN Paging --->
 
 <table width='100%'>

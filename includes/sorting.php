@@ -18,7 +18,7 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
     // make sure our sorting field is valid
     $tempsort = strpos($newsort, " DESC") > 0?
         str_replace(" DESC", "", $newsort) : $newsort;
-    if( !array_key_exists($tempsort, $GLOBALS['zt_field_dependencies']['fields']) ) {
+    if( !getFmFieldProps($view, $tempsort) ) {
       $zen->addDebug('sorting.php', "Invalid column '$tempsort'", 1);
       $newsort = false;
     }
@@ -43,5 +43,7 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
     $sm->store('ztorderby', $orderby);
     $zen->addDebug("sorting.php", "search order set to ".join(',',$orderby),2);
   }
+  
+  $sortstring = join(',',$orderby);
 
 ?>

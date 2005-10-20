@@ -28,8 +28,13 @@
 
 <form method="post" name="ticketTabForm" action="<?=$actionName?>" onSubmit='return validateTicketForm(this)'>
 <?
+$context = new ZenFieldMapRenderContext(
+  array("view" => $formview, "form" => 'ticketForm')
+);
 foreach($hidden_fields as $f=>$field) {
-  print $map->renderTicketField($formview, 'ticketForm', $f, $ticket[$f]);
+  $context->set('field', $f);
+  $context->set('value', $ticket[$f]);
+  print $map->renderTicketField($context);
 }
 ?>
 <input type="hidden" name="id" value="<?=$zen->ffv($id)?>">
@@ -46,9 +51,12 @@ foreach($hidden_fields as $f=>$field) {
 <?
 
 foreach($visible_fields as $f=>$field) {
+  $context->set('field', $f);
+  $context->set('value', $ticket[$f]);
+  $context->set('force_label', $f == 'status');
   if( $field['field_type'] == 'section' ) {
     print "<tr><td colspan='2' class='subTitle'>";
-    print $map->renderTicketField($formview, 'ticketForm', $ticket[$f]);
+    print $map->renderTicketField($context);
     print "</td></tr>\n";
   }
   else {
@@ -64,7 +72,7 @@ foreach($visible_fields as $f=>$field) {
       print "&nbsp;<span class='error bigBold'>*</span>";
     }
     print "</td><td class='bars'>";
-    print $map->renderTicketField($formview, 'ticketForm', $f, $ticket[$f], null, $f == 'status');
+    print $map->renderTicketField($context);
     print "</td></tr>\n";
   }
 }

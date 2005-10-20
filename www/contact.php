@@ -10,7 +10,7 @@
   include_once("contact_header.php");
 
   // security measure
-  if( $login_level < $zen->settings['level_contacts'] ) {
+  if( $login_level < $zen->getSetting('level_contacts') ) {
     print "Illegal access.  You do not have permission to access contacts.";
     exit;
   }
@@ -63,14 +63,15 @@ $id = NULL;
 	    	include("$templateDir/contact_personBox.php"); 
 	    	if($overview=="tickets") {
           //collect field map info
-          $view = 'ticket_list';
-          $fields = $map->getFieldMap($view);
-		    	//sort tickets
-          include("$libDir/sorting.php");
+          $view = 'contact_list';
+          
+          // creates the $sortby variable describing how columns will be sorted
+          include_once("$libDir/sorting.php");
+          
           // collect open tickets
-          $tickets = $zen->getTicketsByPerson($id, join(',',$orderby));
-					//$tickets = $zen->get_open_tickets($id,"2");
+          $tickets = $zen->getTicketsByPerson($id, $sortstring);
 					
+          //$tickets = $zen->get_open_tickets($id,"2");
           include("$templateDir/listTickets.php");
 	    	}
 	    	
@@ -79,32 +80,25 @@ $id = NULL;
 			
 				if ($overview=="agreement"){
 					//show the related agreements
-					$parms = array(1 => array(1 => "company_id", 2 => "=", 3 => $id),
-													2 => array(1 => "status", 2 => "=", 3 => "1"),												
-					);
+					$parms = array(array("company_id","=",$id),
+													array("status","=","1") );
 					$contacts = $zen->get_contacts($parms,"ZENTRACK_AGREEMENT","contractnr asc");	
-					if( is_array($contacts) && count($contacts) ) {
-	  				include("$templateDir/agreement_list.php");
-  				}
+          include("$templateDir/agreement_list.php");
 				} elseif ($overview=="tickets") {
           //collect field map info
-          $view = 'ticket_list';
-          $fields = $map->getFieldMap($view);
+          $view = 'contact_list';
+
           // sort tickets
           include("$libDir/sorting.php");
 					//show open tickets
 					//$tickets = $zen->get_open_tickets($id,"1");
           $tickets = $zen->getTicketsByCompany($id,join(',',$orderby));
-					echo "<br>";
           include("$templateDir/listTickets.php");
 				} else {
 					//show the related contacts
-					$parms = array(1 => array(1 => "company_id", 2 => "=", 3 => $id),
-					);
+					$parms = array(array("company_id","=",$id));
 					$contacts = $zen->get_contacts($parms,"ZENTRACK_EMPLOYEE","lname asc");	
-    			if( is_array($contacts) && count($contacts) ) {
-	  				include("$templateDir/contact_list.php"); 
-  				}
+          include("$templateDir/contact_list.php"); 
 		  	}
 		  }
 	   

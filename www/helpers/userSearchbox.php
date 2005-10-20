@@ -7,6 +7,8 @@
     $search_param["homebin"] = $search_bins;
   }
   $onechoice = isset($_GET['onechoice']) || isset($_POST['onechoice']);
+  $return_form = $zen->ffv($return_form);
+  $return_field = $zen->ffv($return_field);
 ?><html>
 <head>
   <title><?php echo tr("Search Users"); ?></title>
@@ -91,7 +93,7 @@
 	$results = array($zen->get_user($v));
 	break;
       } else {
-	$params["$k"] = (strpos($v,"%")>-1)? array($k,"LIKE",$v) : array($k,"=",$v);
+	$params["$k"] = !(strpos($v,"%")===false)? array($k,"LIKE",$v) : array($k,"=",$v);
       }
     }
   }
@@ -135,7 +137,18 @@
        //else { s += "skipped "+element.name+": "+element.type+"\n"; }//debug
      }
      //alert(s);//debug
-     opener.document.<?=$return_form?>["<?=$return_field?>"].value = val;
+     <? $field = "opener.document.forms['$return_form'].elements['$return_field']"; ?>
+     <?=$field?>.value = val;
+     if( <?=$field?>.select ) {
+       <?=$field?>.select();
+     }
+     else if( <?=$field?>.focus ) {
+       <?=$field?>.focus();
+     }
+     if( <?=$field?>.onchange ) {
+       <?=$field?>.onchange();
+     }
+     
      window.self.close();
      return false;
    }

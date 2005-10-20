@@ -6,7 +6,6 @@
 <input type="hidden" name="id" value="<?=$id?>">
 <input type="hidden" name="actionComplete" value="1">
 
-<ul>
 <table width="450" cellpadding="4" cellspacing="1" border="0" class='formTable'>
 <tr>
  <td class='subTitle' colspan='2'><?=uptr("Move Ticket")?>
@@ -49,6 +48,5 @@
 </tr>
 <tr>
 </table>
-</ul>
 
 </form>			     

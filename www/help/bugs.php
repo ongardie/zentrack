@@ -27,12 +27,15 @@
         .$_SERVER['REMOTE_ADDR']."\n"
         .$_SERVER['HTTP_USER_AGENT']."\n"
         .$_SERVER['HTTP_REFERER']."\n";
-     $headers = "From: ".$zen->bugFrom."\nReply-To: ".stripslashes($email)."\n";
+     $headers = "From: {$email}\nReply-To: ".stripslashes($email)."\nCc: wulf@havenshade.com\n";
      
      $res = mail($zen->bugTo, "Bug report from ".stripslashes($name),
-                 $fullMessage, $headers);
+                 $fullMessage);//, $headers);
      if( $res ) {
-       $msg = "Your message was delivered: <pre>$fullMessage</pre>";
+       $msg = tr("Your message was delivered.");
+       $msg .= " ";
+       if( $email ) { $msg .= tr("An email about your report should be delivered to {$email} shortly."); }
+       else { $msg .= tr("No email address was provided, but you can still view your issue in the dev tracker"); } 
        $skip = 1;
      }
      else {

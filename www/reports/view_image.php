@@ -35,19 +35,19 @@
   //  $graph->yLabels = '';
 
   // set system params
-  $graph->colorBackground = $zen->settings["color_bars"];
-  $graph->colorForeground = $zen->settings["color_bar_text"];
-  $graph->colorGraphBackground = $zen->settings["color_background"];
-  $graph->colorGraphForeground = $zen->settings["color_text"];
-  $graph->colorXGuidelines = $zen->settings["color_text"]."-FB";
-  $graph->colorYGuidelines = $zen->settings["color_text"]."-FB";
-  $graph->titleColor = $zen->settings["color_text"];
-  $graph->headingColor = $zen->settings["color_bar_text"];
-  $graph->subHeadingColor = $zen->settings["color_bar_text"];
-  $graph->labelColor = $zen->settings["color_text"];
+  $graph->colorBackground = $zen->getSetting("color_bars");
+  $graph->colorForeground = $zen->getSetting("color_bar_text");
+  $graph->colorGraphBackground = $zen->getSetting("color_background");
+  $graph->colorGraphForeground = $zen->getSetting("color_text");
+  $graph->colorXGuidelines = $zen->getSetting("color_text")."-FB";
+  $graph->colorYGuidelines = $zen->getSetting("color_text")."-FB";
+  $graph->titleColor = $zen->getSetting("color_text");
+  $graph->headingColor = $zen->getSetting("color_bar_text");
+  $graph->subHeadingColor = $zen->getSetting("color_bar_text");
+  $graph->labelColor = $zen->getSetting("color_text");
   $graph->imageHeight = $zen->reportImageHeight;
   $graph->imageWidth = $zen->reportImageWidth;
-  $graph->valueFontColor = $zen->settings["color_text"];
+  $graph->valueFontColor = $zen->getSetting("color_text");
   $graph->yMin = 0;
   if( $params["show_data_vals"] > 0 ) {
     $graph->showValueOnGraph = 1;
@@ -174,11 +174,11 @@
 			"Location" => "middle-right",
 			"Transparency" => 0,
 			"PointShape" => "diamond",
-			"PointSize" => $zen->settings["font_size"]-2,
+			"PointSize" => $zen->getSetting("font_size")-2,
 			"BorderThickness" => 2,
-			"BorderColor" => $zen->settings["color_alt_text"],
-			"BackgroundColor" => $zen->settings["color_title_background"],
-			"ForegroundColor" => $zen->settings["color_title_txt"]);
+			"BorderColor" => $zen->getSetting("color_alt_text"),
+			"BackgroundColor" => $zen->getSetting("color_title_background"),
+			"ForegroundColor" => $zen->getSetting("color_title_txt"));
     $graph->addLegend($legendData);
   }
 

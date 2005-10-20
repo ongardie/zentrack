@@ -4,8 +4,8 @@
   
   $expand_reports = 1;
   $section = "Reports";
-  $system_name = $zen->settings["system_name"];
-  if( $_SESSION["login_level"] < $zen->settings["level_reports"] ) {
+  $system_name = $zen->getSetting("system_name");
+  if( $_SESSION["login_level"] < $zen->getSetting("level_reports") ) {
      $page_title = tr("Access Error");    
      $msg = "<p class='hot'>" . tr("You do not have permission to view the reports.") . "</p>\n"; 
      include("$libDir/nav.php");     

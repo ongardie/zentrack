@@ -3,7 +3,7 @@
   <table width="600" cellpadding="2" cellspacing="2">
    <tr>  
      <td class='subTitle'>
-       <?=tr("Related ?s", array($page_type))?>    
+       <?=tr("Related ?",tr($page_type."s"))?>    
      </td>
    </tr>  
    <tr>
@@ -25,7 +25,7 @@
   if( is_array($tickets) && count($tickets) ) {
      include("$templateDir/listTickets.php");
   } else {
-     print tr("No related ?s", $page_type);
+     print tr("No related ?", tr($page_type."s"));
   }
 ?>
      </td>

@@ -1,150 +1,117 @@
 <?
 if( !ZT_DEFINED ) { die("Illegal Access"); }
 
-
 /*
 *Show the contacts that are connected to a company
 */
 //echo($company_id);
-if ($company_id>"0") {
-$company = $zen->get_contact($company_id,"ZENTRACK_COMPANY","company_id");
+$company_id = $zen->checkNum($company_id);
+$agree_id = $zen->checkNum($agree_id);
+if ($company_id > 0) {
+  $company = $zen->get_contact($company_id,"ZENTRACK_COMPANY","company_id");
 }
 
 if (is_array($company)) {
-
-$name ="<A HREF='".$rootUrl."/contact.php?cid=".$company['company_id']."'>".ucfirst($company["title"])." ".ucfirst($company["office"])."</A>";
+  $name ="<A HREF='".$rootUrl."/contact.php?cid=".$zen->checkNum($company['company_id'])."'>".$zen->ffv(ucfirst($company["title"]))." ".$zen->ffv(ucfirst($company["office"]))."</A>";
 }
 
 ?>
-   <table cellpadding="0" cellspacing="0" border="0">
+<table width='60%' class='formtable' cellpadding='2' cellspacing='1'>
   <tr>
-   <td class="ticketCell">
-   <table align="center" width='570' border="0">
-     <tr>
-       <td valign="top"><table border="0"
-          width="430" cellpadding="0" cellspacing="1">
-
-    <tr>
-	   <td class="titleCell" colspan="4"><p align="center"><?=$contractnr?></p></td>
-	  </tr>
-	  <tr>
-	   <td class="smallTitleCell" colspan="2" ><?=uptr("Info")?></td>
-	   <td class="smallTitleCell"  colspan="2" width="50%"><?=uptr("Dates")?></td>
-	  </tr>
-	  <tr>
-     <td class="small" width="20%"><?=tr("Title")?>:</td>
-	   <td class="small" width="30%"><?=$title?></td>
-	   <td class="small" width="20%"><?=tr("Start Date")?>:</td>
-	   <td class="small" width="30%"><?if($stime){echo $zen->showDate($stime);}?></td>
-	  </tr>
-	  <tr>
-	   <td class="small" width="20%"><?=tr("Company")?>:</td>
-	   <td class="small" width="30%"><?=$name?></td>
-	   <td class="small" width="20%"><?=tr("Expiration Date")?>:</td>
-	   <td class="small" width="30%"><?if($dtime){echo $zen->showDate($dtime);}?></td>
-	  </tr>
-	  <tr>
-	   <td class="small" width="20%"></td>
-	   <td class="small" width="30%"></td>
-	   <td class="small" width="20%"></td>
-	   <td class="small" width="30%"></td>
-	  </tr>
+   <td class="subTitle" colspan="4"><p align="center"><?=$zen->ffv($contractnr)?></p></td>
+  </tr>
+  <tr>
+   <td class="headerCell" colspan="2" ><?=tr("Info")?></td>
+   <td class="headerCell"  colspan="2" width="50%"><?=tr("Dates")?></td>
+  </tr>
+  <tr>
+   <td class="bars small" width="20%"><?=tr("Title")?>:</td>
+   <td class="bars small" width="30%"><?=$zen->ffv($title)?></td>
+   <td class="bars small" width="20%"><?=tr("Start Date")?>:</td>
+   <td class="bars small" width="30%"><?if($stime){echo $zen->showDate($stime);}?></td>
+  </tr>
+  <tr>
+   <td class="bars small" width="20%"><?=tr("Company")?>:</td>
+   <td class="bars small" width="30%"><?=$name?></td>
+   <td class="bars small" width="20%"><?=tr("Expiration Date")?>:</td>
+   <td class="bars small" width="30%"><?if($dtime){echo $zen->showDate($dtime);}?></td>
+  </tr>
 <?
  if(!empty($description)) {
 ?>
 	  <tr>
-	   <td class="smallTitleCell" colspan="4"><?=uptr("Description")?></td>
+	   <td class="headerCell" colspan="4"><?=tr("Description")?></td>
 	  </tr>
 	  <tr>
-	   <td class="small" colspan="4"><?=(get_magic_quotes_runtime())?nl2br(stripslashes($description)):nl2br($description); ?></td>
+	   <td class="bars small" colspan="4"><?=$zen->ffvText($description)?></td>
 	  </tr>
 <?
 }
-//show items
-$parms = array(1 => array(1 => "agree_id", 2 => "=", 3 => $agree_id),
-);
-$sort = "item_id asc";
 
-$items = $zen->get_contacts($parms,"ZENTRACK_AGREEMENT_ITEM",$sort);
+  print "<tr><td class='subTitle' colspan='4'><table width='100%' cellpadding='0' cellspacing='0'><tr>";
+  
+  print "<td>";
+  print "<form name='editAgreementForm' action='$rootUrl/actions/agreement_edit.php'>\n";
+  renderDivButtonFind("Edit");
+  print "<input type='hidden' name='id' value='$agree_id'>\n";
+  print "</form>\n";
+  print "</td>";
+  
+  if ($status=="1") {
+    $active = "0";
+    $value = "ARCHIVE";
+  } else {
+    $active = "1";
+    $value = "ACTIVATE";
+  }
+  
+  print "<td width='100%' align='center'>";
+  print "<form name='archiveAgreementForm' action='$rootUrl/actions/agreement_archive.php'>\n";
+  renderDivButtonFind('Archive');
+  print "<input type='hidden' name='id' value='$agree_id'>\n";
+  print "<input type='hidden' name='active' value='".$zen->ffv($active)."'>\n";
+  print "</form>\n";
+  print "</td>";
+  
+  print "<td>";
+  print "<form name='deleteAgreementForm' action='$rootUrl/actions/agreement_delete.php'>\n";
+  renderDivButtonFind("Delete");
+  print "<input type='hidden' name='id' value='$agree_id'>\n";
+  print "</form>\n";
+  print "</td>";
+  
+  print "</tr></table></td></tr>";
 ?>
-<tr>
-	   <td class="smallTitleCell" colspan="4"><?=uptr("Items")?></td>
-</tr>
-<tr><td colspan="4">
-<table>
+</table>
 <?
-if (is_array($items)) {
+//show items
+$parms = array(array("agree_id", "=", $agree_id));
+$sort = "item_id asc";
+$items = $zen->get_contacts($parms,"ZENTRACK_AGREEMENT_ITEM",$sort);
 
-  $class = '';
+if (is_array($items) && count($items)) {
+?>
+<br>
+<table width='60%' class='formtable' cellspacing='1' cellpadding='2'>
+<tr>
+	   <td class="subTitle" colspan="3"><?=tr("Items")?></td>
+</tr>
+<tr>
+  <td class='headerCell'><?=tr("ID")?></td>
+  <td class='headerCell'><?=tr("Name")?></td>
+  <td class='headerCell'><?=tr("Description")?></td>
+</tr>
+<?
   foreach($items as $t) {
-    $class = $class == 'bars'? 'cell' : 'bars';
     ?>
-    <tr class='<?=$class?>'>
+    <tr class='bars'>
     <td><?=$t["item_id"]?></td>
-    <td height="25" width="50%" align="middle">
-    <?=strtoupper($t["name1"])?>
-    </td>
-    <td height="25" width="50%" align="middle" >
-    <?=strtolower($t["description1"])?>
-    </td>
+    <td><?=$zen->ffv($t["name1"])?></td>
+    <td><?=$zen->ffv($t["description1"])?></td>
     </tr>
     <?
   }
-
-} else {
-  echo "<tr><td colspan='4'>No items are set</td></tr>" ;
-}?>
-</table>
-</td</tr>
-
-<?//end items
-?>
-	 </table>
-
-	 </td>
-   <td valign="top" width='75'>
-
-<table width="120" cellpadding="0" cellspacing="0" border="0">
-<?
-print "<tr>\n<form name='edit_form' action='$rootUrl/actions/agreement_edit.php'>\n";
-print "<td>\n";
-print "<input type='submit' class='actionButtonContact' value='EDIT'>\n";
-print "<input type='hidden' name='id' value='$agree_id'>\n";
-print "</td>\n</form>\n</tr>\n";
-
-if ($status=="1") {
-  $active = "0";
-  $value = "ARCHIVE";
-} else {
-  $active = "1";
-  $value = "ACTIVATE";
 }
 
-print "<tr>\n<form name='archief_form' action='$rootUrl/actions/agreement_archive.php'>\n";
-print "<td>\n";
-print "<input type='submit' class='actionButtonContact'  value='$value'";
-print " onClick='return confirm(\"";
-print tr("Are you sure you want to archive this agreement?");
-print "\")'";
-print ">\n";
-print "<input type='hidden' name='id' value='$agree_id'>\n";
-print "<input type='hidden' name='active' value='$active'>\n";
-print "</td>\n</form>\n</tr>\n";
-
-
-print "<tr>\n<form name='delete_form' action='$rootUrl/actions/agreement_delete.php'>\n";
-print "<td>\n";
-print "<input type='submit' class='actionButtonContact'  value='".uptr('delete')."'";
-print " onClick='return confirm(\"".tr("Are you sure you want to permanently delete this agreement?")."\")'";
-print ">\n";
-print "<input type='hidden' name='id' value='$agree_id'>\n";
-print "</td>\n</form>\n</tr>\n";
 ?>
 </table>
-     </td>
-     </tr>
-    </table>
-    </td>
-  </tr>
-</table>
-<br>

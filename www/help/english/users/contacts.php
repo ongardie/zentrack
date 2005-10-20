@@ -10,7 +10,7 @@
 <tr>
   <td class='cell'>
     Contacts are simply companies or people who can be related to tickets
-    or placed on notify lists, but do not have a login to <?=$zen->settings['system_name']?>.
+    or placed on notify lists, but do not have a login to <?=$zen->getSetting('system_name')?>.
     
     <p>A Company contact can have several Person contacts associated with it.
     

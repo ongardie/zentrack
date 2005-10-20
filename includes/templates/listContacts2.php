@@ -1,81 +1,48 @@
 <?
-if( !ZT_DEFINED ) { die("Illegal Access"); }
-
-/*
-*Person bar to show some info
-*/
-
-if( is_array($tickets) ) {
-      ?>
-        <table width="100%" cellspacing='1' cellpadding='2' bgcolor='<?=$zen->getSetting("color_alt_background")?>'>
-      <?   
-    //show title bar  
-    if ($setmode=="all"){
-	    ?>
-		<td width="32" height="25" valign="middle" title="<?=tr("ID of the contact")?>" class="titleCell" >
-		<div align="center"><span style="color:<?=$zen->getSetting("color_title_txt")?>"><b><span><?=tr("ID")?></span></b></span></div>
-		</td>
-
-		<td height="25" valign="middle" title="<?=tr("The name of the contact")?>" class="titleCell">
-		<div align="center"><span style="color:<?=$zen->getSetting("color_title_txt")?>"><b><span><?=tr("Name")?></span></b></span></div>
-		</td>
-		<?if ($overview=="extern") { ?>
-		<td height="25" valign="middle" title="<?=tr("The company of the contact")?>" class="titleCell">
-		<div align="center"><span style="color:<?=$zen->getSetting("color_title_txt")?>"><b><span><?=tr("Company")?></span></b></span></div>
-		</td>
-		<?}?>
-		<td height="25" valign="middle" title="<?=tr("The e-mail of the contact")?>" class="titleCell">
-		<div align="center"><span style="color:<?=$zen->getSetting("color_title_txt")?>"><b><span><?=tr("E-mail")?></span></b></span></div>
-		</td>
-
-		<td height="25" valign="middle" title="<?=tr("The telephone of the contact")?>" class="titleCell">
-		<div align="center"><span style="color:<?=$zen->getSetting("color_title_txt")?>"><b><span><?=tr("Telephone Nr.")?></span></b></span></div>
-		</td>
-	    <?
-    }
-    //show the results             
-		$link  = "$rootUrl/contact.php";
-   	$td_ttl = "title='".tr("Click here to view the Contact")."'";   
-   	
-   foreach($tickets as $t) {    
-
-      ?>
-   <tr  class='priority1' onclick='ticketClk("<?=$link?>?pid=<?=$t["person_id"]?>")' onMouseOver='mClassX(this, "priority1Over", true)' onMouseOut='mClassX(this, "priority1", false)'>
-   <td height="25" width="5%" valign="middle" <?=$td_ttl?>>
-    <?=$t["person_id"]?>
-   </td>
-   <td height="25" width="25%" valign="middle" <?=$td_ttl?>>
-    <?=ucfirst($t["lname"])?>&nbsp;<?=($t["fname"])?",".ucfirst($t["fname"]):",".ucfirst($t["initials"])?>
-   </td>
-   <?if ($overview=="extern") { ?>
-   <td height="25" width="25%" valign="middle" <?=$td_ttl?>><?
-   	 if ( isset($t["company_id"])&& $t["company_id"]>"0") {
-	 $contact = $zen->get_contact($t["company_id"],"ZENTRACK_COMPANY","company_id");
-	  if( is_array($contact) ) {
-      echo strtoupper($contact['title']);
-      if ($contact['title']){
-	      echo " " .strtolower($contact['office']);
-      }
-    }	  
-  }
-}
-   ?>
-   </td>
-   <td height="25" width="25%" valign="middle" <?=$td_ttl?>>
-   <?=$t["email"]?>
-   </td>
-   <td width="20%" valign="middle" <?=$td_ttl?>>
-   <?=strtolower($t["telephone"])?>
-   </td>
-   </tr>       
-   <?
-   }      
-   $contact= NULL;  
-   print "</table>\n";
-   
-} else {
-  
-    print "<p>&nbsp;</p><ul><b>".tr('No contacts in this section.').".</b></ul>";
-}
-  
+///////////////////////////////////////////
+// RENDER A PERSON CONTACT
+///////////////////////////////////////////
+  if( !isset($show_list_options) ) { $show_list_options = false; }
+  $pid = $zen->ffv($t['person_id']);
 ?>
+<tr  class='bars' onclick='ticketClk("<?=$link?>?pid=<?=$pid?>",event)' 
+  <?=$row_rollover_eff?>>
+  <td valign="middle" <?=$td_ttl?>>
+    <?=$zen->ffv($t["person_id"])?>
+  </td>
+  <td valign="middle" <?=$td_ttl?>>
+    <?=$zen->ffv($t["lname"])?>&nbsp;<?=$zen->ffv($t["fname"])?
+      ",".$zen->ffv($t["fname"]):",".$zen->ffv($t["initials"])?>
+  </td>
+  <?if ($overview=="extern") { ?>
+    <td valign="middle" <?=$td_ttl?>><?
+    if ( isset($t["company_id"])&& $t["company_id"]>"0") {
+      $contact = $zen->get_contact($t["company_id"],"ZENTRACK_COMPANY","company_id");
+      if( is_array($contact) ) {
+        print $zen->ffv($contact['title']);
+        if ($contact['title']){
+          print $zen->ffv($contact['office']);
+        }
+      }	  
+    }
+  }
+  ?>
+  </td>
+  <td valign="middle" <?=$td_ttl?>>
+    <?=$t['email']? $zen->ffv($t["email"]) : '&nbsp;'?>
+  </td>
+  <td width="20%" valign="middle" <?=$td_ttl?>>
+    <?=$t['telephone']? $zen->ffv($t["telephone"]) : '&nbsp;'?>
+  </td>
+  <? if( $show_list_options ) { ?>
+      <td class='bars small' width='50'>
+       <a class='pinIcon' href='<?=$rootUrl?>/actions/contact_edit.php?pid=<?=$pid?>'
+          title='<?=tr("Edit Employee")?>'><img src='<?=$imageUrl?>/16x16/pin_green.png'
+          width='16' height='16' border='0' alt='<?=tr("Edit Employee")?>'></a>
+       <a class='pinIcon' href='<?=$rootUrl?>/actions/contact_delete.php?pid=<?=$pid?>'
+          onclick='return confirm("<?=tr("Delete this contact?")?>")'
+          title='<?=tr("Delete Contact")?>'><img src='<?=$imageUrl?>/16x16/pin_red.png'
+          width='16' height='16' border='0' alt='<?=tr("Delete Contact")?>'></a>
+      </td>    
+  <? } ?>
+</tr>

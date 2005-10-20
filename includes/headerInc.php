@@ -108,7 +108,7 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
     '&NTILDE;' => '&Ntilde;'
     );
     $trad=strtoupper(tr($string,$vals));
-    $trad = strtr($string, $specials);
+    $trad = strtr($trad, $specials);
     return $trad;
   }
 
@@ -331,20 +331,28 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
    * Generate a div layer that imitates a submit button, but can have
    * a hot key affect applied to it.
    */
-   function renderDivButton($key, $onclick, $width=100) {
+   function renderDivButton($key, $onclick, $width=100, $label = null) {
      $hotkeys = $GLOBALS['zt_hotkeys'];
-     $clickmouse = " onclick=\"{$onclick}; return false;\"";
-     print "<div style='width: {$width}px; text-align: center;' class='actionButtonDiv'"; 
-     print $clickmouse;
-     print " onmouseover='mClassX(this, \"actionButtonDiv abdDown\", true)'";
-     print " onmouseout='mClassX(this, \"actionButtonDiv\")'";
-     print " title='".$hotkeys->tooltip($key)."'>";
-     print "<a href='#' $clickmouse";
-     print " onfocus='mClassX(this.parentNode, \"actionButtonDiv abdDown\", true)'";
-     print " onblur='mClassX(this.parentNode, \"actionButtonDiv\")'";
-     print ">".$hotkeys->label($key)."</a>";
-     print "</div>";
-     print "<input type='submit' class='nodisplay'>";
+     $clickmouse = " onclick=\"{$onclick}; return false;\"\n";
+     print "<div style='width: {$width}px; text-align: center;' class='actionButtonDiv'\n"; 
+     print " $clickmouse";
+     print " onmouseover='mClassX(this, \"actionButtonDiv abdDown\", true)'\n";
+     print " onmouseout='mClassX(this, \"actionButtonDiv\")'\n";
+     print " title='".$hotkeys->tooltip($key)."'>\n";
+     print "<a href='#' $clickmouse\n";
+     print " onfocus='mClassX(this.parentNode, \"actionButtonDiv abdDown\", true)'\n";
+     print " onblur='mClassX(this.parentNode, \"actionButtonDiv\")'\n";
+     print ">".$hotkeys->label($key, $label, true)."</a>\n";
+     print "</div>\n";
+     print "<input type='submit' class='nodisplay'>\n";
+     print $hotkeys->renderAccessKey($key);
+   }
+   
+   function renderDivButtonFind( $label, $override_label = null, $onclick=null, $width=100 ) {
+     $hotkeys = $GLOBALS['zt_hotkeys'];
+     $key = $hotkeys->find($label);
+     if( !$onclick ) { $onclick = $hotkeys->getFxnName($key); }
+     return renderDivButton($key,$onclick,$width,$override_label);
    }
 
   /**
@@ -405,43 +413,53 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
   **  ROLLOVER EFFECTS
   */
 
-  $rollover_text = " onclick=\"mClk(this);\" onmouseout=\"mOut(this,'"
-    .$zen->getSetting("color_background")."', '');\" "
-    ."onmouseover=\"mOvr(this,'"
-    .$zen->getSetting("color_bars")."', '');\"";
+  $rollover_text = " onclick=\"if(window.document.body && mClk){mClk(this);return false;}\" "
+    ."onmouseout=\"if(window.document.body && mOut){mOut(this,'"
+    .$zen->getSetting("color_background")."', '');}\" "
+    ."onmouseover=\"if(window.document.body && mOvr){mOvr(this,'"
+    .$zen->getSetting("color_bars")."', '');}\"";
 
-  $rollover_greytext = " onclick=\"mClk(this);\" onmouseout=\"mOut(this,'"
-    .$zen->getSetting("color_bars")."', '');\" "
-    ."onmouseover=\"mOvr(this,'"
-    .$zen->getSetting("color_background")."', '');\"";
+  $rollover_greytext = " onclick=\"if(window.document.body && mClk){mClk(this);return false;}\" "
+    ."onmouseout=\"if(window.document.body && mOut){mOut(this,'"
+    .$zen->getSetting("color_bars")."', '');}\" "
+    ."onmouseover=\"if(window.document.body && mOvr){mOvr(this,'"
+    .$zen->getSetting("color_background")."', '');}\"";
 
-  $hotrollover_greytext = " onclick=\"mClk(this);\" onmouseout=\"mOut(this,'"
-    .$zen->getSetting("color_bars")."', '');\" "
-    ."onmouseover=\"mOvr(this,'"
-    .$zen->getSetting("color_highlight")."', '');\"";
+  $hotrollover_greytext = " onclick=\"if(window.document.body && mClk){mClk(this);return false;}\" "
+    ."onmouseout=\"if(window.document.body && mOut){mOut(this,'"
+    .$zen->getSetting("color_bars")."', '');}\" "
+    ."onmouseover=\"if(window.document.body && mOvr){mOvr(this,'"
+    .$zen->getSetting("color_highlight")."', '');}\"";
 
-  $hotrollover_text = "onclick=\"mClk(this);\" onmouseout=\"mOut(this,'"
-    .$zen->getSetting("color_background")."', '');\" "
-    ."onmouseover=\"mOvr(this,'"
-    .$zen->getSetting("color_highlight")."', '');\"";
+  $hotrollover_text = "onclick=\"if(window.document.body && mClk){mClk(this);return false;}\" "
+    ."onmouseout=\"if(window.document.body && mOut){mOut(this,'"
+    .$zen->getSetting("color_background")."', '');}\" "
+    ."onmouseover=\"if(window.document.body && mOvr){mOvr(this,'"
+    .$zen->getSetting("color_highlight")."', '');}\"";
 
-  $heading_rollover = " onmouseout=\"mOut(this,'"
-    .$zen->getSetting("color_bar_darkest")."','"
-    .$zen->getSetting("color_alt_text")."');\" onmouseover=\"mOvr(this,'"
+  $heading_rollover = " onmouseout=\"if(window.document.body && mOut){mOut(this,'"
+    .$zen->getSetting("color_bar_darker")."','"
+    .$zen->getSetting("color_alt_text")."');}\" "
+    ."onmouseover=\"if(window.document.body && mOvr){mOvr(this,'"
     .$zen->getSetting("color_alt_background")."','"
-    .$zen->getSetting("color_alt_text")."');\" ";
+    .$zen->getSetting("color_alt_text")."');}\" ";
 
 
-  $nav_rollover_eff = " onmouseout=\"mOut(this,'"
-    .$zen->getSetting("color_bar_darker")."');\" onmouseover=\"mOvr(this,'"
-    .$zen->getSetting("color_alt_background")."');\" ";
+  $nav_rollover_eff = " onmouseout=\"if(window.document.body && mOut){mOut(this,'"
+    .$zen->getSetting("color_bar_darker")."');}\" "
+    ."onmouseover=\"if(window.document.body && mOvr){mOvr(this,'"
+    .$zen->getSetting("color_alt_background")."');}\" ";
 
-  $nav_rollover_text = " onclick=\"mClk(this);\" ".$nav_rollover_eff;
+  $nav_rollover_text = " onclick=\"if(window.document.body && mClk){mClk(this);return false;}\" ".$nav_rollover_eff;
 
-  $lnav_rollover = " onmouseout=\"mOut(this,'"
-    .$zen->getSetting("color_bars")."');\" onmouseover=\"mOvr(this,'"
-    .$zen->getSetting("color_alt_background")."');\" "
-    ." onclick=\"mClk(this);\" ";
+  $lnav_rollover = " onmouseout=\"if(window.document.body && mOut){mOut(this,'"
+    .$zen->getSetting("color_bars")."');}\" "
+    ."onmouseover=\"if(window.document.body && mOvr){mOvr(this,'"
+    .$zen->getSetting("color_alt_background")."');}\" "
+    ." onclick=\"if(window.document.body && mClk){mClk(this);return false;}\" ";
+    
+  $row_rollover_eff = 'onmouseout="if(window.document.body && mClassX){mClassX(this);}" 
+      onmouseover="if(window.document.body && mClassX){mClassX(this,\'altBars\',true);}"';
 
   /**
    * Returns true if a login is required to view the current page.

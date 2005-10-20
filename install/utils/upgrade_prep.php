@@ -18,11 +18,14 @@
    *  -- my comment here (do not use /* my comment ...)
    *
    * Primary Keys:
-   *  - ???
+   *  - enter primary keys on a seperate line (not as part of a column definition)
+   *      my_pk_field int(12) NOT NULL,
+   *      PRIMARY KEY(my_pk_field)
    *
    * Create Sequence:
    *  - place auto_increment into the column and add a CREATE SEQUENCE.
    *  - this script will decide which one to use in the final version based on database
+   *  - always do both!
    *
    * Other Limitations:
    *  - do not create indexes in tables, do them all as CREATE INDEX statements

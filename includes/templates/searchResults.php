@@ -1,8 +1,7 @@
 <?{
 if( !ZT_DEFINED ) { die("Illegal Access"); }
 
-  
-  include("$libDir/sorting.php");
+  include_once("$libDir/sorting.php");
   
   function searchResultsMaxPri( $a, $b ) {
     if( $a > $b ) { return $a; }

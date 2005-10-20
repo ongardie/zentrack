@@ -61,6 +61,13 @@ KeyEvent.keyCodeTranslations = {
 };
 
 KeyEvent.generateKeyCode = function( keyCode, shift ) {
+  // don't translate if the shift key isn't down... some control keys,
+  // like page_up share keycodes... the only way to tell them apart is
+  // with the shift key
+  if( !shift ) { return keyCode; }
+  // if the shift key is down, we will check our table of funky chars
+  // and convert them to something more usable
+  // specifically, we need this for the symbols above numbers
   if( KeyEvent.keyCodeTranslations[keyCode] ) {
     return KeyEvent.keyCodeTranslations[keyCode];
   }
@@ -179,7 +186,7 @@ KeyEvent.keyPress = function(keyPress) {
     // determine if we are in a form field and this is not a meta key
     // (if so, we ignore the event, because the user must be able to
     // type into the field)
-    return true;
+    return;
   }
   
   // determine if we have a key event registered
@@ -213,10 +220,10 @@ KeyEvent.checkKey = function(keyPress) {
   }
   else if( c == 18 ) {
     ZenTabs.singleton.start();
-    if( !KeyEvent.showHelpOn ) {
-      KeyEvent.showHelpOn = window.setTimeout('KeyEvent.showHelp()', 8000);
+    if( !KeyEvent.showHelpOn && hotkeyHelpDelay > 0 ) {
+      KeyEvent.showHelpOn = window.setTimeout('KeyEvent.showHelp()', hotkeyHelpDelay);
+      if( debugOn ) { window.status = 'Prepping showhelp: '+KeyEvent.showHelpOn; }
     }
-    if( debugOn ) { window.status = 'Prepping showhelp: '+KeyEvent.showHelpOn; }
     return;
   }
   return true;
@@ -243,10 +250,24 @@ KeyEvent.getSourceElement = function( e ) {
 
 KeyEvent.targetsFormField = function( keyEvent ) {
   var s = keyEvent.source;
-  //alert('keyEvent.type|keyEvent.parent: '+s.type+"|"+s.parent);
-  //alert('keyEvent.parent.type: '+s.parent.type);//debug
-  if( s && s.parent && s.parent.type && s.parent.type == "form" ) {
-    return true;
+  if( !s || !s.type ) { return false; }
+  switch( s.type ) {
+    case "checkbox":
+    case "text":
+    case "textarea":
+    case "file":
+    case "select":
+    case "select-one":
+    case "select-multiple":
+    case "radio":
+    case "button":
+    case "submit":
+    case "hidden":
+    case "password":
+    case "reset":
+      return true;
+    default:
+      return false;
   }
   return false;
 }
@@ -276,7 +297,7 @@ KeyEvent.loadUrl = function(url) {
  */
 KeyEvent.register = function(fxn, keyName) {
   var evt = KeyEvent.valueOf(keyName);
-  evt.run = fxn;
+  evt.run = typeof(fxn)=='function'? fxn : function() { eval(fxn); };
   KeyEvent.listedEvents[KeyEvent.listedEvents.length] = evt;
 }
 
@@ -289,9 +310,10 @@ function ZenTabs() {
 }
 
 ZenTabs.prototype.start = function() {
+  if( hotkeyHintDelay < 1 ) { return; }
   if( this.visible ) { return; }
   if( this.timeout ) { return; }
-  this.timeout = window.setTimeout('ZenTabs.singleton.show()', 1500);
+  this.timeout = window.setTimeout('ZenTabs.singleton.show()', hotkeyHintDelay);
 }
 
 ZenTabs.prototype.show = function() {

@@ -5,30 +5,69 @@
    PREREQUISITES:
      (ZenFieldMap)$map - contains properties for fields
      (string)$view - the current view (probably project_list or ticket_list)
-     (array)$fields - [optional]properties for fields to be rendered, obtained from ZenFieldMap::getFieldMap( view )
      (string)$page_type - (optional) either 'ticket' or 'project'
      (array)$tickets - list of tickets to be displayed, as retrieved from zenTrack::get_tickets()
   **/
   
+  $right_aligned = '@^(elapsed|est_hours|wkd_hours|custom_number)@';
+  
+$show_totals = $map->getViewProp($view, 'show_totals');
 if( !$page_type )
   $page_type = "ticket";
-  
-$fields = $map->getFieldMap($view);
+
+if( $view == 'contact_list' ) { $fields = $map->getFieldMap('ticket_list'); }
+else { $fields = $map->getFieldMap($view); }
+$atc = 0;
+
+// creates the $sortby variable describing how columns will be sorted
 include_once("$libDir/sorting.php");
+
+// create ticket list using filters (if applicable)
+if( $view == 'ticket_list' || $view == 'project_list' ) {
+  $sm =& $zen->getSessionManager();
+  // creates the $params array specifying how we will filter tickets
+  include("$libDir/listFilters.php");
+  // retrieves the list of tickets filtered and sorted
+  $tickets = $zen->get_tickets($filter_params,$sortstring);
+  // total records in list
+  $atc = $zen->total_records;
+  // create the form for filtering results
+  include("$templateDir/listFiltersForm.php");
+}
+
+if( $view == 'contact_list' ) { $view = 'ticket_list'; }
+
+if( $ticket && !$atc ) {
+  if( isset($ticket['total_children']) ) {
+    $atc = $ticket['total_children'];
+  }
+}
+
+$locale = localeconv();
+$dec = $locale['decimal_point'];
+$sep = $locale['thousands_sep'];
+$len = $zen->getSetting('worked_hours_decimal');
+$cols = 0;
+$est_col = 0;
+$wkd_col = 0;
 
 if( is_array($tickets) && count($tickets) ) {
   $c = count($tickets);
-  $cols = 0;
   foreach($fields as $f=>$field) {
     if ( $field['is_visible'] ) {
-     $cols++;
+      $cols++;
+      if( $f == 'est_hours' ) { $est_col = $cols; }
+      else if( $f == 'wkd_hours' ) { $wkd_col = $cols; }
     }
   }
+  
+  if( $show_totals ) { $cols++; }
 
   $numtoshow = $zen->getSetting('paging_max_rows');
   $pageNumber = array_key_exists('pageNumber', $_GET)?
                 $zen->checkNum($_GET['pageNumber']) : 0;
 
+  /***
   $ata = NULL;
   if ( strpos($view,"search_list")===0 ) {
     $ata = $zen->search_tickets($params, "AND", "0", join(',',$orderby), 0) ;
@@ -41,6 +80,7 @@ if( is_array($tickets) && count($tickets) ) {
   } else {
     $atc = $zen->count_tickets($params);
   }
+  ***/
   if ( $atc > 0 ) {
     $t_from = $pageNumber*$numtoshow+1;
     $t_to = $t_from + $c -1;
@@ -58,18 +98,30 @@ function resortListPage( sortName ) {
   document.searchModifyForm.submit();
   return false;
 <? } else { ?>
-  s = window.location.href;
-  s += s.indexOf('?') > 0? '&newsort='+sortName : '?newsort='+sortName;
+  var s = window.location.href;
+  if( s.indexOf('newsort=') > 0 ) {
+    s = s.replace(/newsort=[^&]+/, "newsort="+sortName);
+  }
+  else {
+    s += s.indexOf('?') > 0? '&newsort='+sortName : '?newsort='+sortName;
+  }
   window.location = s;
 <? } ?>
 }
 </script>
 <table width="100%" cellspacing='1' cellpadding='2'>
 <?
-if ($atc>0) {
-?>
-   <tr><td class='titleCell' colspan="<?=$cols?>" align='center'><?=($atc>1)? tr("? Matches",array($atc))." (".$t_from." - ".$t_to.")" : tr("1 Match");?></td></tr>
-<?
+$atc_text = $atc > 1? tr("Tickets ?-? of ?",array($t_from,$t_to,$atc)) : "";  
+if( $view == 'project_tasks' ) {
+  print "<tr><td colspan='$cols' class='subTitle'>".tr("Tasks for this project")
+    .($atc_text? " ($atc_text)":"")."</td></tr>";
+}
+else if ($atc_text) {
+  print "<tr><td class='subTitle' colspan='$cols' align='center'>$atc_text</td></tr>\n";
+}
+else {
+  print "<tr><td class='subTitle' colspan='$cols' align='center'>".tr("Ticket List")
+      .($atc_text? " ($atc_text)":"")."</td></tr>\n";
 }
 ?>
    <tr>
@@ -82,16 +134,24 @@ if ($atc>0) {
 
     $tf = tr($map->getLabel($view,$f));
     $sn = in_array($f, $orderby)? "$f DESC" : $f;
-    print "<td width='32' height='15' valign='middle' ";
+    print "<td valign='middle' ";
     if( getFmFieldProps($view, $f) ) {
       print "onclick='resortListPage(\"$sn\")' $heading_rollover ";
     }
-    print " title='".$zen->ffv($tf)."' class='subTitle'><span class='small'>$tf</span></td>\n";
+    print " title='".$zen->ffv($tf)."' class='headerCell'>$tf</td>\n";
     
     // store information about field types
     if( strpos($f, 'custom_') === 0 && $field['is_visible'] ) {
       $custom_field_list[] = $f;
     }
+  }
+  
+  if( $show_totals ) {
+    ?>
+      <td width="40" height="25" valign="middle" title="<?=tr("Percent completed")?>" class='headerCell'>
+        <?=tr("%")?>
+      </td>
+    <?    
   }
   
   // close the row
@@ -135,9 +195,28 @@ if ($atc>0) {
   }
 
    $td_ttl = "title='".tr("Click here to view the ?", array(tr(ucfirst($page_type))))."'";
+   $ttl_est = 0;
+   $ttl_wkd = 0;
+   $ttl_ext = "";
    foreach($tickets as $t) {
-      $row = $zen->getSetting("color_background");
-      
+     $est = null;
+     $wkd = null;
+     $per = "n/a";
+     if( $show_totals ) {
+        // calculate the total hours
+        // and format the ticket's hours
+        list($est,$wkd,$ext) = $zen->getTicketHours($t["id"]);
+        $ttl_est += $est;
+        $ttl_wkd += $wkd;
+        $ttl_ext += $ext;
+        if( !strlen($est) )
+          $est = "n/a";
+        if( $wkd <= 0 ) { $wkd = 0; }
+        if( $est > 0 ) {
+          $per = round($zen->percentWorked($est,$wkd),1).tr("%");
+        }
+     }
+
       // create special url for projects
       if( $zen->inProjectTypeIDs($t["type_id"]) ) {
          $link = $projectUrl;
@@ -152,8 +231,8 @@ if ($atc>0) {
       else if( $zen->getSetting("priority_medium") ) {
         $classxText = "class='priority{$t['priority']}' "
          ."onclick='ticketClk(\"{$link}?id={$t['id']}\"); return false;' "
-         ."onMouseOver='mClassX(this, \"priority{$t['priority']}Over\", true)' "
-         ."onMouseOut='mClassX(this, \"priority{$t['priority']}\", false)'";
+         ."onMouseOver='if(window.document.body && mClassX){mClassX(this, \"priority{$t['priority']}Over\", true);}' "
+         ."onMouseOut='if(window.document.body && mClassX){mClassX(this, \"priority{$t['priority']}\", false);}'";
       }
       else {
         $classxText = "class='cell' onclick='ticketClk(\"{$link}?id={$t['id']}\"); return false;' $rollover_text";
@@ -166,7 +245,7 @@ if ($atc>0) {
       foreach($fields as $f=>$field) {
         // skip hidden fields
         if( !$field['is_visible'] ) { continue; }
-        $align = $f == 'elapsed'? 'align="right"' : '';
+        $align = preg_match($right_aligned, $f)? 'align="right"' : '';
         print "<td height='25' valign='middle' $align $td_ttl>";
         print "<a class='rowLink' href='$link?id={$t['id']}'>";
         if( $f == 'user_id' || $f == 'creator_id' ) {
@@ -184,14 +263,23 @@ if ($atc>0) {
         print "</a></td>\n";
       }
       
+      if( $show_totals ) {
+        print "<td align='right'>$per</td>";
+      }
+      
       // close the row
       print "</tr>";
+   }
+   
+   if( $show_totals ) {
+     $totals_titlebar_txt = tr('Totals:');
+     include("$templateDir/totalsBar.php");
    }
    
    if( strpos($view, 'search')===0 ) {
 ?>
    <tr>
-       <td colspan="<?= 9+$vfcount ?>" class="titleCell">
+       <td colspan="<?= $cols ?>" class="subTitle">
        <nobr>
        <form method="post" action="search.php" name='searchModifyForm' style="display: inline; margin: 0px;">
           <input type="submit" class="smallSubmit" value="<?=tr("Modify Search")?>">
@@ -259,6 +347,30 @@ if ($atc>0) {
 <?
    }
    
+   if( $atc > 0 ) {
+     $hotkeys->loadSection('paging');
+     if( $show_totals ) {
+       $totals_titlebar_txt = tr("Grand Total");
+       list($ttl_est,$ttl_wkd,$ttl_ext) = $zen->getTicketHours($id);
+       include("$templateDir/totalsBar.php");
+     }
+?>
+
+<!--- BEGIN Paging --->
+<tr>
+   <td  align="right" valign='bottom' colspan='<?=$cols?>' class='subTitle'>
+     <?
+       $links = $zen->get_links("all", "off", $atc);
+       for ($y = 0; $y < count($links); $y++) {
+          echo $links[$y] . "&nbsp;&nbsp;";
+       }
+     ?>
+   </td>
+</tr>
+<!--- END Paging --->
+
+<?
+   }
    print "</table>\n";
    
 } else {

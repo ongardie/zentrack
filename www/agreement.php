@@ -10,7 +10,7 @@
   include_once("contact_header.php");
 
   // security measure
-  if( $login_level < $zen->settings['level_contacts'] ) {
+  if( $login_level < $zen->getSetting('level_contacts') ) {
     print "Illegal access.  You do not have permission to access contacts.";
     exit;
   }
@@ -33,6 +33,8 @@
   
   $page_section = "Agreement $id";
   $expand_agreement = 1;
+  
+  $hotkeys->loadSection('agreement_view');
   
   /*
   ** PRINT OUT THE PAGE

@@ -1,77 +1,59 @@
 <? if( !ZT_DEFINED ) { die("Illegal Access"); } ?>
-<table width="645" cellpadding="0" cellspacing="0" border="0">
-<tr> 
-<td valign="bottom">
-<?
-  /*
-  ** SHOW THE NAVIGATION TABS
-  */
-  
-  // set the page mode, for viewing tickets
-  if( $setmode ) {    
-    $page_mode = strtolower($setmode); 
- 	} else {
-	  $page_mode = "abc";	
- 	}
 
-
-  
-  print "<table cellpadding='0' cellspacing='0'><tr>\n";
-  print "<td width='3'><img src='$rootUrl/images/empty.gif' width='3' height='1'></td>\n";
-  
-   $tabs = array(
-      "abc",
-      "def",
-      "ghi",     
-      "jkl",
-			"mno",
-			"pqrs",
-			"tuv",
- 			"wxyz",
-			"!19" 
-      );
-  
-      $i = 1;   
-  foreach( $tabs as $t ) {
-    $lt = strtolower($t);
-    if( $page_mode == $lt ) {
-      $class = 'tab on';
-      $lclass = "tabsOn";
-    } else {
-      $class = 'tab off';
-      $lclass = 'tabsOff';
-    }
-    
-    print "<td class='$class' height='16' width='60' align='center'>";
-    print "<a href='$rootUrl/contacts.php?setmode=$t&overview=$overview&ie=$ie' class='$lclass'>$t</a></td>\n";
-    if( $i < count($tabs) ) {
-      print "<td width='3'><img src='$rootUrl/images/empty.gif' width='3' height='1'></td>\n";
-    }
-     $i++;
-  }
-print "<td width='3'><img src='$rootUrl/images/empty.gif' width='3' height='1'></td>\n";
-?>
-</tr></table>
-</td>
-</tr>
-<tr> 
-  <td class="ticketCell" height="300" valign="top">
-  <br>  
+<table width="100%" cellspacing='1' class='formtable'>
 <?
+if( $overview == 'company' ) {
+  include("$templateDir/listContactsHeading.php");
+}
+else {
+  include("$templateDir/listContacts2Heading.php");
+}
 
   /*
   ** DETERMINE WHICH SCREEN TO SHOW AND SHOW IT
   */
-  $name = "contact_".$page_mode."Box.php";
-  $name = ereg_replace("[.]{2}", "", $name);
-  // check for valid filename
-  if( !file_exists("$templateDir/$name") ) {
-    $name = "ticket_systemBox.php";
-    $this->addDebug("contact_box","Invalid filename $name declared... redirecting",1);
+  for($i=0; $i<strlen($page_mode); $i++) {
+    $l = substr($page_mode,$i,1);
+    $letter = strtoupper($l);
+    $n = strpos($letters,$l)+1;
+    if( $page_mode == '!19' ) {
+      $parms = array(array($title, "<", "a"));
+    }
+    else {
+      $parms = array();
+      $parms[] = array($title, ">=", $l);
+      if( $n < strlen($letters) ) {
+        $parms[] = array($title, "<", $letters{$n});
+      }
+    }
+    $sort = $title." asc";
+    if( $overview != 'company' ) {
+      $parms[] = array("inextern", "=", $ie);
+    }
+    $tickets = $zen->get_contacts($parms,$tabel,$sort);
+    ?>
+      <tr>
+       <td class='headerCell' align="center" colspan='5'>
+         <?=$letter?>
+       </td>
+      </tr>
+    <?
+    if( is_array($tickets) ) {
+      $link  = "$rootUrl/contact.php";
+      $td_ttl = "title='".tr("Click here to view the Contact")."'";
+
+     foreach($tickets as $t) {
+       if( $overview == 'company' ) {
+         include("$templateDir/listContacts.php");
+       }
+       else {
+         include("$templateDir/listContacts2.php");
+       }
+     }
+    } else {
+      print "<tr><td class='bars note' colspan='5'>".tr('No contacts for section ?', $letter)."</td></tr>";
+    }
   }
-  include("$templateDir/$name");
+
 ?>
-   <br>
-  </td>
-</tr>
 </table>

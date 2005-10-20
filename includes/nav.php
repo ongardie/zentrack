@@ -57,12 +57,13 @@
   <title><?=$page_prefix.$page_title?></title>
   <LINK HREF="<?=$rootUrl?>/styles.php" REL="STYLESHEET" TYPE="text/css">
   <script language="javascript">
-    function mOvr() { }//just a placeholder to remove js errors
-    var imageUrl = "<?=$imageUrl?>";
-    var rootUrl = "<?=$rootUrl?>";
-    var id = "<?=$id?>";
+    var imageUrl = <?=$zen->fixJsVal($imageUrl)?>;
+    var rootUrl = <?=$zen->fixJsVal($rootUrl)?>;
+    var id = <?=$zen->fixJsVal(id)?>;
+    var hotkeyHelpDelay = <?=$zen->fixJsVal($zen->getSetting('hotkeys_help_delay'))?>;
+    var hotkeyHintDelay = <?=$zen->fixJsVal($zen->getSetting('hotkeys_hint_delay'))?>;
+    var loaded = false;
   </script>
-
   <script language="javascript" src="<?=$rootUrl?>/javascript.js"></script>
   <script language="javascript" src="<?=$rootUrl?>/keyevent.js"></script>
   <script language="javascript" src="<?=$rootUrl?>/popcalendar.js"></script>
@@ -76,6 +77,7 @@
     var isIE = navigator.appName.indexOf('Microsoft') >= 0;
     var debugOn = <?=$Debug_Mode > 0? 'true' : 'false'?>;
     window.onload = function() {
+      loaded = true;
       loadRenderKeys();
       window.onblur = function() {
         if( KeyEvent.hideHelp ) { KeyEvent.hideHelp(); }
@@ -90,7 +92,6 @@
         window.document.onkeyup = KeyEvent.cancelKey;
       }
     }
-    
   </script>
 
   </head>
@@ -103,7 +104,7 @@
   src="<?=$imageUrl?>/zenTrack_logo.jpg"
   border="0" width="140" height="30" alt="logo"></a>
   </td>
-  <td valign='bottom' align='left'><table cellpadding='0' cellspacing='0' border='0'>
+  <td class='indent' valign='bottom' align='left'><table cellpadding='0' cellspacing='0' border='0'>
     <tr><?= $nav_tabs ?></tr></table></td>
   <td align='right'>
      <form action="<?=$rootUrl?>/quickSearch.php" name='quickIdForm'>
@@ -139,8 +140,8 @@
 
       <!-- ********* \LEFT NAV MENU\ ********* -->
 
-      <td height='400' width='110' valign='top' align='center' class='subTitle'>
-      <table width='106' height='100%' cellpadding='3' cellspacing='3'>
+      <td height='400' width='110' valign='top' align='center' class='navCell'>
+      <table width='110' height='100%' class='slimPad'>
       <?
       include("$templateDir/nav_$sect.php");
       print "</table>\n";
@@ -157,7 +158,7 @@
     }
     if( is_array($msg) && count($msg) ) {
        foreach($msg as $m) {
-          print "<div class='highlight'>$m</div>";
+          print "<div class='highlight indent'>".$zen->ffv($m)."</div>";
        }
        $msg = array();
     }

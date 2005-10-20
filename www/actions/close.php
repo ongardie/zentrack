@@ -55,8 +55,9 @@
           $msg = tr("Ticket ? has been closed", array($id));
         }
       }
-      $setmode = "";
-      $action = "";
+      $setmode = null;
+      $action = null;
+      $ticketTabAction = false;
       include("$rootWWW/ticket.php");
       exit;
     }
@@ -66,11 +67,8 @@
   include("$libDir/nav.php");
   $zen->printErrors($errs);
   $ticket = $zen->get_ticket($id);
-  $varfields = $zen->getVarfieldVals($id);
-  extract($varfields);
-  extract($ticket);
-  if( $zen->inProjectTypeIDs($type_id) ) {
-     include("$templateDir/projectView.php");
+  if( $zen->inProjectTypeIDs($ticket['type_id']) ) {
+    include("$templateDir/projectView.php");
   } else {
     include("$templateDir/ticketView.php");     
   }

@@ -29,15 +29,15 @@
   
   // load the ticket info, validate it, and switch 
   // to the project view if needed
-  $page_type = 'ticket';
   if( $view == "project_view" ) {
-    $ticket = $zen->get_project($id);
+    $ticket = $zen->get_project($id, true);
     $page_type = 'project';
   } else {
-    $ticket = $zen->get_ticket($id);
-    if( is_array($ticket) ) {
+    $ticket = $zen->get_ticket($id, true);
+    $page_type = 'ticket';
+    if( $ticket ) {
       if( $zen->inProjectTypeIDs($ticket["type_id"]) ) {
-        $ticket = $zen->get_project($id);
+        $ticket = $zen->get_project($id, true);
         $view = 'project_view';
         $page_type = 'project';
       }

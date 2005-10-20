@@ -114,7 +114,7 @@
   
         // default_val has some special considerations
         if( !$map->getViewProp($view, 'view_only') ) {
-          if( $fprops['default'] ) { fmGetSet($f, 'default_val'); }
+          if( $fprops['default'] || preg_match('@(ticket|project)_list_filters@', $view) ) { fmGetSet($f, 'default_val'); }
         }
       }
   

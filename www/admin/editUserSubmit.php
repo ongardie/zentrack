@@ -30,7 +30,7 @@
   if( $user_id == 1 && $access_level < 5 ) {
     $errs[] = tr("The root admin account must have access of 5 or greater");
   }
-  if( $user_id == 1 && $access_level < $zen->settings["level_settings"] ) {
+  if( $user_id == 1 && $access_level < $zen->getSetting("level_settings") ) {
     $errs[] = tr("The root admin access cannot be less than the level_settings parameter");
   }
   if( $user_id == 1 && !$active ) {

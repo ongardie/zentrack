@@ -34,6 +34,9 @@
     foreach(array_keys($fields) as $f) {
       if( strlen($$f) ) {
         $params["$f"] = $$f;
+        if( $f == 'title' && strlen($params["$f"]) > 50 ) {
+          $params["$f"] = substr($params["$f"],0,50);
+        }
       }
     }
     $params["creator_id"] = $login_id;
@@ -59,7 +62,9 @@
   }
   
   if( !$errs ) {
-    $setmode = "details";
+    $setmode = null;
+    $action = null;
+    $ticketTabAction = 0;
     include("ticket.php");
     exit;
     //header("Location:$rootUrl/ticket.php?id=$id");

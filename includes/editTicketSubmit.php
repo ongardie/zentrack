@@ -30,6 +30,9 @@
        if( $f == 'status' ) { continue; }
        // put the value into the updates array
        $params["$f"] = $$f;
+       if( $f == 'title' && strlen($params["$f"]) > 50 ) {
+         $params["$f"] = substr($params["$f"],0,50);
+       }
      }
      // update the ticket info
      $res = $zen->edit_ticket($id,$login_id,$params,$edit_reason);

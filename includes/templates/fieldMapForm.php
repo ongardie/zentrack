@@ -221,8 +221,15 @@ foreach($fields as $f=>$field) {
     }
     // default value (text)
     $txt = "n/a";
-    if( $fprops['default'] && !$map->getViewProp($view,'view_only') ) {
-      if( strpos($f,'custom_menu')===0 || strpos($f,'custom_multi')===0 ) {
+    if( ($fprops['default']||preg_match('@(project|ticket)_list_filters@',$view)) && !$map->getViewProp($view,'view_only') ) {
+      if( $f == 'status' ) {
+        $choices = array(''             => tr("-any-"),
+                         'OPEN,PENDING' => tr("Open")." ".tr("or")." ".tr("Pending"),
+                         'OPEN'         => tr("Open"),
+                         'PENDING'      => tr("Pending"),
+                         'CLOSED'       => tr("Closed"));
+      }
+      else if( strpos($f,'custom_menu')===0 || strpos($f,'custom_multi')===0 ) {
         // custom menus use the data groups as a selector, not a list of values
         $choices = $zen->getDataGroups();
       }
@@ -231,9 +238,19 @@ foreach($fields as $f=>$field) {
       }
       //if( $f == 'custom_menu1' ) { Zen::printArray($choices); }
       if( is_array($choices) && count($choices) ) {
-        $txt = "<select ".fmfName($f,'default_val').">";
+        //if( $field['multiple'] ) { 
+        //  $txt = "<select name='{$f}[default_val][]' size='3' multiple>";
+        //}
+        //else {
+          $txt = "<select ".fmfName($f,'default_val')."$m>";
+        //}
         foreach($choices as $k=>$v) {
-          $sel = $field['default_val'] == $k && strlen($field['default_val']) == strlen($k)? " selected" : "";
+          if( is_array($field['default_val']) ) {
+            $sel = in_array($sel, $field['default_val'])&&strlen($sel)? ' selected' : '';
+          }
+          else {
+            $sel = $field['default_val'] == $k && strlen($field['default_val']) == strlen($k)? " selected" : "";
+          }
           $txt .= "<option value='$k'{$sel}>$v</option>";
         }
         $txt .= "</select>";
@@ -285,7 +302,7 @@ foreach($fields as $f=>$field) {
 }
 ?>
 <tr id='section0' style="display:none;">
-  <td class='highlight'><input type='hidden' name='orderset[section0]' value='3'><a href='#' onClick='moveRowUp(this.parentNode);return false;' border='0' alt='Move Up' title='Move Up'><img src='/images/icon_arrow_up.gif' width='16' height='16' alt='Move Up' title='Move Up' border='0'></a><a href='#' onClick='moveRowDown(this.parentNode);return false;' border='0' alt='Move Down' title='Move Down'><img src='/images/icon_arrow_down.gif' width='16' height='16' alt='Move Up' title='Move Up' border='0'></a><a href='#' onClick='removeRow(this);return false;' border='0' alt='Remove Section' title='Remove Section'><img src='/images/icon_trash.gif' width='16' height='16' alt='Remove Section' title='Remove Section' border='0'></a></td>
+  <td class='highlight'><input type='hidden' name='orderset[section0]' value='3'><a href='#' onClick='moveRowUp(this.parentNode);return false;' border='0' alt='Move Up' title='Move Up'><img src='<?=$imageUrl?>/icon_arrow_up.gif' width='16' height='16' alt='Move Up' title='Move Up' border='0'></a><a href='#' onClick='moveRowDown(this.parentNode);return false;' border='0' alt='Move Down' title='Move Down'><img src='<?=$imageUrl?>/icon_arrow_down.gif' width='16' height='16' alt='Move Up' title='Move Up' border='0'></a><a href='#' onClick='removeRow(this);return false;' border='0' alt='Remove Section' title='Remove Section'><img src='<?=$imageUrl?>/icon_trash.gif' width='16' height='16' alt='Remove Section' title='Remove Section' border='0'></a></td>
   <td class='highlight' islabel="islabel">section0</td>
   <td class='highlight'><input type='text' name='section0[field_label]' value='' size=15 maxlength=200></td>
   <td class='highlight'><input type='checkbox'  name='section0[is_visible]' value='1' onclick='return checkVisible(this)' checked></td>
@@ -435,7 +452,6 @@ function moveRowDown( tdCell ) {
     while( thisRow.nodeName != "TR" || thisRow.getAttribute("toofar") ) {
       thisRow = thisRow.nextSibling;
     }
-    alert(thisRow.id+": "+document.fieldMapForm["orderset["+thisRow.id+"]"]);//debug
     //We set the current row's orderset value to the first row's orderset -1
     v1=parseFloat(document.fieldMapForm[ "orderset[" + thisRow.id + "]" ].value);
     document.fieldMapForm[ "orderset[" + nextRow.id + "]" ].value=v1-1;
@@ -480,7 +496,6 @@ function toggleRowColor( checkBox ) {
     var defObj = document.fieldMapForm[defName];
     var reqObj = document.fieldMapForm[reqName];
     toggleRowColor( document.fieldMapForm[namePrefix+"[is_visible]"] );
-    //if( !defObj ) { alert("crap!"); }//debug
     if( defObj && defObj.value == null && reqObj.checked ) {
       alert("You cannot hide a required field unless it has a default value.");
       return false;

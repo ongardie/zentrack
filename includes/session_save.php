@@ -8,6 +8,8 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
   ** in every place that we call one of these values
   */
 
+  $skips = array('ztDataCache', 'ztVarfields', 'ztMiscCache', 'ztDataTypes');
+  
   $vals = array();
   if( is_array($_SESSION) ) {
     foreach($session_vars as $s) {

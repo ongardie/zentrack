@@ -107,17 +107,17 @@ CREATE TABLE zentrack_employee (
 );
 
 CREATE TABLE ZENTRACK_FIELD_MAP (
-   field_map_id default nextval('"field_map_seq_id"') NOT NULL PRIMARY KEY,
+   field_map_id INT8 nextval('"field_map_seq_id"') NOT NULL PRIMARY KEY,
    field_name   VARCHAR2(25) NOT NULL default '',
    field_label  VARCHAR2(255) default '',
-   is_visible   NUMBER(1) default 0,
+   is_visible   INT2 default 0,
    which_view   VARCHAR2(50) default 0,
    default_val  VARCHAR2(255),
-   sort_order   NUMBER(4) default 0,
+   sort_order   INT default 0,
    field_type   VARCHAR2(50),
-   num_cols     NUMBER(4) default 0,
-   num_rows     NUMBER(2) default 0,
-   is_required  NUMBER(1) default 0,
+   num_cols     INT default 0,
+   num_rows     INT2 default 0,
+   is_required  INT2 default 0,
 );
 
 --

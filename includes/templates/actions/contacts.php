@@ -6,11 +6,9 @@
   // collect contact data
 	$companies = $zen->get_contact_all();	
 	if (empty($company_id)) {
-		$parms = array(1 => array(1 => "company_id", 2 => "=", 3 => "0"),
-		);
+		$parms = array(array("company_id", "=", "0"));
 	} else {
-		$parms = array(1 => array(1 => "company_id", 2 => "=", 3 => $company_id),
-		);
+		$parms = array(array("company_id", "=", $company_id));
 	}
 	$sort = "lname asc";
 	$people = $zen->get_contacts($parms,"ZENTRACK_EMPLOYEE",$sort);
@@ -27,13 +25,14 @@
 <script type="text/javascript">
 function printpopup(varialbe)
 {
-location.href ="<?=$_SERVER['SCRIPT_NAME']?>?id=<?=$id?>&company_id="+varialbe
+location.href ="<?=$_SERVER['SCRIPT_NAME']?>?id=<?=$id?>&company_id="+varialbe+"&setmode=<?=$zen->ffv($setmode)?>";
 }
 </script>
 
 <form method='post' action='<?=$zen->ffv($SCRIPT_NAME)?>' name='ContactsAddForm'>
 <input type='hidden' name='id' value='<?=$id?>'>
 <input type='hidden' name='actionComplete' value='1'>
+<input type='hidden' name='setmode' value='<?=$zen->ffv($page_mode)?>'>
 
 <table cellpadding="4" width='300' cellspacing="1" border="0">
 <tr>
@@ -123,5 +122,5 @@ location.href ="<?=$_SERVER['SCRIPT_NAME']?>?id=<?=$id?>&company_id="+varialbe
 
 <p>&nbsp;
 <form action='<?=$rootUrl?>/newContact.php' target="_BLANK" name='newContactForm'>
-  <? renderDivButton($hotkeys->find('Create New Contact'), "window.document.forms['newContactForm'].submit()"); ?>
+  <? renderDivButton($hotkeys->find('Create New Contact'), "window.document.forms['newContactForm'].submit()", 150); ?>
 </form>

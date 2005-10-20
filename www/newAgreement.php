@@ -10,7 +10,7 @@
   include("contact_header.php");
 
   // security measure
-  if( $login_level < $zen->settings['level_contacts'] ) {
+  if( $login_level < $zen->getSetting('level_contacts') ) {
     print "Illegal access.  You do not have permission to access contacts.";
     exit;
   }
@@ -24,19 +24,19 @@
 
   // add item button
   if ($TODO == "addItems") {
-	    $agree_id = "0";
+    $agree_id = "0";
     $create_time = time();
     
     $fields = array(
-		    "agree_id"    => "int",
-		    "description1" => "ignore",
-		    "name1"       => "text",
-		    "create_time" => "int",
-		    );
+    "agree_id"    => "int",
+    "description1" => "ignore",
+    "name1"       => "text",
+    "create_time" => "int",
+    );
     
     foreach(array_keys($fields) as $f) {
       if( strlen($$f) ) {
-	$params["$f"] = $$f;
+        $params["$f"] = $$f;
       }
     }
     
@@ -54,18 +54,20 @@
     $description1 = null;
     $name1 = null;
   }
-
-  // drop button action
-  if ($TODO == "removeItems" ){
+  else if ($TODO == "removeItems" ){
     if( is_array($drops) ) {
       // drop items in list
       for($i=0; $i<count($drops); $i++) {
-	// clean up numbers just in case
-	$n = $zen->checkNum($drops[$i]);
-	
-	$res = $zen->delete_contact( $n,"ZENTRACK_AGREEMENT_ITEM","item_id");
+        // clean up numbers just in case
+        $n = $zen->checkNum($drops[$i]);
+        
+        $res = $zen->delete_contact( $n,"ZENTRACK_AGREEMENT_ITEM","item_id");
       }
     }
+  }
+  else {
+    // clear any temporary items which might be hanging out
+    $zen->delete_contact('0', "ZENTRACK_AGREEMENT_ITEM", "agree_id");
   }
 
   include("$templateDir/newAgreementForm.php");

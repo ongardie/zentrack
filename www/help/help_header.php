@@ -104,17 +104,17 @@
     $list = $GLOBALS[$s];
 
     // output the list
-    print "<ul>\n";
-    $b = '';
+    //print "<ul>\n";
+    //$b = '';
     if( $overview ) {
-      print "<a href='$helpUrl/$section/index.php'>Overview</a>\n";
-      $b = '<br>';
+      print "<p onclick='mClk(this)'><a href='$helpUrl/$section/index.php'>".tr("Overview")."</a></p>\n";
+      //$b = '<br>';
     }
     foreach($list as $page=>$name) {
-      print "$b<a href='$helpUrl/$section/$page'>$name</a>\n";
-      if( !$b ) { $b = '<br>'; }
+      print "<p onclick='mClk(this)'><a href='$helpUrl/$section/$page'>$name</a></p>\n";
+      //if( !$b ) { $b = '<br>'; }
     }
-    print "</ul>\n";
+    //print "</ul>\n";
   }
 
   /**

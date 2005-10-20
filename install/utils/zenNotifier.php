@@ -42,7 +42,7 @@
    */
   // set language to default if unspecified
   if( !$login_language ) {
-    $login_language = $zen->settings["language_default"];
+    $login_language = $zen->getSetting("language_default");
   }
 
   //Create the initialization array for the translator object
@@ -149,8 +149,8 @@
   <body><b>".$mailHeader."</b><br><br>";
       foreach($v as $bin => $ids) {
         $message.="<br><b>$bin</b><br>
-    <table width='100%' cellspacing='1' cellpadding='2' bgcolor='".$zen->settings["color_alt_background"]."'>
-      <tr bgcolor='".$zen->settings["color_title_background"]."'>
+    <table width='100%' cellspacing='1' cellpadding='2' bgcolor='".$zen->getSetting("color_alt_background")."'>
+      <tr bgcolor='".$zen->getSetting("color_title_background")."'>
         <td height='25' valign='middle' width='32'>
           <div align='center'><span style='color: rgb(255, 255, 255);'><b><span class='small'>".tr("ID")."</span></b></span></div>
         </td>

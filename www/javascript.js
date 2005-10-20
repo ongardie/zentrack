@@ -66,15 +66,43 @@ function mClk(src) {
   if( src.childNodes ) {
     for( var i=0; i < src.childNodes.length; i++ ) {
       var n = src.childNodes[i];
-      if( n.tagName == "A" ) {
-        if( n.click ) { n.click(); }
-        else { window.location = n.href; }
+      //alert(n+"|"+n.nodeName);//debug
+      if( n.nodeName == "A" ) {
+        if( n.href != '#' ) {
+          window.location = n.href;
+          break;
+        }
+        else if( n.click ) {
+          //alert('clickage: '+n.click);//debug
+          n.click(); 
+          break;
+        }
+        else {
+          //alert('locationage: '+n.href);//debug
+          window.location = n.href;
+          break;
+        }
       }
     }
   }
 }
 
-function ticketClk( url ) {
+function confirmSubmit(formObject, msg) {
+  if( window.confirm(msg) && formObject ) {
+    formObject.submit();
+  }
+}
+
+function ticketClk( url, evt ) {
+  var src = getEventSrc(evt);
+  // don't override links
+  if( src && src.href && src.href != url ) { return; }
+  // this is an image inside a link, let it run too
+  var u = src && src.src && src.parentNode && src.parentNode.href? src.parentNode.href : false;
+  if( u && u != url ) { return; }
+  // let user check boxes
+  if( src && src.type == 'checkbox' ) { return; }
+  // nothing wrong, so go for it
   window.location = url;
   return false;
 }
@@ -116,18 +144,27 @@ function mergeFunctions(fxn1, fxn2) {
   }
 }
 
+function getEventSrc( evt ) {
+  if( !evt ) { evt = window.event; }
+  return src = (evt && evt.srcElement)? evt.srcElement : 
+      (evt && evt.target)? evt.target : false;
+}
+
 function checkMyBox(fieldName, event) {
-  if( !event ) { event = window.event; }
-  if( document.getElementById ) {
-    var elem = document.getElementById(fieldName);
+  if( window.document.getElementById ) {
+    var elem = window.document.getElementById(fieldName);
     if( elem ) {
-      if( !event || !event.target || event.target.type != 'checkbox' ) {
+      var src = getEventSrc(evt);
+      if( !src || (src.type != 'checkbox' && !src.src && !src.href) ) {
+        // it's not an image (for a link) or the checkbox itself
+        // checking the checkbox causes it to double-check
+        // checking on hrefs is altogether bad
         elem.checked = elem.checked? false : true;
       }
+      if( elem.parentNode ) { 
+        elem.parentNode.parentNode.oldStyle = elem.checked? 'invalidBars' : 'bars'; 
+      }    
     }
-    if( elem.parentNode ) { 
-      elem.parentNode.parentNode.oldStyle = elem.checked? 'invalidCell' : 'cell'; 
-    }    
   }
 }
 
@@ -209,6 +246,39 @@ function getAbsolutePos(el) {
 function printWindow() {
   popupWindowScrolls(rootUrl+"/actions/print.php?id="+id,'printWindow', 700, 500);
   return false;
+}
+
+function toggleDebug( type ) {
+  var debugObj = window.document.getElementById('debugContent');
+  if( !debugObj || !debugObj.childNodes ) { return; }
+  for(var i=0; i < debugObj.childNodes.length; i++) {
+    var child = debugObj.childNodes[i];
+    if( child.nodeName == 'LI' ) {
+      var c = child.className? child.className : child.getAttribute? child.getAttribute('class') : null;
+      child.style.display = (type == 'all' || c == type)? 'block' : 'none';
+    }
+  }
+}
+
+function appendUrl(k, v) {
+  v = escape(v);
+  var u = window.location.href;
+  if( u.indexOf("?"+k+"=") > 0 ) {
+    var re = new RegExp("[?]"+k+"=[^&]+");
+    u = u.replace(re, "?"+k+"="+v);
+  }
+  else if( u.indexOf("&"+k+"=") > 0 ) {
+    var re = new RegExp("&"+k+"=[^&]+");
+    u = u.replace(re, "&"+k+"="+v);
+  }
+  else {
+    u += u.indexOf("?") > 0? "&"+k+"="+v : "?"+k+"="+v;
+  }
+  return u;
+}
+
+function updateUrl(k, v) {
+  window.location = appendUrl(k,v);
 }
 
 function doNothing() { return false; }

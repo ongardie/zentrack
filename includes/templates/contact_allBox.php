@@ -1,49 +1,47 @@
 <? if( !ZT_DEFINED ) { die("Illegal Access"); } ?>
-<table width="645" cellpadding="0" cellspacing="0" border="0">
-<tr> 
-  <td class="ticketCell" height="300" valign="top">
-<br>
-<table width="600" align="center" cellpadding="2" cellspacing="2">
-   <tr>  
-     <td class='titleCell' align="center">
-       ALL    
-     </td>
-   </tr>  
-   <tr>
-     <td valign="top">
+
+<table width="100%" cellspacing='1' class='formtable'>
 <?
+if( $overview == 'company' ) {
+  include("$templateDir/listContactsHeading.php");
+}
+else {
+  include("$templateDir/listContacts2Heading.php");
+}
 //echo $ie;
 
 
 $sort = $title." asc";
 $ie=($overview=="internal")?2:1;
+$letter = 'ALL';
   
   if ($overview=="company") {  
 		$tickets = $zen->get_contacts("",$tabel,$sort);
   } else {
-	  $parms = array(1 => array(1 => "inextern", 2 => "=", 3 => $ie)
-	  );	
+	  $parms = array(array("inextern", "=", $ie));	
 	  $tickets = $zen->get_contacts($parms,$tabel,$sort);
   }
-  
-  if( is_array($tickets) && count($tickets) ) {
-    
-	  if ($overview=="company"){
-     include("$templateDir/listContacts.php");
-    } else {
-	   include("$templateDir/listContacts2.php"); 
-    }
-   
-  } else {
-     print tr("No contacts in this section.");
-  }
-  $tickets = NULL;
-?>
+  ?>
+    <tr>
+     <td class='headerCell' align="center" colspan='5'>
+       ALL
      </td>
-   </tr>
-</table>
-</td>
-</tr>
-</table>
+    </tr>
+  <?  
+  if( is_array($tickets) && count($tickets) ) {
+    $link  = "$rootUrl/contact.php";
+    $td_ttl = "title='".tr("Click here to view the Contact")."'";    
+	  
+   foreach($tickets as $t) {
+      if ($overview=="company"){
+       include("$templateDir/listContacts.php");
+      } else {
+       include("$templateDir/listContacts2.php"); 
+      }
+   }
+  } else {
+      print "<tr><td class='bars' colspan='5'>".tr('No contacts found')."</td></tr>";
+  }
 
-<br>  
+?>
+</table>

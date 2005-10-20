@@ -29,6 +29,7 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
     $ticket['id'] = 0;
     $ticket['creator_id'] = $login_id;
     $ticket['status'] = 'OPEN';
+    if( $project_id ) { $ticket['project_id'] = $zen->checkNum($project_id); }
   }
   
   $id = $ticket['id'];
@@ -79,7 +80,7 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
 <form method="post" name="<?=$form_name?>" action="<?=$formDest?>" onSubmit='return validateTicketForm(this)'>
 <table width="640" align="left" cellpadding="2" cellspacing="2" class='formTable'>
 <tr>
-  <td colspan="2" width="640" class="titleCell" align="center">
+  <td colspan="2" width="640" class="subTitle" align="center">
      <?=tr("$ucfirst Information")?>
   </td>
 </tr>
@@ -117,12 +118,7 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
   }
 ?>
 <tr>
-  <td class="titleCell" colspan="2" align="center">
-  <?=tr("Click button to")?> <?=($td)? tr("save your changes"):tr("create your $page_type")?>.
-  </td>
-</tr>
-<tr>
-  <td colspan="2" class="bars">
+  <td colspan="2" class="subTitle">
    <input type="submit" value=" <?=tr(($td)?"Save":"Create")?> " class="submit">
   </td>
 </tr>

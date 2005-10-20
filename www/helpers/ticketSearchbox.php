@@ -16,6 +16,8 @@
   $userBins = $zen->getUsersBins($login_id,"level_view");
   $users = $zen->get_users( $userBins, "level_view" );
   $onechoice = isset($_GET['onechoice']) || isset($_POST['oncchoice']);
+  $return_form = $zen->ffv($return_form);
+  $return_field = $zen->ffv($return_field);
 ?><html>
 <head>
   <title><?php echo tr("Search Tickets"); ?></title>
@@ -159,7 +161,7 @@
 	$results = array($zen->get_ticket($v));
 	break;
       } else {
-	$params["$k"] = (strpos($v,"%")>-1)? array($k,"LIKE",$v) : array($k,"=",$v);
+	$params["$k"] = !(strpos($v,"%")===false)? array($k,"LIKE",$v) : array($k,"=",$v);
       }
     } else {
       $params["$k"] = array($k,"IN",preg_replace("@[^0-9,]@", "",join(",",$v)));
@@ -205,7 +207,18 @@
            val += ","+element.value;
        } 
      }
-     opener.document.<?=$return_form?>["<?=$return_field?>"].value = val;
+     <? $field = "opener.document.forms['$return_form'].elements['$return_field']"; ?>
+     <?=$field?>.value = val;
+     if( <?=$field?>.select ) {
+       <?=$field?>.select();
+     }
+     else if( <?=$field?>.focus ) {
+       <?=$field?>.focus();
+     }
+     if( <?=$field?>.onchange ) {
+       <?=$field?>.onchange();
+     }
+
      window.self.close();
      return false;
    }

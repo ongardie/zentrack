@@ -11,14 +11,9 @@
 <?
 //echo $ie;
 if ($overview=="company") {
-$parms = array(1 => array(1 => $title, 2 => ">", 3 => "w"),
-								2 => array(1 => $title, 2 => "<", 3 => "x"),
-);
+  $parms = array(array($title, ">", "w"),array($title, "<", "x"));
 } else {
-$parms = array(1 => array(1 => $title, 2 => ">", 3 => "w"),
-								2 => array(1 => $title, 2 => "<", 3 => "x"),
-									3 => array(1 => "inextern", 2 => "=", 3 => $ie)
-);	
+  $parms = array(array($title, ">", "w"),array($title, "<", "x"),array("inextern", "=", $ie));	
 }
 
 $sort = $title." asc";
@@ -52,14 +47,9 @@ $sort = $title." asc";
      <td valign="top">
 <?
 if ($overview=="company") {
-$parms = array(1 => array(1 => $title, 2 => ">", 3 => "x"),
-								2 => array(1 => $title, 2 => "<", 3 => "y"),
-);
+  $parms = array(array($title, ">", "x"),array($title, "<", "y"));
 } else {
-$parms = array(1 => array(1 => $title, 2 => ">", 3 => "x"),
-								2 => array(1 => $title, 2 => "<", 3 => "y"),
-									3 => array(1 => "inextern", 2 => "=", 3 => $ie)
-);	
+  $parms = array(array($title, ">", "x"),array($title, "<", "y"),array("inextern", "=", $ie));
 }
 
 $sort = $title." asc";
@@ -92,14 +82,9 @@ $sort = $title." asc";
      <td valign="top">
 <?
 if ($overview=="company") {
-$parms = array(1 => array(1 => $title, 2 => ">", 3 => "y"),
-								2 => array(1 => $title, 2 => "<", 3 => "z"),
-);
+  $parms = array(array($title, ">", "y"),array($title, "<", "z"));
 } else {
-$parms = array(1 => array(1 => $title, 2 => ">", 3 => "y"),
-								2 => array(1 => $title, 2 => "<", 3 => "z"),
-									3 => array(1 => "inextern", 2 => "=", 3 => $ie)
-);	
+  $parms = array(array($title, ">", "y"),array($title, "<", "z"),array("inextern", "=", $ie));	
 }
 
 $sort = $title." asc";
@@ -132,12 +117,9 @@ $sort = $title." asc";
      <td valign="top">
 <?
 if ($overview=="company") {
-$parms = array(1 => array(1 => $title, 2 => ">", 3 => "z"),
-);
+  $parms = array(array($title, ">", "z"));
 } else {
-$parms = array(1 => array(1 => $title, 2 => ">", 3 => "z"),
-									2 => array(1 => "inextern", 2 => "=", 3 => $ie)
-);	
+  $parms = array(array($title, ">", "z"), array("inextern", "=", $ie));	
 }
 
 $sort = $title." asc";

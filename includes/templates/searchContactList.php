@@ -39,7 +39,9 @@ $td_ttl = "title='".tr("Click here to view the Contact")."'";
 
    foreach($tickets as $t) {      
       ?>
-   <tr  class='priority1' onclick='ticketClk("<?=$link?>?cid=<?=$t['company_id']?>")' onMouseOver='mClassX(this, "priority1Over", true)' onMouseOut='mClassX(this, "priority1", false)'>
+   <tr  class='priority1' onclick='ticketClk("<?=$link?>?cid=<?=$t['company_id']?>")' 
+     onMouseOver='if(window.document.body && mClassX){mClassX(this, "priority1Over", true);}' 
+     onMouseOut='if(window.document.body && mClassX){mClassX(this, "priority1", false);}'>
    <td height="25" width="5%" valign="middle" <?=$td_ttl?>>
     <?=$t["company_id"]?>
    </td>

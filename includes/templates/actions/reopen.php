@@ -4,7 +4,6 @@
 <input type="hidden" name="id" value="<?=$id?>">
 <input type="hidden" name="actionComplete" value="1">
 
-<ul>
 <table class='formTable' cellpadding="4" cellspacing="1" border="0">
 <tr>
  <td colspan='2' class='subTitle'><?=tr("Reopen Ticket")?>
@@ -29,6 +28,5 @@
 </tr>
 <tr>
 </table>
-</ul>
 
 </form>			     

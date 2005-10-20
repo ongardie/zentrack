@@ -11,12 +11,9 @@
 <?
 //echo $ie;
 if ($overview=="company") {
-$parms = array(1 => array(1 => $title, 2 => "<", 3 => "a"),
-);
+  $parms = array(array($title, "<", "a"));
 } else {
-$parms = array(1 => array(1 => $title, 2 => "<", 3 => "a"),
-									2 => array(1 => "inextern", 2 => "=", 3 => $ie)
-);	
+  $parms = array(array($title, "<", "a"),array("inextern", "=", $ie));	
 }
 
 $sort = $title." asc";

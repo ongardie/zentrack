@@ -3,20 +3,23 @@
   include("$b/admin_header.php");
 ?>
 
-<p><b>Where Am I?</b></p>
+<table width='80%'><tr><td>
 
-<p>The administrator's manual contains instructions on how 
-set up advanced features of <?=$zen->settings['system_name']?>.</p>
+<div class='menubox'>
+  <div><?=tr("Where Am I?")?></div>
+  <p class='note'>The administrator's manual contains instructions on how 
+  set up advanced features of <?=$zen->getSetting('system_name')?>.</p>
+  <p class='note'>First time using <?=$zen->getSetting('system_name')?>?  
+  Please try out the <a href='<?=$helpUrl?>/tutorial.php'><?=tr("Tutorial")?></a>!</p>
+</div>
 
-<p>
-First time using <?=$zen->settings['system_name']?>?  
-Please try out the 
-<a href='<?=$helpUrl?>/users/tutorial.php'>Tutorial</a>!</p>
-
-<p><b>Contents of Administrator's Manual</b></p>
+<div class='menubox'>
+  <div><?=tr("Contents of Administrator's Manual")?></div>
 <?
   renderTOC('admin', false);
 ?>
+</div>
+</table>
 
 <? 
   renderNavbar('admin');

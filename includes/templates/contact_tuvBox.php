@@ -11,14 +11,9 @@
 <?
 //echo $ie;
 if ($overview=="company") {
-$parms = array(1 => array(1 => $title, 2 => ">", 3 => "t"),
-								2 => array(1 => $title, 2 => "<", 3 => "u"),
-);
+  $parms = array(array($title, ">", "t"),array($title, "<", "u"));
 } else {
-$parms = array(1 => array(1 => $title, 2 => ">", 3 => "t"),
-								2 => array(1 => $title, 2 => "<", 3 => "u"),
-									3 => array(1 => "inextern", 2 => "=", 3 => $ie)
-);	
+  $parms = array(array($title, ">", "t"),array($title, "<", "u"),array("inextern", "=", $ie));	
 }
 
 $sort = $title." asc";
@@ -52,14 +47,9 @@ $sort = $title." asc";
      <td valign="top">
 <?
 if ($overview=="company") {
-$parms = array(1 => array(1 => $title, 2 => ">", 3 => "u"),
-								2 => array(1 => $title, 2 => "<", 3 => "v"),
-);
+  $parms = array(array($title, ">", "u"),array($title, "<", "v"));
 } else {
-$parms = array(1 => array(1 => $title, 2 => ">", 3 => "u"),
-								2 => array(1 => $title, 2 => "<", 3 => "v"),
-									3 => array(1 => "inextern", 2 => "=", 3 => $ie)
-);	
+  $parms = array(array($title, ">", "u"),array($title, "<", "v"),array("inextern", "=", $ie));	
 }
 
 $sort = $title." asc";
@@ -92,14 +82,9 @@ $sort = $title." asc";
      <td valign="top">
 <?
 if ($overview=="company") {
-$parms = array(1 => array(1 => $title, 2 => ">", 3 => "v"),
-								2 => array(1 => $title, 2 => "<", 3 => "w"),
-);
+  $parms = array(array($title, ">", "v"),array($title, "<", "w"));
 } else {
-$parms = array(1 => array(1 => $title, 2 => ">", 3 => "v"),
-								2 => array(1 => $title, 2 => "<", 3 => "w"),
-									3 => array(1 => "inextern", 2 => "=", 3 => $ie)
-);	
+  $parms = array(array($title, ">", "v"),array($title, "<", "w"),array("inextern", "=", $ie));	
 }
 
 $sort = $title." asc";

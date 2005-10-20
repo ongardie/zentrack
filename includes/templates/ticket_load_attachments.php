@@ -1,71 +1,91 @@
-<?
-if( !ZT_DEFINED ) { die("Illegal Access"); }
+<? if( !ZT_DEFINED ) { die("Illegal Access"); }
 
-   $rollover_text = " onclick=\"mClk(this);\" "
-      ."onmouseout=\"mOut(this,'".$zen->getSetting("color_background")."', '');\" "
-      ."onmouseover=\"mOvr(this,'".$zen->getSetting("color_bars")."', '');\"";
-   $row = "background:".$zen->getSetting("color_background");
+$access = $zen->actionApplicable($id, "upload", $login_id);
+$colspan = $access? 5 : 4;
+if( $access ) {
+  $hotkeys->loadSection('tab_attachments');
+  ?>
+  <form method='post' action='<?=$rootUrl?>/actions/dropAttachments.php' name='deleteAttachmentForm'>
+  <input type="hidden" name="id" value="<?=$id?>">
+  <input type='hidden' name='setmode' value="<?=$zen->ffv($page_mode)?>">
+  <?
+}
 ?>
-  <table width="600" cellpadding="2" cellspacing="2">
+  <table width="600" class='formtable' cellpadding="2" cellspacing="1">
    <tr>  
-     <td class="subTitle indent">
+     <td class="subTitle indent" colspan='<?=$colspan?>'>
         <?=tr("Attachments")?>
      </td>
   </tr>
-   <tr>
-    <td colspan="2">
 <?
   // get attachments and display a list
   // of them
   $attachments = $zen->get_attachments($id);
   if( is_array($attachments) && count($attachments) > 0) {
      ?>
-       <table width="100%" cellpadding='2' cellspacing='1' border='0'>
        <tr>
-         <td class='bars' width='150'><?=tr("Attachment")?></td>
-         <td class='bars' width='50'><?=tr("Log ID")?></td>
-         <td class='bars' width='50'><?=tr("Type")?></td>
-         <td class='bars'><?=tr("Description")?></td>
+         <td class='headerCell'><?=tr("Log ID")?></td>
+         <td class='headerCell'><?=tr("Attachment")?></td>
+         <td class='headerCell'><?=tr("Type")?></td>
+         <td class='headerCell'><?=tr("Description")?></td>
+         <? if( $access ) { ?>
+         <td class='headerCell'><?=tr("Delete")?></td>
+         <? } ?>
        </tr>
   <?
      foreach($attachments as $a) {
+       $aid = $a['attachment_id'];
+       $clk = "onclick=\"ticketClk('".$zen->getSetting("url_view_attachment")."?aid=$aid');return false;\"";
 	?>
-	  <tr style="<?=$row?>">
-	  <td <?=$rollover_text?>>
-	    <a href='<?=$zen->getSetting("url_view_attachment")?>?aid=<?=$a["attachment_id"]?>' 
-	    class='rowLink' target='_blank'><?=$a[name]?></a></td>
-	  <td <?=($a["log_id"])? $rollover_text:"";?>>
+	  <tr class='bars' <?=$row_rollover_eff?>>
+	  <td <?=$clk?>>
 	    <?= ($a["log_id"])?
+          $a['log_id']." ".
 	         "<a href='".$zen->getSetting("url_view_log")
-                    ."?lid=$a[log_id]' class='rowLink'>$a[log_id]</a>" :
+                    ."?lid=".$zen->ffv($a['log_id'])."' class='rowLink'>"
+                    ."<img src='$imageUrl/24x24/magnify.png' width='24' height='24' border='0'>"
+                    ."</a>" :
 	         "n/a";
 	    ?>
 	  </td>
-	  <td class='plainCell'>
-	    <?=$a["filetype"]?>
+	  <td <?=$clk?>>
+	    <a href='<?=$zen->getSetting("url_view_attachment")?>?aid=<?=$aid?>' 
+	    class='rowLink' target='_blank'><?=$zen->ffv($a['name'])?></a></td>
+	  <td <?=$clk?>>
+	    <?=$zen->ffv($a["filetype"])?>
 	  </td>
-	  <td class='plainCell'>
-	    <?=$a["description"]?>
+	  <td <?=$clk?>>
+	    <?=$zen->ffv($a["description"])?>
 	  </td>
+    <? if( $access ) { ?>
+    <td class='bars' onclick='checkMyBox("drops_<?=$aid?>", event)'>
+      <input id='drops_<?=$aid?>' type='checkbox' name='drops[]' value='<?=$aid?>'>
+    </td>
+    <? } ?>
 	  </tr>
-        <?
+    <?
      }    
-     print "</table>\n";
   } else {
-     print tr("No attachments exist for this ?", array($page_type));
+     print "<tr><td class='bars' colspan='4'>".tr("No attachments exist for this ?", array($page_type))."</td></tr>";
   }
 ?>
-    </td>
-   </tr>
-  <? if( $zen->actionApplicable($id,"upload",$login_id) ) { ?>
+  <? if( $access ) { ?>
   <tr> 
-     <form action="<?=$rootUrl?>/actions/upload.php">
-     <input type="hidden" name="id" value="<?=strip_tags($id)?>">
-     <td align="right">
-       <input type="submit" value="<?=uptr("Add Attachment")?>" class="actionButton">
+     <td class='subTitle' colspan='<?=$colspan?>'>
+     <? if( is_array($attachments) && count($attachments) ) { ?>
+       <div style='float:right'>
+       <? renderDivButtonFind('Delete Attachments', null, null, 150); ?>
+       </div>
+     <? } ?>
+       </form>
+       <div style='float:left'>
+       <form name='addAttachmentForm' action='<?=$rootUrl?>/actions/upload.php'>
+       <input type="hidden" name="id" value="<?=$id?>">
+       <input type='hidden' name='setmode' value="<?=$zen->ffv($page_mode)?>">
+       <? renderDivButtonFind('Add Attachment'); ?>
+       </form>
+       </div>
      </td>
-     </form>
    </tr>  
-    <? } ?>
-   </table>
-
+   <? } ?>
+</table>
