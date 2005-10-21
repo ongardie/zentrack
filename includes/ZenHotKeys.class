@@ -475,7 +475,7 @@ class ZenHotKeys {
       $this->_keysRendered[$k] = 1;
       $fxn_parsed = Zen::fixJsHtml($v['fxn']);
       $fxn_parsed = str_replace('KeyEvent.createLoadUrl', 'KeyEvent.loadUrl', $fxn_parsed);
-      return "<input type='button' {$key}' name='accessKeyButton{$key}' value='' accesskey='{$key}' class='accesskeys' onclick=$fxn_parsed>";
+      return "<input type='button' name='accessKeyButton{$key}' value='' accesskey='{$key}' class='accesskeys' onclick=$fxn_parsed>";
     }
     return null;
   }

@@ -13,6 +13,15 @@ abstraction, and endless possibilities for project expansion.
 
 ----- VERSION 2.6 (development) -----
 
+----- VERSION 2.6.PRE2 (development)--
+
+2005-10-21, kato
+  Fixed error in header file
+    - zentrack_2/install/header.php.default 1.20
+    
+  Fixed error in hotkeys file
+    - zentrack_2/includes/ZenHotKeys.php 1.10
+
 ----- VERSION 2.6.PRE1 (2005-10-21)--
 
 2005-10-21, kato
