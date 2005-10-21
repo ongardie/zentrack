@@ -13,6 +13,13 @@ abstraction, and endless possibilities for project expansion.
 
 ----- VERSION 2.6 (development) -----
 
+----- VERSION 2.6.PRE1 (2005-10-21)--
+
+2005-10-21, kato
+  Created patch files
+    - zentrack_2/install/patches/upgrade_2-5-5-1_to_2-6-pre1.patch 1.1
+    - zentrack_2/install/patches/upgrade_2-5-5-2_to_2-6-pre1.patch 1.1
+
 2005-10-21, kato
   Prepared install/upgrade docs and scripts
     - zentrack_2/install/UPGRADE.readme
