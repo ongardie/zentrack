@@ -1,4 +1,44 @@
 
+----- 2.6 Major Release ----
+
+NEW FEATURES / ENHANCEMENTS
+  New UI look/feel
+  Added keyboard shortcuts
+  Added filters to list window
+  Updated contacts section
+  Added customizable multiple-select fields
+  Added automatic email notifier for overdue tickets
+
+BUG FIXES / MINOR CHANGES
+  Added bin_id/type_id checks and filtering for project vs. tickets
+  Added filter to debug output in footer
+  Fixed caching of getUsersBins
+  General GUI and code cleanup
+  Prettied admin and help sections
+  Minor translation issue
+  Added spiffy icons
+  Added log filter
+  Improved spacing/eye tracking for ticket view
+  Improved search_form values to avoid common search mistakes
+  Fixed mOvr error message in mozilla
+  Added view map table
+  Added dynamic sorting to data types admin menus
+  Reworked get_users, should work with all possible access configurations
+  Fixed a bug in dateParse function
+  Keyboard shortcuts added
+  Minor bugs fixes to search and contacts sections
+  Added missing custom_date fields to field map
+  Login now works correctly if ZT is installed under a subdirectory of /help/
+  Made htaccess/windows authentication for auto-login configurable
+  Fixed error with https builds not viewing attachments correctly in IE
+  Added javascript variables to data group feature
+  Minor change in spanish translation
+  Added ticket totals and paging info in listings
+  Included some new translations
+  Include default_access of the user in evaluation for retaining the ticket's owner
+  Fixed a bug that created a wrong page immediately after project creation
+
+
 ----- 2.5.5.2 Minor Release -----
 
 NEW FEATURES / ENHANCEMENTS
