@@ -68,7 +68,7 @@
   }
 
   .gutter {
-    padding-left: 3px;
+    padding-left: 5px;
   }
   
   TD.navpad {

@@ -147,6 +147,10 @@
       <table width='110' height='100%' class='slimPad'>
       <?
       include("$templateDir/nav_$sect.php");
+      if( $login_name ) {
+        print "<tr><td><span class='note'>".tr("Logged in as:")."</span>"
+          ."<br>".$zen->ffv($login_name)."</td></tr>";
+      }
       print "</table>\n";
       print "</td>\n";
       print "\n      <!-- ********* /LEFT NAV MENU/ ********* -->\n\n";
@@ -166,5 +170,6 @@
        $msg = array();
     }
   ?>
-
+  
   <!-- END OF NAVIGATION -->
+
