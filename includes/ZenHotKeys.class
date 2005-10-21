@@ -417,7 +417,7 @@ class ZenHotKeys {
       $txt = $label;
     }
     //if( !$supress_key ) { $txt .= $this->renderAccessKey($key); }
-    //$txt .= $this->addZenTab($key);
+    $txt .= $this->addZenTab($key);
     return $txt;
   }
   

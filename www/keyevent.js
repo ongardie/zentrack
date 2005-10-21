@@ -151,22 +151,26 @@ KeyEvent.cancelKey = function(keyPress) {
   }
 }
 
-// KeyEvent.hideHelp = function() {
-  // if( KeyEvent.showHelpOn > 0 ) {
-    // window.clearTimeout(KeyEvent.showHelpOn);
-  // }
-  // KeyEvent.showHelpOn = false;
-  // var obj = window.document.getElementById('hotKeyHelp');
-  // mClassX(obj,'hotKeyHelp invisible');
-// }
-// 
-// KeyEvent.showHelp = function() {
-  // if( !KeyEvent.showHelpOn ) { KeyEvent.showHelpOn = true; }
-  // var obj = window.document.getElementById('hotKeyHelp');
-  // mClassX(obj,'hotKeyHelp');
-// }
-// 
-// KeyEvent.showHelpOn = false;
+//KeyEvent.hideHelp = function() {
+//  if( KeyEvent.showHelpOn > 0 ) {
+//    window.clearTimeout(KeyEvent.showHelpOn);
+//  }
+//  KeyEvent.showHelpOn = false;
+//  var obj = window.document.getElementById('hotKeyHelp');
+//  mClassX(obj,'hotKeyHelp invisible');
+//  obj.left = '-300px';
+//  obj.top = '-300px';
+//}
+//
+//KeyEvent.showHelp = function() {
+//  if( !KeyEvent.showHelpOn ) { KeyEvent.showHelpOn = true; }
+//  var obj = window.document.getElementById('hotKeyHelp');
+//  mClassX(obj,'hotKeyHelp');
+//  obj.left = '300px';
+//  obj.top = '300px';
+//}
+//
+//KeyEvent.showHelpOn = false;
 
 /** 
  * Reads key events, tries to match with registered functions and run them. 
@@ -223,10 +227,10 @@ KeyEvent.checkKey = function(keyPress) {
   }
   else if( c == 18 ) {
     ZenTabs.singleton.start();
-    // if( !KeyEvent.showHelpOn && hotkeyHelpDelay > 0 ) {
-      // KeyEvent.showHelpOn = window.setTimeout('KeyEvent.showHelp()', hotkeyHelpDelay);
-      // if( debugOn ) { window.status = 'Prepping showhelp: '+KeyEvent.showHelpOn; }
-    // }
+//    if( !KeyEvent.showHelpOn && hotkeyHelpDelay > 0 ) {
+//      KeyEvent.showHelpOn = window.setTimeout('KeyEvent.showHelp()', hotkeyHelpDelay);
+//      if( debugOn ) { window.status = 'Prepping showhelp: '+KeyEvent.showHelpOn; }
+//    }
     return;
   }
   return true;

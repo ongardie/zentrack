@@ -711,10 +711,9 @@ TD.bigger { font-size: 50px; }
     padding: 1px;
     border-style: solid;
     font-size: <?=$zen->getSetting('font_size_small')-1?>px;
-    border-color: <?=$zen->getSetting('color_title_background')?>;
-    border-width: 0 0 0 4px;
-    background: <?=$zen->getSetting('color_title_background')?>;
-    color: <?=$zen->getSetting('color_background')?>;
+    border: 1px solid <?=$zen->getSetting('color_title_background')?>;
+    background: <?=$zen->getSetting('color_highlight')?>;
+    color: <?=$zen->getSetting('color_text')?>;
     filter:alpha(opacity=80);
     opacity: 0.80;
     -moz-opacity:0.80;

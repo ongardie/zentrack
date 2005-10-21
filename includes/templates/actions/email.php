@@ -52,13 +52,12 @@
 </tr>
 <tr>
  <td class="bars">
-   <input type='radio' name='emethod' value='2' 
-   <?=($emethod == 2)? 'CHECKED' : ''?>
-   > <?=$hotkeys->ll("Manually Enter Addresses", "OR manually enter email addresses, seperated by commas")?>
+   <input type='radio' name='emethod' value='2' <?=($emethod == 2)? 'CHECKED' : ''?>>
+   <?=$hotkeys->ll("Manually Enter Addresses", "OR manually enter email addresses, seperated by commas")?>
  </td>
 </tr>
 <tr>
- <td class='bars'
+ <td class='bars'>
    <input type="text" onFocus="checkAbox(document.emailForm.emethod[1])"
    name="custom_email_addresses" value="<?=$zen->ffv($custom_email_addresses)?>" 
    size="50" maxlength="500" title="<?=$hotkeys->tt("Manually Enter Addresses")?>">
