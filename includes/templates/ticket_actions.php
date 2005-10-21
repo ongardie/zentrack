@@ -1,6 +1,7 @@
 <?  if( !ZT_DEFINED ) { die("Illegal Access"); } ?><table><tr><?
 
 $hotkeys->loadSection('actionbar');
+$GLOBALS['zt_hotkeys'] = $hotkeys;
 $iconDir = "$imageDir/48x48";
 $actions = $zen->getActions();
 foreach($actions as $k=>$v) {

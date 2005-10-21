@@ -1,5 +1,6 @@
 <? if( !ZT_DEFINED ) { die("Illegal Access"); } 
    $hotkeys->loadSection('contacts_view');
+   $GLOBALS['zt_hotkeys'] = $hotkeys;
 ?>
 <table cellpadding="0" width='600' cellspacing="1">
   <tr>

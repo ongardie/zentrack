@@ -9,6 +9,7 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
   
   $view = 'search_form';
   $hotkeys->loadSection('search_form');
+  $GLOBALS['zt_hotkeys'] = $hotkeys;
   $fields = $map->getFieldMap($view);
   $text_fields = array();
   $other_fields = array();

@@ -35,6 +35,7 @@
   $expand_agreement = 1;
   
   $hotkeys->loadSection('agreement_view');
+  $GLOBALS['zt_hotkeys'] = $hotkeys;
   
   /*
   ** PRINT OUT THE PAGE

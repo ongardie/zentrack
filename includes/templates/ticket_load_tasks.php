@@ -3,6 +3,7 @@
   $tickets = $zen->get_tickets(array('project_id'=>$id),$sortstring);
   $total_children = $zen->total_records;
   $hotkeys->loadSection('project_tasks');
+  $GLOBALS['zt_hotkeys'] = $hotkeys;
 
   if( is_array($tickets) && count($tickets) > 0) {
     $master_view = $view;

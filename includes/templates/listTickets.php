@@ -349,6 +349,7 @@ else {
    
    if( $atc > 0 ) {
      $hotkeys->loadSection('paging');
+     $GLOBALS['zt_hotkeys'] = $hotkeys;
      if( $show_totals ) {
        $totals_titlebar_txt = tr("Grand Total");
        list($ttl_est,$ttl_wkd,$ttl_ext) = $zen->getTicketHours($id);

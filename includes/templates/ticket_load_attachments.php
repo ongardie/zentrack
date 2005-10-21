@@ -4,6 +4,7 @@ $access = $zen->actionApplicable($id, "upload", $login_id);
 $colspan = $access? 5 : 4;
 if( $access ) {
   $hotkeys->loadSection('tab_attachments');
+  $GLOBALS['zt_hotkeys'] = $hotkeys;
   ?>
   <form method='post' action='<?=$rootUrl?>/actions/dropAttachments.php' name='deleteAttachmentForm'>
   <input type="hidden" name="id" value="<?=$id?>">

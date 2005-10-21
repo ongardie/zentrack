@@ -1,6 +1,7 @@
 <? if( !ZT_DEFINED ) { die("Illegal Access"); } 
 
 $hotkeys->loadSection('log');
+$GLOBALS['zt_hotkeys'] = $hotkeys;
 $total_hours = 0;
 $logs = $zen->get_logs($id);
 $num_logs=0;

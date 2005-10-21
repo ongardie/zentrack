@@ -86,5 +86,6 @@
   $page_mode = $setmode? $setmode : $action;
   $hotkeys->loadSection($view);
   $hotkeys->loadSection("action_$action");
+  $GLOBALS['zt_hotkeys'] = $hotkeys;
 
 ?>

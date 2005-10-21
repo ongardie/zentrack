@@ -55,6 +55,7 @@
   
   // load hot keys for page
   $hotkeys->loadSection($view);
+  $GLOBALS['zt_hotkeys'] = $hotkeys;
   
   // place record into history of recently viewed items
   $history =& $zen->getHistoryManager();

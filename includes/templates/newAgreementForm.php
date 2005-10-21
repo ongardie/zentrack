@@ -1,5 +1,6 @@
 <? if( !ZT_DEFINED ) { die("Illegal Access"); } 
   $hotkeys->loadSection('agreement_form');
+  $GLOBALS['zt_hotkeys'] = $hotkeys;
 ?>
 <script language='javascript' type='text/javascript'>
   function checkMyBox(fieldName, event) {

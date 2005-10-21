@@ -49,7 +49,10 @@
   // load hot key selections
   $sect = getZtSection();
   $load_section = $sect != 'undefined' && file_exists("$templateDir/nav_$sect.php");
-  if( $load_section ) { $hotkeys->loadSection($sect); }
+  if( $load_section ) {
+    $hotkeys->loadSection($sect);
+    $GLOBALS['zt_hotkeys'] = $hotkeys;
+  }
 
 ?>
 <html>

@@ -1,6 +1,7 @@
 <? 
   if( !ZT_DEFINED ) { die("Illegal Access"); }
   $hotkeys->loadSection('login');
+  $GLOBALS['zt_hotkeys'] = $hotkeys;
 ?>
 
 <blockquote><br>

@@ -1,5 +1,6 @@
 <? if( !ZT_DEFINED ) { die("Illegal Access"); } 
    $hotkeys->loadSection('paging');
+   $GLOBALS['zt_hotkeys'] = $hotkeys;
 ?>
 <!--- BEGIN Paging --->
 
