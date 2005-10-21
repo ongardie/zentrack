@@ -13,6 +13,8 @@
   $page_title = tr("Search Tickets");
   $page_section = $page_title;
   
+  $inc = "$templateDir/searchForm.php";
+  
   if( $TODO == 'SEARCH' ) {
     include("$templateDir/searchResults.php");
     if( is_array($tickets) ) {
@@ -21,8 +23,6 @@
     } else if( !$errs ) { 
       $msg = tr("There were no results for your search."); 
     }
-  } else {
-    $inc = "$templateDir/searchForm.php";
   }
   
   include("$libDir/nav.php");
