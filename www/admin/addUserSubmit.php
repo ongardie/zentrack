@@ -37,11 +37,9 @@
     } else {
       $user_id = $zen->add_user($params);
       if( $user_id ) {
-	$msg = tr("User ? was added successfully. The password is the last name of the user. ? to customize user ?'s access permissions.",
-				array($user_id, "--link--" . tr("Click Here") . "</a>", $user_id));
-   $msg = str_replace("--link--", "<br><a href='$rootUrl/admin/access.php?user_id=$user_id'>", $msg);
+          $msg = tr("User ? was added successfully. The password is the last name of the user.",$user_id);
       } else {
-	$errs[] = tr("System Error: Could not add ?, ? to the system", array($lname, $fname));
+        $errs[] = tr("System Error: Could not add ?, ? to the system", array($lname, $fname));
       }
     }
   }
