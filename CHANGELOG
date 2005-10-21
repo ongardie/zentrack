@@ -15,6 +15,32 @@ abstraction, and endless possibilities for project expansion.
 
 ----- VERSION 2.6.PRE2 (development)--
 
+2005-10-21, cfalonso
+  Fixed the problem of the text not being displayed in the buttons.
+  This fix also solves the problem of single hot keys not working.
+    - zentrack_2/includes/nav.php 1.22
+    - zentrack_2/includes/paging.php 1.7
+    - zentrack_2/includes/templates/contact_buttonBox.php 1.5
+    - zentrack_2/includes/templates/contact_personBox.php 1.4
+    - zentrack_2/includes/templates/contact_titleBox.php 1.5
+    - zentrack_2/includes/templates/listTickets.php 1.33
+    - zentrack_2/includes/templates/loginForm 1.19
+    - zentrack_2/includes/templates/newAgreementForm.php 1.9
+    - zentrack_2/includes/templates/searchForm.php 1.20
+    - zentrack_2/includes/templates/ticket_actions.php 1.5
+    - zentrack_2/includes/templates/ticket_fields_editable.php 1.3
+    - zentrack_2/includes/templates/ticket_load_attachments.php 1.3
+    - zentrack_2/includes/templates/ticket_load_contacts.php 1.5
+    - zentrack_2/includes/templates/ticket_load_log.php 1.4
+    - zentrack_2/includes/templates/ticket_load_notify.php 1.4
+    - zentrack_2/includes/templates/ticket_load_tasks.php 1.3
+    - zentrack_2/includes/templates/actions/move.php 1.7
+    - zentrack_2/www/agreement.php 1.5
+    - zentrack_2/www/newContact.php 1.5
+    - zentrack_2/www/ticket.php 1.32
+    - zentrack_2/www/actions/action_header.php 1.21
+
+
 2005-10-21, kato
   Fixed error in header file
     - zentrack_2/install/header.php.default 1.20
