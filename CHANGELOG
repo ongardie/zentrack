@@ -16,6 +16,9 @@ abstraction, and endless possibilities for project expansion.
 ----- VERSION 2.6.PRE2 (development)--
 
 2005-10-21, cfalonso
+  Fixed an exception thrown when no tickets were found in the search
+   - zentrack_2/www/search.php 1.15
+
   Fixed the problem of the text not being displayed in the buttons.
   This fix also solves the problem of single hot keys not working.
     - zentrack_2/includes/nav.php 1.22
