@@ -3,8 +3,6 @@
   include("$b/admin_header.php");
 ?>
 
-<table width='80%'><tr><td>
-
 <div class='menubox'>
   <div><?=tr("Where Am I?")?></div>
   <p class='note'>The administrator's manual contains instructions on how 
@@ -19,7 +17,6 @@
   renderTOC('admin', false);
 ?>
 </div>
-</table>
 
 <? 
   renderNavbar('admin');

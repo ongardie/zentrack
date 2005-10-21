@@ -145,7 +145,7 @@ function mergeFunctions(fxn1, fxn2) {
 }
 
 function getEventSrc( evt ) {
-  if( !evt ) { evt = window.event; }
+  if( !evt || (!evt.srcElement && !evt.target) ) { evt = window.event; }
   return src = (evt && evt.srcElement)? evt.srcElement : 
       (evt && evt.target)? evt.target : false;
 }

@@ -9,7 +9,6 @@
 
   include("admin_header.php");
   $page_title = tr("Edit Field Map");
-  include("$libDir/nav.php");
   function fmGetSet( $name, $key, $type = '' ) {
     // don't make updates on rows that don't exist (we may skip some fields occasionally
     if( !array_key_exists($name, $_POST) ) { return; }
@@ -117,34 +116,38 @@
           if( $fprops['default'] || preg_match('@(ticket|project)_list_filters@', $view) ) { fmGetSet($f, 'default_val'); }
         }
       }
-  
-      foreach($_POST as $k=>$v) {
-        if( strpos($k, 'section') === 0 && $map->getViewProp($view,'sections') && !array_key_exists($k,$updates) ) {
-          // skip section0, it's a template
-          if( $k == 'section0' ) { continue; }
-          // add the style
-          $inserts[$k] = array(
-            "field_name"  => $k,
-            "field_label" => strip_tags($_POST[$k]['field_label']),
-            "is_visible"  => $_POST[$k]['is_visible']? 1 : 0,
-            "which_view"  => $view,
-            "sort_order"  => 500,
-          );
+
+      if( isset($_POST) ) {
+        foreach($_POST as $k=>$v) {
+          if( strpos($k, 'section') === 0 && $map->getViewProp($view,'sections') && !array_key_exists($k,$updates) ) {
+            // skip section0, it's a template
+            if( $k == 'section0' ) { continue; }
+            // add the style
+            $inserts[$k] = array(
+              "field_name"  => $k,
+              "field_label" => strip_tags($_POST[$k]['field_label']),
+              "is_visible"  => $_POST[$k]['is_visible']? 1 : 0,
+              "which_view"  => $view,
+              "sort_order"  => 500,
+            );
+          }
         }
       }
   
       // set the sort order
       $i = 1;
-      asort($_POST['orderset']);
-      foreach( $_POST['orderset'] as $k=>$v ) {
-        if( array_key_exists($k, $updates) ) {
-          $updates[$k]['sort_order'] = $i++;
-        }
-        else if( array_key_exists($k, $inserts) ) {
-          $inserts[$k]['sort_order'] = $i++;
+      if( isset($_POST['orderset']) ) {
+        asort($_POST['orderset']);
+        foreach( $_POST['orderset'] as $k=>$v ) {
+          if( array_key_exists($k, $updates) ) {
+            $updates[$k]['sort_order'] = $i++;
+          }
+          else if( array_key_exists($k, $inserts) ) {
+            $inserts[$k]['sort_order'] = $i++;
+          }
         }
       }
-  
+      
       $total = count($updates) + count($inserts) + count($deletes);
     }
     if( !$errs ) {
@@ -165,11 +168,11 @@
       }
       if( count($viewUpdates) ) {
         $res = $map->updateViewProps($view, $viewUpdates);
-        print "<p><b>".tr("? of ? properties were updated successfully",$res)."</b></p>\n";
+        $msg[] = tr("? of ? properties were updated successfully",$res);
       }
       if( $total ) {
         $res = $map->updateFieldMap($view, $updates, $inserts, $deletes);
-        print "<p><b>".tr("? of ? fields were updated successfully",$res)."</b></p>\n";
+        $msg[] = tr("? of ? fields were updated successfully",$res);
       }
     }
     
@@ -182,11 +185,9 @@
 
   }
 
+  include("$libDir/nav.php");
   $zen->printErrors($errs);
-
   include("$templateDir/fieldMapForm.php");
-
   include("$libDir/footer.php");
-
 
 ?>

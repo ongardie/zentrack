@@ -3838,7 +3838,7 @@ class zenTrack extends zen {
             $ticket = $this->get_ticket($v);
           }
         }
-        $ticket['varfields'] = $this->getVarfieldVals($id);
+        $ticket['varfields'] = $this->getVarfieldVals($v);
         $url = $this->getSetting("url_view_ticket")."?id=$v";
         $n = $ticket["bin_id"];
         $u = $ticket["user_id"];

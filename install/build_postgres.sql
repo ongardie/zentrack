@@ -462,3 +462,27 @@ CREATE TABLE ZENTRACK_VARFIELD_IDX (
   js_validation text default NULL
 
 );
+
+
+-- ADDED IN VERSION 2.6
+
+CREATE TABLE ZENTRACK_VIEW_MAP (
+  view_map_id int8 NOT NULL,
+  vm_name VARCHAR(25) NOT NULL,
+  vm_val  VARCHAR(50) default '',
+  vm_type VARCHAR(12) NOT NULL,
+  vm_order int8 default 0,
+  which_view VARCHAR(50) NOT NULL,
+  PRIMARY KEY (view_map_id)
+);
+CREATE TABLE ZENTRACK_VARFIELD_MULTI (
+  multi_id int8 NOT NULL,
+  ticket_id int8 NOT NULL default '0',
+  field_name varchar(25) NOT NULL default '',
+  field_value varchar(255) default NULL,
+  PRIMARY KEY  (multi_id)
+);
+CREATE INDEX view_map_idx ON ZENTRACK_VIEW_MAP(which_view,vm_order);
+CREATE INDEX vf_multi_idx ON ZENTRACK_VARFIELD_MULTI(ticket_id);
+CREATE SEQUENCE view_map_id_seq start 1001 increment 1 maxvalue 2147483647 minvalue 1 cache 1;
+CREATE SEQUENCE varfield_multi_id_seq start 1001 increment 1 maxvalue 2147483647 minvalue 1 cache 1;

@@ -57,20 +57,18 @@
  }
 
 ?>
-<br>
-<p class='error'><?
+<form method='post' action='<?=$SCRIPT_NAME?>' name='viewPickForm'>
+<input type='hidden' name='view' value='<?=$zen->ffv($view)?>'>
+<table class='microTable'><tr><td width='150' valign='top'>
+<p class='heading'><?=tr("Edit Field Map")?></p>
+<p class='note'><?
    $str = "<a href='$rootUrl/help/find.php?s=admin&p=fieldmap'>".tr('Documentation')."</a>";
    print tr("Please refer to the ? before using this feature", array($str));
  ?></p>
 
-<form method='post' action='<?=$SCRIPT_NAME?>' name='fieldMapForm'>
-<input type='hidden' name='TODO' value='save'>
-<input type='hidden' name='view' value='<?=$zen->ffv($view)?>'>
-<p>
-<nobr>
-<b>Screen to Edit:</b>
-&nbsp;
-<select name='view'>
+<div class='bold'>Screen to Edit:</div>
+<select name='view' size=20
+  onchange="window.document.forms['viewPickForm'].submit()">
 <?
 $vp = $map->getViewProps();
 foreach( $vp as $k=>$v ) {
@@ -80,11 +78,17 @@ foreach( $vp as $k=>$v ) {
 }
 ?>
 </select>
+
+<p class='note'><?=tr("Do not switch views without saving changes!")?></p>
+
+
+</td><td>&nbsp;</td><td valign='top'>
 &nbsp;
-<input type='submit' name='switchview' onclick='return setTodo("switch")' value='GO'>
-</nobr>
-<br><span class='note'><?=tr("Do not switch views without saving changes!")?></span>
-</p>
+
+</form>
+<form method='post' action='<?=$SCRIPT_NAME?>' name='fieldMapForm'>
+<input type='hidden' name='TODO' value='save'>
+<input type='hidden' name='view' value='<?=$zen->ffv($view)?>'>
 
 <?
 if( !$view ) {
@@ -93,7 +97,7 @@ if( !$view ) {
 else {
 ?>
 <table cellpadding='4' cellspacing='1' class='cell' border='0'>
-  <tr toofar="toofar"><td colspan='10' align='center' class='titleCell'><?=tr("Properties for ?", $view)?></td></tr>
+  <tr toofar="toofar"><td colspan='10' align='center' class='subTitle'><?=tr("Properties for ?", $view)?></td></tr>
 <?
 foreach($map->getViewProps($view) as $v) {
   if( $v['vm_type'] == 'hidden' ) { continue; }
@@ -103,7 +107,7 @@ foreach($map->getViewProps($view) as $v) {
 }
 ?>
 <tr toofar="toofar">
-  <td class='titleCell' align='center' colspan='10'>
+  <td class='subTitle' align='center' colspan='10'>
     <b><?=tr("Fields for ?", $view)?></b>
   </td>
 </tr>
@@ -115,15 +119,15 @@ if( !is_array($fields) || !count($fields) || !$map || !$view ){
 else {
 ?>
 <tr toofar="toofar" id="beforeFirstRow">
-  <td class='subTitle' align='center'><b><?=tr("Options")?></b></td>
-  <td class='subTitle' align='center'><b><?=tr("Name")?></b></td>
-  <td class='subTitle' align='center'><b><?=tr("Label")?></b></td>
-  <td class='subTitle' align='center'><b><?=tr("Show")?></b></td>
-  <td class='subTitle' align='center'><b><?=tr("Required")?></b></td>
-  <td class='subTitle' align='center'><b><?=tr("Default")?></b></td>
-  <td class='subTitle' align='center'><b><?=tr("Type")?></b></td>
-  <td class='subTitle' align='center'><b><?=tr("Columns")?></b></td>
-  <td class='subTitle' align='center'><b><?=tr("Rows")?></b></td>
+  <td class='headerCell' align='center'><b><?=tr("Options")?></b></td>
+  <td class='headerCell' align='center'><b><?=tr("Name")?></b></td>
+  <td class='headerCell' align='center'><b><?=tr("Label")?></b></td>
+  <td class='headerCell' align='center'><b><?=tr("Show")?></b></td>
+  <td class='headerCell' align='center'><b><?=tr("Required")?></b></td>
+  <td class='headerCell' align='center'><b><?=tr("Default")?></b></td>
+  <td class='headerCell' align='center'><b><?=tr("Type")?></b></td>
+  <td class='headerCell' align='center'><b><?=tr("Columns")?></b></td>
+  <td class='headerCell' align='center'><b><?=tr("Rows")?></b></td>
 </tr>
 <?
 function fmfRow( $text, $class ) {
@@ -309,18 +313,18 @@ foreach($fields as $f=>$field) {
   <td class='highlight' colspan='5'>&nbsp;</td>
 </tr>
 <tr id="afterLastRow" toofar="toofar">
-  <td class='subTitle' align='center'><b><?=tr("Options")?></b></td>
-  <td class='subTitle' align='center'><b><?=tr("Name")?></b></td>
-  <td class='subTitle' align='center'><b><?=tr("Label")?></b></td>
-  <td class='subTitle' align='center'><b><?=tr("Show")?></b></td>
-  <td class='subTitle' align='center'><b><?=tr("Required")?></b></td>
-  <td class='subTitle' align='center'><b><?=tr("Default")?></b></td>
-  <td class='subTitle' align='center'><b><?=tr("Type")?></b></td>
-  <td class='subTitle' align='center'><b><?=tr("Columns")?></b></td>
-  <td class='subTitle' align='center'><b><?=tr("Rows")?></b></td>
+  <td class='headerCell' align='center'><b><?=tr("Options")?></b></td>
+  <td class='headerCell' align='center'><b><?=tr("Name")?></b></td>
+  <td class='headerCell' align='center'><b><?=tr("Label")?></b></td>
+  <td class='headerCell' align='center'><b><?=tr("Show")?></b></td>
+  <td class='headerCell' align='center'><b><?=tr("Required")?></b></td>
+  <td class='headerCell' align='center'><b><?=tr("Default")?></b></td>
+  <td class='headerCell' align='center'><b><?=tr("Type")?></b></td>
+  <td class='headerCell' align='center'><b><?=tr("Columns")?></b></td>
+  <td class='headerCell' align='center'><b><?=tr("Rows")?></b></td>
 </tr>
 <tr toofar="toofar">
-  <td class='titleCell' colspan='10'>
+  <td class='subTitle' colspan='10'>
     <input type='submit' value='<?=uptr('save')?>' onClick="return setTodo('save');">
     &nbsp;
     <input type='submit' class='submitPlain' value='<?=tr('Reset')?>' onClick="return setTodo('reset');">
@@ -334,6 +338,8 @@ foreach($fields as $f=>$field) {
   } //end if( !$view ) { ... } else { ...
 ?>
 </form>
+
+</td></tr></table>
 
 <script type='text/javascript'>
 
@@ -392,7 +398,7 @@ function removeRow( obj ) {
 function moveRowUp( tdCell ) {
   var v1, v2;
   var thisRow = tdCell.parentNode;
-  quickHighlightRow( thisRow, 'subTitle' );
+  quickHighlightRow( thisRow, 'headerCell' );
   var previousRow = thisRow.previousSibling;
   var parentNode = thisRow.parentNode;
   while( previousRow && previousRow.nodeName != "TR" ) {
@@ -439,7 +445,7 @@ function quickHighlightRow( parentObj, s ) {
 function moveRowDown( tdCell ) {
   var v1, v2;
   var thisRow = tdCell.parentNode;
-  quickHighlightRow( thisRow, 'subTitle' );
+  quickHighlightRow( thisRow, 'headerCell' );
   var nextRow = thisRow.nextSibling;
   var parentNode = thisRow.parentNode;
   //while( nextRow && nextRow.nodeName != "TR" ) {

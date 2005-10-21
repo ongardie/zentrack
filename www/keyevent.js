@@ -129,7 +129,7 @@ KeyEvent.cancelKey = function(keyPress) {
     return; 
   }
   
-  KeyEvent.hideHelp();
+  //KeyEvent.hideHelp();
   ZenTabs.singleton.hide();
   
   // ignore control keys
@@ -151,20 +151,22 @@ KeyEvent.cancelKey = function(keyPress) {
   }
 }
 
-KeyEvent.hideHelp = function() {
-  if( KeyEvent.showHelpOn > 0 ) {
-    window.clearTimeout(KeyEvent.showHelpOn);
-  }
-  mClassX(window.document.getElementById('hotKeyHelp'),'hotKeyHelp invisible');
-  KeyEvent.showHelpOn = false;
-}
-
-KeyEvent.showHelp = function() {
-  if( !KeyEvent.showHelpOn ) { KeyEvent.showHelpOn = true; }
-  mClassX(window.document.getElementById('hotKeyHelp'),'hotKeyHelp');
-}
-
-KeyEvent.showHelpOn = false;
+// KeyEvent.hideHelp = function() {
+  // if( KeyEvent.showHelpOn > 0 ) {
+    // window.clearTimeout(KeyEvent.showHelpOn);
+  // }
+  // KeyEvent.showHelpOn = false;
+  // var obj = window.document.getElementById('hotKeyHelp');
+  // mClassX(obj,'hotKeyHelp invisible');
+// }
+// 
+// KeyEvent.showHelp = function() {
+  // if( !KeyEvent.showHelpOn ) { KeyEvent.showHelpOn = true; }
+  // var obj = window.document.getElementById('hotKeyHelp');
+  // mClassX(obj,'hotKeyHelp');
+// }
+// 
+// KeyEvent.showHelpOn = false;
 
 /** 
  * Reads key events, tries to match with registered functions and run them. 
@@ -186,7 +188,8 @@ KeyEvent.keyPress = function(keyPress) {
     // determine if we are in a form field and this is not a meta key
     // (if so, we ignore the event, because the user must be able to
     // type into the field)
-    return;
+    k.source.focus();
+    return true;
   }
   
   // determine if we have a key event registered
@@ -220,10 +223,10 @@ KeyEvent.checkKey = function(keyPress) {
   }
   else if( c == 18 ) {
     ZenTabs.singleton.start();
-    if( !KeyEvent.showHelpOn && hotkeyHelpDelay > 0 ) {
-      KeyEvent.showHelpOn = window.setTimeout('KeyEvent.showHelp()', hotkeyHelpDelay);
-      if( debugOn ) { window.status = 'Prepping showhelp: '+KeyEvent.showHelpOn; }
-    }
+    // if( !KeyEvent.showHelpOn && hotkeyHelpDelay > 0 ) {
+      // KeyEvent.showHelpOn = window.setTimeout('KeyEvent.showHelp()', hotkeyHelpDelay);
+      // if( debugOn ) { window.status = 'Prepping showhelp: '+KeyEvent.showHelpOn; }
+    // }
     return;
   }
   return true;

@@ -3,7 +3,6 @@
   define('ZT_SECTION', 'admin');
   include_once("../header.php");
   
-  $expand_admin = 1;
   $section = "Admin";
   $page_title = tr("Administration");
 

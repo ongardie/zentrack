@@ -474,6 +474,14 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
     $section = getZtSection();
     return $section != 'help' && $section != 'js' && $section != 'css';
   }
+  
+  function eLink($email) {
+    $zen = $GLOBALS['zen'];
+    if( !$email ) { return '&nbsp;'; }
+    if( !strpos($email,'@') ) { return $zen->ffv($email); }
+    list($name,$dom) = explode('@',$email);
+    return '<script>eLink('.$zen->fixJsVal($name).','.$zen->fixJsVal($dom).')</script>';
+  }
 
   /*
   **  USER AUTHENTICATION

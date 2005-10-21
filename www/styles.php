@@ -387,8 +387,8 @@
   
   .hotKeyHelp {
     position: absolute;
-    left: 300px;
-    top: 120px;
+    left: -300px;
+    top: -300px;
     max-height: 400px;
     height: expression(this.scrollHeight > 400? "400px" : "auto");
     overflow: auto;
@@ -412,7 +412,7 @@
   }
   
   .accesskeys {
-   border: 0; width: 0px; height: 0px; display:inline; position:absolute;
+   border: 0; width: 0px; height: 0px; position:absolute;
   }
   
   A.navTab { border: none; }
@@ -743,7 +743,7 @@ TD.bigger { font-size: 50px; }
     border-top: 1px solid <?=$zen->getSetting('color_bar_darker');?>;
     border-left: 15px solid <?=$zen->getSetting('color_bar_darker');?>;
     padding-left: 5px;
-    /* width: 80%; */
+    width: 600px;
     margin-top: 40px;
     margin-left: 30px;
   }
@@ -770,22 +770,25 @@ TD.bigger { font-size: 50px; }
   }
   
   .menuBox A {
+    width: 175px;
     background-image: url(<?=$imageUrl?>/16x16/arrow_grey_right.png);
     background-repeat: no-repeat;
     background-position: 0 0px;
     padding-left: 25px;
     font-weight: bold;
+    behavior: url('<?=$rootUrl?>/menubox.htc');
   }
   
   .menuBox A:hover {
-    background: <?=$zen->getSetting('color_background');?>;
     background-image: url(<?=$imageUrl?>/16x16/arrow_green_right.png);
     background-repeat: no-repeat;
     background-position: 0 0px;
+    behavior: url('<?=$rootUrl?>/menubox.htc');
   }
   
   .menuBox DIV {
-    margin-left: -20px;
+    position: absolute;
+    margin-left: -30px;
     margin-top:  -25px;
     font-weight: bold;
     font-size:   <?=$zen->getSetting('font_size_large')?>;
@@ -794,6 +797,23 @@ TD.bigger { font-size: 50px; }
   
   A.pinIcon:hover {
     background: <?=$zen->getSetting('color_highlight')?>;
+  }
+  
+  .microTable {
+    font-size: <?=$zen->getSetting('font_size_small')-1?>px;
+  }
+  
+  .microTable TABLE {
+    border-spacing: 1px;
+  }
+  
+  .microTable TD {
+    padding: 0px;
+    height: 20px;
+  }
+  
+  .microTable INPUT, .microTable BUTTON, , .microTable SELECT, .microTable SUBMIT {
+    font-size: <?=$zen->getSetting('font_size_small')-1?>px;
   }
   
 -->

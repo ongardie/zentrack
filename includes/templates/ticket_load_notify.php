@@ -1,7 +1,8 @@
 <? if( !ZT_DEFINED ) { die("Illegal Access"); } 
 
-  $drop = $zen->checkAccess($login_id,$ticket["bin_id"],"notify_drop");
-  $add = $zen->checkAccess($login_id,$ticket["bin_id"],"notify_add");
+  $on = $zen->actionApplicable($ticket['id'],'notify',$login_id);
+  $drop = $on && $zen->checkAccess($login_id,$ticket['bin_id'],'notify_drop');
+  $add = $on && $zen->checkAccess($login_id,$ticket["bin_id"],"notify_add");
   $colspan = $drop? 5 : 4;
   $hotkeys->loadSection('tab_notify');
 
@@ -23,7 +24,7 @@
     <tr>
     <td class='headerCell'><?=tr("Name")?></td>
     <td class='headerCell'><?=tr("Email")?></td>
-    <td class='headerCell'><?=tr("Delete")?></td>
+    <? if($drop) {?> <td class='headerCell'><?=tr("Delete")?></td> <? } ?>
     </tr>
     <?  
     foreach($notify_list as $n) {
@@ -42,7 +43,7 @@
       //print " onmouseout='if(window.document.body && mClassX){mClassX(this);}'";
       print " onclick='checkMyBox(\"drops_{$n['notify_id']}\", event)'>\n";
       print "\t<td>$name</td>\n";
-      print "\t<td>$email</td>\n";
+      print "\t<td>".eLink($email)."</td>\n";
       if( $drop ) {
         print "\t<td><input id='drops_{$n['notify_id']}' type='checkbox' "
         ."name='drops[]' value='{$n['notify_id']}'></td>\n";
@@ -58,7 +59,7 @@
     </div>
     <? } ?>
     </form>
-    <? if( $zen->checkAccess($login_id,$ticket["bin_id"],"notify_set") ) { ?>
+    <? if( $add ) { ?>
       <div style='float:left'>
       <form name='notifyAddForm' action="<?=$rootUrl?>/actions/addToNotify.php">
       <input type="hidden" name="id" value="<?=$zen->checkNum($id)?>">
@@ -73,7 +74,7 @@
   }
   else {
     print "<tr><td class='bars bold'>".tr("No recipients on notify list")."</td></tr>";
-    if( $zen->checkAccess($login_id,$ticket["bin_id"],"notify_set") ) { 
+    if( $add ) { 
     ?>
       <tr><td class='subTitle'>
       <form name='notifyAddForm' action="<?=$rootUrl?>/actions/addToNotify.php">

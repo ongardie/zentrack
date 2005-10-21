@@ -16,7 +16,7 @@
     <div><?=tr("Tutorial")?></div>
     <p onclick='mClk(this)'>
     <a href='<?=$helpUrl?>/tutorial.php'><?=tr("View the Tutorial")?></a>
-    &nbsp;&nbsp;<span class='note'>
+    <span class='note'>
     <?=tr("New to ??  Try out the tutorial, which will explain everything you "
       ."need to know... except for the stuff it doesn't.", $zen->getSetting('system_name'));?>
     </span></p>
@@ -57,13 +57,13 @@
     <p onclick='mClk(this)'><a href='http://www.zentrack.net'><?=tr("Website")?></a></p>
     <p onclick='mClk(this)'><a href='http://www.zentrack.net/feedback/?subject=Feedback' 
       target='_blank'><?=tr("Feedback")?></a>
-     &nbsp;&nbsp;<span class='note'><?=tr("Be sure to give us some feedback about the the "
+      <span class='note'><?=tr("Be sure to give us some feedback about the the "
       ."the documentation, software, or the latest ?.", 
         "<a href='http://kato.was-here.org/funnies/catattack.mpeg' 
           target='_blank'>".tr("cat attack")."</a>")?></span>
     </p>
   </div>
-
+  
 <?
   include("$libDir/footer.php");
 ?>

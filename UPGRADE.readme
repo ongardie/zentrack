@@ -1,23 +1,12 @@
 
-UPGRADE INSTRUCTIONS FOR VERSION 2.5.5.2
+UPGRADE INSTRUCTIONS FOR VERSION 2.6
 
-!!!!!!!!!!!!!!!!!!!!!!!!!!!
-!!! VERY IMPORTANT NOTE !!!
-!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-As of 2.5.5, there are now two ways to upgrade.  There
-is a patch and a manual upgrade approach.
-
-Manual upgrades are recommended for most users.  Patches are intended
-for users who have made modifications to the source code and have some
-experience applying patches.
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-!!!! ALWAYS MAKE BACKUPS          !!!!
-!!!!    www/header.php            !!!!
-!!!!    includes/egate_config.php !!!!
-!!!!    database data             !!!!
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            !!!! ALWAYS MAKE BACKUPS          !!!!
+            !!!!    www/header.php            !!!!
+            !!!!    includes/egate_config.php !!!!
+            !!!!    database data             !!!!
+            !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 --------------------
 REQUIREMENTS
@@ -34,22 +23,27 @@ REQUIREMENTS
     Freetype libraray required to view reports
 
 --------------------
-UPGRADE FROM 2.5.5.1
+UPGRADE FROM 2.5.5.2
 --------------------
 
-  1. Manually copy the files from the install folder over your existing
+  1. Manually copy the files from the download folder over your existing
      includes and www directories.  (Remember to back up your header.php
-     file first and to restore it afterwards!) 
+     file first and to copy settings from it afterwards!) 
      
      Advanced users only!  Alternately, if you have modified your code, 
      you may wish to apply a patch from the install/patches/ folder.  
      Instructions for patching versions are at end of this file under
      HOW TO APPLY PATCHES.
-     
-  2. Run the following sql query to update your database version:
-     UPDATE ZENTRACK_SETTINGS SET value='2.5.5.2' WHERE setting_id=74;
-     
+
+  2. Run the UPGRADE_yourdb.sql script which is appropriate for your database
+  
   3. See AFTER UPGRADE below.
+
+--------------------
+UPGRADE FROM 2.5.5.1
+--------------------
+
+  1. Follow instructions for UPGRADE FROM 2.5.5.2
 
 --------------------
 UPGRADE FROM 2.5.5
@@ -164,16 +158,11 @@ UPGRADE FROM EALIER THAN 2.4.2
   AFTER UPGRADE
 --------------------------------------------
 
-  1. Be sure to change your Administrator password!
-  
-  2. Check out the Admin -> Configuration Settings panel and customize to
-     your hearts content.
-
-  3. Speak Up!
+  1. Speak Up!
      Let us know you are using zentrack, meet other users, 
      and send us feedback on your install: http://www.zentrack.net
 
-  4. Consider a donation to the Open Source Community:
+  2. Consider a donation to the Open Source Community:
      The developers spend a lot of their lives developing this product.  If you like it,
      give something back to the open source community!  Might I recomment this project?
      

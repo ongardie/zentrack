@@ -15,12 +15,15 @@ class ZenHotKeys {
     
     //todo load registered hot keys from database for the 'all' section
     //todo and assign them here
-    $this->assign('ALT+1', 'Projects',    "KeyEvent.createLoadUrl('{rootUrl}/projects.php')", '', true);
-    $this->assign('ALT+2', 'Tickets',     "KeyEvent.createLoadUrl('{rootUrl}/index.php')", '', true);
-    $this->assign('ALT+3', 'Contacts',    "KeyEvent.createLoadUrl('{rootUrl}/contacts.php')", '', true);
-    $this->assign('ALT+4', 'Options',     "KeyEvent.createLoadUrl('{rootUrl}/options.php')", '', true);  
-    $this->assign('ALT+5', 'Help',        "KeyEvent.createLoadUrl('{rootUrl}/help/index.php')", '', true);  
-    $this->assign('ALT+6', 'Admin',       "KeyEvent.createLoadUrl('{rootUrl}/admin/index.php')", '', true);  
+    $c = 1;
+    $this->assign('ALT+'.$c++, 'Projects',    "KeyEvent.createLoadUrl('{rootUrl}/projects.php')", '', true);
+    $this->assign('ALT+'.$c++, 'Tickets',     "KeyEvent.createLoadUrl('{rootUrl}/index.php')", '', true);
+    if( $this->_zen->settingOn('allow_contacts') ) {
+      $this->assign('ALT+'.$c++, 'Contacts',    "KeyEvent.createLoadUrl('{rootUrl}/contacts.php')", '', true);
+    }
+    $this->assign('ALT+'.$c++, 'Options',     "KeyEvent.createLoadUrl('{rootUrl}/options.php')", '', true);  
+    $this->assign('ALT+'.$c++, 'Help',        "KeyEvent.createLoadUrl('{rootUrl}/help/index.php')", '', true);  
+    $this->assign('ALT+'.$c++, 'Admin',       "KeyEvent.createLoadUrl('{rootUrl}/admin/index.php')", '', true);  
     $this->assign('ALT+P', 'New Project', "KeyEvent.createLoadUrl('{rootUrl}/newProject.php')", '', true);  
     $this->assign('ALT+T', 'New Ticket',  "KeyEvent.createLoadUrl('{rootUrl}/newTicket.php')", '', true);  
     $this->assign('ALT+C', 'New Contact', "KeyEvent.createLoadUrl('{rootUrl}/newContact.php')", '', true);
@@ -472,7 +475,7 @@ class ZenHotKeys {
       $this->_keysRendered[$k] = 1;
       $fxn_parsed = Zen::fixJsHtml($v['fxn']);
       $fxn_parsed = str_replace('KeyEvent.createLoadUrl', 'KeyEvent.loadUrl', $fxn_parsed);
-      return "<input type='button' name='accessKeyButton{$key}' value='' accesskey='{$key}' class='accesskeys' onclick=$fxn_parsed>";
+      return "<input type='button' {$key}' name='accessKeyButton{$key}' value='' accesskey='{$key}' class='accesskeys' onclick=$fxn_parsed>";
     }
     return null;
   }

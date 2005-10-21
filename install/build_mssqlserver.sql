@@ -447,3 +447,26 @@ CREATE NONCLUSTERED INDEX behavior_idx ON ZENTRACK_BEHAVIOR (is_enabled);
 CREATE NONCLUSTERED INDEX bdtl_idx ON ZENTRACK_BEHAVIOR_DETAIL (behavior_id);
 CREATE NONCLUSTERED INDEX var_idx_idx ON ZENTRACK_VARFIELD_IDX (sort_order, field_name);
 
+
+
+-- ADDED IN VERSION 2.6
+
+CREATE TABLE ZENTRACK_VIEW_MAP (
+  view_map_id NUMERIC(12) NOT NULL,
+  vm_name VARCHAR(25) NOT NULL,
+  vm_val  VARCHAR(50) default '',
+  vm_type VARCHAR(12) NOT NULL,
+  vm_order NUMERIC(4) default 0,
+  which_view VARCHAR(50) NOT NULL,
+  PRIMARY KEY (view_map_id)
+);
+CREATE TABLE ZENTRACK_VARFIELD_MULTI (
+  multi_id NUMERIC(12) NOT NULL,
+  ticket_id NUMERIC(12) NOT NULL default '0',
+  field_name varchar(25) NOT NULL default '',
+  field_value varchar(255) default NULL,
+  PRIMARY KEY  (multi_id)
+);
+CREATE INDEX view_map_idx ON ZENTRACK_VIEW_MAP(which_view,vm_order);
+CREATE INDEX vf_multi_idx ON ZENTRACK_VARFIELD_MULTI(ticket_id);
+

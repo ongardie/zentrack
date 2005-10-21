@@ -110,8 +110,17 @@
       print "<p onclick='mClk(this)'><a href='$helpUrl/$section/index.php'>".tr("Overview")."</a></p>\n";
       //$b = '<br>';
     }
-    foreach($list as $page=>$name) {
-      print "<p onclick='mClk(this)'><a href='$helpUrl/$section/$page'>$name</a></p>\n";
+    foreach($list as $page=>$v) {
+      if( is_array($v) ) {
+        list($name,$desc) = $v;
+      }
+      else {
+        $name = $v;
+        $desc = false;
+      }
+      print "<p onclick='mClk(this)'><a href='$helpUrl/$section/$page'>$name</a>";
+      if( $desc ) { print "<span class='note'>$desc</span>"; }
+      print "</p>\n";
       //if( !$b ) { $b = '<br>'; }
     }
     //print "</ul>\n";
@@ -129,11 +138,12 @@
 		    );
 
   $adminTOC = array(
-		    "bins.php"            => tr("Bins and Permissions"),
-		    "data_types.php"      => tr("Data Types (standard ticket fields)"),
+		    "bins.php"            => array(tr("Bins and Permissions"),tr("Explanation of access controls")),
+		    "data_types.php"      => array(tr("Data Types"),     tr("Setting up standard ticket fields")),
 		    "data_groups.php"     => tr("Data Groups"),
-		    "behaviors.php"       => tr("Behaviors"),
-		    "varfields.php"       => tr("Variable Fields (custom ticket fields)"),
+		    "behaviors.php"       => array(tr("Behaviors"),      tr("Creating dynamic values and choices in fields")),
+        "fieldmap.php"        => array(tr("Field Map"),      tr("Configuring fields for various screens")), 
+		    "varfields.php"       => array(tr("Variable Fields"),tr("Setting up custom fields for use")),
 		    "settings.php"        => tr("System Settings")
 		    );
 

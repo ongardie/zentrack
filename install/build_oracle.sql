@@ -483,3 +483,27 @@ CREATE INDEX behavior_idx ON ZENTRACK_BEHAVIOR (is_enabled);
 CREATE INDEX bdtl_idx ON ZENTRACK_BEHAVIOR_DETAIL (behavior_id);
 CREATE INDEX var_idx_idx ON ZENTRACK_VARFIELD_IDX (sort_order, field_name);
 
+
+
+-- ADDED IN VERSION 2.6
+
+CREATE TABLE ZENTRACK_VIEW_MAP (
+  view_map_id NUMBER(12) NOT NULL,
+  vm_name VARCHAR2(25) NOT NULL,
+  vm_val  VARCHAR2(50) default '',
+  vm_type VARCHAR2(12) NOT NULL,
+  vm_order NUMBER(4) default 0,
+  which_view VARCHAR2(50) NOT NULL,
+  CONSTRAINT view_map_id_pk1 PRIMARY KEY (view_map_id)
+);
+CREATE TABLE ZENTRACK_VARFIELD_MULTI (
+  multi_id NUMBER(12) NOT NULL,
+  ticket_id NUMBER(12) NOT NULL default '0',
+  field_name VARCHAR2(25) NOT NULL default '',
+  field_value VARCHAR2(255) default NULL,
+  CONSTRAINT multi_id_pk1 PRIMARY KEY (multi_id)
+);
+CREATE INDEX view_map_idx ON ZENTRACK_VIEW_MAP(which_view,vm_order);
+CREATE INDEX vf_multi_idx ON ZENTRACK_VARFIELD_MULTI(ticket_id);
+CREATE SEQUENCE view_map_id_seq start with 1001 nocache;
+CREATE SEQUENCE varfield_multi_id_seq start with 1001 nocache;

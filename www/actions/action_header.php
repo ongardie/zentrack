@@ -73,10 +73,9 @@
 
   // find out if user can do this action, if not, redirect them
   if( !$zen->actionApplicable( $id, $action, $login_id ) && !$tf_creator ) {
-    $setmode = "";
+    $zen->addDebug("action_header.php","Action ($action) was not applicable, redirecting",1);
     $action = '';
     $ticketTabAction = false;
-    $zen->addDebug("action_header.php","Action was not applicable, redirecting",1);
     include("$rootWWW/ticket.php");
     exit;
   }

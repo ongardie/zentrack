@@ -7,7 +7,10 @@
   if( @file_exists("$helpDir/$s/$p.php") ) {
     include("$helpDir/$s/$p.php");
   }
+  else if( @file_exists("$helpDir/$s/index.php") ) {
+    include("$helpDir/$s/index.php");
+  }
   else {
-    print "<b>Sorry, not found</b>\n"; 
+    print "<b>Sorry, not found: $helpDir/$s/$p.php</b>\n"; 
   }
 ?>

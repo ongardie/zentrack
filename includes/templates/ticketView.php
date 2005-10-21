@@ -23,7 +23,7 @@
   $pageUrl = $page_type == 'project'? $projectUrl : $ticketUrl;
 ?><table class='barborder' width='100%' cellpadding="0" cellspacing="0">
 <tr>
-  <td class='tbar padded indent ridge' valign='bottom'><?
+  <td class='subTitle padded' valign='bottom'><? //tbar padded indent ridge
   if( $map->getViewProp('ticket_view_top','move_actions_up') ) {
   ?><table width='100%' cellpadding='0' cellspacing='0'><tr><td class='tbar' valign='bottom'>
     <?=$zen->ffv(tr($zen->getTypeName($type_id)))?> #<?=$id?><?
