@@ -22,9 +22,31 @@ abstraction, and endless possibilities for project expansion.
   Fixed bug in retrieving project children (causing stall in mysql db)
   Added check for project self-references which cause an infinite loop
   Fixed bug in project create that causes "Invalid page mode requested: 'details'" error
+   - zentrack_2/includes/zenTrack.class 1.198
+   - zentrack_2/includes/ZenFieldMap.class 1.38
+   - zentrack_2/includes/nav.php 1.24
+   - zentrack_2/includes/templates/fieldMapForm.php 1.18
+   - zentrack_2/includes/templates/listTickets.php 1.34
+   - zentrack_2/includes/templates/newTicketForm.php 1.53
+   - zentrack_2/includes/templates/ticketView.php 1.12
+   - zentrack_2/includes/templates/fields/multihidden.template 1.2
+   - zentrack_2/www/addProjectSubmit.php 1.24
+   - zentrack_2/www/addSubmit.php 1.31
+   - zentrack_2/www/styles.php 1.33
+   - zentrack_2/www/admin/editUserSubmit.php 1.14
   
   Added missing field map entries for project_view_top and for project_close
   Added missing multifields for ticket_view_top
+  Prepared upgrade/sql files for new release
+   - zentrack_2/UPGRADE.readme 1.29
+   - zentrack_2/install/UPGRADE_mssqlserver.sql 1.40
+   - zentrack_2/install/UPGRADE_mysql.sql 1.51
+   - zentrack_2/install/UPGRADE_oracle.sql 1.48
+   - zentrack_2/install/UPGRADE_postgres.sql 1.40
+   - zentrack_2/install/seed_mssqlserver.sql 1.44
+   - zentrack_2/install/seed_mysql.sql 1.61
+   - zentrack_2/install/seed_oracle.sql 1.50
+   - zentrack_2/install/seed_postgres.sql 1.46
 
 ----- VERSION 2.6.PRE2 (2005-10-22)--
 
