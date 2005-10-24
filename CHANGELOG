@@ -13,11 +13,20 @@ abstraction, and endless possibilities for project expansion.
 
 ----- VERSION 2.6 (development) -----
 
-2005-10-21, kato
-  Simplified CSS attributes for menubox
-  Added menubox to login page
+----- VERSION 2.6.PRE2 (2005-10-24)--
 
------ VERSION 2.6.PRE2 (development)--
+2005-10-23, kato
+  Removed erroneous "Errors Detected" output
+    - zentrack_2/includes/Zen.class 1.41
+    
+  Fixed bug in retrieving project children (causing stall in mysql db)
+  Added check for project self-references which cause an infinite loop
+  Fixed bug in project create that causes "Invalid page mode requested: 'details'" error
+  
+  Added missing field map entries for project_view_top and for project_close
+  Added missing multifields for ticket_view_top
+
+----- VERSION 2.6.PRE2 (2005-10-22)--
 
 2005-10-21, kato
   Fixed permissions on contact panel

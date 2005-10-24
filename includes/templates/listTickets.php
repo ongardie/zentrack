@@ -109,7 +109,7 @@ function resortListPage( sortName ) {
 <? } ?>
 }
 </script>
-<table width="100%" cellspacing='1' cellpadding='2'>
+<table width="100%" class='formTable' cellspacing='1' cellpadding='2'>
 <?
 $atc_text = $atc > 1? tr("Tickets ?-? of ?",array($t_from,$t_to,$atc)) : "";  
 if( $view == 'project_tasks' ) {
@@ -272,10 +272,37 @@ else {
    }
    
    if( $show_totals ) {
-     $totals_titlebar_txt = tr('Totals:');
+     $totals_titlebar_txt = !$atc || $atc <= count($tickets)? tr("Grand Total") : tr('Subtotal');
      include("$templateDir/totalsBar.php");
    }
    
+   if( $atc && $atc > count($tickets) ) {
+     $hotkeys->loadSection('paging');
+     $GLOBALS['zt_hotkeys'] = $hotkeys;
+     if( $show_totals ) {
+       $totals_titlebar_txt = tr("Grand Total");
+       list($ttl_est,$ttl_wkd,$ttl_ext) = $zen->getTicketHours($id);
+       include("$templateDir/totalsBar.php");
+     }
+?>
+
+<!--- BEGIN Paging --->
+<tr>
+   <td  align="right" valign='bottom' colspan='<?=$cols?>' class='subTitle'>
+     <?
+       $links = $zen->get_links("all", "off", $atc);
+       for ($y = 0; $y < count($links); $y++) {
+          echo $links[$y] . "&nbsp;&nbsp;";
+       }
+     ?>
+   </td>
+</tr>
+<!--- END Paging --->
+
+<?
+   }
+
+
    if( strpos($view, 'search')===0 ) {
 ?>
    <tr>
@@ -346,32 +373,7 @@ else {
    </tr>
 <?
    }
-   
-   if( $atc > 0 ) {
-     $hotkeys->loadSection('paging');
-     $GLOBALS['zt_hotkeys'] = $hotkeys;
-     if( $show_totals ) {
-       $totals_titlebar_txt = tr("Grand Total");
-       list($ttl_est,$ttl_wkd,$ttl_ext) = $zen->getTicketHours($id);
-       include("$templateDir/totalsBar.php");
-     }
-?>
 
-<!--- BEGIN Paging --->
-<tr>
-   <td  align="right" valign='bottom' colspan='<?=$cols?>' class='subTitle'>
-     <?
-       $links = $zen->get_links("all", "off", $atc);
-       for ($y = 0; $y < count($links); $y++) {
-          echo $links[$y] . "&nbsp;&nbsp;";
-       }
-     ?>
-   </td>
-</tr>
-<!--- END Paging --->
-
-<?
-   }
    print "</table>\n";
    
 } else {

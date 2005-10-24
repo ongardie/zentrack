@@ -1,5 +1,5 @@
 
-UPGRADE INSTRUCTIONS FOR VERSION 2.6
+UPGRADE INSTRUCTIONS FOR VERSION 2.6 Pre 3
 
             !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             !!!! ALWAYS MAKE BACKUPS          !!!!
@@ -22,6 +22,33 @@ REQUIREMENTS
     GD: [optional] 2.0 or higher needed to use reports
     Freetype libraray required to view reports
 
+---------------------
+UPGRADE FROM 2.6 Pre2
+---------------------
+
+  1. Manually copy the files from the download folder over your existing
+     includes and www directories.  (Remember to back up your header.php
+     file first and to copy settings from it afterwards!) 
+     
+  2. Run the install/previous/2.6-pre.UPGRADE.sql script to bring your
+     db up to date with release data. (there is only one file for all db types)
+     
+  3. Set directory permissions (probably only necessary on unix)
+     chmod 777 includes/attachments
+     chmod 777 includes/logs
+     chmod 777 includes/cache
+     chmod 777 includes/translations
+     chmod 755 includes/egate.php
+     chmod 755 includes/egate_create.php  
+     
+  4. See AFTER UPGRADE BELOW
+
+---------------------
+UPGRADE FROM 2.6 Pre1
+---------------------
+
+  1. Follow instructions for UPGRADE FROM 2.6 Pre2
+
 --------------------
 UPGRADE FROM 2.5.5.2
 --------------------
@@ -37,7 +64,15 @@ UPGRADE FROM 2.5.5.2
 
   2. Run the UPGRADE_yourdb.sql script which is appropriate for your database
   
-  3. See AFTER UPGRADE below.
+  3. Set directory permissions (probably only necessary on unix)
+     chmod 777 includes/attachments
+     chmod 777 includes/logs
+     chmod 777 includes/cache
+     chmod 777 includes/translations
+     chmod 755 includes/egate.php
+     chmod 755 includes/egate_create.php  
+     
+  4. See AFTER UPGRADE BELOW
 
 --------------------
 UPGRADE FROM 2.5.5.1

@@ -276,6 +276,7 @@ class zenTrack extends zen {
     // the priority table and alter the processing slightly to get the
     // desired effect
     $tf_pri = preg_match("/priority/", $sort);
+    $this->addDebug('get_tickets', "incoming sort is: $sort",3);
 
     // parse fields and deal with special values such as custom fields, which
     // mean that we need to include the custom table
@@ -2943,6 +2944,16 @@ class zenTrack extends zen {
         case "status":
           $params["$k"] = "OPEN";
           break;
+        case "project_id":
+          $v = is_array($v)? join(",",$v) : $v;
+          $test = explode(',',$params["$k"]);
+          if( in_array($id, $test) ) {
+            $this->addDebug('update_ticket', "Project id references this ticket!", 1);
+          }
+          else {
+            $params["$k"] = $v;
+          }
+          break;
         default:
           $params["$k"] = "NULL";
         }
@@ -5466,7 +5477,7 @@ class zenTrack extends zen {
     }
   }
 
-  function getProjectChildren( $pid, $columns = '', $archive_flag = 0, $sort = "status desc, t.priority desc, otime desc" ) {
+  function getProjectChildren( $pid, $columns = '', $archive_flag = 0, $sort = "status desc, priority desc, otime desc" ) {
     // returns array of tickets for the project by its pid ($pid)
     // this is seperated from the get_tickets() for abstraction
     // (i.e. future expansion compatability)
@@ -5477,7 +5488,7 @@ class zenTrack extends zen {
     $params = array("project_id"=>$pid);
     $page = 0;
     $vars = $this->get_tickets($params, $sort, $columns,$page++);
-    while( count($vars) < $this->total_records ) {
+    while( count($vars) && count($vars) < $this->total_records ) {
       $vars = array_merge($vars,$this->get_tickets($params,$sort,$columns,$page++));
     }
     return( $vars );

@@ -404,6 +404,11 @@
     visibility: hidden;
   }
   
+  .permhide {
+    position: absolute;
+    visibility: hidden;
+  }
+  
   .nodisplay {
     width: 0px;
     height: 0px;
@@ -703,6 +708,10 @@ TD.bigger { font-size: 50px; }
     background: <?=$zen->getSetting('color_alt_background')?>;
     color: <?=$zen->getSetting('color_alt_text')?>;
     overflow: auto;
+    filter:alpha(opacity=80);
+    opacity: 0.80;
+    -moz-opacity:0.80;
+    font-weight: bold;
   }
   
   .keySubLow, .keySubHigh {

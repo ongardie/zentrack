@@ -77,8 +77,8 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
     $formDest = $page_type == 'project'? 'addProjectSubmit.php' : 'addSubmit.php';
   }
 ?>
-<form method="post" name="<?=$form_name?>" action="<?=$formDest?>" onSubmit='return validateTicketForm(this)'>
 <table width="640" align="left" cellpadding="2" cellspacing="2" class='formTable'>
+<form method="post" name="<?=$form_name?>" action="<?=$formDest?>" onSubmit='return validateTicketForm(this)'>
 <tr>
   <td colspan="2" width="640" class="subTitle" align="center">
      <?=tr("$ucfirst Information")?>
@@ -124,7 +124,6 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
 </tr>
 </table>
 </form>
-
 <?
   $formview = $view;
   include_once("$libDir/templates/validateTicketForm.php");

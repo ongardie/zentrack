@@ -1,5 +1,5 @@
 <?{
-   
+  
   /*
   **  EDIT USER SUBMIT
   **  
@@ -9,9 +9,9 @@
   
   include("admin_header.php");
   $page_title = tr("Edit User Submit");
-
+  
   if( !$active )
-    $active = 0;
+  $active = 0;
   $zen->cleanInput($user_fields);
   foreach($user_required as $u) {
     if( !strlen($$u) ) {
@@ -25,7 +25,7 @@
   if( !$access_level ) {
     $access_level = 0;
   }
-
+  
   // security checks for the root administrator account
   if( $user_id == 1 && $access_level < 5 ) {
     $errs[] = tr("The root admin account must have access of 5 or greater");
@@ -38,15 +38,15 @@
   } else if( $user_id == 1 ) {
     $active = 2;
   }
-
+  
   if( !$errs ) {
     $params = array();
     foreach(array_keys($user_fields) as $k) {
       if( strlen($$k) ) {
-	$params["$k"] = $$k;
+        $params["$k"] = $$k;
       }
       else {
-	$params["$k"] = "NULL";
+        $params["$k"] = "NULL";
       }
     }
     if( $zen->demo_mode == "on" ) {
@@ -54,18 +54,13 @@
     } else {
       $res = $zen->update_user($user_id, $params);
       if( $res ) {
-	$msg = tr("User ? was updated successfully. ? to customize user ?'s access permissions.",
-		  array($user_id,
-			"--link--",
-			$user_id));
-	$msg = str_replace("--link--","<br><a href='$rootUrl/admin/access.php?user_id=$user_id'>"
-			   .tr("Click Here")."</a>",$msg);
+        $msg = tr("User ? was updated successfully",array($user_id));
       } else {
-	$errs[] = tr("System Error: Could not update ?, ?", array($lname, $fname));
+        $errs[] = tr("System Error: Could not update ?, ?", array($lname, $fname));
       }
     }
   }
-
+  
   include("$libDir/nav.php");
   if( $errs ) {
     $zen->printErrors($errs);
@@ -74,7 +69,7 @@
   } else {
     include("$templateDir/adminMenu.php");
   }
-
+  
   include("$libDir/footer.php");
-
+  
 }?>

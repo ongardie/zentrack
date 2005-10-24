@@ -652,9 +652,11 @@ class ZenFieldMap {
       $typename = "multihidden";
       $vals["field_choices"] = $this->getChoices($view,$field_name);
       //Prevent loosing current values in hidden fields:
-      foreach ($vals["field_value"] as $value) {
-        if ( ! in_array($value, $vals["field_choices"]) ) {
-          $vals["field_choices"][$value]=$value;
+      if( is_array($vals['field_value']) ) {
+        foreach ($vals["field_value"] as $value) {
+          if ( ! in_array($value, $vals["field_choices"]) ) {
+            $vals["field_choices"][$value]=$value;
+          }
         }
       }
     }

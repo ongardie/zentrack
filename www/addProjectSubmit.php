@@ -54,7 +54,8 @@
   }
   
   if( !$errs ) {
-    $setmode = "details";
+    $setmode = '';
+    $action = '';
     include("project.php");
     exit;
   } else {

@@ -12,6 +12,7 @@
   **    $id - (integer)id of the ticket to view
   **    $ticket - (array)the ticket properties from get_ticket or get_project
   **    $page_mode - (string)page to load (ticket_tab_2, close, etc.. validate this!)
+  **    $page_type - either 'ticket' or 'project'
   */
   
   if( !$page_type ) {
@@ -36,7 +37,7 @@
   }
   else {
     print $zen->ffv(tr($zen->getTypeName($type_id)))." #$id";
-    if( $map->getViewProp('ticket_view_top','show_summary_inline') ) {
+    if( $map->getViewProp("{$page_type}_view_top",'show_summary_inline') ) {
       print ": ".$zen->ffvText($ticket['title']);
     }
   }
@@ -44,8 +45,8 @@
 </tr>
 <tr>
   <td class='indent boxpad'><?
-    $boxview = 'ticket_view_top';
-    include("$templateDir/ticket_box.php"); 
+    $boxview = "{$page_type}_view_top";
+    include("$templateDir/ticket_box.php");
   ?></td>
 </tr>
 <tr>

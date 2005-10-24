@@ -82,13 +82,20 @@ foreach( $vp as $k=>$v ) {
 <p class='note'><?=tr("Do not switch views without saving changes!")?></p>
 
 
-</td><td>&nbsp;</td><td valign='top'>
-&nbsp;
-
 </form>
 <form method='post' action='<?=$SCRIPT_NAME?>' name='fieldMapForm'>
 <input type='hidden' name='TODO' value='save'>
 <input type='hidden' name='view' value='<?=$zen->ffv($view)?>'>
+
+<? if( $view ) { ?>
+<input type='submit' value='<?=uptr('save')?>' onClick="return setTodo('save');">
+&nbsp;
+<input type='submit' class='submitPlain' value='<?=tr('Reset')?>' onClick="return setTodo('reset');">
+<? } ?>
+
+</td><td>&nbsp;</td><td valign='top'>
+&nbsp;
+
 
 <?
 if( !$view ) {

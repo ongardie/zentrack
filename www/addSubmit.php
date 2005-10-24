@@ -37,29 +37,37 @@
         if( $f == 'title' && strlen($params["$f"]) > 50 ) {
           $params["$f"] = substr($params["$f"],0,50);
         }
+        else if( $f == 'project_id' ) {
+          $vs = isset($$f)? (is_array($$f)? $$f : explode(',',$$f)) : array();
+          if( in_array($id, $vs) ) {
+            $errs[] = "A ticket cannot belong to itself, project id is invalid";
+          }
+        }
       }
     }
     $params["creator_id"] = $login_id;
     
-    // add the ticket to database
-    $id = $zen->add_ticket($params);
+    if( !$errs ) {
+      // add the ticket to database
+      $id = $zen->add_ticket($params);
+      // update the variable field entries for this ticket
+      if( $id && $varfields && count($varfield_params) ) {
+        $res = $zen->updateVarfieldVals($id, $varfield_params);
+        if( !$res ) {
+          $errs[] = tr("? created, but variable fields could not be saved", array(tr('Ticket')));
+        }      
+      }
+      
+      // check for errors
+      if( !$id ) {
+        $errs[] = tr("Could not create ticket."). " ".$zen->db_error;
+      }
+      else if( in_array($params["type_id"],$zen->noteTypeIDs()) ) {
+        $zen->close_ticket($id,null,null,'Notes closed automatically');
+      }
+    } // if( !$errs )
     
-    // update the variable field entries for this ticket
-    if( $id && $varfields && count($varfield_params) ) {
-      $res = $zen->updateVarfieldVals($id, $varfield_params);
-      if( !$res ) {
-        $errs[] = tr("? created, but variable fields could not be saved", array(tr('Ticket')));
-      }      
-    }
-    
-    // check for errors
-    if( !$id ) {
-      $errs[] = tr("Could not create ticket."). " ".$zen->db_error;
-    }
-    else if( in_array($params["type_id"],$zen->noteTypeIDs()) ) {
-      $zen->close_ticket($id,null,null,'Notes closed automatically');
-    }
-  }
+  } // if( !$errs )
   
   if( !$errs ) {
     $setmode = null;

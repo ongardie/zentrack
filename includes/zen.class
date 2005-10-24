@@ -591,7 +591,7 @@ class zen extends zenDate {
    function printErrors( $errs = '' ) {
       // prints an array of errors
       // in red, as a formatted list
-      if( is_array($errs) ) {
+      if( is_array($errs) && count($errs) ) {
         print "<span class='error'><b>Errors Detected</b><ul>\n";
         foreach($errs as $e)
         print "<li class='error'>".$this->ffv($e)."</li>\n";

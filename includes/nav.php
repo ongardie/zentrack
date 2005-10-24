@@ -133,12 +133,10 @@
       src='<?=$imageUrl?>/empty.gif' width='1' height='1'></td>
   </tr>
   <tr>
-  <td valign="top" height="400" colspan='<?=$nav_col_span?>' class='mainContent navpad'>
-
-  <?
-    // include left nav menu if one is appropriate
+  <td valign="top" height="400" colspan='<?=$nav_col_span?>' class='mainContent navpad'><?
     print "<table width='100%' cellpadding='0' cellspacing='0'><tr>\n";
     if( $load_section ) {
+      // include left nav menu if one is appropriate
       ?>
 
       <!-- ********* \LEFT NAV MENU\ ********* -->
@@ -150,6 +148,9 @@
       if( $login_name ) {
         print "<tr><td><span class='note'>".tr("Logged in as:")."</span>"
           ."<br>".$zen->ffv($login_name)."</td></tr>";
+      }
+      if( $zen->demo_mode == "on" ) {
+        print "<tr><td class='hot'>".tr("Demo Mode")."</td></tr>";
       }
       print "</table>\n";
       print "</td>\n";
@@ -169,7 +170,4 @@
        }
        $msg = array();
     }
-  ?>
-  
-  <!-- END OF NAVIGATION -->
-
+  ?><!-- END OF NAVIGATION -->
