@@ -65,7 +65,7 @@
        // name cell
 	     print "<input type='hidden' name='newID[$j]' value='".$v[$id_type]."'>\n";
 	     print "$t<input type='text' name='newName[$j]' "
-	       ." value='$v[name]' size='20' maxlength='25'>$te";
+         ." value='".$zen->ffv($v["name"])."' size='20' maxlength='25'>$te";
          
        // active cell
        print "$t<input type='checkbox' name='newActive[$j]' onclick='checkVisible(this)' value='1'";

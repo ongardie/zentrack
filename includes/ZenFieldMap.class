@@ -655,10 +655,15 @@ class ZenFieldMap {
       if( is_array($vals['field_value']) ) {
         foreach ($vals["field_value"] as $value) {
           if ( ! in_array($value, $vals["field_choices"]) ) {
-            $vals["field_choices"][$value]=$value;
+            $vals["field_choices"][$value]= $value;
           }
         }
       }
+    }
+    
+    $vals['field_value'] = $this->_zen->ffv($vals['field_value']);
+    if( isset($vals['field_choices']) ) {
+      $vals['field_choices'] = $this->_zen->ffv($vals['field_choices']);
     }
     
     // parse and return 

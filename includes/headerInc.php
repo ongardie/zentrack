@@ -22,9 +22,7 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
   * ERROR REPORTING (security)
   */
   error_reporting(E_ALL ^ E_NOTICE);
-  if( !$Debug_Mode ) {
-    ini_set("display_errors", false);
-  }
+  ini_set("display_errors", $Debug_Mode > 0);
 
   // fix problems with array indices and case of table columns
   define('ADODB_ASSOC_CASE',0);

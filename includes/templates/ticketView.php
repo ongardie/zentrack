@@ -61,7 +61,7 @@
       print "</div>";
     }
     else if( preg_match("/^{$page_type}_tab_[0-9]$/", $page_mode) ) {
-      $tabs = $map->getTabs($page_type, $login_id, $bin_id);
+      $tabs = $map->getTabs($page_type, $login_id, $ticket['bin_id']);
       if( !array_key_exists($page_mode, $tabs) || !$map->getViewProp($page_mode,'visible') ) {
         print "<div class='error'>".tr("Invalid page mode requested: ?", $zen->ffv($page_mode))."</div>";
       }

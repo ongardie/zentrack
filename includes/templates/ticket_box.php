@@ -1,4 +1,5 @@
 <? if( !ZT_DEFINED ) { die("Illegal Access"); }
+  $zen->addDebug('ticket_box.php', "Rendering ".$boxview, 3);
 
  /**
   * A tab or block of information in the ticket view
@@ -13,9 +14,9 @@
   $id = $ticket['id'];
   $varfields = $zen->getVarfieldVals($id);
 
-  if( !$zen->checkAccess($login_id, $bin_id, $map->getViewProp($boxview,'access_level')) ) {
+  if( !$zen->checkAccess($login_id, $ticket['bin_id'], $map->getViewProp($boxview,'access_level')) ) {
     print("Illegal access");
-    exit;
+    return;
   }
 
   //////////////////////////////////////////////////
@@ -47,4 +48,6 @@
       include("$templateDir/ticket_load_$l.php"); 
     }
   }
+  
+  $zen->addDebug('ticket_box.php', "Completed ".$boxview, 3);
 ?>

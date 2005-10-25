@@ -13,6 +13,12 @@ abstraction, and endless possibilities for project expansion.
 
 ----- VERSION 2.6 (development) -----
 
+  Data types can now take quotes in name (admin section)
+  Corrected quote problems from data types in create/edit forms
+  
+  Fixed access for ticket view using guest login account
+  
+
 ----- VERSION 2.6.PRE3 (2005-10-24)--
 
 2005-10-23, kato
