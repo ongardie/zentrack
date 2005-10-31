@@ -13,12 +13,10 @@ abstraction, and endless possibilities for project expansion.
 ----- VERSION 2.6 (development) -----
   Added missing menubox.htc file
    - zentrack_2/www/menubox.htc 1.1
-
+   
   Data types can now take quotes in name (admin section)
   Corrected quote problems from data types in create/edit forms
    - zentrack_2/includes/ZenFieldMap.class 1.39
-   - zentrack_2/includes/headerInc.php 1.65
-   - zentrack_2/includes/nav.php 1.25
    - zentrack_2/includes/templates/configForm.php 1.14
   
   Fixed access for ticket view using guest login account
@@ -26,8 +24,15 @@ abstraction, and endless possibilities for project expansion.
    - zentrack_2/includes/templates/ticket_box.php 1.22
    
   Fixes for caching problems
-   - zentrack_2/includes/session_start.php
-  
+   - zentrack_2/includes/headerInc.php 1.65
+   - zentrack_2/includes/session_start.php 1.31
+   
+  Fix postgres syntax errors
+   - zentrack_2/install/build_postgres.sql 1.22
+   
+  UI Cleanup
+   - zentrack_2/includes/nav.php 1.26
+   - zentrack_2/includes/templates/nav_projects.php 1.6
 
 ----- VERSION 2.6.PRE3 (2005-10-24)--
 
