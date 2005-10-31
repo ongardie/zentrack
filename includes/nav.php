@@ -57,8 +57,6 @@
 ?>
 <html>
   <head>
-  < meta http-equiv="Pragma" content="no-cache" >
-  < meta http-equiv="Expires" content="-1" >
   <title><?=$page_prefix.$page_title?></title>
   <LINK HREF="<?=$rootUrl?>/styles.php" REL="STYLESHEET" TYPE="text/css">
   <script language="javascript">

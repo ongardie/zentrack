@@ -182,7 +182,8 @@ function loadRenderKeys() {
 <div id='hotKeyHelp'  class='hotKeyHelp invisible'><?=$hotkeys->renderHelp()?></div>
 
 </body>
+<head>
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="-1">
+</head>
 </html>
-
-
-
