@@ -11,7 +11,7 @@
   
   if( !$zen->checkAccess($login_id,$bin_id,"create") ) {
     $page_title = tr("Access Error");
-    $msg = "<p class='hot'>" . tr("You do not have permission to create tickets in this bin.") . "</p>\n"; 
+    $msg[] = tr("You do not have permission to create tickets in this bin."); 
     include("$libDir/nav.php");     
     include("$libDir/footer.php");
     exit;

@@ -49,7 +49,7 @@
   }
   
   if( !$errs ) {
-    $msg = tr("Edited ticket #?", array($id));
+    $msg[] = tr("Edited ticket #?", array($id));
     //header("Location:$rootUrl/ticket.php?id=$id&setmode=Details");
     $setmode = "";
     if( $is_project ) {

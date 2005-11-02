@@ -26,12 +26,12 @@
         }
       }
     }
-    $msg = tr("? recipients dropped from the notify list", $num);
+    $msg[] = tr("? recipients dropped from the notify list", $num);
     $action = '';
   }
   else {
     // create an error message
-    $msg = tr("No recipients were selected to drop");
+    $msg[] = tr("No recipients were selected to drop");
     $action = '';
   }
   

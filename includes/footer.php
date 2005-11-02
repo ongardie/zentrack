@@ -1,11 +1,9 @@
 <? if( !ZT_DEFINED ) { die("Illegal Access"); } ?>
 
 
-  </td></tr></table>
-   
-
    <!--- BEGIN FOOTER --->
-   
+
+  </td></tr></table>
   
   </td>
   </tr>

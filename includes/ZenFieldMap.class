@@ -433,7 +433,7 @@ class ZenFieldMap {
           return $this->_zen->ffvText($value);
         case "custom_multi":
 //          return str_replace("\t", "; ", $value);
-          return implode("; ", $value);
+          return implode($this->_zen->multisep, $value);
         default:
           $val = $this->_zen->ffvText(str_replace("\t",";",$value), $field['num_cols']);
           $this->_zen->addDebug("getTextValue", "rendering default: $val", 3);
@@ -513,7 +513,7 @@ class ZenFieldMap {
       // a date right here
       //$vals['field_value'] = $this->_zen->showDate($value);
       $vals["field_value"] = strlen($value)? $this->_zen->showDateTime($value) : '';
-    } else if( strpos($vals["field_name"], 'custom_multi') !== false ) {
+    } else if( ZenFieldMap::isMultiField($vals['field_name']) ) {
 /*
       $tok=strtok($value,"\t");
       $vals["field_value"]=array();
@@ -525,13 +525,13 @@ class ZenFieldMap {
       $vals["field_value"]=array();
       if ( is_array($value) ) {
         foreach($value as $element) {
-          $vals["field_value"][] = $this->_zen->ffv($element, $field['num_cols']);
+          $vals["field_value"][] = $element;
         }
       } else {
-        $vals["field_value"][] = $this->_zen->ffv($value, $field['num_cols']);
+        $vals["field_value"][] = $value;
       }
     } else {
-      $vals["field_value"] = $this->_zen->ffv($value);
+      $vals["field_value"] = $value;
     }
     $vals["field_label"] = $this->getTextValue($view,$field_name,$value);
     $vals["field_max"] = $context->maxlength()? $context->maxlength() : $field['num_cols'];
@@ -554,7 +554,7 @@ class ZenFieldMap {
                                 ||
                                 ( $view == 'search_form' && $typeint == ZTFIELD_MENU && $field['num_rows'] > 1 )
                                 || 
-                                ( strpos($field_name,'custom_multi')===0 )
+                                ( ZenFieldMap::isMultiField($field_name) )
                               ) ? "multiple" : "";
 
     if( $vals['field_multiple'] ) {
@@ -597,7 +597,7 @@ class ZenFieldMap {
     }
     
     // deal with special custom field problems
-    if( strpos($field_name,'custom_')===0 ) {
+    if( ZenFieldMap::isVariableField($field_name) ) {
       $f = $this->_zen->getCustomField($field_name);
       if( $f['js_validation'] ) {
         if( $vals['field_events'] ) {
@@ -648,7 +648,7 @@ class ZenFieldMap {
       $vals["field_choices"] = $this->getChoices($view,$field_name);
     }
 
-    if ( $typename == "hidden" && strpos($field_name,"multi")>0 ) {
+    if ( $typename == "hidden" && ZenFieldMap::isMultiField($field_name) ) {
       $typename = "multihidden";
       $vals["field_choices"] = $this->getChoices($view,$field_name);
       //Prevent loosing current values in hidden fields:
@@ -661,9 +661,22 @@ class ZenFieldMap {
       }
     }
     
-    $vals['field_value'] = $this->_zen->ffv($vals['field_value']);
-    if( isset($vals['field_choices']) ) {
-      $vals['field_choices'] = $this->_zen->ffv($vals['field_choices']);
+    // variable fields have some special attributes.  First, we don't want
+    // to try to render keys for these (too much trouble with escaping), so
+    // we render them without keys.  Second, the normal comparisons (key to
+    // current value) won't work since there are no keys, so we have to
+    // check the value.
+    $vf = ZenFieldMap::isVariableField($vals['field_name']);
+    if( $vf && $typename == 'menu' ) { $typename = 'menunokeys'; }
+    
+    // we escape the field_choices array here (values only) and try
+    // to find the correct value to select if this is a variable field
+    if( $vf && isset($vals['field_choices']) ) {
+      foreach($vals['field_choices']  as $k=>$v) {
+        if( $v == $vals['field_value'] ) { 
+          $vals['field_selected'] = $v;
+        }
+      }
     }
     
     // parse and return 
@@ -680,11 +693,14 @@ class ZenFieldMap {
      $template = new zenTemplate($templateFile);
      
      $vals['field_value'] = $this->_zen->ffv($vals['field_value']);
+     if( isset($vals['field_choices']) ) {
+       $vals['field_choices'] = $this->_zen->ffv($vals['field_choices']);
+     }
+     if( isset($vals['field_selected']) ) {
+       $vals['field_selected'] = $this->_zen->ffv($vals['field_selected']);
+     }
      
      $template->values($vals);
-//print "<pre>";
-//print_r($vals);
-//print "</pre>";
      return $template->process();     
    }
   
@@ -868,21 +884,20 @@ class ZenFieldMap {
       case "approved":
         $vals = array('1'=>tr('Required'), '2'=>tr('Completed'));
         break;
-      default:
-        if(  strncmp("custom_menu",$this->fieldName($field_name),11)==0 
-          || strncmp("custom_multi",$this->fieldName($field_name),12)==0 ) {
-          $pts = explode("_", $view, 2);
+      case "custom_menu":
+      case "custom_multi":
+        $pts = explode("_", $view, 2);
 //          $vars = $this->_zen->getCustomField($field_name);
 //          $set = genDataGroupChoices($vars['field_value']);
-          $vars = $this->getFieldFromMap($view, $field_name);
-          $set = genDataGroupChoices($vars['default_val']);
-          $vals = array();
-          foreach($set as $s) {
-            $vals[ $s['field_value'] ] = $s['label'];
-          }
-        } else {
-          $vals = array();
+        $vars = $this->getFieldFromMap($view, $field_name);
+        $set = genDataGroupChoices($vars['default_val']);
+        $vals = array();
+        foreach($set as $s) {
+          $vals[ $s['field_value'] ] = $s['label'];
         }
+        break;
+      default:
+        $vals = array();
         break;
     }
     
@@ -908,7 +923,7 @@ class ZenFieldMap {
     } else if ( $field['is_required']==0 && $field['field_type'] == 'menu') {
       $vals = Zen::mergeArrays( array('' => tr('-none-')), $vals );
     }
-    else if( !$field['is_required'] && $field['num_rows'] == 1 ) {
+    else if( !$field['is_required'] && $field['num_rows'] == 1 && $this->fieldName($field_name) != 'custom_boolean' ) {
       $vals = Zen::mergeArrays( array(''=>'-----'), $vals );
       //$vals = array_merge(array(''=>'-----'), $vals);
     }
@@ -923,7 +938,7 @@ class ZenFieldMap {
    * @static
    */
    function fieldName( $name ) {
-     return strpos($name, 'custom_') === 0? 
+     return ZenFieldMap::isVariableField($name)? 
         preg_replace('/[0-9]+$/', '', $name) : $name;
    }
    
@@ -1041,6 +1056,20 @@ class ZenFieldMap {
     }
     return $opts;
   }
+  
+  /**
+   * Is this a variable field?  True if so.
+   */
+   function isVariableField( $field_name ) {
+     return strpos($field_name, 'custom_') === 0;
+   }
+   
+  /**
+   * Is this a multi field? True if so
+   */
+   function isMultiField( $field_name ) {
+     return strpos($field_name, 'custom_multi') === 0;
+   }
 
   function listMultiFields() {
     return array ('custom_multi1', 'custom_multi2');

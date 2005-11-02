@@ -89,7 +89,7 @@
            $zen->add_log($id, $logParams);
            $zen->addDebug("www/actions/email.php", "Ticket emailed by $login_id", 3);
          }
-         $msg = tr("Ticket ? emailed to selected recipients", array($id));
+         $msg[] = tr("Ticket ? emailed to selected recipients", array($id));
          $setmode = "";
          $action = "";
          include("$rootWWW/ticket.php");

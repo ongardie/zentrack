@@ -330,9 +330,28 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
    * a hot key affect applied to it.
    */
    function renderDivButton($key, $onclick, $width=100, $label = null) {
-     $hotkeys = $GLOBALS['zt_hotkeys'];
-     $clickmouse = " onclick=\"{$onclick}; return false;\"\n";
-     print "<div style='width: {$width}px; text-align: center;' class='actionButtonDiv'\n"; 
+     // if we are passed an empty key for some reason
+     // then just try to render something sensible instead
+     if( !$key ) {
+       // if there is no key, we can't look up the label, so we need
+       // to have a default
+       if( !$label ) { $label = 'Submit'; }
+       
+       // render a simple submit button
+       print "<input type='submit' class='actionButtonDiv' value=\"$label\">";
+       return;
+     }
+
+     // create the click event for our button
+     // the default is to just submit the current form
+     if( !$onclick ) { $onclick = 'submitThisForm(this)'; }
+     $clickmouse = " onclick=\"{$onclick};\"\n";
+     
+     // the hotkeys object is stored globally
+     $hotkeys = $GLOBALS['hotkeys'];
+     
+     // render the div layers
+     print "<div style='width: {$width}px;' class='actionButtonDiv'\n"; 
      print " $clickmouse";
      print " onmouseover='mClassX(this, \"actionButtonDiv abdDown\", true)'\n";
      print " onmouseout='mClassX(this, \"actionButtonDiv\")'\n";
@@ -342,14 +361,30 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
      print " onblur='mClassX(this.parentNode, \"actionButtonDiv\")'\n";
      print ">".$hotkeys->label($key, $label, true)."</a>\n";
      print "</div>\n";
+     
+     // create a default button (which is not visible on the page) so that
+     // our form will still submit if the user hits enter
      print "<input type='submit' class='nodisplay'>\n";
-     print $hotkeys->renderAccessKey($key);
+     
+     // generate our accesskey if one exists
+     if( $key ) {
+       print $hotkeys->renderAccessKey($key);
+     }
    }
    
    function renderDivButtonFind( $label, $override_label = null, $onclick=null, $width=100 ) {
-     $hotkeys = $GLOBALS['zt_hotkeys'];
+     // search for our label in the hotkeys registry
+     $hotkeys = $GLOBALS['hotkeys'];
      $key = $hotkeys->find($label);
-     if( !$onclick ) { $onclick = $hotkeys->getFxnName($key); }
+     
+     // if there is no key for this item then we need to explicitly pass the
+     // label (so we have something to show)
+     if( !$key && !$override_label ) { $override_label = $label; }
+     
+     // get the onclick event we will use (if it has not been specified)
+     if( $key && !$onclick ) { $onclick = $hotkeys->getFxnName($key); }
+     
+     // genreate the div button now
      return renderDivButton($key,$onclick,$width,$override_label);
    }
 

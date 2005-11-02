@@ -35,7 +35,7 @@
     if( !$errs ) {
       $res = $zen->log_ticket($id, $login_id, $log_action, $hours, $comments);
       if( $res ) {
-        $msg = tr("Log entry has been added");
+        $msg[] = tr("Log entry has been added");
       } else {
         $errs[] = tr("System error: Activity could not be logged.").$zen->db_error;
       }

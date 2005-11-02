@@ -9,9 +9,8 @@
   
   include("admin_header.php");
   $page_title = "New User Submit";
-
-  if( !$active )
-    $active = 0;
+  
+  if( !$active ) { $active = 0; }
   $zen->cleanInput($user_fields);
   foreach($user_required as $u) {
     if( !strlen($$u) ) {
@@ -29,15 +28,15 @@
     $params = array();
     foreach(array_keys($user_fields) as $k) {
       if( strlen($$k) ) {
-	$params["$k"] = $$k;
+        $params["$k"] = $$k;
       }
     }
     if( $zen->demo_mode == "on" ) {
-      $msg = tr("Process completed successfully.  Account not added, because this is a demo site");
+      $msg[] = tr("Process completed successfully.  Account not added, because this is a demo site");
     } else {
       $user_id = $zen->add_user($params);
       if( $user_id ) {
-          $msg = tr("User ? was added successfully. The password is the last name of the user.",$user_id);
+        $msg[] = tr("User ? was added successfully. The password is the last name of the user.",$user_id);
       } else {
         $errs[] = tr("System Error: Could not add ?, ? to the system", array($lname, $fname));
       }

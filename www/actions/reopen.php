@@ -32,7 +32,7 @@
     if( !$errs ) {
       $res = $zen->reopen_ticket($id, $login_id, $comments);
       if( $res ) {
-        $msg = tr("Ticket reopened, status moved to OPEN");
+        $msg[] = tr("Ticket reopened, status moved to OPEN");
         $setmode = null;
         $action = null;
         include("../ticket.php");

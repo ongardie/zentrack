@@ -32,6 +32,8 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
    **  <li>{list:varname:"text"+index+"more text"+checked+"other text"+value} - loops through indexed array and print
    **                                                                            name/value (and " checked" when appropriate)
    **  <li>{foreach:varname:"text"+value+"text"} - loops through array and prints values
+   **  <li>{foreach:varname:"text"+selected+"more text"+value+"text"} - prints values and ' selected' if 
+   **               field_selected exists and matches current value
    **  <li>{include:template_name} - inserts another template into this one
    **  <li>{if:field:"text to print"+field+"text to print"} - inserts text if field exists
    **  <li>{if:field=something:"text to print"+field+"more text"} - inserts text if field = something
@@ -169,12 +171,15 @@ class zenTemplate {
 	  // {foreach:varname:"text"+value+"text"}
 	  $vars = $this->_getVar(trim($parts[1]));
 	  if( is_array($vars) ) {
+      $sel = $this->_getVar("field_selected");
 	    $txt = "";
 	    // parse the string
 	    $str = $this->_parseString($parts[2]);
 	    // create the output text
 	    foreach($vars as $v) {
-	      $txt .= str_replace("{value}", $v, $str);
+        $selected = $sel && $sel == $v && strlen($sel) == strlen($v)? ' selected' : '';
+        $s = str_replace("{selected}", $selected, $str);
+	      $txt .= str_replace("{value}", $v, $s);
 	    }
 	    return $txt;
 	  }

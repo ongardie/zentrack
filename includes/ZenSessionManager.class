@@ -142,14 +142,8 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
     if( isset($GLOBALS) ) {
       if( !isset($GLOBALS['ztDataCache']) ) { $GLOBALS['ztDataCache'] = array(); }
       if( !isset($GLOBALS['ztDataCache'][$type]) ) { $GLOBALS['ztDataCache'][$type] = array(); }
-      if( !strlen($id) ) {
-        $this->_zen->addDebug("storeDataCache", "Storing cache for {$type}",3);
-        $GLOBALS['ztDataCache'][$type] = $vals; 
-      }
-      else {
-        $this->_zen->addDebug("storeDataCache", "Storing cache for {$type}->{$id}",3);
-        $GLOBALS['ztDataCache'][$type]["id$id"] = $vals; 
-      }
+      $this->_zen->addDebug("storeDataCache", "Storing cache for {$type}->{$id}",3);
+      $GLOBALS['ztDataCache'][$type]["id$id"] = $vals; 
     }
   }
   
@@ -164,7 +158,7 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
     if( isset($GLOBALS) && isset($GLOBALS['ztDataCache']) ) {
       if( $id ) {
         $this->_zen->addDebug("clearDataCache", "Clearing cache for {$type}->{$id}",3);
-        unset($GLOBALS['ztDataCace'][$type]["id$id"]);
+        unset($GLOBALS['ztDataCache'][$type]["id$id"]);
       }
       else {
         $this->_zen->addDebug("clearDataCache", "Clearing cache for {$type}",3);

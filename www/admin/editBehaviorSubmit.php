@@ -42,7 +42,7 @@
 
   if( !$errs ) {
     if( $zen->demo_mode == "on" ) {
-      $msg = tr("Process successful.  Behavior was not updated, because this is a demo site.");
+      $msg[] = tr("Process successful.  Behavior was not updated, because this is a demo site.");
     } else {
       $updflds = array(
       "behavior_name" => $NewBehaviorName,
@@ -55,12 +55,7 @@
       );
       $res = $zen->updateBehavior($behavior_id,$updflds);
       if( $res ) {
-        $msg = tr("Behavior ? was updated successfully. ? to customize behavior ?'s details.",
-        array($NewBehaviorName,
-        "--link--",
-        $NewBehaviorName));
-        $msg = str_replace("--link--","<br><a href='$rootUrl/admin/editBehaviorDetails.php?behavior_id=$behavior_id'>"
-        .tr("Click Here")."</a>",$msg);
+        $msg[] = tr("Behavior ? was updated successfully.",$NewBehaviorName);
       } else {
         $errs[] = tr("System Error: Could not update ?", array($NewBehaviorName));
       }

@@ -116,7 +116,8 @@ class DB {
   function db_update( $table, $key, $val, $columns ) {
     unset($columns[$key]);
     $set = $this->makeInsertVals( $columns, 1 );
-    $query = "UPDATE $table SET $set WHERE $key = '$val'";
+    $val = $this->checkSlashes($val);
+    $query = "UPDATE $table SET $set WHERE $key = $val";
     $r = $this->db_result($query);
     $this->addDebug("db_update", "[$r]".$query, 3);
     return $r;
@@ -276,7 +277,7 @@ class DB {
       }
       $val = "(".$text.")";
     } else {
-      $val = $this->db_link->qstr($val,get_magic_quotes_gpc());
+      $val = $this->db_link->qstr($val,false);//get_magic_quotes_gpc());
       if( $val == "''" ) {
         $val = "NULL";
       }

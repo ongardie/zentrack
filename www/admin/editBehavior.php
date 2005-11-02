@@ -9,6 +9,8 @@
 
 include_once("admin_header.php");
 
+$behavior_id = $zen->checkNum($behavior_id);
+
 if( $TODO == 'DONE' ) {
   $skip = 1;
 } else {
@@ -16,7 +18,7 @@ if( $TODO == 'DONE' ) {
   if ( $TODO != "NEW" ) {
     $behavior = $zen->getBehavior( $behavior_id );
     if( !$behavior ) {
-      $msg = "That behavior could not be found, please select a behavior.";
+      $msg[] = "That behavior could not be found, please select a behavior.";
       $skip = 1;
     }
     else {

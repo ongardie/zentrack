@@ -32,14 +32,13 @@
      $res = mail($zen->bugTo, "Bug report from ".stripslashes($name),
                  $fullMessage);//, $headers);
      if( $res ) {
-       $msg = tr("Your message was delivered.");
-       $msg .= " ";
-       if( $email ) { $msg .= tr("An email about your report should be delivered to {$email} shortly."); }
-       else { $msg .= tr("No email address was provided, but you can still view your issue in the dev tracker"); } 
+       $msg[] = tr("Your message was delivered.");
+       if( $email ) { $msg[] = tr("An email about your report should be delivered to '?' shortly.", $zen->ffv($email)); }
+       else { $msg[] = tr("No email address was provided, but you can still view your issue in the dev tracker"); } 
        $skip = 1;
      }
      else {
-       $msg = "Your message could not be delivered.";
+       $msg[] = tr("Your message could not be delivered.");
      }
   }
   

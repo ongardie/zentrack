@@ -281,6 +281,18 @@ function updateUrl(k, v) {
   window.location = appendUrl(k,v);
 }
 
+function submitThisForm( obj ) {
+  var formNode = obj.parentNode;
+  while(formNode && !formNode.submit && formNode.nodeName != "DOCUMENT") {
+    alert("formNode="+formNode+", formNode.nodeName="+formNode.nodeName);
+    formNode = formNode.parentNode;
+  };
+  if( formNode.submit ) {
+    alert("submitting "+formNode+"["+formNode.name+":"+formNode.nodeName+"]");
+    formNode.submit();
+  };
+}
+
 function doNothing() { return false; }
 
 //-->

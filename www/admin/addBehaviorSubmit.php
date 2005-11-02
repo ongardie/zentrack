@@ -41,7 +41,7 @@
 
   if( !$errs ) {
     if( $zen->demo_mode == "on" ) {
-      $msg = tr("Process successful.  Behavior was not added, because this is a demo site.");
+      $msg[] = tr("Process successful.  Behavior was not added, because this is a demo site.");
     } else {
       $updflds = array(
                   "behavior_name" => $NewBehaviorName,
@@ -54,14 +54,9 @@
                        );
       $res = $zen->addBehavior($updflds,array());
       if( $res ) {
-	$msg = tr("Behavior ? was added successfully. ? to customize behavior ?'s rules.",
-		  array($NewBehaviorName,
-			"--link--",
-			$NewBehaviorName));
-	$msg = str_replace("--link--","<br><a href='$rootUrl/admin/editBehaviorDetails.php?behavior_id=$res'>"
-			   .tr("Click Here")."</a>",$msg);
+	      $msg[] = tr("Behavior ? was added successfully.",$NewBehaviorName);
       } else {
-	$errs[] = tr("System Error: Could not add ?", array($NewBehaviorName));
+        $errs[] = tr("System Error: Could not add ?", array($NewBehaviorName));
       }
     }
   }

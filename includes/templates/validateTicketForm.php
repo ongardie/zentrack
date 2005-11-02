@@ -23,18 +23,17 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
       case "select-one":
         var val = obj.options[ obj.selectedIndex ].value;       
         return val != null && val != "";    
-      case "select-multiple":
       case "radio":
-        return true;
+      case "select-multiple":
+        return obj.selectedIndex? true : false;
+      case "hidden":
       case "button":
       case "submit":
-      case "hidden":
       case "password":
       case "reset":
       default:
-        return false;
+        return true;
     }
-    return true;
  }
 
  function validateTicketForm(formObj) {

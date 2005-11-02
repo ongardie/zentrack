@@ -118,13 +118,12 @@
         $params["description"] = $comments;
         $res = $zen->attach_to_ticket( $ticket_id, $login_id, $params, $log_id);
         if( $res ) {
-          $msg[] = "Attachment $userfile_name uploaded";
+          $msg[] = tr("Attachment ? uploaded",$zen->ffv($userfile_name));
           $action = '';
           include("../ticket.php");
           exit;
         } else {
-          $errs[] = tr("System error: Attachment ? could not be uploaded for ticket ?. ", array($userfile_name, $id))
-          .$zen->db_error;
+          $errs[] = tr("System error: Attachment ? could not be uploaded for ticket ?. ", array($zen->ffv($userfile_name), $id)).$zen->db_error;
         }
       }
     }

@@ -44,7 +44,7 @@
     }
     if( !$errs ) { 
       $action = ''; 
-      $msg = $num > 1?
+      $msg[] = $num > 1?
         tr("? contacts were removed", array($num)) :
         tr("One contact was removed");
     }

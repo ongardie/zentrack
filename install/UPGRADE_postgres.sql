@@ -985,7 +985,7 @@ CREATE INDEX vf_multi_idx ON ZENTRACK_VARFIELD_MULTI(ticket_id);
 CREATE SEQUENCE varfield_multi_id_seq start 1001 increment 1 maxvalue 2147483647 minvalue 1 cache 1;
 
 -- Modify the version number
-UPDATE ZENTRACK_SETTINGS SET value='2.6' WHERE setting_id=74;
+UPDATE ZENTRACK_SETTINGS SET value='2.6 Final' WHERE setting_id=74;
 
 -- PROJECT_CLOSE
 INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,which_view,default_val,sort_order,field_type,num_cols,num_rows,is_required) VALUES(878,'approved','Approval','0','project_close',NULL,'13','checkbox','1','1','0');
@@ -1054,6 +1054,3 @@ INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,w
 -- TICKET_VIEW_TOP
 INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,which_view,default_val,sort_order,field_type,num_cols,num_rows,is_required) VALUES(938, 'custom_multi1', NULL, 0, 'ticket_view_top', NULL, 100, 'label', 50, 8, 0);
 INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,which_view,default_val,sort_order,field_type,num_cols,num_rows,is_required) VALUES(939, 'custom_multi2', NULL, 0, 'ticket_view_top', NULL, 100, 'label', 50, 8, 0);
-
--- UPDATE VERSION NUMBER
-UPDATE ZENTRACK_SETTINGS SET value='2.6 Pre-3' WHERE setting_id=74;

@@ -47,7 +47,7 @@
       if( !$errs ) {
 	$j = 0;
 	if( $zen->demo_mode == "on" ) {
-	  $msg = tr("Process completed successfully.  No changes were made, because this is a demo site.");
+	  $msg[] = tr("Process completed successfully.  No changes were made, because this is a demo site.");
 	  $skip = 1;
 	} else {
 	  foreach($newparams as $k=>$v) {
@@ -59,7 +59,7 @@
 	  }
 	  if( $j )
 	    $zen->settings = $zen->getSettings();
-	  $msg = tr("? of ? settings changed were successfully updated", array($j, count($newparams)));
+	  $msg[] = tr("? of ? settings changed were successfully updated", array($j, count($newparams)));
 	  $skip = 1;
 	}
       }

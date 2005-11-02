@@ -116,7 +116,7 @@ if( !$login_id ) {
       "User logged in: $login_id,$login_name,$login_level",2);
     } else {
       // generate an error message and let them try again
-      $msg = tr("That passphrase didn't work.");
+      $msg[] = tr("That passphrase didn't work.");
     }
     if( $login_bin == -1 ) {
       $login_bin = null;

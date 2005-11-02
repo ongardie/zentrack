@@ -44,7 +44,7 @@
   } else if( $TODO == 'Save' ) {
 //When the action is Save and demo_mode is on, we don't save the changes to the database
     if( $zen->demo_mode == "on" ) {
-      $msg = tr("Process completed successfully. Behaviors were not updated since this is a demo site.");
+      $msg[] = tr("Process completed successfully. Behaviors were not updated since this is a demo site.");
       $skip = 1;
     } else {
       $j = 0;
@@ -61,7 +61,7 @@
       }
 //Last commands for the Save action when demo_mode is not on:
       $zen->updateBehaviorDetails($behavior_id, $elements) ;
-      $msg = tr("? elements were saved in the selected behavior. Updates complete", array($j));
+      $msg[] = tr("? elements were saved in the selected behavior. Updates complete", array($j));
       $skip = 1;
     }
   } else {

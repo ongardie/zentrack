@@ -344,7 +344,7 @@ class zen extends zenDate {
      **    case "":          strip all html excepting $mda->html_allowed (determined by lists/okhtmltags)
      **
      */
-
+     
      if( is_array($vals) ) {
        $vars = $vals;
        $vals = array();
@@ -354,6 +354,7 @@ class zen extends zenDate {
          } else if( $fields ) {
            $f = $fields;
          }
+         $v = Zen::dropSlashes($v);
          if( !$k ) {
            $vals[] = strip_tags( $v, $this->html_allowed );
          } else if( !$f ) {
@@ -407,6 +408,7 @@ class zen extends zenDate {
      } else {
        foreach( $fields as $k=>$v ) {
          global $$k;
+         $$k = Zen::dropSlashes($$k);
          switch( strtolower($v) ) {
          case "alpha":
            $$k = $this->checkAlpha($$k);
@@ -448,6 +450,17 @@ class zen extends zenDate {
          }  
        }
      }
+   }
+   
+   function dropSlashes($val) {
+     if( !get_magic_quotes_gpc() ) { return $val; }
+     if( is_array($val) ) {
+       foreach($val as $k=>$v) {
+         $val[$k] = Zen::dropSlashes($v);
+       }
+       return $val;
+     }
+     return stripslashes($val);
    }
 
    function hiddenField( $name, $value = '' ) {

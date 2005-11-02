@@ -19,7 +19,11 @@
     if( !$errs ) {
       $res = $zen->test_ticket($id, $login_id, $hours, $comments);
       if( $res ) {
-        $msg = "Ticket marked as tested";
+        $msg[] = tr("Ticket marked as tested");
+        $ticket = $zen->get_ticket($id);
+        if( $ticket['status'] == 'CLOSED' ) {
+          $msg[] = tr("Ticket status moved to CLOSED");
+        }
         $setmode = null;
         $action = null;
         include("../ticket.php");

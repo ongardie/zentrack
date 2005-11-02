@@ -120,7 +120,7 @@
        <?=tr("Enter a ticket ID or text to search for")?></div>
     </form>
   </td>
-  <td>
+  <td width='125'>
     <div class='small' align='center'><b><?=$zen->showLongDate()?></b></div>
     <div class='small' align='center'><?=tr("version")?>
       <?=$zen->getSetting("version_xx")?>

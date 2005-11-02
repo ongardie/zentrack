@@ -541,9 +541,11 @@ TD.bigger { font-size: 50px; }
      font-size:      <?=$zen->getSetting("font_size_small")?>px;
      padding-left:   4px;
      padding-right:  4px;
-     padding-top: 2px;
+     padding-top:    2px;
      padding-bottom: 2px;
      text-align:     center;
+     /** This width is overridden by renderDivButton() */
+     width:          100px; 
   }
   
   .submit, SUBMIT {

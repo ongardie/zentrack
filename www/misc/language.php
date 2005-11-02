@@ -21,18 +21,18 @@
       $params = array("language"=>$newlang);
       $res = $zen->update_prefs($login_id, array($params), "language");
       if( $res > 0 ) {
-	$translator_init = array(
-				 'domain' => 'translator',
-				 'path' => "$libDir/translations",
-				 'locale' => $login_language
-				 );
-	$translator_init['zen'] =& $zen;
-	tr($translator_init);
-	$msg[] = tr("Your language has been changed to ?", $newlang);
-	$skip = 1;
+        $translator_init = array(
+        'domain' => 'translator',
+        'path' => "$libDir/translations",
+        'locale' => $login_language
+        );
+        $translator_init['zen'] =& $zen;
+        tr($translator_init);
+        $msg[] = tr("Your language has been changed to ?", $newlang);
+        $skip = 1;
       }
       else {
-	$errs[] = tr("The language could not be changed to ?", $newlang);
+        $errs[] = tr("The language could not be changed to ?", $newlang);
       }
     } else {
       $errs[] = tr("The language file chosen was not valid");

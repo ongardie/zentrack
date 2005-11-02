@@ -50,11 +50,11 @@
       }
     }
     if( $zen->demo_mode == "on" ) {
-      $msg = tr("Process successful.  User was not updated, because this is a demo site.");
+      $msg[] = tr("Process successful.  User was not updated, because this is a demo site.");
     } else {
       $res = $zen->update_user($user_id, $params);
       if( $res ) {
-        $msg = tr("User ? was updated successfully",array($user_id));
+        $msg[] = tr("User ? was updated successfully",array($user_id));
       } else {
         $errs[] = tr("System Error: Could not update ?, ?", array($lname, $fname));
       }

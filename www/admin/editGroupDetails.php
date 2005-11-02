@@ -60,7 +60,7 @@
     // we don't save the changes to the database
     $elements = array();
     if( $zen->demo_mode == "on" ) {
-      $msg = tr("Process completed successfully. Groups were not updated "
+      $msg[] = tr("Process completed successfully. Groups were not updated "
 		."since this is a demo site.");
       $skip = 1;
     } else {
@@ -100,7 +100,7 @@
       }
 
       // print useful information for user
-      $msg = tr("? of ? elements were saved in the selected group. Updates complete", 
+      $msg[] = tr("? of ? elements were saved in the selected group. Updates complete", 
 		array($num, count($elements)));
       $skip = 1;
     }

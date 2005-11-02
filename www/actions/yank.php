@@ -26,7 +26,7 @@
     if( !$errs ) {
       $res = $zen->yank_ticket($id, $login_id, $comments);
       if( $res ) {
-        $msg = tr("Ticket pulled from ?",$zen->formatName($ticket["user_id"]));
+        $msg[] = tr("Ticket pulled from ?",$zen->formatName($ticket["user_id"]));
         $setmode = null;
         $action = null;
         include("../ticket.php");

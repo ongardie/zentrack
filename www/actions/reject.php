@@ -32,7 +32,7 @@
           $to = $ticket['user_id']? $to . '(' . $zen->getBinName($ticket['bin_id']) . ')' :
              $zen->getBinName($ticket['bin_id']);
         }
-        $msg = tr("Ticket was rejected to ?", array($to));
+        $msg[] = tr("Ticket was rejected to ?", array($to));
         $setmode = null;
         $action = null;
         include("../ticket.php");

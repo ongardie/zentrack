@@ -44,7 +44,7 @@
 </tr>
 <tr>
   <td class="subTitle" colspan='2'>
-    <? renderDivButton($hotkeys->find('Move'), 'window.document.moveForm.submit()'); ?>
+    <? renderDivButtonFind('Move'); ?>
   </td>
 </tr>
 <tr>

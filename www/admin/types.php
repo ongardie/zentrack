@@ -14,7 +14,7 @@
     if( !is_array($newName) || !count($newName) ) {
       $errs[] = tr("There was nothing provided to update");
     } else if( $zen->demo_mode == "on" ) {
-      $msg = tr("Process completed successfully.  Types were not updated since this is a demo site.");
+      $msg[] = tr("Process completed successfully.  Types were not updated since this is a demo site.");
       $skip = 1;
     } else {
       // find out the lowest count, so we can renumber all priorities
@@ -45,7 +45,7 @@
           $j++;
         }
       }
-      $msg = tr("? types were saved to the database. Updates complete", array($j));
+      $msg[] = tr("? types were saved to the database. Updates complete", array($j));
       $skip = 1;
     }
   }

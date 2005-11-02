@@ -24,8 +24,8 @@
          $errs[] = tr("System Error: Unable to update bin.");
       } else {
          $skip = 1;
-         $hb = ( $homebin == 'all' )? "-" . tr("All") . "-" : $zen->bins["$homebin"];
-         $msg = tr("Your bin has been changed to") . " $hb";
+         $hb = ( $homebin == 'all' )? "-" . tr("All") . "-" : $zen->ffv($zen->bins["$homebin"]);
+         $msg[] = tr("Your bin has been changed to ?",$hb);
          $login_bin = $homebin;
       }
     }

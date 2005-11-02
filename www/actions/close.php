@@ -24,13 +24,15 @@
     $view = 'ticket_close';
     include("$libDir/validateFields.php");
     
+    $typ = $zen->getTypeName($ticket['type_id']);
+    
     if( !$errs ) {
       if( $zen->inProjectTypeIDs($ticket["type_id"]) ) {
         $children = $zen->getProjectChildren($id,'id,type,status');
         if( is_array($children) ) {
           foreach($children as $c) {
             if( $c["status"] != "CLOSED" ) {
-              $errs[] = tr("? ? must be closed before this project may close", array($zen->getTypeName($c['type_id']), $c['id']));
+              $errs[] = tr("? #? must be closed before this project may close", array($zen->getTypeName($c['type_id']), $c['id']));
             }
           }
         }
@@ -50,9 +52,15 @@
         // update the variable field entries for this ticket
         $res = $zen->updateVarfieldVals($id, $varfield_params);
         if( !$res ) {
-          $msg = tr("? ? closed, but variable fields could not be saved", array(tr('Ticket'),$id));
+          $msg[] = tr("? #? closed, but variable fields could not be saved", array($typ,$id));
         } else {
-          $msg = tr("Ticket ? has been closed", array($id));
+          $ticket = $zen->get_ticket($id);
+          if( $ticket['status'] == 'PENDING' ) {
+            $msg[] = tr("? #? is now pending", array($typ,$id));
+          }
+          else {
+            $msg[] = tr("? #? has been closed", array($typ,$id));
+          }
         }
       }
       $setmode = null;

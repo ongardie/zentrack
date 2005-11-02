@@ -15,7 +15,7 @@
     if( !is_array($newName) || !count($newName) ) {
       $errs[] = tr("There was nothing provided to update");
     } else if( $zen->demo_mode == "on" ) {
-      $msg = tr("Process completed successfully.  Priorities were not updated since this is a demo site.");
+      $msg[] = tr("Process completed successfully.  Priorities were not updated since this is a demo site.");
       $skip = 1;
     } else {
       // It is critical that priorities are numbered sequentially, so we will
@@ -58,7 +58,7 @@
           $j++;
         }
       }
-      $msg = tr("? priorities were saved to the database. Updates complete", array($j));
+      $msg[] = tr("? priorities were saved to the database. Updates complete", array($j));
       $skip = 1;
     }
   }

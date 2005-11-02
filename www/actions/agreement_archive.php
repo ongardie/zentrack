@@ -4,7 +4,6 @@
   include_once("../contact_header.php");
   $page_title = tr("Agreements");
   $page_section = "Agreements";
-  $expand_agreement = 1;
   
 	if(isset($id)){	
     $params["status"] = $active;
@@ -12,10 +11,10 @@
     if( !$res ) {
       $errs[] = tr("System Error").": ".tr("Agreement could not be archived.")." ".$zen->db_error;
     } else {
-      $msg = "Archived agreement #$id";
+      $msg[] = tr("Archived agreement #?",$id);
     }
 	} else {
-	  $errs[] = "No agreement selected";
+	  $errs[] = tr("No agreement selected");
 	}
 	
   include("$libDir/nav.php");

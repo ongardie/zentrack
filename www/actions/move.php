@@ -28,7 +28,7 @@
     if( !$errs ) {
       $res = $zen->move_ticket($id, $newBin, $login_id, $comments);
       if( $res ) {
-        $msg = tr("Ticket ? moved to the ? bin", array($id, $zen->bins["$newBin"]));
+        $msg[] = tr("Ticket '?' moved to bin '?'", array($id, $zen->bins["$newBin"]));
         $setmode = "";
         $action = '';
         include("$rootWWW/ticket.php");

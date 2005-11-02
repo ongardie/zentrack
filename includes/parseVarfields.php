@@ -6,7 +6,7 @@
   * to run $zen->updateVarfieldVals()
   *
   * Depends on the following variables to determine which custom fields are used:
-  *   $varfields - the results of $zen->getCustomFields() call
+  *   $varfields - the variable fields that will be tested and parsed
   */
   
   $varfield_fields = array();

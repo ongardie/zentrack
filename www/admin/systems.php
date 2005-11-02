@@ -14,7 +14,7 @@
     if( !is_array($newName) || !count($newName) ) {
       $errs[] = tr("There was nothing provided to update");
     } else if( $zen->demo_mode == "on" ) {
-      $msg = tr("Process completed successfully.  Systems were not updated since this is a demo site.");
+      $msg[] = tr("Process completed successfully.  Systems were not updated since this is a demo site.");
       $skip = 1;
     } else {
       // find out the lowest count, so we can renumber all priorities
@@ -46,7 +46,7 @@
           $k++;
         }
       }
-      $msg = tr("? of ? systems were saved to the database", array($j, $k));
+      $msg[] = tr("? of ? systems were saved to the database", array($j, $k));
       $skip = 1;
     }
   }

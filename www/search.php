@@ -21,7 +21,7 @@
       $view = "search_list";
       $inc = "$templateDir/listTickets.php";
     } else if( !$errs ) { 
-      $msg = tr("There were no results for your search."); 
+      $msg[] = tr("There were no results for your search."); 
     }
   }
   

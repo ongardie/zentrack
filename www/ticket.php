@@ -48,7 +48,7 @@
   // inform the user of the bad choice
   if( !is_array($ticket) || !count($ticket) ) {
     $pt = $page_type == 'project'? 'projects.php' : 'index.php';
-    $msg = tr("Invalid ? id requested", array(tr($page_type)));
+    $msg[] = tr("Invalid ? id requested", array(tr($page_type)));
     include("$rootWWW/$pt");
     exit;
   }  
@@ -125,7 +125,7 @@
         if( in_array($params["type_id"],$zen->noteTypeIDs()) && $ticket['status'] == 'OPEN' ) {
           $zen->close_ticket($id,null,null,'Notes closed automatically');
         }
-        $msg = array('All fields updated successfully');        
+        $ticket = $zen->get_ticket($id);
         if( $varfields && count($varfield_params) ) {
           $vp = array();
           foreach($varfield_params as $k=>$v) {
@@ -138,8 +138,11 @@
             $errs[] = tr("? created, but variable fields could not be saved due to system error", array(tr('Ticket')));
           }
           else {
-            $msg = array('All fields updated successfully');
+            $msg[] = tr('All fields updated successfully');
           }
+        }
+        else {
+          $msg[] = 'All fields updated successfully';          
         }
       }
     }
@@ -148,6 +151,7 @@
       foreach($params as $k=>$v) {
         $ticket[$k] = $v;
       }
+      $varfields = $varfield_params;
     }
   }
   
@@ -172,7 +176,7 @@
     }
     reset($tabs);
     if( !$map->getViewProp($page_mode, 'view_only') ) {
-      $onLoad[] = "behavior_js.php?formset=ticketTabForm";
+      $onLoad[] = "behavior_js.php?formset=".$zen->ffv($page_mode);
     }
   }
   

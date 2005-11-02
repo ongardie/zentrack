@@ -11,6 +11,36 @@ and user experience, internationalization, platform and database
 abstraction, and endless possibilities for project expansion. 
 --------------------
 ----- VERSION 2.6 (development) -----
+
+2005-11-01, kato
+  Made 'close' messages more descriptive
+   - zentrack_2/www/actions/close.php
+   
+  Fixed warnings concerning foreach on field maps (due to multifields)
+  Extracted mutlifield seperator to a variable
+  Improved efficiency of multifield lookups (uses a single bulk query)
+  Fixed ZenTrack::getVarfieldVals to always return an array for multifields
+     (even if they are not found)
+  
+  Improved renderDivButton to survive errors and to print a default if the
+  key is not valid
+   - zentrack_2/includes/headerInc.php
+   - zentrack_2/www/styles.php
+  
+  Fixed editing of field from ticket tabs (several minor bugs)
+  Cleaned up field validation to work better with hidden and multi-select
+    - zentrack_2/includes/ZenFieldMap.class
+    - zentrack_2/includes/zenTemplate.class
+    - zentrack_2/includes/templates/fieldMapForm.php
+    - zentrack_2/includes/templates/menunokeys.template 1.0
+    - zentrack_2/includes/templates/radio.template
+    - zentrack_2/includes/templates/validateTicketForm.php
+    - zentrack_2/www/ticket.php
+    
+  Audited $msg output for formatting and security hardening
+  
+
+2005-10-30, kato
   Added missing menubox.htc file
    - zentrack_2/www/menubox.htc 1.1
    

@@ -19,7 +19,7 @@
   if( !$errs ) {
     $res = $zen->approve_ticket($id, $login_id, $comments);
     if( $res ) {
-      $msg = "Ticket was approved and closed";
+      $msg[] = tr("Ticket was approved and closed");
       $setmode = null;
       $action = null;
       include("../ticket.php");

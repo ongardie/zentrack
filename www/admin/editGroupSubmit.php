@@ -57,7 +57,7 @@
   // add to database (or show demo mode message)
   if( !$errs ) {
     if( $zen->demo_mode == "on" ) {
-      $msg = tr("Process successful.  Group was not updated, because this is a demo site.");
+      $msg[] = tr("Process successful.  Group was not updated, because this is a demo site.");
     } else {
       $res = $zen->updateDataGroup($group_id,$NewGroupName,$NewTableName,
       $NewEvalType,$NewEvalText,
@@ -68,13 +68,7 @@
         $_SESSION['data_groups'][$group_id] = $vars[$group_id];
         
         // print useful messages for user
-        $msg = tr("Group '?' was updated successfully.", array($NewGroupName));
-        if( $NewEvalType == 'Matches' ) {
-          $msg .= tr("? to customize this group's entries.",array("--link--"));
-          $msg = str_replace("--link--",
-            "<br><a href='$rootUrl/admin/editGroupDetails.php?group_id=$group_id'>"
-            .tr("Click Here")."</a>",$msg);
-        }
+        $msg[] = tr("Group '?' was updated successfully.", array($NewGroupName));
       } else {
         $errs[] = tr("System Error: Could not update ?", array($NewGroupName));
       }

@@ -9,15 +9,16 @@
   
   include("admin_header.php");
 
+  $user_id = $zen->checkNum($user_id);
   if( $user_id == 1 && $login_id != 1 ) {
     $errs[] = tr("Only the root administrator can change the root administrator's passphrase");
   } else if( $user_id ) {
     if( $zen->demo_mode == "on" ) {
-      $msg = tr("Process completed successfully.  No changes were made because this is a demo site");
+      $msg[] = tr("Process completed successfully.  No changes were made because this is a demo site");
     } else {
       $res = $zen->reset_password($user_id);
       if( $res ) {
-	$msg = tr("Password reset to the default [user's last name] for user ?", array($user_id));
+	$msg[] = tr("Password reset to the default [user's last name] for user ?", array($user_id));
       } else { 
 	$errs[] = tr("The user passphrase could not be found/edited");
       }	

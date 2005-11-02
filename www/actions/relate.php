@@ -29,7 +29,7 @@
     if( !$errs ) {
       $res = $zen->relate_ticket($id, $relations, $login_id, $comments);
       if( $res ) {
-        $msg = tr("Ticket ? related.", $id);
+        $msg[] = tr("Ticket ? related.", $id);
         $action = '';
       } else {
         $errs[] = tr("System error: Ticket ? could not be related, or the entries were the same.", array($id)).$zen->db_error;

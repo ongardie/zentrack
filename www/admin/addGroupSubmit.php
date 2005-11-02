@@ -55,7 +55,7 @@
   // add to database (or do demo mode message)
   if( !$errs ) {
     if( $zen->demo_mode == "on" ) {
-      $msg = tr("Process successful.  Group was not added, because this is a demo site.");
+      $msg[] = tr("Process successful.  Group was not added, because this is a demo site.");
     } else {
       $group_id = $zen->addDataGroup( $NewGroupName, $NewTableName, $NewDescript, 
       $NewEvalType, $NewEvalText, $name_of_file, $include_none, array() );
@@ -64,13 +64,7 @@
         $_SESSION['data_groups'][$group_id] = $vars[$group_id];
 
         // print useful messages for user
-        $msg = tr("Group '?' was updated successfully.", array($NewGroupName));
-        if( $NewEvalType == 'Matches' ) {
-          $msg .= tr("? to customize this group's entries.",array("--link--"));
-          $msg = str_replace("--link--",
-            "<br><a href='$rootUrl/admin/editGroupDetails.php?group_id=$group_id'>"
-            .tr("Click Here")."</a>",$msg);
-        }
+        $msg[] = tr("Group '?' was updated successfully.", array($NewGroupName));
       } else {
         $errs[] = tr("System Error: Could not add ? to the system", array($NewGroupName));
       }

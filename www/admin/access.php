@@ -11,7 +11,7 @@
   include("admin_header.php");
 
   // security
-  $user_id = ereg_replace("[^0-9]", "", $user_id);
+  $user_id = $zen->checkNum($user_id);
   // update database if submitted
   if( $TODO == 'Update' ) {
     $bins = array();
@@ -40,24 +40,24 @@
     }
     if( !$errs ) {
       if( $zen->demo_mode == "on" ) {
-	$msg = tr("Process completed successfully. No privileges were changed, because this is a demo site.");
-	$skip = 1;
+        $msg[] = tr("Process completed successfully. No privileges were changed, because this is a demo site.");
+        $skip = 1;
       } else if( !is_array($bins) || !count($bins) ) {
-	$res = $zen->delete_access($user_id);
-	if( !$res ) {
-	  $errs[] = tr("System Error: could not update access &#151; this is most likely because no bins were set, and no bins previously existed (i.e. nothing happened)");
-	} else {
-	  $msg = tr("All bins were removed from access for user ?", array($user_id));
-	  $skip = 1;
-	}
+        $res = $zen->delete_access($user_id);
+        if( !$res ) {
+          $errs[] = tr("System Error: could not update access &#151; this is most likely because no bins were set, and no bins previously existed (i.e. nothing happened)");
+        } else {
+          $msg[] = tr("All bins were removed from access for user ?", array($user_id));
+          $skip = 1;
+        }
       } else {
-	$res = $zen->update_access($user_id, $bins);
-	if( !$res ) {
-	  $errs[] = tr("System Error: could not update access for user ?", array($user_id));
-	} else {
-	  $skip = 1;
-	  $msg = tr("Custom Access priviledges updated for user ?", array($user_id));
-	}
+        $res = $zen->update_access($user_id, $bins);
+        if( !$res ) {
+          $errs[] = tr("System Error: could not update access for user ?", array($user_id));
+        } else {
+          $skip = 1;
+          $msg[] = tr("Custom Access priviledges updated for user ?", array($user_id));
+        }
       }
     }
     if( !$skip )

@@ -305,13 +305,16 @@ class ZenHotKeys {
    */
   function assign( $key, $label, $fxn, $description = '', $global = false ) {
     global $id; global $rootUrl;
-    
+
+    // if the hot key doesn't exist, we fail and don't add anything
     $key = strtoupper($key);
     if( array_key_exists($key, $this->_keys) ) {
-      $this->_zen->addDebug('ZenHotKeys->assign', "The key '$key' already exists", 1);
+      $this->_zen->addDebug('ZenHotKeys->assign', "The key '$key' already exists and will not have a hot key", 1);
       return;
     }
 
+    // add the label if it is not a duplicate... items which duplicate the label
+    // cannot appear together
     if( array_key_exists($label, $this->_idx) ) {
       $this->_zen->addDebug('ZenHotKeys->assign', "The label '$label' already exists for key '".$this->_idx["$label"]."', this hotkey cannot be looked up by label accurately", 2);
     }
@@ -319,10 +322,14 @@ class ZenHotKeys {
       $this->_idx["$label"] = $key;
     }
     
+    // if there is no description, we use the label for this field
     if( !$description ) { $description = $label; }
+    
+    // replace special variables in the function call with current values
     $fxn = str_replace("{rootUrl}", $rootUrl, $fxn);
     $fxn = str_replace("{id}", $id, $fxn);
     
+    // actually create the key assignment now
     $this->_zen->addDebug('ZenHotKeys->assign', "Added key '$key' for label '$label' and fxn '$fxn'", 3);
     $this->_keys["$key"] = array('label'=>$label, 'fxn'=>$fxn, 'description'=>$description, 'global'=>$global);
   }

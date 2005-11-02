@@ -20,7 +20,7 @@
 
 	if(isset($id)){	
       $res = $zen->delete_contact($id,$table,$col);
-      if( $res ) { $msg = tr("Deleted contact #?",$id); }
+      if( $res ) { $msg[] = tr("Deleted contact #?",$id); }
       else { $errs[] = "Delete contact failed due to system error"; } 
 	} else {
 			print "No contact selected";

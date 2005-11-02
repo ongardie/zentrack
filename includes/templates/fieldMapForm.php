@@ -233,22 +233,38 @@ foreach($fields as $f=>$field) {
     // default value (text)
     $txt = "n/a";
     if( ($fprops['default']||preg_match('@(project|ticket)_list_filters@',$view)) && !$map->getViewProp($view,'view_only') ) {
-      if( $f == 'status' ) {
-        $choices = array(''             => tr("-any-"),
-                         'OPEN,PENDING' => tr("Open")." ".tr("or")." ".tr("Pending"),
-                         'OPEN'         => tr("Open"),
-                         'PENDING'      => tr("Pending"),
-                         'CLOSED'       => tr("Closed"));
+      // find out about our field and how we will render the defaults
+      $is_status = $f == 'status';
+      $is_custom_menu = (strpos($f,'custom_menu')===0 || strpos($f,'custom_multi')===0);
+      $is_menu = $fprops['multiple'];
+      if( !$is_menu ) {
+        $vals = array(ZTFIELD_MENU, ZTFIELD_SEARCHBOX, ZTFIELD_RADIO);
+        foreach($fprops['types'] as $typ) {
+          if( in_array(ZenFieldMap::getTypeInt($typ), $vals) ) {
+            $is_menu = true;
+            break;
+          }
+        }
       }
-      else if( strpos($f,'custom_menu')===0 || strpos($f,'custom_multi')===0 ) {
-        // custom menus use the data groups as a selector, not a list of values
-        $choices = $zen->getDataGroups();
-      }
-      else {
-        $choices = $map->getChoices($view, $f);
-      }
+      $has_choices = $is_status || $is_custom_menu || $is_menu;
+      
       //if( $f == 'custom_menu1' ) { Zen::printArray($choices); }
-      if( is_array($choices) && count($choices) ) {
+      if( $has_choices ) {
+        if( $is_status ) {
+          $choices = array(''             => tr("-any-"),
+                           'OPEN,PENDING' => tr("Open")." ".tr("or")." ".tr("Pending"),
+                           'OPEN'         => tr("Open"),
+                           'PENDING'      => tr("Pending"),
+                           'CLOSED'       => tr("Closed"));
+        }
+        else if( $is_custom_menu ) {
+          // custom menus use the data groups as a selector, not a list of values
+          $choices = $zen->getDataGroups();
+        }
+        else if( $is_menu ) {
+          $choices = $map->getChoices($view, $f);
+        }
+        
         //if( $field['multiple'] ) { 
         //  $txt = "<select name='{$f}[default_val][]' size='3' multiple>";
         //}
@@ -262,7 +278,7 @@ foreach($fields as $f=>$field) {
           else {
             $sel = $field['default_val'] == $k && strlen($field['default_val']) == strlen($k)? " selected" : "";
           }
-          $txt .= "<option value='$k'{$sel}>$v</option>";
+          $txt .= "<option value='".$zen->ffv($k)."'{$sel}>".$zen->ffv($v)."</option>";
         }
         $txt .= "</select>";
       }

@@ -12,6 +12,8 @@
    * $formTitle - title of the form
    * $formDesc - descriptive text for this form (optional)
    * $id - id of the ticket to display
+   * $ticket - current contents of the ticket to display
+   * $varfields - current varfield values for the ticket
    */
   $fields = $map->getFieldMap($formview);
   if( !isset($actionName) ) { $actionName = $SCRIPT_NAME; }
@@ -52,7 +54,7 @@ foreach($hidden_fields as $f=>$field) {
 
 foreach($visible_fields as $f=>$field) {
   $context->set('field', $f);
-  $context->set('value', $ticket[$f]);
+  $context->set('value', ZenFieldMap::isVariableField($f)? $varfields[$f] : $ticket[$f]);
   $context->set('force_label', $f == 'status');
   if( $field['field_type'] == 'section' ) {
     print "<tr><td colspan='2' class='subTitle'>";

@@ -117,4 +117,7 @@
   
   // address to put in to field for bug reports
   $this->bugTo = 'bugs@zentrack.net';
+  
+  // seperator to use for splitting/joining multifield values
+  $this->multisep = '; ';
 }?>

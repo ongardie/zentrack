@@ -32,7 +32,7 @@
       $params = array();
       $params["passphrase"] = $newPass1;
       if( $zen->demo_mode == "on" ) {
-        $msg = tr("Your request was successful, but this is a demo site, so the passphrase was not altered");
+        $msg[] = tr("Your request was successful, but this is a demo site, so the passphrase was not altered");
         $skip = 1;
       } else {
         $res = $zen->update_user($login_id,$params);
@@ -40,7 +40,7 @@
           $errs[] = tr("System Error: Unable to change user passphrase.");
         } else {
           $skip = 1;
-          $msg = tr("Password successfully changed");
+          $msg[] = tr("Password successfully changed");
         }
       }
       if( $skip ) {

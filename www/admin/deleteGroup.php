@@ -11,7 +11,7 @@
   $group_id = $zen->checkNum($group_id);
   $tmpltForm = "$templateDir/groupForm.php";
   if( $group_id && $zen->demo_mode == "on" ) {
-    $msg = tr("The action completed successfully.  The data group was not actually deleted, because this is a demo site");
+    $msg[] = tr("The action completed successfully.  The data group was not actually deleted, because this is a demo site");
   } else if ( $group_id && $TODO != "CANCEL" ) {
     if ( $TODO == "DISABLE" ) {
       $zen->disableReferencesToDataGroup($group_id);
@@ -25,14 +25,12 @@
       if ( !$res ) {
         $errs[] = tr("The data group (?) could not be found/deleted successfully", array($group_id));
       } else {
-        $msg = tr("The data group (?) was successfully removed", array($group_id));
+        $msg[] = tr("The data group (?) was successfully removed", array($group_id));
         unset($_SESSION['data_groups']["$group_id"]);
       }
     } else {
      $tmpltForm = "$templateDir/referencedGroupForm.php"; 
     }
-  } else {
-    $msg = tr("The data group (?) WAS NOT removed", array($group_id));
   }
 
   $page_title = tr("Delete Data Group");

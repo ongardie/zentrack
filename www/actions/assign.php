@@ -27,7 +27,7 @@
     if( !$errs ) {
       $res = $zen->assign_ticket($id, $user_id, $login_id, $comments);
       if( $res ) {
-        $msg = tr("Ticket was assigned to ?",$zen->formatName($user_id));
+        $msg[] = tr("Ticket was assigned to ?",$zen->formatName($user_id));
         $setmode = "";
         $action = "";
         include("../ticket.php");
