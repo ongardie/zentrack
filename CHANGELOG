@@ -12,6 +12,10 @@ abstraction, and endless possibilities for project expansion.
 --------------------
 ----- VERSION 2.6 (development) -----
 
+2005-11-01, alberts
+  Fixed Navtab mouseout color, per tt#219
+   - zentrack_2/includes/headerInc.php 1.67
+
 2005-11-01, kato
   Prepared release files and upgrade notes
    - zentrack_2/UPGRADE.readme 1.30
