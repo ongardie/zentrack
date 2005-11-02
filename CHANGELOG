@@ -13,6 +13,17 @@ abstraction, and endless possibilities for project expansion.
 ----- VERSION 2.6 (development) -----
 
 2005-11-01, kato
+  Prepared release files and upgrade notes
+   - zentrack_2/UPGRADE.readme 1.30
+   - zentrack_2/install/UPGRADE_mssqlserver.sql 1.41
+   - zentrack_2/install/UPGRADE_mysql.sql 1.52
+   - zentrack_2/install/UPGRADE_oracle.sql 1.49
+   - zentrack_2/install/UPGRADE_postgres.sql 1.41
+   - zentrack_2/install/seed_mssqlserver.sql 1.45
+   - zentrack_2/install/seed_mysql.sql 1.62
+   - zentrack_2/install/seed_oracle.sql 1.51
+   - zentrack_2/install/seed_postgres.sql 1.47
+  
   Made 'close' messages more descriptive
    - zentrack_2/www/actions/close.php
    
@@ -21,24 +32,91 @@ abstraction, and endless possibilities for project expansion.
   Improved efficiency of multifield lookups (uses a single bulk query)
   Fixed ZenTrack::getVarfieldVals to always return an array for multifields
      (even if they are not found)
+   - zentrack_2/includes/parseVarfields.php 1.7
+   - zentrack_2/includes/zenTemplate.class 1.13
+   - zentrack_2/includes/zenTrack.class 1.199
+   - zentrack_2/includes/templates/fieldMapForm.php 1.19
+   - zentrack_2/includes/templates/ticket_tab_form.php 1.3
+   - zentrack_2/includes/templates/validateTicketForm.php 1.6
+   - zentrack_2/includes/templates/fields/multihidden.template 1.3
+   - zentrack_2/includes/templates/fields/radio.template 1.3
+   - zentrack_2/install/configVars.php.default 1.14
   
   Improved renderDivButton to survive errors and to print a default if the
   key is not valid
    - zentrack_2/includes/headerInc.php
-   - zentrack_2/www/styles.php
+   - zentrack_2/www/styles.php 1.34
   
   Fixed editing of field from ticket tabs (several minor bugs)
   Cleaned up field validation to work better with hidden and multi-select
-    - zentrack_2/includes/ZenFieldMap.class
+   - zentrack_2/includes/ZenFieldMap.class 1.40
+   - zentrack_2/includes/ZenHotKeys.class 1.11
+   - zentrack_2/includes/ZenSessionManager.class 1.7
+   - zentrack_2/includes/db.class 1.43
     - zentrack_2/includes/zenTemplate.class
     - zentrack_2/includes/templates/fieldMapForm.php
     - zentrack_2/includes/templates/menunokeys.template 1.0
     - zentrack_2/includes/templates/radio.template
     - zentrack_2/includes/templates/validateTicketForm.php
-    - zentrack_2/www/ticket.php
+   - zentrack_2/www/ticket.php 1.33
     
   Audited $msg output for formatting and security hardening
-  
+   - zentrack_2/includes/editTicketSubmit.php 1.20
+   - zentrack_2/includes/footer.php 1.43
+   - zentrack_2/includes/headerInc.php 1.66
+   - zentrack_2/includes/login.php 1.33
+   - zentrack_2/includes/nav.php 1.27
+   - zentrack_2/includes/zen.class 1.42
+   - zentrack_2/includes/templates/actions/move.php 1.8
+   - zentrack_2/includes/templates/nav_projects.php 1.7
+   - zentrack_2/includes/templates/nav_tickets.php 1.6
+   - zentrack_2/www/actions/accept.php 1.8
+   - zentrack_2/www/actions/agreement_archive.php 1.4
+   - zentrack_2/www/actions/approve.php 1.7
+   - zentrack_2/www/actions/assign.php 1.9
+   - zentrack_2/www/actions/close.php 1.16
+   - zentrack_2/www/actions/contact_delete.php 1.4
+   - zentrack_2/www/actions/dropFromContacts.php 1.4
+   - zentrack_2/www/actions/dropFromNotify.php 1.4
+   - zentrack_2/www/actions/email.php 1.18
+   - zentrack_2/www/actions/log.php 1.11
+   - zentrack_2/www/actions/move.php 1.7
+   - zentrack_2/www/actions/reject.php 1.8
+   - zentrack_2/www/actions/relate.php 1.9
+   - zentrack_2/www/actions/reopen.php 1.8
+   - zentrack_2/www/actions/test.php 1.7
+   - zentrack_2/www/actions/upload.php 1.14
+   - zentrack_2/www/actions/yank.php 1.6
+   - zentrack_2/www/addProjectSubmit.php 1.25
+   - zentrack_2/www/addSubmit.php 1.32
+   - zentrack_2/www/javascript.js 1.22
+   - zentrack_2/www/search.php 1.16
+   - zentrack_2/www/admin/access.php 1.9
+   - zentrack_2/www/admin/addBehaviorSubmit.php 1.7
+   - zentrack_2/www/admin/addGroupSubmit.php 1.13
+   - zentrack_2/www/admin/addUserSubmit.php 1.14
+   - zentrack_2/www/admin/admin_header.php 1.18
+   - zentrack_2/www/admin/bins.php 1.9
+   - zentrack_2/www/admin/config.php 1.13
+   - zentrack_2/www/admin/deleteBehavior.php 1.2
+   - zentrack_2/www/admin/deleteGroup.php 1.4
+   - zentrack_2/www/admin/deleteUser.php 1.6
+   - zentrack_2/www/admin/editBehavior.php 1.5
+   - zentrack_2/www/admin/editBehaviorDetails.php 1.6
+   - zentrack_2/www/admin/editBehaviorSubmit.php 1.6
+   - zentrack_2/www/admin/editCustom.php 1.9
+   - zentrack_2/www/admin/editGroupDetails.php 1.8
+   - zentrack_2/www/admin/editGroupSubmit.php 1.11
+   - zentrack_2/www/admin/editUserSubmit.php 1.15
+   - zentrack_2/www/admin/priorities.php 1.7
+   - zentrack_2/www/admin/resetPassword.php 1.8
+   - zentrack_2/www/admin/systems.php 1.10
+   - zentrack_2/www/admin/tasks.php 1.8
+   - zentrack_2/www/admin/types.php 1.8
+   - zentrack_2/www/help/bugs.php 1.5
+   - zentrack_2/www/misc/homebin.php 1.8
+   - zentrack_2/www/misc/language.php 1.6
+   - zentrack_2/www/misc/pwc.php 1.14
 
 2005-10-30, kato
   Added missing menubox.htc file
