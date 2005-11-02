@@ -479,7 +479,7 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
 
 
   $nav_rollover_eff = " onmouseout=\"if(window.document.body && mOut){mOut(this,'"
-    .$zen->getSetting("color_bar_darker")."');}\" "
+    .$zen->getSetting("color_bar_darkest")."');}\" "
     ."onmouseover=\"if(window.document.body && mOvr){mOvr(this,'"
     .$zen->getSetting("color_alt_background")."');}\" ";
 
