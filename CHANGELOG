@@ -14,6 +14,11 @@ abstraction, and endless possibilities for project expansion.
 ----- VERSION 2.6 Final (2005-11-05) -----
 
 2005-11-03, kato
+  Fixed search bug when searching by bin
+   - zentrack_2/includes/templates/listTickets.php 1.35
+   - zentrack_2/includes/templates/searchResults.php 1.19
+   - zentrack_2/includes/zenTrack.class 1.200
+  
   Fixed display of internal/external contacts (works on all tabs now)
    - zentrack_2/www/contacts.php 1.5
   
