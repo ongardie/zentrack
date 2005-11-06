@@ -1,0 +1,1999 @@
+diff -Naur zentrack_2-5-5-2/includes/ZenContext.class zentrack_2-6-final/includes/ZenContext.class
+--- zentrack_2-5-5-2/includes/ZenContext.class	1969-12-31 16:00:00.000000000 -0800
++++ zentrack_2-6-final/includes/ZenContext.class	2005-11-05 19:57:02.000000000 -0800
+@@ -0,0 +1,43 @@
++<?
++/**
++ * ZenContext: a generic container for properties to be passed between objects
++ *
++ * This class is intended to be abstract and extended by specific instances for
++ * use, such as ZenFieldMapRenderContext
++ *
++ * @abstract
++ */
++class ZenContext {
++  function ZenContext($vals = null) {
++    $this->_vals = is_array($vals)? $vals : array();
++    $this->rand = $this->randomNumber = mt_rand(1,10000)."-".mt_rand(1,10000);
++  }
++  
++  function set($prop, $val) {
++    $this->_debug('get', "Setting $prop to ".Zen::dval($val), 3);
++    $this->_vals[$prop] = $val;
++  }
++  
++  function get($prop) {
++    if( !array_key_exists($prop, $this->_vals) ) {
++      $this->_debug('get', "Invalid property: $prop", 3);
++      return null;
++    }
++    return $this->_vals[$prop];
++  }
++  
++  function _debug( $method, $msg, $lvl ) {
++    $zen = $GLOBALS['zt_zen'];
++    if( $zen ) {
++      $zen->addDebug("ZenContext::$method", $msg, $lvl);
++    }
++  }
++  
++  function printDebug() {
++    Zen::printArray($this->_vals, 'ZenContext['.$this->rand.']');
++  }
++  
++  var $_vals;
++  var $rand;
++}
++?>
+\ No newline at end of file
+diff -Naur zentrack_2-5-5-2/includes/ZenFieldMap.class zentrack_2-6-final/includes/ZenFieldMap.class
+--- zentrack_2-5-5-2/includes/ZenFieldMap.class	2005-05-15 16:44:30.000000000 -0700
++++ zentrack_2-6-final/includes/ZenFieldMap.class	2005-11-01 20:46:41.000000000 -0800
+@@ -13,40 +13,6 @@
+ define("ZTFIELD_DATE",7);
+ define("ZTFIELD_SECTION",8);
+ 
+-/** 
+- * Returns properties for a view
+- * <ul>
+- *  <li>disabled - (boolean)this view doesn't use field_map yet
+- *  <li>view_only - (boolean)this view does not have input fields, just text
+- *  <li>has_behaviors - (boolean)this view has behaviors
+- *  <li>admin_view - (boolean)this is an admin screen
+- *  <li>multiple - (boolean)this view allows multiple selections (overrides field->multiple)
+- *  <li>sections - (boolean)true if this view can support sections
+- * </ul>
+- *
+- * @param string $view if omitted, all views are returned
+- */
+-function getFmViewProps( $view = null ) {
+-  if( !$view ) {
+-    // return the entire set
+-    $set = array();
+-    $list = array_keys($GLOBALS['zt_field_dependencies']['views']);
+-    foreach($list as $l) {
+-      $set[$l] = getFmViewProps($l);
+-    }
+-    return $set;
+-  }
+-  // fetch an individual view
+-  $vals = $GLOBALS['zt_field_dependencies']['views'][$view];
+-  if( !is_array($vals) ) { return false; }
+-  $vars = array();
+-  $indices = array("disabled", "view_only", "has_behaviors", "admin_view", "multiple", "sections");
+-  for($i=0; $i < count($vals); $i++) {
+-    $vars[ $indices[$i] ] = $vals[$i];
+-  }
+-  return $vars;
+-}
+-
+ /**
+  * Returns properties for a field:
+  * <ul>
+@@ -55,13 +21,14 @@
+  *  <li>multiple - (boolean)may have multiple entries (view can override this)
+  *  <li>always_required - (boolean)true if this field is required by system
+  *  <li>default - (boolean)true if this field can use default values
+-    <li>data_type - (string) contains 'int', 'string', 'date', 'boolean', or 'float'
++ *  <li>data_type - (string) contains 'int', 'string', 'date', 'boolean', or 'float'
+  * </ul>
+  *
+  * @param string $view
+  * @param string $field if omitted, returns all fields formatted for a given view
+  */
+ function getFmFieldProps( $view, $field = null ) {
++  global $map;
+   $field = ZenFieldMap::fieldName($field);
+   if( !$field ) {
+     // return all fields for a view
+@@ -73,9 +40,10 @@
+     return $set;
+   }
+   // return a single field
+-  $vprops = getFmViewProps($view);
++  if( !array_key_exists($field, $GLOBALS['zt_field_dependencies']['fields']) ) {
++    return false;
++  }
+   $vals = $GLOBALS['zt_field_dependencies']['fields'][$field];
+-  if( !is_array($vals) ) { return false; }
+   $vars = array();
+   // the distance between "types" and "admin_view" is important for
+   // the details listed below
+@@ -88,14 +56,14 @@
+       foreach($vals[$i] as $v) {
+         $set[] = ZenFieldMap::getTypeString($v);
+       }
+-      if( $vprops['admin_view'] && $vals[$i+2] ) {
++      if( $map->getViewProp($view,'admin_view') && $vals[$i+2] ) {
+         foreach($vals[$i+2] as $v) {
+           $set[] = ZenFieldMap::getTypeString($v);
+         }
+       }
+       $vars[ $indices[$i] ] = $set;
+     }
+-    else if( $vprops['multiple'] && $indices[$i] == 'multiple' ) {
++    else if( $map->getViewProp($view,'multiple') && $indices[$i] == 'multiple' ) {
+       $vars[ $indices[$i] ] = true;
+     }
+     else {
+@@ -143,13 +111,13 @@
+   "fields" => array(//       searchable,  types                 , data_type,  admin_view, multiple, always_required, default
+     "id"              => array(   true,   array(1)              , 'int'    ,      null, false,  true,  false),
+     "title"           => array(   true,   array(1,2)            , 'text' ,        null, false,  true,   true),
+-    "priority"        => array(   true,   array(1,3,4,6)        , 'int'    ,      null, false,  true,   true),
+-    "status"          => array(   true,   array(1,3,4,6)        , 'string' ,      null, false,  true,  false),
++    "priority"        => array(   true,   array(0,1,3,6)        , 'int'    ,      null, false,  true,   true),
++    "status"          => array(   true,   array(0,1,3,6)        , 'string' ,      null, false,  true,  false),
+     "description"     => array(   true,   array(1,2)            , 'text' ,        null, false,  false,  true),
+     "otime"           => array(   true,   array(1)              , 'date'   ,  array(7), false,  true,  false),
+     "ctime"           => array(   true,   array(1)              , 'date'   ,  array(7), false,  false,  false),
+     "bin_id"          => array(   true,   array(1,3,4,6)        , 'int'    ,      null, false,  true,   true),
+-    "type_id"         => array(   true,   array(1,3,4,6)        , 'int'    ,      null, false,  true,   true),
++    "type_id"         => array(   true,   array(1,3,6)          , 'int'    ,      null, false,  true,   true),
+     "user_id"         => array(   true,   array(1,3,4,6)        , 'int'    ,      null, false,  false,  true),
+     "system_id"       => array(   true,   array(1,3,4,6)        , 'int'    ,      null, false,  true,   true),
+     "creator_id"      => array(  false,   array(1)              , 'int'    ,  array(4), false,  true,  false),
+@@ -166,28 +134,37 @@
+     "custom_boolean"  => array(   true,   array(1,3,5,6)        , 'boolean',      null, false,  false,  true),
+     "custom_date"     => array(   true,   array(1,7)            , 'date'   ,      null, false,  false,  true),
+     "custom_menu"     => array(   true,   array(1,3,6)          , 'string' ,      null, false,  false,  true),
++    "custom_multi"    => array(   true,   array(1,3)            , 'string' ,      null, true ,  false,  true),
+     "custom_text"     => array(  false,   array(1,2)            , 'text'   ,      null, false,  false,  true),
+     "hours"           => array(  false,   array(2)              , 'float'  ,      null, false,  false,  true),
+     "comments"        => array(  false,   array(2)              , 'text'   ,      null, false,  false,  true)
+   ),
+   
+-  "views" => array(//           disabled, view_only, has_behaviors, admin_view, multiple, sections
+-    "ticket_create"   => array(    false,    false,      true, false, false, true  ), 
+-    "project_create"  => array(    false,    false,      true, false, false, true  ),
+-    "ticket_edit"     => array(    false,    false,      true,  true, false, true  ), 
+-    "project_edit"    => array(    false,    false,      true,  true, false, true  ),
+-    "ticket_list"     => array(    false,     true,     false, false, false, false ),
+-    "project_list"    => array(    false,     true,     false, false, false, false ),
+-    "search_form"     => array(    false,    false,      true,  true, true , false ),
+-    "search_list"     => array(    false,     true,     false, false, false, false ),
+-    "ticket_close"    => array(    false,    false,      true, false, false, true  ), 
+-    "ticket_title"    => array(     true,     true,     false, false, false, false ),
+-    "project_title"   => array(     true,     true,     false, false, false, false ),
+-    "ticket_detail"   => array(     true,     true,     false, false, false, true  ),
+-    "project_detail"  => array(     true,     true,     false, false, false, true  ),
+-    "ticket_custom"   => array(     true,    false,      true, false, false, true  ),
+-    "project_custom"  => array(     true,    false,      true, false, false, true  )
+-  ),
++  // "views" => array(//           disabled, view_only, has_behaviors, admin_view, multiple, sections, any_option, access_level
++    // "ticket_close"    => array(    false,    false,      true, false, false, true,  false, 'level_user' ), 
++    // "ticket_create"   => array(    false,    false,      true, false, false, true,  false, 'level_create' ), 
++    // "ticket_custom"   => array(    false,    false,      true, false, false, true,  false, 'level_view' ),
++    // "ticket_edit"     => array(    false,    false,      true,  true, false, true,  false, 'level_edit' ), 
++    // "ticket_list"     => array(    false,     true,     false, false, false, false, false, 'level_view' ),
++    // "ticket_options"  => array(    false,    false,     false, false, false, false, true , 'level_view' ),
++    // "ticket_view_top" => array(    false,     true,     false, false, false,  true, false, 'level_view' ),
++    // "ticket_tab_1"    => array(    false,     true,     false, false, false,  true, false, 'level_view' ),
++    // "ticket_tab_2"    => array(    false,     true,     false, false, false,  true, false, 'level_view' ),
++    // "ticket_tab_3"    => array(    false,     true,     false, false, false,  true, false, 'level_view' ),
++    // "ticket_tab_4"    => array(    false,     true,     false, false, false,  true, false, 'level_view' ),
++    // "ticket_tab_5"    => array(    false,     true,     false, false, false,  true, false, 'level_view' ),
++    // "ticket_tab_6"    => array(    false,     true,     false, false, false,  true, false, 'level_view' ),
++    // "ticket_tab_7"    => array(    false,     true,     false, false, false,  true, false, 'level_view' ),
++    // "ticket_tab_8"    => array(    false,     true,     false, false, false,  true, false, 'level_view' ),
++    // "project_close"   => array(    false,    false,      true, false, false, true,  false, 'level_user' ), 
++    // "project_create"  => array(    false,    false,      true, false, false, true,  false, 'level_create_proj' ),
++    // "project_custom"  => array(    false,    false,      true, false, false, true,  false, 'level_view' ),
++    // "project_edit"    => array(    false,    false,      true,  true, false, true,  false, 'level_edit' ),
++    // "project_list"    => array(    false,     true,     false, false, false, false, false, 'level_view' ),
++    // "project_options" => array(    false,    false,     false, false, false, false, true , 'level_view' ),
++    // "search_form"     => array(    false,    false,      true,  true, true , false, true , 'level_view' ),
++    // "search_list"     => array(    false,     true,     false, false, false, false, false, 'level_view' )
++  // ),
+   
+   "types" => array(//   choices| multirows
+     "hidden"   => array(  false, false ),
+@@ -204,6 +181,8 @@
+ );
+ $GLOBALS['zt_field_dependencies'] = $ztf;
+ 
++include_once("$libDir/ZenContext.class");
++
+ /**
+  * Stores information about the fields and how they are rendered on different
+  * view.
+@@ -222,6 +201,114 @@
+   }
+   
+   /**
++   * Return name and properties of each tab in the ticket view
++   */
++  function getTabs( $type, $login_id, $bin_id ) {
++    $tabs = array();
++    foreach($this->getViewProps() as $k=>$v) {
++      if( !preg_match("@^{$type}_tab_[0-9]$@", $k) ) { continue; }
++      if( $this->_zen->checkAccess($login_id, $bin_id, $this->getViewProp($k,'access_level')) ) {
++        $tabs["$k"] = array();
++        foreach($v as $key=>$val) {
++          $tabs["$k"]["$key"] = $this->getViewProp($k,$key);
++        }
++      }
++    }
++    return $tabs;
++  }
++  
++  /** 
++   * Returns properties for a view
++   * <ul>
++   *  <li>disabled - (boolean)this view doesn't use field_map yet
++   *  <li>view_only - (boolean)this view does not have input fields, just text
++   *  <li>has_behaviors - (boolean)this view has behaviors
++   *  <li>admin_view - (boolean)this is an admin screen
++   *  <li>multiple - (boolean)this view allows multiple selections (overrides field->multiple)
++   *  <li>sections - (boolean)true if this view can support sections
++   *  <li>any_option - (boolean)true if menus should include -any- option (for searching, etc)
++   * </ul>
++   *
++   * @param string $view if omitted, all views are returned
++   */
++  function getViewProps( $view = null ) {
++    if( !$this->_viewProps ) {
++      // attempt to retrieve from session
++      $vp = $this->_session->find('view_map');
++      if( is_array($vp) ) {
++        $this->_zen->addDebug('ZenFieldMap->getViewProps', "Loading from session[".count($vp)."]", 3);
++        $this->_viewProps = $vp;
++      }
++      else {
++        // if not in session, load from database
++        $query = "SELECT * FROM ZENTRACK_VIEW_MAP ORDER BY which_view, vm_order";
++        $this->_viewProps = array();
++        $vals = $this->_zen->db_queryIndexed($query);
++        $this->_zen->addDebug('ZenFieldMap->getViewProps', "Loading from db[".count($vals)."]: ".$query, 3);
++        foreach($vals as $v) {
++          $vw = $v['which_view'];
++          $field = $v['vm_name'];
++          if( !array_key_exists($vw, $this->_viewProps) ) {
++            // intialize the view array
++            $this->_viewProps["$vw"] = array();
++          }
++          $this->_viewProps["$vw"]["$field"] = $v;
++        }
++        $this->_session->store('view_map', $this->_viewProps);
++      }
++    }
++    return $view? $this->_viewProps["$view"] : $this->_viewProps;
++  }
++  
++  /**
++   * Update the properties of a view (in the view map).  This will insure that
++   * only fields which should be editable have been updated.
++   *
++   * @param array updates (String)field_name => (mixed)vm_val
++   */
++  function updateViewProps($view, $updates) {
++    $props = $this->getViewProps($view);
++    $res = array(0,0);
++    foreach($updates as $k=>$v) {
++      // if the field is invalid, skip it
++      if( !array_key_exists($k, $props) ) {
++        $this->_zen->addDebug('ZenFieldMap::updateViewProps', "Invalid field specified: $k", 1);
++        continue;
++      }
++      // get some vals
++      $id = $props[$k]['view_map_id'];
++      $type = $props[$k]['vm_type'];
++      $val = $this->getViewProp($view,$k,'vm_val');
++      // if the field cannot be updated, skip it
++      if( $type == 'hidden' || $type == 'label' ) { continue; }
++      // if the value hasn't changed, don't bother
++      if( $v == $val ) { continue; }
++      // otherwise, check for 'load' and set an appropriate value
++      if( $type == 'load' ) {
++        // all of this is to avoid errors caused by trying to call
++        // join() on an array
++        if( $v && $val && join(',',$v) == join(',',$val) ) {
++          continue;
++        }
++        if( !$v ) { $vals = array('vm_val'=>null); }
++        else { $vals = array('vm_val'=> join(",",$v)); }
++      }
++      else {
++        $vals = array('vm_val'=>$v);
++      }
++      $set = $this->_zen->makeInsertVals($vals, 1);
++      $query = "UPDATE ZENTRACK_VIEW_MAP SET $set WHERE view_map_id = {$id}";
++      $r = $this->_zen->db_result($query);
++      $this->_zen->addDebug('ZenFieldMap::updateViewProps', "$id[$r]: $query", $res? 3 : 1);
++      $res[1]++;
++      if( $r ) { $res[0]++; }
++    }
++    $this->_session->clear('view_map');
++    $this->_viewProps = false;
++    return $res;
++  }
++  
++  /**
+    * Consults the field map and constructs a list of (String)field_name which
+    * represents all of the fields which exist in this view. (note that some
+    * of these may be hidden fields
+@@ -235,6 +322,10 @@
+        return null;
+      }
+      $map = $this->getFieldMap($view);
++     if( !$map ) {
++       $this->_zen->addDebug('listFieldForView', "Invalid view: ".$view, 1);
++       return array(); 
++     }
+      $this->_zen->addDebug('listFieldsForView', "Found ".count($map)." entries for view '$view'", 3);
+      return array_keys($map);
+    }
+@@ -251,6 +342,26 @@
+       return $map[$view][$field_name];
+     }
+     
++    /**
++     * Returns a single property from a field in the map
++     */
++   function getFieldProp( $view, $field, $prop ) {
++     $map = $this->getFieldMap($view);
++     if( !$map ) {
++       $this->_zen->addDebug('getFieldProp', "Invalid view: {$view}->{$field}->{$prop}", 1);
++       return null;
++     }
++     if( !array_key_exists($field, $map) ) {
++       $this->_zen->addDebug('getFieldProp', "Invalid field: {$view}->{$field}->{$prop}", 1);
++       return null;
++     }
++     if( !array_key_exists($prop, $map[$field]) ) {
++       $this->_zen->addDebug('getFieldProp', "Prop not found: {$view}->{$field}->{$prop}", 3);
++       return null;
++     }
++     return $map[$field][$prop];
++   }
++    
+   /**
+    * Returns the label specified for the field in question
+    */
+@@ -262,7 +373,7 @@
+   new Function: */
+   function getLabel( $view, $field_name) {
+     $field = $this->getFieldFromMap($view,is_array($field_name)?$field_name['field_name']:$field_name);
+-    return $field['field_label']? $field['field_label'] : $field['field_name'];
++    return $field['field_label']? tr($field['field_label']) : tr($field['field_name']);
+   }
+   
+   /**
+@@ -279,14 +390,16 @@
+   function getTextValue( $view, $field_name, $value ) {
+     $this->_zen->addDebug("getTextValue", "rendering $view, $field_name, $value", 3);
+     $field = $this->getFieldFromMap($view,$field_name);
+-    if( strlen($value) && $field['is_visible'] && $field['field_type'] != 'hidden' ) {
++    $userBins = $this->_zen->getUsersBins($_SESSION['login_id']);
++    if( $field['is_visible'] && $field['field_type'] != 'hidden' ) {
++      if( !strlen($value) ) { return '&nbsp;'; }
+       switch($this->fieldName($field_name)) {
+         case "priority":
+         case "status":
+         case "bin_id":
+         case "type_id":
+         case "system_id":
+-          $vals = $this->getChoices($view,$field_name);
++          $vals = $this->_zen->getValsForTicketField($field_name,$userBins);
+           if( isset($vals["$value"]) ) { return $this->_zen->ffv(tr($vals["$value"])); }
+           else {
+             $this->_zen->addDebug("getTextValue", "Unable to find choices for {$view}->{$field_name}", 1);
+@@ -298,7 +411,7 @@
+           return $this->_zen->ffv($name,$field['num_cols']);
+         case "tested":
+         case "approved":
+-          $val = $value == 1? tr('No') : $value == 2? tr('Yes') : tr('n/a');
++          $val = $value == 1? tr('Required') : ($value == 2? tr('Complete') : tr('n/a'));
+           return $this->_zen->ffv($val,$field['num_cols']);
+         case "otime":
+         case "ctime":
+@@ -310,7 +423,7 @@
+           }
+           if( $value == 'NULL' ) { $value = ''; }
+           if( $value == 0 ) { $value = ""; }
+-          return strlen($value)? $this->_zen->showDateTime($value) : '';
++          return $this->_zen->showDateTime($value);
+         case "custom_boolean":
+           $val = $value == 1? tr('Yes') : tr('No');
+           return $this->_zen->ffv($val,$field['num_cols']);
+@@ -318,10 +431,13 @@
+         case "title":
+         case "custom_text":
+           return $this->_zen->ffvText($value);
++        case "custom_multi":
++//          return str_replace("\t", "; ", $value);
++          return implode($this->_zen->multisep, $value);
+         default:
+-          $val = $this->_zen->ffv($value, $field['num_cols']);
++          $val = $this->_zen->ffvText(str_replace("\t",";",$value), $field['num_cols']);
+           $this->_zen->addDebug("getTextValue", "rendering default: $val", 3);
+-          return $this->_zen->ffv($value, $field['num_cols']);
++          return $val;
+       }
+     }
+     // it's hidden, return nothing
+@@ -332,22 +448,38 @@
+    * Consults the field map to determine what sort of field we have, loads
+    * this information, and renders the field to the screen appropriately.
+    *
+-   * @param string $view corresponds to which_view field
+-   * @param string $field_name the field's name
+-   * @param mixed $value the field's current value
+-   * @param $override_name if provided, will override the name=".." property of this input field 
++   * @param ZenFieldMapRenderContext $context
+    * @return string containing html to render
+    */
+-  function renderTicketField( $view, $form_name, $field_name, $value = null, $override_name = null ) {
+-//    $this->_zen->addDebug("renderTicketField", "rendering $view, $form_name, $field_name, $value, $override_name", 1);//debug
++  function renderTicketField( $context ) {
+     global $templateDir;
+     global $rootUrl;
+     
++    $view = $context->view();
++    
++    $form_name = $context->form();
++    $field_name = $context->field();
++    $value = $context->value();
++    $override_name = $context->name();
++    $override_as_label = $context->force_label();
++    $field_events = $context->events();
++    
+     // collect field properties
+     $field = $this->getFieldFromMap($view,$field_name);
+     $typeint = $this->getTypeInt($field['field_type']);
+     $typename = $field['field_type'];
+     
++    // override properties if appropriate
++    if( $context->columns() ) { $field['num_cols'] = $context->columns(); }
++    if( $context->rows()    ) { $field['num_rows'] = $context->rows();    }
++    if( $context->label()   ) { $field['label']    = $context->label();   }
++    if( $context->multiple()) { $field['multiple'] = $context->multiple();}
++    
++    if ($typeint != ZTFIELD_SECTION && $typeint != ZTFIELD_HIDDEN && $override_as_label == 1) {
++      $typeint = ZTFIELD_LABEL;
++      $typename =  "label";
++    }
++    
+     // don't waste time on spacers
+     if( $typeint == ZTFIELD_SECTION ) {
+       $vals = array('label'=>tr($field['field_label']));
+@@ -356,35 +488,53 @@
+ 
+     // collect system properties
+     $fprops = getFmFieldProps($view, $field_name);
+-    $vprops = getFmViewProps($view);
+     $tprops = getFmTypeProps($typename);
+     
+     // see if this is a 'viewonly' screen, if so, no form fields needed
+-    if( $vprops["view_only"] ) { return $this->getTextValue($view,$field_name,$value); }
++    if( $this->getViewProp($view, 'view_only') ) { return $this->getTextValue($view,$field_name,$value); }
+     
+     // collect template props
+     $vals = array();
+-    $vals["view"] = $view;
+-    $vals["form_name"] = $form_name;
+-    $vals["templateDir"] = $templateDir;
+-    $vals["rooturl"] = $rootUrl;
+-    $vals['date_format'] = $this->_zen->popupDateFormat();
+-    $vals["field_name"] = $this->_zen->ffv(strlen($override_name)>0? $override_name : $field_name);
++    $vals["view"]         = $view;
++    $vals["form_name"]    = $form_name;
++    $vals["templateDir"]  = $templateDir;
++    $vals["rooturl"]      = $rootUrl;
++    $vals['date_format']  = $this->_zen->popupDateFormat();
++    $vals["field_name"]   = $this->_zen->ffv($override_name);
++    $vals["field_events"] = $field_events;
+     
+     if( !isset($value) && ($view=="ticket_create" || $view=="project_create"
+-         || $view == 'search_form' )) {
++         || $view == 'search_form' || preg_match('@(ticket|project)_list_filters@',$view) )) {
+       // if there is no value and this is a create page or search page then we will
+       // retrieve a default value to use instead
+       $vals["field_value"] = $this->getDefaultValue($view,$field_name);
+     } else if( $typeint == ZTFIELD_DATE && !preg_match('/[^0-9]/', $value) ) {
+       // if it is a date and we have a numeric value, then we will parse it to
+       // a date right here
+-      
++      //$vals['field_value'] = $this->_zen->showDate($value);
++      $vals["field_value"] = strlen($value)? $this->_zen->showDateTime($value) : '';
++    } else if( ZenFieldMap::isMultiField($vals['field_name']) ) {
++/*
++      $tok=strtok($value,"\t");
++      $vals["field_value"]=array();
++      while ($tok !== false) {
++        $vals["field_value"][] = $this->_zen->ffv($tok, $field['num_cols']);
++        $tok = strtok("\t");
++      }
++*/
++      $vals["field_value"]=array();
++      if ( is_array($value) ) {
++        foreach($value as $element) {
++          $vals["field_value"][] = $element;
++        }
++      } else {
++        $vals["field_value"][] = $value;
++      }
+     } else {
+-      $vals["field_value"] = $this->_zen->ffv($value);
++      $vals["field_value"] = $value;
+     }
+     $vals["field_label"] = $this->getTextValue($view,$field_name,$value);
+-    $vals["field_max"] = $field['num_cols'];
++    $vals["field_max"] = $context->maxlength()? $context->maxlength() : $field['num_cols'];
+     if( $tprops["has_choices"] ) {
+       $vals["field_choices"] = $this->getChoices($view,$field_name);
+     }
+@@ -395,8 +545,19 @@
+     else { $vals['field_cols'] = $field['num_cols'] > 50? 50 : $field['num_cols']; }
+     $vals['field_rows'] = $field['num_rows'];
+     
+-    $vals['field_multiple'] = $view == 'search_form' && $typeint == ZTFIELD_MENU && $field['num_rows'] > 1? "multiple" : "";
+-    if( $vals['field_multiple'] && $typename == 'menu' ) {
++//    $vals['field_multiple'] = $view == 'search_form' && $typeint == ZTFIELD_MENU && $field['num_rows'] > 1? "multiple" : "";
++//    $vals['field_multiple'] = (
++//                                ( $view == 'search_form' || strpos($field_name,'custom_multi')===0 )
++//                                && $typeint == ZTFIELD_MENU && $field['num_rows'] > 1
++//                              ) ? "multiple" : "";
++    $vals['field_multiple'] = ( $context->multiple()
++                                ||
++                                ( $view == 'search_form' && $typeint == ZTFIELD_MENU && $field['num_rows'] > 1 )
++                                || 
++                                ( ZenFieldMap::isMultiField($field_name) )
++                              ) ? "multiple" : "";
++
++    if( $vals['field_multiple'] ) {
+       $vals['field_name'] .= "[]";
+     }
+ 
+@@ -430,16 +591,30 @@
+       }
+       $vals["search_url"] = $rootUrl."/helpers/{$s}Searchbox.php?"
+         ."return_form=$form_name&return_field={$vals['field_name']}";
+-      if( !$fprops["multiple"] && !$vprops["multiple"] ) {
++      if( !$fprops["multiple"] && !$this->getViewProp($view,'multiple') ) {
+         $vals['search_url'] .= "&onechoice=1";
+       }
+     }
+     
+     // deal with special custom field problems
+-    if( strpos($field_name,'custom_')===0 ) {
++    if( ZenFieldMap::isVariableField($field_name) ) {
+       $f = $this->_zen->getCustomField($field_name);
+       if( $f['js_validation'] ) {
+-        $vals['field_events'] = "onblur='{$f['js_validation']}'";
++        if( $vals['field_events'] ) {
++          if( preg_match("/onblur=(['\"])([^'\"]+)['\"]/", $vals['field_events'], $matches) ) {
++            $q = $matches[1];
++            $v = str_replace($q, "\\$q", $f['js_validation']);
++            if( !preg_match('@;$@', $v) ) { $v .= ';'; }
++            $val = "onblur='{$v};{$matches[2]}'";
++            $vals['field_events'] = preg_replace("/onblur=['\"]([^'\"]+)['\"]/", $val, $vals['field_events']);
++          }
++          else {
++            $vals['field_events'] .= " onblur=".$zen->fixJsVal($f['js_validation']);
++          }
++        }
++        else {
++          $vals['field_events'] = "onblur=".$zen->fixJsVal($f['js_validation']);
++        }
+       }
+       if( strpos($field_name,'custom_date') === 0 ) {
+         if( $vals['field_value'] == 'NULL' ) { $vals['field_value'] = ''; }
+@@ -467,6 +642,42 @@
+         }
+       }
+     }
++
++    if ( $typename == 'label' && strpos($field_name,"multi")>0 ) {
++      $typename = "multilabel";
++      $vals["field_choices"] = $this->getChoices($view,$field_name);
++    }
++
++    if ( $typename == "hidden" && ZenFieldMap::isMultiField($field_name) ) {
++      $typename = "multihidden";
++      $vals["field_choices"] = $this->getChoices($view,$field_name);
++      //Prevent loosing current values in hidden fields:
++      if( is_array($vals['field_value']) ) {
++        foreach ($vals["field_value"] as $value) {
++          if ( ! in_array($value, $vals["field_choices"]) ) {
++            $vals["field_choices"][$value]= $value;
++          }
++        }
++      }
++    }
++    
++    // variable fields have some special attributes.  First, we don't want
++    // to try to render keys for these (too much trouble with escaping), so
++    // we render them without keys.  Second, the normal comparisons (key to
++    // current value) won't work since there are no keys, so we have to
++    // check the value.
++    $vf = ZenFieldMap::isVariableField($vals['field_name']);
++    if( $vf && $typename == 'menu' ) { $typename = 'menunokeys'; }
++    
++    // we escape the field_choices array here (values only) and try
++    // to find the correct value to select if this is a variable field
++    if( $vf && isset($vals['field_choices']) ) {
++      foreach($vals['field_choices']  as $k=>$v) {
++        if( $v == $vals['field_value'] ) { 
++          $vals['field_selected'] = $v;
++        }
++      }
++    }
+     
+     // parse and return 
+     return $this->_template($templateDir, $typename, $vals);
+@@ -480,6 +691,15 @@
+      $this->_zen->addDebug("_template", "Rendering $templateDir/fields/$typename.template", 3);
+      $templateFile = "$templateDir/fields/$typename.template";
+      $template = new zenTemplate($templateFile);
++     
++     $vals['field_value'] = $this->_zen->ffv($vals['field_value']);
++     if( isset($vals['field_choices']) ) {
++       $vals['field_choices'] = $this->_zen->ffv($vals['field_choices']);
++     }
++     if( isset($vals['field_selected']) ) {
++       $vals['field_selected'] = $this->_zen->ffv($vals['field_selected']);
++     }
++     
+      $template->values($vals);
+      return $template->process();     
+    }
+@@ -505,7 +725,12 @@
+     $set = array();
+     for($i=0; $i<count($vals); $i++) {
+       $v = $vals[$i];
+-      if( !array_key_exists($v['which_view'], $set) ) { $set[ $v['which_view'] ] = array(); }
++      if ( !array_key_exists($v['which_view'], $set) ) {
++        $set[ $v['which_view'] ] = array();
++      }
++//      if (strpos($v['field_name'],"custom_multi")===0) {
++//        $v['field_name'].="[]";
++//      }
+       $set[ $v['which_view'] ] [ $v['field_name'] ] = $v;
+     }
+     $this->_zen->addDebug("getFieldMap", "Loaded $i rows into field_map from database",3);
+@@ -629,8 +854,7 @@
+       
+     $field = $this->getFieldFromMap($view, $field_name);
+     $fprops = getFmFieldProps($view, $field_name);
+-    $vprops = getFmViewProps($view);
+-    $bins = $this->_zen->getUsersBins($_SESSION['login_id']);
++    $bins = $this->_zen->getUsersBins($_SESSION['login_id'], $this->getViewProp($view, 'access_level'));
+     
+     switch( $this->fieldName($field_name) ) {
+       case "bin_id":
+@@ -641,7 +865,7 @@
+         }
+         break;
+       case "status":
+-        $vals = array('OPEN'=>"Open",'PENDING'=>"Pending",'CLOSED'=>"Closed");
++        $vals = array('OPEN'=>tr("Open"),'PENDING'=>tr("Pending"),'CLOSED'=>tr("Closed"));
+         break;
+       case "id":
+       case "title":
+@@ -650,6 +874,7 @@
+       case "user_id":
+       case "system_id":
+       case "creator_id":
++      case "project_id":
+         $vals = $this->_zen->getValsForTicketField($field_name, $bins);
+         break;
+       case 'custom_boolean':
+@@ -657,31 +882,50 @@
+         break;      
+       case "tested":
+       case "approved":
+-        $vals = $vprops["admin_view"]?
+-          array('0'=>'n/a', '2'=>'Yes', '1'=>'No') : array('1'=>'Yes', '2'=>'No');
++        $vals = array('1'=>tr('Required'), '2'=>tr('Completed'));
+         break;
+-      default:
+-        if( strncmp("custom_menu",$this->fieldName($field_name),11)==0 ) {
+-          $pts = explode("_", $view, 2);
++      case "custom_menu":
++      case "custom_multi":
++        $pts = explode("_", $view, 2);
+ //          $vars = $this->_zen->getCustomField($field_name);
+ //          $set = genDataGroupChoices($vars['field_value']);
+-          $vars = $this->getFieldFromMap($view, $field_name);
+-          $set = genDataGroupChoices($vars['default_val']);
+-          $vals = array();
+-          foreach($set as $s) {
+-            $vals[ $s['field_value'] ] = $s['label'];
+-          }
+-        } else {
+-          $vals = array();
++        $vars = $this->getFieldFromMap($view, $field_name);
++        $set = genDataGroupChoices($vars['default_val']);
++        $vals = array();
++        foreach($set as $s) {
++          $vals[ $s['field_value'] ] = $s['label'];
+         }
+         break;
++      default:
++        $vals = array();
++        break;
+     }
+     
+     $this->_zen->addDebug('_getChoices', "Generated ".count($vals)." choices for {$view}->{$field_name}", 3);
+     
+-    if( $view == 'search_form' && $field['num_rows'] == 1 ) {
+-      $vals = Zen::mergeArrays( array('' => '-any-'), $vals );
++    if( $field_name == 'type_id' && preg_match('@^(project|view)_@', $view, $matches) ) {
++      // remove project types from ticket views and ticket types from
++      // project views
++      $newvals = array();
++      $isproj = $matches[1] == 'project';
++      foreach($vals as $k=>$v) {
++        if( ($is_proj && $this->_zen->inProjectTypeIDs($k)) ||
++        (!$is_proj && !$this->_zen->inProjectTypeIDs($k)) ) {
++          $newvals[$k] = $v;
++        }
++      }
++      $vals = $newvals;
++    }
++    
++    if( $this->getViewProp($view, 'any_option') && $field['num_rows'] == 1 ) {
++      $vals = Zen::mergeArrays( array('' => tr('-any-')), $vals );
+       //$vals = array_merge(array(''=>'-any-'),$vals);
++    } else if ( $field['is_required']==0 && $field['field_type'] == 'menu') {
++      $vals = Zen::mergeArrays( array('' => tr('-none-')), $vals );
++    }
++    else if( !$field['is_required'] && $field['num_rows'] == 1 && $this->fieldName($field_name) != 'custom_boolean' ) {
++      $vals = Zen::mergeArrays( array(''=>'-----'), $vals );
++      //$vals = array_merge(array(''=>'-----'), $vals);
+     }
+     if( !isset($this->_fieldVals[$view]) ) { $this->_fieldVals[$view] = array(); }
+     $this->_fieldVals[$view][$field_name] = $vals;
+@@ -694,7 +938,7 @@
+    * @static
+    */
+    function fieldName( $name ) {
+-     return strpos($name, 'custom_') === 0? 
++     return ZenFieldMap::isVariableField($name)? 
+         preg_replace('/[0-9]+$/', '', $name) : $name;
+    }
+    
+@@ -769,6 +1013,67 @@
+          return null;
+      }     
+    }
++   
++   /**
++    * Returns the value (from fmx_val) for a given view property
++    *
++    * @param string $view
++    * @param string $prop
++    * @return mixed value of the property (boolean, string or array)
++    */
++   function getViewProp( $view, $prop ) {
++     $vals = $this->getViewProps($view);
++     if( !$vals || !$view ) {
++       $this->_zen->addDebug('getViewProp', "Invalid view $view, unable to retrieve $prop", 1);
++       return null;
++     }
++     if( !array_key_exists($prop, $vals) ) {
++       $this->_zen->addDebug('getViewProp', "Property not found: {$view}->{$prop}", 3);
++       return null;
++     }
++     $val = $vals["$prop"]["vm_val"];
++     if( $prop == 'preload' || $prop == 'postload' ) {
++       // preload and postload are special cases, always return an array
++       $val = $val? explode(",",$val) : array();
++     }
++     return $val;
++   }
++   
++   /**
++    * Returns a list of possible choices for preload/postload options
++    *
++    * @static
++    * @param $libDir includes directory
++    * @return array of (String)name values
++    */
++  function getLoadOptions( $templateDir ) {
++    $opts = array();
++    $dh = opendir($templateDir);
++    while( $file = readdir($dh) ) {
++      if( preg_match('@^ticket_load_([a-zA-Z0-9]+)[.]php$@', $file, $matches) ) {
++        $opts[] = $matches[1];
++      }
++    }
++    return $opts;
++  }
++  
++  /**
++   * Is this a variable field?  True if so.
++   */
++   function isVariableField( $field_name ) {
++     return strpos($field_name, 'custom_') === 0;
++   }
++   
++  /**
++   * Is this a multi field? True if so
++   */
++   function isMultiField( $field_name ) {
++     return strpos($field_name, 'custom_multi') === 0;
++   }
++
++  function listMultiFields() {
++    return array ('custom_multi1', 'custom_multi2');
++  }
+   
+   /** @var array $_map an array of (string)view -> array( (string)field_name->(array)values... ) */
+   var $_map;
+@@ -782,6 +1087,56 @@
+   /** @var zenTrack $_zen */
+   var $_zen;
+   
++  /** @var array $_viewProps properties for all views */
++  var $_viewProps;
++  
++}
++
++class ZenFieldMapRenderContext extends ZenContext {
++  function ZenFieldMapRenderContext($vals = null) {
++    $this->ZenContext($vals);
++  }
++  
++  
++  /** Sets the view (required) */
++  function view() { return $this->get('view'); }
++  
++  /** The field name from the field map (not the one to appear in the form, required) */
++  function field() { return $this->get('field'); }
++  
++  /** The form name (required) */
++  function form() { return $this->get('form'); }  
++  
++  /** Overrides the field_name used in the form field */
++  function name() { return $this->get('name')? $this->get('name') : $this->get('field'); }
++  
++  /** If set, this overrides the fields num_cols value */
++  function columns() { return $this->get('columns'); }
++  
++  /** If set, this overrides the fields num_rows value */
++  function rows() { return $this->get('rows'); }
++  
++  /** If set, overrides the fields max length (from num_cols) */
++  function maxlength() { return $this->get('maxlength'); }
++  
++  /** Appends text into field, such as onclick or onmouseover events */
++  function events() { return $this->get('events'); }
++  
++  /** Applies a stylesheet class to the field */
++  function cssStyle() { return $this->get('cssStyle'); }
++  
++  /** Sets the default value to use */
++  function value() { return $this->get('value'); }
++  
++  /** Overrides the fields label text */
++  function label() { return $this->get('label')? $this->get('label') : $this->name(); }
++  
++  /** Overrides the fields setting for allowing multiple entries */
++  function multiple() { return $this->get('multiple'); }
++  
++  /** Overrides the field_type and makes it a label */
++  function force_label() { return $this->get('force_label'); }
++  
+ }
+ 
+-?>
++?>
+\ No newline at end of file
+diff -Naur zentrack_2-5-5-2/includes/ZenHistoryManager.class zentrack_2-6-final/includes/ZenHistoryManager.class
+--- zentrack_2-5-5-2/includes/ZenHistoryManager.class	1969-12-31 16:00:00.000000000 -0800
++++ zentrack_2-6-final/includes/ZenHistoryManager.class	2005-07-29 12:13:14.000000000 -0700
+@@ -0,0 +1,103 @@
++<?
++if( !ZT_DEFINED ) { die("Illegal Access"); }
++
++
++/**
++ * Manages history of visited items in ZT
++ */
++class ZenHistoryManager {
++  
++  /** 
++   * Construct a history manager
++   *
++   * @param zenTrack $zen
++   */
++  function ZenHistoryManager(&$zen) {
++    global $login_id;
++    $this->_session =& $zen->getSessionManager();
++    $this->_max = $zen->getSetting('recently_viewed_max');
++    $this->_zen =& $zen;
++    $this->_user = $login_id;
++  }
++  
++  /**
++   * Store an item in the history manager
++   * @param String $type
++   * @param int $id
++   * @param String $label
++   */
++  function storeItem( $type, $id, $label ) {
++    $list = $this->getList($type);
++    
++    // see if our item appears in the array
++    $loc = -1;
++    $count = 0;
++    foreach($list as $k=>$v) {
++      if( $k == $id ) { 
++        $loc = $count;
++        break;
++      } 
++      $count++;
++    }
++    
++    // if this item is already first in the list
++    // there is nothing left to do
++    if( $loc == 0 ) {
++      $this->_zen->addDebug("ZenHistoryManager->storeItem", "Item already appears first in $type history: $id - $label", 3);
++      return; 
++    }
++
++    $this->_zen->addDebug("ZenHistoryManager->storeItem", "Adding item to $type history: $id - $label", 3);
++    
++    // place item in beginning of list
++    $newlist = array("$id"=>$label);
++    
++    // add items from original list until it is full
++    $count = 1;
++    foreach($list as $k=>$v) {
++      // remove item if it already appears in list (it will be at the top now)
++      if( $k == $id ) { continue; }
++      // limit the size of our list
++      if( ++$count > $this->_max ) { break; }
++      // place old items into the history
++      $newlist["$k"] = $v;
++    }
++    $list = $newlist;
++    
++    // store new list
++    $this->_session->store("history_$type", $list);
++    $this->_zen->update_pref( $this->_user, "history_$type", join(",",array_keys($list)) );
++  }
++   
++  /**
++   * Retrieve a list of items from the history manager
++   *
++   * @param String $type
++   * @return Array associative array of (int)id => (String)label
++   */
++  function getList( $type ) {
++    // check the session
++    $list = $this->_session->find("history_$type");
++    if( !$list ) {
++      // try to get our list from user prefs
++      $pref = $this->_zen->get_prefs($this->_login_id, "history_$type");
++      if( $pref ) {
++        // build key/value set from the string of ids
++        $list = $this->_zen->listTitles($type, explode(",",$pref));
++        $this->_session->store("history_$type", $list);
++      }
++      else {
++        $list = array();
++      }
++    }
++    return $list;
++  }
++   
++  var $_zen;
++  var $_max;
++  var $_session;
++  var $_login_id;
++
++}
++
++?>
+\ No newline at end of file
+diff -Naur zentrack_2-5-5-2/includes/ZenHotKeys.class zentrack_2-6-final/includes/ZenHotKeys.class
+--- zentrack_2-5-5-2/includes/ZenHotKeys.class	1969-12-31 16:00:00.000000000 -0800
++++ zentrack_2-6-final/includes/ZenHotKeys.class	2005-11-05 22:28:54.000000000 -0800
+@@ -0,0 +1,560 @@
++<? if( !ZT_DEFINED ) { die("Illegal Access"); }
++
++class ZenHotKeys {
++  
++  function ZenHotKeys( &$zen ) {
++    $this->_zen =& $zen;
++    $this->_keys = array();
++    $this->_fxns = array();
++    $this->_idx = array();
++    $this->_tabs = array();
++    $this->_keysRendered = array();
++    $this->_tabkeys = array();
++    $this->_lh = '';
++    $this->_alternate = $zen->getSetting('hotkeys_alternate_hints');
++    $this->_alreadyLoaded = array();
++    
++    //todo load registered hot keys from database for the 'all' section
++    //todo and assign them here
++    $c = 1;
++    $this->assign('ALT+'.$c++, 'Projects',    "KeyEvent.createLoadUrl('{rootUrl}/projects.php')", '', true);
++    $this->assign('ALT+'.$c++, 'Tickets',     "KeyEvent.createLoadUrl('{rootUrl}/index.php')", '', true);
++    if( $this->_zen->settingOn('allow_contacts') ) {
++      $this->assign('ALT+'.$c++, 'Contacts',    "KeyEvent.createLoadUrl('{rootUrl}/contacts.php')", '', true);
++    }
++    $this->assign('ALT+'.$c++, 'Options',     "KeyEvent.createLoadUrl('{rootUrl}/options.php')", '', true);  
++    $this->assign('ALT+'.$c++, 'Help',        "KeyEvent.createLoadUrl('{rootUrl}/help/index.php')", '', true);  
++    $this->assign('ALT+'.$c++, 'Admin',       "KeyEvent.createLoadUrl('{rootUrl}/admin/index.php')", '', true);  
++    $this->assign('ALT+P', 'New Project', "KeyEvent.createLoadUrl('{rootUrl}/newProject.php')", '', true);  
++    $this->assign('ALT+T', 'New Ticket',  "KeyEvent.createLoadUrl('{rootUrl}/newTicket.php')", '', true);  
++    $this->assign('ALT+C', 'New Contact', "KeyEvent.createLoadUrl('{rootUrl}/newContact.php')", '', true);
++    
++    $this->newFxn('quickFocus', 'window.document.quickIdForm.idText.focus(); quickHighlight("window.document.quickIdForm.idText","searchHelpBox");', '', true);
++    $this->assign('ALT+S', 'Search',   "quickFocus()", 'Enter a ticket id or summary', true);
++    $this->assign('ALT+V', 'Advanced Search', "KeyEvent.createLoadUrl('{rootUrl}/search.php')", "Advanced ticket search", true);
++  }
++  
++  /** Prepares hot keys for a given section of the app */
++  function loadSection( $sect ) {
++    $sect = strtolower($sect);
++    if( in_array($sect, $this->_alreadyLoaded) ) {
++      $this->_zen->addDebug('loadSection', "$sect already loaded", 3);
++      return;
++    }
++    $this->_alreadyLoaded[] = $section;
++    
++    //todo load registered hot keys from database and assign here
++    $this->_zen->addDebug('loadSection', "Attempting to load section: $sect", 3);
++    
++    //this is a quick hack for the time being
++    if( $sect == 'admin' ) {
++      $this->assign('ALT+N',  'New User',        "KeyEvent.createLoadUrl('{rootUrl}/admin/addUser.php')");
++      $this->assign('ALT+U',  'Edit Users',      "KeyEvent.createLoadUrl('{rootUrl}/admin/listUsers.php')");
++      $this->assign('ALT+E',  'Edit Tickets',    "KeyEvent.createLoadUrl('{rootUrl}/admin/editTicket.php')");
++      $this->assign('ALT+F',  'Edit Field Map',  "KeyEvent.createLoadUrl('{rootUrl}/admin/fieldMap.php')");
++      $this->assign('ALT+B',  'Bins',            "KeyEvent.createLoadUrl('{rootUrl}/admin/bins.php')");
++      $this->assign('ALT+R',  'Priorities',      "KeyEvent.createLoadUrl('{rootUrl}/admin/priorities.php')");
++      $this->assign('ALT+S',  'Systems',         "KeyEvent.createLoadUrl('{rootUrl}/admin/systems.php')");
++      $this->assign('ALT+A',  'Tasks',           "KeyEvent.createLoadUrl('{rootUrl}/admin/tasks.php')");
++      $this->assign('ALT+Y',  'Types',           "KeyEvent.createLoadUrl('{rootUrl}/admin/types.php')");
++      $this->assign('ALT+G',  'Data Groups',     "KeyEvent.createLoadUrl('{rootUrl}/admin/groups.php')");
++      $this->assign('ALT+H',  'Behaviors',       "KeyEvent.createLoadUrl('{rootUrl}/admin/behaviors.php')");
++      $this->assign('ALT+O',  'Configuration',   "KeyEvent.createLoadUrl('{rootUrl}/admin/config.php')");
++    }
++    else if( $sect == 'actionbar' ) {
++      $actions = $this->_zen->getActions();
++      foreach($actions as $k=>$v) {
++        if( $v['button'] && $v['key'] ) {
++          if( $k == 'print' ) {
++            $this->assign($v['key'], "Action: {$v['label']}", "printWindow");
++            continue;
++          }
++          $this->assign($v['key'], "Action: {$v['label']}", 
++            "KeyEvent.createLoadUrl('{rootUrl}/actions/$k.php?id={id}')", $v['label']);
++        }
++      }
++    }
++    else if( $sect == 'action_approve' ) {
++      $f = "window.document.formless['approveForm']";
++      $this->assign('ALT+O', "Comments", "{$f}.elements['comments'].select()");
++      $this->assign('ALT+A', "Approve", "{$f}.submit()");
++    }
++    else if( $sect == 'action_assign' ) {
++      $f = "window.document.forms['assignForm']";
++      $this->assign('ALT+R', "Recipient", "{$f}.elements['user_id'].focus()");
++      $this->assign('ALT+O', "Comments or Instructions", "{$f}.elements['comments'].select()");
++      $this->assign('ALT+A', "Assign", "{$f}.submit()");
++    }
++    else if( $sect == 'action_close' ) {
++      $this->assign('ALT+H', 'Field: hours', "window.document.forms['ticketTabForm'].elements['hours'].select()", "Hours");
++      $this->assign('ALT+O', 'Field: comments', "window.document.forms['ticketTabForm'].elements['comments'].select()", "Comments");
++      $this->assign('ALT+L', 'Close', "window.document.forms['ticketTabForm'].submit()");
++    }
++    else if( $sect == 'action_contacts' ) {
++      $this->assign('ALT+N', 'Create New Contact', "window.document.forms['newContactForm'].submit()");
++      $this->assign('ALT+A', 'Add Contact', "window.document.forms['ContactsAddForm'].submit()");
++      $this->assign('ALT+D', 'Drop Contacts', "window.document.forms['dropContactsForm'].submit()");
++      $this->assign('ALT+Y', 'Field: company_id', "window.document.forms['ContactsAddForm'].elements['company_id'].focus()", "Company");
++      $this->assign('ALT+E', 'Field: person_id', "window.document.forms['ContactsAddForm'].elements['person_id'].focus()", "Person");
++    }
++    else if( $sect == 'action_notify' ) {
++      $f = "window.document.forms['notifyAddForm']";
++      $this->assign('ALT+R', "Enter Registered Users", "{$f}.elements['user_accts'].select()");
++      $this->assign('ALT+U', "Add an Unregistered User", "{$f}.elements['unreg_name'].select()");
++      $this->assign('ALT+O', "Add a Contact", "{$f}.elements['company_id'].focus()");
++      $this->assign('ALT+A', "Add Recipients", "{$f}.submit()");
++    }
++    else if( $sect == 'action_email' ) {
++      $f = "window.document.forms['emailForm']";
++      $this->newFxn('emailFormToggle', "var obj = {$f}.elements['method']; var newVal = arguments[0]; for(var i=0; i < obj.length; i++) { if( obj[i].value == newVal ) { obj[i].checked = true; break; } }");
++      $this->assign('ALT+U', 'Select a User', "{$f}.elements['users_to_email[]'].focus();",
++        "Select one or more users, use CTRL or SHIFT key for multiples");
++      $this->assign('ALT+M', 'Manually Enter Addresses', "{$f}.elements['custom_email_addresses'].select();",
++        "Manually enter an email address, use commas to separate multiple addresses");
++      $this->assign('ALT+O', 'Comments or Instructions', "{$f}.elements['comments'].select()");
++      $this->assign('ALT+E', 'Send Email', "{$f}.submit()");
++      $this->assign('ALT+L', 'send option: link',  "emailFormToggle(1)");
++      $this->assign('ALT+Y', 'send option: summary', "emailFormToggle(2)");
++      $this->assign('ALT+G', 'send option: log',  "emailFormToggle(3)");
++    }
++    else if( $sect == 'action_log' ) {
++      $f = "window.document.forms['logForm']";
++      $this->assign('ALT+Y', 'Select an Activity', "{$f}.elements['log_action'].focus()");
++      $this->assign('ALT+H', 'Enter Hours Worked', "{$f}.elements['hours'].select()");
++      $this->assign('ALT+O', 'Log Entry / Comments', "{$f}.elements['comments'].select()");
++      $this->assign('ALT+A', 'Save Log', "{$f}.submit()");
++    }
++    else if( $sect == 'action_move' ) {
++      $f = "window.document.forms['moveForm']";
++      $this->assign('ALT+B',  'New Bin', "{$f}.elements['newBin'].focus()");
++      $this->assign('ALT+O',  'Comments', "{$f}.elements['comments'].select()");
++      $this->assign('ALT+M',  'Move',  "{$f}.submit()");
++    }
++    else if( $sect == 'action_reject' ) {
++      $f = "window.document.forms['rejectForm']";
++      $this->assign('ALT+O', 'Reason', "{$f}.elements['comments'].select()");
++      $this->assign('ALT+R', 'Reject', "{$f}.submit()");
++    }
++    else if( $sect == 'action_relate' ) {
++      $f = "window.document.forms['relateTicketForm']";
++      $this->assign('ALT+I', 'Enter Ticket IDs', "{$f}.elements['relations'].select()");
++      $this->assign('ALT+O', 'Comments', "{$f}.elements['comments'].select()");
++      $this->assign('ALT+R', 'Relate', "{$f}.submit()");
++    }
++    else if( $sect == 'action_reopen' ) {
++      $f = "window.document.forms['reopenForm']";
++      $this->assign('ALT+O', 'Comments or Instructions', "{$f}.elements['comments'].select()");
++      $this->assign('ALT+R', 'Reopen', "{$f}.submit()");
++    }
++    else if( $sect == 'action_test' ) {
++      $f = "window.document.forms['testForm']";
++      $this->assign('ALT+H', 'Hours Worked', "{$f}.elements['hours'].select()");
++      $this->assign('ALT+O', 'Comments or Instructions', "{$f}.elements['comments'].select()");
++      $this->assign('ALT+E', 'Testing Complete', "{$f}.submit()");
++    }
++    else if( $sect == 'action_upload' ) {
++      $f = "window.document.forms['addAttachmentForm']";
++      $this->assign('ALT+U', 'Select a File to Upload', "{$f}.elements['userfile'].focus()");
++      $this->assign('ALT+E', 'Description of Attachment', "{$f}.elements['comments'].select()");
++      $this->assign('ALT+A', 'Add Attachment', "{$f}.submit()");
++    }
++    else if( $sect == 'action_yank' ) {
++      $this->assign('ALT+O', 'Reason', "window.document.forms['pullForm'].elements['comments'].select()");
++      $this->assign('ALT+U', 'Pull', "window.document.forms['pullForm'].submit()");
++    }
++    else if( $sect == 'agreement_view' ) {
++      $this->assign('ALT+E', 'Edit', "window.document.forms['editAgreementForm'].submit()");
++      $msg = Zen::fixJsHtml(tr("Are you sure you want to archive this agreement?"),"'");
++      $this->assign('ALT+A', 'Archive', "confirmSubmit(window.document.forms['archiveAgreementForm'],$msg)");
++      $msg = Zen::fixJsHtml(tr("Are you sure you want to delete this agreement?"),"'");
++      $this->assign('ALT+D', 'Delete', "confirmSubmit(window.document.forms['deleteAgreementForm'],$msg)");
++    }
++    else if( $sect == 'agreement_form' ) {
++      $f = "window.document.forms['agreementForm']";
++      $this->assign('ALT+A', "Add Item",     "rerouteAgreementForm('addItems')");
++      $this->assign('ALT+O', "Drop Items",   "rerouteAgreementForm('removeItems')");
++      $this->assign('ALT+R', "Create",       "{$f}.submit()");
++      $this->assign('ALT+M', "Agreement ID", "{$f}.elements['contractnr'].select()");
++      $this->assign('ALT+E', "Description",  "{$f}.elements['description'].select()");
++    }
++    else if( $sect == 'contacts' ) {
++      $this->assign('ALT+N',  'Find',           "KeyEvent.createLoadUrl('{rootUrl}/searchContacts.php')");
++      $this->assign('ALT+B',  'Browse',         "KeyEvent.createLoadUrl('{rootUrl}/agreements.php')");
++      $this->assign('ALT+G',  'New Agreement',  "KeyEvent.createLoadUrl('{rootUrl}/newAgreement.php')");
++    }
++    else if( $sect == 'contacts_new_menu' ) {
++      $this->assign('ALT+Y',  'New Company',    "KeyEvent.createLoadUrl('{rootUrl}/newContact.php?mode2=1')");
++      $this->assign('ALT+N',  'New Person',     "KeyEvent.createLoadUrl('{rootUrl}/newContact.php?mode2=2')");
++    }
++    else if( $sect == 'contacts_view' ) {
++      $this->assign('ALT+D',  'Edit',    "KeyEvent.createLoadUrl('{rootUrl}/actions/contact_edit.php?cid={id}')");
++      $this->assign('ALT+L',  'Delete',  "KeyEvent.createLoadUrl('{rootUrl}/actions/contact_delete.php?cid={id}')");
++      $this->assign('ALT+E',  'Add Employee',  "KeyEvent.createLoadUrl('{rootUrl}/actions/contact_employee.php?cid={id}')");
++      $this->assign('ALT+A',  'Add Agreement',  "KeyEvent.createLoadUrl('{rootUrl}/actions/contact_agreement.php?cid={id}')");
++      $this->assign('ALT+I',  'View Tickets', "KeyEvent.createLoadUrl('{rootUrl}/contact.php?overview=tickets&cid={id}')");
++      $this->assign('ALT+Y',  'View Employees',  "KeyEvent.createLoadUrl('{rootUrl}/contact.php?cid={id}&overview=contact')");
++      $this->assign('ALT+M',  'View Agreements',  "KeyEvent.createLoadUrl('{rootUrl}/contact.php?cid={id}&overview=agreement')");
++    }
++    else if( $sect == 'contacts_view_employee' ) {
++      $this->assign('ALT+E',  'Edit',         "window.document.forms['edit_form'].submit()");
++      $msg = Zen::fixJsVal(tr("Are you sure you want to delete this contact?"));
++      $this->assign('ALT+D',  'Delete',       "confirmSubmit(window.document.forms['delete_form'],$msg)");
++      $this->assign('ALT+I',  'View Tickets', "window.document.forms['view_form'].submit()");
++    }
++    else if( $sect == 'contacts_list' ) {
++      $tabs = array('all',"abc","def","ghi","jkl","mno","pqrs","tuv","wxyz","!19");
++      foreach($tabs as $t) {
++        $c = 0;
++        $k = false;
++        while(!$k || (array_key_exists($k,$this->_keys) && $c < strlen($t))) {
++          $k = strtoupper(substr($t,$c,1));
++          if( $k == '!' ) { $k = false; }
++          $c++;
++        }
++        $this->assign($k, $t, "updateUrl('setmode','$t')");
++      }
++      $this->assign('ALT+O', "Company",  "updateUrl('overview', 'company')"  );
++      $this->assign('ALT+E', "External", "updateUrl('overview', 'external')" );
++      $this->assign('ALT+I', "Internal", "updateUrl('overview', 'internal')" );
++    }
++    else if( $sect == 'log' ) {
++      $this->assign('ALT+L',  'Show All Logs',  "window.document.getElementById('systemLogFilterCheckbox').click()");
++    }
++    else if( $sect == 'login' ) {
++      $f = "window.document.forms['loginForm']";
++      $this->newFxn("loginAutoCheck", "{$f}.elements['save_my_password'].checked = !window.document.forms['loginForm'].elements['save_my_password'].checked;");
++      $this->assign('ALT+L',   'Log On',         "{$f}.submit()");
++      $this->assign('ALT+A',   "In the future, log me in automatically (using a cookie)", "loginAutoCheck()");
++      $this->assign('ALT+N',   'Login Name',     "{$f}.elements['username'].select()");
++      $this->assign('ALT+W',   'Password',       "{$f}.elements['passphrase'].select()");
++    }
++    else if( $sect == 'options' ) {
++      $this->assign('ALT+L',  'Log Off',        "KeyEvent.createLoadUrl('{rootUrl}/index.php?logoff=1')", "Log out of ".$this->_zen->getSetting('system_name'));
++    }
++    else if( $sect == 'paging' ) {
++      $this->assign('ALT+E',  "Prev",           "window.location = window.document.getElementById('pagingPrevLink').href");
++      $this->assign('ALT+X',  "Next",           "window.location = window.document.getElementById('pagingNextLink').href");
++    }
++    else if( $sect == 'project_tasks' ) {
++      $this->assign('ALT+A', "Add Ticket to Project", "window.document.forms['newTicketHotkey'].submit()");
++      $this->assign('ALT+R', "Create Sub-Project", "window.document.forms['newProjectHotkey'].submit()");
++    }
++    else if( $sect == 'search_form' ) {
++      $f = "window.document.forms['searchForm']";
++      $this->assign('ALT+E', "Search",  "{$f}.submit()");
++      $this->assign('ALT+O', "Containing", "{$f}.elements['search_text'].select()");
++      $this->assign('ALT+U', "Summary", "{$f}.elements['search_fields[title]'].click()");
++      $this->assign('ALT+D', "Description", "{$f}.elements['search_fields[description]'].click()");
++    }
++    else if( $sect == 'tab_attachments' ) {
++      $this->assign('ALT+D', 'Delete Attachments', "window.document.forms['deleteAttachmentForm'].submit()");
++      $this->assign('ALT+A', 'Add Attachment', "window.document.forms['addAttachmentForm'].submit()");
++    }
++    else if( $sect == 'tab_contacts' ) {
++      $this->assign('ALT+N', 'Create New Contact', "window.document.forms['newContactForm'].submit()");
++      $this->assign('ALT+A', 'Add Contact', "window.document.forms['ContactsAddForm'].submit()");
++      $this->assign('ALT+D', 'Drop Contacts', "window.document.forms['dropContactsForm'].submit()");
++      $this->assign('ALT+Y', 'Field: company_id', "window.document.forms['ContactsAddForm'].elements['company_id'].focus()", "Company");
++      $this->assign('ALT+E', 'Field: person_id', "window.document.forms['ContactsAddForm'].elements['person_id'].focus()", "Person");
++    }
++    else if( $sect == 'tab_notify' ) {
++      $this->assign('ALT+D', "Drop Recipients", "window.document.forms['dropNotifyForm'].submit()");
++      $this->assign('ALT+A', "Add Recipients", "window.document.forms['notifyAddForm'].submit()");
++    }    
++    else if( $sect == 'ticket_fields_editable' ) {
++      $this->assign('ALT+A', 'Save', "window.document.forms['ticketTabForm'].submit()");
++    }
++    else if( $sect == 'ticket_view' || $sect == 'project_view' ) {
++      $map = $GLOBALS['zt_map'];
++      preg_match('@(ticket|project)@', $sect, $matches);
++      $t = $matches[1];
++      $j = 1;
++      for($i=1; $i<=8; $i++) {
++        $view = "{$t}_tab_{$i}";
++        if( $map->getViewProp($view, 'visible') ) {
++          $this->_tabkeys[$view] = $j;
++          $label = $map->getViewProp($view,'label');
++          $this->assign($j++, $label, "KeyEvent.createLoadUrl('{rootUrl}/ticket.php?id={id}&setmode=$view')");
++        }
++      }
++    }
++  }
++  
++  var $_tabkeys;
++  
++  function getTabKeys() {
++    return $this->_tabkeys;
++  }
++  
++  function newFxn( $name, $code ) {
++    if( array_key_exists($name, $this->_fxns) ) {
++      $this->_zen->addDebug('ZenHotKeys->newFxn', "The fxn '$name' already exists", 1);
++      return;
++    }
++    $this->_zen->addDebug('ZenHotKeys->assign', "Added fxn '$name'", 3);
++    $this->_fxns["$name"] = $code;
++  }
++  
++  function getFxnName($key) {
++    return str_replace('KeyEvent.createLoadUrl', 'KeyEvent.loadUrl', $this->_keys[$key]['fxn']);
++  }
++
++  /** 
++   * Adds a hot key to the list.  The fxn param accepts the following special
++   * placeholders:
++   * <ul>
++   *  <li>{rootUrl} - replaced with the value of $rootUrl in www/header.php
++   *  <li>{id} - replaced with the current ticket/project/contact/agreement id (if any)
++   * </ul>
++   *
++   * @param String $key a hot key such as 'ALT+SHIFT+Y'
++   * @param String $label name of the hot key
++   * @param String $fxn name of function to call when hot key is pressed
++   * @param String $description tooltip text (defaults to label)
++   */
++  function assign( $key, $label, $fxn, $description = '', $global = false ) {
++    global $id; global $rootUrl;
++
++    // if the hot key doesn't exist, we fail and don't add anything
++    $key = strtoupper($key);
++    if( array_key_exists($key, $this->_keys) ) {
++      $this->_zen->addDebug('ZenHotKeys->assign', "The key '$key' already exists and will not have a hot key", 1);
++      return;
++    }
++
++    // add the label if it is not a duplicate... items which duplicate the label
++    // cannot appear together
++    if( array_key_exists($label, $this->_idx) ) {
++      $this->_zen->addDebug('ZenHotKeys->assign', "The label '$label' already exists for key '".$this->_idx["$label"]."', this hotkey cannot be looked up by label accurately", 2);
++    }
++    else {
++      $this->_idx["$label"] = $key;
++    }
++    
++    // if there is no description, we use the label for this field
++    if( !$description ) { $description = $label; }
++    
++    // replace special variables in the function call with current values
++    $fxn = str_replace("{rootUrl}", $rootUrl, $fxn);
++    $fxn = str_replace("{id}", $id, $fxn);
++    
++    // actually create the key assignment now
++    $this->_zen->addDebug('ZenHotKeys->assign', "Added key '$key' for label '$label' and fxn '$fxn'", 3);
++    $this->_keys["$key"] = array('label'=>$label, 'fxn'=>$fxn, 'description'=>$description, 'global'=>$global);
++  }
++  
++  function disableAction( $key ) {
++    $this->_keys["$key"]["fxn"] = 'doNothing';
++  }
++  
++  /**
++   * Return the hot key for a given label (the section must be loaded unless
++   * this label appears in 'all')
++   *
++   * @param String $label
++   * @return String the key for this label
++   */
++  function find( $label ) {
++    if( !array_key_exists("$label", $this->_idx) ) { return false; }
++    return $this->_idx["$label"];
++  }
++  
++  
++  /** Returns a tooltip for a given label */
++  function tt( $label ) {
++    $key = $this->find($label);
++    if( !$key ) {
++      $this->_zen->addDebug('ZenHotKeys->tt', "Invalid label '$label'", 1);
++      return $label;
++    }
++    return $this->tooltip($key, $override_text = '');
++  }
++  
++  /** Returns a parsed/translated label for a given label */
++  function ll( $label, $override_text = '', $supress_key = false ) {
++    $key = $this->find($label);
++    if( !$key ) {
++      $this->_zen->addDebug('ZenHotKeys->ll', "Invalid label '$label'", 1);
++      return $override_text? $override_text : $label;
++    }
++    return $this->label($key, $override_text, $supress_key);
++  }
++  
++  /** 
++   * Return a tooltip message for a given key, this will be translated and
++   * the hot key will be appended
++   */
++  function tooltip( $key ) {
++    $key = strtoupper($key);
++    return $this->_zen->ffv(tr($this->_keys["$key"]["description"])." ($key)");
++  }
++  
++  /**
++   * Return description for a given key, translated and escaped
++   *
++   * If the description is the same as the label, it will be skipped.
++   */
++  function description( $key ) {
++    $key = strtoupper($key);
++    $x = $this->_keys["$key"];
++    if( $x["description"] == $x["label"] ) { return "&nbsp;"; }
++    return $this->_zen->ffv(tr($x["description"]));
++  }
++  
++  /** 
++   * Return a label for a given key, this will be translated
++   * and the hot key will be underlined if possible
++   */
++  function label( $key, $override_text = '' ) {
++    $key = strtoupper($key);
++    $char = $this->_getChar($key);
++    $lchar = strtolower($char);
++    $label = $override_text? tr($override_text) : tr($this->_keys["$key"]["label"]);
++    $label = preg_replace('@^(Action|Field): @', '', $label);
++    $label = str_replace('_', ' ', $label);
++    $pos = strpos($label, $char);
++    if( $pos === false ) { $pos = strpos($label, $lchar); $char = $lchar; }
++    $len = strlen($label);
++    if( $pos === 0 ) {
++      // matched at beginning of string
++      $txt = "<u>{$char}</u>".substr($label,1);
++    }
++    else if( $pos > 0 && $pos == $len-1 ) {
++      // matched at end of string
++      $txt = substr($label,0,$len-1)."<u>{$char}</u>";
++    }
++    else if( $pos > 0 ) {
++      // matched inside the string
++      $txt = substr($label,0,$pos)."<u>{$char}</u>".substr($label,$pos+1);
++    }
++    else {
++      // no match, just return the label
++      //return $label."<sub class='note'>$char</sub>";
++      $txt = $label;
++    }
++    //if( !$supress_key ) { $txt .= $this->renderAccessKey($key); }
++    $txt .= $this->addZenTab($key);
++    return $txt;
++  }
++  
++  /**
++   * Renders any custom functions defined here.
++   */
++  function renderFunctions() {
++    if( !count($this->_fxns) ) { return; }
++    foreach( $this->_fxns as $k=>$v ) {
++      print "function $k() {\n";
++      print $v;
++      print "}\n\n";
++    }
++     
++  }
++  
++  /** 
++   * Create javascript code needed for
++   * hot keys to function.  Depends on the keyevents.js file
++   *
++   * This is meant to be used inside of the onload fxn for the page.   */
++  function renderKeys() {
++    if( !count($this->_keys) ) { return; }
++    foreach( $this->_keys as $k=>$v ) {
++      if( $this->_getAccessKey($k) || array_key_exists($k,$this->_keysRendered) ) { continue; }
++      $this->_keysRendered[$k] = 1;
++      $f = $v['fxn'];
++      if( strpos($f,'KeyEvent.createLoadUrl')===false ) { $f = Zen::fixJsVal($f); }
++      print "\tKeyEvent.register($f, '$k');\n";
++    }
++    foreach( $this->_tabs as $t=>$k ) {
++      print "\tZenTabs.singleton.register('keySub_$t');\n";
++    }
++  }
++  
++  /**
++   * create javascript code needed for
++   * accesskey functions
++   */
++  function renderAccessKeys() {
++    $keys = array();
++    foreach($this->_keys as $k=>$v) {
++      print $this->renderAccessKey($k);
++    }
++  }
++  
++  /**
++   * Render a single access key, done this way so that they will focus near
++   * the appropriate field, when possible
++   */
++  function renderAccessKey( $k ) {
++    $v = $this->_keys[$k];
++    if( array_key_exists($k,$this->_keysRendered) ) { return; }
++    if( $key = $this->_getAccessKey($k) ) {
++      $this->_keysRendered[$k] = 1;
++      $fxn_parsed = Zen::fixJsHtml($v['fxn']);
++      $fxn_parsed = str_replace('KeyEvent.createLoadUrl', 'KeyEvent.loadUrl', $fxn_parsed);
++      return "<input type='button' name='accessKeyButton{$key}' value='' accesskey='{$key}' class='accesskeys' onclick=$fxn_parsed>";
++    }
++    return null;
++  }
++  
++  /** Returns letter used to access this key if it is an accesskey */
++  function _getAccessKey( $key ) {
++    preg_match('@^ALT[+](\w)$@', $key, $matches);
++    return count($matches)>1? $matches[1] : false;
++  }
++  
++  /** Splits a key and returns the letter to be used */
++  function _getChar( $key ) {
++    return preg_replace('@^.*[+]@', '', $key);
++  }
++  
++  function getChar( $key ) {
++    return $this->_getChar($key);
++  }
++  
++  /** Creates html output to display help info */
++  function renderHelp() {
++    print "<table width='300' border='0' cellspacing='1' cellpadding='2'><tr><td class='titleCell'>Hot Key</td><td class='titleCell'>Function</td></tr>";
++    $keys = $this->_keys;
++    uasort($keys, 'sortHotKeyTable');
++    foreach( $keys as $k=>$v ) {
++      print "<tr><td class='hotKeyCell'>$k</td><td class='hotKeyCell'>"
++      .$this->label($k)."</td></tr>";
++    }
++    print "</table>\n";
++  }
++  
++  /** Store a key that will be used to display subtext on tabs */
++  function addZenTab( $key ) {
++    $count = 1;
++    $id = $key.$count++;
++    while( array_key_exists($id, $this->_tabs) ) {
++      $id = $key.$count++;
++    }
++    $this->_tabs[$id] = $key;
++    $this->_lh = $this->_alternate? $this->_lh == 'High'? 'Low' : 'High' : "High";
++    return "<div id='keySub_$id' class='keySub{$this->_lh}'>$key</div>";
++  }
++  
++  function addZenTabByLabel($label) {
++    $this->addZenTab($this->find($label));
++  }
++  
++  var $_alternate;
++  var $_lh;
++  var $_fxns;
++  var $_zen;
++  var $_keys;
++  var $_idx;
++  var $_alreadyLoaded;
++  var $_tabs;
++  var $_keysRendered;
++}
++
++/** Must be declared outside of class to work with php */
++function sortHotKeyTable( $a, $b ) {
++  $a['label'] = preg_replace('@^(Action|Field): @', '', $a['label']);
++  $b['label'] = preg_replace('@^(Action|Field): @', '', $b['label']);
++  return strnatcmp($a['label'], $b['label']);
++}
++
++?>
+\ No newline at end of file
+diff -Naur zentrack_2-5-5-2/includes/ZenSessionManager.class zentrack_2-6-final/includes/ZenSessionManager.class
+--- zentrack_2-5-5-2/includes/ZenSessionManager.class	2005-05-15 16:44:30.000000000 -0700
++++ zentrack_2-6-final/includes/ZenSessionManager.class	2005-11-01 20:46:41.000000000 -0800
+@@ -121,7 +121,8 @@
+     if( isset($GLOBALS) && isset($GLOBALS['ztDataCache']) && isset($GLOBALS['ztDataCache'][$type]) ) {
+       if( isset($id) ) {
+         $this->_zen->addDebug("getDataCache", "$type-$id: retrieved");
+-        return isset($GLOBALS['ztDataCache']["id$id"])? $GLOBALS['ztDataCache']["id$id"] : false;
++        return isset($GLOBALS['ztDataCache'][$type])
++          && isset($GLOBALS['ztDataCache'][$type]["id$id"])? $GLOBALS['ztDataCache'][$type]["id$id"] : false;
+       }
+       $this->_zen->addDebug("getDataCache", "$type: retrieved");
+       return $GLOBALS['ztDataCache'][$type];
+@@ -141,14 +142,8 @@
+     if( isset($GLOBALS) ) {
+       if( !isset($GLOBALS['ztDataCache']) ) { $GLOBALS['ztDataCache'] = array(); }
+       if( !isset($GLOBALS['ztDataCache'][$type]) ) { $GLOBALS['ztDataCache'][$type] = array(); }
+-      if( !strlen($id) ) {
+-        $this->_zen->addDebug("storeDataCache", "Storing cache for {$type}",3);
+-        $GLOBALS['ztDataCache'][$type] = $vals; 
+-      }
+-      else {
+-        $this->_zen->addDebug("storeDataCache", "Storing cache for {$type}->{$id}",3);
+-        $GLOBALS['ztDataCache'][$type][$id] = $vals; 
+-      }
++      $this->_zen->addDebug("storeDataCache", "Storing cache for {$type}->{$id}",3);
++      $GLOBALS['ztDataCache'][$type]["id$id"] = $vals; 
+     }
+   }
+   
+@@ -163,7 +158,7 @@
+     if( isset($GLOBALS) && isset($GLOBALS['ztDataCache']) ) {
+       if( $id ) {
+         $this->_zen->addDebug("clearDataCache", "Clearing cache for {$type}->{$id}",3);
+-        unset($GLOBALS['ztDataCace'][$type]["id$id"]);
++        unset($GLOBALS['ztDataCache'][$type]["id$id"]);
+       }
+       else {
+         $this->_zen->addDebug("clearDataCache", "Clearing cache for {$type}",3);
+@@ -198,7 +193,7 @@
+   function clearCustomFields() {
+     if( isset($_SESSION) ) {
+       $this->_zen->addDebug("clearCustomFields", "Clearing cache", 3);
+-      $_SESSION['ztVarfields'] = false;
++      unset($_SESSION['ztVarfields']);
+     }
+   }
+   
+@@ -213,4 +208,4 @@
+ 
+  }
+ 
+-?>
+\ No newline at end of file
++?>
+diff -Naur zentrack_2-5-5-2/includes/colors/bluegradient zentrack_2-6-final/includes/colors/bluegradient
+--- zentrack_2-5-5-2/includes/colors/bluegradient	2003-01-03 22:11:47.000000000 -0800
++++ zentrack_2-6-final/includes/colors/bluegradient	1969-12-31 16:00:00.000000000 -0800
+@@ -1,14 +0,0 @@
+-
+-#gradient blues
+-
+-=204,255,255
+-=153,255,255
+-=  0,255,255
+-=  0,204,255
+-=  0,153,255
+-=  0,102,255
+-=  0,  0,255
+-=  0,  0,204
+-=  0,  0,153
+-=  0,  0,102
+- 
+\ No newline at end of file
+diff -Naur zentrack_2-5-5-2/includes/colors/default zentrack_2-6-final/includes/colors/default
+--- zentrack_2-5-5-2/includes/colors/default	2003-01-11 19:53:41.000000000 -0800
++++ zentrack_2-6-final/includes/colors/default	1969-12-31 16:00:00.000000000 -0800
+@@ -1,21 +0,0 @@
+-#primary
+-blue     =   0,   0, 255
+-red      = 255,   0,   0
+-yellow   = 255, 255,   0
+-white    = 255, 255, 255
+-grey     = 180, 180, 180
+-charcoal = 100, 100, 100
+-black    =   0,   0,   0
+-#secondary
+-green  =   0, 255,   0
+-purple = 255,   0, 255
+-teal   =   0, 255, 255
+-#darks
+-dkblue  =   0,   0, 140
+-dkgreen =   0, 140,   0
+-dkred   = 140,   0,   0
+-#pastels
+-pastel_yellow = 255, 255, 200
+-pastel_red    = 255, 200, 200
+-pastel_green  = 200, 255, 200
+-pastel_blue   = 200, 200, 255 
+\ No newline at end of file
+diff -Naur zentrack_2-5-5-2/includes/colors/modblue zentrack_2-6-final/includes/colors/modblue
+--- zentrack_2-5-5-2/includes/colors/modblue	2003-01-03 22:11:47.000000000 -0800
++++ zentrack_2-6-final/includes/colors/modblue	1969-12-31 16:00:00.000000000 -0800
+@@ -1,10 +0,0 @@
+-
+-# gradient blues
+-# modified for a short
+-# graph (5 or so)
+-
+-=  0,204,255
+-=  0,153,255
+-=  0,102,255
+-=  0,  0,255
+-=  0,  0,204
+diff -Naur zentrack_2-5-5-2/includes/colors/primary zentrack_2-6-final/includes/colors/primary
+--- zentrack_2-5-5-2/includes/colors/primary	2003-01-03 23:07:31.000000000 -0800
++++ zentrack_2-6-final/includes/colors/primary	1969-12-31 16:00:00.000000000 -0800
+@@ -1,10 +0,0 @@
+-#primary
+-black  =   0,   0,   0
+-blue   =   0,   0, 255
+-red    = 255,   0,   0
+-yellow = 255, 255,   0
+-white  = 255, 255, 255
+-#secondary
+-green  =   0, 255,   0
+-purple = 255,   0, 255
+-teal   =   0, 255, 255
+diff -Naur zentrack_2-5-5-2/includes/colors/redgradient zentrack_2-6-final/includes/colors/redgradient
+--- zentrack_2-5-5-2/includes/colors/redgradient	2003-01-03 22:11:47.000000000 -0800
++++ zentrack_2-6-final/includes/colors/redgradient	1969-12-31 16:00:00.000000000 -0800
+@@ -1,12 +0,0 @@
+-
+-#red color gradient
+-
+-=255,204,204
+-=255,153,153
+-=255,102,102
+-=255, 51, 51
+-=255,  0,  0
+-=205,  0,  0
+-=153,  0,  0
+-=102,  0,  0
+-= 51,  0,  0
+diff -Naur zentrack_2-5-5-2/includes/db.class zentrack_2-6-final/includes/db.class
+--- zentrack_2-5-5-2/includes/db.class	2005-05-15 16:44:30.000000000 -0700
++++ zentrack_2-6-final/includes/db.class	2005-11-05 19:57:02.000000000 -0800
+@@ -63,6 +63,9 @@
+       if( is_array($vars) && count($vars) > 0 )
+       return($vars);
+     }
++    else {
++      $this->addDebug('db_queryIndexed', "Error in query: $query [" . $this->db_link->ErrorMsg()."]", 1);
++    }
+   }
+   
+   function db_query( $query ) {
+@@ -75,6 +78,9 @@
+       if( is_array($vars) && count($vars) > 0 )
+       return($vars);  
+     }
++    else {
++      $this->addDebug('db_query', "Error in query: $query [" . $this->db_link->ErrorMsg()."]", 1);      
++    }
+   }
+   
+   function db_quickIndexed( $query ) {
+@@ -88,6 +94,9 @@
+       if( is_array($vars) && count($vars) > 0 )
+       return($vars);  
+     }
++    else {
++      $this->addDebug('db_quickIndexed', "Error in query: $query [" . $this->db_link->ErrorMsg()."]", 1);      
++    }    
+   }
+   
+   function db_quick( $query ) {
+@@ -101,6 +110,9 @@
+       if( is_array($vars) && count($vars) > 0 )
+       return($vars);     
+     }
++    else {
++      $this->addDebug('db_quick', "Error in query: $query [" . $this->db_link->ErrorMsg()."]", 1);      
++    }
+   }
+   
+   function db_get( $query ) {
+@@ -111,12 +123,16 @@
+     if( $recordSet ) {
+       return( $recordSet->fields[0] );
+     }
++    else {
++      $this->addDebug('db_get', "Error in query: $query [" . $this->db_link->ErrorMsg()."]", 1);      
++    }
+   }
+   
+   function db_update( $table, $key, $val, $columns ) {
+     unset($columns[$key]);
+     $set = $this->makeInsertVals( $columns, 1 );
+-    $query = "UPDATE $table SET $set WHERE $key = '$val'";
++    $val = $this->checkSlashes($val);
++    $query = "UPDATE $table SET $set WHERE $key = $val";
+     $r = $this->db_result($query);
+     $this->addDebug("db_update", "[$r]".$query, 3);
+     return $r;
+@@ -199,10 +215,13 @@
+     // or other query which does not retrieve
+     // data
+     $res = $this->db_link->Execute($query);
+-    if( $this->_returnsResult )
+-    return $res;
+-    else
+-    return true;
++    if( $this->_returnsResult ) { 
++      if( !$res ) {
++        $this->addDebug('db_result', "query failed: $query [" . $this->db_link->ErrorMsg()."]", 2);
++      }
++      return $res; 
++    }
++    else { return true; }
+   }
+   
+   function db_list( $query ) {
+@@ -222,6 +241,9 @@
+         }
+       }
+     }
++    else {
++      $this->addDebug('db_list', "Error in query: $query [" . $this->db_link->ErrorMsg()."]", 1);      
++    }
+     return($vals);
+   }
+   
+@@ -276,7 +298,7 @@
+       }
+       $val = "(".$text.")";
+     } else {
+-      $val = $this->db_link->qstr($val,get_magic_quotes_gpc());
++      $val = $this->db_link->qstr($val,false);//get_magic_quotes_gpc());
+       if( $val == "''" ) {
+         $val = "NULL";
+       }
+diff -Naur zentrack_2-5-5-2/includes/editCustomSubmit.php zentrack_2-6-final/includes/editCustomSubmit.php
+--- zentrack_2-5-5-2/includes/editCustomSubmit.php	2005-05-15 16:44:30.000000000 -0700
++++ zentrack_2-6-final/includes/editCustomSubmit.php	2005-07-14 13:07:11.000000000 -0700
+@@ -6,21 +6,38 @@
+   $required = array();
+   // the TODO is saved, even if the save failed
+   $TODO = 'SAVED';
+-  
++
++  if( $zen->inProjectTypeIDs($type_id) ) {
++    $view="project_custom";
++  } else {
++    $view="ticket_custom";
++  }
+   include("$libDir/validateFields.php");
+-  
+   if( !$errs ) {
+     if( count($varfield_params) ) {
+       // update the ticket info
+       $res = $zen->updateVarfieldVals($id,$varfield_params);
+     }
++    // check for errors
++    if( !$res ) {
++      $errs[] = tr("System Error").": ".tr("Ticket could not be edited.")." ".$zen->db_error;
++    }
++  }
+ 
++/*
++  if( !$errs ) {
++      $varfields = $zen->getCustomFields(0,$page_type, 'Custom Tab'); 	 
++      include("$libDir/parseVarfields.php"); 	 
++    }
++  if( !$errs ) {
++    // update the ticket info
++    $res = $zen->updateVarfieldVals($id,$varfield_params);
+     // check for errors
+     if( !$res ) {
+       $errs[] = tr("System Error").": ".tr("Ticket could not be edited.")." ".$zen->db_error;
+     }
+   }
+-  
++*/  
+   $setmode = 'custom';
+ 
+   if( !$errs ) {
+@@ -28,7 +45,7 @@
+     $save_message = tr("Fields updated successfully");
+      //header("Location:$rootUrl/ticket.php?id=$id&setmode=Custom");
+     $setmode = "custom";
+-    if( $zen->inProjectTypeIDs($bin_id) ) {
++    if( $zen->inProjectTypeIDs($type_id) ) {
+       include("../project.php");
+     } else {
+       include("../ticket.php");
+@@ -37,7 +54,7 @@
+   } else {
+      include_once("$libDir/nav.php");
+      $zen->printErrors($errs);
+-     if( $zen->inProjectTypeIDs($bin_id) )
++     if( $zen->inProjectTypeIDs($type_id) )
+        include("$templateDir/projectView.php");
+      else
+        include("$templateDir/ticketView.php");
+diff -Naur zentrack_2-5-5-2/includes/editTicketSubmit.php zentrack_2-6-final/includes/editTicketSubmit.php
+--- zentrack_2-5-5-2/includes/editTicketSubmit.php	2005-05-08 14:14:53.000000000 -0700
++++ zentrack_2-6-final/includes/editTicketSubmit.php	2005-11-01 20:46:41.000000000 -0800
+@@ -8,7 +8,6 @@
+   }
+ 
+   $page_title = tr("Commit Edited Ticket");
+-  $expand_admin = 1;
+ 
+   // initiate default values
+   if( !$tested )
+@@ -27,7 +26,13 @@
+      $params = array();
+      // create an array of existing fields
+      foreach(array_keys($fields) as $f) {
++       // can't edit the status
++       if( $f == 'status' ) { continue; }
++       // put the value into the updates array
+        $params["$f"] = $$f;
++       if( $f == 'title' && strlen($params["$f"]) > 50 ) {
++         $params["$f"] = substr($params["$f"],0,50);
++       }
+      }
+      // update the ticket info
+      $res = $zen->edit_ticket($id,$login_id,$params,$edit_reason);
+@@ -44,9 +49,9 @@
+   }
+   
+   if( !$errs ) {
+-    add_system_messages(tr("Edited ticket #?", array($id)));
++    $msg[] = tr("Edited ticket #?", array($id));
+     //header("Location:$rootUrl/ticket.php?id=$id&setmode=Details");
+-    $setmode = "Details";
++    $setmode = "";
+     if( $is_project ) {
+       include("../project.php");
+     } else {
+diff -Naur zentrack_2-5-5-2/includes/egate_utils.php zentrack_2-6-final/includes/egate_utils.php
+--- zentrack_2-5-5-2/includes/egate_utils.php	2005-05-04 09:01:07.000000000 -0700
++++ zentrack_2-6-final/includes/egate_utils.php	2005-10-20 11:23:44.000000000 -0700
+@@ -200,7 +200,7 @@
+   include_once('Mail/mimeDecode.php');
+   
+   // make sure we are using the email interface
+-  if( $zen->settings["email_interface_enabled"] != "on" ) {
++  if( !$zen->settingOn("email_interface_enabled") ) {
+     egate_log("ERROR: email ignored, email_interface_enabled = off",1);
+     egate_log_write();
+     exit;
+@@ -444,7 +444,7 @@
+     } else {
+       // try to divine the action anyways, even though the format wasn't correct
+       // start by removing [zenBot] tag
+-      $test = preg_replace("/\[".$zen->settings['bot_name']."]/","",$params->headers["subject"]);
++      $test = preg_replace("/\[".$zen->getSetting('bot_name')."]/","",$params->headers["subject"]);
+       if( strlen($test) ) {
+ 	// look for an id
+ 	if( preg_match("/#([0-9]+)/", $subject, $matches) ) {
+@@ -545,7 +545,7 @@
+ 	      egate_log("could not locate owner by id '$v', skipped",2);
+ 	    }
+ 	  }
+-	  else if( strpos('@', $v) > 0 ) {
++	  else if( strpos($v, '@') > 0 ) {
+ 	    $user = find_user_id('',$v);
+ 	    if( $user ) {
+ 	      $vals['user_id'] = $user['user_id'];
+@@ -656,7 +656,7 @@
+ 	// add user to notify list if they create
+ 	// a ticket through the egate system
+ 	// and default_notify_creator == "on"
+-	if( $user_id == $egate_user["user_id"] && $zen->settings["default_notify_creator"] == "on" ) {
++	if( $user_id == $egate_user["user_id"] && $zen->settingOn("default_notify_creator") ) {
+ 	  $zen->add_to_notify_list( $id, array("name"=>$name,"email"=>$email) );
+ 	}
+ 	return $id;
+@@ -1515,22 +1515,18 @@
+ 	$txt .= $temp->process();
+       }
+ 
+-      $subject = "[".$zen->settings["bot_name"]."] ".$subject;
++      $subject = "[".$zen->getSetting("bot_name")."] ".$subject;
+ 
+       // send messages
+       $i=0;
+       $from = $egate_user["email"];
+       $bcc = $egate_bcc_address? "Bcc:$egate_bcc_address\r\n" : "";
+       foreach($recipients as $r) {
+-	if( is_array($r) && count($r) && $r["email"] != $egate_user["email"] ) {
+-	  $to = ($r["name"])? "\"{$r['name']}\" <{$r['email']}>" : $r['email'];
+-	  $res = mail($to,$subject,$txt,"From:$from\r\nReply-to:$from\r\n$bcc");
+-	  if( $res )
+-	    $i++;
+-	}
+-	else {
+-	  egate_log("return recipient was blank, skipping reply email");
+-	}
++        if( is_array($r) && count($r) && $r["email"] != $egate_user["email"] ) {
++        $res = mail($r['email'],$subject,$txt,"From:$from\r\nReply-to:$from\r\n$bcc");
++        if( $res )
++          $i++;
++        }
+       }
+       return $i;
+     }
+diff -Naur zentrack_2-5-5-2/includes/fonts/arial.ttf zentrack_2-6-final/includes/fonts/arial.ttf
+--- zentrack_2-5-5-2/includes/fonts/arial.ttf	2003-01-03 22:11:47.000000000 -0800
++++ zentrack_2-6-final/includes/fonts/arial.ttf	1969-12-31 16:00:00.000000000 -0800
+@@ -1,2698 +0,0 @@
+-       pDSIGÄ±Â¬ ‹  GDEFQ«Q7 &Ï   òGSUB¡ø¶ 'Ñ  ÷JSTFm*i *\   LTSH°!  Ud  OS/2ﬂ2k  ¯   VPCLT˝{>C §   6VDMXPíjı  Zx  îcmapÔ‹£  .@  ﬁcvt ñp“v  |º  0fpgmw'©ı  w  ∞gasp  	  P   glyfq∞Ô  ª hdmxB:ç  ó(  yËhead«GÎN  |   6hheamè  ¥   $hmtxW∑nd  ÇÏ  :kern7a96 ˝D  `loca´Ó  A   Dmaxp	∂ì  ÿ    name6Ñ“  `  +ﬂpost∆¨%E Ã0  1prepÎ≠q‚  l  
+-˝    ôöõ∞{_<ı     ¢„'*    ≤Kﬂÿ˙Ø˝g:L   	         >˛N C ˙Ø˛3:                    ? c    / B  
+-˝   àê   ö3  ö3  — f  záÄ          Mono @  ˇ¸”˛Q3>≤@ ˇˇˇ           ˇˇ    FN        ˛         
+- ˛              ^       
+-t       ~       ñ       ƒ§       &h      	 äé      
+-¬       b⁄       f<      ¥¢       \V        ≤       1       6       /=       l       q       }       bÑ       Ê      	 E˘      
+-a>       1ü       3–      Z       .]    ã    ó    ß    ≥    √  	   ˛”  	  
+-—  	  €  	  ^È  	  
+-G  	  Q  	  i  	  ƒw  	  &
