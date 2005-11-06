@@ -392,12 +392,7 @@ else {
    print "</table>\n";
    
 } else {
-  if( $login_bin && $login_bin != -1 ) {
-    $viewbin = $login_bin? $zen->bins["$login_bin"] : "any bin";
-    print "<p>&nbsp;</p><ul><b>".tr('No open ?s in ?', array( tr($page_type), $zen->bins["$login_bin"])).".</b></ul>";
-  } else {
-    print "<p>&nbsp;</p><ul><b>".tr("No ?s were found", tr($page_type) ).".</b></ul>";
-  }
+  print "<p>&nbsp;</p><ul><b>".tr("No tickets were found").".</b></ul>";
 }
   
 ?>

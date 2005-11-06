@@ -18,7 +18,7 @@
   if( $TODO == 'SEARCH' ) {
     include("$templateDir/searchLogResults.php");
     if( is_array($logs) ) {
-      $results = true;
+      $log_search_res = true;
     } else if( count($errs) ) {
       $zen->printErrors($errs);
     } else {

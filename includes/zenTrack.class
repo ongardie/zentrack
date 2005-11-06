@@ -487,7 +487,6 @@ class zenTrack extends zen {
     $outlist = '';
     $query  = "SELECT user_id,bin_id FROM ".$this->table_access;
     $query .= " WHERE lvl IS NOT NULL AND lvl < $lvl";
-    if( $active ) { $query .= " AND active = 1"; }
     $vals = $this->db_query($query);
     for($i=0; $i<count($vals); $i++) {
       list($k,$v) = $vals[$i];

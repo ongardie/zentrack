@@ -29,13 +29,12 @@
   }
 
   $tabs = $map->getTabs($page_type, $login_id, $ticket['bin_id']);
+  $keys = $hotkeys->getTabKeys();
   print "<table cellpadding='0' cellspacing='0'><tr>";
   $n = 1;
   foreach($tabs as $k=>$v) {
-    $viewProps = $map->getViewProps($k);
-    if( !$viewProps['visible']['vm_val'] ) { continue; }
-    preg_match('/_([0-9]+)$/', $k, $matches);
-    $key = $matches[1];
+    if( !$map->getViewProp($k,'visible') ) { continue; }
+    $key = $keys[$k];
     $loads = array();
     if( $v['preload'] ) { $loads = $v['preload']; }
     if( $v['postload'] ) { $loads = array_merge($loads, $v['postload']); }

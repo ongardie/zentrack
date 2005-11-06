@@ -9,6 +9,7 @@ class ZenHotKeys {
     $this->_idx = array();
     $this->_tabs = array();
     $this->_keysRendered = array();
+    $this->_tabkeys = array();
     $this->_lh = '';
     $this->_alternate = $zen->getSetting('hotkeys_alternate_hints');
     $this->_alreadyLoaded = array();
@@ -271,11 +272,18 @@ class ZenHotKeys {
       for($i=1; $i<=8; $i++) {
         $view = "{$t}_tab_{$i}";
         if( $map->getViewProp($view, 'visible') ) {
+          $this->_tabkeys[$view] = $j;
           $label = $map->getViewProp($view,'label');
           $this->assign($j++, $label, "KeyEvent.createLoadUrl('{rootUrl}/ticket.php?id={id}&setmode=$view')");
         }
       }
     }
+  }
+  
+  var $_tabkeys;
+  
+  function getTabKeys() {
+    return $this->_tabkeys;
   }
   
   function newFxn( $name, $code ) {

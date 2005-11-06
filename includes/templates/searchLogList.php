@@ -61,7 +61,7 @@ if( is_array($logs) && count($logs) ) {
     }
     ?>
     <tr style="background:<?=$row?>;color:<?=$text?>" 
-        onClick='ticketClk("<?=$link?>?id=<?=$t["ticket_id"]?>&setmode=log")'
+        onClick='ticketClk("<?=$link?>?id=<?=$t["ticket_id"]?>")'
         <?=$txt?>
         <?=$td_ttl?>>
     <td height="25" valign="middle">
