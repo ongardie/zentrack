@@ -328,7 +328,10 @@ ZenTabs.prototype.show = function() {
   if( this.timeout ) { window.clearTimeout(this.timeout); this.timeout = false; } 
   this.visible = true;
   for(var i=0; i < this.entries.length; i++) {
-    window.document.getElementById(this.entries[i]).style.display = 'inline';
+    var obj = window.document.getElementById(this.entries[i]);
+    if( obj ) {
+      obj.style.display = 'inline';
+    }
   }
 }
 
@@ -341,7 +344,10 @@ ZenTabs.prototype.hide = function() {
   if( !this.visible ) { return; }
   this.visible = false;
   for(var i=0; i < this.entries.length; i++) {
-    window.document.getElementById(this.entries[i]).style.display = 'none';
+    var obj = window.document.getElementById(this.entries[i]);
+    if( obj ) {
+      obj.style.display = 'none';
+    }
   }  
 }
 

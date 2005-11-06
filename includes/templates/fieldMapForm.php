@@ -74,7 +74,7 @@ $vp = $map->getViewProps();
 foreach( $vp as $k=>$v ) {
   $sel = $view == $k? " selected" : "";
   $l = $map->getViewProp($k,'label')? $k." (".tr($map->getViewProp($k,'label')).")" : $k;
-  print "<option value='$k'$sel>$l</option>\n";
+  print "<option value='$k'$sel>".$zen->ffv($l)."</option>\n";
 }
 ?>
 </select>
@@ -84,6 +84,13 @@ foreach( $vp as $k=>$v ) {
 
 </form>
 <form method='post' action='<?=$SCRIPT_NAME?>' name='fieldMapForm'>
+<?
+$fcount = 0;
+foreach($fields as $f=>$field) {
+  print "<input type='hidden' name='orderset[$f]' value='$fcount'>\n";
+  $fcount++;
+}
+?>
 <input type='hidden' name='TODO' value='save'>
 <input type='hidden' name='view' value='<?=$zen->ffv($view)?>'>
 
@@ -100,6 +107,11 @@ foreach( $vp as $k=>$v ) {
 <?
 if( !$view ) {
   print "<div class='heading'>Please choose a view to edit</div>";
+  if( $page_browser == 'mz' ) {
+    print "<p class='hot'>".tr("You are using a Mozilla/Firefox Browser");
+    print "<br>".tr("Sorting and editing fields simultaneously has produced unreliable results in Mozilla.");
+    print "<br>".tr("Until a fix is implemented, please sort rows and edit fields seperately.")."</p>\n";
+  }
 }
 else {
 ?>
@@ -150,7 +162,6 @@ function fmfVal( $field, $key ) {
   return $zen->ffv($field[$key]);
 }
 
-$fcount=0;
 $prevSection = false;
 $typeprops = getFmTypeProps();
 foreach($fields as $f=>$field) {
@@ -169,17 +180,15 @@ foreach($fields as $f=>$field) {
 
   // create options row
   $txt = '';
-    $fn = "document.fieldMapForm";
-    // up arrow
-    $txt .= "<a href='#' onClick='moveRowUp(this.parentNode);return false;'";
-    $txt .= " border='0' alt='Move Up' title='Move Up'><img src='$rootUrl/images/icon_arrow_up.gif'";
-    $txt .= " width='16' height='16' alt='Move Up' title='Move Up' border='0'></a>";
-    // down arrow
-    $txt .= "<a href='#' onClick='moveRowDown(this.parentNode);return false;'";
-    $txt .= " border='0' alt='Move Down' title='Move Down'><img src='$rootUrl/images/icon_arrow_down.gif'";
-    $txt .= " width='16' height='16' alt='Move Down' title='Move Down' border='0'></a>";
-    // control sort ordering by tracking what order these hidden fields arrive
-    $txt .= "<input type='hidden' name='orderset[$f]' value='$fcount'>";
+  // up arrow
+  $txt .= "<a href='#' onClick='moveRowUp(this.parentNode);return false;'";
+  $txt .= " border='0' alt='Move Up' title='Move Up'><img src='$rootUrl/images/icon_arrow_up.gif'";
+  $txt .= " width='16' height='16' alt='Move Up' title='Move Up' border='0'></a>";
+  // down arrow
+  $txt .= "<a href='#' onClick='moveRowDown(this.parentNode);return false;'";
+  $txt .= " border='0' alt='Move Down' title='Move Down'><img src='$rootUrl/images/icon_arrow_down.gif'";
+  $txt .= " width='16' height='16' alt='Move Down' title='Move Down' border='0'></a>";
+  // control sort ordering by tracking what order these hidden fields arrive
   if( $map->getViewProp($view, 'sections') ) {
     if( $field['field_type'] == 'section' && $field['field_name'] != 'elapsed' ) {
       // remove sections
@@ -324,7 +333,6 @@ foreach($fields as $f=>$field) {
   }
 
   print "</tr>\n";
-  $fcount++;
   $prevSection = $field['field_type'] == 'section';
 }
 ?>
@@ -367,7 +375,7 @@ foreach($fields as $f=>$field) {
 <script type='text/javascript'>
 
 function setTodo( txt ) {
-  document.fieldMapForm.TODO.value = txt;
+  window.document.fieldMapForm.TODO.value = txt;
   return true;
 }
 
@@ -375,9 +383,9 @@ function addRow( obj ) {
   if( !confirm("Add a Section Here?") ) { return; }
   // determine what the next available section number is
   var x = 1;
-  while( document.getElementById("section"+x) ) { x++; }
+  while( window.document.getElementById("section"+x) ) { x++; }
   var newName = "section"+x;
-  var newSection = document.getElementById("section0").cloneNode(true);
+  var newSection = window.document.getElementById("section0").cloneNode(true);
   newSection.setAttribute("id",newName);
   for(var i=0; i < newSection.childNodes.length; i++) {
     var sect = newSection.childNodes[i];
@@ -392,7 +400,7 @@ function addRow( obj ) {
         s += " - new name: "+c.name+"\n";
         if ( c.type == 'hidden' ) {
           var v1, v2;
-          v1=parseFloat(document.fieldMapForm[ "orderset[" + obj.parentNode.parentNode.id + "]" ].value);
+          v1=parseFloat(window.document.fieldMapForm[ "orderset[" + obj.parentNode.parentNode.id + "]" ].value);
           var previousRow = obj.parentNode.parentNode.previousSibling;
           while( previousRow && previousRow.nodeName != "TR" ) {
             previousRow = previousRow.previousSibling;
@@ -400,7 +408,7 @@ function addRow( obj ) {
           if( !previousRow || previousRow.getAttribute("toofar") ) {
             v2=-1.0;
           } else {
-            v2=parseFloat(document.fieldMapForm[ "orderset[" + previousRow.id + "]" ].value);
+            v2=parseFloat(window.document.fieldMapForm[ "orderset[" + previousRow.id + "]" ].value);
           }
           v=(v1 + v2) / 2.0;
           c.setAttribute('value',v);
@@ -420,55 +428,86 @@ function removeRow( obj ) {
 
 function moveRowUp( tdCell ) {
   var v1, v2;
+  var f = window.document.forms['fieldMapForm'];
   var thisRow = tdCell.parentNode;
-  quickHighlightRow( thisRow, 'headerCell' );
+  quickHighlightRow( thisRow, 'mark' );
   var previousRow = thisRow.previousSibling;
   var parentNode = thisRow.parentNode;
   while( previousRow && previousRow.nodeName != "TR" ) {
     previousRow = previousRow.previousSibling;
   }
   if( !previousRow || previousRow.getAttribute("toofar") ) {
-    parentNode.insertBefore(thisRow, document.getElementById("afterLastRow"));
+    parentNode.insertBefore(thisRow, window.document.getElementById("afterLastRow"));
     //As this is now the last row, we can get the orderset value of it's new previous row
     previousRow = thisRow.previousSibling;
     while( (previousRow && previousRow.nodeName != "TR") || (previousRow && previousRow.id === "section0") ) {
       previousRow = previousRow.previousSibling;
     }
     //And set the current row's orderset value to it's previous row orderset value + 1
-    v1=parseFloat(document.fieldMapForm[ "orderset[" + previousRow.id + "]" ].value);
-    document.fieldMapForm[ "orderset[" + thisRow.id + "]" ].value=v1+1;
+    v1=parseFloat(f.elements[ "orderset[" + previousRow.id + "]" ].value);
+    f.elements[ "orderset[" + thisRow.id + "]" ].value=v1+1;
     return;
   }
-  parentNode.insertBefore(thisRow, previousRow);
   //If it didn't cross the edge of the table, we just swap the orderset values:
-  v1=parseFloat(document.fieldMapForm[ "orderset[" + thisRow.id + "]" ].value);
-  v2=parseFloat(document.fieldMapForm[ "orderset[" + previousRow.id + "]" ].value);
-  document.fieldMapForm[ "orderset[" + thisRow.id + "]" ].value=v2;
-  document.fieldMapForm[ "orderset[" + previousRow.id + "]" ].value=v1;
+  v1=parseFloat(f.elements[ "orderset[" + thisRow.id + "]" ].value);
+  v2=parseFloat(f.elements[ "orderset[" + previousRow.id + "]" ].value);
+  f.elements[ "orderset[" + thisRow.id + "]" ].value=v2;
+  f.elements[ "orderset[" + previousRow.id + "]" ].value=v1;
+  parentNode.insertBefore(thisRow, previousRow);
 }
 
+var quickHighlightedRows = new Object();
 function quickHighlightRow( parentObj, s ) {
   for(var i=0; i < parentObj.childNodes.length; i++) {
     var obj = parentObj.childNodes[i];
     obj.id = parentObj.id + '-'+i;
     if( obj.nodeName != "TD" ) { continue; }
     objName = obj.id;
-    if( obj.className ) {
+    if( quickHighlightedRows[objName] ) {
+      // if the row is already highlighted, just remove the timeout
+      // we will reset the timeout below to a later time
+      clearTimeout( quickHighlightedRows[objName] );
+      quickHighlightedRows[objName] = false;
+    }
+    else if( obj.className ) {
+      // if this is IE then use className
       obj.className = obj.className + ' ' + s;
-      setTimeout("var x = document.getElementById('"+objName+"'); x.className = x.className.substr(0,x.className.indexOf(' "+s+"'));",500);
     }
     else {
+      // otherwise use setAttribute
       obj.setAttribute('class', obj.getAttribute('class') + ' ' + s);
-      setTimeout("var x = document.getElementById('"+objName+"'); x.setAttribute('class', x.getAttribute('class').substr(0,x.getAttribute('class').indexOf(' "+s+"')));",500);
     }
+    // set a timeout to clear the effect
+    quickHighlightedRows[objName] = setTimeout("unHighlightRow('"+objName+"','"+s+"');",500);
+  }
+}
 
+function unHighlightRow( objName, s ) {
+  quickHighlightedRows[objName] = false;
+  var obj = window.document.getElementById(objName);
+  if( obj.className ) {
+    // see if our object contains the highlight style
+    var idx = obj.className.indexOf(' '+s);
+    // if it does, then we remove it
+    if( idx >= 0 ) {
+      obj.className = obj.className.substr(0,idx);
+    }
+  }
+  else {
+    // see if our object contains the highlight style
+    var idx = obj.getAttribute('class').indexOf(' '+s);
+    // if it does then we remove it
+    if( idx >= 0 ) {
+      obj.setAttribute('class', obj.getAttribute('class').substr(0,idx));
+    }
   }
 }
 
 function moveRowDown( tdCell ) {
   var v1, v2;
+  var f = window.document.forms['fieldMapForm'];
   var thisRow = tdCell.parentNode;
-  quickHighlightRow( thisRow, 'headerCell' );
+  quickHighlightRow( thisRow, 'mark' );
   var nextRow = thisRow.nextSibling;
   var parentNode = thisRow.parentNode;
   //while( nextRow && nextRow.nodeName != "TR" ) {
@@ -482,14 +521,14 @@ function moveRowDown( tdCell ) {
       thisRow = thisRow.nextSibling;
     }
     //We set the current row's orderset value to the first row's orderset -1
-    v1=parseFloat(document.fieldMapForm[ "orderset[" + thisRow.id + "]" ].value);
-    document.fieldMapForm[ "orderset[" + nextRow.id + "]" ].value=v1-1;
+    v1=parseFloat(f.elements[ "orderset[" + thisRow.id + "]" ].value);
+    f.elements[ "orderset[" + nextRow.id + "]" ].value=v1-1;
   } else {
     //We swap the orderset values:
-    v1=parseFloat(document.fieldMapForm[ "orderset[" + thisRow.id + "]" ].value);
-    v2=parseFloat(document.fieldMapForm[ "orderset[" + nextRow.id + "]" ].value);
-    document.fieldMapForm[ "orderset[" + thisRow.id + "]" ].value=v2;
-    document.fieldMapForm[ "orderset[" + nextRow.id + "]" ].value=v1;
+    v1=parseFloat(f.elements[ "orderset[" + thisRow.id + "]" ].value);
+    v2=parseFloat(f.elements[ "orderset[" + nextRow.id + "]" ].value);
+    f.elements[ "orderset[" + thisRow.id + "]" ].value=v2;
+    f.elements[ "orderset[" + nextRow.id + "]" ].value=v1;
   }
   parentNode.insertBefore(nextRow, thisRow);
 }
@@ -522,9 +561,9 @@ function toggleRowColor( checkBox ) {
     var namePrefix = getNamePrefix(obj.name);
     var defName = namePrefix+'[default_val]';
     var reqName = namePrefix+'[is_required]';
-    var defObj = document.fieldMapForm[defName];
-    var reqObj = document.fieldMapForm[reqName];
-    toggleRowColor( document.fieldMapForm[namePrefix+"[is_visible]"] );
+    var defObj = window.document.fieldMapForm[defName];
+    var reqObj = window.document.fieldMapForm[reqName];
+    toggleRowColor( window.document.fieldMapForm[namePrefix+"[is_visible]"] );
     if( defObj && defObj.value == null && reqObj.checked ) {
       alert("You cannot hide a required field unless it has a default value.");
       return false;

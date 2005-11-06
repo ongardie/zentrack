@@ -75,7 +75,7 @@ if( $access ) {
      <td class='subTitle' colspan='<?=$colspan?>'>
      <? if( is_array($attachments) && count($attachments) ) { ?>
        <div style='float:right'>
-       <? renderDivButtonFind('Delete Attachments', null, null, 150); ?>
+       <? renderDivButtonFind('Delete Attachments', 150); ?>
        </div>
      <? } ?>
        </form>
@@ -83,7 +83,7 @@ if( $access ) {
        <form name='addAttachmentForm' action='<?=$rootUrl?>/actions/upload.php'>
        <input type="hidden" name="id" value="<?=$id?>">
        <input type='hidden' name='setmode' value="<?=$zen->ffv($page_mode)?>">
-       <? renderDivButtonFind('Add Attachment'); ?>
+       <? renderDivButtonFind('Add Attachment', 150); ?>
        </form>
        </div>
      </td>

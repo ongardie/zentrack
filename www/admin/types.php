@@ -31,21 +31,25 @@
       }
       
       $j = 0;
+      // specify validation parms
       for( $i=0; $i<count($newName); $i++ ) {
         if( $newName[$i] ) {
+          // this line is necessary to insure that magic quotes are handled properly
+          $newName[$i] = $zen->cleanValue('html', $newName[$i]);
+          // now we will conduct the update
           $updateParams = array( 
-          "name"     => $newName[$i],
-          "active"   => (strlen($newActive[$i])?$newActive[$i]:0),
-          "priority" => getPriCount($newPri[$i], $lowestCount)
+            "name"     => $newName[$i],
+            "active"   => (strlen($newActive[$i])? 1 : 0),
+            "priority" => getPriCount($newPri[$i], $lowestCount)
           );
           $res = ($newID[$i])?
-          $zen->update_type($newID[$i], $updateParams) :
-          $zen->add_type($updateParams);
-          if( $res )
-          $j++;
+            $zen->update_type($newID[$i], $updateParams) :
+            $zen->add_type($updateParams);
+          if( $res ) { $j++; }
         }
       }
-      $msg[] = tr("? types were saved to the database. Updates complete", array($j));
+      $c = $i > 0? $i-1 : 0;
+      $msg[] = tr("? of ? types were saved to the database. Updates complete", array($j,$c));
       $skip = 1;
     }
   }

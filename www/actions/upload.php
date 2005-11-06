@@ -28,8 +28,9 @@
     // for use
     $ticket_id = $id;
     $input = array(
-      "ticket_id"       => "int",
-      "userfile_name"  => "text"
+      "ticket_id"      => "int",
+      "userfile_name"  => "text",
+      "userfile_type"  => "text"
     );
     if( $log_id ) {
       $input["log_id"] = "int";

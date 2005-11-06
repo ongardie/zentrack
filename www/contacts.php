@@ -25,11 +25,13 @@
         $tabel = "ZENTRACK_EMPLOYEE"; 
         $title = "lname"; 
         $page_section = tr("Contact list - Persons Extern");
+        $ie = 1;
         break;
     case "internal":
         $tabel = "ZENTRACK_EMPLOYEE";
         $title = "lname";  
         $page_section = tr("Contact list - Persons Intern");
+        $ie = 2;
         break;
     default:
         $tabel = "ZENTRACK_COMPANY"; 

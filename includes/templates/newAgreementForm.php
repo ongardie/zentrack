@@ -126,7 +126,7 @@ value="<?=($dtime)?$zen->showDate($dtime):""?>">
 </tr>
 <tr>
   <td colspan="2" valign='middle' class="headerCell padded" style='text-align:left'>
-   <? renderDivButtonFind("Create", $skip? "Save":null); ?>
+   <? renderDivButtonFind("Create", null, ($skip? "Save":null) ); ?>
   </td>
 </tr>
 <tr><td class='bars' colspan='2'>&nbsp;</td></tr>

@@ -347,6 +347,15 @@ class zenTrack extends zen {
 
     if( $sort )
       $query .= " ORDER BY $sort ";
+    
+    // check for an unlimited query and don't bother with number of rows
+    if( $pageNumber == -1 ) {
+      $vals = $this->db_queryIndexed($query);
+      $this->addDebug('get_tickets', 'unlimited query['.count($vals).']: '.$query, 3);
+      return $vals;
+    }
+    
+    // check and record the number of rows
     $w = preg_replace('/^ *WHERE/', '', $where);
     $this->total_records = $this->db_getrowcount($tables, $w);
     $numtoshow = $this->getSetting('paging_max_rows');
@@ -684,6 +693,7 @@ class zenTrack extends zen {
     $query = "DELETE FROM {$this->table_notify_list} WHERE user_id = $user_id";
     if( $ticket_id )
       $query .= " AND ticket_id = $ticket_id";
+    $this->addDebug('drop_notify_by_user',$query,3);
     return $this->db_result($query);
   }
 
@@ -703,16 +713,19 @@ class zenTrack extends zen {
     $query = "DELETE FROM {$this->table_notify_list} WHERE email = $email";
     if( $ticket_id )
     $query .= " AND ticket_id = $ticket_id";
+    $this->addDebug('drop_notify_by_email', $query, 3);
     $res = $this->db_result($query);
     // get a list of users matching from users table
     // and delete those from notify too
     $query = "SELECT user_id FROM {$this->table_users} WHERE email = $email";
+    $this->addDebug('drop_notify_by_email', $query, 3);
     $ids = $this->db_list($query);
     if( is_array($ids) && count($ids) ) {
       $query = "DELETE FROM {$this->table_notify_list} WHERE user_id in(".
       join(",",$ids).")";
       if( $ticket_id )
       $query .= " AND ticket_id = $ticket_id";
+      $this->addDebug('drop_notify_by_email', $query, 3);
       $res2 = $this->db_result($query);
     }
     return($res || $res2);
@@ -3559,7 +3572,7 @@ class zenTrack extends zen {
     $bid = $this->checkNum($bid);
     $set = $this->makeInsertVals($params,1);
     $query = "UPDATE ".$this->table_bins." SET $set WHERE bid = $bid";
-    $this->addDebug("update_bin()Query",$query,2);
+    $this->addDebug("update_bin()Query",$query,3);
     $this->_session->clearDataType('bins');
     return( $this->db_result($query) );
   }
@@ -3569,7 +3582,7 @@ class zenTrack extends zen {
     $pid = $this->checkNum($pid);
     $set = $this->makeInsertVals($params,1);
     $query = "UPDATE ".$this->table_priorities." SET $set WHERE pid = $pid";
-    $this->addDebug("update_priority()Query",$query,2);
+    $this->addDebug("update_priority()Query",$query,3);
     $this->_session->clearDataType('priorities');
     return( $this->db_result($query) );
   }
@@ -3579,7 +3592,7 @@ class zenTrack extends zen {
     $setting_id = $this->checkNum($setting_id);
     $set = $this->makeInsertVals($params,1);
     $query = "UPDATE ".$this->table_settings." SET $set WHERE setting_id = $setting_id";
-    $this->addDebug("update_setting()Query",$query,2);
+    $this->addDebug("update_setting()Query",$query,3);
     $this->_session->clearDataType('settings');
     $this->_settings = false;
     return( $this->db_result($query) );
@@ -3591,7 +3604,7 @@ class zenTrack extends zen {
     $sid = $this->checkNum($sid);
     $set = $this->makeInsertVals($params,1);
     $query = "UPDATE ".$this->table_systems." SET $set WHERE sid = $sid";
-    $this->addDebug("update_system()Query",$query,2);
+    $this->addDebug("update_system()Query",$query,3);
     $this->_session->clearDataType('systems');
     return( $this->db_result($query) );      
   }
@@ -3601,7 +3614,7 @@ class zenTrack extends zen {
     $task_id = $this->checkNum($task_id);
     $set = $this->makeInsertVals($params,1);
     $query = "UPDATE ".$this->table_tasks." SET $set WHERE task_id = $task_id";
-    $this->addDebug("update_task()Query",$query,2);
+    $this->addDebug("update_task()Query",$query,3);
     $this->_session->clearDataType('tasks');
     return( $this->db_result($query) );            
   }
@@ -3611,9 +3624,9 @@ class zenTrack extends zen {
     $type_id = $this->checkNum($type_id);
     $set = $this->makeInsertVals($params,1);
     $query = "UPDATE ".$this->table_types." SET $set WHERE type_id = $type_id";
-    $this->addDebug("update_type()Query",$query,2);
+    $this->addDebug("update_type()Query",$query,3);
     $this->_session->clearDataType('types');
-    return( $this->db_result($query) );            
+    return( $this->db_result($query) );
   }
 
 
@@ -4350,7 +4363,7 @@ class zenTrack extends zen {
       case "id":
         if( !$validBins ) { return null; }
         $tickets = $this->get_tickets(
-          array('bin_id'=>$validBins)
+          array('bin_id'=>$validBins), 'title', 'id, title', -1
         );
         for($i=0; $i<count($tickets); $i++) {
           $t = $tickets[$i];
@@ -4359,8 +4372,8 @@ class zenTrack extends zen {
         break;
       case "project_id":
         $tickets = $this->get_tickets(
-          array('type_id'=>$this->projectTypeIds(),'bin_id'=>$validBins)
-        );
+          array('type_id'=>$this->projectTypeIds(),'bin_id'=>$validBins),
+          'title', 'id, title', -1 );
         for($i=0; $i<count($tickets); $i++) {
           $t = $tickets[$i];
           $vals["{$t['id']}"] = $t['title'];
@@ -4437,7 +4450,7 @@ class zenTrack extends zen {
     // calls for the same user will not result slow the system
 
     // set what we have in the session
-    $userBins = $this->_session->getDataType('userbins');
+    //$userBins = $this->_session->getDataType('userbins');  //debug
     if( !isset($userBins) ) { $userBins = array(); }
     if( !isset($userBins["U$user_id"]) ) { $userBins["U$user_id"] = array(); }
     if( isset($userBins["U$user_id"]["L$level"]) ) { 
@@ -4452,7 +4465,7 @@ class zenTrack extends zen {
     }
     
     // insure that our session cache doesn't become excessive
-    if( count($userBins) > 5 ) {
+    if( count($userBins) > 10 ) {
       array_shift($userBins);
     }
     
@@ -4460,17 +4473,17 @@ class zenTrack extends zen {
     $user_id = $this->checkNum($user_id);
     $access = $this->getAccess($user_id);
     $user   = $this->getUser($user_id);
-    if( is_array($this->bins) ) {
-      foreach($this->getBins() as $k=>$v) {
-        if( $k ) {
-          if( strlen($access["$k"]) ) {
-            if( $access["$k"] >= $this->getSetting("$level") ) {
-              $vars[] = $k;
-            }
-          } else {
-            if( $user["access_level"] >= $this->getSetting("$level") ) {
-              $vars[] = $k;
-            }
+    $bins = $this->getBins();
+    $vars = array();
+    foreach($bins as $k=>$v) {
+      if( $k ) {
+        if( strlen($access["$k"]) ) {
+          if( $access["$k"] >= $this->getSetting("$level") ) {
+            $vars[] = $k;
+          }
+        } else {
+          if( $user["access_level"] >= $this->getSetting("$level") ) {
+            $vars[] = $k;
           }
         }
       }
@@ -4487,6 +4500,7 @@ class zenTrack extends zen {
         join(",",$vars) : "-none-";
         $this->addDebug("getUsersBins", $this->formatName($user_id)." loaded from database: ".$adp,3);
     }
+    
     return $vars;
   }
   
@@ -5517,11 +5531,8 @@ class zenTrack extends zen {
 
     $pid = $this->checkNum($pid);
     $params = array("project_id"=>$pid);
-    $page = 0;
-    $vars = $this->get_tickets($params, $sort, $columns,$page++);
-    while( count($vars) && count($vars) < $this->total_records ) {
-      $vars = array_merge($vars,$this->get_tickets($params,$sort,$columns,$page++));
-    }
+    $vars = $this->get_tickets($params, $sort, $columns, -1);
+    $this->addDebug('getProjectChildren', "pid=$pid, columns=$columns, sort=$sort, results=".count($vars), 3);
     return( $vars );
   }
 

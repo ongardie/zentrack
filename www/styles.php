@@ -468,7 +468,8 @@ TD.bigger { font-size: 50px; }
 }
 
 .mark {
-   background:  <?=$zen->getSetting("color_highlight")?>;  
+   border:  1px solid <?=$zen->getSetting("color_highlight")?>;
+   font-weight: bold;
 }
 
 .hot {

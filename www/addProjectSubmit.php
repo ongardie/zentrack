@@ -24,7 +24,7 @@
   // initiate default values
   $otime = date('Y-m-d H:i:s');  // set time ticket opened
   include("$libDir/validateFields.php");
-
+  
   if( !$errs ) {
     // create an array of existing fields
     foreach(array_keys($fields) as $f) {

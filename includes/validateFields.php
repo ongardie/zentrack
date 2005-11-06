@@ -43,6 +43,11 @@
                  'level_user priviledges for the selected bin (?)', $zen->getBinName($bin_id));
   }
   
+  // do not allow self referencing tickets
+  if( isset($id) && isset($project_id) && $id && $id == $project_id ) {
+    $errs[] = tr("The parent project cannot be set to this project (itself)");
+  }
+  
   // check for required fields
   foreach($required as $r) {
     if( !strlen($$r) ) {

@@ -108,9 +108,9 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
             else {
               $errs[] = tr('You do not have permission to search this bin'); 
             }
-            break;  
+            break;
           default:
-            if ( strpos($k,"custom_multi") === false ) {
+            if ( !ZenFieldMap::isMultiField($k) ) {
               $params[] = array($k, $op, $v, 1);
             } else {
               $qry = "SELECT ticket_id, count(*) FROM $zen->table_varfield_multi "
@@ -146,7 +146,7 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
   // see if there is a text search and
   // if so, then see what fields are to
   // be searched
-  if( $search_text && is_array($search_fields) && count($search_fields)>0 ) {
+  if( isset($search_text) && strlen($search_text) && is_array($search_fields) && count($search_fields) > 0 ) {
     unset($sp);
     foreach($search_fields as $k=>$f) {
       $zen->addDebug("searchResults.php", "Adding text search for $k", 3);
@@ -174,12 +174,15 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
   // if there are any search params
   // then perform the query
   if( !count($errs) ) {
-    // debug
-    unset($dp);
-    foreach($params as $v) {
-      $dp[] = "'".join("','",$v)."'";
+    if( $Debug_Mode > 2 ) {
+      // don't wast processor time if debug mode is not set
+      $db = array();
+      foreach($params as $v) {
+        $val = is_array($v[2])? "(".join(',',$v[2]).")" : $v2;
+        $dp[] = "$v[0] $v[1] $val [$v[3]]";
+      }
+      $zen->addDebug("searchResults.php-params[]",join("||",$dp),3);
     }
-    $zen->addDebug("searchResults.php-params[]",join("|",$dp),3);
     
     $limit = $nolimit? 0 : false;
     $tickets = $zen->search_tickets($params, "AND", "0", join(',',$orderby), $limit);//"status DESC, priority DESC"

@@ -15,7 +15,7 @@ $show_totals = $map->getViewProp($view, 'show_totals');
 if( !$page_type )
   $page_type = "ticket";
 
-if( $view == 'contact_list' ) { $fields = $map->getFieldMap('ticket_list'); }
+if( $view == 'contact_list' || $view == 'assigned_list' ) { $fields = $map->getFieldMap('ticket_list'); }
 else { $fields = $map->getFieldMap($view); }
 $atc = 0;
 
@@ -35,7 +35,8 @@ if( $view == 'ticket_list' || $view == 'project_list' ) {
   include("$templateDir/listFiltersForm.php");
 }
 
-if( $view == 'contact_list' ) { $view = 'ticket_list'; }
+if( $view == 'contact_list' ) { $view = 'ticket_list'; }  //temporary fix
+if( $view == 'assigned_list' ) { $view = 'ticket_list'; } //temporary fix
 
 if( $ticket && !$atc ) {
   if( isset($ticket['total_children']) ) {
@@ -112,8 +113,13 @@ function resortListPage( sortName ) {
 <table width="100%" class='formTable' cellspacing='1' cellpadding='2'>
 <?
 $atc_text = $atc > 1? tr("Tickets ?-? of ?",array($t_from,$t_to,$atc)) : "";  
-if( $view == 'project_tasks' ) {
-  print "<tr><td colspan='$cols' class='subTitle'>".tr("Tasks for this project")
+if( $view == 'search_list' ) {
+  print "<tr><td colspan='$cols' class='subTitle' align='center'>".tr("Search Results");
+  if( $atc_text ) { print " ($atc_text)"; }
+  print "</td></tr>";
+}
+else if( $view == 'project_tasks' ) {
+  print "<tr><td colspan='$cols' class='subTitle' align='center'>".tr("Tasks for this project")
     .($atc_text? " ($atc_text)":"")."</td></tr>";
 }
 else if ($atc_text) {
@@ -258,7 +264,11 @@ else {
         }
         else {
           $value = strpos($f, 'custom_')===0? $custom_fields[$t["id"]][$f] : $t[$f];
-          print $map->getTextValue($view, $f, $value);
+          $val = $map->getTextValue($view, $f, $value);
+          if( $view == 'search_list' && is_array($search_fields) && array_key_exists($f, $search_fields) ) {
+            $val = $zen->highlight( $val, $search_text );
+          }
+          print $val;
         }
         print "</a></td>\n";
       }

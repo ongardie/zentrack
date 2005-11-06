@@ -20,13 +20,13 @@
      <td align="right">
      <form style='display:inline' name='newTicketHotkey' action="<?=$rootUrl?>/newTicket.php">
      <input type="hidden" name="project_id" value="<?=$zen->checkNum($id)?>">
-     <? renderDivButtonFind('Add Ticket to Project'); ?>
+     <? renderDivButtonFind('Add Ticket to Project', 150); ?>
      </form>
      </td>
      <td align='left'>
      <form style='display:inline' name='newProjectHotkey' action="<?=$rootUrl?>/newProject.php">
      <input type="hidden" name="project_id" value="<?=$zen->checkNum($id)?>">
-     <? renderDivButtonFind('Create Sub-Project'); ?>
+     <? renderDivButtonFind('Create Sub-Project', 150); ?>
      </form>
      </td>
    </tr>    

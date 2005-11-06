@@ -74,7 +74,7 @@ class ZenHotKeys {
       }
     }
     else if( $sect == 'action_approve' ) {
-      $f = "window.document.forms['approveForm']";
+      $f = "window.document.formless['approveForm']";
       $this->assign('ALT+O', "Comments", "{$f}.elements['comments'].select()");
       $this->assign('ALT+A', "Approve", "{$f}.submit()");
     }

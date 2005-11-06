@@ -8,7 +8,8 @@
   
   include("header.php");
 
-  $view = 'ticket_list';
+  $page_type = 'ticket';
+  $view = 'assigned_list';
   $map = new ZenFieldMap($zen);
   $fields = $map->getFieldMap($view);
 
@@ -24,9 +25,8 @@
   }
 
   include_once("$libDir/sorting.php");
-  $tickets = $zen->get_tickets($params, join(',',$orderby));
+  $tickets = $zen->get_tickets($params, $sortstring);
   include("$templateDir/listTickets.php");
-  include("$libDir/paging.php"); //Addition for paging
 
   include("$libDir/footer.php");
 ?>

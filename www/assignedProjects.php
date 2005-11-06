@@ -9,7 +9,7 @@
   include("header.php");
 
   $page_type = "project";
-  $view = 'project_list';
+  $view = 'assigned_list';
 
   $params = array(
 		  "type_id"  => $zen->projectTypeIDs(),
@@ -33,7 +33,7 @@
     
   include_once("$libDir/sorting.php");
   if( is_array($params) )
-    $tickets = $zen->get_tickets($params, join(',',$orderby));
+    $tickets = $zen->get_tickets($params, $sortstring);
   include("$templateDir/listTickets.php");
 
   include("$libDir/footer.php");

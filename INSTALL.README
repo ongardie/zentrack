@@ -1,10 +1,9 @@
 
   Welcome to zenTrack!
 
-  If you checked this version out from the CVS repository you will need to
-  run zentrack/setup_from_cvs or zentrack/setup_from_cvs.cmd if you are on windows
-
-  If "CVS repository" doesn't ring a bell, you can probably ignore that paragraph.
+  The following document describes everything you need to know to get a basic
+  ZT install up and running.  Please read it line by line!  If you encounter
+  problems then try the HELP doc in this same directory.
  
   --------------
   REQUIREMENTS
@@ -85,7 +84,7 @@
 
      8. Consider a donation to the Open Source Community:
         The developers spend a lot of their lives developing this product.  If you like it,
-        give something back to the open source community!  Might I recomment starting here:
+        give something back to the open source community!  I would recomment starting here:
         http://sourceforge.net/project/project_donations.php?group_id=22724
 
   --------------

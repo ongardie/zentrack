@@ -57,12 +57,13 @@
     <p onclick='mClk(this)'><a href='http://www.zentrack.net'><?=tr("Website")?></a></p>
     <p onclick='mClk(this)'><a href='http://www.zentrack.net/feedback/?subject=Feedback' 
       target='_blank'><?=tr("Feedback")?></a>
-      <span class='note'><?=tr("Be sure to give us some feedback about the the "
-      ."the documentation, software, or the latest ?.", 
+      <span class='note'><?=tr("Give us Feedback!")." ".tr("Tell us about the latest ?", 
         "<a href='http://kato.was-here.org/funnies/catattack.mpeg' 
           target='_blank'>".tr("cat attack")."</a>")?></span>
     </p>
   </div>
+  
+  <p>&nbsp;</p>
   
 <?
   include("$libDir/footer.php");

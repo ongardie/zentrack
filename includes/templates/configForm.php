@@ -150,6 +150,7 @@ function setToDo(val) {
 }
 
 function addRow( obj ) {
+  alert('obj: '+obj);
   var newName = rowCount++;
   var newSection = document.getElementById("aSampleRow").cloneNode(true);
   newSection.setAttribute("id",newName);
@@ -160,7 +161,6 @@ function addRow( obj ) {
         var c = sect.childNodes[j];
         if( c.type == 'text' || c.type == 'checkbox' || c.type == 'hidden' ) {
           c.setAttribute('name', c.getAttribute('name').replace('<?=$sampleRowId?>',newName));
-          s += " - new name: "+c.name+"\n";
           if ( c.name.indexOf('newPri') == 0 ) {
             var v1, v2;
             v1=parseFloat(document.configForm[ "newPri[" + obj.parentNode.parentNode.id + "]" ].value);

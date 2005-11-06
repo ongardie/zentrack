@@ -23,7 +23,7 @@
       $userBins = $zen->getUsersBins($login_id,"level_move");
       if( is_array($userBins) ) {
         foreach($userBins as $v) {
-          $n = $zen->bins["$v"];
+          $n = $zen->getBinName("$v");
           print "<option value='$v'>$n</option>\n";
         }
       } else {

@@ -118,14 +118,14 @@ if( count($date_fields) ) {
       print "<span class='note'>between ";
       $name = "{$f}_begin";
       $context->set('field', $f);
-      $context->set('value', $search_parms["$name"]);
-      $context->set('name',  "search_parms[$name]");
+      $context->set('value', $search_params["$name"]);
+      $context->set('name',  "search_params[$name]");
       print $map->renderTicketField($context);
       print " and ";
       $name = "{$f}_end";
       $context->set('field', $f);
-      $context->set('value', $search_parms["$name"]);
-      $context->set('name',  "search_parms[$name]");
+      $context->set('value', $search_params["$name"]);
+      $context->set('name',  "search_params[$name]");
       print $map->renderTicketField($context);
       print "</span>";
       print "</td></tr>\n";
@@ -149,8 +149,8 @@ if( count($other_fields) ) {
     print $map->getLabel($view,$f);
     print "</td><td class='bars'>";
     $context->set('field', $f);
-    $context->set('value', $search_parms["$f"]);
-    $context->set('name',  "search_parms[$f]");
+    $context->set('value', $search_params["$f"]);
+    $context->set('name',  "search_params[$f]");
     print $map->renderTicketField($context);
     if( $f == 'priority' ) {
       print "&nbsp;<input type='checkbox' name='or_higher' checked value='1'> or higher";

@@ -147,7 +147,9 @@
       include("$templateDir/nav_$sect.php");
       if( $login_name ) {
         print "<tr><td><span class='note'>".tr("Logged in as:")."</span>"
-          ."<br>".$zen->ffv($login_name)."</td></tr>";
+          ."<br>".$zen->ffv($login_name);
+        print "<div class='small'><a href='$rootUrl/index.php?logoff=1'>".tr("(Log Out)")."</a></div>";
+        print "</td></tr>";
       }
       if( $zen->demo_mode == "on" ) {
         print "<tr><td class='hot'>".tr("Demo Mode")."</td></tr>";

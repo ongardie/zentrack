@@ -63,6 +63,9 @@ class DB {
       if( is_array($vars) && count($vars) > 0 )
       return($vars);
     }
+    else {
+      $this->addDebug('db_queryIndexed', "Error in query: $query [" . $this->db_link->ErrorMsg()."]", 1);
+    }
   }
   
   function db_query( $query ) {
@@ -74,6 +77,9 @@ class DB {
       $vars = $recordSet->getArray();
       if( is_array($vars) && count($vars) > 0 )
       return($vars);  
+    }
+    else {
+      $this->addDebug('db_query', "Error in query: $query [" . $this->db_link->ErrorMsg()."]", 1);      
     }
   }
   
@@ -88,6 +94,9 @@ class DB {
       if( is_array($vars) && count($vars) > 0 )
       return($vars);  
     }
+    else {
+      $this->addDebug('db_quickIndexed', "Error in query: $query [" . $this->db_link->ErrorMsg()."]", 1);      
+    }    
   }
   
   function db_quick( $query ) {
@@ -101,6 +110,9 @@ class DB {
       if( is_array($vars) && count($vars) > 0 )
       return($vars);     
     }
+    else {
+      $this->addDebug('db_quick', "Error in query: $query [" . $this->db_link->ErrorMsg()."]", 1);      
+    }
   }
   
   function db_get( $query ) {
@@ -110,6 +122,9 @@ class DB {
     $recordSet = &$this->db_link->Execute($query);
     if( $recordSet ) {
       return( $recordSet->fields[0] );
+    }
+    else {
+      $this->addDebug('db_get', "Error in query: $query [" . $this->db_link->ErrorMsg()."]", 1);      
     }
   }
   
@@ -200,10 +215,13 @@ class DB {
     // or other query which does not retrieve
     // data
     $res = $this->db_link->Execute($query);
-    if( $this->_returnsResult )
-    return $res;
-    else
-    return true;
+    if( $this->_returnsResult ) { 
+      if( !$res ) {
+        $this->addDebug('db_result', "query failed: $query [" . $this->db_link->ErrorMsg()."]", 2);
+      }
+      return $res; 
+    }
+    else { return true; }
   }
   
   function db_list( $query ) {
@@ -222,6 +240,9 @@ class DB {
           $vals[] = $v[0];
         }
       }
+    }
+    else {
+      $this->addDebug('db_list', "Error in query: $query [" . $this->db_link->ErrorMsg()."]", 1);      
     }
     return($vals);
   }

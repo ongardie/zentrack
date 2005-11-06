@@ -311,40 +311,38 @@ class zen extends zenDate {
      }
    }
 
-   /*
+   /********************
    **  FORM UTILITIES
-   */
+   *********************/
 
+
+   /*
+   **  Formats incoming data from forms.  To clean a single value, see Zen::cleanValue instead.
+   **
+   **  There are several ways to call this function:
+   **    With with only $vals -- strips html excepting html_allowed from $vals and returns array
+   **    With $fields & $vals -- formats $vals as specified in $fields(both indexed arrays) 
+   **                            and returns array
+   **    With only $fields -- pulls variables listed in $fields by reference, formats 
+   **                         (using global attribute) and returns nothing
+   **
+   **  There are several values for the indexed array 'fields' which can be used
+   **
+   **    case "alpha":     letters only
+   **    case "alphanum":  letters and numbers only
+   **    case "string":    [a-zA-Z0-9_ '-]
+   **    case "filename":  [a-zA-Z0-9_.-]
+   **    case "num":       numbers and decimal symbols only
+   **    case "int":       numbers only
+   **    case "date":      date chars format only
+   **    case "html":      all but php tags allowed
+   **    case "text":      strip all html
+   **    case "ignore":    leave this fields alone
+   **    case "email":     email format
+   **    case "array":     ignored (legacy entry)
+   **    case "":          strip all html excepting $mda->html_allowed (determined by lists/okhtmltags)
+   */
    function cleanInput( $fields = '', $vals = '' ) {
-     /*
-     **  Formats incoming data from forms
-     **
-     **  There are several ways to call this function:
-     **    
-     **    With with only $vals -- strips html excepting html_allowed from $vals and returns array
-     **    With $fields & $vals -- formats $vals as specified in $fields(both indexed arrays) 
-     **                            and returns array
-     **    With only $fields -- pulls variables listed in $fields by reference, formats 
-     **                         (using global attribute) and returns nothing
-     **
-     **  There are several values for the indexed array 'fields' which can be used
-     **
-     **    case "alpha":     letters only
-     **    case "alphanum":  letters and numbers only
-     **    case "string":    [a-zA-Z0-9_ '-]
-     **    case "filename":  [a-zA-Z0-9_.-]
-     **    case "num":       numbers and decimal symbols only
-     **    case "int":       numbers only
-     **    case "date":      date chars format only
-     **    case "html":      all but php tags allowed
-     **    case "text":      strip all html
-     **    case "ignore":    leave this fields alone
-     **    case "email":     email format
-     **    case "array":     also ignored
-     **    case "":          strip all html excepting $mda->html_allowed (determined by lists/okhtmltags)
-     **
-     */
-     
      if( is_array($vals) ) {
        $vars = $vals;
        $vals = array();
@@ -354,102 +352,64 @@ class zen extends zenDate {
          } else if( $fields ) {
            $f = $fields;
          }
-         $v = Zen::dropSlashes($v);
-         if( !$k ) {
-           $vals[] = strip_tags( $v, $this->html_allowed );
-         } else if( !$f ) {
+         if( !$f ) {
            $vals["$k"] = strip_tags( $v, $this->html_allowed );
          } else if( !strlen($v) ) {
            $vals["$k"] = null;
          } else {
-           switch( $f ) {
-           case "alpha":
-             $vals["$k"] = $this->checkAlpha($v);
-             break;
-           case "alphanum":
-             $vals["$k"] = $this->checkAlphaNum($v);
-             break;      
-           case "array":
-             $vals["$k"] = (is_array($v))? $v : array();
-             break;        
-           case "date":
-             $vals["$k"] = ereg_replace("[^0-9/: -]", "", $v);
-             break;
-           case "email":
-             $vals["$k"] = ereg_replace("[^0-9a-zA-Z@._-]", "", $v);
-             break;              
-           case "html": 
-             $vals["$k"] = $this->stripPHP( $v );
-             break;
-           case "int":
-             $vals["$k"] = $this->checkNum($v);
-             break;        
-           case "ignore":
-             $vals["$k"] = $v;
-             break;
-           case "num":
-             $vals["$k"] = $this->checkNum($v,true);
-             break;
-           case "string":
-             $vals["$k"] = $this->checkAlphaNum($v," '_-");
-             break;
-           case "filename":
-             $vals["$k"] = $this->checkAlphaNum($v,"_.-");
-             break;
-           case "text":
-             $vals["$k"] = $v; //$this->checkSlashes($v);
-             break;
-           default:
-             $vals["$k"] = strip_tags("$v", $this->html_allowed);
-           }
+           $vals["$k"] = Zen::cleanValue($f, $v);
          }       
        }
        return $vals;
      } else {
        foreach( $fields as $k=>$v ) {
-         global $$k;
-         $$k = Zen::dropSlashes($$k);
-         switch( strtolower($v) ) {
-         case "alpha":
-           $$k = $this->checkAlpha($$k);
-           break;
-         case "alphanum":
-           $$k = $this->checkAlphaNum($$k);
-           break;     
-         case "array":
-           $$k = (is_array($$k))? $$k : null;
-           break;       
-         case "date":
-           $$k = ereg_replace("[^0-9/: -]", "", $$k);
-           break;
-         case "email":
-           $$k = ereg_replace("[^0-9a-zA-Z@._-]", "", $$k);
-           break;             
-         case "html": 
-           $$k = $this->stripPHP( $$k );
-           break;
-         case "int":
-           $$k = $this->checkNum($$k);
-           break;       
-         case "ignore":
-           break;
-         case "num":
-           $$k = $this->checkNum($$k,true);
-           break;
-         case "string":
-           $$k = $this->checkAlphaNum($$k, " _-");
-           break;
-         case "filename":
-           $$k = $this->checkAlphaNum($$k, "_.-");
-           break;
-         case "text":
-           //$$k = $$k;
-           break;
-         default:
-           $$k = strip_tags($$k, $this->html_allowed);
-         }  
+         $GLOBALS["$k"] = Zen::cleanValue($v, $GLOBALS["$k"]);
        }
      }
+   }
+   
+   function cleanValue( $type, $v ) {
+     $v = Zen::dropSlashes($v);
+     switch( strtolower($v) ) {
+       case "alpha":
+         $v = $this->checkAlpha($v);
+         break;
+       case "alphanum":
+         $v = $this->checkAlphaNum($v);
+         break;     
+       case "array":
+         $v = (is_array($v))? $v : null;
+         break;       
+       case "date":
+         $v = ereg_replace("[^0-9/: -]", "", $v);
+         break;
+       case "email":
+         $v = ereg_replace("[^0-9a-zA-Z@._-]", "", $v);
+         break;             
+       case "html": 
+         $v = $this->stripPHP( $v );
+         break;
+       case "int":
+         $v = $this->checkNum($v);
+         break;       
+       case "ignore":
+         break;
+       case "num":
+         $v = $this->checkNum($v,true);
+         break;
+       case "string":
+         $v = $this->checkAlphaNum($v, " _-");
+         break;
+       case "filename":
+         $v = $this->checkAlphaNum($v, "_.-");
+         break;
+       case "text":
+         //$v = $v;
+         break;
+       default:
+         $v = strip_tags($v, $this->html_allowed);
+     }
+     return $v;
    }
    
    function dropSlashes($val) {

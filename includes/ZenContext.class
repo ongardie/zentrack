@@ -10,6 +10,7 @@
 class ZenContext {
   function ZenContext($vals = null) {
     $this->_vals = is_array($vals)? $vals : array();
+    $this->rand = $this->randomNumber = mt_rand(1,10000)."-".mt_rand(1,10000);
   }
   
   function set($prop, $val) {
@@ -32,6 +33,11 @@ class ZenContext {
     }
   }
   
+  function printDebug() {
+    Zen::printArray($this->_vals, 'ZenContext['.$this->rand.']');
+  }
+  
   var $_vals;
+  var $rand;
 }
 ?>

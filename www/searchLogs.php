@@ -6,31 +6,31 @@
   **  only those logs matching the result set
   **
   */
-  
   include("header.php");
-
+  define('ZT_SECTION','tickets');
 
   $page_title = tr("Search Logs");
   $page_section = $page_title;
-  $expand_search = 1;
+  $log_search_res = false;
+
   include("$libDir/nav.php");
 
   if( $TODO == 'SEARCH' ) {
     include("$templateDir/searchLogResults.php");
     if( is_array($logs) ) {
-       include("$templateDir/searchLogList.php");
-       include("$libDir/paging.php"); //Addition for paging
+      $results = true;
+    } else if( count($errs) ) {
+      $zen->printErrors($errs);
     } else {
-      if( count($errs) ) {
-        $zen->printErrors($errs);
-      } else {
-        print "<p><b>" . tr("There were no logs matching your search.") . "</b></p>\n";
-      }
-       include("$templateDir/searchLogForm.php");
-     }
-  } else {
-     include("$templateDir/searchLogForm.php");
+      $msg = tr("There were no logs matching your search.");
+    }
   }
-
+  
+  if( $log_search_res ) {
+    include("$templateDir/searchLogList.php");
+    include("$libDir/paging.php"); //Addition for paging
+  } else {
+    include("$templateDir/searchLogForm.php");
+  }
   include("$libDir/footer.php");
 ?>

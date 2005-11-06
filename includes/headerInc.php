@@ -47,12 +47,12 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
   */
 
   $page_browser = 'unkown';
-  if( eregi("(\[en\]|netscape)", $HTTP_USER_AGENT) ) {
+  if( eregi("msie", $HTTP_USER_AGENT) ) {
+    $page_browser = "ie";
+  } else if( eregi("(\[en\]|netscape)", $HTTP_USER_AGENT) ) {
     $page_browser = "ns";
   } else if( eregi("Mozilla", $HTTP_USER_AGENT) ) {
     $page_browser = "mz";
-  } else if( eregi("ie", $HTTP_USER_AGENT) ){
-    $page_browser = "ie";
   }
 
 
@@ -372,7 +372,7 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
      }
    }
    
-   function renderDivButtonFind( $label, $override_label = null, $onclick=null, $width=100 ) {
+   function renderDivButtonFind( $label, $width=100, $override_label = null ) {
      // search for our label in the hotkeys registry
      $hotkeys = $GLOBALS['hotkeys'];
      $key = $hotkeys->find($label);
