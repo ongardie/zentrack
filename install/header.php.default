@@ -19,6 +19,20 @@
   */
   $libDir = "/not_web_directory/zentrack/includes";
 
+  // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  // !!  EGATE USERS:  You must set this variable manually  !!
+  // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  // the base url used to reach zentrack
+  // you should only need to edit this if the auto-config fails or if you
+  // plan to use the egate interface.
+  $rootUrl = 'http://'.$_SERVER['HTTP_HOST'] . preg_replace( '@^'.str_replace("\\", "/", realpath(strtolower($_SERVER['DOCUMENT_ROOT']))).'@', '', str_replace("\\", "/", realpath(strtolower(dirname(__FILE__)))));
+  //$rootUrl = "http://www.yourhost.com/zentrack"; //uncomment and edit if the previous line fails
+
+  // the directory where the www files are stored
+  // you should only need to edit this if the auto-config fails
+  $rootWWW = dirname(__FILE__);
+  //$rootWWW = "/web/zentrack/www"; //uncomment and edit if the previous line fails
+
   /*
   **
   **  DATABASE SETTINGS
@@ -132,21 +146,6 @@
    // setlocale(LC_TIME, "fr_FR");  // french
    // setlocale(LC_TIME, "de_DE");  // german
    // setlocale(LC_TIME, "es_ES");  // spanish
-
-   
-  // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  // !!  EGATE USERS:  You must set this variable manually  !!
-  // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  // the base url used to reach zentrack
-  // you should only need to edit this if the auto-config fails or if you
-  // plan to use the egate interface.
-  $rootUrl = 'http://'.$_SERVER['HTTP_HOST'] . preg_replace( '@^'.str_replace("\\", "/", realpath(strtolower($_SERVER['DOCUMENT_ROOT']))).'@', '', str_replace("\\", "/", realpath(strtolower(dirname(__FILE__)))));
-  //$rootUrl = "http://www.yourhost.com/zentrack"; //uncomment and edit if the previous line fails
-
-  // the directory where the www files are stored
-  // you should only need to edit this if the auto-config fails
-  $rootWWW = dirname(__FILE__);
-  //$rootWWW = "/web/zentrack/www"; //uncomment and edit if the previous line fails
 
   /*
   **  LEAVE THIS PART ALONE

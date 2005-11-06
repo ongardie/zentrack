@@ -1915,10 +1915,10 @@ class zenTrack extends zen {
     $this->addDebug("search_ticketsQuery:",$query,3);
     // return(  $this->db_queryIndexed($query) );      
     //paging feature
-    $numtoshow = $limit? $limit : $this->getSetting('paging_max_rows');
+    $numtoshow = $limit > 0? $limit : $this->getSetting('paging_max_rows');
     $start = $pageNumber * $numtoshow;
     $this->total_records = $this->db_getrowcount($tables, $where);
-    if( $limit === 0 ) {
+    if( $limit < 0 ) {
       return $this->db_queryIndexed($query);
     }
     else {
@@ -6160,18 +6160,26 @@ class zenTrack extends zen {
 
     if( !$fullfile ) { $fullfile = $_SERVER['SCRIPT_NAME']; }
     
-    reset ($cgi);
-    while (list($key, $value) = each($cgi)) {
-      if (( $key != "username" ) && ($key != "passphrase") ){
-        if (is_array($value)) {
-          foreach ($value as $key1 => $value1) {
-             $query_string .= "&" . $key . "%5B" . $key1 . "%5D" . "=" . $value1;
+    foreach($cgi as $key=>$value) {
+      if( $key != 'username' && $key != 'passphrase' ) {
+        if( is_array($value) ) {
+          foreach($value as $k=>$v) {
+            if( is_array($v) ) {
+              foreach($v as $k2=>$v2) {
+                $query_string .= "&{$key}%5B{$k}%5D%5B{$k2}%5D={$v2}";
+              }
+            }
+            else {
+              $query_string .= "&{$key}%5B{$k}%5D={$v}";
+            }
           }
-       } elseif (($key != "pageNumber"))
-        $query_string .= "&" . $key . "=" . $value;
+        }
+        else if( $key != 'pageNumber' ) {
+          $query_string .= "&$key=$value";
+        }
       }
     }
-    return array($query_string, $fullfile);
+    return array($query_string,$fullfile);
    }
 
   //fucntion for adding the paging feature

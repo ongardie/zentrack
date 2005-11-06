@@ -184,8 +184,9 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
       $zen->addDebug("searchResults.php-params[]",join("||",$dp),3);
     }
     
-    $limit = $nolimit? 0 : false;
+    $limit = $nolimit? -1 : false;
     $tickets = $zen->search_tickets($params, "AND", "0", join(',',$orderby), $limit);//"status DESC, priority DESC"
+    $total_search_results = $zen->total_records;
   }
   
 }?>

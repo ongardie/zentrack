@@ -17,7 +17,12 @@ if( !$page_type )
 
 if( $view == 'contact_list' || $view == 'assigned_list' ) { $fields = $map->getFieldMap('ticket_list'); }
 else { $fields = $map->getFieldMap($view); }
-$atc = 0;
+if( $view == 'search_list' ) {
+  $atc = $total_search_results;
+}
+else {
+  $atc = 0;
+}
 
 // creates the $sortby variable describing how columns will be sorted
 include_once("$libDir/sorting.php");

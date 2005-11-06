@@ -44,6 +44,7 @@
         }
       }
       if( $skip ) {
+        $_SESSION['login_level'] = $user['access_level'];
         $login_level = $user["access_level"];
       }
     }
