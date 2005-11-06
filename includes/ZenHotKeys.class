@@ -267,11 +267,12 @@ class ZenHotKeys {
       $map = $GLOBALS['zt_map'];
       preg_match('@(ticket|project)@', $sect, $matches);
       $t = $matches[1];
+      $j = 1;
       for($i=1; $i<=8; $i++) {
         $view = "{$t}_tab_{$i}";
         if( $map->getViewProp($view, 'visible') ) {
           $label = $map->getViewProp($view,'label');
-          $this->assign($i, $label, "KeyEvent.createLoadUrl('{rootUrl}/ticket.php?id={id}&setmode=$view')");
+          $this->assign($j++, $label, "KeyEvent.createLoadUrl('{rootUrl}/ticket.php?id={id}&setmode=$view')");
         }
       }
     }
