@@ -10,20 +10,21 @@ It features a simple interface, fully adaptable administration
 and user experience, internationalization, platform and database 
 abstraction, and endless possibilities for project expansion. 
 --------------------
------ VERSION 2.6 (development) -----
+
+----- VERSION 2.6 Final (2005-11-05) -----
 
 2005-11-03, kato
   Fixed display of internal/external contacts (works on all tabs now)
-   - zentrack_2/www/contacts.php
+   - zentrack_2/www/contacts.php 1.5
   
   Corrected obscure js error in field map form
   Corrected highlighting problems caused by clicking very fast on up/down arrows
-   - zentrack_2/includes/templates/fieldMapForm.php
+   - zentrack_2/includes/templates/fieldMapForm.php 1.20
    
   Search by project_id corrected
   Corrected obscure bug causing undesirable limit in lists of tickets (menu pulldowns)
-   - zentrack_2/includes/zenTrack.class
    - zentrack_2/includes/ZenFieldMap.class
+   - zentrack_2/includes/zenTrack.class 1.200
   
   'Modify Search' bug fixed so that fields are preserved
   Search text highlighted in results
@@ -31,9 +32,11 @@ abstraction, and endless possibilities for project expansion.
    - zentrack_2/includes/templates/listTickets.php
    - zentrack_2/includes/templates/searchForm.php
    
-  Project now selected automagically when clicking 'Att Ticket to Project' in tasks view
-   - zentrack_2/includes/templates/ticket_load_tasks.php
-   - zentrack_2/includes/headerInc.php
+  Project now selected automagically when clicking 'Add Ticket to Project' in tasks view
+   - zentrack_2/includes/templates/ticket_load_attachments.php 1.4
+   - zentrack_2/includes/headerInc.php 1.68
+   - zentrack_2/includes/nav.php 1.28
+   - zentrack_2/includes/templates/ticket_load_tasks.php 1.4
   
 2005-11-01, alberts
   Fixed Navtab mouseout color, per tt#219
