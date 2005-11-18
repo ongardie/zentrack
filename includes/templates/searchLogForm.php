@@ -87,7 +87,7 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
   if( is_array($userBins) && $zen->settingOn("allow_assign") ) {
     $users = $zen->get_users($userBins);
     if( is_array($users) ) {
-      asort($users);
+      //asort($users);
       foreach($users as $k=>$v) {
         $check = ( $search_params["user_id"] && $v["user_id"] == $search_params["user_id"] )? 
         "selected" : "";
