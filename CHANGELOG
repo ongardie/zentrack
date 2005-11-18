@@ -13,6 +13,10 @@ abstraction, and endless possibilities for project expansion.
 
 ----- VERSION 2.6 Final (2005-11-05) -----
 
+2005-11-18, cfalonso
+  Removed an asort that disordered the users list in the search logs form
+   - zentrack_2/includes/templates/searchLogForm.php 1.12
+
 2005-11-03, kato
   Fixed search bug when searching by bin
    - zentrack_2/includes/templates/listTickets.php 1.35
