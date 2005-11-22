@@ -1,7 +1,10 @@
 
 DELETE FROM ZENTRACK_FIELD_MAP where which_view = 'ticket_custom' OR which_view = 'project_custom';
 DELETE FROM ZENTRACK_SETTINGS WHERE name = 'varfield_tab_name';
+-- Fix for error when creating new project
 DELETE FROM ZENTRACK_FIELD_MAP WHERE which_view = 'project_create' and field_name = 'type_id';
+-- Fix title field being too long and getting cut off
+UPDATE ZENTRACK_FIELD_MAP SET  num_cols = '50' WHERE field_name = 'title';
 
 -- new entries for custom_date in field map
 
