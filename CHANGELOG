@@ -14,6 +14,14 @@ abstraction, and endless possibilities for project expansion.
 ----- VERSION 2.6.1
 
 2005-11-22, alberts
+  Moved sql fix from upgrade files to upgrade_base.sql file.  *oops*
+   - zentrack_2/install/UPGRADE_mssqlserver.sql 1.45
+   - zentrack_2/install/UPGRADE_mysql.sql 1.56
+   - zentrack_2/install/UPGRADE_oracle.sql 1.53
+   - zentrack_2/install/UPGRADE_postgres.sql 1.45
+   - zentrack_2/install/upgrade_base.sql 1.11
+
+2005-11-22, alberts
   Fix for title getting cut off, tt#239.  Also fixed several inconsistencies
   with label for the 'title' field_name being called 'Summary' in some rows
   and called 'title' in others.
