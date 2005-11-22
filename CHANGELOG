@@ -13,6 +13,19 @@ abstraction, and endless possibilities for project expansion.
 
 ----- VERSION 2.6.1
 
+2005-11-22, alberts
+  Fix for title getting cut off, tt#239.  Also fixed several inconsistencies
+  with label for the 'title' field_name being called 'Summary' in some rows
+  and called 'title' in others.
+   - zentrack_2/install/UPGRADE_mssqlserver.sql 1.44
+   - zentrack_2/install/UPGRADE_mysql.sql 1.55
+   - zentrack_2/install/UPGRADE_oracle.sql 1.52
+   - zentrack_2/install/UPGRADE_postgres.sql 1.44
+   - zentrack_2/install/seed_mssqlserver.sql 1.47
+   - zentrack_2/install/seed_mysql.sql 1.65
+   - zentrack_2/install/seed_oracle.sql 1.54
+   - zentrack_2/install/seed_postgres.sql 1.50
+
 2005-11-21, alberts
   Removed zenTrack_log.psd file, tt#247
    - zentrack_2/install/zenTrack_log.psd *removed*
