@@ -1,6 +1,7 @@
 
 DELETE FROM ZENTRACK_FIELD_MAP where which_view = 'ticket_custom' OR which_view = 'project_custom';
 DELETE FROM ZENTRACK_SETTINGS WHERE name = 'varfield_tab_name';
+DELETE FROM ZENTRACK_FIELD_MAP WHERE which_view = 'project_create' and field_name = 'type_id';
 
 -- new entries for custom_date in field map
 
