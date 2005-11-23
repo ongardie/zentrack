@@ -46,6 +46,11 @@
         $errs[] = tr(" ? is required", array($r));
       }
     }
+    
+    // Check if description is too long
+    if ( strlen($comments) > 100 ){
+    	$errs[] = tr("Attachment description can not exceed 100 characters, yours is ? characters long.", strlen($comments));
+    }
     // print out an appropriate error message
     // thanks to Jeremy G. for this correction
     if( $userfile_error ) {
