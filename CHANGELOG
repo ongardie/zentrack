@@ -14,6 +14,10 @@ abstraction, and endless possibilities for project expansion.
 ----- VERSION 2.6.1
 
 2005-11-22, alberts
+
+  Fixed attachment truncate bug in tt#241
+   - zentrack_2/www/actions/upload.php 1.16
+  
   Moved sql fix from upgrade files to upgrade_base.sql file.  *oops*
    - zentrack_2/install/UPGRADE_mssqlserver.sql 1.45
    - zentrack_2/install/UPGRADE_mysql.sql 1.56
