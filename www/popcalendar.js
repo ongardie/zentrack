@@ -614,6 +614,10 @@ var	today =	new	Date()
 	{
 		init()
 	}
+	else if (document.addEventListener)	// for Mozilla browsers
+	{
+    document.addEventListener("DOMContentLoaded", init, null);
+	}
 	else
 	{
 	  //var oldOnLoad = window.onload;
