@@ -14,6 +14,10 @@ abstraction, and endless possibilities for project expansion.
 ----- VERSION 2.6.1
 
 2005-11-22, alberts
+  Fixed date picker not working in firefox, tt#252
+   - zentrack_2/www/popcalendar.js 1.7
+
+2005-11-22, alberts
 
   Fixed attachment truncate bug in tt#241
    - zentrack_2/www/actions/upload.php 1.16
