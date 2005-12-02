@@ -616,7 +616,7 @@ var	today =	new	Date()
 	}
 	else if (document.addEventListener)	// for Mozilla browsers
 	{
-    document.addEventListener("DOMContentLoaded", init, null);
+      document.addEventListener("DOMContentLoaded", init, null);
 	}
 	else
 	{
