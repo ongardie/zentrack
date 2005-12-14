@@ -11,6 +11,16 @@ and user experience, internationalization, platform and database
 abstraction, and endless possibilities for project expansion. 
 --------------------
 
+----- VERSION 2.6.2
+2005-12-14, cfalonso
+  Fixed warning about global variables
+   - zentrack_2/includes/session_start.php 1.32
+
+  Accidentally introduced an error and corrected it
+   - zentrack_2/www/behavior_js.php 1.37
+   - zentrack_2/www/behavior_js.php 1.36
+
+
 ----- VERSION 2.6.1
 
 2005-11-22, alberts
