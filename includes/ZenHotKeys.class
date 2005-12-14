@@ -1,5 +1,14 @@
 <? if( !ZT_DEFINED ) { die("Illegal Access"); }
 
+/**
+ * Manages keyboard shortcuts for all pages.
+ *
+ * There are global assignments (those which are available on every page) and
+ * local assignments (which are loaded using ZenHotKeys::loadSection().
+ *
+ * A singleton instance of this class is maintained in $hotkeys by the
+ * includes/headerInc.php file.
+ */
 class ZenHotKeys {
   
   function ZenHotKeys( &$zen ) {

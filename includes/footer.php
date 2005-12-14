@@ -95,7 +95,7 @@ function loadRenderKeys() {
      $debug_text .= "SCRIPT_NAME: $SCRIPT_NAME<br>\n";
      $debug_text .= "QUERY_STRING: $QUERY_STRING<br>\n";
      $debug_text .= "HTTP_HOST: (".(preg_match("/$HTTP_HOST/",$rootUrl)? 'matches rootUrl' : 
-        '<b><span class="error">DOES NOT MATCH $rootUrl!!!</span></b>').")<br>\n";
+        '<b><span class="error">DOES NOT MATCH \$rootUrl!!!</span></b>').")<br>\n";
      $debug_text .= "HTTP_COOKIE: $HTTP_COOKIE<br>\n";
      $debug_text .= "SERVER_SOFTWARE: {$_SERVER['SERVER_SOFTWARE']}<br>\n";
      $debug_text .= "PHP Version: ".phpversion()."<br>\n";

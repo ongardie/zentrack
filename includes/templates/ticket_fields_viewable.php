@@ -84,7 +84,7 @@
     print "</tr>";
     
     // close row
-    print "</table>\n";
+    print "</table>&nbsp;\n";
   }
 
 ?>

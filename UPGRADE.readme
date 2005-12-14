@@ -237,7 +237,9 @@ UPGRADE FROM EALIER THAN 2.4.2
   installation, might I recommend the manual install?  Patches are not trivial if they do
   not go as expected.
   
-  If you do not see a patch in the install folder that matches your desired versions, such as
+  Patches can be downloaded from http://www.zentrack.net/modules/mydownloads/.
+  
+  If you do not see a patch on the website that matches your desired versions, such as
   upgrading from 2.5.0.1 to 2.5.6, you might need to apply a series of patches, such as
   upgrade_2.5.0.1_to_2.5.5.patch and then upgrade_2.5.5_to_2.5.6.patch.
   

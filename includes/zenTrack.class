@@ -305,28 +305,32 @@ class zenTrack extends zen {
                   $this->checkNum($_GET['pageNumber']) : 0;
     }
     
-    $tables = $this->table_tickets." t";
+    $tables = $this->table_tickets." as t";
     if( $tf_pri ) {
       $tblpri = $this->table_priorities;
-      $tables .= ", $tblpri p";
+      $tables .= ", $tblpri as p";
       $sort = str_replace("priority", "ppri", $sort);
     }
     
     if( $tf_vf ) {
-      $tables .= ", ".$this->table_varfield." vf";
+      $tables .= ", ".$this->table_varfield." as vf";
+    }
+    
+    if( $columns && !is_array($columns) ) {
+      $columns = explode(',',$columns);
     }
 
     if( !is_array($columns) ) {
       $columns = $tf_pri? 
-         array('id', 'title', 't.priority priority', 'status',
+         array('id', 'title', 't.priority as priority', 'status',
                'description', 'otime', 'ctime', 'bin_id', 'type_id',
                'user_id', 'system_id', 'creator_id', 'tested', 'approved',
                'relations','project_id','est_hours','deadline','start_date',
-               'wkd_hours','p.priority ppri') : array("*");
+               'wkd_hours','p.priority as ppri') : array("*");
     }
     else if( $tf_pri ) {
-      if( !in_array("p.priority ppri", $columns) ) {
-        $columns[] = "p.priority ppri"; 
+      if( !in_array("p.priority as ppri", $columns) ) {
+        $columns[] = "p.priority as ppri"; 
       }
     }
 

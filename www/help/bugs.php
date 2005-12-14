@@ -34,7 +34,7 @@
      if( $res ) {
        $msg[] = tr("Your message was delivered.");
        if( $email ) { $msg[] = tr("An email about your report should be delivered to '?' shortly.", $zen->ffv($email)); }
-       else { $msg[] = tr("No email address was provided, but you can still view your issue in the dev tracker"); } 
+       else { $msg[] = tr("No email address was provided.  You should check devTracker (http://dev.zentrack.net) to insure your email was received."); } 
        $skip = 1;
      }
      else {
