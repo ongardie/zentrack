@@ -79,15 +79,21 @@ $session_vars = array("login_name",
 		      "ticket_mode");
 
 if( is_array($_SESSION) ) {
-  $vals = $_SESSION;
-  foreach($session_vars as $k) {
-    $$k = isset($vals[$k])? $vals[$k] : null;
+  foreach($session_vars as $s) {
+    if( strlen($_SESSION["$s"]) ) {
+      $$s = $_SESSION["$s"];
+    } else {
+      $$s = "";
+    }
   }
 }
 else if( is_array($HTTP_SESSION_VARS) ) {
-  $vals = $HTTP_SESSION_VARS;
-  foreach($session_vars as $k) {
-    $$k = isset($vals[$k])? $vals[$k] : null;
+  foreach($session_vars as $s) {
+     if( strlen($HTTP_SESSION_VARS["$s"]) ) {
+       $$s = $HTTP_SESSION_VARS["$s"];
+     } else {
+       $$s = "";
+     }
   }
 }
 else {
