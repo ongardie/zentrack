@@ -70,12 +70,6 @@
   <script language="javascript" src="<?=$rootUrl?>/javascript.js"></script>
   <script language="javascript" src="<?=$rootUrl?>/keyevent.js"></script>
   <script language="javascript" src="<?=$rootUrl?>/popcalendar.js"></script>
-  <?
-  for($i=0; $i<count($onLoad); $i++) {
-    $s = $onLoad[$i];
-    print "<script language='javascript' src='$rootUrl/$s'></script>\n";
-  }
-  ?>
   <script type='text/javascript'>
     var isIE = navigator.appName.indexOf('Microsoft') >= 0;
     var debugOn = <?=$Debug_Mode > 0? 'true' : 'false'?>;
@@ -96,6 +90,12 @@
       }
     }
   </script>
+  <?
+  for($i=0; $i<count($onLoad); $i++) {
+    $s = $onLoad[$i];
+    print "<script language='javascript' src='$rootUrl/$s'></script>\n";
+  }
+  ?>
 
   </head>
 

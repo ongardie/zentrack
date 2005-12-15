@@ -130,6 +130,7 @@ function makeTimeString() {
   return date.getHours()+":"+date.getMinutes()+":"+date.getSeconds()+"-"+date.getMilliseconds();
 }
 
+/*
 function mergeFunctions(fxn1, fxn2) {
   if( fxn1 ) {
     return function() {
@@ -143,6 +144,7 @@ function mergeFunctions(fxn1, fxn2) {
     return fxn2;
   }
 }
+*/
 
 function getEventSrc( evt ) {
   if( !evt || (!evt.srcElement && !evt.target) ) { evt = window.event; }
@@ -200,6 +202,7 @@ function addToOnload( newFxn ) {
 /**
  * Merges two functions
  */
+
 function mergeFunctions( fxn1, fxn2 ) {
   return function() {
     var res = fxn1();
