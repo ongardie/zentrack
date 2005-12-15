@@ -12,6 +12,13 @@ abstraction, and endless possibilities for project expansion.
 --------------------
 
 ----- VERSION 2.6.2
+
+2005-12-15, cfalonso
+  Fixed problem on behaviors. Now behaviors run again.
+   - zentrack_2/includes/nav.php 1.29
+   - zentrack_2/www/behavior_js.php 1.38
+   - zentrack_2/www/javascript.js 1.23
+
 2005-12-14, cfalonso
   Fixed warning about global variables
    - zentrack_2/includes/session_start.php 1.32
