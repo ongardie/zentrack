@@ -23,13 +23,6 @@
   }
   $expand_projects = 1;
   include("$libDir/nav.php");
-
-  
-  if( $login_bin ) {
-    $params["bin_id"] = $login_bin;
-  } else {
-    $params["bin_id"] = $zen->getUsersBins($login_id);
-  }
     
   include_once("$libDir/sorting.php");
   if( is_array($params) )
