@@ -11,8 +11,14 @@ and user experience, internationalization, platform and database
 abstraction, and endless possibilities for project expansion. 
 --------------------
 
------ VERSION 2.6.2
 
+----- VERSION 2.6.0.1
+
+2005-12-17, alberts
+  Fixed tt#245, My Tickets only shows home bin
+   - zentrack_2/www/assignedProjects.php 1.12
+   - zentrack_2/www/assignedTickets.php 1.16
+   
 2005-12-15, cfalonso
   Fixed problem on behaviors. Now behaviors run again.
    - zentrack_2/includes/nav.php 1.29
@@ -26,9 +32,6 @@ abstraction, and endless possibilities for project expansion.
   Accidentally introduced an error and corrected it
    - zentrack_2/www/behavior_js.php 1.37
    - zentrack_2/www/behavior_js.php 1.36
-
-
------ VERSION 2.6.1
 
 2005-11-22, alberts
   Fixed date picker not working in firefox, tt#252
