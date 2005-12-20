@@ -823,7 +823,6 @@ function printBehaviorDebug() {
  */
 function pageLoadedBehavior() {
   // debug output
-alert ("Probando");
   behaviorDebug(3, "(pageLoadedBehavior)running");
   
   // clear the behavior flags from any previous uses
