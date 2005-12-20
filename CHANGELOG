@@ -14,6 +14,10 @@ abstraction, and endless possibilities for project expansion.
 
 ----- VERSION 2.6.0.1
 
+2005-12-15, cfalonso
+  Cleaned up test code
+   - zentrack_2/www/behavior_js.php 1.39
+
 2005-12-17, alberts
   Fixed tt#245, My Tickets only shows home bin
    - zentrack_2/www/assignedProjects.php 1.12
