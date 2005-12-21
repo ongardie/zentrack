@@ -21,14 +21,24 @@ abstraction, and endless possibilities for project expansion.
 2005-12-20, kato
   Cleaned up and commented session manager
   Added cap on data cache to prevent overusing memory
-   - zentrack_2/includes/ZenSessionManager.class
+   - zentrack_2/includes/ZenSessionManager.class 1.8
    
   Cached user lookups
   Cached access rights for users
-   - zentrack_2/includes/zenTrack.class
+  Removed incorrectly stored user/access values from member vars
+   - zentrack_2/includes/zenTrack.class 1.204
+   - zentrack_2/includes/login.php 1.34
    
   Fixed user/bin filtering for ticket lists and access
-   - zentrack_2/includes/zenTrack.class
+   - zentrack_2/includes/zenTrack.class  1.204
+   - zentrack_2/includes/zen.class       1.44
+   - zentrack_2/includes/listTickets.php 1.38
+   - zentrack_2/www/index.php            1.17
+   - zentrack_2/www/projects.php         1.15
+   
+  Fixed bug in editBehaviorSubmit.php that occurs when a validation error is
+  produced
+   - zentrack_2/www/admin/editBehaviorSubmit.php 1.7
 
 2005-12-17, alberts
   Fixed tt#245, My Tickets only shows home bin
