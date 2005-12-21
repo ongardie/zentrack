@@ -241,7 +241,9 @@ UPGRADE FROM EALIER THAN 2.4.2
   installation, might I recommend the manual install?  Patches are not trivial if they do
   not go as expected.
   
-  Patches can be downloaded from http://www.zentrack.net/modules/mydownloads/.
+  Patches can be downloaded from one of the following urls:
+    http://www.zentrack.net/modules/mydownloads/
+    http://sourceforge.net/project/showfiles.php?group_id=22724&package_id=71190&release_id=368795
   
   If you do not see a patch on the website that matches your desired versions, such as
   upgrading from 2.5.0.1 to 2.5.6, you might need to apply a series of patches, such as
