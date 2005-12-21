@@ -13,6 +13,12 @@ abstraction, and endless possibilities for project expansion.
 
 ----- VERSION 2.6.0.2
 
+2005-12-21, cfalonso
+  Task #266: Unable to edit custom field due to system error
+   - zentrack_2/includes/validateFields.php 1.7
+   - zentrack_2/www/ticket.php 1.34
+
+2005-12-21, (pending)
   Added js validation to ticket create/edit forms for user/bin security
    - zentrack_2/includes/templates/validateTicketForm.php (pending)
 
