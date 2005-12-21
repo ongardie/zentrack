@@ -18,6 +18,27 @@ abstraction, and endless possibilities for project expansion.
 
 ----- VERSION 2.6.0.1
 
+2005-12-21, kato
+  Prepared install/upgrade docs and scripts
+    - zentrack_2/UPGRADE.readme
+    - zentrack_2/install/build_mysql.sql
+    - zentrack_2/install/build_mssqlserver.sql
+    - zentrack_2/install/build_postgres.sql
+    - zentrack_2/install/build_oracle.sql
+    - zentrack_2/install/seed_mssqlserver.sql
+    - zentrack_2/install/seed_mysql.sql
+    - zentrack_2/install/seed_oracle.sql
+    - zentrack_2/install/seed_postgres.sql
+    - zentrack_2/install/seed_random_report_data.sql
+    - zentrack_2/install/UPGRADE_mssqlserver.sql
+    - zentrack_2/install/UPGRADE_mysql.sql
+    - zentrack_2/install/UPGRADE_oracle.sql
+    - zentrack_2/install/UPGRADE_postgres.sql
+    - zentrack_2/install/previous/2.6.UPGRADE_mssqlserver.sql 1.1
+    - zentrack_2/install/previous/2.6.UPGRADE_mysql.sql 1.1
+    - zentrack_2/install/previous/2.6.UPGRADE_oracle.sql 1.1
+    - zentrack_2/install/previous/2.6.UPGRADE_postgres.sql 1.1
+
 2005-12-20, kato
   Cleaned up and commented session manager
   Added cap on data cache to prevent overusing memory

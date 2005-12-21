@@ -1392,3 +1392,8 @@ INSERT INTO ZENTRACK_VIEW_MAP (view_map_id, which_view, vm_name, vm_val, vm_type
 INSERT INTO ZENTRACK_VIEW_MAP (view_map_id, which_view, vm_name, vm_val, vm_type, vm_order) VALUES(209, 'ticket_view_top', 'view_only', '1', 'label', 0);
 INSERT INTO ZENTRACK_VIEW_MAP (view_map_id, which_view, vm_name, vm_val, vm_type, vm_order) VALUES(210, 'ticket_view_top', 'visible', '1', 'checkbox', 0);
 INSERT INTO ZENTRACK_VIEW_MAP (view_map_id, which_view, vm_name, vm_val, vm_type, vm_order) VALUES(211, 'ticket_view_top', 'width', '50', 'text', 0);
+
+
+-- ADDED IN VERSION 2.6.0.1
+
+

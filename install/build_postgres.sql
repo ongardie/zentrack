@@ -486,3 +486,10 @@ CREATE INDEX view_map_idx ON ZENTRACK_VIEW_MAP(which_view,vm_order);
 CREATE INDEX vf_multi_idx ON ZENTRACK_VARFIELD_MULTI(ticket_id);
 CREATE SEQUENCE view_map_id_seq start 1001 increment 1 maxvalue 2147483647 minvalue 1 cache 1;
 CREATE SEQUENCE varfield_multi_id_seq start 1001 increment 1 maxvalue 2147483647 minvalue 1 cache 1;
+
+
+-- ADDED IN VERSION 2.6.0.1
+
+
+
+
