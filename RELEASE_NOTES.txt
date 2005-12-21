@@ -1,4 +1,17 @@
 
+----- 2.6.0.1 Maintenance Release -----
+
+  Cached user lookups
+  Cached access rights for users
+  Fixed user/bin filtering for ticket lists and access
+  Fixed bug causing my tickets to only show home bin
+  Fixed bug causing behaviors to fail
+  Fixed warning about global variables
+  Fixed date picker not working in firefox, tt#252
+  Fixed attachment truncate bug in tt#241
+  Fix for title getting cut off
+  Fixed project create error
+
 ----- 2.6 Major Release ----
 
 NEW FEATURES / ENHANCEMENTS
