@@ -25,10 +25,10 @@
 
   $behavior_required = array("NewBehaviorName",
                              "NewGroupId",
-                             "NewIsEnabled",
-                             "NewSortOrder",
+                             //"NewIsEnabled",
+                             //"NewSortOrder",
                              "NewFieldName",
-                             "NewFieldEnabled",
+                             //"NewFieldEnabled",
                              "NewMatchAll");
 
 
@@ -66,7 +66,7 @@
   if( $errs ) {
     $zen->printErrors($errs);
     $TODO = 'EDIT';
-    include("$templateDir/behaviorAdd.php");
+    include("$templateDir/behaviorForm.php");
   } else {
     include("$templateDir/behaviorMenu.php");
   }

@@ -2,6 +2,7 @@
 if( !ZT_DEFINED ) { die("Illegal Access"); }
 
 $autologin = $zen->settingOn('allow_pwd_save');
+$user = false;
 
 // log user out of zentrack if $logoff
 if( isset($logoff) && $logoff > 0 ) {
@@ -36,12 +37,13 @@ if( $autologin && !$login_id && $zentrackUsername && $zentrackKey ) {
     // automatically log in users based on cookie values
     $login_id = $zen->login_user($zentrackUsername, $zentrackKey, true);
     if( $login_id ) {
+      $user = $zen->getUser($login_id);
       $_SESSION['login_id'] = $login_id;
       // user login was valid so set session variables
-      $login_level = $zen->user["access_level"];
-      $login_name  = $zen->user["fname"]." ".$zen->user["lname"];
-      $login_inits = $zen->user["initials"];
-      $login_bin   = $zen->user["homebin"];
+      $login_level = $user["access_level"];
+      $login_name  = $user["fname"]." ".$user["lname"];
+      $login_inits = $user["initials"];
+      $login_bin   = $user["homebin"];
       $language = $zen->get_prefs($login_id, "language");
       if($language) { $login_language = $language; }
       setcookie("zentrackUsername", $zentrackUsername, time()+2592000);
@@ -69,19 +71,20 @@ if( !$login_id ) {
   }
   if( isset($username) && $username && isset($passphrase) ) {
     $login_id = $zen->login_user( $username, $passphrase );
+    if( $login_id ) { $user = $zen->getUser($login_id); }
     if( $login_id && $zen->demo_mode != "on"
-	  && $zen->user["initials"] != "GUEST"
-	  && $zen->encval($zen->user["lname"]) == $zen->encval($passphrase) ) {
+	  && $user["initials"] != "GUEST"
+	  && $zen->encval($user["lname"]) == $zen->encval($passphrase) ) {
       // this will redirect the user
       // to a login screen where they can
       // change their passphrase, since it is
       // set to the default
       $_SESSION['login_id'] = $login_id;
       $login_level = 'first_login';
-      $login_name  = $zen->user["fname"]." ".$zen->user["lname"];
+      $login_name  = $user["fname"]." ".$user["lname"];
       setcookie("zentrackUsername", $username, time()+2592000);
-      $login_inits = $zen->user["initials"];
-      $login_bin   = $zen->user["homebin"];
+      $login_inits = $user["initials"];
+      $login_bin   = $user["homebin"];
       $lang_pref = $zen->get_prefs($login_id,'language');
       if(isset($lang_pref)) { $login_language = $lang_pref; }
       if( $autologin && $save_my_password ) {
@@ -97,10 +100,10 @@ if( !$login_id ) {
       // as a cookie to save time logging in
       // in the future
       $_SESSION['login_id'] = $login_id;
-      $login_level = $zen->user["access_level"];
-      $login_name  = $zen->user["fname"]." ".$zen->user["lname"];
-      $login_inits = $zen->user["initials"];
-      $login_bin   = $zen->user["homebin"];
+      $login_level = $user["access_level"];
+      $login_name  = $user["fname"]." ".$user["lname"];
+      $login_inits = $user["initials"];
+      $login_bin   = $user["homebin"];
       $lang_pref = $zen->get_prefs($login_id, "language");
       if( $lang_pref ) { $login_language = $lang_pref; }
       setcookie("zentrackUsername", $username, time()+2592000);
@@ -125,7 +128,7 @@ if( !$login_id ) {
     $zen->addDebug("login.php:userLogin",
     "User not logged in, username and passphrase not detected, so creating login form",3);
   }
-
+  
   // user isn't logged in, so show the login form
   if( !isset($skip) || !$skip ) {
     // no login has been recieved, but it's required

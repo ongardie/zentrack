@@ -540,12 +540,15 @@ class ZenHotKeys {
       $id = $key.$count++;
     }
     $this->_tabs[$id] = $key;
-    $this->_lh = $this->_alternate? $this->_lh == 'High'? 'Low' : 'High' : "High";
-    return "<div id='keySub_$id' class='keySub{$this->_lh}'>$key</div>";
+    return "<div id='keySub_$id' class='keySub".$this->_lh()."'>$key</div>";
   }
   
   function addZenTabByLabel($label) {
     $this->addZenTab($this->find($label));
+  }
+  
+  function _lh() {
+    return $this->_alternate? $this->_lh == 'High'? 'Low' : 'High' : "High";
   }
   
   var $_alternate;

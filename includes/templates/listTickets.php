@@ -9,7 +9,7 @@
      (array)$tickets - list of tickets to be displayed, as retrieved from zenTrack::get_tickets()
   **/
   
-  $right_aligned = '@^(elapsed|est_hours|wkd_hours|custom_number)@';
+$right_aligned = '@^(elapsed|est_hours|wkd_hours|custom_number)@';
   
 $show_totals = $map->getViewProp($view, 'show_totals');
 if( !$page_type )

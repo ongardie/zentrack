@@ -11,12 +11,24 @@ and user experience, internationalization, platform and database
 abstraction, and endless possibilities for project expansion. 
 --------------------
 
+----- VERSION 2.6.0.2
+
+  Added js validation to ticket create/edit forms for user/bin security
+   - zentrack_2/includes/templates/validateTicketForm.php (pending)
 
 ----- VERSION 2.6.0.1
 
-2005-12-15, cfalonso
-  Cleaned up test code
-   - zentrack_2/www/behavior_js.php 1.39
+2005-12-20, kato
+  Cleaned up and commented session manager
+  Added cap on data cache to prevent overusing memory
+   - zentrack_2/includes/ZenSessionManager.class
+   
+  Cached user lookups
+  Cached access rights for users
+   - zentrack_2/includes/zenTrack.class
+   
+  Fixed user/bin filtering for ticket lists and access
+   - zentrack_2/includes/zenTrack.class
 
 2005-12-17, alberts
   Fixed tt#245, My Tickets only shows home bin
@@ -24,6 +36,9 @@ abstraction, and endless possibilities for project expansion.
    - zentrack_2/www/assignedTickets.php 1.16
    
 2005-12-15, cfalonso
+  Cleaned up test code
+   - zentrack_2/www/behavior_js.php 1.39
+
   Fixed problem on behaviors. Now behaviors run again.
    - zentrack_2/includes/nav.php 1.29
    - zentrack_2/www/behavior_js.php 1.38

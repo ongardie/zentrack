@@ -22,6 +22,7 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
     $page_type = strpos($view,'project')===0? 'project' : 'ticket'; 
   }
   $plural = $page_type == 'project'? 'projects' : 'tickets';
+  tr( $plural );
   $ucfirst = ucfirst($page_type);
   
   if( !$td ) {

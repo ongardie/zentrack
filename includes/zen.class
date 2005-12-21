@@ -195,6 +195,13 @@ class zen extends zenDate {
    }
    
    function checkNum( $val = 0, $decimal=false ) {
+     if( is_array($val) ) {
+       for($i=0; $i<count($val); $i++) {
+         $val[$i] = Zen::checkNum($val[$i]);
+       }
+       return $val;
+     }
+     
      // converts values to integer or 
      // decimal if $decimal == true;
      $val = ($decimal)? 

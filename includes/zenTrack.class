@@ -27,33 +27,48 @@ class zenTrack extends zen {
   **  RETRIEVAL 
   */
 
-  
+  /**
+   * Return access priviledges for user
+   *
+   * @param int $user_id
+   * @param int $flag 1 returns db rows, 0 returns array("bin_id" => level)
+   * @return mixed array
+   */
   function get_access( $user_id, $flag = 0, $withnull = false ) {
-    // retrieves the access priviledges
-    // by the user_id (user id)
-    // if flag set to 1, then it returns
-    // a simple array containing all the columns
-    //  ( [0] = array(..all columns in db..) )
-    // otherwise, returns an array indexed by bin_id, 
-    // with a value of the level for that bin
-    //  ( ["bin_id"] = $bin_level )
-    
-    $query = "SELECT * FROM ".$this->table_access
-      ." WHERE user_id = ".$this->checkNum($user_id);
-    if( !$withnull ) { $query .= " AND lvl is not null"; }
-    $this->addDebug("get_access()Query",$query,3);
-    $vars = $this->db_queryIndexed($query);
     if( $flag ) {
-      return $vars;  
-    } else {
+      $query = "SELECT * FROM ".$this->table_access
+        ." WHERE user_id = ".$this->checkNum($user_id);
+      if( !$withnull ) { $query .= " AND lvl is not null"; }
+      $this->addDebug("get_access()Query",$query,3);
+      return $this->db_queryIndexed($query);
+    }
+    
+    if( $user_id == ZenSessionManager::getSession('login_id') ) {
+      $vals = $this->_session->find('login_user_access');
+    }
+    else {
+      $vals = $this->_session->getDataCache('user_access', $user_id);
+    }
+    if( !$vals ) {
+      $query = "SELECT * FROM ".$this->table_access
+        ." WHERE user_id = ".$this->checkNum($user_id);
+      if( !$withnull ) { $query .= " AND lvl is not null"; }
+      $this->addDebug("get_access()Query",$query,3);
+      $vars = $this->db_queryIndexed($query);
       $vals = array();
       if( is_array($vars) ) {
         foreach($vars as $v) {
           $vals["{$v['bin_id']}"] = $v['lvl'];
         }
       }
-      return( $vals );
+      if( $user_id == ZenSessionManager::getSession('login_id') ) {
+        $this->_session->store('login_user_access', $vals);
+      }
+      else {
+        $this->_session->storeDataCache('user_access', $user_id, $vals);
+      }
     }
+    return $vals;
   }
 
   function get_attachment($access_id) {
@@ -401,9 +416,7 @@ class zenTrack extends zen {
   function get_user( $user_id ) {
     // returns a specific user
     // by the user id
-    $user_id = $this->checkNum($user_id);
-    $query = "SELECT * FROM ".$this->table_users." WHERE user_id = $user_id";
-    return( $this->db_quickIndexed($query) );
+    return $this->getUser($user_id);
   }
 
   function get_user_by_login( $login ) {
@@ -466,7 +479,10 @@ class zenTrack extends zen {
   }
 
   /**
-   * grabs all users matching the priviledges given for the bins designated
+   * Grabs all users matching the priviledges given for the bins designated.  If
+   * a list of bins is provided, then users are returned who can access any of
+   * the bins listed.  To enforce users who match all of the bins, you must use
+   * checkAccess() against the user/bin combinations.
    *
    * @param array $bins only return users with access to the bins listed
    * @param string $level only return users with at least $level access
@@ -477,20 +493,14 @@ class zenTrack extends zen {
     // get our level
     $lvl = $level? $this->getSetting($level) : 0;
     
-    $binlist = '';
-    for($i=0; $i<count($bins); $i++) {
-      if( $i > 0 ) { $query .= ","; }
-      $binlist .= $this->checkNum($bins[$i]);
-    }
-    
+    $binlist = $bins? join(',', $this->checkNum($bins)) : false;
 
     // get a list from the access table of invalid bins
     // and map them to user_ids
     $outs = array();  //ones to skip
-    $ins  = array();   //ones to keep
-    $outlist = '';
     $query  = "SELECT user_id,bin_id FROM ".$this->table_access;
-    $query .= " WHERE lvl IS NOT NULL AND lvl < $lvl";
+    $query .= " WHERE lvl IS NOT NULL AND lvl < $lvl ";
+    if( $binlist ) { $query .= " AND bin_id IN($binlist)"; }
     $vals = $this->db_query($query);
     for($i=0; $i<count($vals); $i++) {
       list($k,$v) = $vals[$i];
@@ -503,7 +513,7 @@ class zenTrack extends zen {
     }
 
     // select all users who appear to have some sort of access to one of the bins
-    $query  = "SELECT u.*, bin_id as bins ";
+    $query  = "SELECT u.*, a.bin_id ";
     $query .= " FROM {$this->table_users} u LEFT JOIN {$this->table_access} a";
     $query .= " ON (u.user_id = a.user_id)";
     $query .= " WHERE access_level >= $lvl";
@@ -524,9 +534,9 @@ class zenTrack extends zen {
     for($i=0; $i<count($vals); $i++) {
       $user = $vals[$i];
       $id = $user['user_id'];
-      $bin = $user['bins'];
+      $bin = $user['bin_id'];
       if( $bin && array_key_exists($id, $outs) && in_array($bin, $outs[$id]) ) {
-        // skip invalid entries
+        // skip users for bins which are explicitly disallowed
         continue;
       }
       if( array_key_exists($id, $usermap) ) {
@@ -539,7 +549,7 @@ class zenTrack extends zen {
       else {
         // create the user, store the location of the user in our temp map
         // create the special bins array to store valid bins
-        $user['bins'] = array($user['bins']);
+        $user['bins'] = array($bin);
         $users[$count++] = $user;
         $usermap[$id] = $count;
       }
@@ -547,6 +557,7 @@ class zenTrack extends zen {
     
     // debug
     $this->addDebug("get_users","results: ".count($vals)."/$query",3);
+    
     // return
     return $users;  
   }
@@ -3271,6 +3282,9 @@ class zenTrack extends zen {
     // user's id.  also deletes all access
     // and prefs entries for this user
     // $user_id can be an array
+    
+    $this->_userChanged($user_id);
+    
     if( is_array($user_id) ) {
       $where = " user_id IN(";
       for($i=0; $i<count($user_id); $i++) {
@@ -3285,7 +3299,6 @@ class zenTrack extends zen {
     $query = "DELETE FROM ".$this->table_users." WHERE $where";
     $this->addDebug("delete_user()Query",$query,2);
     $this->delete_access($user_id);
-    $this->_session->clearDataType('userbins');
     return( $this->db_result($query) );
   }
 
@@ -3293,6 +3306,8 @@ class zenTrack extends zen {
     // updates user settings by user_id
     // do not encrypt the passphrase, this is done
     // automatically
+    
+    $this->_userChanged($user_id);
 
     $user_id = $this->checkNum($user_id);
     if( $user["login"] == "egate" ) {
@@ -3318,61 +3333,81 @@ class zenTrack extends zen {
     $set = $this->makeInsertVals($params,1);
     $query = "UPDATE ".$this->table_users." SET $set WHERE user_id = $user_id";
     $this->addDebug("update_user()Query",$query,2);
-    $this->_session->clearDataType('userbins');
     return( $this->db_result($query) );
   }
 
+  /**
+   * Add new access params for a given user.  This method does not check for
+   * duplicates or remove old entries.  Use {@link ZenTrack::update_access} if
+   * you need this logic.
+   *
+   * @param int $user_id
+   * @param array $params is an associative array of "bin_id" => array("lvl", "notes/roles")
+   * @return int number of successfully added rows, which can be compared to count($params)
+   */
   function add_access( $user_id, $params ) {
     // adds new access parameters for the 
     // given user, ignores ones that 
     // currently exist for that user
     // $params is an indexed array containing:
     //   "bin_id" => level (integer)
-
     $user_id = $this->checkNum($user_id);
+
+    $i = 0;
     foreach($params as $k=>$v) {
-      if( !strlen($v[0]) )
-      $v[0] = 'NULL';
-      if( !strlen($v[1]) )
-      $v[1] = 'NULL';
-      else
-      $v[1] = "$v[1]";
-      $arr = array( "user_id"=>$user_id,
-      "bin_id"=>$k,
-      "lvl"=>$v[0],
-      "notes"=>$v[1] );
-      $res = $this->db_insert($this->table_access,$arr);
-      if( $res )
-      $i++;
+      if( !strlen($v[0]) ) { $v[0] = 'NULL'; }
+      if( !strlen($v[1]) ) { $v[1] = 'NULL'; }
+      $arr = array( "user_id" => $user_id,
+                    "bin_id"  => $k,
+                    "lvl"     => $v[0],
+                    "notes"   => $v[1] );
+      if( $this->db_insert($this->table_access,$arr) ) {
+        $i++;
+      }
     }
-    $this->_session->clearDataType('userbins');
-    return($i);
+
+    return $i;
   }
 
+  /**
+   * Replaces users existing access priviledges with the new values provided
+   *
+   * @param int $user_id
+   * @param array $params array matching spec for {@link zenTrack::addAccess()}
+   * @return int db_result
+   */
   function update_access( $user_id, $params ) {
-    // deletes the users old access privileges 
-    // and replaces them with the ones given in 
-    // $params, $user_id is the user_id
-
     $user_id = $this->checkNum($user_id);
     $this->delete_access( $user_id );
-    $this->_session->clearDataType('userbins');
     return( $this->add_access($user_id, $params) );
   }
 
+  /**
+   * Delete's user's access priviledges from db
+   *
+   * @param int $id the id to delete priviledges for (id type is based on flag)
+   * @param int $flag null=>user_id, 1=>bin_id, 2=>access_id
+   * @return int db_result
+   */
   function delete_access( $id, $flag = '' ) {
-    // deletes access privedges based on $flag
-    //   NULL - by user_id
-    //   1    - by bin_id
-    //   2    - by access_id
-    // $id can be an array
+    if( $flag == 1 ) { $field = "bin_id"; }
+    else if( $flag == 2 ) { $field = "access_id"; }
+    else { $field = "user_id"; }
     
-    if( $flag == 1 )
-      $field = "bin_id";
-    else if( $flag == 2 )
-      $field = "access_id";
-    else
-      $field = "user_id";
+    // clear data cache
+    if( $field == 'user_id' ) {
+      // clear all uses from cache who have been altered
+      $vals = is_array($id)? $id : array($id);
+      foreach($id as $uid) {
+        $this->_accessChanged($uid);
+      }
+    }
+    else {
+      // if we are deleting by bin or access id, then we will just clear the
+      // entire cache, since it will not be worth the effort to track which ones
+      // are deleted.
+      $this->_accessChanged();
+    }
     if( is_array($id) ) {
       $where = " $field IN(";
       for($i=0; $i<count($id); $i++) {
@@ -3385,7 +3420,6 @@ class zenTrack extends zen {
     }
     $query = "DELETE FROM ".$this->table_access." WHERE $where";
     $this->addDebug("delete_access()Query",$query,2);
-    $this->_session->clearDataType('userbins');
     return( $this->db_result($query) );
   }
 
@@ -3525,7 +3559,7 @@ class zenTrack extends zen {
 
   function add_bin( $params ) {
     // add a new bin to the bins table
-    $this->_session->clearDataType('bins');
+    $this->_binChanged();
     return( $this->db_insert( $this->table_bins, $params ) );
   }
 
@@ -3576,7 +3610,7 @@ class zenTrack extends zen {
     $set = $this->makeInsertVals($params,1);
     $query = "UPDATE ".$this->table_bins." SET $set WHERE bid = $bid";
     $this->addDebug("update_bin()Query",$query,3);
-    $this->_session->clearDataType('bins');
+    $this->_binChanged();
     return( $this->db_result($query) );
   }
 
@@ -3595,10 +3629,12 @@ class zenTrack extends zen {
     $setting_id = $this->checkNum($setting_id);
     $set = $this->makeInsertVals($params,1);
     $query = "UPDATE ".$this->table_settings." SET $set WHERE setting_id = $setting_id";
-    $this->addDebug("update_setting()Query",$query,3);
+    $res = $this->db_result($query);
+    $this->addDebug("update_setting()Query","[$res]$query",3);
     $this->_session->clearDataType('settings');
-    $this->_settings = false;
-    return( $this->db_result($query) );
+    $this->_settings = $this->getSettings();
+    $this->_accessChanged(); // might be changing a level_ setting.. no way to tell
+    return( $res );
   }
 
   function update_system( $sid, $params ) {
@@ -3647,8 +3683,7 @@ class zenTrack extends zen {
       ." where login = '$username' and passphrase = $pass and active > 0";
     $user_id = $this->db_get($query);
     $this->addDebug("zentrack.class:login_user($user_id)",$query,2);
-    if( $user_id )
-      $this->getUser($user_id);
+    if( $user_id ) { $this->getUser($user_id); };
     return($user_id);
   }
 
@@ -4412,99 +4447,163 @@ class zenTrack extends zen {
     return $names["$n"];
   }
 
+  /**
+   * Retrieves all properties from the USERS table for the user_id specified
+   *
+   * @param int $user_id
+   * @return array
+   */
   function getUser( $user_id ) {
-    // retrieves the user who is logged in 
-    // to zenTrack.  This function prevents 
-    // multiple queries to retrieve user info
-    // on a single page by checking the stored
-    // user information and validating the user_id
-    // first.
-    // 
-    // Do not use this function for any data other
-    // than that of the logged in system user
-
     $user_id = $this->checkNum($user_id);
-    if( !$this->user || $this->user["user_id"] != $user_id ) {
-      $this->user = $this->get_user($user_id);
+    if( $user_id == ZenSessionManager::getSession('login_id') ) {
+      // logged in user is stored in the session, not in
+      // the temporary cache
+      $user = $this->_session->find("login_user");
     }
-    return( $this->user );
+    else {
+      // all other users are only stored for the life of the page
+      $user = $this->_session->getDataCache('users', $user_id);
+    }
+    if( $user ) {
+      $this->addDebug('ZenTrack::getUser', "User $user_id retrieved from cache", 3);
+      return $user; 
+    }
+    
+    $query = "SELECT * FROM ".$this->table_users." WHERE user_id = $user_id";
+    $user = $this->db_quickIndexed($query);
+    $this->addDebug('ZenTrack::getUser', "Retrieved user $user_id from db [$user]: $query", 3);
+    
+    if( $user_id == ZenSessionManager::getSession('login_id') ) {
+      $this->_session->store("login_user", $user);
+    }
+    else {
+      $this->_session->storeDataCache('users', $user_id, $user);
+    }
+    return $user;
   }
 
   function getAccess( $user_id ) {
-    if( !$this->access || $this->access["user_id"] != $user_id ) {
-      $this->access = $this->get_access($user_id);
-      $this->access["user_id"] = $user_id;
-    }
-    return( $this->access );
+    return $this->get_access($user_id);
   }
 
+  /**
+   * Determine which bins a user has the required access level for.
+   *
+   * Retrieves the list of bins and compares those to the user's default
+   * access level and specific access priviledges.
+   *
+   * The access is done such that the default level is overridden if a bin
+   * is specified in the access priviledges.
+   *
+   * For example, if a user has a default level of 1, and has the following:
+   * <pre><code>
+   *   accounting - 2
+   *   engineering - 0
+   * </code></pre>
+   *
+   * Then this user has level 1 access to all bins except engineering, and has level 2
+   * access to the accounting bin.
+   *
+   * The results of this lookup are cached, so multiple calls will not result
+   * in multiple db lookups.
+   *
+   * @param int $user_id the user to look up
+   * @param string $level any level_* name from the configuration settings
+   * @return array 
+   */
   function getUsersBins( $user_id, $level = "level_view" ) {
-    // gets the users bins, compares those to the
-    // settings required to access $this->bins and 
-    // then checks against the users default level to
-    // return a simple list of binIDs that this user
-    // has access to
-    // $user_id is the user's id
-    // $level is the access level to meet
-    // (i.e. could be set to level_user to only
-    // retrieve bins this user_id is a "user" for,
-    // defaults to level_view)
-    // this function caches results for efficiency, so repeating
-    // calls for the same user will not result slow the system
-
-    // set what we have in the session
-    //$userBins = $this->_session->getDataType('userbins');  //debug
-    if( !isset($userBins) ) { $userBins = array(); }
-    if( !isset($userBins["U$user_id"]) ) { $userBins["U$user_id"] = array(); }
-    if( isset($userBins["U$user_id"]["L$level"]) ) { 
-      $vars = $userBins["U{$user_id}"]["L$level"];
-      if( $this->debug > 2 ) {
-        // don't waste resources if it is not going to be printed
-        $adp = (is_array($vars))? 
-          join(",",$vars) : "-none-";
-          $this->addDebug("getUsersBins", $this->formatName($user_id)." loaded from session: ".$adp,3);
-      }
-      return $vars;
-    }
-    
-    // insure that our session cache doesn't become excessive
-    if( count($userBins) > 10 ) {
-      array_shift($userBins);
-    }
-    
-    // load this user/level into the cache
     $user_id = $this->checkNum($user_id);
-    $access = $this->getAccess($user_id);
-    $user   = $this->getUser($user_id);
+    
+    // retrieve the access level
+    $lvl = $this->getSetting($level);
+    
+    // we will check out temporary cache to see if this algorithm has
+    // already been run and stored there, to save cpu cycles
+    $key = "$user_id-$lvl";
+    $vals = $this->_session->getDataCache('userbins', $key);
+    if( $vals ) {
+      return $vals;
+    }
+    
+    // retrieve information from the session if possible
+    $rights = $this->getAccess($user_id, $level);
+    $user = $this->getUser($user_id);
+    $default = $user['access_level'];
     $bins = $this->getBins();
-    $vars = array();
-    foreach($bins as $k=>$v) {
-      if( $k ) {
-        if( strlen($access["$k"]) ) {
-          if( $access["$k"] >= $this->getSetting("$level") ) {
-            $vars[] = $k;
-          }
-        } else {
-          if( $user["access_level"] >= $this->getSetting("$level") ) {
-            $vars[] = $k;
-          }
+    
+    if( !$rights ) {
+      // there are no overriding entries, so everything hinges on the default value
+      if( $default >= $lvl ) {
+        $vals = array_keys( $bins );
+      }
+      else {
+        $vals = array();
+      }
+    }
+    else if( $default < $lvl ) {
+      // if the user's default level is < the level requested, we have a pretty
+      // simple operation, because the user can only see bins with a specific
+      // access right assigned to them
+      $vals = array();
+      foreach($rights as $b=>$l) {
+        if( $l >= $lvl ) {
+          $vals[] = $b;
         }
       }
     }
-
-    // store results in session
-    $userBins["U$user_id"]["L$level"] = $vars;
-    $this->_session->storeDataType('userbins', $userBins);
-
-    // debug and return results
-    if( $this->debug > 2 ) {
-      // don't waste resources if it is not going to be printed
-      $adp = (is_array($vars))? 
-        join(",",$vars) : "-none-";
-        $this->addDebug("getUsersBins", $this->formatName($user_id)." loaded from database: ".$adp,3);
+    else {
+      // if the user has a default level >= to the level requested, then we
+      // will go through the list of current bins and assign values,
+      // comparing the list of bins to our user's access priviledges
+      // and add/remove bins as needed
+      foreach($bins as $b=>$v) {
+        if( isset($rights["$b"]) && $rights["$b"] < $lvl ) {
+          // an access right specifically denies this action
+          continue; 
+        }
+        else {
+          // otherwise, the user has sufficient access
+          $vals[] = $b;
+        }
+      }
     }
     
-    return $vars;
+    $this->_session->storeDataCache('userbins', $key, $vals);
+    return $vals;
+  }
+  
+  function _userChanged( $user_id = false ) {
+    if( $user_id && $user_id == ZenSessionManager::getSession('login_id') ) {
+      $this->_session->clear('login_user');
+      $this->_accessChanged($user_id);
+    }
+    else if( $user_id ) {
+      $this->_session->clearDataCache('users', $user_id);
+      $this->_accessChanged($user_id);
+    }
+    else {
+      $this->_session->clearDataCache('users');
+      $this->_session->clear('login_user');
+      $this->_accessChanged();
+    }
+  }
+  
+  function _accessChanged( $user_id = false ) {
+    if( $user_id && $user_id == ZenSessionManager::getSession('login_id') ) {
+      $this->_session->clear('login_user_access');
+    }
+    else if( $user_id ) {
+      $this->_session->clearDataCache('user_access');
+    }
+    else {
+      $this->_session->clearDataCache('user_access');
+      $this->_session->clear('login_user_access');
+    }
+  }
+  
+  function _binChanged() {
+    $this->_session->clearDataType('bins');
+    $this->_accessChanged();
   }
   
   function checkCreator( $user_id, $ticket_id ) {
@@ -5163,7 +5262,7 @@ class zenTrack extends zen {
    * the main reason for this method is that we will be updating
    * the structure of the settings before long to become more rigid.
    *
-   * @param int $flag 1=return full info, 0=return bids and names
+   * @param int $flag 1=return full info, 0=returns array( "bin_id" => "name" )
    * @param int $active 1=only active bins, 0=all bins
    * @return array of bins
    */

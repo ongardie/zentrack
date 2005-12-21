@@ -14,12 +14,14 @@
   $fields = $map->getFieldMap($view);
 
   $page_title = tr("Tickets assigned") . ": $login_name";
-  $expand_tickets = 1;
+  $page_section = "Tickets";
   include("$libDir/nav.php");
 
   $params = array("status"  => array('OPEN','PENDING'),
 		  "user_id" => $login_id,
-		  "type_id" => $zen->notProjectTypeIDs());
+		  "type_id" => $zen->notProjectTypeIDs(),
+      "bin_id"  => $zen->getUsersBins($login_id)
+      );
 
   include_once("$libDir/sorting.php");
   $tickets = $zen->get_tickets($params, $sortstring);

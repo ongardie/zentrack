@@ -11,22 +11,19 @@
   $page_type = "project";
   $view = 'assigned_list';
 
-  $params = array(
-		  "type_id"  => $zen->projectTypeIDs(),
-		  "status"  => array("OPEN","PENDING"),
-		  "user_id"  => $login_id
-		  );
   $page_title = tr("Projects");
   $page_section = "Projects";
-  if( $login_bin ) {
-     $page_section .= " - ".$zen->bins["$login_bin"];
-  }
-  $expand_projects = 1;
   include("$libDir/nav.php");
+  
+  $params = array(
+		  "type_id"  => $zen->projectTypeIDs(),
+		  "status"   => array("OPEN","PENDING"),
+		  "user_id"  => $login_id,
+      "bin_id"   => $zen->getUsersBins($login_id)
+		  );
     
   include_once("$libDir/sorting.php");
-  if( is_array($params) )
-    $tickets = $zen->get_tickets($params, $sortstring);
+  $tickets = $zen->get_tickets($params, $sortstring);
   include("$templateDir/listTickets.php");
 
   include("$libDir/footer.php");
