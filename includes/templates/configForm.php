@@ -150,7 +150,7 @@ function setToDo(val) {
 }
 
 function addRow( obj ) {
-  alert('obj: '+obj);
+//  alert('obj: '+obj);
   var newName = rowCount++;
   var newSection = document.getElementById("aSampleRow").cloneNode(true);
   newSection.setAttribute("id",newName);
