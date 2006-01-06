@@ -13,6 +13,10 @@ abstraction, and endless possibilities for project expansion.
 
 ----- VERSION 2.6.0.2
 
+2006-01-05, cfalonso
+  A debug alert was present in the code -Commented
+   - zentrack_2/includes/templates/configForm.php 1.16
+
 2005-12-21, cfalonso
   Task #266: Unable to edit custom field due to system error
    - zentrack_2/includes/validateFields.php 1.7
