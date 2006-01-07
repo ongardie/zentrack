@@ -15,33 +15,37 @@ abstraction, and endless possibilities for project expansion.
 
 2006-01-06, kato
   265: Added user inits when editing varfield values
-    - zentrack_2/includes/editCustomSubmit.php
+    - zentrack_2/includes/editCustomSubmit.php 1.12
   
   248: Euro dates should work with adding new tickets now
-    - zentrack_2/www/addSubmit.php
+    - zentrack_2/www/addSubmit.php 1.33
     
   271: Fixed bug in behaviors with integer values for -value_column-
-    - zentrack_2/www/behavior_js.php
-    - zentrack_2/includes/behaviorForm.php
+    - zentrack_2/www/behavior_js.php 1.40
   
   134: Fixed bug in custom edit tab causing deleted values to be overlooked
-    - zentrack_2/www/ticket.php
+    - zentrack_2/www/ticket.php 1.35
+    - zentrack_2/includes/validateFields.php 1.8
     
   267: Fixed behavior submit to point to correct form if validation errors occur
-    - zentrack_2/www/admin/addBehaviorSubmit.php
+    - zentrack_2/www/admin/addBehaviorSubmit.php 1.8
+    - zentrack_2/includes/templates/behaviorDetailForm.php 1.10
     
   255: Contact email address fixed in ticket tab
-    - zentrack_2/includes/templates/ticket_load_contacts.php
+    - zentrack_2/includes/templates/ticket_load_contacts.php 1.7
   
   240: Recent tickets feature fixed
-    - zentrack_2/includes/templates/nav_tickets.php
+    - zentrack_2/includes/templates/nav_tickets.php 1.8
 
   147: Fixed erroneous close time produced when editing ticket twice
-    - zentrack_2/includes/zenTrack.class
+    - zentrack_2/includes/zenTrack.class 1.205
+    - zentrack_2/includes/editTicketSubmit.php 1.21
+    - zentrack_2/includes/zenDate.class 1.16
+    - zentrack_2/includes/form_fields.php 1.3
     
   230: Removed project type_id from filters for ticket lists and vice versa
-    - zentrack_2/includes/templates/listFiltersForm.php
-    - zentrack_2/includes/ZenFieldMap.class
+    - zentrack_2/includes/templates/listFiltersForm.php 1.2
+    - zentrack_2/includes/ZenFieldMap.class 1.41
     
 2006-01-05, cfalonso
   A debug alert was present in the code -Commented
