@@ -84,7 +84,7 @@
       $errs[] = "Fields cannot be edited in this view";
     }
     else if( !$zen->checkAccess($login_id, $ticket['bin_id'], 
-                $map->getViewProp($setmode, 'access_level')) ) {
+    $map->getViewProp($setmode, 'access_level')) ) {
       $errs[] = "You do not have sufficient access for this area";
     }
     
@@ -97,62 +97,33 @@
       include("$libDir/validateFields.php");
       $view = $OV;
     }
-
-/*    
-    // now that everything is valid, we will try to save information
+    
     if( !$errs ) {
-      $fields = $map->getFieldMap($setmode);
-      // create an array of existing fields
-      // to be inserted for the ticket
       $params = array();
-      foreach($fields as $f=>$field) {
-        // only include fields the user could have edited
-        if( !$field['is_visible'] || $field['field_type'] == 'section' ) { continue; }
-        // filter out custom fields, we do them seperately
+      // create an array of existing fields
+      foreach(array_keys($fields) as $f) {
         // can't edit the status
-        if( strpos($f, 'custom_') === 0 || $f == 'status' ) { continue; }
-        // add field to the parm list for update
-        $params[$f] = $$f;
+        if( $f == 'status' ) { continue; }
+        // put the value into the updates array
+        $params["$f"] = $$f;
+        if( $f == 'title' && strlen($params["$f"]) > 50 ) {
+          $params["$f"] = substr($params["$f"],0,50);
+        }
       }
-     
-      // edit the ticket's fields
-      $res = $zen->edit_ticket($id, $login_id, $params);
-*/
-
-/**/
-
-  include("$libDir/validateFields.php");
-
-  if( !$errs ) {
-     $params = array();
-     // create an array of existing fields
-     foreach(array_keys($fields) as $f) {
-       // can't edit the status
-       if( $f == 'status' ) { continue; }
-       // put the value into the updates array
-       $params["$f"] = $$f;
-       if( $f == 'title' && strlen($params["$f"]) > 50 ) {
-         $params["$f"] = substr($params["$f"],0,50);
-       }
-     }
-     // update the ticket info
-     if (count($params)>0) {
-       $res = $zen->edit_ticket($id,$login_id,$params,$edit_reason);
-       // check for errors
-       if( !$res ) {
-         $errs[] = tr("System Error").": ".tr("Ticket could not be edited.")." ".$zen->db_error;
-       }
-     }
-     if( !$errs && count($varfield_params) ) {
-       $res = $zen->updateVarfieldVals($id, $varfield_params, $login_id, $bin_id);
-       if( !$res ) {
-         $errs[] = tr("? updated, but variable fields could not be saved", array(tr($x)));
-       }
-     }
-
-/**/
-
-
+      // update the ticket info
+      if (count($params)>0) {
+        $res = $zen->edit_ticket($id,$login_id,$params,$edit_reason);
+        // check for errors
+        if( !$res ) {
+          $errs[] = tr("System Error").": ".tr("Ticket could not be edited.")." ".$zen->db_error;
+        }
+      }
+      if( !$errs && count($varfield_params) ) {
+        $res = $zen->updateVarfieldVals($id, $varfield_params, $login_id, $bin_id);
+        if( !$res ) {
+          $errs[] = tr("? updated, but variable fields could not be saved", array(tr($x)));
+        }
+      }
       
       // update the variable field entries for this ticket
       if( !$res ) {
@@ -190,7 +161,7 @@
       }
       $varfields = $varfield_params;
     }
-  }
+  }  // if( $ticketTabAction == 1 )
   
   // determine which page we will view
   $page_mode = "{$page_type}_tab_1";

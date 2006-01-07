@@ -64,7 +64,8 @@
   include("$libDir/nav.php");
   if( $errs ) {
     $zen->printErrors($errs);
-    include("$templateDir/behaviorAdd.php");
+    include("$templateDir/behaviorForm.php");
+    //include("$templateDir/behaviorAdd.php");
   } else {
     include("$templateDir/behaviorMenu.php");
   }

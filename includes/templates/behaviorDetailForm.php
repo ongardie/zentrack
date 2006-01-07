@@ -27,7 +27,7 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
         print "</p>\n";
       ?>
       <ul>
-      <form name='behaviorDetailForm' action='<?=$SCRIPT_NAME?>' method='post'>
+      <form name='behaviorDetailForm' action='<?=$SCRIPT_NAME?>' onsubmit='return checkForValueColumn(this)' method='post'>
       <input type='hidden' name='TODO' value=''>
       <input type='hidden' name='behavior_id' value='<?=$zen->checkNum($behavior_id)?>'>
       <table cellpadding="2" cellspacing="1" class='plainCell'>
@@ -65,7 +65,7 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
           print "<option value=''>".tr('-new/delete-')."</option>\n";
           if( $groupIsFile ) {
             $sel = $item['field_name'] == 'value_column'? ' selected' : '';
-            print "<option value='value_column'$sel>".tr('-value column-')."</option>\n"; 
+            print "<option value='value_column'$sel>".tr('-value column-')."</option>\n";
           }
           foreach($field_list as $fl=>$fn) {
             $sel=($item['field_name']==$fn)? " selected" : "";
@@ -113,7 +113,7 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
       print "$t<select name='NewFieldName[{$j}]'>\n";
       print "<option value='' selected>".tr('-new/delete-')."</option>\n";
       if( $groupIsFile ) {
-        print "<option value='value_column'>".tr('-value column-')."</option>\n"; 
+        print "<option value='value_column'>".tr('-value column-')."</option>\n";
       }
       foreach($field_list as $fl=>$fn) {
         print "<option value='$fn'>$fl</option>\n";
@@ -166,7 +166,7 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
          &nbsp;
          <input type='submit' value='<?=uptr('less')?>' onClick="return setTodo('LESS')">
 	 &nbsp;
-	 <input type='submit' class='submit' value='<?=tr('Save')?>' onClick="return setTodo('Save')">
+	 <input type='submit' class='submit' value='<?=tr('Save')?>' onClick="setTodo('Save')">
 	 &nbsp;
 	 <input type='submit' class='submitPlain' value='<?=tr('Reset')?>' onClick="return setTodo('Reset')">
          </td>
@@ -179,6 +179,19 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
       <script language='javascript'>
 	 function setTodo( val ) {
 	   document.behaviorDetailForm.TODO.value = val;
-	 } 	 
+	 }
+
+   function checkForValueColumn(formObj) {
+     for( var i=0; i < formObj.elements.length; i++ ) {
+       var f = formObj.elements[i];
+       if( f.type.indexOf('select') >= 0 ) {
+         if( f.value == 'value_column' ) {
+           return true;
+         }
+       }
+     }
+     alert("<?=tr("You must supply a value_column before this behavior will function.")?>");
+     return false;
+   }
       </script> 
 

@@ -16,10 +16,10 @@
   $access_level = $map->getViewProp($formview, 'access_level');
   $userBins = $zen->getUsersBins($login_id, $access_level);
 
-  if( strlen($ticket['deadline']) ) { $ticket['deadline'] = $zen->showDateTime($ticket['deadline']); }
-  if( strlen($ticket['start_date']) ) { $ticket['start_date'] = $zen->showDateTime($ticket['start_date']); }
-  if( strlen($ticket['ctime']) ) { $ticket['ctime'] = $zen->showDateTime($ticket['ctime']); }
-  if( strlen($ticket['otime']) && $td ) { $ticket['otime'] = $zen->showDateTime($ticket['otime']); }
+  if( $ticket['deadline'] > 0 ) { $ticket['deadline'] = $zen->showDateTime($ticket['deadline']); }
+  if( $ticket['start_date'] > 0 ) { $ticket['start_date'] = $zen->showDateTime($ticket['start_date']); }
+  if( $ticket['ctime'] > 0 ) { $ticket['ctime'] = $zen->showDateTime($ticket['ctime']); }
+  if( $ticket['otime'] > 0 && $td ) { $ticket['otime'] = $zen->showDateTime($ticket['otime']); }
 
   //$formview = $td? 'ticket_edit' : 'ticket_create';
   $context_vals = array('view' => $formview, 'form' => $form_name);

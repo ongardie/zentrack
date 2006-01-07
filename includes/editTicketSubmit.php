@@ -20,7 +20,11 @@
   $is_project = $type == 'project' || $zen->inProjectTypeIds($type_id);
   $view = $is_project? 'project_edit' : 'ticket_edit';
 
+  print "pre ctime: $ctime<br>\n";//debug
+  
   include("$libDir/validateFields.php");
+  
+  print "post ctime: $ctime<br>\n";//debug
   
   if( !$errs ) {
      $params = array();

@@ -1471,7 +1471,7 @@ class zenTrack extends zen {
          $this->addDebug('getBehaviorFileSet', "$key: adding value '".($v? $v[0].'->'.$v[1]: $d)."'", 3);
        }
      }
-
+     
      return $vals;
    }
    
@@ -2980,7 +2980,6 @@ class zenTrack extends zen {
       if( !strlen($v) ) {
         switch($k) {
         case "otime":
-        case "ctime":
         case "tested":
         case "approved":
         case "priority":
@@ -3003,6 +3002,7 @@ class zenTrack extends zen {
             $params["$k"] = $v;
           }
           break;
+        case "ctime":
         default:
           $params["$k"] = "NULL";
         }
@@ -3027,6 +3027,7 @@ class zenTrack extends zen {
     }
     $id = $this->checkNum($id);
     $res = $this->update_ticket($id, $params);
+    Zen::printArray($params, 'edit_ticket');//debug
     if( $res && $this->settingOn('log_edit') ) {
       $log_entry = "Ticket edited:\n\n";
       foreach($params as $key=>$val) {
@@ -3054,13 +3055,13 @@ class zenTrack extends zen {
             case "otime":
             case "ctime":
             case "deadline":
-            case "start_date": $v1=$this->showDateTime($v1);
-                               $v2=$this->showDateTime($v2);
+            case "start_date": $v1= $v1? $this->showDateTime($v1) : '';
+                               $v2= $v2? $this->showDateTime($v2) : '';
             default:           $d1 = "";
                                $d2 = "";
                                if (strpos($key,"custom_date")===0) {
-                                 $v1=$this->showDateTime($v1);
-                                 $v2=$this->showDateTime($v2);
+                                 $v1= $v1? $this->showDateTime($v1) : '';
+                                 $v2= $v2? $this->showDateTime($v2) : '';
                                }
                                break;
           }
@@ -4203,6 +4204,7 @@ class zenTrack extends zen {
     // if $units is 0, shows whole name
     // if $units is null, skips unit name
     // if $units is > 0, abbreviate units
+    if( !$end ) { print "setting end: $start/".time()."<br>\n"; $end = time(); }
     $num = round($this->dateDiff($end,$start,$this->elapsed_unit),$round);
     $abr = "";
     if( $units > 0 ) {
@@ -6177,7 +6179,7 @@ class zenTrack extends zen {
 
   function get_contact_all() {
     // get all companys for the droplists
-    $query = "SELECT company_id,title,office FROM ZENTRACK_COMPANY ORDER BY title asc";
+    $query = "SELECT company_id,title,office,email FROM ZENTRACK_COMPANY ORDER BY title asc";
     $this->addDebug("get_contact_all",$query,3);
     return( $this->db_queryIndexed($query) );
   }  
@@ -6186,7 +6188,7 @@ class zenTrack extends zen {
     //get a single contact
     $query = "SELECT * FROM $t WHERE $c = $id";
     $vals = $this->db_quickIndexed($query);
-  $this->addDebug("get_contact","[".count($vals)."]".$query,3);
+    $this->addDebug("get_contact","[".count($vals)."]".$query,3);
     return( $vals );
   }
   

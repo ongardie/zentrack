@@ -12,15 +12,18 @@
 
   $expand_options = 1;
   $skip = 0;
+  $res = false;
   if( isset($TODO) && $TODO == 'LANG' ) {
     if( isset($newlang) ) {
       $newlang = preg_replace("/[^0-9a-zA-Z_-]/", "", $newlang);
     }
     if( file_exists("$libDir/translations/$newlang.trans") ) {
       $login_language = $newlang;
-      $params = array("language"=>$newlang);
-      $res = $zen->update_prefs($login_id, array($params), "language");
-      if( $res > 0 ) {
+      if( !$Demo_Mode ) {
+        $params = array("language"=>$newlang);
+        $res = $zen->update_prefs($login_id, array($params), "language");
+      }
+      if( $Demo_Mode || $res > 0 ) {
         $translator_init = array(
         'domain' => 'translator',
         'path' => "$libDir/translations",
@@ -29,6 +32,9 @@
         $translator_init['zen'] =& $zen;
         tr($translator_init);
         $msg[] = tr("Your language has been changed to ?", $newlang);
+        if( $Demo_Mode ) {
+          $msg[] = tr("The server is in Demo Mode, this change will be reset when you log out.");
+        }
         $skip = 1;
       }
       else {

@@ -24,7 +24,7 @@
   $expand_tickets = 1;
   
   // initiate default values
-  $otime = date('Y-m-d H:i:s');  // set time ticket opened
+  $otime = time();  // set time ticket opened
 
   include("$libDir/validateFields.php");
 

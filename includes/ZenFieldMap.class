@@ -867,10 +867,29 @@ class ZenFieldMap {
       case "status":
         $vals = array('OPEN'=>tr("Open"),'PENDING'=>tr("Pending"),'CLOSED'=>tr("Closed"));
         break;
+      case "type_id":
+        $vars = $this->_zen->getValsForTicketField($field_name, $bins);
+        $vals = array();
+        if( strpos($view, 'project') === 0 ) {
+          // only list projects
+          $ids = $this->_zen->projectTypeIDs();
+        }
+        else if( strpos($view, 'ticket') === 0 ) {
+          // only list tickets
+          $ids = $this->_zen->notProjectTypeIds();
+        }
+        else {
+          // this must be a search or admin of some kind, so just list them all
+          $vals = $vars;
+          break;
+        }
+        foreach($vars as $k=>$v) {
+          if( in_array($k, $ids) ) { $vals[$k] = $v; }
+        }
+        break;
       case "id":
       case "title":
       case "priority":
-      case "type_id":
       case "user_id":
       case "system_id":
       case "creator_id":

@@ -50,6 +50,7 @@
         print "</select>\n";
       }
       else {
+        $context->set('page_type', $page_type);
         $context->set('field', $c);
         $context->set('name',  "filterForm_{$c}");
         $context->set('value', $v);

@@ -25,5 +25,17 @@
 <tr>
   <td class='leftNavCell' height='100%' valign='top'>
     <div class='recentHistory'><?=tr("Recent Tickets")?></div>
+    <?
+      $history =& $zen->getHistoryManager();
+      $list = $history->getList('ticket');
+      if( count($list) ) {
+        foreach($list as $k=>$v) {
+          print "<br><a href='$rootUrl/ticket.php?id=$k' title='".$zen->ffv($v)."'>$k".tr("-").substr($zen->ffv($v),0,12)."</a>\n";
+        }
+      }
+      else {
+        print "-none-";
+      }    
+    ?>
   </td>
 </tr>

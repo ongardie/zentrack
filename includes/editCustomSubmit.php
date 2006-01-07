@@ -6,6 +6,9 @@
   $required = array();
   // the TODO is saved, even if the save failed
   $TODO = 'SAVED';
+  
+  $type_id = $zen->checkNum($type_id);
+  $bin_id = $zen->checkNum($bin_id);
 
   if( $zen->inProjectTypeIDs($type_id) ) {
     $view="project_custom";
@@ -16,7 +19,7 @@
   if( !$errs ) {
     if( count($varfield_params) ) {
       // update the ticket info
-      $res = $zen->updateVarfieldVals($id,$varfield_params);
+      $res = $zen->updateVarfieldVals($id,$varfield_params,$login_id,$bin_id);
     }
     // check for errors
     if( !$res ) {

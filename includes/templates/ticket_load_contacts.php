@@ -54,7 +54,6 @@ if ($tickets){
 		 	 $n1 = "lname";
 		   $n2 = "fname";
 		 }
-		 
   	$u=$zen->get_contact($n["cp_id"],$table,$col);
     $cpid = $zen->checkNum($cpid);
     $tc = "onclick='checkMyBox(\"drops_".$zen->ffv($n['clist_id'])."\", event)' ";
@@ -66,7 +65,7 @@ if ($tickets){
     <td <?=$tc?>><?= $img." ".$zen->ffv(ucfirst($u[$n1]))." ".$zen->ffv($u[$n2]) ?></td>
     <td <?=$tc?>><?= $u['telephone']? $zen->ffv($u["telephone"]) : '&nbsp;' ?></td>
     <td <?=$tc?>><?
-      if( $email ) {
+      if( $u['email'] ) {
       ?><A id='link_<?=$cpid?>' HREF="mailto:<?=$zen->ffv($u['email'])?>"><?=$zen->ffv($u["email"])?></A>
       <? } else { ?>&nbsp;<? } ?></td>
     <? if( $editable ) { ?>

@@ -112,7 +112,7 @@ function BehaviorMapField(name, operator, value) {
   this.name = name;
   this.operator = operator;
   // always store value in lower case for case insensitive matching
-  this.value = value == null? '' : value.toLowerCase();
+  this.value = (typeof value == 'string')? value.toLowerCase() : ((typeof value == 'undefined')? null : value);
 }
 
 /**
@@ -940,8 +940,17 @@ function probablyNumericComparator( behaviorMapField ) {
  * Determine if a value contains only numbers and is probably a valid id
  */
 function isIntegerValue( val ) {
-  return val.search(/[^0-9]/) < 0 && parseInt(val) > 0;
+  try {
+    if( typeof val == 'string' ) {
+      return val.search(/[^0-9]/) < 0 && parseInt(val) > 0;
+    }
+    return parseInt(val)+"" == val;
+  }
+  catch( e ) {
+    return false;
+  }
 }
+
 
 /**
  * Evaluate js code and return results

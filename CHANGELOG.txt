@@ -13,6 +13,36 @@ abstraction, and endless possibilities for project expansion.
 
 ----- VERSION 2.6.0.2
 
+2006-01-06, kato
+  265: Added user inits when editing varfield values
+    - zentrack_2/includes/editCustomSubmit.php
+  
+  248: Euro dates should work with adding new tickets now
+    - zentrack_2/www/addSubmit.php
+    
+  271: Fixed bug in behaviors with integer values for -value_column-
+    - zentrack_2/www/behavior_js.php
+    - zentrack_2/includes/behaviorForm.php
+  
+  134: Fixed bug in custom edit tab causing deleted values to be overlooked
+    - zentrack_2/www/ticket.php
+    
+  267: Fixed behavior submit to point to correct form if validation errors occur
+    - zentrack_2/www/admin/addBehaviorSubmit.php
+    
+  255: Contact email address fixed in ticket tab
+    - zentrack_2/includes/templates/ticket_load_contacts.php
+  
+  240: Recent tickets feature fixed
+    - zentrack_2/includes/templates/nav_tickets.php
+
+  147: Fixed erroneous close time produced when editing ticket twice
+    - zentrack_2/includes/zenTrack.class
+    
+  230: Removed project type_id from filters for ticket lists and vice versa
+    - zentrack_2/includes/templates/listFiltersForm.php
+    - zentrack_2/includes/ZenFieldMap.class
+    
 2006-01-05, cfalonso
   A debug alert was present in the code -Commented
    - zentrack_2/includes/templates/configForm.php 1.16
