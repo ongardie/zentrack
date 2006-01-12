@@ -18,6 +18,7 @@ abstraction, and endless possibilities for project expansion.
   Also fixed the edit page that didn't show custom field previous values:
     - zentrack_2/includes/editTicketSubmit.php 1.22
     - zentrack_2/includes/zenTrack.class 1.206
+    - zentrack_2/includes/templates/form_fields.php 1.5
     - zentrack_2/includes/templates/form_fields.php 1.4
     - zentrack_2/www/ticket.php 1.36
 
