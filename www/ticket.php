@@ -111,6 +111,12 @@
         }
       }
       // update the ticket info
+      $action_name="UPDATE";
+      $label = $map->getViewProp($setmode,'label');
+      $log_init=tr("Updated ticket in ?",array(tr("? tab",array($label))));
+      $errs = $zen->update_all_ticket_fields($id, $login_id, $bin_id, $params,
+                                    $varfield_params, $action_name, $log_init, $edit_reason);
+/*
       if (count($params)>0) {
         $res = $zen->edit_ticket($id,$login_id,$params,$edit_reason);
         // check for errors
@@ -124,14 +130,14 @@
           $errs[] = tr("? updated, but variable fields could not be saved", array(tr($x)));
         }
       }
-      
+*/      
       // update the variable field entries for this ticket
-      if( !$res ) {
+      if( $errs ) {
         $errs[] = tr("Unable to edit ticket due to system error"). " ".$zen->db_error;
       }
       else {
         if( in_array($params["type_id"],$zen->noteTypeIDs()) && $ticket['status'] == 'OPEN' ) {
-          $zen->close_ticket($id,null,null,'Notes closed automatically');
+          $zen->close_ticket($id,null,null,tr('Notes closed automatically'));
         }
         $ticket = $zen->get_ticket($id);
         if( $varfields && count($varfield_params) ) {
@@ -150,7 +156,7 @@
           }
         }
         else {
-          $msg[] = 'All fields updated successfully';          
+          $msg[] = tr('All fields updated successfully');          
         }
       }
     }

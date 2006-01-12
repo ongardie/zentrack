@@ -20,11 +20,11 @@
   $is_project = $type == 'project' || $zen->inProjectTypeIds($type_id);
   $view = $is_project? 'project_edit' : 'ticket_edit';
 
-  print "pre ctime: $ctime<br>\n";//debug
+//  print "pre ctime: $ctime<br>\n";//debug
   
   include("$libDir/validateFields.php");
   
-  print "post ctime: $ctime<br>\n";//debug
+//  print "post ctime: $ctime<br>\n";//debug
   
   if( !$errs ) {
      $params = array();
@@ -38,6 +38,14 @@
          $params["$f"] = substr($params["$f"],0,50);
        }
      }
+
+     if ( !$varfields )  {
+       $varfield_params=null;
+     }
+
+     $zen->update_all_ticket_fields($id, $login_id, $bin_id, $params,
+                                    $varfield_params, "EDIT", "Ticket edited", $edit_reason);
+/*
      // update the ticket info
      $res = $zen->edit_ticket($id,$login_id,$params,$edit_reason);
      // check for errors
@@ -50,6 +58,7 @@
          $errs[] = tr("? updated, but variable fields could not be saved", array(tr($x)));
        }
      }
+*/
   }
   
   if( !$errs ) {

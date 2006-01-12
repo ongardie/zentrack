@@ -47,7 +47,11 @@
   $context->set('force_label', $override_as_label);
   foreach($visible_fields as $f) {
     $context->set('field', $f);
-    $context->set('value', $ticket[$f]);
+    if (strpos($f,"custom")===false) {
+      $context->set('value', $ticket[$f]);
+    } else {
+      $context->set('value', $$f);
+    }
     if( in_array($f, $sections) ) {
       print "<tr><td colspan='2' class='headerCell indent'>";
       print $map->renderTicketField($context);

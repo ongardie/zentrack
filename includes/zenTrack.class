@@ -1175,12 +1175,17 @@ class zenTrack extends zen {
    * @param array $field_values mapped (String)field_name -> (String)value
    * @param integer $user_id user who edited
    * @param integer $bin_id bin where edit occured (prevents sql query for ticket)
+   * @param integer $mode if set to any value, don't log but use log_buffer
    */
-  function updateVarfieldVals( $ticket_id, $field_values, $user_id = null, $bin_id = null ) { 
+  function updateVarfieldVals( $ticket_id, $field_values, $user_id = null, $bin_id = null, $mode = null ) { 
     $ticket_id = $this->checkNum($ticket_id);
     $user_id = $this->checkNum($user_id);
     $a = $this->getSetting('varfield_tab_name');
-    $log_entry = $a? "Updated ".ucfirst(strtolower($a))." fields" : "Updated Custom Fields";
+    if ($mode) {
+      $log_entry="";
+    } else {
+      $log_entry = $a? "Updated ".ucfirst(strtolower($a))." fields" : "Updated Custom Fields";
+    }
     $oldVals = $this->getVarfieldVals($ticket_id);
     $field_values_std = array();
     $field_values_multi = array();
@@ -1253,14 +1258,61 @@ class zenTrack extends zen {
     }
     if( $res && $this->settingOn('log_edit') ) {
       // add a log entry
-      $this->add_log( $ticket_id, array('user_id'   => $user_id,
-                                        'bin_id'    => $bin_id,
-                                        'action'    => 'EDIT',
-                                        'entry'     => $log_entry) );
+      if ($mode) {
+        $this->log_buffer.=$log_entry;
+      } else {
+        $this->add_log( $ticket_id, array('user_id'   => $user_id,
+                                          'bin_id'    => $bin_id,
+                                          'action'    => 'EDIT',
+                                          'entry'     => $log_entry) );
+      }
     }
     $this->_session->clearDataCache('tickets',$ticket_id);
     return $res;
   }
+
+
+  /**
+   * Update standard and variable fields for a ticket, and log only once
+   *
+   * @param integer $id Ticket ID
+   * @param integer $login_id user who is updating the ticket
+   * @param integer $bin_id Ticket's current bin (I can get it from the ticket too...)
+   * @param array $params (only for standard fields) mapped field_name -> value
+   * @param array $varfield_params (only for custom fields) mapped field_name -> value
+   * @param string $action The action name to be logged (default EDIT)
+   * @param string $edit_reason reason why the ticket is being edited (user entry)
+   */
+  function update_all_ticket_fields($id, $login_id, $bin_id, $params,
+                                    $varfield_params, $action="EDIT", $log_init="", $edit_reason="") {
+    $this->log_buffer=$log_init."\n\n";
+    $errs = array();
+    // update the ticket info
+    $res = $this->edit_ticket($id,$login_id,$params,$edit_reason, 1);
+    // check for errors
+    if( !$res ) {
+      $errs[] = tr("System Error").": ".tr("Ticket could not be edited.")." ".$zen->db_error;
+    }
+    else if( count($varfield_params) ) {
+      $res = $this->updateVarfieldVals($id, $varfield_params, $login_id, $bin_id, 1);
+      if( !$res ) {
+        $errs[] = tr("? updated, but variable fields could not be saved", array(tr($x)));
+        $this->log_buffer.=tr("Variable fields could not be saved");
+        $this->add_log( $id, array('user_id'   => $login_id,
+                                   'action'    => $action,
+                                   'entry'     => $this->log_buffer,
+                                   'bin_id'    => $bin_id) );
+      }
+    }
+    if(!$errs) {    
+      $this->add_log( $id, array('user_id'   => $login_id,
+                                 'action'    => $action,
+                                 'entry'     => $this->log_buffer,
+                                 'bin_id'    => $bin_id) );
+    }
+    return $errs;
+  }
+
 
 
   /**
@@ -3016,7 +3068,16 @@ class zenTrack extends zen {
     return $this->db_result($query);
   }
 
-  function edit_ticket( $id, $user_id, $params, $reason="" ) {
+  /**
+   * Update the entries in the standard fields for a given ticket
+   *
+   * @param integer $id
+   * @param integer $user_id user who edited
+   * @param array $params mapped field_name -> value
+   * @param string $reason reason why the ticket is being edited (user entry)
+   * @param integer $mode if not null, don't log but use log_buffer
+   */
+  function edit_ticket( $id, $user_id, $params, $reason="", $mode=null ) {
     if( is_array($id) ) {
       $t = $id;
       $tid = $t['id'];
@@ -3027,9 +3088,13 @@ class zenTrack extends zen {
     }
     $id = $this->checkNum($id);
     $res = $this->update_ticket($id, $params);
-    Zen::printArray($params, 'edit_ticket');//debug
+//    Zen::printArray($params, 'edit_ticket');//debug
     if( $res && $this->settingOn('log_edit') ) {
-      $log_entry = "Ticket edited:\n\n";
+      if ( $mode ) {
+        $log_entry = "";
+      } else {
+        $log_entry = "Ticket edited:\n\n";
+      }
       foreach($params as $key=>$val) {
         // check each field to see if it was updated
         if( $t["$key"] != $val ) {
@@ -3076,10 +3141,14 @@ class zenTrack extends zen {
         $log_entry.= "\nReason:\n";
         $log_entry.= $reason;
       }
-      $this->add_log( $tid, array('user_id'   => $user_id,
-                                  'action'    => 'EDIT',
-                                  'entry'     => $log_entry,
-                                  'bin_id'    => $t['bin_id']) );
+      if ($mode) {
+        $this->log_buffer.=$log_entry;
+      } else {
+        $this->add_log( $tid, array('user_id'   => $user_id,
+                                    'action'    => 'EDIT',
+                                    'entry'     => $log_entry,
+                                    'bin_id'    => $t['bin_id']) );
+      }
     }
     return $res;
   }
@@ -6489,6 +6558,9 @@ class zenTrack extends zen {
   
   // multi_field seperator (for display use)
   var $multisep;
+
+  // to be used in ticket update functions
+  var $log_buffer;
 }
 
 ?>
