@@ -39,7 +39,11 @@
   $context = new ZenFieldMapRenderContext($context_vals);
   foreach($hidden_fields as $f) {
     $context->set('field', $f);
-    $context->set('value', $ticket[$f]);
+    if (strpos($f,"custom")===false) {
+      $context->set('value', $ticket[$f]);
+    } else {
+      $context->set('value', $$f);
+    }
     print $map->renderTicketField($context);
   }
   
