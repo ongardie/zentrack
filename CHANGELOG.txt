@@ -13,6 +13,15 @@ abstraction, and endless possibilities for project expansion.
 
 ----- VERSION 2.6.0.2
 
+2006-01-12, cfalonso
+  Unified log entries for standard and custom fields edit.
+  Also fixed the edit page that didn't show custom field previous values:
+    - zentrack_2/includes/editTicketSubmit.php 1.22
+    - zentrack_2/includes/zenTrack.class 1.206
+    - zentrack_2/includes/templates/form_fields.php 1.4
+    - zentrack_2/www/ticket.php 1.36
+
+
 2006-01-06, kato
   265: Added user inits when editing varfield values
     - zentrack_2/includes/editCustomSubmit.php 1.12
