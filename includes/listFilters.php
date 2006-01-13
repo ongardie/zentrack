@@ -50,7 +50,7 @@
           }
           else {
             $params[$k] = $v['default_val'];
-            $dt .= "|::$k = ".$_POST[$k]."::|";
+            $dt .= "|::$k = {$v['default_val']}::|";
           }
         }
       }
@@ -71,7 +71,8 @@
   /////////////////////////
   
   // if there have been updates by the user, we will apply those to the session
-  if( $_POST['ticketFilterForm'] == 1 ) {
+  if( $_GET['ticketFilterForm'] == 1 ) {
+    
     // get field map which describes the filter values
     $filtercols = $map->getFieldMap($filterview);
     $dt = '';
@@ -79,9 +80,9 @@
       // set our params using the form results
       foreach($filtercols as $k=>$v) {
         $pn = "filterForm_{$k}";
-        if( array_key_exists($pn, $_POST) ) {
-          $params[$k] = $_POST[$pn];
-          $dt .= "|::$k = ".$_POST[$pn]."::|";
+        if( array_key_exists($pn, $_GET) ) {
+          $params[$k] = $_GET[$pn];
+          $dt .= "|::$k = ".$_GET[$pn]."::|";
           $updated = true;
         }
       }

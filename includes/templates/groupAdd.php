@@ -60,7 +60,7 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
     <?=tr("Eval Type")?>
   </td>
   <td class="bars">
-    <select name='NewEvalType' onChange='toggleFields(this)'>
+    <select name='NewEvalType' onChange='toggleFields(this)' onBlur='toggleFields(this)'>
       <option<?=$group['eval_type'] == 'Matches'? ' selected':''?>>Matches</option>
       <option<?=$group['eval_type'] == 'Javascript'? ' selected':''?>>Javascript</option>
       <option<?=$group['eval_type'] == 'File'? ' selected':''?>>File</option>

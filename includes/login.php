@@ -5,6 +5,8 @@ $autologin = $zen->settingOn('allow_pwd_save');
 $user = false;
 
 // log user out of zentrack if $logoff
+/*
+  logoff action is now handled in includes/session_start.php
 if( isset($logoff) && $logoff > 0 ) {
   $login_id = "";
   $login_name = "";
@@ -14,6 +16,7 @@ if( isset($logoff) && $logoff > 0 ) {
   setcookie("zentrackKey", "", time());
   $_SESSION['login_id'] = null;
 }
+*/
 
 // auto-login via cookie
 if( $autologin && !$login_id && $zentrackUsername && $zentrackKey ) {

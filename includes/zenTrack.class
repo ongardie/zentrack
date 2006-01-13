@@ -3469,7 +3469,7 @@ class zenTrack extends zen {
     if( $field == 'user_id' ) {
       // clear all uses from cache who have been altered
       $vals = is_array($id)? $id : array($id);
-      foreach($id as $uid) {
+      foreach($vals as $uid) {
         $this->_accessChanged($uid);
       }
     }
@@ -3480,11 +3480,7 @@ class zenTrack extends zen {
       $this->_accessChanged();
     }
     if( is_array($id) ) {
-      $where = " $field IN(";
-      for($i=0; $i<count($id); $i++) {
-        if( $i > 0 ) { $where .= ','; }
-        $where .= $this->checkNum($id[$i]);
-      }
+      $where = " $field IN(".join(',',Zen::checkNum($id)).")";
     }
     else {
       $where = " $field = ".$this->checkNum($id);      
@@ -4633,7 +4629,7 @@ class zenTrack extends zen {
           // an access right specifically denies this action
           continue; 
         }
-        else {
+        else if( $default >= $lvl ) {
           // otherwise, the user has sufficient access
           $vals[] = $b;
         }

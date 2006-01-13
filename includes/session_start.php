@@ -16,7 +16,7 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
 session_cache_limiter('public'); 
 session_start();     
 
-if( $_GET['clear_session_cache'] ) {
+if( isset($_GET['clear_session_cache']) || isset($_GET['logoff']) ) {
   session_unset();
 }
 
