@@ -20,6 +20,7 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
 include_once("$libDir/zen.class");
 include_once("$libDir/ZenSessionManager.class");
 include_once("$libDir/ZenHistoryManager.class");
+include_once("$libDir/ZenFieldMap.class");
 
 class zenTrack extends zen {
 

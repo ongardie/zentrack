@@ -15,7 +15,7 @@
   $filterview = "{$view}_filters";
   $filtercols = $map->getFieldMap($filterview);
   if( $filtercols && count($filtercols) > 0 ) {
-    print "<form name='ticketFilterForm' method='post'>";
+    print "<form name='ticketFilterForm'>";
     print "<input type='hidden' name='ticketFilterForm' value='1'>";
     print "<table width='100%'><tr>";
     $context = new ZenFieldMapRenderContext(
