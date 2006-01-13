@@ -1,4 +1,19 @@
 
+----- 2.6.0.3 Maintenance Release -----
+
+  Fixed log entries for editing variable fields
+  Added user inits when editing varfield values
+  Euro dates work with adding new tickets now
+  Fixed bug in behaviors with integer values for -value_column-
+  Fixed bug in custom edit tab causing deleted values to be overlooked
+  Fixed behavior submit to point to correct form if validation errors occur
+  Contact email address fixed in ticket tabs
+  Recent tickets feature fixed
+  Fixed erroneous close time produced when editing ticket twice
+  Removed project type_id from filters for ticket lists and vice versa
+  A debug alert was present in the code, removed
+  Added js validation to ticket create/edit forms for user/bin security
+
 ----- 2.6.0.1 Maintenance Release -----
 
   Cached user lookups
