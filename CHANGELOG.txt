@@ -11,7 +11,7 @@ and user experience, internationalization, platform and database
 abstraction, and endless possibilities for project expansion. 
 --------------------
 
------ VERSION 2.6.0.2
+----- VERSION 2.6.0.3 (2006-01-12) -----
 
 2006-01-12, cfalonso
   Unified log entries for standard and custom fields edit.
@@ -21,7 +21,6 @@ abstraction, and endless possibilities for project expansion.
     - zentrack_2/includes/templates/form_fields.php 1.5
     - zentrack_2/includes/templates/form_fields.php 1.4
     - zentrack_2/www/ticket.php 1.36
-
 
 2006-01-06, kato
   265: Added user inits when editing varfield values
@@ -70,7 +69,7 @@ abstraction, and endless possibilities for project expansion.
   Added js validation to ticket create/edit forms for user/bin security
    - zentrack_2/includes/templates/validateTicketForm.php (pending)
 
------ VERSION 2.6.0.1
+----- VERSION 2.6.0.1 (2005-12-21) -----
 
 2005-12-21, kato
   Prepared install/upgrade docs and scripts
