@@ -11,6 +11,16 @@ and user experience, internationalization, platform and database
 abstraction, and endless possibilities for project expansion. 
 --------------------
 
+----- VERSION 2.6.0.4 -----
+
+2006-01-14, alberts
+Fixed checkboxes in attachments not being able to be checked in
+firefox, tt#250.  Also fixed another seperate firefox mouseover
+cursor error.  The code was trying to display the 'hand' cursor
+that is only available in IE.  Changed this to 'pointer' which is
+available in both IE and Firefox.
+   - zentrack_2/www/javascript.js 1.24
+
 ----- VERSION 2.6.0.3 (2006-01-12) -----
 
 2006-01-12, cfalonso
