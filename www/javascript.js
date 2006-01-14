@@ -43,7 +43,7 @@ function popupWindowCentered(loadpos, theName, w, h, scroll) {
 //
 
 function mOvr(src,clrOver,txtOver) {
-	src.style.cursor = 'hand'; 
+	src.style.cursor = 'pointer'; 
 	src.style.backgroundColor = clrOver;
 	if( txtOver != null &&  txtOver != "" ){
 	  if( src.children && src.children.tags('A') && src.children.tags('A')[0] ) {
@@ -109,7 +109,7 @@ function ticketClk( url, evt ) {
 
 function mClassX( obj, classname, hand ) {
   if( hand ) { 
-    obj.style.cursor = 'hand'; 
+    obj.style.cursor = 'pointer'; 
   }
   else {
     obj.style.cursor = 'default';
@@ -156,7 +156,7 @@ function checkMyBox(fieldName, event) {
   if( window.document.getElementById ) {
     var elem = window.document.getElementById(fieldName);
     if( elem ) {
-      var src = getEventSrc(evt);
+      var src = getEventSrc(event);
       if( !src || (src.type != 'checkbox' && !src.src && !src.href) ) {
         // it's not an image (for a link) or the checkbox itself
         // checking the checkbox causes it to double-check
