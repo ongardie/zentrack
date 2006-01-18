@@ -13,6 +13,15 @@ abstraction, and endless possibilities for project expansion.
 
 ----- VERSION 2.6.0.4 -----
 
+2006-01-18, cfalonso
+  284: Rounded the odate field to date_fmt_time before saving the created
+       ticket, to avoid future roundings
+    - zentrack_2/includes/zenTrack.class 1.209
+  285: Changed function zenFieldMap::getDefaultValue so that custom_menu
+       fields default to the first element in the data group instead of
+       the data group id.
+    - zentrack_2/includes/ZenFieldMap.class 1.42
+
 2006-01-14, alberts
 Fixed checkboxes in attachments not being able to be checked in
 firefox, tt#250.  Also fixed another seperate firefox mouseover
