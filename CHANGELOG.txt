@@ -14,6 +14,9 @@ abstraction, and endless possibilities for project expansion.
 ----- VERSION 2.6.0.4 -----
 
 2006-01-18, cfalonso
+  Fixed "Invalid page mode requested: log" message when getting a ticket
+  through search logs
+    - zentrack_2/includes/templates/searchLogList.php 1.15
   284: Rounded the odate field to date_fmt_time before saving the created
        ticket, to avoid future roundings
     - zentrack_2/includes/zenTrack.class 1.209
