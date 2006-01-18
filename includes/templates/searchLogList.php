@@ -69,7 +69,7 @@ if( is_array($logs) && count($logs) ) {
     </td>
     <td height="25" valign="middle">
     <a class="rowLink" style="color:<?=$text?>" 
-    href="<?=$link?>?id=<?=$t["ticket_id"]?>&setmode=log"><?=$zen->showDate($t["created"])?></a>
+    href="<?=$link?>?id=<?=$t["ticket_id"]?>"><?=$zen->showDate($t["created"])?></a>
     </td>
     <? if( !$search_params["action"] || is_array($search_params["action"]) ) { ?>
       <td height="25" valign="middle">
@@ -90,7 +90,7 @@ if( is_array($logs) && count($logs) ) {
     <? if( trim($t["entry"]) ) { ?>
       <tr style="background:<?=$row?>;color:<?=$text?>">
       <td height="25" colspan="8" <?=$td_ttl?> <?=$txt?>>
-      <a class="rowLink" href='<?=$link?>?id=<?=$t["ticket_id"]?>&setmode=log'>
+      <a class="rowLink" href='<?=$link?>?id=<?=$t["ticket_id"]?>'>
       <?
       $t["entry"] = $zen->ffv($t["entry"]);
       $parts = explode("\n",$t["entry"]);
