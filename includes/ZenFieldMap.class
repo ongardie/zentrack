@@ -814,9 +814,18 @@ class ZenFieldMap {
   
   /**
    * Returns the default value for this field
+   *
+   * IMPORTANT FOR CUSTOM_MENU FIELDS
+   *   If the field is optional in the view, the default would be "-none-".
+   *   If not, the default would be the first item.
+   *   This happens no matter if the field is visible or invisible.
+   *
+   * IMPORTANT FOR CUSTOM_MULTI FIELDS
+   *   The default is always empty.
    */
   function getDefaultValue( $view, $field_name ) {
     $field = $this->getFieldFromMap($view,$field_name);
+    $retVal = 0;
     switch($this->fieldName($field_name)) {
       case "creator_id":
       case "user_id":
@@ -824,24 +833,36 @@ class ZenFieldMap {
           if( strpos($field['default_val'],'@') === false ) {
             $val = $this->_zen->get_user_by_login($field['default_value']);
             $this->_zen->addDebug("getDefaultValue", "Retrieved user id '$val' by login: {$view}->{$field_name}", 3);
-            return $val;
+            $retVal = $val;
           }
           else {
             $vals = $this->_zen->getUsersFromEmail($field['default_value']);
             $this->_zen->addDebug("getDefaultValue", "Retrieved ".count($vals)." user ids by email: {$view}->{$field_name}", 3);
-            return $vals && count($vals)? $vals[0] : null; 
+            $retVal = $vals && count($vals)? $vals[0] : null; 
           }
         }
-        else { return $field['default_val']; }
+        else { $retVal = $field['default_val']; }
+        break;
       case "custom_date":
       case "otime":
       case "ctime":
       case "deadline":
       case "start_date":
-        return strlen($field['default_val'])? $this->_zen->showDateTime($this->_zen->dateParse($field['default_val'])) : "";
+        $retVal = strlen($field['default_val'])? $this->_zen->showDateTime($this->_zen->dateParse($field['default_val'])) : "";
+        break;
+      case "custom_menu":
+        $choices = $this->getChoices( $view, $field_name );
+        $retVal = array_shift( $choices );
+        break;
+      case "custom_multi":
+        $retVal = '';
+        break;
       default:
-        return $field['default_val'];
+        $retVal = $field['default_val'];
+        break;
     }
+    $this->_zen->addDebug('_getDefaultValue', "Returned {".$retVal."} for {$view}->{$field_name}", 3);
+    return $retVal;
   }
   
   /**
@@ -938,12 +959,15 @@ class ZenFieldMap {
     
     if( $this->getViewProp($view, 'any_option') && $field['num_rows'] == 1 ) {
       $vals = Zen::mergeArrays( array('' => tr('-any-')), $vals );
+      $this->_zen->addDebug('_getChoices', "Added '-any-' entry choices for {$view}->{$field_name}", 3);
       //$vals = array_merge(array(''=>'-any-'),$vals);
     } else if ( $field['is_required']==0 && $field['field_type'] == 'menu') {
       $vals = Zen::mergeArrays( array('' => tr('-none-')), $vals );
+      $this->_zen->addDebug('_getChoices', "Added '-none-' entry choices for {$view}->{$field_name}", 3);
     }
     else if( !$field['is_required'] && $field['num_rows'] == 1 && $this->fieldName($field_name) != 'custom_boolean' ) {
       $vals = Zen::mergeArrays( array(''=>'-----'), $vals );
+      $this->_zen->addDebug('_getChoices', "Added '-----' entry choices for {$view}->{$field_name}", 3);
       //$vals = array_merge(array(''=>'-----'), $vals);
     }
     if( !isset($this->_fieldVals[$view]) ) { $this->_fieldVals[$view] = array(); }

@@ -2901,6 +2901,8 @@ class zenTrack extends zen {
    * @return integer returns the new ticket's id, if creation succeeded
    */
   function add_ticket( $params, $log_notes = '' ) {
+    // Do otime rounding here to avoid confusion in the logs when the edit roundes to date_fmt_time:
+    $params['otime']=$this->dateParse($this->showDateTime($params['otime']));
     // perform the ticket insert
     $id = $this->db_insert($this->table_tickets,$params);
     if( $id ) {
