@@ -13,6 +13,18 @@ abstraction, and endless possibilities for project expansion.
 
 ----- VERSION 2.6.0.4 -----
 
+2006-01-27, cfalonso
+  Fixed problem loosing varfields in edit and changed ticket creation to add
+  only one log entry
+    - zentrack_2/includes/zenTrack.class 1.210
+    - zentrack_2/includes/templates/ticketView.php 1.14
+    - zentrack_2/includes/templates/ticket_box.php 1.23
+    - zentrack_2/includes/templates/ticket_fields_viewable.php 1.4
+    - zentrack_2/includes/templates/ticket_tab_form.php 1.4
+    - zentrack_2/www/addProjectSubmit.php 1.27
+    - zentrack_2/www/addSubmit.php 1.34
+    - zentrack_2/www/ticket.php 1.37
+
 2006-01-18, cfalonso
   Fixed "Invalid page mode requested: log" message when getting a ticket
   through search logs
