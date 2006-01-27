@@ -2895,12 +2895,56 @@ class zenTrack extends zen {
 
   /*
    * create a new ticket
-   * 
-   * @param array $params is an indexed array("database_column"=>value), the values will be quoted and checked
-   * @param string $log_notes is extra notes to add to create log
+   *
+   * @param integer $id returns the created ticket ID
+   * @param array $params (only for standard fields) mapped field_name -> value
+   * @param array $varfield_params (only for custom fields) mapped field_name -> value
+   * @param string $action The action name to be logged (default EDIT)
+   * @param string $log_init is extra notes to add at the beginning of the create log
    * @return integer returns the new ticket's id, if creation succeeded
    */
-  function add_ticket( $params, $log_notes = '' ) {
+  function add_new_ticket(&$id, $params, $varfield_params, $action="CREATE", $log_init="") {
+    $login_id=$params["creator_id"];
+    $bin_id=$params["bin_id"];
+    $this->log_buffer=$log_init."\n\n";
+    $errs = array();
+    // create the ticket
+    $id = $this->add_ticket( $params, "", 1 );
+
+    // check for errors
+    if( !$id ) {
+      $errs[] = tr("System Error").": ".tr("Ticket could not be created.")." ".$zen->db_error;
+    }
+    else if( count($varfield_params) ) {
+      $res = $this->updateVarfieldVals($id, $varfield_params, $login_id, $bin_id, 1);
+      if( !$res ) {
+        $errs[] = tr("? created, but variable fields could not be saved", array(tr($x)));
+        $this->log_buffer.=tr("Variable fields could not be saved");
+        $this->add_log( $id, array('user_id'   => $login_id,
+                                   'action'    => $action,
+                                   'entry'     => $this->log_buffer,
+                                   'bin_id'    => $bin_id) );
+      }
+    }
+    if(!$errs) {
+      $this->add_log( $id, array('user_id'   => $login_id,
+                                 'action'    => $action,
+                                 'entry'     => $this->log_buffer,
+                                 'bin_id'    => $bin_id) );
+    }
+    return $errs;
+  }
+
+
+  /*
+   * create a new ticket (does not handle varfields, so it should not be called directly, but via add_new_ticket)
+   *
+   * @param array $params is an indexed array("database_column"=>value), the values will be quoted and checked
+   * @param string $log_notes is extra notes to add to create log
+   * @param integer $mode if not null, don't log but use log_buffer
+   * @return integer returns the new ticket's id, if creation succeeded
+   */
+  function add_ticket( $params, $log_notes = '', $mode=null ) {
     // Do otime rounding here to avoid confusion in the logs when the edit roundes to date_fmt_time:
     $params['otime']=$this->dateParse($this->showDateTime($params['otime']));
     // perform the ticket insert
@@ -2940,7 +2984,7 @@ class zenTrack extends zen {
       }
       // the ticket owner
       if( $this->settingOn("default_notify_owner") && $params["user_id"] ) {
-        $notify_list[]["user_id"] = $params["user_id"];   
+        $notify_list[]["user_id"] = $params["user_id"];
       }
       // create the list
       $this->set_notify_list($id,$notify_list);
@@ -2961,15 +3005,18 @@ class zenTrack extends zen {
           $lParams["entry"] .= $log_notes;
         }
       }
-      $this->add_log($id,$lParams);
-
+      if ( $mode ) {
+        $this->log_buffer.=$lParams["entry"];
+      } else {
+        $this->add_log($id,$lParams);
+      }
       if( $this->settingOn("email_created") ) {
         // send email
         $bin = $t["bin_id"];
         // set the recipient list
         $recipients = $this->get_notify_recipients($id);
         if( $params["user_id"] ) {
-          $user = $this->get_user($params["user_id"]);	
+          $user = $this->get_user($params["user_id"]);
           if( $user["email"] ) {
             $this->checkIncludedRecipients($recipients,$params['user_id']);
           }
@@ -2985,10 +3032,11 @@ class zenTrack extends zen {
           $this->sendEmail($recipients,$subject,
                            $message,$params["creator_id"]);
         }
-      } 
+      }
     }
     return $id;
   }
+
    
   function delete_ticket( $id, $archive_flag = 0 ) {
     // drop a ticket, its log entries, and 

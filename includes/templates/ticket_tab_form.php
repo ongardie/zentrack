@@ -35,7 +35,7 @@ $context = new ZenFieldMapRenderContext(
 );
 foreach($hidden_fields as $f=>$field) {
   $context->set('field', $f);
-  $context->set('value', $ticket[$f]);
+  $context->set('value', ZenFieldMap::isVariableField($f)? $varfields[$f] : $ticket[$f]);
   print $map->renderTicketField($context);
 }
 ?>

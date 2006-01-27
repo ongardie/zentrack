@@ -10,7 +10,7 @@
   *   $boxview - (string)view to be loaded from field map
   *   $ticket - values for all columns in the ticket we are viewing
   */
-  
+
   $id = $ticket['id'];
   $varfields = $zen->getVarfieldVals($id);
 

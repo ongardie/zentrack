@@ -114,6 +114,7 @@
       $action_name="UPDATE";
       $label = $map->getViewProp($setmode,'label');
       $log_init=tr("Updated ticket in ?",array(tr("? tab",array($label))));
+
       $errs = $zen->update_all_ticket_fields($id, $login_id, $bin_id, $params,
                                     $varfield_params, $action_name, $log_init, $edit_reason);
 /*
@@ -139,6 +140,7 @@
         if( in_array($params["type_id"],$zen->noteTypeIDs()) && $ticket['status'] == 'OPEN' ) {
           $zen->close_ticket($id,null,null,tr('Notes closed automatically'));
         }
+/*
         $ticket = $zen->get_ticket($id);
         if( $varfields && count($varfield_params) ) {
           $vp = array();
@@ -156,11 +158,15 @@
           }
         }
         else {
+*/
           $msg[] = tr('All fields updated successfully');          
+/*
         }
+*/
       }
     }
     $ticket = $zen->get_ticket($id);
+
     if( $errs ) {
       foreach($params as $k=>$v) {
         $ticket[$k] = $v;

@@ -34,6 +34,7 @@
     }
     $params['type_id'] = $zen->projectTypeID();
     $params["creator_id"] = $login_id;
+/*
     // add the ticket to db
     $id = $zen->add_ticket($params);
     // check for errors
@@ -51,6 +52,11 @@
         $zen->close_ticket($id,null,null,'Notes closed automatically');
       }      
     }
+*/
+    $errs = $zen->add_new_ticket($id,$params,$varfield_params);
+    if( in_array($params["type_id"],$zen->noteTypeIDs()) ) {
+      $zen->close_ticket($id,null,null,'Notes closed automatically');
+    }      
   }
   
   if( !$errs ) {

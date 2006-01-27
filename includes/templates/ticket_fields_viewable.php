@@ -29,7 +29,7 @@
       
       // skip hidden fields but don't add a column
       if( !$field['is_visible'] ) { $i++; continue; }
-      
+
       if( $field['field_type'] == 'section' && $f != 'elapsed' ) {
         // sections become gaps here
         $label = '';

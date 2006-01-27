@@ -49,6 +49,7 @@
     
     if( !$errs ) {
       // add the ticket to database
+/*
       $id = $zen->add_ticket($params);
       // update the variable field entries for this ticket
       if( $id && $varfields && count($varfield_params) ) {
@@ -57,6 +58,8 @@
           $errs[] = tr("? created, but variable fields could not be saved", array(tr('Ticket')));
         }      
       }
+*/
+      $errs = $zen->add_new_ticket($id,$params,$varfield_params);
       
       // check for errors
       if( !$id ) {
