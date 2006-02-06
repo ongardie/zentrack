@@ -1,4 +1,25 @@
 
+----- 2.6.0.4 Maintenance Release -----
+
+  Fixed bug displaying tickets in bins user cannot view when selecting "all" from list filters
+  Fixed incorrect reference to LIMIT in query (affecting sql server users)
+  Fixed bug showing closed projects/tickets (when should only display open)
+  Fixed log entries for email messages (< and > display correctly now)
+  Removed debug print statement appearing in time column
+  Restrict tickets listed in a project view to bins for logged in user rather than all tickets assigned to the project.
+  Corrected wrapping of text in the navigation bar for displays less than 900px wide
+  Added homebin link into options page
+  Cleaned up options menu and added template for auto-login button
+  Added help page to display hot key configuration
+  Fixed contacts magifying glass icon to show contact info
+  Removed unused customField pages and function calls
+  Fixed problem loosing varfields in edit
+  Ticket creation changed to add only one log entry
+  Fixed "Invalid page mode requested: log" message when searching logs
+  Rounded odate to date_fmt_time before saving to avoid future roundings
+  Fixed checkboxes in attachments.
+  Changed css references to 'hand' to 'pointer' which is available in both IE and Firefox.
+
 ----- 2.6.0.3 Maintenance Release -----
 
   Fixed log entries for editing variable fields

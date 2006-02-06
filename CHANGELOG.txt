@@ -11,51 +11,55 @@ and user experience, internationalization, platform and database
 abstraction, and endless possibilities for project expansion. 
 --------------------
 
------ VERSION 2.6.0.4 (development) -----
+----- VERSION 2.6.0.4 (2006-02-06) -----
 
 2006-02-05, kato
+  Fixed bug allowing users to display tickets for bins they are not allowed to view
+  when selecting "all" from filter list
+    - zentrack_2/includes/listFilters.php 1.3
+
   Added debug into the get_logs method
   Fixed incorrect reference to LIMIT in query
-    - zentrack_2/includes/zenTrack.class
+    - zentrack_2/includes/zenTrack.class 1.211
   
   Fixed bug showing closed projects/tickets (when should only display open)
-    - zentrack_2/includes/zenTrack.class
+    - zentrack_2/includes/zenTrack.class 1.211
     
   Fixed log entries for email messages (< and > show up corretly now)
-    - zentrack_2/includes/zenTrack.class
+    - zentrack_2/includes/zenTrack.class 1.211
     
   Removed debug print statement appearing in time column
-    - zentrack_2/includes/zenTrack.class
+    - zentrack_2/includes/zenTrack.class 1.211
 
   Restrict tickets listed in a project view to those in bins the logged in user
   is allowed to view rather than all tickets assigned to the project.
-    - zentrack_2/includes/ticket_load_tasks.php
+    - zentrack_2/includes/templates/ticket_load_tasks.php 1.5
   
   Corrected wrapping of text in the navigation bar at top of window, which sometimes
   pushed the layout into a funky format when the window was made too small (less than 900px)
-    - zentrack_2/includes/nav.php
+    - zentrack_2/includes/nav.php 1.30
   
   289: Added homebin link into options page
   Cleaned up options menu and added template for auto-login button
-    - zentrack_2/includes/ZenHotKeys.php
+    - zentrack_2/includes/ZenHotKeys.php 1.17
     - zentrack_2/includes/templates/autoLoginForm.php 1.0
-    - zentrack_2/includes/templates/nav_options.php
-    - zentrack_2/www/homebin.php
-    - zentrack_2/www/options.php
-    - zentrack_2/www/language.php
+    - zentrack_2/includes/templates/nav_options.php 1.6
+    - zentrack_2/www/options.php 1.7
+    - zentrack_2/www/misc/homebin.php 1.9
+    - zentrack_2/www/misc/language.php 1.8
   
   Added help page to display hot key configuration
-    - zentrack_2/www/help/english/index.php
+    - zentrack_2/www/help/english/index.php 1.9
     - zentrack_2/includes/templates/listHotKeys.php 1.0
-    - zentrack_2/includes/ZenHotKeys.php
+    - zentrack_2/includes/ZenHotKeys.php 1.17
   
   273: Fixed contacts magifying glass icon to show contact info
-    - zentrack_2/includes/templates/ticket_load_contacts.php
-    - zentrack_2/www/javascript.js
+    - zentrack_2/includes/templates/ticket_load_contacts.php 1.8
+    - zentrack_2/www/javascript.js 1.25
     
   223: Removed unused customField pages and function calls
     - zentrack_2/includes/prepareSearchVarfields.php [removed]
-    - zentrack_2/includes/zenTrack.class
+    - zentrack_2/includes/zenTrack.class 1.211
     - zentrack_2/includes/editCustomSubmit.php [removed]
     - zentrack_2/www/admin/editCustom.php [removed]
     - zentrack_2/www/actions/editCustomSubmit.php [removed]
