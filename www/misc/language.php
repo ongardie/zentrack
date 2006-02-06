@@ -19,29 +19,24 @@
     }
     if( file_exists("$libDir/translations/$newlang.trans") ) {
       $login_language = $newlang;
-      if( !$Demo_Mode ) {
+      if( $Demo_Mode != "on" ) {
         $params = array("language"=>$newlang);
         $res = $zen->update_prefs($login_id, array($params), "language");
       }
-      if( $Demo_Mode || $res > 0 ) {
-        $translator_init = array(
-        'domain' => 'translator',
-        'path' => "$libDir/translations",
-        'locale' => $login_language
-        );
-        $translator_init['zen'] =& $zen;
-        tr($translator_init);
-        $msg[] = tr("Your language has been changed to ?", $newlang);
-        if( $Demo_Mode ) {
-          $msg[] = tr("The server is in Demo Mode, this change will be reset when you log out.");
-        }
-        $skip = 1;
+      $translator_init = array(
+      'domain' => 'translator',
+      'path' => "$libDir/translations",
+      'locale' => $login_language
+      );
+      $translator_init['zen'] =& $zen;
+      tr($translator_init);
+      $msg[] = tr("Your language has been changed to ?", $newlang);
+      if( $Demo_Mode == "on" ) {
+        $msg[] = tr("The server is in Demo Mode, this change will be reset when you log out.");
       }
-      else {
-        $errs[] = tr("The language could not be changed to ?", $newlang);
-      }
+      $skip = 1;
     } else {
-      $errs[] = tr("The language file chosen was not valid");
+      $errs[] = tr("The language chosen was not valid");
     }
   }
 
@@ -52,7 +47,8 @@
   if( is_array($errs) ) {
     $zen->printErrors($errs);
   }
-  include("$templateDir/optionsMenu.php");
+  if( $skip ) { include("$templateDir/optionsMenu.php"); }
+  else { include("$templateDir/languageForm.php"); }
 
   include("$libDir/footer.php");
 

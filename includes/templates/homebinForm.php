@@ -4,7 +4,7 @@
 
 <table width="300" cellpadding="5">
 <tr>
-  <td colspan="2" class="titleCell" align="center" height="20">
+  <td colspan="2" class="subTitle" align="center" height="20">
     <b><?=tr("Change Your Default Bin")?></b>
   </td>
 </tr>

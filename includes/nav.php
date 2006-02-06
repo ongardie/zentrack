@@ -130,7 +130,7 @@
   </tr>
   <tr>
     <td width='100%' colspan='<?=$nav_col_span?>' class='titleCell' height='<?=$nav_bar_height?>' align='right'><img
-      src='<?=$imageUrl?>/empty.gif' width='1' height='1'></td>
+      src='<?=$imageUrl?>/empty.gif' width='930' height='1'></td>
   </tr>
   <tr>
   <td valign="top" height="400" colspan='<?=$nav_col_span?>' class='mainContent navpad'><?

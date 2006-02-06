@@ -96,12 +96,13 @@ function confirmSubmit(formObject, msg) {
 function ticketClk( url, evt ) {
   var src = getEventSrc(evt);
   // don't override links
-  if( src && src.href && src.href != url ) { return; }
+  // be careful of IE images... they report an href stupidly
+  if( src && !src.src && src.href && src.href != url ) { return true; }
   // this is an image inside a link, let it run too
   var u = src && src.src && src.parentNode && src.parentNode.href? src.parentNode.href : false;
-  if( u && u != url ) { return; }
+  if( u && u != url ) { return true; }
   // let user check boxes
-  if( src && src.type == 'checkbox' ) { return; }
+  if( src && src.type == 'checkbox' ) { return true; }
   // nothing wrong, so go for it
   window.location = url;
   return false;
@@ -287,11 +288,11 @@ function updateUrl(k, v) {
 function submitThisForm( obj ) {
   var formNode = obj.parentNode;
   while(formNode && !formNode.submit && formNode.nodeName != "DOCUMENT") {
-    alert("formNode="+formNode+", formNode.nodeName="+formNode.nodeName);
+    //alert("formNode="+formNode+", formNode.nodeName="+formNode.nodeName);
     formNode = formNode.parentNode;
   };
   if( formNode.submit ) {
-    alert("submitting "+formNode+"["+formNode.name+":"+formNode.nodeName+"]");
+    //alert("submitting "+formNode+"["+formNode.name+":"+formNode.nodeName+"]");
     formNode.submit();
   };
 }

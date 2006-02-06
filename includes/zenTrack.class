@@ -127,7 +127,10 @@ class zenTrack extends zen {
     // returns a specific logs data
     $lid = $this->checkNum($lid);
     $query = "SELECT * FROM ".$this->table_logs." WHERE lid = $lid";
-    return( $this->db_quick($query) );
+    $res = $this->db_quick($query);
+    $c = $res? count($res) : 0;
+    $this->addDebug("ZenTrack::get_log", "[$c]$query", 3);
+    return $res;
   }
 
   function get_logs( $id, $sort = 'created DESC', $limit = '' ) {
@@ -137,10 +140,16 @@ class zenTrack extends zen {
     $query = "SELECT * FROM ".$this->table_logs." WHERE ticket_id = $id";
     if( $sort )
       $query .= " ORDER BY $sort";
-    if( $limit )
-      $query .= " LIMIT $limit";
-    return( $this->db_queryIndexed($query) );
-  }  
+    if( $limit ) {
+      $res = $this->db_getlimitedIndex($query, $limit);
+    }
+    else {
+      $res = $this->db_queryIndexed($query);
+    }
+    $c = $res? count($res) : 0;
+    $this->addDebug("ZenTrack::get_logs", "[$c|".($limit? "limit=$limit" : "no limit")."]$query", 3);
+    return( $res );
+  }
 
   function get_project( $pid, $reload = false ) {
     // retrieves all properties from database for given
@@ -4164,8 +4173,8 @@ class zenTrack extends zen {
     // figure out who sent it
     $message = (get_magic_quotes_gpc())? stripslashes($message) : $message;
     $message = preg_replace(
-                            array("#&lt;#", "#&gt;#", "#&quot;#", "#&amp;#"),
-                            array("<",">",'"',"&"), $message);
+                            array("#&amp;#", "#&lt;#", "#&gt;#", "#&quot;#"),
+                            array("&", "<",">",'"'), $message);
     if( !$sender ) {
       $sender_address = $this->getSetting("admin_email");
     } else {
@@ -4320,7 +4329,6 @@ class zenTrack extends zen {
     // if $units is 0, shows whole name
     // if $units is null, skips unit name
     // if $units is > 0, abbreviate units
-    if( !$end ) { print "setting end: $start/".time()."<br>\n"; $end = time(); }
     $num = round($this->dateDiff($end,$start,$this->elapsed_unit),$round);
     $abr = "";
     if( $units > 0 ) {
@@ -4519,7 +4527,7 @@ class zenTrack extends zen {
       case "id":
         if( !$validBins ) { return null; }
         $tickets = $this->get_tickets(
-          array('bin_id'=>$validBins), 'title', 'id, title', -1
+          array('bin_id'=>$validBins, 'status'=>array('OPEN','PENDING')), 'title', 'id, title', -1
         );
         for($i=0; $i<count($tickets); $i++) {
           $t = $tickets[$i];
@@ -4528,7 +4536,7 @@ class zenTrack extends zen {
         break;
       case "project_id":
         $tickets = $this->get_tickets(
-          array('type_id'=>$this->projectTypeIds(),'bin_id'=>$validBins),
+          array('type_id'=>$this->projectTypeIds(), 'status'=>array('OPEN','PENDING'), 'bin_id'=>$validBins),
           'title', 'id, title', -1 );
         for($i=0; $i<count($tickets); $i++) {
           $t = $tickets[$i];

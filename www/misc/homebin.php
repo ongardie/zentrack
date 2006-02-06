@@ -36,7 +36,13 @@
   if( is_array($errs) ) {
     $zen->printErrors($errs);
   }
-  include("$templateDir/optionsMenu.php");
+  
+  if( $skip ) {
+    include("$templateDir/optionsMenu.php");
+  }
+  else {
+    include("$templateDir/homebinForm.php");
+  }
 
   include("$libDir/footer.php");
 

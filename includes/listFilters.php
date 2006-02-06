@@ -115,7 +115,7 @@
     }
   }
 
-  if( array_key_exists('bin_id',$params) ) {
+  if( array_key_exists('bin_id',$params) && !empty($params['bin_id']) ) {
     // validate the bins to make sure this user can view them
     $userBins = $zen->getUsersBins($login_id);
     $vals = is_array($params['bin_id'])? $params['bin_id'] : array($params['bin_id']);

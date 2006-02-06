@@ -1,6 +1,7 @@
 <? if( !ZT_DEFINED ) { die("Illegal Access"); }
   include_once("$libDir/sorting.php");
-  $tickets = $zen->get_tickets(array('project_id'=>$id),$sortstring);
+  $parms = array('project_id'=>$id, 'bin_id'=>$zen->getUsersBins($login_id));
+  $tickets = $zen->get_tickets($parms,$sortstring);
   $total_children = $zen->total_records;
   $hotkeys->loadSection('project_tasks');
   $GLOBALS['zt_hotkeys'] = $hotkeys;

@@ -11,8 +11,55 @@ and user experience, internationalization, platform and database
 abstraction, and endless possibilities for project expansion. 
 --------------------
 
------ VERSION 2.6.0.4 -----
+----- VERSION 2.6.0.4 (development) -----
 
+2006-02-05, kato
+  Added debug into the get_logs method
+  Fixed incorrect reference to LIMIT in query
+    - zentrack_2/includes/zenTrack.class
+  
+  Fixed bug showing closed projects/tickets (when should only display open)
+    - zentrack_2/includes/zenTrack.class
+    
+  Fixed log entries for email messages (< and > show up corretly now)
+    - zentrack_2/includes/zenTrack.class
+    
+  Removed debug print statement appearing in time column
+    - zentrack_2/includes/zenTrack.class
+
+  Restrict tickets listed in a project view to those in bins the logged in user
+  is allowed to view rather than all tickets assigned to the project.
+    - zentrack_2/includes/ticket_load_tasks.php
+  
+  Corrected wrapping of text in the navigation bar at top of window, which sometimes
+  pushed the layout into a funky format when the window was made too small (less than 900px)
+    - zentrack_2/includes/nav.php
+  
+  289: Added homebin link into options page
+  Cleaned up options menu and added template for auto-login button
+    - zentrack_2/includes/ZenHotKeys.php
+    - zentrack_2/includes/templates/autoLoginForm.php 1.0
+    - zentrack_2/includes/templates/nav_options.php
+    - zentrack_2/www/homebin.php
+    - zentrack_2/www/options.php
+    - zentrack_2/www/language.php
+  
+  Added help page to display hot key configuration
+    - zentrack_2/www/help/english/index.php
+    - zentrack_2/includes/templates/listHotKeys.php 1.0
+    - zentrack_2/includes/ZenHotKeys.php
+  
+  273: Fixed contacts magifying glass icon to show contact info
+    - zentrack_2/includes/templates/ticket_load_contacts.php
+    - zentrack_2/www/javascript.js
+    
+  223: Removed unused customField pages and function calls
+    - zentrack_2/includes/prepareSearchVarfields.php [removed]
+    - zentrack_2/includes/zenTrack.class
+    - zentrack_2/includes/editCustomSubmit.php [removed]
+    - zentrack_2/www/admin/editCustom.php [removed]
+    - zentrack_2/www/actions/editCustomSubmit.php [removed]
+    
 2006-01-27, cfalonso
   Fixed problem loosing varfields in edit and changed ticket creation to add
   only one log entry
@@ -38,12 +85,12 @@ abstraction, and endless possibilities for project expansion.
     - zentrack_2/includes/ZenFieldMap.class 1.42
 
 2006-01-14, alberts
-Fixed checkboxes in attachments not being able to be checked in
-firefox, tt#250.  Also fixed another seperate firefox mouseover
-cursor error.  The code was trying to display the 'hand' cursor
-that is only available in IE.  Changed this to 'pointer' which is
-available in both IE and Firefox.
-   - zentrack_2/www/javascript.js 1.24
+  Fixed checkboxes in attachments not being able to be checked in
+  firefox, tt#250.  Also fixed another seperate firefox mouseover
+  cursor error.  The code was trying to display the 'hand' cursor
+  that is only available in IE.  Changed this to 'pointer' which is
+  available in both IE and Firefox.
+     - zentrack_2/www/javascript.js 1.24
 
 ----- VERSION 2.6.0.3 (2006-01-12) -----
 

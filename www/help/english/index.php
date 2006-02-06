@@ -30,6 +30,7 @@
       // edit the labels in the appropriate language file!    
       renderTOC( 'users', true ); 
     ?>
+    <p onclick='mClk(this)'><a href='<?=$rootUrl?>/misc/hotkeys.php'><?=tr("Hot Key Settings")?></a></p>
   </div>
 
   <div class='menubox'>

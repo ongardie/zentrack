@@ -14,11 +14,30 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
 
 // start the session
 session_cache_limiter('public'); 
-session_start();     
 
 if( isset($_GET['clear_session_cache']) || isset($_GET['logoff']) ) {
+  // Initialize the session.
+  // If you are using session_name("something"), don't forget it now!
+  session_start();
+  
+  // Unset all of the session variables.
+  $_SESSION = array();
+  
+  // If it's desired to kill the session, also delete the session cookie.
+  // Note: This will destroy the session, and not just the session data!
+  setcookie("zentrackKey", "", time());
+  unset($_COOKIE['zentrackKey']);
+  if (isset($_COOKIE[session_name()])) {
+     unset($_COOKIE[session_name()]);
+     setcookie(session_name(), '', time()-42000, '/');
+  }
+
+  // Finally, destroy the session.
+  session_destroy();
   session_unset();
 }
+
+session_start();
 
 // ... except the following list
 $reservedList = array("libDir", "rootUrl", "rootWWW",

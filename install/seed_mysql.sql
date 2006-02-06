@@ -1,7 +1,7 @@
 
---
--- Load data for table 'ZENTRACK_ACCESS'
---
+#
+# Load data for table 'ZENTRACK_ACCESS'
+#
 
 INSERT INTO ZENTRACK_ACCESS (access_id, user_id, bin_id, lvl, notes) VALUES (1,2,2,1,NULL);
 INSERT INTO ZENTRACK_ACCESS (access_id, user_id, bin_id, lvl, notes) VALUES (2,2,3,1,NULL);
@@ -9,9 +9,9 @@ INSERT INTO ZENTRACK_ACCESS (access_id, user_id, bin_id, lvl, notes) VALUES (3,2
 INSERT INTO ZENTRACK_ACCESS (access_id, user_id, bin_id, lvl, notes) VALUES (4,2,4,1,NULL);
 INSERT INTO ZENTRACK_ACCESS (access_id, user_id, bin_id, lvl, notes) VALUES (5,2,3,1,NULL);
 
---
--- Load data for table 'ZENTRACK_BINS'
---
+#
+# Load data for table 'ZENTRACK_BINS'
+#
 
 INSERT INTO ZENTRACK_BINS (bid, name, priority, active) VALUES (1,'Accounting',0,1);
 INSERT INTO ZENTRACK_BINS (bid, name, priority, active) VALUES (2,'Engineering',0,1);
@@ -88,7 +88,6 @@ INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,w
 INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,which_view,default_val,sort_order,field_type,num_cols,num_rows,is_required) VALUES('71','otime','Open Time','1','project_create',NULL,'13','label','20','1','1');
 INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,which_view,default_val,sort_order,field_type,num_cols,num_rows,is_required) VALUES('72','ctime','Close Time','0','project_create',NULL,'14','label','20','1','0');
 INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,which_view,default_val,sort_order,field_type,num_cols,num_rows,is_required) VALUES('73','bin_id','Bin','1','project_create',NULL,'5','menu','50','1','1');
---INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,which_view,default_val,sort_order,field_type,num_cols,num_rows,is_required) VALUES('74','type_id','Type','0','project_create',NULL,'6','label','50','1','1');
 INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,which_view,default_val,sort_order,field_type,num_cols,num_rows,is_required) VALUES('75','system_id','System','1','project_create',NULL,'7','menu','50','1','1');
 INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,which_view,default_val,sort_order,field_type,num_cols,num_rows,is_required) VALUES('76','user_id','Owner','1','project_create',NULL,'8','searchbox','50','1','0');
 INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,which_view,default_val,sort_order,field_type,num_cols,num_rows,is_required) VALUES('78','tested','Testing','0','project_create',NULL,'9','checkbox','1','1','0');
@@ -293,14 +292,14 @@ INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,w
 INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,which_view,default_val,sort_order,field_type,num_cols,num_rows,is_required) VALUES('280','hours','Hours','1','ticket_close',NULL,'30','text','6','1','0');
 INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,which_view,default_val,sort_order,field_type,num_cols,num_rows,is_required) VALUES('281','comments','Comments','1','ticket_close',NULL,'31','text','60','10','1');
 
--- Load data for table 'ZENTRACK_LOGS'
---
+# Load data for table 'ZENTRACK_LOGS'
+#
 
 INSERT INTO ZENTRACK_LOGS (lid, ticket_id, user_id, bin_id, created, action, hours, entry) VALUES (1,2,1,2,1019621210,'ACCEPTED',NULL,NULL);
 
---
--- Load data for table 'ZENTRACK_PRIORITIES'
---
+#
+# Load data for table 'ZENTRACK_PRIORITIES'
+#
 
 INSERT INTO ZENTRACK_PRIORITIES (pid, name, priority, active) VALUES (1,'Critical',5,1);
 INSERT INTO ZENTRACK_PRIORITIES (pid, name, priority, active) VALUES (2,'High',4,1);
@@ -308,9 +307,9 @@ INSERT INTO ZENTRACK_PRIORITIES (pid, name, priority, active) VALUES (3,'Medium'
 INSERT INTO ZENTRACK_PRIORITIES (pid, name, priority, active) VALUES (4,'Low',2,1);
 INSERT INTO ZENTRACK_PRIORITIES (pid, name, priority, active) VALUES (6,'None',1,1);
 
---
--- Load data for table 'ZENTRACK_SETTINGS'
---
+#
+# Load data for table 'ZENTRACK_SETTINGS'
+#
 
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (1,'admin_email','root@localhost','The email address of the zenTrack administrator');
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (2,'bot_name','zenBot','The system bots name');
@@ -422,9 +421,9 @@ INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (108
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (109,'email_accept', 'on', 'Send email to users in the notify list when ticket is accepted');
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (110,'ctime_on_pending', 'off', 'Set this to on if you want tickets to set ctime when changed to pending');
 
---
--- Load data for table 'ZENTRACK_SYSTEMS'
---
+#
+# Load data for table 'ZENTRACK_SYSTEMS'
+#
 
 INSERT INTO ZENTRACK_SYSTEMS (sid, name, priority, active) VALUES (1,'Apache',0,1);
 INSERT INTO ZENTRACK_SYSTEMS (sid, name, priority, active) VALUES (2,'Email',0,1);
@@ -434,9 +433,9 @@ INSERT INTO ZENTRACK_SYSTEMS (sid, name, priority, active) VALUES (5,'PC',0,1);
 INSERT INTO ZENTRACK_SYSTEMS (sid, name, priority, active) VALUES (6,'Printer',0,1);
 INSERT INTO ZENTRACK_SYSTEMS (sid, name, priority, active) VALUES (7,'Website',0,1);
 
---
--- Load data for table 'ZENTRACK_TASKS'
---
+#
+# Load data for table 'ZENTRACK_TASKS'
+#
 
 INSERT INTO ZENTRACK_TASKS (task_id, name, priority, active) VALUES (1,'Action Taken',0,1);
 INSERT INTO ZENTRACK_TASKS (task_id, name, priority, active) VALUES (2,'Debugging',0,1);
@@ -450,16 +449,16 @@ INSERT INTO ZENTRACK_TASKS (task_id, name, priority, active) VALUES (9,'Solution
 INSERT INTO ZENTRACK_TASKS (task_id, name, priority, active) VALUES (10,'Testing',0,1);
 INSERT INTO ZENTRACK_TASKS (task_id, name, priority, active) VALUES (11,'Work',0,1);
 
---
--- Load data for table 'ZENTRACK_TICKETS'
---
+#
+# Load data for table 'ZENTRACK_TICKETS'
+#
 
 INSERT INTO ZENTRACK_TICKETS (id, title, priority, status, description, otime, ctime, bin_id, type_id, user_id, system_id, creator_id, tested, approved, relations, project_id, est_hours, deadline, start_date, wkd_hours) VALUES (1,'Welcome to zenTrack!!',2,'OPEN','Welcome to the zenTrack system!\r<br />\n\r<br />\nCongratulations, your install was successful.\r<br />\n\r<br />\nYou can find more help in the help section on this site, and online at http://zentrack.phpzen.net.\r<br />\n\r<br />\nYou can find support for your product at the sourceforge project: http://www.sourceforge.net/projects/zentrack',1019621097,NULL,2,5,2,7,1,0,0,NULL,NULL,0.00,NULL,NULL,0.10);
 INSERT INTO ZENTRACK_TICKETS (id, title, priority, status, description, otime, ctime, bin_id, type_id, user_id, system_id, creator_id, tested, approved, relations, project_id, est_hours, deadline, start_date, wkd_hours) VALUES (2,'CHANGE ADMIN PASSWORD',1,'OPEN','You need to change the admin passphrase right away.\r<br />\n\r<br />\nIn addition, two other accounts, User, and Guest were created.  You will want to modify those or delete them as your system security and preferences determine.',1019621197,NULL,2,8,NULL,7,1,0,0,NULL,NULL,0.01,1022137200,NULL,1.00);
 
---
--- Load data for table 'ZENTRACK_TYPES'
---
+#
+# Load data for table 'ZENTRACK_TYPES'
+#
 
 INSERT INTO ZENTRACK_TYPES (type_id, name, priority, active) VALUES (1,'Project',0,1);
 INSERT INTO ZENTRACK_TYPES (type_id, name, priority, active) VALUES (2,'Support Request',0,1);
@@ -471,9 +470,9 @@ INSERT INTO ZENTRACK_TYPES (type_id, name, priority, active) VALUES (7,'Service'
 INSERT INTO ZENTRACK_TYPES (type_id, name, priority, active) VALUES (8,'Task',0,1);
 INSERT INTO ZENTRACK_TYPES (type_id, name, priority, active) VALUES (9,'Note',0,1);
 
---
--- Load data for table 'ZENTRACK_USERS'
---
+#
+# Load data for table 'ZENTRACK_USERS'
+#
 
 INSERT INTO ZENTRACK_USERS (user_id, login, access_level, passphrase, lname, fname, initials, email, notes, homebin, active) VALUES (1,'Administrator',5,'7b7bc2512ee1fedcd76bdc68926d4f7b','Administrator','zenTrack','ADMIN','root@localhost','This is the master login',2,2);
 INSERT INTO ZENTRACK_USERS (user_id, login, access_level, passphrase, lname, fname, initials, email, notes, homebin, active) VALUES (2,'Guest',0,'adb831a7fdd83dd1e2a309ce7591dff8','Visitor','Guest','GUEST',NULL,NULL,2,1);
@@ -481,9 +480,9 @@ INSERT INTO ZENTRACK_USERS (user_id, login, access_level, passphrase, lname, fna
 INSERT INTO ZENTRACK_USERS (user_id, login, access_level, passphrase, lname, fname, initials, email, notes, homebin, active) VALUES (4,'egate',2,NULL,'Gateway','Email','egate','zentrack@localhost','Email Gateway Account',1,0);
 
 
---
--- Load data for table 'ZENTRACK_VARFIELD_IDX'
---
+#
+# Load data for table 'ZENTRACK_VARFIELD_IDX'
+#
 
 
 INSERT INTO ZENTRACK_VARFIELD_IDX (field_name,       field_label,       sort_order) 
@@ -514,7 +513,7 @@ INSERT INTO ZENTRACK_VARFIELD (ticket_id) SELECT id FROM ZENTRACK_TICKETS;
 
 
 
--- ADDED IN VERSION 2.6
+# ADDED IN VERSION 2.6
 
 INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,which_view,default_val,sort_order,field_type,num_cols,num_rows,is_required) VALUES(282,'custom_date1','Date 1','0','project_create',NULL,'31','date','20','1','0');
 INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,which_view,default_val,sort_order,field_type,num_cols,num_rows,is_required) VALUES(283,'custom_date2','Date 2','0','project_create',NULL,'31','date','20','1','0');
@@ -1113,7 +1112,7 @@ INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,w
 INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,which_view,default_val,sort_order,field_type,num_cols,num_rows,is_required) VALUES(876,'user_id','Owner','1','ticket_view_top',NULL,'3','label','20','1','0');
 INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,which_view,default_val,sort_order,field_type,num_cols,num_rows,is_required) VALUES(877,'wkd_hours','Hours Worked','1','ticket_view_top',NULL,'9','label','10','1','0');
 
--- PROJECT_CLOSE
+# PROJECT_CLOSE
 INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,which_view,default_val,sort_order,field_type,num_cols,num_rows,is_required) VALUES(878,'approved','Approval','0','project_close',NULL,'13','checkbox','1','1','0');
 INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,which_view,default_val,sort_order,field_type,num_cols,num_rows,is_required) VALUES(879,'bin_id','Bin','0','project_close',NULL,'7','menu','50','1','1');
 INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,which_view,default_val,sort_order,field_type,num_cols,num_rows,is_required) VALUES(880,'comments','Comments','1','project_close',NULL,'31','text','60','10','1');
@@ -1146,7 +1145,7 @@ INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,w
 INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,which_view,default_val,sort_order,field_type,num_cols,num_rows,is_required) VALUES(907,'user_id','Owner','0','project_close',NULL,'10','searchbox','50','1','0');
 INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,which_view,default_val,sort_order,field_type,num_cols,num_rows,is_required) VALUES(908,'wkd_hours','Hours Worked','0','project_close','0','19','text','6','1','0');
 
--- PROJECT_VIEW_TOP
+# PROJECT_VIEW_TOP
 INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,which_view,default_val,sort_order,field_type,num_cols,num_rows,is_required) VALUES(909, 'approved','Approval','0','project_view_top',NULL,'15','label','10','1','0');
 INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,which_view,default_val,sort_order,field_type,num_cols,num_rows,is_required) VALUES(910, 'bin_id','Bin','0','project_view_top',NULL,'11','label','10','1','0');
 INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,which_view,default_val,sort_order,field_type,num_cols,num_rows,is_required) VALUES(911, 'ctime','Close Time','0','project_view_top',NULL,'10','label','20','1','0');
@@ -1177,7 +1176,7 @@ INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,w
 INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,which_view,default_val,sort_order,field_type,num_cols,num_rows,is_required) VALUES(936, 'user_id','Owner','1','project_view_top',NULL,'3','label','20','1','0');
 INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,which_view,default_val,sort_order,field_type,num_cols,num_rows,is_required) VALUES(937, 'wkd_hours','Hours Worked','1','project_view_top',NULL,'9','label','10','1','0');
 
--- TICKET_VIEW_TOP
+# TICKET_VIEW_TOP
 INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,which_view,default_val,sort_order,field_type,num_cols,num_rows,is_required) VALUES(938, 'custom_multi1', NULL, 0, 'ticket_view_top', NULL, 100, 'label', 50, 8, 0);
 INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,which_view,default_val,sort_order,field_type,num_cols,num_rows,is_required) VALUES(939, 'custom_multi2', NULL, 0, 'ticket_view_top', NULL, 100, 'label', 50, 8, 0);
 
@@ -1404,6 +1403,6 @@ INSERT INTO ZENTRACK_VIEW_MAP (view_map_id, which_view, vm_name, vm_val, vm_type
 INSERT INTO ZENTRACK_VIEW_MAP (view_map_id, which_view, vm_name, vm_val, vm_type, vm_order) VALUES(210, 'ticket_view_top', 'visible', '1', 'checkbox', 0);
 INSERT INTO ZENTRACK_VIEW_MAP (view_map_id, which_view, vm_name, vm_val, vm_type, vm_order) VALUES(211, 'ticket_view_top', 'width', '50', 'text', 0);
 
--- ADDED IN VERSION 2.6.0.1
+# ADDED IN VERSION 2.6.0.1
 
 

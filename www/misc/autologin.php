@@ -14,9 +14,11 @@
   if( !$zen->settingOn('allow_pwd_save') ) {
     $msg[] = tr("This feature has been disabled by the administrator.");
   }
-  else {
-    $res = $zen->update_pref($login_id, 'autologin', $on? 1 : 0);
-    
+  else if( $zen->demo_mode == 'on' ) {
+    $msg[] = tr("Your request was successful, but this is a demo site, so the autologin was not altered");
+  }
+  else if( isset($_GET['setauto']) ) {
+    $res = $zen->update_pref($login_id, 'autologin', $_GET['setauto'] == 'on'? 1 : 0);
     if( $res ) {
       $msg[] = $on? tr("Your auto-login feature has been turned on.  It will become active after your next login attempt.") : 
                  tr("Your auto-login feature has been turned off.");
@@ -28,6 +30,13 @@
   
   include("$libDir/nav.php");
   $zen->printErrors($errs);
-  include("$templateDir/optionsMenu.php");
+  if( $zen->settingOn('allow_pwd_save') ) {
+    include("$templateDir/autoLoginForm.php"); 
+  }
+  else { 
+    include("$templateDir/optionsMenu.php"); 
+  }
+  
   include("$libDir/footer.php");
+  
 }?>

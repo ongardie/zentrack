@@ -57,7 +57,7 @@ if ($tickets){
   	$u=$zen->get_contact($n["cp_id"],$table,$col);
     $cpid = $zen->checkNum($cpid);
     $tc = "onclick='checkMyBox(\"drops_".$zen->ffv($n['clist_id'])."\", event)' ";
-    $img = "<div style='float:right'><a href='#' onclick='ticketClk(\"$rootUrl/contact.php?$c1=$cpid\",this,event);return false;'>";
+    $img = "<div style='float:right'><a href='$rootUrl/contact.php?$c1=$cpid'>";
     $img .= "<img src='$imageUrl/24x24/magnify.png' border='0' width='24' height='24'></a></div>";
 ?>	
     <tr class='bars' <?=$row_rollover_eff?>>

@@ -66,15 +66,12 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
   include_once("$libDir/zenTrack.class");
   include_once("$libDir/ZenFieldMap.class");
   include_once("$libDir/zenTemplate.class");
-  include_once("$libDir/ZenHotKeys.class");
   
   $zen = new zenTrack( $configFile );
   $map =& new ZenFieldMap($zen);
-  $hotkeys =& new ZenHotKeys($zen);
   
   $GLOBALS['zt_zen'] = $zen;
   $GLOBALS['zt_map'] = $map;
-  $GLOBALS['zt_hotkeys'] = $hotkeys;
 
   /**
   * Translator Object Initialization (mlively)
@@ -95,6 +92,11 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
   tr($translator_init);
   //save a bit on memory
   unset($translator_init);
+  
+  // this must be initialized after the translator is started
+  include_once("$libDir/ZenHotKeys.class");
+  $hotkeys =& new ZenHotKeys($zen);
+  $GLOBALS['zt_hotkeys'] = $hotkeys;
 
   function uptr($string, $vals = '') {
     $specials = array(
@@ -329,7 +331,7 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
    * Generate a div layer that imitates a submit button, but can have
    * a hot key affect applied to it.
    */
-   function renderDivButton($key, $onclick, $width=100, $label = null) {
+   function renderDivButton($key, $onclick = false, $width=100, $label = null) {
      // if we are passed an empty key for some reason
      // then just try to render something sensible instead
      if( !$key ) {

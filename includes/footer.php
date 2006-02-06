@@ -156,7 +156,7 @@ function loadRenderKeys() {
     $debug_text = preg_replace('/Db_Pass=[^"\' ]+/', 'Db_Pass=xxxx', $debug_text);
     $debug_text = preg_replace('/database_password=[^"\' ]+/', 'database_password=xxxx', $debug_text);
     $debug_text = preg_replace('/[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+[.][a-zA-Z0-9_.-]+/', 'xxxx@xxxx.xxx',$debug_text);
-    $debug_text = preg_replace('@(https?://|www[.])[a-zA-Z0-9_-]+[.]([a-zA-Z]{2,4})@', '\\1xxxx.\\2', $debug_text);
+    $debug_text = preg_replace('@(https?://|www[.])([a-zA-Z0-9_-]+[.])+([a-zA-Z]{2,4})@', '\\1xxxx.\\3', $debug_text);
     $debug_text = preg_replace('@(https?://)[0-9]{1,3}[.][0-9]{1,3}[.][0-9]{1,3}[.][0-9]{1,3}@', '\\1xxx.xxx.xxx.xxx', $debug_text);
     $debug_text = preg_replace('/zentrackKey=([^, "\']+)/', 'zentrackKey=xxxxx', $debug_text);
     print $debug_text;
