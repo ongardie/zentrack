@@ -11,6 +11,12 @@ and user experience, internationalization, platform and database
 abstraction, and endless possibilities for project expansion. 
 --------------------
 
+----- VERSION 2.6.1 -----
+
+2006-02-21
+   - zentrack_2/install/utils/upgrade_base.sql 1.2
+   - zentrack_2/www/styles.php 1.36
+
 ----- VERSION 2.6.0.4 (2006-02-06) -----
 
 2006-02-05, kato
