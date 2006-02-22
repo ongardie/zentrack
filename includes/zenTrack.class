@@ -330,15 +330,15 @@ class zenTrack extends zen {
                   $this->checkNum($_GET['pageNumber']) : 0;
     }
     
-    $tables = $this->table_tickets." as t";
+    $tables = $this->table_tickets." t";
     if( $tf_pri ) {
       $tblpri = $this->table_priorities;
-      $tables .= ", $tblpri as p";
+      $tables .= ", $tblpri p";
       $sort = str_replace("priority", "ppri", $sort);
     }
     
     if( $tf_vf ) {
-      $tables .= ", ".$this->table_varfield." as vf";
+      $tables .= ", ".$this->table_varfield." vf";
     }
     
     if( $columns && !is_array($columns) ) {
