@@ -644,8 +644,8 @@ TD.bigger { font-size: 50px; }
     background: <?=$zen->getSetting('color_background')?>;
     border:     1px solid <?=$zen->getSetting('color_bar_darkest')?>;
     padding: 5px;
-    max-height: 200px;
-    height: expression(this.scrollHeight > 200? "200px" : "auto");
+    max-height: <?=$zen->getSetting('max_textbox_height')?>px;
+    height: expression(this.scrollHeight > <?=$zen->getSetting('max_textbox_height')?> ? "<?=$zen->getSetting('max_textbox_height')?>px" : "auto");	
     overflow: auto;
   }
   
