@@ -18,6 +18,16 @@
   if( $TODO == 'SEARCH' ) {
     include("$templateDir/searchResults.php");
     if( is_array($tickets) ) {
+      if ( count($tickets) == 1 ) {
+        $id = $tickets[0][id];
+        $ticket = $zen->get_ticket($id);
+        if( is_array($ticket) ) {
+          $page_type = $zen->inProjectTypeIDs($ticket['type_id'])? 'project' : 'ticket';
+          $view = "{$page_type}_view";
+          include("$rootWWW/ticket.php");
+          exit;
+        }
+      }
       $view = "search_list";
       $inc = "$templateDir/listTickets.php";
     } else if( !$errs ) { 
