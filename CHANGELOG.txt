@@ -14,6 +14,9 @@ abstraction, and endless possibilities for project expansion.
 ----- VERSION 2.6.1 -----
 
 2006-02-22, cfalonso
+  Task #294: oracle 9.0 sql error? (not properly ended)
+    - zentrack_2/includes/zenTrack.class 1.212
+
   TK #306: If there is only one matching result, just show the ticket instead
            of a list of one ticket
    - zentrack_2/www/quickSearch.php 1.3
