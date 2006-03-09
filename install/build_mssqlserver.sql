@@ -201,6 +201,7 @@ CREATE TABLE ZENTRACK_PRIORITIES (
  [name] varchar(25) NOT NULL default '',
  priority NUMERIC(12) default NULL,
  active NUMERIC(12) default NULL,
+ color varchar(25) default NULL,
  PRIMARY KEY (pid)
 );
 

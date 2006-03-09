@@ -300,11 +300,11 @@ INSERT INTO ZENTRACK_LOGS (lid, ticket_id, user_id, bin_id, created, action, hou
 -- Loading data for table 'ZENTRACK_PRIORITIES'
 --
 
-INSERT INTO ZENTRACK_PRIORITIES (pid, name, priority, active) VALUES (1,'Critical',5,1);
-INSERT INTO ZENTRACK_PRIORITIES (pid, name, priority, active) VALUES (2,'High',4,1);
-INSERT INTO ZENTRACK_PRIORITIES (pid, name, priority, active) VALUES (3,'Medium',3,1);
-INSERT INTO ZENTRACK_PRIORITIES (pid, name, priority, active) VALUES (4,'Low',2,1);
-INSERT INTO ZENTRACK_PRIORITIES (pid, name, priority, active) VALUES (6,'None',1,1);
+INSERT INTO ZENTRACK_PRIORITIES (pid, name, priority, active, color) VALUES (1,'Critical',5,1,'#FF9999');
+INSERT INTO ZENTRACK_PRIORITIES (pid, name, priority, active, color) VALUES (2,'High',4,1,'#FFBBAA');
+INSERT INTO ZENTRACK_PRIORITIES (pid, name, priority, active, color) VALUES (3,'Medium',3,1,'#FFDDBB');
+INSERT INTO ZENTRACK_PRIORITIES (pid, name, priority, active, color) VALUES (4,'Low',2,1,'#FFFFCC');
+INSERT INTO ZENTRACK_PRIORITIES (pid, name, priority, active, color) VALUES (6,'None',1,1,'#FFFFFF');
 
 --
 -- Loading data for table 'ZENTRACK_SETTINGS'
@@ -382,7 +382,7 @@ INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (70,
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (71,'allow_pwd_save','off','Allows users to save passphrase in a cookie(fairly secure/not available until v2.1)');
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (72,'check_pwd_simple','on','System will refuse lazy passwords');
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (73,'level_reports','1','Level required to access and view reports');
-INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (74,'version_xx','2.6.0.4','The version of zentrack, this cannot be edited');
+INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (74,'version_xx','2.6.1','The version of zentrack, this cannot be edited');
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (75,'date_fmt_long','%A %d, %b %Y','Long date format');
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (76,'date_fmt_short','%m/%d/%Y','Short Date Format');
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (77,'date_fmt_time','%H:%M','Time Format');
@@ -1197,6 +1197,7 @@ INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (117
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (118, 'hotkeys_hint_delay', 1200, 'Delay before showing hotkey hint boxes(0 = off)');
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (119, 'hotkeys_help_delay', 8000, 'Delay before showing hotkey help window (0 = off)');
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (120, 'worked_hours_decimal', 2, 'Number of decimal places to show for hours worked/estimated');
+INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (121, 'max_textbox_height', 200, 'Max height of textbox in ticket view');
 
 INSERT INTO ZENTRACK_VIEW_MAP (view_map_id, which_view, vm_name, vm_val, vm_type, vm_order) VALUES(1, 'project_close', 'access_level', 'level_user', 'label', 0);
 INSERT INTO ZENTRACK_VIEW_MAP (view_map_id, which_view, vm_name, vm_val, vm_type, vm_order) VALUES(2, 'project_close', 'has_behaviors', '1', 'label', 0);

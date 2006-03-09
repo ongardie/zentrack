@@ -232,7 +232,8 @@ CREATE TABLE ZENTRACK_PRIORITIES (
   pid int8 default nextval('"priorities_id_seq"') NOT NULL PRIMARY KEY,
   name varchar(25) NOT NULL default '',
   priority int8 default NULL,
-  active int2 default NULL
+  active int2 default NULL,
+  color varchar(25) default NULL
 );
 
 --

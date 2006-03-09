@@ -208,6 +208,7 @@ CREATE TABLE ZENTRACK_PRIORITIES (
   name varchar(25) NOT NULL default '',
   priority int(4) default NULL,
   active int(1) default NULL,
+  color varchar(25) default NULL,
   PRIMARY KEY (pid)
 ) TYPE=MyISAM;
 

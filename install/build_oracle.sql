@@ -207,6 +207,7 @@ CREATE TABLE ZENTRACK_PRIORITIES (
   name varchar2(25) CONSTRAINT priorities_name_not_null NOT NULL,
   priority number(4) default NULL,
   active number(1) default NULL,
+  color varchar2(25) default NULL,
   CONSTRAINT priorities_pk PRIMARY KEY (pid)
 ) ;
 

@@ -14,6 +14,20 @@ abstraction, and endless possibilities for project expansion.
 ----- VERSION 2.6.1 (development) -----
 
 2006-03-09, kato
+  Prepared install/upgrade docs and scripts
+    - zentrack_2/UPGRADE.readme
+    - zentrack_2/install/seed_mssqlserver.sql
+    - zentrack_2/install/seed_mysql.sql
+    - zentrack_2/install/seed_oracle.sql
+    - zentrack_2/install/seed_postgres.sql
+    
+    > upgrade notes
+    > mention priority coloring
+    > install procedure?
+    > zip files
+    > news releases
+
+2006-03-08, kato
   313: Fixed adding users if homebin set to "All", 
   Corrected problem with cleanup util causing integers to be parsed poorly
     - zentrack_2/includes/zen.class 1.45
