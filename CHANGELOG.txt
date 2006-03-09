@@ -13,48 +13,68 @@ abstraction, and endless possibilities for project expansion.
 
 ----- VERSION 2.6.1 (development) -----
 
-2006-02-16, kato
+2006-03-09, kato
   313: Fixed adding users if homebin set to "All", 
   Corrected problem with cleanup util causing integers to be parsed poorly
-    - zentrack_2/includes/zen.class
+    - zentrack_2/includes/zen.class 1.45
+    - zentrack_2/www/admin/addUserSubmit.php 1.15
   
   Corrected broken link pointing to hot key definitions.
-    - zentrack_2/www/help/english/hotkeys.php
+    - zentrack_2/www/help/english/hotkeys.php 1.1
 
   Corrected value_column validation when creating behaviors which are not file based
   Thanks to Epimethius for this fix.
-    - zentrack_2/includes/templates/behaviorDetailForm.php
+    - zentrack_2/includes/templates/behaviorDetailForm.php 1.11
   
   Fixed static calls to Zen::ffv() method (broken by adding locale setting)
-    - zentrack_2/includes/zen.class
+    - zentrack_2/includes/zen.class 1.45
+    
+  Added color pickers to config and priority screens
+    - zentrack_2/includes/templates/configForm.php 1.17
+    - zentrack_2/www/admin/priorities.php 1.8
+    - zentrack_2/www/images/select_*.gif 1.1
+    - zentrack_2/www/images/tab_*.gif 1.1
+    - zentrack_2/www/js_color_picker_v2.js 1.1
+    - zentrack_2/www/js_color_picker_v2.php 1.1
+    - zentrack_2/www/color_functions.js 1.1
+    - zentrack_2/www/styles.php 1.37
     
   Removed deprecated file
-    - zentrack_2/includes/templates/listTickets_workFormat.php
+    - zentrack_2/includes/templates/listTickets_workFormat.php [deleted]
     
   296: added hot keys to select items from ticket list
-    - zentrack_2/includes/templates/listTickets.php
-    - zentrack_2/includes/ZenHotKeys.php
+    - zentrack_2/includes/templates/listTickets.php 1.39
+    - zentrack_2/includes/ZenHotKeys.php 1.18
     
   262: added hot keys and focus to forms
        added to all ticket actions, edit form, contacts tab, and attachments tab
-    - zentrack_2/includes/ZenHotKeys.php
-    - zentrack_2/includes/ZenFieldMap.php
-    - zentrack_2/includes/templates/form_fields.php
-    - zentrack_2/www/keyevent.js
-    - zentrack_2/www/javascript.js
-    - zentrack_2/includes/templates/newAgreementForm.php
-    - zentrack_2/includes/templates/agreement_list.php
-    - zentrack_2/includes/templates/agreementView.php
-    - zentrack_2/includes/templates/contact_personBox.php
-    - zentrack_2/includes/templates/contact_list.php
-    - zentrack_2/includes/templates/contact_box.php
+    - zentrack_2/includes/ZenHotKeys.php 1.18
+    - zentrack_2/includes/ZenFieldMap.php 1.43
+    - zentrack_2/includes/templates/form_fields.php 1.6
+    - zentrack_2/www/keyevent.js 1.10
+    - zentrack_2/www/javascript.js 1.26
+    - zentrack_2/includes/templates/newAgreementForm.php 1.11
+    - zentrack_2/includes/templates/agreement_list.php 1.4
+    - zentrack_2/includes/templates/agreementView.php 1.6
+    - zentrack_2/includes/templates/contact_personBox.php 1.5
+    - zentrack_2/includes/templates/contact_list.php 1.4
+    - zentrack_2/includes/templates/contact_box.php 1.5
+    - zentrack_2/includes/templates/contact_!19Box.php [deleted]
+    - zentrack_2/includes/templates/contact_abcBox.php [deleted]
+    - zentrack_2/includes/templates/contact_defBox.php [deleted]
+    - zentrack_2/includes/templates/contact_ghiBox.php [deleted]
+    - zentrack_2/includes/templates/contact_jklBox.php [deleted]
+    - zentrack_2/includes/templates/contact_mnoBox.php [deleted]
+    - zentrack_2/includes/templates/contact_psrsBox.php [deleted]
+    - zentrack_2/includes/templates/contact_tuvBox.php [deleted]
+    - zentrack_2/includes/templates/contact_wxyzBox.php [deleted]
     
   Added clear to the hot key hints so that when alt+tabbing away from the window
   they do not appear and stay open permanently
-    - zentrack_2/includes/keyevent.js
+    - zentrack_2/www/keyevent.js 1.10
     
   Improved log appearance
-    - zentrack_2/includes/templates/ticket_load_log.php
+    - zentrack_2/includes/templates/ticket_load_log.php 1.5
   
 2006-02-22, cfalonso
   294: oracle 9.0 sql error? (not properly ended)
