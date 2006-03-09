@@ -31,6 +31,12 @@ else {
       $parms[] = array("inextern", "=", $ie);
     }
     $tickets = $zen->get_contacts($parms,$tabel,$sort);
+    if( $overview == 'company' ) {
+      $tickets = $hotkeys->activateList($tickets, 'title', 'title', "KeyEvent.loadUrl('$rootUrl/contact.php?cid={company_id}')");
+    }
+    else {
+      $tickets = $hotkeys->activateList($tickets, 'lname', 'lname', "KeyEvent.loadUrl('$rootUrl/contact.php?pid={person_id}')");
+    }
     ?>
       <tr>
        <td class='headerCell' align="center" colspan='5'>

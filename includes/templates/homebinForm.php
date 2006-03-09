@@ -1,6 +1,6 @@
 <? if( !ZT_DEFINED ) { die("Illegal Access"); } ?>
 
-<form method="post" action="<?=$rootUrl?>/misc/homebin.php">
+<form method="post" action="<?=$rootUrl?>/misc/homebin.php" name='homebinForm'>
 
 <table width="300" cellpadding="5">
 <tr>
@@ -37,7 +37,10 @@
 </tr>
 <tr>
   <td class="bars" colspan="2">
-    <input type="submit" value="<?=tr("Update Bin")?>" class="submit">
+  <?
+    $hotkeys->activateButton("Update Bin", "pwcForm");
+    renderDivButtonFind("Update Bin");
+  ?>
   </td>
 </tr>
 </table>
@@ -45,4 +48,4 @@
 <input type="hidden" name="TODO" value="BIN">
 </form>
 
-
+<script>setFocalPoint( 'homebinForm', 'homebin' );</script>

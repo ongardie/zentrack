@@ -79,11 +79,15 @@
     include("$rootWWW/ticket.php");
     exit;
   }
+  
+  if( array_key_exists("currentMode", $_POST) ) {
+    $setmode = $_POST['currentMode'];
+  }
 
   // set up page paremeters
   $page_title = $page_type == "project"? tr("Project #?", array($id)) : tr("Ticket #?", array($id));
-  $page_section = "Ticket #$id";
-  $page_mode = $setmode? $setmode : $action;
+  $page_section = $page_title;
+  $page_mode = $setmode? $setmode : "{$page_type}_tab_1";
   $hotkeys->loadSection($view);
   $hotkeys->loadSection("action_$action");
   $GLOBALS['zt_hotkeys'] = $hotkeys;

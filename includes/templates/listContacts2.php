@@ -11,7 +11,7 @@
     <?=$zen->ffv($t["person_id"])?>
   </td>
   <td valign="middle" <?=$td_ttl?>>
-    <?=$zen->ffv($t["lname"])?>&nbsp;<?=$zen->ffv($t["fname"])?
+    <?=$t['hotkey_label']?>&nbsp;<?=$zen->ffv($t["fname"])?
       ",".$zen->ffv($t["fname"]):",".$zen->ffv($t["initials"])?>
   </td>
   <?if ($overview=="extern") { ?>

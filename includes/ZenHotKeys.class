@@ -23,6 +23,7 @@ class ZenHotKeys {
     $this->_alternate = $zen->getSetting('hotkeys_alternate_hints');
     $this->_alreadyLoaded = array();
     $this->_initSections();
+    $this->_urlMatches = array();
     $this->loadSection('globals');
   }
   
@@ -56,18 +57,18 @@ class ZenHotKeys {
     // ADMIN
     ////////////////////////
     $this->_sections['admin'] = array();
-    $this->_sections['admin']['ALT+N'] = array('New User', "KeyEvent.createLoadUrl('{rootUrl}/admin/addUser.php')", '', false);
-    $this->_sections['admin']['ALT+U'] = array('Edit Users', "KeyEvent.createLoadUrl('{rootUrl}/admin/listUsers.php')", '', false);
-    $this->_sections['admin']['ALT+E'] = array('Edit Tickets', "KeyEvent.createLoadUrl('{rootUrl}/admin/editTicket.php')", '', false);
-    $this->_sections['admin']['ALT+F'] = array('Edit Field Map', "KeyEvent.createLoadUrl('{rootUrl}/admin/fieldMap.php')", '', false);
-    $this->_sections['admin']['ALT+B'] = array('Bins', "KeyEvent.createLoadUrl('{rootUrl}/admin/bins.php')", '', false);
-    $this->_sections['admin']['ALT+R'] = array('Priorities', "KeyEvent.createLoadUrl('{rootUrl}/admin/priorities.php')", '', false);
-    $this->_sections['admin']['ALT+S'] = array('Systems', "KeyEvent.createLoadUrl('{rootUrl}/admin/systems.php')", '', false);
-    $this->_sections['admin']['ALT+A'] = array('Tasks', "KeyEvent.createLoadUrl('{rootUrl}/admin/tasks.php')", '', false);
-    $this->_sections['admin']['ALT+Y'] = array('Types', "KeyEvent.createLoadUrl('{rootUrl}/admin/types.php')", '', false);
-    $this->_sections['admin']['ALT+G'] = array('Data Groups', "KeyEvent.createLoadUrl('{rootUrl}/admin/groups.php')", '', false);
-    $this->_sections['admin']['ALT+H'] = array('Behaviors', "KeyEvent.createLoadUrl('{rootUrl}/admin/behaviors.php')", '', false);
-    $this->_sections['admin']['ALT+O'] = array('Configuration', "KeyEvent.createLoadUrl('{rootUrl}/admin/config.php')", '', false);
+    $this->_sections['admin']['ALT+SHIFT+N'] = array('New User', "KeyEvent.createLoadUrl('{rootUrl}/admin/addUser.php')", '', false);
+    $this->_sections['admin']['ALT+SHIFT+U'] = array('Edit Users', "KeyEvent.createLoadUrl('{rootUrl}/admin/listUsers.php')", '', false);
+    $this->_sections['admin']['ALT+SHIFT+E'] = array('Edit Tickets', "KeyEvent.createLoadUrl('{rootUrl}/admin/editTicket.php')", '', false);
+    $this->_sections['admin']['ALT+SHIFT+F'] = array('Edit Field Map', "KeyEvent.createLoadUrl('{rootUrl}/admin/fieldMap.php')", '', false);
+    $this->_sections['admin']['ALT+SHIFT+B'] = array('Bins', "KeyEvent.createLoadUrl('{rootUrl}/admin/bins.php')", '', false);
+    $this->_sections['admin']['ALT+SHIFT+P'] = array('Priorities', "KeyEvent.createLoadUrl('{rootUrl}/admin/priorities.php')", '', false);
+    $this->_sections['admin']['ALT+SHIFT+S'] = array('Systems', "KeyEvent.createLoadUrl('{rootUrl}/admin/systems.php')", '', false);
+    $this->_sections['admin']['ALT+SHIFT+T'] = array('Tasks', "KeyEvent.createLoadUrl('{rootUrl}/admin/tasks.php')", '', false);
+    $this->_sections['admin']['ALT+SHIFT+Y'] = array('Types', "KeyEvent.createLoadUrl('{rootUrl}/admin/types.php')", '', false);
+    $this->_sections['admin']['ALT+SHIFT+D'] = array('Data Groups', "KeyEvent.createLoadUrl('{rootUrl}/admin/groups.php')", '', false);
+    $this->_sections['admin']['ALT+SHIFT+H'] = array('Behaviors', "KeyEvent.createLoadUrl('{rootUrl}/admin/behaviors.php')", '', false);
+    $this->_sections['admin']['ALT+SHIFT+C'] = array('Configuration', "KeyEvent.createLoadUrl('{rootUrl}/admin/config.php')", '', false);
 
     ////////////////////////
     // ACTIONS
@@ -229,9 +230,9 @@ class ZenHotKeys {
     $this->_sections['agreement_form'] = array();
     $f = "window.document.forms['agreementForm']";
     $this->_sections['agreement_form']['ALT+A'] = array('Add Item', "rerouteAgreementForm('addItems')", '', false);
+    $this->_sections['agreement_form']['ALT+M'] = array('Name', "fieldFocus('agreementForm','name1')", '', false);
     $this->_sections['agreement_form']['ALT+O'] = array('Drop Items', "rerouteAgreementForm('removeItems')", '', false);
-    $this->_sections['agreement_form']['ALT+R'] = array('Create', "{$f}.submit()", '', false);
-    $this->_sections['agreement_form']['ALT+M'] = array('Agreement ID', "{$f}.elements['contractnr'].select()", '', false);
+    $this->_sections['agreement_form']['ALT+I'] = array('Agreement ID', "{$f}.elements['contractnr'].select()", '', false);
     $this->_sections['agreement_form']['ALT+E'] = array('Description', "{$f}.elements['description'].select()", '', false);
     
     ////////////////////////
@@ -282,18 +283,32 @@ class ZenHotKeys {
     $this->_sections['contacts_list'] = array();
     $tabs = array('all',"abc","def","ghi","jkl","mno","pqrs","tuv","wxyz","!19");
     foreach($tabs as $t) {
-      $c = 0;
+      $c = $t == 'all'? 1 : 0;
       $k = false;
-      while(!$k || (array_key_exists($k,$this->_keys) && $c < strlen($t))) {
-        $k = strtoupper(substr($t,$c,1));
-        if( $k == '!' ) { $k = false; }
+      $key = false;
+      $len = strlen($t);
+      while(!$key || array_key_exists($key,$this->_keys)) {
+        if( $c == $len ) {
+          $key = false;
+          break;
+        }
+        $key = "SHIFT+".strtoupper(substr($t,$c,1));
+        if( $key == 'SHIFT+!' ) { $key = false; }
         $c++;
       }
-      $this->_sections['contacts_list']["$k"] = array($t, "updateUrl('setmode','$t')", '', false);
+      if( $key && !array_key_exists($key,$this->_sections['contacts_list']) ) {
+        $this->_sections['contacts_list'][$key] = array($t, "updateUrl('setmode','$t')", '', false);
+      }
     }
     $this->_sections['contacts_list']['ALT+O'] = array("Company",  "updateUrl('overview', 'company')", '', false);
     $this->_sections['contacts_list']['ALT+E'] = array("External", "updateUrl('overview', 'external')", '', false);
     $this->_sections['contacts_list']['ALT+I'] = array("Internal", "updateUrl('overview', 'internal')", '', false);
+    
+    /////////////////////////
+    // field map form
+    /////////////////////////
+    $this->_sections['field_map_form'] = array();
+    $this->_sections['field_map_form']['ALT+D'] = array("Update", "submitForm('fieldMapForm')", 'Save changes to this view', false);
     
     ////////////////////////
     // log
@@ -386,11 +401,12 @@ class ZenHotKeys {
     $t = 'ticket';
     $j = 1;
     for($i=1; $i<=8; $i++) {
+      $key = "SHIFT+$j";
       $view = "{$t}_tab_{$i}";
       if( $map->getViewProp($view, 'visible') ) {
-        $this->_tabkeys[$view] = $j;
+        $this->_tabkeys[$view] = $key;
         $label = $map->getViewProp($view,'label');
-        $this->_sections['ticket_view']["$j"] = array($label, "KeyEvent.createLoadUrl('{rootUrl}/ticket.php?id={id}&setmode=$view')", '', false);
+        $this->_sections['ticket_view'][$key] = array($label, "KeyEvent.createLoadUrl('{rootUrl}/ticket.php?id={id}&setmode=$view')", '', false);
         $j++;
       }
     }
@@ -403,13 +419,40 @@ class ZenHotKeys {
     $t = 'project';
     $j = 1;
     for($i=1; $i<=8; $i++) {
+      $key = "SHIFT+$j";
       $view = "{$t}_tab_{$i}";
       if( $map->getViewProp($view, 'visible') ) {
-        $this->_tabkeys[$view] = $j;
+        $this->_tabkeys[$view] = $key;
         $label = $map->getViewProp($view,'label');
-        $this->_sections['project_view']["$j"] = array($label, "KeyEvent.createLoadUrl('{rootUrl}/ticket.php?id={id}&setmode=$view')", '', false);
+        $this->_sections['project_view'][$key] = array($label, "KeyEvent.createLoadUrl('{rootUrl}/ticket.php?id={id}&setmode=$view')", '', false);
         $j++;
       }
+    }
+    
+    ////////////////////////
+    // user search
+    ////////////////////////
+    $this->_sections['user_search'] = array();
+    $this->_sections['user_search']['ALT+L'] = array("List All Users", "KeyEvent.createLoadUrl('{rootUrl}/admin/listUsers.php?TODO=ALL');", 'Show all user accounts', false);
+    $this->_sections['user_search']['ALT+D'] = array("Find", "submitForm('searchUsersForm')", '', false);
+    $this->_sections['user_search']['ALT+I'] = array('User ID', "placeFocus(window.document.forms['searchUsersForm'].elements['search_params[user_id]'])", '', false);
+    $this->_sections['user_search']['ALT+M'] = array('Modify Search', "submitForm('searchModifyForm')", '', false);
+    
+    ////////////////////////
+    // user form
+    ////////////////////////
+    $this->_sections['user_form'] = array();
+    $this->_sections['user_form']['ALT+L'] = array("Last Name", "fieldFocus('userForm','lname')", '', false);
+    $this->_sections['user_form']['ALT+I'] = array("Email", "fieldFocus('userForm','email')", '', false);
+    $this->_sections['user_form']['ALT+M'] = array("Make User", "submitForm('userForm')", '', false);
+
+    /////////////////////////
+    // useful for activating list of items (see ZenHotKeys::activateList())
+    /////////////////////////
+    $this->_sections['activated_list'] = array();
+    for($i=0; $i <= 10; $i++) {
+      $j = $i==10? 0 : $i;
+      $this->_sections['activated_list']["$j"] = array("Select item from list", "", "", false);
     }
     
   }
@@ -426,7 +469,7 @@ class ZenHotKeys {
   /** Prepares hot keys for a given section of the app */
   function loadSection( $sect ) {
     $sect = strtolower($sect);
-    if( in_array($sect, $this->_alreadyLoaded) ) {
+    if( $sect != 'activated_list' && in_array($sect, $this->_alreadyLoaded) ) {
       $this->_zen->addDebug('loadSection', "$sect already loaded", 3);
       return;
     }
@@ -471,6 +514,9 @@ class ZenHotKeys {
    *  <li>{rootUrl} - replaced with the value of $rootUrl in www/header.php
    *  <li>{id} - replaced with the current ticket/project/contact/agreement id (if any)
    * </ul>
+   *
+   * The special text "KeyEvent.createLoadUrl('{root_url}/my_url_here')" can be used to access
+   * the global url forwarding mechanism and should be preferred to trying window.forward
    *
    * @param String $key a hot key such as 'ALT+SHIFT+Y'
    * @param String $label name of the hot key
@@ -551,7 +597,7 @@ class ZenHotKeys {
    */
   function tooltip( $key ) {
     $key = strtoupper($key);
-    return $this->_zen->ffv(tr($this->_keys["$key"]["description"])." ($key)");
+    return Zen::ffv(tr($this->_keys["$key"]["description"])." ($key)");
   }
   
   /**
@@ -563,7 +609,7 @@ class ZenHotKeys {
     $key = strtoupper($key);
     $x = $this->_keys["$key"];
     if( $x["description"] == $x["label"] ) { return "&nbsp;"; }
-    return $this->_zen->ffv(tr($x["description"]));
+    return Zen::ffv(tr($x["description"]));
   }
   
   /** 
@@ -577,6 +623,7 @@ class ZenHotKeys {
     $label = $override_text? tr($override_text) : tr($this->_keys["$key"]["label"]);
     $label = preg_replace('@^(Action|Field): @', '', $label);
     $label = str_replace('_', ' ', $label);
+    $label = Zen::ffv($label);
     $pos = strpos($label, $char);
     if( $pos === false ) { $pos = strpos($label, $lchar); $char = $lchar; }
     $len = strlen($label);
@@ -623,11 +670,9 @@ class ZenHotKeys {
   function renderKeys() {
     if( !count($this->_keys) ) { return; }
     foreach( $this->_keys as $k=>$v ) {
-      if( $this->_getAccessKey($k) || array_key_exists($k,$this->_keysRendered) ) { continue; }
+      if( $this->_getAccessKey($k) || array_key_exists($k,$this->_keysRendered) || !$v['fxn'] ) { continue; }
       $this->_keysRendered[$k] = 1;
-      $f = $v['fxn'];
-      if( strpos($f,'KeyEvent.createLoadUrl')===false ) { $f = Zen::fixJsVal($f); }
-      print "\tKeyEvent.register($f, '$k');\n";
+      print "\tKeyEvent.register(".Zen::fixJsVal($v['fxn']).", '$k');\n";
     }
     foreach( $this->_tabs as $t=>$k ) {
       print "\tZenTabs.singleton.register('keySub_$t');\n";
@@ -641,6 +686,7 @@ class ZenHotKeys {
   function renderAccessKeys() {
     $keys = array();
     foreach($this->_keys as $k=>$v) {
+      if( !$v['fxn'] ) { continue; }
       print $this->renderAccessKey($k);
     }
   }
@@ -707,6 +753,146 @@ class ZenHotKeys {
     return $this->_alternate? $this->_lh == 'High'? 'Low' : 'High' : "High";
   }
   
+  /**
+   * Activate a form field by examining the label for the field and assigning
+   * it a hot key from the most appropriate letter available.
+   *
+   * @param string $label the text displayed to user (i.e. label) of the field to activate (translated)
+   * @param string $form the form containing the field
+   * @param string $field the actual field name inside the html form
+   * @param string $meta_key the meta key to use in conjunction with field (defaults to ALT)
+   * @return ZenHotKeyElement or (boolean)false if no key could be activated
+   */
+  function activateField( $label, $form, $field, $meta_key = 'ALT' ) {
+    $fxn = "fieldFocus('$form', '$field')";
+    return $this->activate($label, $meta_key, $fxn);
+  }
+  
+  /**
+   * Activate a list of fields using the values given in the array.
+   *
+   * @param array $fields an associative array of (string)field_names -> (string)label
+   * @param string $form name of the form object fields will be placed in
+   * @param string $meta_key the key to use with letter, such as ALT, SHIFT, OR CTRL
+   * @return array of (string)field_name -> (ZenHotKeyElement)hot key info
+   */
+  function activateFieldList( $fields, $form, $meta_key = 'ALT' ) {
+    $vals = array();
+    foreach($fields as $f=>$l) {
+      $vals[$f] = $this->activateField($l, $form, $f, $meta_key);
+    }
+    return $vals;
+  }
+  
+  /**
+   * Activate a button by examining the label of the button and
+   * assigning it a hot key from the most appropriate letter available
+   *
+   * @param string $label the text displayed to user (i.e. label) of the field to activate (translated)
+   * @param string $form the form containing the field
+   * @param string $button the actual field name inside the html form
+   * @param string $meta_key the meta key to use in conjunction with field (defaults to ALT)
+   * @return ZenHotKeyElement or (boolean)false if no key could be activated
+   */
+  function activateButton( $label, $form, $button = false, $meta_key = 'ALT' ) {
+    if( $button ) {
+      $fxn = "buttonClick('$form', '$button')";
+    }
+    else {
+      $fxn = "submitForm('$form')";
+    }
+    return $this->activate($label, $meta_key, $fxn);
+  }
+  
+  /**
+   * Activates hot keys for up to 10 items (0-9) for use with lists of
+   * tickets/users/etc
+   *
+   * The $event entry can take substitutions from the list by using the {data_column}
+   * syntax.  For example:
+   * <pre><code>
+   *   $keyEvent = "KeyEvent.createLoadUrl('$rootUrl/ticket.php?id={id}')";
+   *   $row1 = array( "id" => 1, "title" => "my favorite ticket" );
+   *   $row2 = array( "id" => 2, "title" => "my second favorite" );
+   *   $list = $hotkeys->activateList( array($row1, $row2), $key_event, "title", "title" );
+   *
+   * //// or ///////
+   *   $keyEvent = "alert(\"You clicked on '{title}'\")";
+   *   $row1 = array( "id" => 1, "title" => "my favorite ticket" );
+   *   $row2 = array( "id" => 2, "title" => "my second favorite" );
+   *   $list = $hotkeys->activateList( array($row1, $row2), $key_event, "title", "title" );
+   * </code></pre>
+   *
+   * @param array $list the data rows to be activated
+   * @param string $label_column the column from data rows to use for the label text
+   * @param string $desc_column the column from data rows to use for description text
+   * @param string $event the event to launch when hot key is pressed (see above for details)
+   * @param boolean $do_not_parse if true, no columns will be substituted into the url
+   * @param string $type right now just 'ticket' (may add 'users', 'attachments', etc later)
+   */
+  function activateList( $list, $label_column, $desc_column, $url ) {
+    if( !$list || !count($list) ) {
+      $this->_zen->addDebug('ZenHotKeys::activateList', "Nothing to do (list was empty)",3);
+      return; 
+    }
+    for($i=0; $i < count($list); $i++) {
+      $name = $list[$i][$label_column];
+      $desc = $list[$i][$desc_column];
+      if( $i >= count($this->_sections['activated_list']) ) {
+        // no more hot keys to assign
+        $list[$i]['hotkey_key'] = null;
+        $list[$i]['hotkey_sup'] = null;
+        $list[$i]['hotkey_label'] = Zen::ffv($name);
+        $list[$i]['hotkey_tooltip'] = Zen::ffv($desc);
+        continue; 
+      }
+      $j = $i==9? 0 : $i+1;
+      $key = "$j";
+      $this->_sections['activated_list'][$key][1] = $this->_parseUrl( $list[$i], $url );
+      $list[$i]['hotkey_key'] = Zen::ffv($key);
+      $list[$i]['hotkey_sup'] = $this->addZenTab($key)."<span class='listHotkey'>[$j]</span>";
+      $list[$i]['hotkey_label'] = $list[$i]['hotkey_sup']." ".Zen::ffv($name);
+      $list[$i]['hotkey_tooltip'] = Zen::ffv($name)." ($key)";
+    }
+    $this->loadSection('activated_list');
+    return $list;
+  }
+  
+  function activate($label, $meta, $fxn) {
+    $meta = strtoupper($meta);
+    for($i=0; $i < strlen($label); $i++) {
+      $letter = strtoupper($label{$i} );
+      if( !preg_match('@[0-9A-Z]@', $letter) ) { continue; }
+      $key = $meta? $meta.'+'.$letter : $letter;
+      if( array_key_exists($key, $this->_keys) ) { continue; }
+      $this->assign($key, $label, $fxn);
+      $hk = new ZenHotKeyElement($key, $this->label($key), $this->tooltip($key), $this->description($key));
+      return $hk;
+    }
+    return new ZenHotKeyElement(false, Zen::ffv($label), Zen::ffv($label), Zen::ffv($label));
+  }
+  
+  /**
+   * Take an associative list of values and try to substitute them in for
+   * any {column_name} entries in $text
+   *
+   * @param array $vals associative array of possible substitutions
+   * @param string $text the text to perform substitutions in
+   */
+  function _parseUrl( $vals, $text ) {
+    if( array_key_exists($text, $this->_urlMatches) ) { $matches = $this->_urlMatches[$text]; }
+    else { preg_match_all("@[{]([^}]+)[}]@", $text, $matches, PREG_SET_ORDER); }
+    for($i=0; $i<count($matches); $i++) {
+      $key = $matches[$i][1];
+      if( array_key_exists($key, $vals) ) {
+        $text = preg_replace("@[{]{$key}[}]@", $vals[$key], $text);
+      }
+    }
+    return $text;
+  }
+  
+  var $_urlMatches;
+  
   var $_alternate;
   var $_lh;
   var $_fxns;
@@ -723,6 +909,28 @@ function sortHotKeyTable( $a, $b ) {
   $a['label'] = preg_replace('@^(Action|Field): @', '', $a['label']);
   $b['label'] = preg_replace('@^(Action|Field): @', '', $b['label']);
   return strnatcmp($a['label'], $b['label']);
+}
+
+class ZenHotKeyElement {
+  function ZenHotKeyElement($key, $label, $tooltip, $description) {
+    $this->_key = $key;
+    $this->_label = $label;
+    $this->_tt = $tooltip;
+    $this->_desc = $description;
+  }
+  
+  function getKey() { return $this->_key; }
+  
+  function getLabel() { return $this->_label; }
+  
+  function getTooltip() { return $this->_tt; }
+  
+  function getDescription() { return $this->_desc; }
+  
+  var $_key;
+  var $_label;
+  var $_tt;
+  var $_desc;
 }
 
 ?>

@@ -322,7 +322,7 @@ class zenTrack extends zen {
     }
     
     // if we have custom fields in the sort criteria, we must include the table
-    if( !$tf_vf ) { $tf_vf = strpos($sort, 'custom_') === 0; }
+    if( !$tf_vf ) { $tf_vf = strpos($sort, 'custom_') !== false; }
 
     //added for paging feature
     if( !strlen($pageNumber) ) {
@@ -2021,7 +2021,15 @@ class zenTrack extends zen {
     // of users who match the criteria given
     // see db.class->build_search_clause() for details about
     // constructing a $params array
-
+    for($i=0; $i<count($params); $i++) {
+      if( $params[$i][0] == 'role' ) {
+        $v = $this->checkNum($params[$i][2]);
+        $ids = $this->db_list("SELECT user_id FROM {$this->table_access} WHERE notes = '$v'");
+        if( is_array($ids) ) { $params[$i] = array('user_id', 'IN', $ids); }
+        else { unset($params[$i]); }
+        break;
+      }
+    }
     $table = $this->table_users;
     $where = $this->build_search_clause($params,$andor);
     $query = "SELECT * FROM $table WHERE $where"
@@ -2597,7 +2605,7 @@ class zenTrack extends zen {
     if( $res && $this->settingOn("log_move") ) {
       $logParams["action"] = "MOVED";
       $logParams["bin_id"] = $t["bin_id"];
-      $logParams["entry"] = "MOVED TO ".$this->bins["$newBin"];
+      $logParams["entry"] = "Moved to ".$this->bins["$newBin"];
       $logParams["ticket_id"] = $id;
       if( $user_id )
         $logParams["user_id"] = $user_id;
@@ -2968,8 +2976,8 @@ class zenTrack extends zen {
       // create the notify list for this ticket
       $notify_list = array();
 
-      // the bin owners
-      if( $this->settingOn("default_notify_owner") ) {
+      // the bin managers
+      if( $this->settingOn("default_notify_manager") ) {
         $vars = $this->fetch_bin_roles($params["bin_id"],"manager");
         if( is_array($vars) && count($vars) ) {
           foreach($vars as $v) {
@@ -5274,6 +5282,7 @@ class zenTrack extends zen {
   function getBinName($id) {
     // returns the name of a bin
     // from the given bin id
+    if( $id == -1 ) { return tr("All"); }
     $bins = $this->getBins(0,0);
     return( isset($bins["$id"])? $bins["$id"] : "" );
   }
@@ -5616,7 +5625,7 @@ class zenTrack extends zen {
       $where = ($active)? " WHERE active = $active" : "";
       $query = "SELECT * FROM ".$this->table_priorities." $where ORDER BY priority DESC, name";
       return( $this->db_queryIndexed($query) );
-    }            
+    }
   }
 
   function statusHighlight( $priority ) {

@@ -11,6 +11,7 @@ $colspan = $overview == 'extern'? 6 : 5;
 <tr><td colspan='<?=$colspan?>' class='subTitle'><?=tr("Employees")?></td></tr>
 <?
 if( is_array($contacts) ) {
+   $contacts = $hotkeys->activateList($contacts, 'lname', 'lname', "KeyEvent.loadUrl('$rootUrl/contact.php?pid={person_id}')");
    $show_list_options = true;
    include("$templateDir/listContacts2Heading.php");
    

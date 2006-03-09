@@ -14,10 +14,10 @@
   $expand_options = 1;
   if( isset($TODO) && $TODO == 'BIN' ) {
     $params = "";
-    $homebin = ereg_replace("[^0-9]-", "", $homebin);
-    if( !isset($homebin) || (!$zen->bins["$homebin"] && $homebin != "all")) {
+    if( !isset($homebin) || ($homebin != 'all' && !$zen->getBinName($homebin)) ) {
       $errs[] = tr("That bin doesn't exist");
     } else {
+      $homebin = ereg_replace("[^0-9]-", "", $homebin);
       $params = array( "homebin"=>$homebin );
       $res = $zen->update_user($login_id, $params);
       if( !$res ) {

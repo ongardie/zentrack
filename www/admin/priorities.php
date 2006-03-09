@@ -11,7 +11,6 @@
 
   $vars = array();
   if( $TODO == 'Save' ) {
-    
     if( !is_array($newName) || !count($newName) ) {
       $errs[] = tr("There was nothing provided to update");
     } else if( $zen->demo_mode == "on" ) {
@@ -47,15 +46,15 @@
         if( $newName[$i] ) {
           $n = $newName[$i];
           $updateParams = array( 
-          "name"     => $n,
-          "active"   => isset($newActive[$i])? $newActive[$i] : 0,
-          "priority" => $priVals[$n]
+            "name"     => $n,
+            "active"   => isset($newActive[$i])? $zen->checkNum($newActive[$i]) : 0,
+            "priority" => $zen->checkNum($priVals[$n]),
+            "color"    => preg_replace('@[^#0-9A-Za-z]@', '', $newColor[$i])
           );
           $res = ($newID[$i])?
-          $zen->update_priority($newID[$i], $updateParams) :
-          $zen->add_priority($updateParams);
-          if( $res )
-          $j++;
+            $zen->update_priority($zen->checkNum($newID[$i]), $updateParams) :
+            $zen->add_priority($updateParams);
+          if( $res ) { $j++; }
         }
       }
       $msg[] = tr("? priorities were saved to the database. Updates complete", array($j));
@@ -64,6 +63,8 @@
   }
 
   $page_title = ($skip)? tr("Admin Section") : tr("Update Priorities");
+  $onLoad[] = "color_functions.js";
+  $onLoad[] = "js_color_picker_v2.js";
   include("$libDir/nav.php");
   $zen->printErrors($errs);
   $type = "priority";
@@ -74,12 +75,3 @@
   include("$libDir/footer.php");
 
 }?>
-
-
-
-
-
-
-
-
-

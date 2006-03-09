@@ -7,7 +7,7 @@ $GLOBALS['zt_hotkeys'] = $hotkeys;
 $parms = array(array("ticket_id", "=", $id));
 $sort = "ticket_id asc";
 
-$tickets = $zen->get_contacts($parms,"ZENTRACK_RELATED_CONTACTS",$sort);
+$list = $zen->get_contacts($parms,"ZENTRACK_RELATED_CONTACTS",$sort);
 $editable = $zen->actionApplicable($id, 'contacts', $login_id) &&
    $zen->checkAccess($login_id, $ticket['bin_id'], 'level_contacts');
 
@@ -21,7 +21,7 @@ $colspan = $editable? 5 : 4;
    </tr>
 <?
 
-if ($tickets){
+if ($list){
 ?>
  <form name='dropContactsForm' action="<?=$rootUrl?>/actions/dropFromContacts.php" method="post">
  <input type="hidden" name="id" value="<?=$zen->checkNum($id)?>">
@@ -36,37 +36,46 @@ if ($tickets){
   <? } ?>
  </tr>
 <?  
-//print_r($tickets);
-    foreach($tickets as $n) {
-	    
-	   if ($n["type"]=="1"){
-		   $table = "ZENTRACK_COMPANY";
-		   $col = "company_id";
-		   $cpid = $n["cp_id"]; 
-		   $c1 = "cid" ;
-		   $n1 = "title";
-		   $n2 = "office";
-	   } else {
-	   	 $table = "ZENTRACK_EMPLOYEE";
-		 	 $col = "person_id";
-		   $cpid = $n["cp_id"];
-		 	 $c1 = "pid";
-		 	 $n1 = "lname";
-		   $n2 = "fname";
-		 }
-  	$u=$zen->get_contact($n["cp_id"],$table,$col);
+//print_r($contacts);
+  $contacts = array();
+  for($i=0; $i<count($list); $i++) {
+    $n = $list[$i];
+    if ($n["type"]=="1"){
+      $table = "ZENTRACK_COMPANY";
+      $col = "company_id";
+      $cpid = $n["cp_id"]; 
+      $c1 = "cid" ;
+      $n1 = "title";
+      $n2 = "office";
+    } else {
+      $table = "ZENTRACK_EMPLOYEE";
+      $col = "person_id";
+      $cpid = $n["cp_id"];
+      $c1 = "pid";
+      $n1 = "lname";
+      $n2 = "fname";
+    }
+    $u = $zen->get_contact($n["cp_id"],$table,$col);
+    $u['clist_id'] = $n['clist_id'];
+    $u['label'] = $u[$n1].", ".$u[$n2];
+    $contacts[] = $u;
+  }
+  
+  $contacts = $hotkeys->activateList($contacts, 'label', 'label', "checkMyRow(\"drops_{clist_id}\", false)");
+    
+  foreach($contacts as $n) {
     $cpid = $zen->checkNum($cpid);
     $tc = "onclick='checkMyBox(\"drops_".$zen->ffv($n['clist_id'])."\", event)' ";
     $img = "<div style='float:right'><a href='$rootUrl/contact.php?$c1=$cpid'>";
     $img .= "<img src='$imageUrl/24x24/magnify.png' border='0' width='24' height='24'></a></div>";
 ?>	
-    <tr class='bars' <?=$row_rollover_eff?>>
+    <tr class='bars' <?=$row_rollover_eff?> title='<?=$n['hotkey_tooltip']?>'>
     <td <?=$tc?>><?=$zen->ffv($cpid)?></td>
-    <td <?=$tc?>><?= $img." ".$zen->ffv(ucfirst($u[$n1]))." ".$zen->ffv($u[$n2]) ?></td>
-    <td <?=$tc?>><?= $u['telephone']? $zen->ffv($u["telephone"]) : '&nbsp;' ?></td>
+    <td <?=$tc?>><?= "$img {$n['hotkey_label']}" ?></td>
+    <td <?=$tc?>><?= $n['telephone']? $zen->ffv($n["telephone"]) : '&nbsp;' ?></td>
     <td <?=$tc?>><?
-      if( $u['email'] ) {
-      ?><A id='link_<?=$cpid?>' HREF="mailto:<?=$zen->ffv($u['email'])?>"><?=$zen->ffv($u["email"])?></A>
+      if( $n['email'] ) {
+      ?><A id='link_<?=$cpid?>' HREF="mailto:<?=$zen->ffv($n['email'])?>"><?=$zen->ffv($n["email"])?></A>
       <? } else { ?>&nbsp;<? } ?></td>
     <? if( $editable ) { ?>
     <td <?=$tc?>><input 
@@ -75,7 +84,7 @@ if ($tickets){
     </tr>
     <? } ?>
 <?
-    }
+  }
 ?>
 <tr>
 <td class='subTitle' colspan='<?=$colspan?>'>

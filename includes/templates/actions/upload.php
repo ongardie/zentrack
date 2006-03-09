@@ -16,7 +16,7 @@
 </tr>
 <tr>
  <td class="bars">
-   <?=$hotkeys->ll("Select a File to Upload")?>
+   <?=$hotkeys->ll("Select a File to Upload")?> <span class='note'>(<?=tr("Max file size is set to ?", ($zen->getSetting('attachment_max_size')/1000)."K")?>)</span>
  </td>
 </tr>
 <tr>

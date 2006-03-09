@@ -71,8 +71,7 @@
   /////////////////////////
   
   // if there have been updates by the user, we will apply those to the session
-  if( $_GET['ticketFilterForm'] == 1 ) {
-    
+  if( $_GET['ticketFiltered'] == 1 ) {
     // get field map which describes the filter values
     $filtercols = $map->getFieldMap($filterview);
     $dt = '';

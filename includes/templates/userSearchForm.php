@@ -1,4 +1,6 @@
-<? if( !ZT_DEFINED ) { die("Illegal Access"); } ?>
+<? if( !ZT_DEFINED ) { die("Illegal Access"); } 
+  $hotkeys->loadSection('user_search');
+?>
 
 <table width="640" align="left" cellpadding="2" cellspacing="2" bgcolor="<?=$zen->getSetting("color_background")?>">
 <tr>
@@ -18,12 +20,12 @@
 
 <tr>
   <td class="bars" colspan="2">
-   <input type="submit" class="submit" value="<?=tr("List All Users")?>">
+   <? renderDivButtonFind("List All Users"); ?>
   </td>
 </tr>
 
 </form>
-<form action="<?=$SCRIPT_NAME?>">
+<form action="<?=$SCRIPT_NAME?>" name='searchUsersForm'>
 <input type="hidden" name="TODO" value="SEARCH">
 
 <tr>
@@ -46,24 +48,26 @@
   </td>
   <td class="bars">
   <?
-   $sfl = ((is_array($search_fields) && in_array("lname",$search_fields)) 
-	     || 
-           !is_array($search_fields));
-   $sff = (is_array($search_fields) && in_array("fname",$search_fields));
-   $sfn = (is_array($search_fields) && in_array("notes",$search_fields));
-   $sfi = (is_array($search_fields) && in_array("initials",$search_fields));
+   $sfl = (is_array($search_fields) && in_array("lname",$search_fields)) || !is_array($search_fields);
+   $sff = (is_array($search_fields) && in_array("fname",$search_fields)) || !is_array($search_fields);
+   $sfe = (is_array($search_fields) && in_array("email",$search_fields)) || !is_array($search_fields);
+   $sfi = is_array($search_fields) && in_array("initials",$search_fields);
+   $sfn = (is_array($search_fields) && in_array("notes",$search_fields)) || !is_array($search_fields);
   ?>
-  <input type="checkbox" name="search_fields[lname]" value="lname"<?=($sfl)?" checked":""?>>
-   &nbsp;<?=tr("Last Name")?>
+  <input id="field_lname" type="checkbox" name="search_fields[lname]" value="lname"<?=($sfl)?" checked":""?>>
+   &nbsp;<label for='field_lname'><?=tr("Last Name")?></label>
   <br>
-  <input type="checkbox" name="search_fields[fname]" value="fname"<?=($sff)?" checked":""?>>
-   &nbsp;<?=tr("First Name")?>
+  <input id="field_fname" type="checkbox" name="search_fields[fname]" value="fname"<?=($sff)?" checked":""?>>
+   &nbsp;<label for='field_fname'><?=tr("First Name")?></label>
   <br>
-  <input type="checkbox" name="search_fields[initials]" value="initials"<?=($sfi)?" checked":""?>>
-   &nbsp;<?=tr("Initials")?>
+  <input id="field_email" type="checkbox" name="search_fields[email]" value="email"<?=($sfe)?" checked":""?>>
+   &nbsp;<label for='field_email'><?=tr("Email")?></label>
   <br>
-  <input type="checkbox" name="search_fields[notes]" value="notes"<?=($sfn)?" checked":""?>>
-   &nbsp;<?=("Role")?>
+  <input id="field_notes" type="checkbox" name="search_fields[notes]" value="notes"<?=($sfn)?" checked":""?>>
+   &nbsp;<label for='field_notes'><?=tr("Notes")?></label>
+  <br>
+  <input id="field_initials" type="checkbox" name="search_fields[initials]" value="initials"<?=($sfi)?" checked":""?>>
+   &nbsp;<label for='field_initials'><?=tr("Initials")?></label>
   </td>
 </tr>
 
@@ -75,7 +79,7 @@
 
 <tr>
   <td class="bars">
-    <?=tr("user ID")?>
+    <?=$hotkeys->ll("User ID")?>
   </td>
   <td class="bars">
     <input type="text" name="search_params[user_id]" value="<?=strip_tags($search_params["user_id"])?>" size="12" maxlength="12">
@@ -108,6 +112,20 @@
 </tr>
 <tr>
   <td class="bars">
+    <?=tr("Role")?>
+  </td>
+  <td class="bars">
+    <select name="search_params[role]">
+       <option value="">----</option>
+       <option value="1" <?=($search_params["role"] == 1)?"selected":""?>><?=tr("Manager")?></option>
+       <option value="2" <?=
+	 (strlen($search_params["role"]) && $search_params["role"] == 2)?"selected":"";
+	 ?>><?=tr("Tester")?></option>
+    </select>
+  </td>
+</tr>
+<tr>
+  <td class="bars">
     <?=tr("Status")?>
   </td>
   <td class="bars">
@@ -126,9 +144,9 @@
   </td>
   <td class="bars">
     <select name="search_access_method">
-      <option value="gt"<?=($search_access_method=="gt")?" selected":""?>"><?=tr("Greater Than")?></option>
-      <option value="lt"<?=($search_access_method=="lt")?" selected":""?>"><?=tr("Less Than")?></option>
-      <option value="eq"<?=($search_access_method=="eq")?" selected":""?>"><?=tr("Equals")?></option>
+      <option value="gt"<?=($search_access_method=="gt")?" selected":""?>><?=tr("Greater Than")?></option>
+      <option value="lt"<?=($search_access_method=="lt")?" selected":""?>><?=tr("Less Than")?></option>
+      <option value="eq"<?=($search_access_method=="eq")?" selected":""?>><?=tr("Equals")?></option>
     </select>&nbsp;
     <input type="text" name="search_params[access_level]" 
 	value="<?=strip_tags($search_params["access_level"])?>"
@@ -137,16 +155,17 @@
 </tr>
 <tr>
   <td colspan="2" class="subTitle">
-    <?=tr("Click 'Search' to execute the search")?>
+    <?=tr("Click 'Find' to execute the search")?>
   </td>
 </tr>
 <tr>
   <td class="bars" colspan="2">
-     <input type="submit" class="submit" value="<?=tr("Search")?>">
+     <? renderDivButtonFind("Find"); ?>
   </td>
 </tr>
 
 </table>
   
 </form>
+<script> setFocalPoint('searchUsersForm', 'search_text'); </script>
 

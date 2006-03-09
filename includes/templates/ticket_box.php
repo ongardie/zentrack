@@ -1,4 +1,8 @@
-<? if( !ZT_DEFINED ) { die("Illegal Access"); }
+<? if( !ZT_DEFINED ) { die("Illegal Access"); } ?>
+
+<!-- \\\\\\\\\\\\\\\\\ TICKET BOX (<?=Zen::ffv($boxview)?>) \\\\\\\\\\\\\\\\\\\\ -->
+
+<?
   $zen->addDebug('ticket_box.php', "Rendering ".$boxview, 3);
 
  /**
@@ -24,8 +28,10 @@
   //////////////////////////////////////////////////
   $pre = $map->getViewProp($boxview,'preload');
   if( $pre ) {
-    foreach($pre as $l) { 
+    foreach($pre as $l) {
+      print "\n\n<!-- \\\\\\\\\\\\\\\\\ ticket_load_$l \\\\\\\\\\\\\\\\\\\\ -->\n\n";
       include("$templateDir/ticket_load_$l.php");
+      print "\n\n<!-- ///////////////// ticket_load_$l //////////////////// -->\n\n";
     }
   }
 
@@ -45,9 +51,13 @@
   $post = $map->getViewProp($boxview,'postload');
   if( $post ) {
     foreach($post as $l) {
-      include("$templateDir/ticket_load_$l.php"); 
+      print "\n\n<!-- \\\\\\\\\\\\\\\\\ ticket_load_$l \\\\\\\\\\\\\\\\\\\\ -->\n\n";
+      include("$templateDir/ticket_load_$l.php");
+      print "\n\n<!-- ///////////////// ticket_load_$l //////////////////// -->\n\n";
     }
   }
   
   $zen->addDebug('ticket_box.php', "Completed ".$boxview, 3);
 ?>
+
+<!-- ///////////////// TICKET BOX (<?=Zen::ffv($boxview)?>) //////////////////// -->

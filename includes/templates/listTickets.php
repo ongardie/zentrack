@@ -16,6 +16,7 @@ if( !$page_type )
   $page_type = "ticket";
 
 if( $view == 'contact_list' || $view == 'assigned_list' ) { $fields = $map->getFieldMap('ticket_list'); }
+else if( $view == 'related_list' ) { $fields = $map->getFieldMap("{$page_type}_list"); }
 else { $fields = $map->getFieldMap($view); }
 if( $view == 'search_list' ) {
   $atc = $total_search_results;
@@ -40,8 +41,10 @@ if( $view == 'ticket_list' || $view == 'project_list' ) {
   include("$templateDir/listFiltersForm.php");
 }
 
+$orig_view = $view;
 if( $view == 'contact_list' ) { $view = 'ticket_list'; }  //temporary fix
 if( $view == 'assigned_list' ) { $view = 'ticket_list'; } //temporary fix
+if( $view == 'related_list' ) { $view = "{$page_type}_list"; } //temporary fix
 
 if( $ticket && !$atc ) {
   if( isset($ticket['total_children']) ) {
@@ -58,7 +61,7 @@ $est_col = 0;
 $wkd_col = 0;
 
 if( is_array($tickets) && count($tickets) ) {
-  $c = count($tickets);
+  $ticket_count = count($tickets);
   foreach($fields as $f=>$field) {
     if ( $field['is_visible'] ) {
       $cols++;
@@ -89,7 +92,7 @@ if( is_array($tickets) && count($tickets) ) {
   ***/
   if ( $atc > 0 ) {
     $t_from = $pageNumber*$numtoshow+1;
-    $t_to = $t_from + $c -1;
+    $t_to = $t_from + $ticket_count -1;
   } else {
     $t_from = 0;
     $t_to = 0;
@@ -118,22 +121,28 @@ function resortListPage( sortName ) {
 <table width="100%" class='formTable' cellspacing='1' cellpadding='2'>
 <?
 $atc_text = $atc > 1? tr("Tickets ?-? of ?",array($t_from,$t_to,$atc)) : "";  
-if( $view == 'search_list' ) {
-  print "<tr><td colspan='$cols' class='subTitle' align='center'>".tr("Search Results");
+print "<tr><td colspan='$cols' class='subTitle' align='center'>";
+if( $orig_view == 'search_list' ) {
+  print tr("Search Results");
   if( $atc_text ) { print " ($atc_text)"; }
-  print "</td></tr>";
 }
-else if( $view == 'project_tasks' ) {
-  print "<tr><td colspan='$cols' class='subTitle' align='center'>".tr("Tasks for this project")
-    .($atc_text? " ($atc_text)":"")."</td></tr>";
+else if( $orig_view == 'project_tasks' ) {
+  print tr("Tasks for this project").($atc_text? " ($atc_text)":"");
+}
+else if( $orig_view == 'assigned_list' ) { 
+  print $page_type == 'project'? tr("Assigned Projects") : tr("Assigned Tickets");
+}
+else if( $orig_view == 'related_list' ) {
+  print $page_type == "project"? tr("Related Projects") : tr("Related Tickets");
 }
 else if ($atc_text) {
-  print "<tr><td class='subTitle' colspan='$cols' align='center'>$atc_text</td></tr>\n";
+  print $atc_text;
 }
 else {
-  print "<tr><td class='subTitle' colspan='$cols' align='center'>".tr("Ticket List")
-      .($atc_text? " ($atc_text)":"")."</td></tr>\n";
+  print tr("Ticket List");
+  if( $atc_text ) { print " ($atc_text)"; }
 }
+print "</td></tr>";
 ?>
    <tr>
 <?
@@ -205,7 +214,7 @@ else {
     }
   }
 
-   $td_ttl = "title='".tr("Click here to view the ?", array(tr(ucfirst($page_type))))."'";
+   $tickets = $hotkeys->activateList($tickets,'title','title',"KeyEvent.loadUrl('$rootUrl/ticket.php?id={id}')");
    $ttl_est = 0;
    $ttl_wkd = 0;
    $ttl_ext = "";
@@ -257,7 +266,7 @@ else {
         // skip hidden fields
         if( !$field['is_visible'] ) { continue; }
         $align = preg_match($right_aligned, $f)? 'align="right"' : '';
-        print "<td height='25' valign='middle' $align $td_ttl>";
+        print "<td height='25' valign='middle' $align title=\"{$t['hotkey_tooltip']}\">";
         print "<a class='rowLink' href='$link?id={$t['id']}'>";
         if( $f == 'user_id' || $f == 'creator_id' ) {
           $uid = $t["$f"];
@@ -269,7 +278,8 @@ else {
         }
         else {
           $value = strpos($f, 'custom_')===0? $custom_fields[$t["id"]][$f] : $t[$f];
-          $val = $map->getTextValue($view, $f, $value);
+          if( $f == 'title' ) { $val = $t['hotkey_label']; }
+          else { $val = $map->getTextValue($view, $f, $value); }
           if( $view == 'search_list' && is_array($search_fields) && array_key_exists($f, $search_fields) ) {
             $val = $zen->highlight( $val, $search_text );
           }

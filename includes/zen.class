@@ -130,25 +130,35 @@ class zen extends zenDate {
    }
    
    function ffvText( $val = '', $strlen = 0 ) {
-     $val = $this->ffv($val, $strlen);
+     $val = Zen::ffv($val, $strlen);
      $val = nl2br($val);
      return $val;
    }
 
    function ffv( $val = '', $strlen = 0 ) {
+     // we create a reference to the character_set setting for
+     // use with htmlspecialchars
+     static $charset;
+     if( !isset($charset) || !$charset ) {
+       // this roundabout approach is used because ffv() needs to be available
+       // in a static context (no $this) and it is possible to call ffv()
+       // before $zen has been made available (although it should not happen this way)
+       global $zen;
+       if( $zen ) { $charset = $zen->getSetting('character_set'); }
+     }
      // converts special characters to ascii codes
      // to be used in <input> fields
      if( is_array($val) ) {
        $vars = array();
        foreach($val as $k=>$v) {
-         $vars[$k] = $this->ffv($v);
+         $vars[$k] = Zen::ffv($v);
        }
        return $vars;
      }
      if( strlen($val) ) {
        if( $strlen && strlen($val) > $strlen ) { $val = substr($val,0,$strlen); }
        if( $val ) {
-         $val = htmlspecialchars($val,ENT_QUOTES,$this->settings["character_set"]);
+         $val = $charset? htmlspecialchars($val,ENT_QUOTES,$charset) : htmlspecialchars($val,ENT_QUOTES);
          $val = str_replace('\\', '&#92;', $val);
          // $val = str_replace('&amp;', '&', $val);
        }
@@ -294,6 +304,7 @@ class zen extends zenDate {
      **          and post tags to use for highlighting
      */
      
+     $text = $this->ffv($text);
      if( !$match ) { return $text; }
 
      if( !is_array($h) )
@@ -364,20 +375,20 @@ class zen extends zenDate {
          } else if( !strlen($v) ) {
            $vals["$k"] = null;
          } else {
-           $vals["$k"] = Zen::cleanValue($f, $v);
-         }       
+           $vals["$k"] = $this->cleanValue($f, $v);
+         }
        }
        return $vals;
      } else {
        foreach( $fields as $k=>$v ) {
-         $GLOBALS["$k"] = Zen::cleanValue($v, $GLOBALS["$k"]);
+         $GLOBALS[$k] = $this->cleanValue($v, $GLOBALS[$k]);
        }
      }
    }
    
    function cleanValue( $type, $v ) {
      $v = Zen::dropSlashes($v);
-     switch( strtolower($v) ) {
+     switch( strtolower($type) ) {
        case "alpha":
          $v = $this->checkAlpha($v);
          break;
@@ -581,7 +592,6 @@ class zen extends zenDate {
    
    function print_errors( $errs = '' ) {
       // alias to printErrors()
-      
       return($this->printErrors($errs));
    }
    

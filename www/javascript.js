@@ -1,7 +1,8 @@
-<!--
 
 function placeFocus(newFocalPoint) {
-	newFocalPoint.focus();
+  if( isFormField(newFocalPoint) && !isEditableField(newFocalPoint) ) { return; }
+  if( newFocalPoint.select ) { newFocalPoint.select(); }
+  else if( newFocalPoint.focus ) { newFocalPoint.focus(); }
 }
 
 function eLink(address, domain) {
@@ -12,6 +13,7 @@ function eLink(address, domain) {
 //
 //window functions
 //
+var controlWindow;
 
 function popupWindow(loadpos, theName, theWidth, theHieght ) {
 	controlWindow=window.open(loadpos,theName,"toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=yes,width="+theWidth+",height="+theHieght);
@@ -93,7 +95,7 @@ function confirmSubmit(formObject, msg) {
   }
 }
 
-function ticketClk( url, evt ) {
+function ticketClk( url, evt, popup ) {
   var src = getEventSrc(evt);
   // don't override links
   // be careful of IE images... they report an href stupidly
@@ -104,7 +106,11 @@ function ticketClk( url, evt ) {
   // let user check boxes
   if( src && src.type == 'checkbox' ) { return true; }
   // nothing wrong, so go for it
-  window.location = url;
+  if( popup ) { 
+    popupWindowScrolls(url, url, 500, 500 );
+    KeyEvent.closeOnEscape(controlWindow);
+  }
+  else { window.location = url; }
   return false;
 }
 
@@ -126,26 +132,18 @@ function mClassX( obj, classname, hand ) {
   obj.className = classname;
 }
 
+function setClassX( obj, classname ) {
+  obj.oldStyle = classname;
+  if( obj.setAttribute ) {
+    obj.setAttribute('class',classname);
+  }
+  obj.className = classname;
+}
+
 function makeTimeString() {
   var date = new Date();
   return date.getHours()+":"+date.getMinutes()+":"+date.getSeconds()+"-"+date.getMilliseconds();
 }
-
-/*
-function mergeFunctions(fxn1, fxn2) {
-  if( fxn1 ) {
-    return function() {
-      var fx = fxn1;
-      var fy = fxn2;
-      fx();
-      fy();
-    }
-  }
-  else {
-    return fxn2;
-  }
-}
-*/
 
 function getEventSrc( evt ) {
   if( !evt || (!evt.srcElement && !evt.target) ) { evt = window.event; }
@@ -164,9 +162,20 @@ function checkMyBox(fieldName, event) {
         // checking on hrefs is altogether bad
         elem.checked = elem.checked? false : true;
       }
-      if( elem.parentNode ) { 
-        elem.parentNode.parentNode.oldStyle = elem.checked? 'invalidBars' : 'bars'; 
-      }    
+      return elem.checked;
+    }
+  }
+}
+
+function checkMyRow(fieldName, event, checkedStyle, uncheckedStyle) {
+  if( !checkedStyle ) { checkedStyle = 'invalidBars'; }
+  if( !uncheckedStyle ) { uncheckedStyle = 'bars'; }
+  var elem = window.document.getElementById(fieldName);
+  if( elem ) {
+    var c = checkMyBox(fieldName, event);
+    var p = elem.parentNode? elem.parentNode.parentNode : false;
+    if( p && p.nodeName == "TR" ) {
+      setClassX(p, c? checkedStyle : uncheckedStyle);
     }
   }
 }
@@ -285,6 +294,11 @@ function updateUrl(k, v) {
   window.location = appendUrl(k,v);
 }
 
+function submitForm( formNode ) {
+  if( typeof(formNode) == "string" ) { formNode = window.document.forms[formNode]; }
+  formNode.submit();
+}
+
 function submitThisForm( obj ) {
   var formNode = obj.parentNode;
   while(formNode && !formNode.submit && formNode.nodeName != "DOCUMENT") {
@@ -299,4 +313,53 @@ function submitThisForm( obj ) {
 
 function doNothing() { return false; }
 
-//-->
+function isEditableField( e ) {
+  if( !e || !e.type ) { return false; }
+  if( e.disabled ) { return false; }
+  switch( e.type ) {
+    case "checkbox":
+    case "text":
+    case "textarea":
+    case "file":
+    case "select":
+    case "select-one":
+    case "select-multiple":
+    case "radio":
+    case "password":
+      return true;
+  }  
+  return false;
+}
+
+function isFormField( e ) {
+  if( !e || !e.type ) { return false; }
+  switch( e.type ) {
+    case "checkbox":
+    case "text":
+    case "textarea":
+    case "file":
+    case "select":
+    case "select-one":
+    case "select-multiple":
+    case "radio":
+    case "button":
+    case "submit":
+    case "hidden":
+    case "password":
+    case "reset":
+      return true;
+  }  
+  return false;
+}
+
+function fieldFocus(form, field) {
+  var f = window.document.forms[form].elements[field];
+  placeFocus(f);
+}
+
+function buttonClick(form, button) {
+  var f = window.document.forms[form].elements[button];
+  if( !f || f.disabled ) { return; }
+  if( !f.click ) { return; }
+  f.click();
+}

@@ -6,9 +6,10 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
   $td = ($TODO == 'EDIT');
   $blurb = ($td)? "Modify Behavior" : "Create New Behavior";
   $button = ($td)? "Save Changes" : "Create Behavior";
+  $hotkeys->activateButton($button, 'behaviorForm');
   $url = ($td)? "edit" : "add";
 ?>
-<form method="post" action="<?=$rootUrl?>/admin/<?=$url?>BehaviorSubmit.php">
+<form method="post" action="<?=$rootUrl?>/admin/<?=$url?>BehaviorSubmit.php" name="behaviorForm">
 <? if( $td ) { print "<input type='hidden' name='behavior_id' value='".strip_tags($behavior_id)."'>\n"; } ?>
   
 <table width="640" align="left" cellpadding="2" cellspacing="2" bgcolor="<?=$zen->getSetting("color_background")?>">
@@ -123,9 +124,10 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
 </tr>  
 <tr>
   <td colspan="2" class="bars">
-   <input type="submit" value="<?=$button?>" class="submit">
+   <? renderDivButtonFind($button); ?>
   </td>
 </tr>
 </table>
 
 </form>
+<script>setFocalPoint('behaviorForm', 'NewBehaviorName');</script>

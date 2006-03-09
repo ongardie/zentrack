@@ -63,29 +63,17 @@ function priority_color($priority) {
    return ($colour);
 }
 
-$lowp = 99999;
-$hip = -1;
-
-$lc = $zen->getSetting("color_priority_low");
-$mc = $zen->getSetting("color_priority_med");
-$hc = $zen->getSetting("color_priority_hi");
-$mp = $zen->getSetting("priority_medium");
-
 $pri_list = $zen->getPriorities(1);
 foreach ($pri_list as $v) {
    if ($v["priority"] < $lowp) $lowp = $v["priority"];
    if ($v["priority"] > $hip) $hip = $v["priority"];
 }
       
-$num = $hip - $lowp;
-
-unset ($previous);
-
 foreach (array_reverse($pri_list) as $v) {
    print "  ";
 //   if ($previous) print ".priority{$previous}Over, ";
 //   $previous = $v["pid"];
-   $col = priority_color($v["priority"]);
+   $col = $v['color']? $v['color'] : $zen->getSetting('color_bars');
    print ".priority{$v['pid']} {\n";
    print "\tBackground:     $col;\n";
    if ($v["priority"] == $hip) {

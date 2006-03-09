@@ -12,8 +12,8 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
          print tr("Please refer to the ? before using this feature", array($str));
        ?></p>      
       <ul>
-      <form name='groupForm' action='<?=$elnk?>' method='post'>
-      <input type='hidden' name='TODO' value=''>
+      <form name='groupForm' action='<?=$elnk?>'>
+      <input type='hidden' name='TODO' value='NEW'>
       <table cellpadding="4" cellspacing="1" class='cell'>
 	 <tr>
 	 <td class='titleCell' align='center' colspan='7'>
@@ -108,21 +108,13 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
 </tr>
       <tr>
          <td class='cell' colspan='3'>
-         <input type='submit' class='submit' value='<?=tr('New')?>' onClick="return setTodo('NEW')">
-         &nbsp;
-         <input type='submit' class='submit' value='<?=tr('Done')?>' onClick="return setTodo('DONE')">
+         <?
+           $hotkeys->activateButton("New", "groupForm");
+           renderDivButtonFind("New");
+         ?>
          </td>
       </tr>
       </table>
       </ul>
 
       </form>
-
-
-      <script language='javascript'>
-          function setTodo( val ) {
-           document.groupForm.TODO.value = val;
-         }
-      </script>
-                                                                                                                             
-

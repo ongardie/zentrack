@@ -1,6 +1,8 @@
 <?
 if( !ZT_DEFINED ) { die("Illegal Access"); }
 
+$hotkeys->loadSection('user_form');
+
   // generate some text to display based on whether this
   // is an edit page or an add page
   $td = ($TODO == 'EDIT');
@@ -8,8 +10,8 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
   $button = ($td)? "Save Changes" : "Create Account";
   $url = ($td)? "edit" : "add";
 ?>
-<form method="post" action="<?=$rootUrl?>/admin/<?=$url?>UserSubmit.php">
-<? if( $td ) { print "<input type='hidden' name='user_id' value='".strip_tags($user_id)."'>\n"; } ?>
+<form method="post" action="<?=$rootUrl?>/admin/<?=$url?>UserSubmit.php" name="userForm">
+<? if( $td ) { print "<input type='hidden' name='user_id' value='".$zen->ffv($user_id)."'>\n"; } ?>
   
 <table width="640" align="left" cellpadding="2" cellspacing="2" bgcolor="<?=$zen->getSetting("color_background")?>">
 <tr>
@@ -19,15 +21,15 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
 </tr>
 <tr>
   <td colspan="2" class="subTitle">
-    <?=tr("User Information")?> (<?=tr("* = required")?>)
+    <?=tr("User Information")?> (<?=tr("? = required", '<span class="error bigBold">*</span>')?>)
   </td>
 </tr>  
 <tr>
   <td class="bars">
-    <?=tr("Last Name")?>*
+    <?=$hotkeys->ll("Last Name")?><span class="error bigBold">*</span>
   </td>
   <td class="bars">
-    <input type="text" name="lname" value="<?=strip_tags($lname)?>" size="40" maxlength="50">
+    <input type="text" name="lname" value="<?=$zen->ffv($lname)?>" size="40" maxlength="50">
   </td>
 </tr>
 <tr>
@@ -35,24 +37,24 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
     <?=tr("First Name")?>
   </td>
   <td class="bars">
-    <input type="text" name="fname" value="<?=strip_tags($fname)?>" size="40" maxlength="50">
+    <input type="text" name="fname" value="<?=$zen->ffv($fname)?>" size="40" maxlength="50">
   </td>
 </tr>
 <tr>
   <td class="bars">
-    <?=tr("Initials")?>*
+    <?=tr("Initials")?><span class="error bigBold">*</span>
   </td>
   <td class="bars">
-    <input type="text" name="initials" value="<?=strip_tags($initials)?>" size=5 maxlength="5">
+    <input type="text" name="initials" value="<?=$zen->ffv($initials)?>" size=5 maxlength="5">
     <br><span class="small">(Letter and numbers only)</span>
   </td>
 </tr>
 <tr>
   <td class="bars">
-    <?=tr("Email")?>
+    <?=$hotkeys->ll("Email")?>
   </td>
   <td class="bars">
-    <input type="text" name="email" value="<?=strip_tags($email)?>" size="40" maxlength="100">
+    <input type="text" name="email" value="<?=$zen->ffv($email)?>" size="40" maxlength="100">
   </td>
 </tr>
 <tr>
@@ -62,10 +64,10 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
 </tr>
 <tr>
   <td class="bars">
-    <?=tr("Login Name")?>*
+    <?=tr("Login Name")?><span class="error bigBold">*</span>
   </td>
   <td class="bars">
-    <input type="text" name="login" value="<?=strip_tags($login)?>" size="20" maxlength="25">
+    <input type="text" name="login" value="<?=$zen->ffv($login)?>" size="20" maxlength="25">
   </td>
 </tr>
 <tr>
@@ -73,7 +75,7 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
     <?=tr("Default Access Level")?>
   </td>
   <td class="bars">
-    <input type="text" name="access_level" value="<?=($access_level)? strip_tags($access_level) : 0?>" 
+    <input type="text" name="access_level" value="<?=($access_level)? $zen->ffv($access_level) : 0?>" 
            size="3" maxlength="2">
     <br><span class="small">
       (<?=tr("This grants the user the specified level of access to all bins not otherwise indicated by 'user access'.")?>  <?=tr("Use zero if unsure.")?>)
@@ -85,7 +87,7 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
     <?=tr("Notes")?>
   </td>
   <td class="bars">
-    <input type="text" name="notes" value="<?=strip_tags($notes)?>" size="50" maxlength="255">
+    <input type="text" name="notes" value="<?=$zen->ffv($notes)?>" size="50" maxlength="255">
   </td>
 </tr>
 <tr>
@@ -95,13 +97,11 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
   <td class="bars">
     <select name="homebin">
       <?
-       if( is_array($zen->bins) ) {
-         print "<option $check value='all'>-All-</option>\n";
-         foreach($zen->getBins(1) as $v) {
-           $k = $v["bid"];
-           print ($k == $homebin)? 
-             "<option selected value='$k'>$v[name]</option>\n" : "<option value='$k'>$v[name]</option>\n";
-         }
+       print "<option $check value='all'>-All-</option>\n";
+       foreach($zen->getBins() as $k=>$v) {
+         $v = $zen->ffv($v);
+         print ($k == $homebin)? 
+           "<option selected value='$k'>$v</option>\n" : "<option value='$k'>$v</option>\n";
        }
       ?>
     </select>
@@ -124,9 +124,10 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
 </tr>  
 <tr>
   <td colspan="2" class="bars">
-   <input type="submit" value="<?=$button?>" class="submit">
+   <? renderDivButtonFind("Make User"); ?>
   </td>
 </tr>
 </table>
 
 </form>
+<script>setFocalPoint('userForm', 'lname');</script>

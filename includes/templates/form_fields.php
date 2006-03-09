@@ -62,8 +62,16 @@
       print "</td></tr>\n";
     }
     else {
+      $maplabel = $map->getLabel($formview, $f);
+      if( $map->isReadOnlyField($formview, $f, $context) ) {
+        $hk = false;
+      }
+      else {
+        $hk = $hotkeys->activateField($maplabel, $form_name, $f);
+      }
       print "<tr><td class='bars'>";
-      print $map->getLabel($formview, $f);
+      print $hk? $hk->getLabel() : $maplabel;
+      if( $map->getFieldProp($formview, $f, 'is_required') ) { print "<span class='error bigBold'>*</span>"; }
       print "</td><td class='bars'>";
       if( $td && $page_type == 'project' && $f == 'type_id' ) {
         // do not allow type to be edited for projects

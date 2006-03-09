@@ -7,7 +7,6 @@
     "&nbsp;<IMG SRC='$imageUrl/".$zen->ffv($image)."' border='0'>" : '';
 	
 if( is_array($tickets) && count($tickets) ) {
- 
    ?>
 <table width="100%" cellspacing='1' cellpadding='2' class='formtable'>
 <tr><td class='subTitle' align='center' colspan='5'><?=tr("Agreements")?></td></tr>
@@ -36,12 +35,13 @@ if( is_array($tickets) && count($tickets) ) {
 <?      
 $link  = "$rootUrl/agreement.php";
 $td_ttl = "title='".tr("Click here to view the Agreement")."'";
-   	
-   foreach($tickets as $t) {    
+$tickets = $hotkeys->activateList($tickets, 'title', 'title', "ticketClk('$link?id={agree_id}')");
+
+  foreach($tickets as $t) {    
 
       ?>
    <tr  class='bars' onclick='ticketClk("<?=$link?>?id=<?=$t["agree_id"]?>")' 
-      <?=$row_rollover_eff?>>
+      <?=$row_rollover_eff?> title="<?=$t['hotkey_tooltip']?>">
    <td height="25" width="5%" valign="middle" <?=$td_ttl?>>
     <?=$zen->ffv($t["agree_id"])?>
    </td>
@@ -49,7 +49,7 @@ $td_ttl = "title='".tr("Click here to view the Agreement")."'";
     <?=$zen->ffv($t["contractnr"])?>
    </td>
    <td height="25" width="35%" valign="middle" <?=$td_ttl?>>
-   <?=$zen->ffv($t["title"])?>
+   <?=$t['hotkey_label']?>
    </td>
       <td height="25" width="25%" valign="middle" <?=$td_ttl?>><?
       if ( !empty($t["company_id"])) {

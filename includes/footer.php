@@ -103,7 +103,7 @@ function loadRenderKeys() {
      $debug_text .= "rootUrl: $rootUrl<br>\n";
      $debug_text .= "section: ".getZtSection()."<br>\n";
      $debug_text .= "database: ".$zen->database_type."/".$zen->database_host."<br>\n";
-     $debug_text .= "settings count: ".count($zen->settings)."<br>\n";
+     $debug_text .= "settings count: ".count($zen->getSettings())."<br>\n";
      $debug_text .= "bins: ".(count($zen->bins)? join(",",$zen->bins) : 'NO BINS FOUND, DID YOU RUN THE SEED_YOURDB.SQL SCRIPT?')."<br>\n";
      $debug_text .= "types: ".(count($zen->types)? join(",",$zen->types) : 'NO TYPES FOUND, DID YOU RUN THE SEED_YOURDB.SQL SCRIPT?')."<br>\n";
      $debug_text .= "priorities: ".(count($zen->priorities)? join(",",$zen->priorities) : 'NO PRIORITIES FOUND, DID YOU RUN THE SEED_YOURDB.SQL SCRIPT?')."<br>\n";
@@ -176,12 +176,6 @@ function loadRenderKeys() {
   //  Zen::printArray($ticket, "Ticket Contents");
   //}
 ?>
-
-<div id='hotKeyHelp'  class='hotKeyHelp invisible'><?=$hotkeys->renderHelp()?></div>
-
+<!-- <div id='hotKeyHelp'  class='hotKeyHelp invisible'><?=$hotkeys->renderHelp()?></div> -->
 </body>
-<head>
-  <meta http-equiv="Pragma" content="no-cache">
-  <meta http-equiv="Expires" content="-1">
-</head>
 </html>

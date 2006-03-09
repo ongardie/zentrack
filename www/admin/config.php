@@ -69,6 +69,8 @@
   
   if( !$skip ) {
     $page_title = tr("? Settings", array($zen->getSetting("system_name")));
+    $onLoad[] = "color_functions.js";
+    $onLoad[] = "js_color_picker_v2.js";
     include("$libDir/nav.php");
     $zen->printErrors($errs);
     print "<blockquote>\n";

@@ -35,7 +35,9 @@
      padding: 0px;
   }
   
-  
+  LABEL:hover {
+    text-decoration: underline;
+  }
 
   /*** PAGE COMPONENTS ***/
 
@@ -202,7 +204,6 @@
      color:       <?=$zen->getSetting("color_bar_text")?>;
      background:  <?=$zen->getSetting("color_bars")?>;
      padding: 2px;
-     border: 1px solid <?=$zen->getSetting('color_bars')?>;
   }
   
   .invalidBars TD {
@@ -825,6 +826,31 @@ TD.bigger { font-size: 50px; }
   
   .microTable INPUT, .microTable BUTTON, , .microTable SELECT, .microTable SUBMIT {
     font-size: <?=$zen->getSetting('font_size_small')-1?>px;
+  }
+  
+  .listHotKey {
+    font-size: <?=$zen->getSetting('font_size_small')-1?>px;
+    color:     <?=$zen->getSetting('color_grey')?>;
+  }
+  
+  .loghead {
+     color:       <?=$zen->getSetting("color_bar_text")?>;
+     background:  <?=$zen->getSetting("color_bars")?>;
+     padding: 2px;
+     border: 1px solid <?=$zen->getSetting('color_bars')?>;
+     font-weight: bold;
+  }
+  
+  .topspaced {
+    padding-top: 1px;
+  }
+  
+  .colorButton {
+    width: 22px;
+    height: 22px;
+    cursor: pointer;
+    cursor: hand;
+    margin-left: 5px;
   }
   
 -->

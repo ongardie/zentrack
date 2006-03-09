@@ -14,6 +14,7 @@
    * $id - id of the ticket to display
    * $ticket - current contents of the ticket to display
    * $varfields - current varfield values for the ticket
+   * $page_type - 'ticket' or 'project' (used by validateTicketForm.php)
    */
   $fields = $map->getFieldMap($formview);
   if( !isset($actionName) ) { $actionName = $SCRIPT_NAME; }
@@ -26,24 +27,24 @@
       $visible_fields["$f"] = $field;
     }
   }
+  
+  /**
+   * set up params for the form_fields include, which requires:
+   *   $zen - zenTrack
+   *   $map - ZenFieldMap
+   *   $formview - view we are creating (ticket_create, project_edit, ticket_tab_3, etc)
+   *   $form_name - name of the html form
+   *   $ticket - the ticket object containing values
+   *   $td - true if this is an edit form, false if it is a new ticket
+   */
+   $td = true;
+   $form_name = "ticketTabForm";
 ?>
-
-<form method="post" name="ticketTabForm" action="<?=$actionName?>" onSubmit='return validateTicketForm(this)'>
-<?
-$context = new ZenFieldMapRenderContext(
-  array("view" => $formview, "form" => 'ticketForm')
-);
-foreach($hidden_fields as $f=>$field) {
-  $context->set('field', $f);
-  $context->set('value', ZenFieldMap::isVariableField($f)? $varfields[$f] : $ticket[$f]);
-  print $map->renderTicketField($context);
-}
-?>
+<form method="post" name="<?=$form_name?>" action="<?=$actionName?>" onSubmit='return validateTicketForm(this)'>
 <input type="hidden" name="id" value="<?=$zen->ffv($id)?>">
 <input type="hidden" name="actionComplete" value="1">
 <input type='hidden' name='ticketTabAction' value='1'>
 <input type='hidden' name='currentMode' value='<?=$zen->ffv($page_mode)?>'>
-
 <table class='formtable' cellpadding="4" cellspacing="1" border="0">
 <tr>
  <td colspan='2' class='subTitle'><?=tr($formTitle)?>
@@ -51,39 +52,12 @@ foreach($hidden_fields as $f=>$field) {
  </td>
 </tr>
 <?
-
-foreach($visible_fields as $f=>$field) {
-  $context->set('field', $f);
-  $context->set('value', ZenFieldMap::isVariableField($f)? $varfields[$f] : $ticket[$f]);
-  $context->set('force_label', $f == 'status');
-  if( $field['field_type'] == 'section' ) {
-    print "<tr><td colspan='2' class='subTitle'>";
-    print $map->renderTicketField($context);
-    print "</td></tr>\n";
-  }
-  else {
-    print "<tr><td class='bars' width='150'>";
-    $key = $hotkeys->find("Field: $f");
-    if( $key ) {
-      print $hotkeys->label($key, $map->getLabel($formview,$f));
-    }
-    else {
-      print $map->getLabel($formview,$f);
-    }
-    if( $field['is_required'] ) {
-      print "&nbsp;<span class='error bigBold'>*</span>";
-    }
-    print "</td><td class='bars'>";
-    print $map->renderTicketField($context);
-    print "</td></tr>\n";
-  }
-}
-
+  include("$templateDir/form_fields.php");
 ?>
 
 <tr>
   <td class="subTitle" colspan='2'>
-  <? renderDivButton($hotkeys->find($submitName), "if( validateTicketForm(window.document.forms['ticketTabForm']) ) { window.document.forms['ticketTabForm'].submit(); }"); ?>
+  <? renderDivButton($hotkeys->find($submitName), "if( validateTicketForm(window.document.forms['$form_name']) ) { window.document.forms['$form_name'].submit(); }"); ?>
   </td>
 </tr>
 <tr>

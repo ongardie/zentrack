@@ -27,7 +27,8 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
         print "</p>\n";
       ?>
       <ul>
-      <form name='behaviorDetailForm' action='<?=$SCRIPT_NAME?>' onsubmit='return checkForValueColumn(this)' method='post'>
+      <form name='behaviorDetailForm' action='<?=$SCRIPT_NAME?>' <? 
+        if( $groupIsFile ) { ?>onsubmit='return checkForValueColumn(this)' <?}?>method='post'>
       <input type='hidden' name='TODO' value=''>
       <input type='hidden' name='behavior_id' value='<?=$zen->checkNum($behavior_id)?>'>
       <table cellpadding="2" cellspacing="1" class='plainCell'>

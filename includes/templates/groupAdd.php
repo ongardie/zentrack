@@ -6,6 +6,7 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
   $td = ($TODO == 'EDIT');
   $blurb = ($td)? "Modify Data Group" : "Create New Data Group";
   $button = ($td)? "Save Changes" : "Create Group";
+  $hotkeys->activateButton($button, 'groupAddForm');
   $url = ($td)? "edit" : "add";
 ?>
 <form method="post" action="<?=$rootUrl?>/admin/<?=$url?>GroupSubmit.php" name='groupAddForm'>
@@ -121,7 +122,7 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
 </tr>  
 <tr>
   <td colspan="2" class="bars">
-   <input type="submit" value="<?=$button?>" class="submit">
+    <? renderDivButtonFind($button); ?>
   </td>
 </tr>
 </table>
@@ -133,4 +134,6 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
      toggleField( window.document.groupAddForm.NewEvalText, selectedText != 'Javascript' );
      toggleField( window.document.groupAddForm.name_of_file, selectedText != 'File' );
    }
+   
+   setFocalPoint('groupAddForm', 'NewTableName');
 </script>

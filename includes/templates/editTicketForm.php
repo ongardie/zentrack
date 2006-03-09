@@ -34,9 +34,10 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
    ?>
    <br><blockquote>
       <b><?=tr("Please enter a ticket ID")?></b>
-   <form action='<?=$SCRIPT_NAME?>'>
+   <form action='<?=$SCRIPT_NAME?>' name='ticketIdForm'>
     <input type="text" name="id" size="8" maxlength="12">
-   </form> 
+   </form>
+   <script>setFocalPoint('ticketIdForm','id');</script>
    <?
   }
 ?>

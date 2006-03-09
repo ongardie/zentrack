@@ -12,7 +12,7 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
     *
     * @param zenTrack $zen
     */
-   function ZenSessionManager(&$zen) { 
+   function ZenSessionManager(&$zen = null) { 
      $this->_zen =& $zen;
    }
    
@@ -99,7 +99,9 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
     if( isset($_SESSION) ) {
       // store results in session for later use
       if( !isset($_SESSION['ztDataTypes']) ) { $_SESSION['ztDataTypes'] = array(); }
-      $this->_zen->addDebug("storeDataType", "$type: stored",3);
+      if( $this->_zen ) {
+        $this->_zen->addDebug("storeDataType", "$type: stored",3);
+      }
       $_SESSION['ztDataTypes'][$type] = $vals;
       return true;
     }    
@@ -120,8 +122,10 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
     if( isset($_SESSION) && isset($_SESSION['ztDataTypes']) ) {
       // check session before bothering with the lookup
       if( isset($_SESSION['ztDataTypes'][$type]) ) {
-        $this->_zen->addDebug("getDataType","$type: retrieved "
-          .count($_SESSION['ztDataTypes'][$type])." from session",3);
+        if( $this->_zen ) {
+          $this->_zen->addDebug("getDataType","$type: retrieved "
+            .count($_SESSION['ztDataTypes'][$type])." from session",3);
+        }
         return $_SESSION['ztDataTypes'][$type];
       }
     }
@@ -136,7 +140,9 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
   function clearDataType( $type ) {
     if( isset($_SESSION) ) {
       if( isset($_SESSION['ztDataTypes']) ) {
-        $this->_zen->addDebug("clearDataType", "$type: cleared",3);
+        if( $this->_zen ) {
+          $this->_zen->addDebug("clearDataType", "$type: cleared",3);
+        }
         unset($_SESSION['ztDataTypes'][$type]);
       }
     }
@@ -161,11 +167,15 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
   function getDataCache( $type, $id = null ) {
     if( isset($GLOBALS) && isset($GLOBALS['ztDataCache']) && isset($GLOBALS['ztDataCache'][$type]) ) {
       if( isset($id) ) {
-        $this->_zen->addDebug("getDataCache", "$type-$id: retrieved");
+        if( $this->_zen ) {
+          $this->_zen->addDebug("getDataCache", "$type-$id: retrieved");
+        }
         return isset($GLOBALS['ztDataCache'][$type])
           && isset($GLOBALS['ztDataCache'][$type]["$id"])? $GLOBALS['ztDataCache'][$type]["$id"] : false;
       }
-      $this->_zen->addDebug("getDataCache", "$type: retrieved");
+      if( $this->_zen ) {
+        $this->_zen->addDebug("getDataCache", "$type: retrieved");
+      }
       return $GLOBALS['ztDataCache'][$type];
     }
     return false;
@@ -202,7 +212,7 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
         // once the cap is reached
         array_splice($GLOBALS['ztDataCache'][$type], 0, 40);
       }
-      $this->_zen->addDebug("storeDataCache", "Storing cache for {$type}->{$id}",3);
+      if( $this->_zen ) { $this->_zen->addDebug("storeDataCache", "Storing cache for {$type}->{$id}",3); }
       $GLOBALS['ztDataCache'][$type]["$id"] = $vals; 
     }
   }
@@ -217,11 +227,15 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
   function clearDataCache( $type, $id = null ) {
     if( isset($GLOBALS) && isset($GLOBALS['ztDataCache']) ) {
       if( $id ) {
-        $this->_zen->addDebug("clearDataCache", "Clearing cache for {$type}->{$id}",3);
+        if( $this->_zen ) {
+          $this->_zen->addDebug("clearDataCache", "Clearing cache for {$type}->{$id}",3);
+        }
         unset($GLOBALS['ztDataCache'][$type]["$id"]);
       }
       else {
-        $this->_zen->addDebug("clearDataCache", "Clearing cache for {$type}",3);
+        if( $this->_zen ) {
+          $this->_zen->addDebug("clearDataCache", "Clearing cache for {$type}",3);
+        }
         unset($GLOBALS['ztDataCache'][$type]);
       }
     }
@@ -230,7 +244,9 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
   /** Stores variable field info in the session for the life of the browser */
   function storeCustomFields( $vals ) {
     if( isset($_SESSION) ) {
-      $this->_zen->addDebug("storeCustomFields", "Storing ".count($vals)." vals", 3);
+      if( $this->_zen ) {
+        $this->_zen->addDebug("storeCustomFields", "Storing ".count($vals)." vals", 3);
+      }
       $_SESSION['ztVarfields'] = $vals;
       return true;
     }
@@ -241,7 +257,9 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
   function getCustomFields() {
     if( isset($_SESSION) ) {
       if( isset($_SESSION['ztVarfields']) ) {
-        $this->_zen->addDebug("getCustomFields", "Retrieving ".count($_SESSION['ztVarfields'])." vals", 3);
+        if( $this->_zen ) {
+          $this->_zen->addDebug("getCustomFields", "Retrieving ".count($_SESSION['ztVarfields'])." vals", 3);
+        }
         return $_SESSION['ztVarfields']; 
       }
     }
@@ -252,7 +270,9 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
   /** Clears variable field info out of the session */
   function clearCustomFields() {
     if( isset($_SESSION) ) {
-      $this->_zen->addDebug("clearCustomFields", "Clearing cache", 3);
+      if( $this->_zen ) {
+        $this->_zen->addDebug("clearCustomFields", "Clearing cache", 3);
+      }
       unset($_SESSION['ztVarfields']);
     }
   }

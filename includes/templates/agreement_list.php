@@ -11,6 +11,7 @@ $agree_id = $zen->ffv($agree_id);
   <tr><td class='subTitle' colspan='6'><?=tr("Agreements")?></td></tr>
 <?
 if( is_array($contacts) ) {
+  $contacts = $hotkeys->activateList($contacts, 'title', 'title', "KeyEvent.loadUrl('$rootUrl/agreement.php?id={agree_id}')");
 ?>
 <tr>
 <td class='headerCell' title="<?=tr("ID of the agreement")?>">
@@ -46,7 +47,7 @@ if( is_array($contacts) ) {
         <?=$zen->ffv($t["contractnr"])?>
       </td>
       <td <?=$td_ttl?>>
-        <?=$zen->ffv($t["title"])?>
+        <?=$t["hotkey_label"]?>
       </td>
       <td <?=$td_ttl?>><?
         if ( !empty($t["company_id"])) {

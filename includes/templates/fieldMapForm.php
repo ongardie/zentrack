@@ -5,7 +5,8 @@
     $map - (ZenFieldMap) map object which can be used to retrieve default values
     $zen - (ZenTrack)
 **/
- 
+
+ $hotkeys->loadSection('field_map_form');
  $loads = ZenFieldMap::getLoadOptions($templateDir);
  $fields = $map->getFieldMap($view);
  
@@ -95,9 +96,7 @@ foreach($fields as $f=>$field) {
 <input type='hidden' name='view' value='<?=$zen->ffv($view)?>'>
 
 <? if( $view ) { ?>
-<input type='submit' value='<?=uptr('save')?>' onClick="return setTodo('save');">
-&nbsp;
-<input type='submit' class='submitPlain' value='<?=tr('Reset')?>' onClick="return setTodo('reset');">
+  <? renderDivButtonFind("Update"); ?>
 <? } ?>
 
 </td><td>&nbsp;</td><td valign='top'>
@@ -356,9 +355,7 @@ foreach($fields as $f=>$field) {
 </tr>
 <tr toofar="toofar">
   <td class='subTitle' colspan='10'>
-    <input type='submit' value='<?=uptr('save')?>' onClick="return setTodo('save');">
-    &nbsp;
-    <input type='submit' class='submitPlain' value='<?=tr('Reset')?>' onClick="return setTodo('reset');">
+    <? renderDivButtonFind("Update"); ?>
   </td>
 </tr>
 

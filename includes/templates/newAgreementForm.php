@@ -1,24 +1,9 @@
 <? if( !ZT_DEFINED ) { die("Illegal Access"); } 
   $hotkeys->loadSection('agreement_form');
   $GLOBALS['zt_hotkeys'] = $hotkeys;
+  $button = $skip? "Update" : "Create";
+  $hotkeys->activateButton($button, 'agreementForm');
 ?>
-<script language='javascript' type='text/javascript'>
-  function checkMyBox(fieldName, event) {
-    if( !event ) { event = window.event; }
-    if( document.getElementById ) {
-      var elem = document.getElementById(fieldName);
-      if( elem ) {
-        if( !event || !event.target || event.target.type != 'checkbox' ) {
-          elem.checked = elem.checked? false : true;
-        }
-      }
-      if( elem.parentNode ) {
-        elem.parentNode.parentNode.oldStyle = elem.checked? 'invalidBars' : 'bars';
-      }
-    }
-  }
-</script>
-
 <form method="post" name="agreementForm" action="<?=($skip)? "editAgreementSubmit.php" : "$rootUrl/addAgreementSubmit.php"?>">
 <input type="hidden" name="id" value="<?=$zen->ffv($id)?>">
 <input type='hidden' name='TODO' value='submit_form'>
@@ -126,7 +111,7 @@ value="<?=($dtime)?$zen->showDate($dtime):""?>">
 </tr>
 <tr>
   <td colspan="2" valign='middle' class="headerCell padded" style='text-align:left'>
-   <? renderDivButtonFind("Create", null, ($skip? "Save":null) ); ?>
+   <? renderDivButtonFind($button); ?>
   </td>
 </tr>
 <tr><td class='bars' colspan='2'>&nbsp;</td></tr>
@@ -150,14 +135,14 @@ value="<?=($dtime)?$zen->showDate($dtime):""?>">
 
   if (is_array($contacts)) {
 	 //print_r($contacts);
-
+   $contacts = $hotkeys->activateList($contacts, 'name1', 'description1', "checkMyRow('drops_{item_id}', false)");
 	 foreach($contacts as $t) {
       ?>
    <tr class='bars' <?=$row_rollover_eff?>
      onclick='checkMyBox("drops_<?=$t['item_id']?>", event)'>
    <td  width="20"><?=$t["item_id"]?></td>
    <td width="200">
-    <?=$zen->ffv($t["name1"])?>
+    <?=$t["hotkey_label"]?>
    </td>
    <td width="400">
    <?=$zen->ffv($t["description1"], 200)?>
@@ -170,11 +155,7 @@ value="<?=($dtime)?$zen->showDate($dtime):""?>">
    } ?>
    <tr>
 	<td class='headerCell' style='text-align:right' colspan='4'>
-         <input type="submit"
-	  value=" <?=tr("Drop Items")?> "
-          class="actionButton"
-          onClick='return rerouteAgreementForm("removeItems")'
-         >
+    <? renderDivButtonFind("Drop Items"); ?>
 	</td>
 	</tr>
 	<?
@@ -195,8 +176,8 @@ value="<?=($dtime)?$zen->showDate($dtime):""?>">
 </tr>
 <tr>
 <td class="bars" colspan="2" valign='top'>
-	<?=tr("Name")?>:
-    <input type="text" name="name1" size="30" maxlength="40" value="<?=$zen->ffv($name1)?>">
+	<?=$hotkeys->ll("Name")?>
+    <input type="text" name="name1" size="30" maxlength="40" value="<?=$zen->ffv($name1)?>" title="<?=$hotkeys->ll("Name")?>">
 
 	<?=tr("Description")?>:
     <textarea cols="22" rows="2" name="description1"><?=$zen->ffv($description1)?></textarea>

@@ -24,6 +24,14 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
   $plural = $page_type == 'project'? 'projects' : 'tickets';
   tr( $plural );
   $ucfirst = ucfirst($page_type);
+
+  // set the form name and the override as label if appropriate
+  $form_name = "ticketForm";
+
+  // set up the submit button before rendering fields to insure there is
+  // a hotkey left for it
+  $submit_label = tr(($td)? "Update" : "Create" );
+  $hotkeys->activateButton($submit_label, $form_name);
   
   if( !$td ) {
     $ticket = array();
@@ -35,9 +43,6 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
   
   $id = $ticket['id'];
 
-  // set the form name and the override as label if appropriate
-  $form_name = "ticketForm";
-  
   // blow up if this user does not have proper access to any bins
   $userBins = $zen->getUsersBins($login_id, $map->getViewProp($view,'access_level'));
   if( !is_array($userBins) || !count($userBins) ) {
@@ -120,7 +125,9 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
 ?>
 <tr>
   <td colspan="2" class="subTitle">
-   <input type="submit" value=" <?=tr(($td)?"Save":"Create")?> " class="submit">
+   <?
+     renderDivButtonFind($submit_label);
+   ?>
   </td>
 </tr>
 </table>

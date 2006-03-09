@@ -517,6 +517,16 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
     list($name,$dom) = explode('@',$email);
     return '<script>eLink('.$zen->fixJsVal($name).','.$zen->fixJsVal($dom).')</script>';
   }
+  
+  function colorBox( $form, $field, $val = null ) {
+    $zen = $GLOBALS['zen'];
+    $txt = '';
+    $val = $zen->ffv($val);
+    $txt .= "<input type='text' name='$field' value='$val' size='8' maxlength='7' onchange='colorChanged(this)'>";
+    $s = $val? "style='background: $val'" : '';
+    $txt .= "<input id='showColorPicker_{$field}' type='button' class='colorButton' $s value=' ' onclick='showColorPicker(this,document.forms[\"$form\"].elements[\"$field\"])'>";
+    return $txt;
+  }
 
   /*
   **  USER AUTHENTICATION

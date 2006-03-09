@@ -10,7 +10,7 @@
     <?=$zen->ffv($t["company_id"])?>
   </td>
   <td height="25" width="25%" valign="middle" <?=$td_ttl?>>
-    <?=$zen->ffv($t["title"])?>&nbsp;<?=$zen->ffv($t["office"])?>
+    <?=$t['hotkey_label']?>&nbsp;<?=$zen->ffv($t["office"])?>
   </td>
   <td height="25" width="25%" valign="middle" <?=$td_ttl?>>
     <?=$zen->ffv($t["email"])?>

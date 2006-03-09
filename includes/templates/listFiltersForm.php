@@ -16,7 +16,7 @@
   $filtercols = $map->getFieldMap($filterview);
   if( $filtercols && count($filtercols) > 0 ) {
     print "<form name='ticketFilterForm'>";
-    print "<input type='hidden' name='ticketFilterForm' value='1'>";
+    print "<input type='hidden' name='ticketFiltered' value='1'>";
     print "<table width='100%'><tr>";
     $context = new ZenFieldMapRenderContext(
        array('form' => 'ticketFilterForm', 'view' => $filterview,
@@ -27,8 +27,9 @@
       $v = array_key_exists($c,$filter_params_withnulls) && 
             !is_array($filter_params_withnulls[$c])? 
               $filter_params_withnulls[$c] : null;
+      $hk = $hotkeys->activateField($map->getLabel($filterview,$c), "ticketFilterForm", "filterForm_{$c}");
       print "<td class='small'>";
-      print $map->getLabel($filterview, $c);
+      print $hk->getLabel();
       print "&nbsp;";
       if( $c == 'status' ) {
         print "<select name='filterForm_status' onchange='window.document.ticketFilterForm.submit()'>";

@@ -361,6 +361,24 @@ class ZenFieldMap {
      }
      return $map[$field][$prop];
    }
+   
+   /**
+    * True if a field should be rendered as readonly
+    *
+    * @param string $view
+    * @param string $field
+    * @param ZenFieldMapRenderContext $context if provided, then the 'force_label' value is checked too
+    */
+   function isReadOnlyField($view, $field, $context = false ) {
+     if( $this->getViewProp($view, 'view_only') ) { return true; }
+     $type = $this->getFieldProp($view, $field, 'field_type');
+     $vis = $this->getFieldProp($view, $field, 'is_visible');
+     if( $type == 'label' || $type == 'hidden' ) { return true; }
+     if( !$vis ) { return true; }
+     if( $context && $context->force_label() ) { return true; }
+     return false;
+   }
+   
     
   /**
    * Returns the label specified for the field in question

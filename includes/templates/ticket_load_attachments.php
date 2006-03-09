@@ -34,11 +34,13 @@ if( $access ) {
          <? } ?>
        </tr>
   <?
+     $url = $zen->getSetting("url_view_attachment")."?aid=";
+     $attachments = $hotkeys->activateList($attachments, "name", "description", "ticketClk('{$url}{attachment_id}', false, true)");
      foreach($attachments as $a) {
        $aid = $a['attachment_id'];
-       $clk = "onclick=\"ticketClk('".$zen->getSetting("url_view_attachment")."?aid=$aid');return false;\"";
+       $clk = "onclick=\"return ticketClk('$url$aid', event, true);\"";
 	?>
-	  <tr class='bars' <?=$row_rollover_eff?>>
+	  <tr class='bars' <?=$row_rollover_eff?> title="<?=$a['hotkey_tooltip']?>">
 	  <td <?=$clk?>>
 	    <?= ($a["log_id"])?
           $a['log_id']." ".
@@ -50,8 +52,8 @@ if( $access ) {
 	    ?>
 	  </td>
 	  <td <?=$clk?>>
-	    <a href='<?=$zen->getSetting("url_view_attachment")?>?aid=<?=$aid?>' 
-	    class='rowLink' target='_blank'><?=$zen->ffv($a['name'])?></a></td>
+	    <a href='<?=$url.$aid?>' 
+	    class='rowLink' target='_blank'><?=$a['hotkey_label']?></a></td>
 	  <td <?=$clk?>>
 	    <?=$zen->ffv($a["filetype"])?>
 	  </td>

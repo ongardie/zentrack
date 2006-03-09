@@ -180,7 +180,7 @@ class DB {
     list($cols,$vals) = $this->makeInsertVals($params);
     $query = "INSERT INTO $table ($cols) VALUES($vals)";
     $res = $this->db_link->Execute($query);
-    $this->addDebug("db_insert","[$res]".$query,3);
+    $this->addDebug("db_insert","[$res] ".$query,3);
     if( !$res && strlen(strpos($this->database_type,"mssql")) ) {
       // deal with sql server id issues by automagically
       // incrementing the counter when a problem occurs

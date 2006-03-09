@@ -17,9 +17,11 @@ $letter = 'ALL';
   
   if ($overview=="company") {  
 		$tickets = $zen->get_contacts("",$tabel,$sort);
+    $tickets = $hotkeys->activateList($tickets, 'title', 'title', "KeyEvent.loadUrl('$rootUrl/contact.php?cid={company_id}')");
   } else {
 	  $parms = array(array("inextern", "=", $ie));	
 	  $tickets = $zen->get_contacts($parms,$tabel,$sort);
+    $tickets = $hotkeys->activateList($tickets, 'lname', 'lname', "KeyEvent.loadUrl('$rootUrl/contact.php?pid={person_id}')");
   }
   ?>
     <tr>

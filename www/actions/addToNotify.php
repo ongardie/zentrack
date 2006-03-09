@@ -119,11 +119,9 @@
       }		
       
       
-      if( $i > 0 ) {
-        $msg[] = tr("? recipients added", $i);
-        $action = '';
-        $page_mode = $setmode;
-      }
+      $msg[] = tr("? recipients added", $i);
+      $action = '';
+      $page_mode = $setmode;
     }
   }
   

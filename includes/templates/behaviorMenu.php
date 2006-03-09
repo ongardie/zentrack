@@ -1,9 +1,11 @@
 <?
 if( !ZT_DEFINED ) { die("Illegal Access"); }
 
-         $elnk="$rootUrl/admin/editBehavior.php";
-         $llnk="$rootUrl/admin/editBehaviorDetails.php";
-         $dlnk="$rootUrl/admin/deleteBehavior.php";
+  $hotkeys->activateButton('New', "behaviorForm");
+
+  $elnk="$rootUrl/admin/editBehavior.php";
+  $llnk="$rootUrl/admin/editBehaviorDetails.php";
+  $dlnk="$rootUrl/admin/deleteBehavior.php";
 ?>
       <br>
       <p><b><?=tr("Edit existing behaviors or create a new one.")?></b></p>
@@ -16,7 +18,7 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
        ?></p>
       <ul>
       <form name='behaviorForm' action='<?=$elnk?>' method='post'>
-      <input type='hidden' name='TODO' value=''>
+      <input type='hidden' name='TODO' value='NEW'>
       <table cellpadding="4" cellspacing="1" class='cell'>
 	 <tr>
 	 <td class='titleCell' align='center' colspan='9'>
@@ -97,21 +99,12 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
 </tr>
       <tr>
          <td class='cell' colspan='3'>
-         <input type='submit' class='submit' value='<?=tr('New')?>' onClick="return setTodo('NEW')">
-         &nbsp;
-         <input type='submit' class='submit' value='<?=tr('Done')?>' onClick="return setTodo('DONE')">
+         <? renderDivButtonFind('New'); ?>
          </td>
       </tr>
       </table>
       </ul>
 
       </form>
-
-
-      <script language='javascript'>
-          function setTodo( val ) {
-           document.behaviorForm.TODO.value = val;
-         }
-      </script>
                                                                                                                              
 

@@ -17,14 +17,12 @@
    } else {
       $errs[] = tr("System error: Ticket ? could not be accepted", array($id)).$zen->db_error;
    }
-  $setmode = null;
   $action = null;
    
    include("$libDir/nav.php");
    $zen->printErrors($errs);
-   $ticket = $zen->get_ticket($id);
-   if( $zen->inProjectTypeIDs($type_id) ) {
-      include("$templateDir/projectView.php");
+   if( $page_type == 'project' ) {
+     include("$templateDir/projectView.php");
    } else {
       include("$templateDir/ticketView.php");     
    }

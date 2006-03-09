@@ -7,7 +7,7 @@ $logs = $zen->get_logs($id);
 $num_logs=0;
 if( is_array($logs) && count($logs) > 0) {
   $att = $zen->get_attachments($id,null,1);
-  $sep = ",&nbsp;";
+  $sep = "&nbsp;|&nbsp;";
   $syslogs = array();
   foreach($logs as $l) {
     $total_hours += $l['hours'];
@@ -22,18 +22,18 @@ if( is_array($logs) && count($logs) > 0) {
     }
     
     // the details
-    $log_text .= "<div id='log_{$lid}' class='bars' $thing>";
-    $log_text .= "<b>".$zen->showDateTime($l["created"])." - ".uptr($l["action"])."</b>";
-    $log_text .= "<div class='tiny'>";
-    $log_text .= tr("Bin: ").$zen->getBinName($l["bin_id"]);
-    $log_text .= $sep.tr("User: ").$zen->formatName($l["user_id"],2);
+    $log_text .= "<div id='log_{$lid}' class='loghead' $thing>";
+    $log_text .= $zen->showDateTime($l["created"])." - ".uptr($l["action"]);
+    $log_text .= "&nbsp;&nbsp;<span class='tiny'>[";
+    $log_text .= $zen->getBinName($l["bin_id"]);
+    $log_text .= $sep.$zen->formatName($l["user_id"],2);
     $log_text .= (strlen($l["hours"]))? $sep.tr("Hours: ").$l['hours']:"";
-    $log_text .= "</div>";
+    $log_text .= "]</span>";
     $log_text .= "</div>";
 
     // the log and attachments
     if( $l["entry"] ) {
-      $log_text .= "<div id='log_{$lid}_entry' class='cell' $thing>";
+      $log_text .= "<div id='log_{$lid}_entry' class='cell topspaced' $thing>";
       $l["entry"] = $zen->ffvText($l["entry"]);
       //$l["entry"] = preg_replace("#\&amp;#", "&", $l["entry"]);
       //	$l["entry"] = preg_replace("#(https?://[a-zA-Z0-9_/.-]+[a-zA-Z0-9\-_]+\.[a-z]{2,3}(/[a-zA-Z/\._\?=&0-9-]+))#", "<a href='\\1' target='_blank'>\\1</a>", $l["entry"]);
@@ -47,7 +47,7 @@ if( is_array($logs) && count($logs) > 0) {
       $log_text .= "</div>\n";
     }
     else if( !is_array($att["$id"]["$lid"]) ) {
-      $log_text .= "&nbsp;";
+      $log_text .= "<div class='topspaced'>";
     }
     if( is_array($att["$id"]["$lid"]) ) {
       $log_text .= "<div id='log_{$lid}_att' class='cell' $thing>";

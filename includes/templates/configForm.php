@@ -1,4 +1,6 @@
-<? if( !ZT_DEFINED ) { die("Illegal Access"); } ?>
+<? if( !ZT_DEFINED ) { die("Illegal Access"); } 
+  $colspan = $type == 'priority'? 5 : 4;
+?>
       <br>
       <p class='error'><?
          $str = "<a href='$rootUrl/help/find.php?s=admin&p=data_types'>".tr('Documentation')."</a>";
@@ -36,7 +38,7 @@
       <form name='configForm' action='<?=$SCRIPT_NAME?>' <?=$type=='type'? " onsubmit='return checkPriType(this)'":""?> method='post'>
       <table cellpadding="2" cellspacing="1" class='plainCell'>
 	 <tr toofar="toofar">
-	 <td class='titleCell' align='center' colspan='5'>
+	 <td class='titleCell' align='center' colspan='<?=$colspan?>'>
      <?
        $plural_type = tr($type == 'priority'? 'Priorities' : ucfirst($type)."s");
      ?>
@@ -44,10 +46,13 @@
 	 </td>
 	 </tr>
 	 <tr toofar="toofar">
-	 <td width="30" class='cell' align='center'><b><?=tr("ID")?></b></td>
-	 <td class='cell' align='center'><b><?=tr("Name")?></b></td>
-	 <td width="30" class='cell' align='center'><b><?=tr("Active")?></b></td>
-	 <td width="30" class='cell' align='center'><b>&nbsp;</b></td>
+	 <td width="30" class='subTitle'><?=tr("ID")?></td>
+	 <td class='subTitle' align='center'><?=tr("Name")?></td>
+	 <td width="30" class='subTitle'><?=tr("Active")?></td>
+   <? if( $type == 'priority' ) { ?>
+     <td width='100' class='subTitle'><?=tr("Color")?></td>
+   <? } ?>
+	 <td width="30" class='subTitle'>&nbsp;</td>
 	 </tr>
     <? 
    $j = count($vars)-1;
@@ -71,11 +76,16 @@
        print "$t<input type='checkbox' name='newActive[$j]' onclick='checkVisible(this)' value='1'";
 	     print ($v["active"])? " checked" : "";
 	     print ">$te";
+       if( $type == 'priority' ) {
+         print $t;
+         print colorBox('configForm', "newColor[$j]", $v['color']);
+         print $te;
+       }
        
        
        // priority cell
        $txt = $t;
-         //$txt .= '['.$v['priority'].':'.$j.']';//debug
+        //$txt .= '['.$v['priority'].':'.$j.']';//debug
         // up arrow
         $txt .= "<a href='#' onClick='moveRowUp(this.parentNode);return false;'";
         $txt .= " border='0' alt='Move Up' title='Move Up'><img src='$rootUrl/images/icon_arrow_up.gif'";
@@ -108,6 +118,11 @@
   <input type='hidden' name='newID[<?=$sampleRowId?>]' value=''>
   <td class='bars'><input type='text' name='newName[<?=$sampleRowId?>]' value='' size='20' maxlength='25'></td>
   <td class='bars'><input type='checkbox' name='newActive[<?=$sampleRowId?>]' value='1' checked></td>
+  <? if( $type == 'priority' ) { ?>
+    <td class='bars'><input type='text' name='newColor[<?=$sampleRowId?>]' value='' size='8' maxlength='7'
+    ><input type='button' value=' ' onclick='showColorPicker(this,document.forms["configForm"].elements["newColor[<?=$sampleRowId?>]"])'
+    ></td>
+  <? } ?>
   <td class='bars'>
     <input type='hidden' name='newPri[<?=$sampleRowId?>]' value='<?=$sampleRowId?>'>
     <a href='#' onClick='moveRowUp(this.parentNode);return false;'
@@ -122,14 +137,14 @@
   </td>
 </tr>    
 <tr toofar="toofar" id="submitRow">
-  <td class="titleCell" colspan="5">
+  <td class="titleCell" colspan="<?=$colspan?>">
     <?=tr("Press Save to save changes")?>
     <br>
     <?=tr("Press Reset to return to original values")?>
   </td>
 </tr>
       <tr toofar="toofar">
-	 <td class='cell' colspan='5'>
+	 <td class='cell' colspan='<?=$colspan?>'>
          <input type='hidden' name='TODO' value=''>
 	 <input type='submit' class='submit' value='<?=uptr("Save")?>' onClick='return setToDo("Save")'>
 	 &nbsp;
@@ -298,4 +313,8 @@ function toggleRowColor( checkBox ) {
   function getNamePrefix( name ) {
     return name.substr(0, name.indexOf('['))
   }
+  
+  <? if( $sampleRowId > 0 ) { ?>
+  setFocalPoint('configForm', 'newName[<?=$sampleRowId-1?>]');
+  <? } ?>
 </script>

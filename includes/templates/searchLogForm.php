@@ -1,6 +1,9 @@
 <?
 if( !ZT_DEFINED ) { die("Illegal Access"); }
 
+$hk = $hotkeys->activateButton("Search", "searchLogForm");
+$hkc = $hotkeys->activateField("Containing", "searchLogForm", "search_text");
+
   // create a default date
   if( !$search_date )
     $search_date = 0;
@@ -10,7 +13,7 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
   $actions = array();
   $actions = $zen->db_list($query);
 ?>
-<form action="<?=$SCRIPT_NAME?>">
+<form action="<?=$SCRIPT_NAME?>" name='searchLogForm'>
 <input type="hidden" name="TODO" value="SEARCH">
   
 <table width="640" align="left" cellpadding="2" cellspacing="2" bgcolor="<?=$zen->getSetting("color_background")?>">
@@ -27,11 +30,11 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
 </tr>
 <tr>
   <td class="bars">
-     <?=tr("Containing")?>
+     <?=$hkc->getLabel()?>
   </td>
   <td class="bars">
    <input type="text" name="search_text" 
-      value="<?=$zen->ffv($search_text)?>" size="25" maxlength="50">
+      value="<?=$zen->ffv($search_text)?>" size="25" maxlength="50" title="<?=$hkc->getTooltip()?>">
   </td>
 </tr>
 
@@ -131,7 +134,7 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
 </tr>
 <tr>
   <td class="bars" colspan="2">
-     <input type="submit" class="submit" value="<?=tr("Search")?>">
+    <? renderDivButton($hk->getKey()); ?>
   </td>
 </tr>
 

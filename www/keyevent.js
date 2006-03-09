@@ -16,6 +16,11 @@ function KeyEvent( e ) {
   this.key = KeyEvent.generateKeyChar(this.keyCode);
 }
 
+/** Same as calling new KeyEvent() */
+function getKeyEvent(event) {
+  return new KeyEvent(event);
+}
+
 KeyEvent.prototype.className = "KeyEvent";
 
 /** 
@@ -132,11 +137,11 @@ KeyEvent.cancelKey = function(keyPress) {
   //KeyEvent.hideHelp();
   ZenTabs.singleton.hide();
   
-  // ignore control keys
-  if( c == 18 ) { return; }
-
   // collect the keycode for validation
   var c = e.which? e.which : e.keyCode;
+
+  // ignore control keys
+  if( c == 18 ) { return; }
 
   // ignore keys without codes
   if( !c ) { 
@@ -186,7 +191,11 @@ KeyEvent.getKey = function(keyPress) {
 
 KeyEvent.keyPress = function(keyPress) {
   var k = new KeyEvent(keyPress? keyPress : window.event);
-  if( debugOn ) { window.status = 'Caught key ['+k.keyCode+']'+k.toString(); }
+  if( debugOn ) {
+    var sourceName = (k.source && k.source.name)? k.source.name : 
+                     ((k.source && k.source.id)? k.source.id : k.source);
+    window.status = 'Caught key ['+k.keyCode+']'+k.toString()+" targeting "+sourceName; 
+  }
   
   if( KeyEvent.targetsFormField(k) && !k.isMetaKey()) {
     // determine if we are in a form field and this is not a meta key
@@ -213,6 +222,7 @@ KeyEvent.checkKey = function(keyPress) {
     return;
   }
   
+  
   // collect the keycode for validation
   var c = e.which? e.which : e.keyCode;
   // ignore keys without codes
@@ -227,21 +237,14 @@ KeyEvent.checkKey = function(keyPress) {
   }
   else if( c == 18 ) {
     ZenTabs.singleton.start();
-//    if( !KeyEvent.showHelpOn && hotkeyHelpDelay > 0 ) {
-//      KeyEvent.showHelpOn = window.setTimeout('KeyEvent.showHelp()', hotkeyHelpDelay);
-//      if( debugOn ) { window.status = 'Prepping showhelp: '+KeyEvent.showHelpOn; }
-//    }
     return;
   }
   return true;
 }
 
 KeyEvent.findKey = function( k ) {
-  var list = KeyEvent.listedEvents;
-  for(var i=0; i < list.length; i++) {
-    if( list[i].equals(k) ) {
-      return list[i];
-    }
+  if( KeyEvent.listedEvents[ k.toString() ] ) {
+    return KeyEvent.listedEvents[ k.toString() ];
   }
   return false;
 }
@@ -256,27 +259,7 @@ KeyEvent.getSourceElement = function( e ) {
 }
 
 KeyEvent.targetsFormField = function( keyEvent ) {
-  var s = keyEvent.source;
-  if( !s || !s.type ) { return false; }
-  switch( s.type ) {
-    case "checkbox":
-    case "text":
-    case "textarea":
-    case "file":
-    case "select":
-    case "select-one":
-    case "select-multiple":
-    case "radio":
-    case "button":
-    case "submit":
-    case "hidden":
-    case "password":
-    case "reset":
-      return true;
-    default:
-      return false;
-  }
-  return false;
+  return isFormField( keyEvent.source );
 }
 
 
@@ -305,10 +288,27 @@ KeyEvent.loadUrl = function(url) {
 KeyEvent.register = function(fxn, keyName) {
   var evt = KeyEvent.valueOf(keyName);
   evt.run = typeof(fxn)=='function'? fxn : function() { eval(fxn); };
-  KeyEvent.listedEvents[KeyEvent.listedEvents.length] = evt;
+  KeyEvent.listedEvents[evt.toString()] = evt;
 }
 
-KeyEvent.listedEvents = new Array();
+/**
+ * Used to automatically close popup windows when escape key is pressed
+ */
+KeyEvent.closeOnEscape = function(win) {
+  // make sure window is loaded
+  while( !win.window || !win.window.document || !win.window.document.body || !win.window.document.body.innerHTML ) {
+    setTimeout( function(){ KeyEvent.closeOnEscape(win); }, 100 );
+    return;
+  }
+  win.window.document.onkeydown = function(event) {
+      var e = event? event : window.event;
+      var keyCode = e.which? e.which : e.keyCode;
+      window.status = "keycode="+keyCode;
+      if( keyCode == 27 ) { win.window.close(); }
+    };
+}
+
+KeyEvent.listedEvents = new Object();
 
 function ZenTabs() {
   this.entries = new Array();
@@ -317,6 +317,7 @@ function ZenTabs() {
 }
 
 ZenTabs.prototype.start = function() {
+  this.altTabDown = true;
   if( hotkeyHintDelay < 1 ) { return; }
   if( this.visible ) { return; }
   if( this.timeout ) { return; }
@@ -325,14 +326,24 @@ ZenTabs.prototype.start = function() {
 
 ZenTabs.prototype.show = function() {
   if( this.visible ) { return; }
-  if( this.timeout ) { window.clearTimeout(this.timeout); this.timeout = false; } 
+  if( this.timeout ) { window.clearTimeout(this.timeout); this.timeout = false; }
+  if( this.cleartime ) { window.clearTimeout(this.cleartime); this.cleartime = false; }
   this.visible = true;
   for(var i=0; i < this.entries.length; i++) {
     var obj = window.document.getElementById(this.entries[i]);
-    if( obj ) {
-      obj.style.display = 'inline';
-    }
+    if( obj ) { obj.style.display = 'inline'; }
   }
+  this.cleartime = window.setTimeout("ZenTabs.singleton.clearout()", 2000);
+  this.altTabDown = false;
+}
+
+ZenTabs.prototype.cleartime = false;
+
+ZenTabs.prototype.altTabDown = false;
+
+ZenTabs.prototype.clearout = function() {
+  if( this.altTabDown == false ) { this.hide(); }
+  this.cleartime = false;
 }
 
 ZenTabs.prototype.register = function(subToRegister) {

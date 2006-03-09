@@ -1,7 +1,8 @@
 <?
 if( !ZT_DEFINED ) { die("Illegal Access"); }
 
-  
+
+$hotkeys->loadSection('user_search');
 if( is_array($users) && count($users) ) {
  
    $c = count($users);
@@ -53,21 +54,26 @@ if( is_array($users) && count($users) ) {
       unset($tx);
       unset($est);
       $row = ($row == $zen->getSetting("color_bars"))?
-   $zen->getSetting("color_background") : $zen->getSetting("color_bars");
+      $zen->getSetting("color_background") : $zen->getSetting("color_bars");
       $name = $zen->formatName($u,1);
       if( $search_text && ($search_fields["lname"] || $search_fields["fname"] ) ) {
-   $name = $zen->highlight($name,$search_text);
+        $name = $zen->highlight($name,$search_text);
       }
       $inits = $zen->formatName($u,2);
       if( $search_text && $search_fields["initials"] )
          $inits = $zen->highlight($inits,$search_text);
+      else
+         $inits = $zen->ffv($inits);
       if( $u["notes"] && $search_text && $search_fields["notes"] )
-         $u["notes"] = $zen->highlight($u["notes"],$search_text);
+         $notes = $zen->highlight($u["notes"],$search_text);
+      else
+         $notes = $zen->ffv($u['notes']);
+      $uid = $zen->checkNum($u['user_id']);
       ?>
 
    <tr style="background:<?=$row?>;color:<?=$text?>">
    <td height="25" valign="middle">
-     <?=$u["user_id"]?>
+     <?=$uid?>
    </td>
    <td height="25" valign="middle">
      <?=$name?>
@@ -76,39 +82,39 @@ if( is_array($users) && count($users) ) {
      <?=$inits?>
         </td>
    <td height="25" valign="middle">
-     <?=$u["access_level"]?>
+     <?=$zen->checkNum($u["access_level"])?>
         </td>
    <td height="25" valign="middle">
-     <?=$u["email"]?>
+     <?=$zen->ffv($u["email"])?>
         </td>
    <td height="25" valign="middle">
      <?=($u["active"])? uptr("yes") : uptr("no")?>
         </td>
    <td height="25" valign="middle">
-     <?=$zen->bins["$u[homebin]"]?>
+     <?=$zen->getBinName($u['homebin'])?>
         </td>  
    <td <?=($u["notes"])? "rowspan='2'" : ""?> valign="middle">
      <span class="small">
-     [<a href='<?=$elnk?>?user_id=<?=$u["user_id"]?>'><?=uptr("edit")?></a>]
+     [<a href='<?=$elnk?>?user_id=<?=$uid?>'><?=uptr("edit")?></a>]
      <br>
-     [<a href='<?=$alnk?>?user_id=<?=$u["user_id"]?>'><?=uptr("access")?></a>]
+     [<a href='<?=$alnk?>?user_id=<?=$uid?>'><?=uptr("access")?></a>]
      <br>
-          [<a href='<?=$plnk?>?user_id=<?=$u["user_id"]?>'
+          [<a href='<?=$plnk?>?user_id=<?=$uid?>'
       onClick='return confirm("<?=
-	tr("Reset the password for user ??",array($u["user_id"]))?>");'
+	tr("Reset the password for user ??",array($uid))?>");'
            ><?=uptr("password")?></a>]
      <br>
-          [<a href='<?=$dlnk?>?user_id=<?=$u["user_id"]?>'
-      onClick='return confirm("<?=tr("Permanently remove user ??",array($u["user_id"]))?>");'
+          [<a href='<?=$dlnk?>?user_id=<?=$uid?>'
+      onClick='return confirm("<?=tr("Permanently remove user ??",array($uid))?>");'
            ><span class='error'><?=uptr("delete")?></span></a>]
         </td>
         </tr>
    <? 
-   if( $u["notes"] ) {
+   if( $notes ) {
    ?>
    <tr style="background:<?=$row?>;color:<?=$text?>">
         <td colspan="7" class="small">
-      <?=$u["notes"]?>
+      <?=$notes?>
    </td>
         </tr>
         <?
@@ -118,23 +124,25 @@ if( is_array($users) && count($users) ) {
    if( count($search_params) ) {
    ?>
     <tr>
-     <form method="post" action="<?=$SCRIPT_NAME?>">
+     <form method="post" action="<?=$SCRIPT_NAME?>" name='searchModifyForm'>
      <td colspan="8" class="titleCell">
-   <input type="submit" class="smallSubmit" value="Modify Search">
-   <input type="hidden" name="search_text" value="<?=strip_tags($search_text)?>">
+   <? renderDivButtonFind("Modify Search"); ?>
+   <input type="hidden" name="search_text" value="<?=$zen->ffv($search_text)?>">
    <input type="hidden" name="search_fields[lname]" 
-           value="<?=strip_tags($search_fields["lname"])?>">
+           value="<?=$zen->ffv($search_fields["lname"])?>">
    <input type="hidden" name="search_fields[fname]" 
-           value="<?=strip_tags($search_fields["fname"])?>">
+           value="<?=$zen->ffv($search_fields["fname"])?>">
    <input type="hidden" name="search_fields[initials]" 
-           value="<?=strip_tags($search_fields["initials"])?>">
+           value="<?=$zen->ffv($search_fields["initials"])?>">
    <input type="hidden" name="search_fields[notes]" 
-           value="<?=strip_tags($search_fields["notes"])?>">
+           value="<?=$zen->ffv($search_fields["notes"])?>">
+   <input type="hidden" name="search_fields[email]" 
+           value="<?=$zen->ffv($search_fields["email"])?>">
    <input type="hidden" name="search_access_method" 
-           value="<?=strip_tags($search_access_method)?>">      
+           value="<?=$zen->ffv($search_access_method)?>">      
         <?
      foreach($search_params as $k=>$v) {
-       print "<input type='hidden' name='search_params[$k]' value='".strip_tags($v)."'>\n";
+       print "<input type='hidden' name='search_params[$k]' value='".$zen->ffv($v)."'>\n";
           }
         ?>
      </td>

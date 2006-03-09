@@ -1,6 +1,7 @@
 <?
 if( !ZT_DEFINED ) { die("Illegal Access"); }
 
+$hk = $hotkeys->activateButton('Modify Search', 'modifySearchForm');
 
 if( is_array($logs) && count($logs) ) {
   
@@ -116,15 +117,15 @@ if( is_array($logs) && count($logs) ) {
   }
   ?>
   <tr>
-  <form method="post" action="<?=$SCRIPT_NAME?>">
+  <form method="post" action="<?=$SCRIPT_NAME?>" name='modifySearchForm'>
   <td colspan="8" class="titleCell">
-  <input type="submit" class="smallSubmit" value="<?=tr("Modify Search")?>">
-  <input type="hidden" name="search_text" value="<?=strip_tags($search_text)?>">
-  <input type="hidden" name="search_fields[title]" value="<?=strip_tags($search_fields["title"])?>">
-  <input type="hidden" name="search_fields[entry]" value="<?=strip_tags($search_fields["entry"])?>">
+  <? renderDivButton($hk->getKey()); ?>
+  <input type="hidden" name="search_text" value="<?=$zen->ffv($search_text)?>">
+  <input type="hidden" name="search_fields[title]" value="<?=$zen->ffv($search_fields["title"])?>">
+  <input type="hidden" name="search_fields[entry]" value="<?=$zen->ffv($search_fields["entry"])?>">
   <?
   foreach($search_params as $k=>$v) {
-    print "<input type='hidden' name='search_params[$k]' value='".strip_tags($v)."'>\n";
+    print "<input type='hidden' name='search_params[$k]' value='".$zen->ffv($v)."'>\n";
   }
   ?>
   </td>

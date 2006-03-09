@@ -7,7 +7,7 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
   }
 ?>
 
-<form method="post" action="<?=$rootUrl?>/misc/pwc.php">
+<form method="post" action="<?=$rootUrl?>/misc/pwc.php" name="pwcForm">
 <table width="300" cellpadding="5">
 <tr>
   <td colspan="2" class="subTitle" align="center" height="20">
@@ -43,12 +43,14 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
 </tr>
 <tr>
   <td class="bars" colspan="2">
-    <input type="submit" value="<?=tr("Set Password")?>" class="submit">
+  <?
+    $hotkeys->activateButton("Set Password", "pwcForm");
+    renderDivButtonFind("Set Password");
+  ?>
   </td>
 </tr>
 </table>
 
 <input type="hidden" name="TODO" value="SET">
 </form>
-
-
+<script>setFocalPoint( 'pwcForm', 'newPass1' );</script>

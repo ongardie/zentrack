@@ -40,14 +40,13 @@
   var f = function() {
     var f = window.document.loginForm;
     if( f.username.value == "" ) {
-      f.username.focus();
+      setFocalPoint( f.username );
     }
     else if( f.passphrase.value == "" ) {
-      f.passphrase.focus();
+      setFocalPoint( f.passphrase );
     }
     else {
-      f.TODO.focus();
+      setFocalPoint( f.TODO );
     }  
   }
-  addToOnload( f );
 </script>

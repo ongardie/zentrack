@@ -1,11 +1,16 @@
-<? if( !ZT_DEFINED ) { die("Illegal Access"); } ?>
+<? if( !ZT_DEFINED ) { die("Illegal Access"); } 
+  $hkc = $hotkeys->activateField("Companies", 'searchCompany', 'search_text');
+  $hke = $hotkeys->activateField("Employees", 'searchEmployee', 'search_text');
+  $hka = $hotkeys->activateField("Agreements", 'searchAgreement', 'search_text');
+  $hki = $hotkeys->activateField("Items", 'searchItem', 'search_text');
+?>
 
 
 <form action="<?=($SCRIPT_NAME)?>" name="searchCompany">
 <table>
 <tr>
   <td colspan="3" class="subTitle" width="600">
-    <?=tr("Search in company")?>
+    <?=tr("Search ?", $hkc->getLabel())?>
   </td>
 </tr>
 <tr>
@@ -14,7 +19,7 @@
 		<input type="hidden" name="table" value="company">
 	</td>
 	<td class="bars">
-		<input type="text" name="search_text" 
+		<input type="text" name="search_text" title="<?=$hkc->getTooltip()?>"
       value="<?=$zen->ffv($search_text)?>" size="25" maxlength="50">
 	</td>
   <td class="bars">
@@ -29,7 +34,7 @@
 <table>
 <tr>
   <td colspan="3" class="subTitle" width="600">
-    <?=tr("Search in persons")?>
+    <?=tr("Search ?", $hke->getLabel())?>
   </td>
 </tr>
 <tr>
@@ -38,7 +43,7 @@
 		<input type="hidden" name="table" value="employee">
 	</td>
 	<td class="bars">
-		<input type="text" name="search_text" 
+		<input type="text" name="search_text" title="<?=$hke->getTooltip()?>" 
       value="<?=$zen->ffv($search_text)?>" size="25" maxlength="50">
 	</td>
   <td class="bars">
@@ -53,7 +58,7 @@
 <table>
 <tr>
   <td colspan="3" class="subTitle" width="600">
-    <?=tr("Search in agreements")?>
+    <?=tr("Search ?", $hka->getLabel())?>
   </td>
 </tr>
 <tr>
@@ -62,7 +67,7 @@
 		<input type="hidden" name="table" value="agreement">
 	</td>
 	<td class="bars">
-		<input type="text" name="search_text" 
+		<input type="text" name="search_text" title="<?=$hka->getTooltip()?>" 
       value="<?=$zen->ffv($search_text)?>" size="25" maxlength="50">
 	</td>
   <td class="bars">
@@ -77,7 +82,7 @@
 <table>
 <tr>
   <td colspan="3" class="subTitle" width="600">
-    <?=tr("Search in items")?>
+    <?=tr("Search ?", $hki->getLabel())?>
   </td>
 </tr>
 <tr>
@@ -86,7 +91,7 @@
 		<input type="hidden" name="table" value="item">
 	</td>
 	<td class="bars">
-		<input type="text" name="search_text" 
+		<input type="text" name="search_text"  title="<?=$hki->getTooltip()?>"
       value="<?=$zen->ffv($search_text)?>" size="25" maxlength="50">
 	</td>
   <td class="bars">
@@ -96,4 +101,3 @@
 </tr>
 </table>
 </form>
-

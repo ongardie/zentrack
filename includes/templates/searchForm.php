@@ -1,6 +1,8 @@
 <?
 if( !ZT_DEFINED ) { die("Illegal Access"); }
 
+$hk = $hotkeys->activateButton("Search", "searchForm");
+
   /**
    PREREQUISITES:
      (ZenFieldMap)$map - contains properties for fields
@@ -50,7 +52,7 @@ foreach($hidden_fields as $f=>$field) {
 </tr>
 <tr>
   <td class="bars" colspan="2">
-     <input type="submit" class="submit" value="<?=tr("Search")?>">
+    <? renderDivButton($hk->getKey()); ?>
   </td>
 </tr>
 
@@ -172,10 +174,11 @@ if( count($other_fields) ) {
 </tr>
 <tr>
   <td class="bars" colspan="2">
-     <input type="submit" class="submit" value="<?=tr("Search")?>">
+    <? renderDivButton($hk->getKey()); ?>
   </td>
 </tr>
 
 </table>
   
 </form>
+<script>setFocalPoint( 'searchForm', 'search_text' );</script>

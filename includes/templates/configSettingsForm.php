@@ -26,7 +26,7 @@
     $off = tr("Off");
     foreach($settings as $s) {
       if( preg_match("#^url_#",$s["name"]) ) {
-	$s["value"] = preg_replace("#^$rootUrl/?#i", "", $s["value"]);
+        $s["value"] = preg_replace("#^$rootUrl/?#i", "", $s["value"]);
       }
       $k = $s["setting_id"];
       $class = ($class == "bars")? "cell" : "bars";
@@ -35,18 +35,21 @@
       print "<td class='$class'>$n</td>\n";
       print "<td class='$class'>";
       if( preg_match("@_xx$@", $s["name"]) ) {
-	print $s["value"]." [permanent]";
+        print $s["value"]." [permanent]";
+      }
+      else if( strpos($n, 'color_') === 0 ) {
+        print colorBox('configSettingsForm', $n, $s['value']);
       } else if( $s["value"] == "on" || $s["value"] == "off" ) {
-	print "<select name='newSettings[$k]'>";
-	print ($s["value"] == "on")? 
-	  "<option selected value='on'>$on</option>" : "<option value='on'>$on</option>\n";
-	print ($s["value"] == "off")?
-	  "<option selected value='off'>$off</option>" : "<option value='off'>$off</option>\n";
-	print "</select>\n";
+        print "<select name='newSettings[$k]'>";
+        print ($s["value"] == "on")? 
+        "<option selected value='on'>$on</option>" : "<option value='on'>$on</option>\n";
+        print ($s["value"] == "off")?
+        "<option selected value='off'>$off</option>" : "<option value='off'>$off</option>\n";
+        print "</select>\n";
       } else {
-	print "<input type='text' style='font-size:"
-	   .$zen->getSetting("font_size_small")."px' name='newSettings[$k]' "
-           ." size='20' maxlength='100' value='".$zen->ffv($s["value"])."'>";
+        print "<input type='text' style='font-size:"
+        .$zen->getSetting("font_size_small")."px' name='newSettings[$k]' "
+        ." size='20' maxlength='100' value='".$zen->ffv($s["value"])."'>";
       }
       print "</td>";
       print "<td class='$class'>$s[description]</td>\n";

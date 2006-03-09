@@ -87,6 +87,8 @@ if($company_id) {
   print "<table width='620' class='formtable'>";
   print "<tr><td class='subTitle' colspan='6'>Company</td></tr>";
   $t = $zen->get_contact($company_id,"ZENTRACK_COMPANY","company_id");
+  $l = $hotkeys->activateList(array($t), 'title', 'title', "KeyEvent.loadUrl('$rootUrl/contact.php?cid={company_id}')");
+  $t = $l[0];
   if( is_array($t) ) {
     //extract($contacts);
     //$id = $company_id;

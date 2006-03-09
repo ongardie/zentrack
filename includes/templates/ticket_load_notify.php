@@ -18,6 +18,16 @@
   <?
   $notify_list = $zen->get_notify_list($id);
   if( is_array($notify_list) ) {
+    for($i=0; $i<count($notify_list); $i++) {
+      $n = $notify_list[$i];
+      if( $n["user_id"] ) {
+        $u = $zen->get_user($n["user_id"]);
+        $notify_list[$i]["name"] = $zen->formatName($u);
+        $notify_list[$i]["email"] = $u["email"];
+      }
+    }
+    $notify_list = $hotkeys->activateList($notify_list, "name", "name", "checkMyRow(\"drops_{notify_id}\", false)");
+    
     ?>
     <form name='dropNotifyForm' action="<?=$rootUrl?>/actions/dropFromNotify.php" method="post">
     <input type="hidden" name="id" value="<?=$zen->checkNum($id)?>">
@@ -29,22 +39,13 @@
     </tr>
     <?  
     foreach($notify_list as $n) {
-      if( $n["user_id"] ) {
-        $u = $zen->get_user($n["user_id"]);
-        $name = $zen->formatName($u);
-        $email = $u["email"];
-      }
-      else {
-        $email = $n["email"];
-        $name = ($n["name"])? $n["name"] : "&nbsp;";
-      }
       print "<tr class='bars'";
       print $row_rollover_eff;
       //print " onmouseover='if(window.document.body && mClassX){mClassX(this, \"altBars\", \"hand\");}' ";
       //print " onmouseout='if(window.document.body && mClassX){mClassX(this);}'";
-      print " onclick='checkMyBox(\"drops_{$n['notify_id']}\", event)'>\n";
-      print "\t<td>$name</td>\n";
-      print "\t<td>".eLink($email)."</td>\n";
+      print " onclick='checkMyRow(\"drops_{$n['notify_id']}\", event)' title='{$n['hotkey_tooltip']}'>\n";
+      print "\t<td>{$n['hotkey_label']}</td>\n";
+      print "\t<td>".eLink($n['email'])."</td>\n";
       if( $drop ) {
         print "\t<td><input id='drops_{$n['notify_id']}' type='checkbox' "
         ."name='drops[]' value='{$n['notify_id']}'></td>\n";

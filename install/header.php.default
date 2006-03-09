@@ -139,7 +139,7 @@
    // IF NEEDED, uncomment the following entry
    // and set it to your location.. use locale -a 
    // to see a list of possibilities
-   // see the php manual for more info on setlocale()
+   // see the php manual for more info on setlocale(): http://www.php.net/setlocale
    // setlocale(LC_TIME, "C");
    // setlocale(LC_TIME, "POSIX");
    // setlocale(LC_TIME, "en_US");  // U.S.

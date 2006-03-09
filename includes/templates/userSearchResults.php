@@ -15,30 +15,33 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
     // organize the search params
     if( is_array($search_params) ) {
       if( $search_params["access_level"] ) {
-	switch($search_access_method) {
-	case "gt":
-	  $op = ">=";
-	  break;
-	case "lt":
-	  $op = "<=";
-	  break;
-	default:
-	  $op = "=";
-	  break;
-	}
-	$search_params["access_level"] = ereg_replace("[^0-9]", "", $search_params["access_level"]);
+        switch($search_access_method) {
+          case "gt":
+          $op = ">=";
+          break;
+          case "lt":
+          $op = "<=";
+          break;
+          default:
+          $op = "=";
+          break;
+        }
+        $search_params["access_level"] = ereg_replace("[^0-9]", "", $search_params["access_level"]);
       }
       foreach($search_params as $k=>$v) {
-	if( strlen($v) ) {
-	  switch($k) {
-	  case "access_level":
-	    $params[] = array($k,$op,$v,1);
-	    break;
-	  default: 
-	    $params[] = array($k,"=",$v,1);
-	    break;
-	  }
-	}
+        if( strlen($v) ) {
+          switch($k) {
+            case "access_level":
+            $params[] = array($k,$op,$v,1);
+            break;
+            case "role":
+            $params[] = array('role', '=', $zen->checkNum($search_params['role']), 1);
+            break;
+            default: 
+            $params[] = array($k,"=",$v,1);
+            break;
+          }
+        }
       }
     }
     
@@ -71,5 +74,5 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
     // debug
     $users = $zen->search_users($params, "AND");
   }
-
+  
 }?>

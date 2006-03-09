@@ -1,6 +1,6 @@
 <? if( !ZT_DEFINED ) { die("Illegal Access"); } ?>
 
-<form method="post" action="<?=$rootUrl?>/misc/language.php">
+<form method="post" action="<?=$rootUrl?>/misc/language.php" name='langform'>
 
 <table width="300" cellpadding="5">
 <tr>
@@ -27,7 +27,10 @@
 </tr>
 <tr>
   <td class="bars" colspan="2">
-    <input type="submit" value="<?=tr("Update Language")?>" class="submit">
+  <?
+    $hotkeys->activateButton("Update Language", "langform");
+    renderDivButtonFind("Update Language", 120);
+  ?>
   </td>
 </tr>
 </table>
@@ -35,4 +38,4 @@
 <input type="hidden" name="TODO" value="LANG">
 </form>
 
-
+<script>setFocalPoint( 'langform', 'newlang' );</script>

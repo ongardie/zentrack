@@ -7,6 +7,8 @@
   $b = realpath(dirname(dirname(__FILE__)));
   include_once("$b/help_header.php");
   $page_title = tr("Main Menu");
+  $onLoad[] = "color_functions.js";
+  $onLoad[] = "js_color_picker_v2.js";
   include("$libDir/nav.php");
 
 ?>
@@ -20,6 +22,7 @@
     <?=tr("New to ??  Try out the tutorial, which will explain everything you "
       ."need to know... except for the stuff it doesn't.", $zen->getSetting('system_name'));?>
     </span></p>
+    <p onclick='mClk(this)'><a href='<?=$helpUrl?>/hotkeys.php'><?=tr("Hot Key Settings")?></a></p>
   </div>
     
   <div class='menubox'>
@@ -30,7 +33,6 @@
       // edit the labels in the appropriate language file!    
       renderTOC( 'users', true ); 
     ?>
-    <p onclick='mClk(this)'><a href='<?=$rootUrl?>/misc/hotkeys.php'><?=tr("Hot Key Settings")?></a></p>
   </div>
 
   <div class='menubox'>

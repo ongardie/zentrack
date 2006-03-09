@@ -11,13 +11,56 @@ and user experience, internationalization, platform and database
 abstraction, and endless possibilities for project expansion. 
 --------------------
 
------ VERSION 2.6.1 -----
+----- VERSION 2.6.1 (development) -----
 
+2006-02-16, kato
+  313: Fixed adding users if homebin set to "All", 
+  Corrected problem with cleanup util causing integers to be parsed poorly
+    - zentrack_2/includes/zen.class
+  
+  Corrected broken link pointing to hot key definitions.
+    - zentrack_2/www/help/english/hotkeys.php
+
+  Corrected value_column validation when creating behaviors which are not file based
+  Thanks to Epimethius for this fix.
+    - zentrack_2/includes/templates/behaviorDetailForm.php
+  
+  Fixed static calls to Zen::ffv() method (broken by adding locale setting)
+    - zentrack_2/includes/zen.class
+    
+  Removed deprecated file
+    - zentrack_2/includes/templates/listTickets_workFormat.php
+    
+  296: added hot keys to select items from ticket list
+    - zentrack_2/includes/templates/listTickets.php
+    - zentrack_2/includes/ZenHotKeys.php
+    
+  262: added hot keys and focus to forms
+       added to all ticket actions, edit form, contacts tab, and attachments tab
+    - zentrack_2/includes/ZenHotKeys.php
+    - zentrack_2/includes/ZenFieldMap.php
+    - zentrack_2/includes/templates/form_fields.php
+    - zentrack_2/www/keyevent.js
+    - zentrack_2/www/javascript.js
+    - zentrack_2/includes/templates/newAgreementForm.php
+    - zentrack_2/includes/templates/agreement_list.php
+    - zentrack_2/includes/templates/agreementView.php
+    - zentrack_2/includes/templates/contact_personBox.php
+    - zentrack_2/includes/templates/contact_list.php
+    - zentrack_2/includes/templates/contact_box.php
+    
+  Added clear to the hot key hints so that when alt+tabbing away from the window
+  they do not appear and stay open permanently
+    - zentrack_2/includes/keyevent.js
+    
+  Improved log appearance
+    - zentrack_2/includes/templates/ticket_load_log.php
+  
 2006-02-22, cfalonso
-  Task #294: oracle 9.0 sql error? (not properly ended)
+  294: oracle 9.0 sql error? (not properly ended)
     - zentrack_2/includes/zenTrack.class 1.212
 
-  TK #306: If there is only one matching result, just show the ticket instead
+  306: If there is only one matching result, just show the ticket instead
            of a list of one ticket
    - zentrack_2/www/quickSearch.php 1.3
    - zentrack_2/www/search.php 1.17
