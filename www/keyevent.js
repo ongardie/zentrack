@@ -263,16 +263,6 @@ KeyEvent.targetsFormField = function( keyEvent ) {
 }
 
 
-/** 
- * Generates a refresh event stored in a function
- */
-KeyEvent.createLoadUrl = function( url ) {
-  return function() {
-    window.location = url; 
-    return false;
-  }
-}
-
 /**
  * Loads a new url
  */

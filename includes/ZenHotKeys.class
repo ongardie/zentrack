@@ -39,36 +39,36 @@ class ZenHotKeys {
     $c = 1;
     $this->newFxn('quickFocus', 'window.document.quickIdForm.idText.focus(); quickHighlight("window.document.quickIdForm.idText","searchHelpBox");', '', true);
     $this->_sections['globals'] = array();
-    $this->_sections['globals']['ALT+'.$c++] = array('Projects', "KeyEvent.createLoadUrl('{rootUrl}/projects.php')", '', true);
-    $this->_sections['globals']['ALT+'.$c++] = array('Tickets', "KeyEvent.createLoadUrl('{rootUrl}/index.php')", '', true);
+    $this->_sections['globals']['ALT+'.$c++] = array('Projects', "KeyEvent.loadUrl('{rootUrl}/projects.php')", '', true);
+    $this->_sections['globals']['ALT+'.$c++] = array('Tickets', "KeyEvent.loadUrl('{rootUrl}/index.php')", '', true);
     if( $this->_zen->settingOn('allow_contacts') ) {
-      $this->_sections['globals']['ALT+'.$c++] = array('Contacts',    "KeyEvent.createLoadUrl('{rootUrl}/contacts.php')", '', true);
+      $this->_sections['globals']['ALT+'.$c++] = array('Contacts',    "KeyEvent.loadUrl('{rootUrl}/contacts.php')", '', true);
     }
-    $this->_sections['globals']['ALT+'.$c++] = array('Options', "KeyEvent.createLoadUrl('{rootUrl}/options.php')", '', true);  
-    $this->_sections['globals']['ALT+'.$c++] = array('Help', "KeyEvent.createLoadUrl('{rootUrl}/help/index.php')", '', true);  
-    $this->_sections['globals']['ALT+'.$c++] = array('Admin', "KeyEvent.createLoadUrl('{rootUrl}/admin/index.php')", '', true);  
-    $this->_sections['globals']['ALT+P'] = array('New Project', "KeyEvent.createLoadUrl('{rootUrl}/newProject.php')", '', true);  
-    $this->_sections['globals']['ALT+T'] = array('New Ticket',  "KeyEvent.createLoadUrl('{rootUrl}/newTicket.php')", '', true);  
-    $this->_sections['globals']['ALT+C'] = array('New Contact', "KeyEvent.createLoadUrl('{rootUrl}/newContact.php')", '', true);
+    $this->_sections['globals']['ALT+'.$c++] = array('Options', "KeyEvent.loadUrl('{rootUrl}/options.php')", '', true);  
+    $this->_sections['globals']['ALT+'.$c++] = array('Help', "KeyEvent.loadUrl('{rootUrl}/help/index.php')", '', true);  
+    $this->_sections['globals']['ALT+'.$c++] = array('Admin', "KeyEvent.loadUrl('{rootUrl}/admin/index.php')", '', true);  
+    $this->_sections['globals']['ALT+P'] = array('New Project', "KeyEvent.loadUrl('{rootUrl}/newProject.php')", '', true);  
+    $this->_sections['globals']['ALT+T'] = array('New Ticket',  "KeyEvent.loadUrl('{rootUrl}/newTicket.php')", '', true);  
+    $this->_sections['globals']['ALT+C'] = array('New Contact', "KeyEvent.loadUrl('{rootUrl}/newContact.php')", '', true);
     $this->_sections['globals']['ALT+S'] = array('Search', "quickFocus()", 'Enter a ticket id or summary', true);
-    $this->_sections['globals']['ALT+V'] = array('Advanced Search', "KeyEvent.createLoadUrl('{rootUrl}/search.php')", "Advanced ticket search", true);
+    $this->_sections['globals']['ALT+V'] = array('Advanced Search', "KeyEvent.loadUrl('{rootUrl}/search.php')", "Advanced ticket search", true);
     
     ////////////////////////
     // ADMIN
     ////////////////////////
     $this->_sections['admin'] = array();
-    $this->_sections['admin']['ALT+N'] = array('New User', "KeyEvent.createLoadUrl('{rootUrl}/admin/addUser.php')", '', false);
-    $this->_sections['admin']['ALT+U'] = array('Edit Users', "KeyEvent.createLoadUrl('{rootUrl}/admin/listUsers.php')", '', false);
-    //$this->_sections['admin']['ALT+E'] = array('Edit Tickets', "KeyEvent.createLoadUrl('{rootUrl}/admin/editTicket.php')", '', false);
-    //$this->_sections['admin']['ALT+F'] = array('Edit Field Map', "KeyEvent.createLoadUrl('{rootUrl}/admin/fieldMap.php')", '', false);
-    //$this->_sections['admin']['ALT+B'] = array('Bins', "KeyEvent.createLoadUrl('{rootUrl}/admin/bins.php')", '', false);
-    //$this->_sections['admin']['ALT+P'] = array('Priorities', "KeyEvent.createLoadUrl('{rootUrl}/admin/priorities.php')", '', false);
-    //$this->_sections['admin']['ALT+S'] = array('Systems', "KeyEvent.createLoadUrl('{rootUrl}/admin/systems.php')", '', false);
-    //$this->_sections['admin']['ALT+T'] = array('Tasks', "KeyEvent.createLoadUrl('{rootUrl}/admin/tasks.php')", '', false);
-    //$this->_sections['admin']['ALT+Y'] = array('Types', "KeyEvent.createLoadUrl('{rootUrl}/admin/types.php')", '', false);
-    //$this->_sections['admin']['ALT+D'] = array('Data Groups', "KeyEvent.createLoadUrl('{rootUrl}/admin/groups.php')", '', false);
-    //$this->_sections['admin']['ALT+H'] = array('Behaviors', "KeyEvent.createLoadUrl('{rootUrl}/admin/behaviors.php')", '', false);
-    //$this->_sections['admin']['ALT+C'] = array('Configuration', "KeyEvent.createLoadUrl('{rootUrl}/admin/config.php')", '', false);
+    $this->_sections['admin']['ALT+N'] = array('New User', "KeyEvent.loadUrl('{rootUrl}/admin/addUser.php')", '', false);
+    $this->_sections['admin']['ALT+U'] = array('Edit Users', "KeyEvent.loadUrl('{rootUrl}/admin/listUsers.php')", '', false);
+    //$this->_sections['admin']['ALT+E'] = array('Edit Tickets', "KeyEvent.loadUrl('{rootUrl}/admin/editTicket.php')", '', false);
+    //$this->_sections['admin']['ALT+F'] = array('Edit Field Map', "KeyEvent.loadUrl('{rootUrl}/admin/fieldMap.php')", '', false);
+    //$this->_sections['admin']['ALT+B'] = array('Bins', "KeyEvent.loadUrl('{rootUrl}/admin/bins.php')", '', false);
+    //$this->_sections['admin']['ALT+P'] = array('Priorities', "KeyEvent.loadUrl('{rootUrl}/admin/priorities.php')", '', false);
+    //$this->_sections['admin']['ALT+S'] = array('Systems', "KeyEvent.loadUrl('{rootUrl}/admin/systems.php')", '', false);
+    //$this->_sections['admin']['ALT+T'] = array('Tasks', "KeyEvent.loadUrl('{rootUrl}/admin/tasks.php')", '', false);
+    //$this->_sections['admin']['ALT+Y'] = array('Types', "KeyEvent.loadUrl('{rootUrl}/admin/types.php')", '', false);
+    //$this->_sections['admin']['ALT+D'] = array('Data Groups', "KeyEvent.loadUrl('{rootUrl}/admin/groups.php')", '', false);
+    //$this->_sections['admin']['ALT+H'] = array('Behaviors', "KeyEvent.loadUrl('{rootUrl}/admin/behaviors.php')", '', false);
+    //$this->_sections['admin']['ALT+C'] = array('Configuration', "KeyEvent.loadUrl('{rootUrl}/admin/config.php')", '', false);
 
     ////////////////////////
     // ACTIONS
@@ -82,7 +82,7 @@ class ZenHotKeys {
           continue;
         }
         $this->_sections['actionbar'][$v['key']] = array("Action: {$v['label']}", 
-          "KeyEvent.createLoadUrl('{rootUrl}/actions/$k.php?id={id}')", $v['label'], false);
+          "KeyEvent.loadUrl('{rootUrl}/actions/$k.php?id={id}')", $v['label'], false);
       }
     }
 
@@ -245,28 +245,28 @@ class ZenHotKeys {
     // contacts
     ////////////////////////
     $this->_sections['contacts'] = array();
-    $this->_sections['contacts']['ALT+N'] = array('Find', "KeyEvent.createLoadUrl('{rootUrl}/searchContacts.php')", '', false);
-    $this->_sections['contacts']['ALT+B'] = array('Browse', "KeyEvent.createLoadUrl('{rootUrl}/agreements.php')", '', false);
-    $this->_sections['contacts']['ALT+G'] = array('New Agreement', "KeyEvent.createLoadUrl('{rootUrl}/newAgreement.php')", '', false);
+    $this->_sections['contacts']['ALT+N'] = array('Find', "KeyEvent.loadUrl('{rootUrl}/searchContacts.php')", '', false);
+    $this->_sections['contacts']['ALT+B'] = array('Browse', "KeyEvent.loadUrl('{rootUrl}/agreements.php')", '', false);
+    $this->_sections['contacts']['ALT+G'] = array('New Agreement', "KeyEvent.loadUrl('{rootUrl}/newAgreement.php')", '', false);
     
     ////////////////////////
     // contacts_new_menu
     ////////////////////////
     $this->_sections['contacts_new_menu'] = array();
-    $this->_sections['contacts_new_menu']['ALT+Y'] = array('New Company', "KeyEvent.createLoadUrl('{rootUrl}/newContact.php?mode2=1')", '', false);
-    $this->_sections['contacts_new_menu']['ALT+N'] = array('New Person', "KeyEvent.createLoadUrl('{rootUrl}/newContact.php?mode2=2')", '', false);
+    $this->_sections['contacts_new_menu']['ALT+Y'] = array('New Company', "KeyEvent.loadUrl('{rootUrl}/newContact.php?mode2=1')", '', false);
+    $this->_sections['contacts_new_menu']['ALT+N'] = array('New Person', "KeyEvent.loadUrl('{rootUrl}/newContact.php?mode2=2')", '', false);
     
     ////////////////////////
     // contacts_view
     ////////////////////////
     $this->_sections['contacts_view'] = array();
-    $this->_sections['contacts_view']['ALT+D'] = array('Edit', "KeyEvent.createLoadUrl('{rootUrl}/actions/contact_edit.php?cid={id}')", '', false);
-    $this->_sections['contacts_view']['ALT+L'] = array('Delete', "KeyEvent.createLoadUrl('{rootUrl}/actions/contact_delete.php?cid={id}')", '', false);
-    $this->_sections['contacts_view']['ALT+E'] = array('Add Employee', "KeyEvent.createLoadUrl('{rootUrl}/actions/contact_employee.php?cid={id}')", '', false);
-    $this->_sections['contacts_view']['ALT+A'] = array('Add Agreement', "KeyEvent.createLoadUrl('{rootUrl}/actions/contact_agreement.php?cid={id}')", '', false);
-    $this->_sections['contacts_view']['ALT+I'] = array('View Tickets', "KeyEvent.createLoadUrl('{rootUrl}/contact.php?overview=tickets&cid={id}')", '', false);
-    $this->_sections['contacts_view']['ALT+Y'] = array('View Employees', "KeyEvent.createLoadUrl('{rootUrl}/contact.php?cid={id}&overview=contact')", '', false);
-    $this->_sections['contacts_view']['ALT+M'] = array('View Agreements', "KeyEvent.createLoadUrl('{rootUrl}/contact.php?cid={id}&overview=agreement')", '', false);
+    $this->_sections['contacts_view']['ALT+D'] = array('Edit', "KeyEvent.loadUrl('{rootUrl}/actions/contact_edit.php?cid={id}')", '', false);
+    $this->_sections['contacts_view']['ALT+L'] = array('Delete', "KeyEvent.loadUrl('{rootUrl}/actions/contact_delete.php?cid={id}')", '', false);
+    $this->_sections['contacts_view']['ALT+E'] = array('Add Employee', "KeyEvent.loadUrl('{rootUrl}/actions/contact_employee.php?cid={id}')", '', false);
+    $this->_sections['contacts_view']['ALT+A'] = array('Add Agreement', "KeyEvent.loadUrl('{rootUrl}/actions/contact_agreement.php?cid={id}')", '', false);
+    $this->_sections['contacts_view']['ALT+I'] = array('View Tickets', "KeyEvent.loadUrl('{rootUrl}/contact.php?overview=tickets&cid={id}')", '', false);
+    $this->_sections['contacts_view']['ALT+Y'] = array('View Employees', "KeyEvent.loadUrl('{rootUrl}/contact.php?cid={id}&overview=contact')", '', false);
+    $this->_sections['contacts_view']['ALT+M'] = array('View Agreements', "KeyEvent.loadUrl('{rootUrl}/contact.php?cid={id}&overview=agreement')", '', false);
     
     ////////////////////////
     // contacts_view_employee
@@ -332,12 +332,12 @@ class ZenHotKeys {
     ////////////////////////
     $this->_sections['options'] = array();
     $this->_sections['options']['ALT+L'] = array('Log Off',
-        "KeyEvent.createLoadUrl('{rootUrl}/index.php?logoff=1')", 
+        "KeyEvent.loadUrl('{rootUrl}/index.php?logoff=1')", 
         "Log out of ".$this->_zen->getSetting('system_name'), false);
-    $this->_sections['options']['ALT+W'] = array('Change Password', "KeyEvent.createLoadUrl('{rootUrl}/misc/pwc.php')", '', false);
-    $this->_sections['options']['ALT+A'] = array('Set Auto-Login', "KeyEvent.createLoadUrl('{rootUrl}/misc/autologin.php')", '', false);
-    $this->_sections['options']['ALT+H'] = array('Change Home Bin', "KeyEvent.createLoadUrl('{rootUrl}/misc/homebin.php')", '', false);
-    $this->_sections['options']['ALT+G'] = array('Set Language', "KeyEvent.createLoadUrl('{rootUrl}/misc/language.php')", '', false);
+    $this->_sections['options']['ALT+W'] = array('Change Password', "KeyEvent.loadUrl('{rootUrl}/misc/pwc.php')", '', false);
+    $this->_sections['options']['ALT+A'] = array('Set Auto-Login', "KeyEvent.loadUrl('{rootUrl}/misc/autologin.php')", '', false);
+    $this->_sections['options']['ALT+H'] = array('Change Home Bin', "KeyEvent.loadUrl('{rootUrl}/misc/homebin.php')", '', false);
+    $this->_sections['options']['ALT+G'] = array('Set Language', "KeyEvent.loadUrl('{rootUrl}/misc/language.php')", '', false);
     
     ////////////////////////
     // paging
@@ -406,7 +406,7 @@ class ZenHotKeys {
       if( $map->getViewProp($view, 'visible') ) {
         $this->_tabkeys[$view] = $key;
         $label = $map->getViewProp($view,'label');
-        $this->_sections['ticket_view'][$key] = array($label, "KeyEvent.createLoadUrl('{rootUrl}/ticket.php?id={id}&setmode=$view')", '', false);
+        $this->_sections['ticket_view'][$key] = array($label, "KeyEvent.loadUrl('{rootUrl}/ticket.php?id={id}&setmode=$view')", '', false);
         $j++;
       }
     }
@@ -424,7 +424,7 @@ class ZenHotKeys {
       if( $map->getViewProp($view, 'visible') ) {
         $this->_tabkeys[$view] = $key;
         $label = $map->getViewProp($view,'label');
-        $this->_sections['project_view'][$key] = array($label, "KeyEvent.createLoadUrl('{rootUrl}/ticket.php?id={id}&setmode=$view')", '', false);
+        $this->_sections['project_view'][$key] = array($label, "KeyEvent.loadUrl('{rootUrl}/ticket.php?id={id}&setmode=$view')", '', false);
         $j++;
       }
     }
@@ -433,7 +433,7 @@ class ZenHotKeys {
     // user search
     ////////////////////////
     $this->_sections['user_search'] = array();
-    $this->_sections['user_search']['ALT+L'] = array("List All Users", "KeyEvent.createLoadUrl('{rootUrl}/admin/listUsers.php?TODO=ALL');", 'Show all user accounts', false);
+    $this->_sections['user_search']['ALT+L'] = array("List All Users", "KeyEvent.loadUrl('{rootUrl}/admin/listUsers.php?TODO=ALL');", 'Show all user accounts', false);
     $this->_sections['user_search']['ALT+D'] = array("Find", "submitForm('searchUsersForm')", '', false);
     $this->_sections['user_search']['ALT+I'] = array('User ID', "placeFocus(window.document.forms['searchUsersForm'].elements['search_params[user_id]'])", '', false);
     $this->_sections['user_search']['ALT+M'] = array('Modify Search', "submitForm('searchModifyForm')", '', false);
@@ -504,7 +504,7 @@ class ZenHotKeys {
   }
   
   function getFxnName($key) {
-    return str_replace('KeyEvent.createLoadUrl', 'KeyEvent.loadUrl', $this->_keys[$key]['fxn']);
+    return $this->_keys[$key]['fxn'];
   }
 
   /** 
@@ -515,7 +515,7 @@ class ZenHotKeys {
    *  <li>{id} - replaced with the current ticket/project/contact/agreement id (if any)
    * </ul>
    *
-   * The special text "KeyEvent.createLoadUrl('{root_url}/my_url_here')" can be used to access
+   * The special text "KeyEvent.loadUrl('{root_url}/my_url_here')" can be used to access
    * the global url forwarding mechanism and should be preferred to trying window.forward
    *
    * @param String $key a hot key such as 'CTRL+SHIFT+Y'
@@ -701,7 +701,6 @@ class ZenHotKeys {
     if( $key = $this->_getAccessKey($k) ) {
       $this->_keysRendered[$k] = 1;
       $fxn_parsed = Zen::fixJsHtml($v['fxn']);
-      $fxn_parsed = str_replace('KeyEvent.createLoadUrl', 'KeyEvent.loadUrl', $fxn_parsed);
       return "<input type='button' name='accessKeyButton{$key}' value='' accesskey='{$key}' class='accesskeys' onclick=$fxn_parsed>";
     }
     return null;
@@ -811,7 +810,7 @@ class ZenHotKeys {
    * The $event entry can take substitutions from the list by using the {data_column}
    * syntax.  For example:
    * <pre><code>
-   *   $keyEvent = "KeyEvent.createLoadUrl('$rootUrl/ticket.php?id={id}')";
+   *   $keyEvent = "KeyEvent.loadUrl('$rootUrl/ticket.php?id={id}')";
    *   $row1 = array( "id" => 1, "title" => "my favorite ticket" );
    *   $row2 = array( "id" => 2, "title" => "my second favorite" );
    *   $list = $hotkeys->activateList( array($row1, $row2), $key_event, "title", "title" );
