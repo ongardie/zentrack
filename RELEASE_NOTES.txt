@@ -1,3 +1,23 @@
+  
+----- 2.6.1 Minor Release -----
+
+NEW FEATURES / ENHANCEMENTS
+  Added color pickers to config and priority screens
+  Added hot keys to select items from ticket list
+  Added hot keys and focus to forms
+  Added to all ticket actions, edit form, contacts tab, and attachments tab
+  Improved log appearance
+    
+BUG FIXES / MINOR CHANGES
+  Hotkey hints do not stay open permanently when using alt+tab to leave window
+  Oracle 9.0 sql error corrected (not properly ended when sorting search results)
+  When one search result is returned, show ticket instead of list with one item
+  Height of scrolling textboxes made configurable in ticket view
+  Fixed static calls to Zen::ffv() method (broken by adding locale setting)
+  Fixed sql error when adding users if homebin set to "All", 
+  Corrected problem with cleanup util causing integers to be parsed poorly
+  Corrected broken link pointing to hot key definitions.
+  Corrected value_column validation when creating behaviors which are not file based (Thanks Epimethius)
 
 ----- 2.6.0.4 Maintenance Release -----
 

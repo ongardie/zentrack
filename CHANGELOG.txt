@@ -11,20 +11,19 @@ and user experience, internationalization, platform and database
 abstraction, and endless possibilities for project expansion. 
 --------------------
 
------ VERSION 2.6.1 (development) -----
+----- VERSION 2.6.1 (2006-03-12) -----
 
 2006-03-09, kato
   Prepared install/upgrade docs and scripts
-    - zentrack_2/UPGRADE.readme
+    - zentrack_2/UPGRADE.txt 1.4
     - zentrack_2/install/seed_mssqlserver.sql
     - zentrack_2/install/seed_mysql.sql
     - zentrack_2/install/seed_oracle.sql
     - zentrack_2/install/seed_postgres.sql
-    
-    > mention priority coloring
-    > install procedure?
-    > zip files
-    > news releases
+    - zentrack_2/install/UPGRADE_mssqlserver.sql 1.48
+    - zentrack_2/install/UPGRADE_mysql.sql 1.59
+    - zentrack_2/install/UPGRADE_oracle.sql 1.56
+    - zentrack_2/install/UPGRADE_postgres.sql 1.48
 
 2006-03-08, kato
   313: Fixed adding users if homebin set to "All", 
