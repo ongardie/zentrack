@@ -38,7 +38,7 @@
         print $s["value"]." [permanent]";
       }
       else if( strpos($n, 'color_') === 0 ) {
-        print colorBox('configSettingsForm', $n, $s['value']);
+        print colorBox('configSettingsForm', "newSettings[$k]", $s['value']);
       } else if( $s["value"] == "on" || $s["value"] == "off" ) {
         print "<select name='newSettings[$k]'>";
         print ($s["value"] == "on")? 

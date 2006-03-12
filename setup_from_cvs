@@ -17,6 +17,7 @@ chmod 777 includes/translations
 chmod -R 755 www/images
 chmod 755 www/*.js
 chmod 755 www/styles.php
+chmod 755 www/pngbehavior.htc
 chmod 755 www/js_color_picker_v2.php
 chmod 755 includes/egate_check.php
 chmod 755 includes/egate.php
