@@ -27,7 +27,7 @@
     - Ensure that short_open_tag = On
 
   --------------
-  QUICK AND DIRTY INSTALL INSTRUCTIONS:
+  INSTALL INSTRUCTIONS:
   --------------
      0. CVS Installs:
         - If you did not check this out from CVS (or don't know what that means)

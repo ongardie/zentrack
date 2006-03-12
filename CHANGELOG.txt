@@ -21,7 +21,6 @@ abstraction, and endless possibilities for project expansion.
     - zentrack_2/install/seed_oracle.sql
     - zentrack_2/install/seed_postgres.sql
     
-    > upgrade notes
     > mention priority coloring
     > install procedure?
     > zip files
