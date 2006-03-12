@@ -12,7 +12,7 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
     *
     * @param zenTrack $zen
     */
-   function ZenSessionManager(&$zen = null) { 
+   function ZenSessionManager(&$zen) { 
      $this->_zen =& $zen;
    }
    

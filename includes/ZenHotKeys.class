@@ -57,18 +57,18 @@ class ZenHotKeys {
     // ADMIN
     ////////////////////////
     $this->_sections['admin'] = array();
-    $this->_sections['admin']['ALT+SHIFT+N'] = array('New User', "KeyEvent.createLoadUrl('{rootUrl}/admin/addUser.php')", '', false);
-    $this->_sections['admin']['ALT+SHIFT+U'] = array('Edit Users', "KeyEvent.createLoadUrl('{rootUrl}/admin/listUsers.php')", '', false);
-    $this->_sections['admin']['ALT+SHIFT+E'] = array('Edit Tickets', "KeyEvent.createLoadUrl('{rootUrl}/admin/editTicket.php')", '', false);
-    $this->_sections['admin']['ALT+SHIFT+F'] = array('Edit Field Map', "KeyEvent.createLoadUrl('{rootUrl}/admin/fieldMap.php')", '', false);
-    $this->_sections['admin']['ALT+SHIFT+B'] = array('Bins', "KeyEvent.createLoadUrl('{rootUrl}/admin/bins.php')", '', false);
-    $this->_sections['admin']['ALT+SHIFT+P'] = array('Priorities', "KeyEvent.createLoadUrl('{rootUrl}/admin/priorities.php')", '', false);
-    $this->_sections['admin']['ALT+SHIFT+S'] = array('Systems', "KeyEvent.createLoadUrl('{rootUrl}/admin/systems.php')", '', false);
-    $this->_sections['admin']['ALT+SHIFT+T'] = array('Tasks', "KeyEvent.createLoadUrl('{rootUrl}/admin/tasks.php')", '', false);
-    $this->_sections['admin']['ALT+SHIFT+Y'] = array('Types', "KeyEvent.createLoadUrl('{rootUrl}/admin/types.php')", '', false);
-    $this->_sections['admin']['ALT+SHIFT+D'] = array('Data Groups', "KeyEvent.createLoadUrl('{rootUrl}/admin/groups.php')", '', false);
-    $this->_sections['admin']['ALT+SHIFT+H'] = array('Behaviors', "KeyEvent.createLoadUrl('{rootUrl}/admin/behaviors.php')", '', false);
-    $this->_sections['admin']['ALT+SHIFT+C'] = array('Configuration', "KeyEvent.createLoadUrl('{rootUrl}/admin/config.php')", '', false);
+    $this->_sections['admin']['ALT+N'] = array('New User', "KeyEvent.createLoadUrl('{rootUrl}/admin/addUser.php')", '', false);
+    $this->_sections['admin']['ALT+U'] = array('Edit Users', "KeyEvent.createLoadUrl('{rootUrl}/admin/listUsers.php')", '', false);
+    //$this->_sections['admin']['ALT+E'] = array('Edit Tickets', "KeyEvent.createLoadUrl('{rootUrl}/admin/editTicket.php')", '', false);
+    //$this->_sections['admin']['ALT+F'] = array('Edit Field Map', "KeyEvent.createLoadUrl('{rootUrl}/admin/fieldMap.php')", '', false);
+    //$this->_sections['admin']['ALT+B'] = array('Bins', "KeyEvent.createLoadUrl('{rootUrl}/admin/bins.php')", '', false);
+    //$this->_sections['admin']['ALT+P'] = array('Priorities', "KeyEvent.createLoadUrl('{rootUrl}/admin/priorities.php')", '', false);
+    //$this->_sections['admin']['ALT+S'] = array('Systems', "KeyEvent.createLoadUrl('{rootUrl}/admin/systems.php')", '', false);
+    //$this->_sections['admin']['ALT+T'] = array('Tasks', "KeyEvent.createLoadUrl('{rootUrl}/admin/tasks.php')", '', false);
+    //$this->_sections['admin']['ALT+Y'] = array('Types', "KeyEvent.createLoadUrl('{rootUrl}/admin/types.php')", '', false);
+    //$this->_sections['admin']['ALT+D'] = array('Data Groups', "KeyEvent.createLoadUrl('{rootUrl}/admin/groups.php')", '', false);
+    //$this->_sections['admin']['ALT+H'] = array('Behaviors', "KeyEvent.createLoadUrl('{rootUrl}/admin/behaviors.php')", '', false);
+    //$this->_sections['admin']['ALT+C'] = array('Configuration', "KeyEvent.createLoadUrl('{rootUrl}/admin/config.php')", '', false);
 
     ////////////////////////
     // ACTIONS
@@ -518,7 +518,7 @@ class ZenHotKeys {
    * The special text "KeyEvent.createLoadUrl('{root_url}/my_url_here')" can be used to access
    * the global url forwarding mechanism and should be preferred to trying window.forward
    *
-   * @param String $key a hot key such as 'ALT+SHIFT+Y'
+   * @param String $key a hot key such as 'CTRL+SHIFT+Y'
    * @param String $label name of the hot key
    * @param String $fxn name of function to call when hot key is pressed
    * @param String $description tooltip text (defaults to label)
