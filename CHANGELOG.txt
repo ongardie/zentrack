@@ -13,6 +13,19 @@ abstraction, and endless possibilities for project expansion.
 
 ----- VERSION 2.6.1 (2006-03-12) -----
 
+2006-04-04, cfalonso
+  TK #325: Multi-fields not showing values on edit screen
+  TK #329: Ticket list after search shows improperly
+  TK #331: Behaviors not working
+    - zentrack_2/includes/nav.php 1.32
+    - zentrack_2/includes/zenTemplate.class 1.14
+    - zentrack_2/includes/zenTrack.class 1.214
+    - zentrack_2/includes/templates/listTickets.php 1.40
+    - zentrack_2/includes/templates/fields/menunokeys.template 1.2
+    - zentrack_2/www/behavior_js.php 1.41
+    - zentrack_2/www/javascript.js 1.27
+
+
 2006-03-09, kato
   Prepared install/upgrade docs and scripts
     - zentrack_2/UPGRADE.txt 1.4
