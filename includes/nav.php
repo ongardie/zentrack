@@ -80,7 +80,7 @@
     var debugOn = <?=$Debug_Mode > 0? 'true' : 'false'?>;
     var focusField = false;
     
-    window.onload = function() {
+    function setHotKeys() {
       loaded = true;
       loadRenderKeys();
       if( isIE ) {
@@ -94,6 +94,8 @@
       }
       if( focusField ) { placeFocus(focusField); }
     }
+
+    addToOnload(setHotKeys);
     
     /**
      * Set the focal point that will recieve cursor focus when the page finishes

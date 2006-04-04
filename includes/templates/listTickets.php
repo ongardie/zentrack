@@ -281,7 +281,12 @@ print "</td></tr>";
           if( $f == 'title' ) { $val = $t['hotkey_label']; }
           else { $val = $map->getTextValue($view, $f, $value); }
           if( $view == 'search_list' && is_array($search_fields) && array_key_exists($f, $search_fields) ) {
-            $val = $zen->highlight( $val, $search_text );
+            if ( strpos($val,'</span>') === false ) {
+              $val = $zen->highlight( $val, $search_text );
+            } else {
+              $pos = strpos($val,'</span>');
+              $val = substr($val,0,$pos+7) . $zen->highlight( substr($val,$pos+7), $search_text );
+            }
           }
           print $val;
         }

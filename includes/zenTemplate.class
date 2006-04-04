@@ -147,7 +147,8 @@ class zenTemplate {
               $fv = $this->_getVar("field_value");
               $fl = $this->_getVar("field_label");
 	      $tmp=$str;
-	      if($fv==$k && strlen($fv) == strlen($k) || is_array($fv) && in_array($k, $fv) || 
+	      if($fv==$k && strlen($fv) == strlen($k) || ( is_array($fv) && in_array($k, $fv) ) || 
+                                           ( is_array($fv) && in_array($v,array_values($fv)) ) ||
                                            ( is_array($fl) && in_array($k, $fl) ) ||
                                            (!is_array($fv) && !strlen($k) && !strlen($fv))) {
 	        $tmp = str_replace("{selected}", " selected", $tmp);

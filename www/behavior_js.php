@@ -961,7 +961,8 @@ function evalJsString( s ) {
 }
 
 
-window.onload = mergeFunctions( window.onload, pageLoadedBehavior );
+//window.onload = mergeFunctions( window.onload, pageLoadedBehavior );
+addToOnload(pageLoadedBehavior);
 
 <?
   // print out debugging info if specified as such

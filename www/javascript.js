@@ -202,25 +202,34 @@ function toggleField( fieldObj, disabledBoolean ) {
   }       
 }
 
-/**
- * Admin Functions
- */
-function addToOnload( newFxn ) {
-  window.onload = mergeFunctions( newFxn, window.onload );
-}
-
-/**
- * Merges two functions
- */
-
-function mergeFunctions( fxn1, fxn2 ) {
-  return function() {
-    var res = fxn1();
-    if( res === false ) { return false; }
-    res = fxn2();
-    if( res === false ) { return false; }
-    if( res === true ) { return true; }
-  }
+/** 
+ * Admin Functions 
+ */ 
+function addToOnload( newFxn ) { 
+  if( window.onload ) { 
+    window.onload = mergeFunctions( window.onload, newFxn, true ); 
+  } 
+  else { 
+    window.onload = newFxn; 
+  } 
+} 
+ 
+/** 
+ * Merges two functions 
+ */ 
+ 
+function mergeFunctions( fxn1, fxn2, skipReturn ) { 
+  if( !fxn1 ) { return fxn2; } 
+  if( !fxn2 ) { return fxn1; } 
+  return function() { 
+    var res = fxn1(); 
+    if( !skipReturn && res === false ) { return false; } 
+    res = fxn2(); 
+    if( !skipReturn ) { 
+      if( res === false ) { return false; } 
+      if( res === true ) { return true; } 
+    } 
+  } 
 }
 
 function openHelpBox(divObj, relativeElement, offsetY) {
