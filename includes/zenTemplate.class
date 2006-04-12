@@ -18,7 +18,7 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
    **
    **  <h3>{title}</h3>
    **  <form name="{name}" action="{action}">
-   **  {list:array_name:"<input type='text' name='"+index+"' value='"+value+"'"}
+   **  {list:array_name:"<input type='text' name='"+index+"' value='"+value+"'>"}
    **  </for>
    **
    ** Valid template entries are:
@@ -49,8 +49,10 @@ class zenTemplate {
    ** @param string $template is the path to the template file to load
    */
   function zenTemplate( $template ) {
+    $this->_dir = dirname($template);
     $this->_template = $template;
     $this->_get();
+    $this->_vars = array('rowcolor'=>'altCell', 'rowcolor_1'=>'cell', 'rowcolor_2'=>'altCell');
   }
 
   /**
@@ -144,21 +146,27 @@ class zenTemplate {
 	    $str = $this->_parseString($parts[2]);
 	    // loop the list and make output text
 	    foreach($vars as $k=>$v) {
-              $fv = $this->_getVar("field_value");
-              $fl = $this->_getVar("field_label");
-	      $tmp=$str;
-	      if($fv==$k && strlen($fv) == strlen($k) || ( is_array($fv) && in_array($k, $fv) ) || 
-                                           ( is_array($fv) && in_array($v,array_values($fv)) ) ||
-                                           ( is_array($fl) && in_array($k, $fl) ) ||
-                                           (!is_array($fv) && !strlen($k) && !strlen($fv))) {
-	        $tmp = str_replace("{selected}", " selected", $tmp);
-	        $tmp = str_replace("{checked}", " checked", $tmp);
-	      } else {
-	        $tmp = str_replace("{selected}", "", $tmp);
-	        $tmp = str_replace("{checked}", "", $tmp);
-	      }
-	      $tmp = str_replace("{index}", $k, $tmp);
-	      $txt .= str_replace("{value}", $v, $tmp);
+        $this->_rowColor();
+        if( preg_match('@^\\{include\\(([A-Za-z0-9/_.]+)\\)\\}$@', $str, $matches) ) {
+          $txt .= $this->_inc($matches[1], $v, $k);
+        }
+        else {
+          $fv = $this->_getVar("field_value");
+          $fl = $this->_getVar("field_label");
+          $tmp=$str;
+          if($fv==$k && strlen($fv) == strlen($k) || is_array($fv) && in_array($k, $fv) || 
+                                       ( is_array($fv) && in_array($v,array_values($fv)) ) || 
+                                       ( is_array($fl) && in_array($k, $fl) ) ||
+                                       (!is_array($fv) && !strlen($k) && !strlen($fv))) {
+            $tmp = str_replace("{selected}", " selected", $tmp);
+            $tmp = str_replace("{checked}", " checked", $tmp);
+          } else {
+            $tmp = str_replace("{selected}", "", $tmp);
+            $tmp = str_replace("{checked}", "", $tmp);
+          }
+          $tmp = str_replace("{index}", $k, $tmp);
+          $txt .= str_replace("{value}", $v, $tmp);
+        }
 	    }
 	    return $txt;
 	  }
@@ -178,9 +186,17 @@ class zenTemplate {
 	    $str = $this->_parseString($parts[2]);
 	    // create the output text
 	    foreach($vars as $v) {
+        $this->_rowColor();
         $selected = $sel && $sel == $v && strlen($sel) == strlen($v)? ' selected' : '';
-        $s = str_replace("{selected}", $selected, $str);
-	      $txt .= str_replace("{value}", $v, $s);
+        if( preg_match('@^\\{include\\(([A-Za-z0-9/_.]+)\\)\\}$@', $str, $matches) ) {
+          $txt .= $this->_inc($matches[1], $v);
+        }
+        else {
+          $s = str_replace("{selected}", $selected, $str);
+          $s = str_replace("{value}", $v, $s);
+          $s = str_replace("{rowcolor}", $c, $s);
+          $txt .= $s;
+        }
 	    }
 	    return $txt;
 	  }
@@ -192,9 +208,7 @@ class zenTemplate {
       case  "include":
 	{
 	  // {include:template_name}
-	  $tmp = new zenTemplate(trim($parts[1]));
-	  $tmp->values( $this->_vars );
-	  return $tmp->process();
+	  return $this->_inc(trim($parts[1]));
 	}
 	break;
       case  "if":
@@ -228,6 +242,30 @@ class zenTemplate {
     // return something generic if we fall through
     return "{invalid tag: $index}";
   }
+  
+  /**
+   ** Return a value from an array based on match
+   **/
+  function _inc($file, $val = false, $key = false) {
+    $tmp = new zenTemplate("{$this->_dir}/$file");
+    $vals = $this->_vars;
+    if( $val ) { $vals['curval'] = $val; }
+    if( $key ) { $vals['curkey'] = $key; }
+	  $tmp->values( $vals );
+	  return $tmp->process();
+  }
+  
+  /**
+   * Alternate row colors
+   */
+  function _rowColor() {
+    if( $this->_vars['rowcolor'] == $this->_vars['rowcolor_1'] ) { 
+      $this->_vars['rowcolor'] = $this->_vars['rowcolor_2'];
+    } 
+    else { 
+      $this->_vars['rowcolor'] = $this->_vars['rowcolor_1']; 
+    }
+  }
 
   /**
    ** <b>private</b>: parse a value string and return the results
@@ -242,7 +280,7 @@ class zenTemplate {
    ** @param string $text the text string to parse
    ** @return string the parsed data
    **/
-  function _parseString( $text ) {
+  function _parseString( $text, $curval = '', $curtext = '' ) {
     $text = str_replace('\\"', '"', $text);
     $text = str_replace("\\'", "'", $text);
     // parse the string to print
@@ -252,27 +290,34 @@ class zenTemplate {
       $v = trim($v);
       // this is a string
       if( strpos($v,'"') === 0 ) {
-	$str .= preg_replace('/^"/', "", preg_replace('/"$/', "", $v)); 
+        $str .= preg_replace('/^"/', "", preg_replace('/"$/', "", $v)); 
+      }
+      else if( preg_match('@^include\\(([A-Za-z0-9/_.]+)\\)$@', $v, $matches) ) {
+        $str .= "\{$v}";
       }
       // this is the foreach key
       else if( $v == "index" ) {
-	$str .= "{index}";
+        $str .= "{index}";
       }
       // this is the foreach value
       else if( $v == "value" ) {
-	$str .= "{value}";
+        $str .= "{value}";
       }
       // this is used for list elements and is set to " selected" when the key equals the field_value
       else if( $v == "selected" ) {
-	$str .= "{selected}";
+        $str .= "{selected}";
       }
       // this is used for list elements and is set to " checked" when the key equals the field_value
       else if( $v == "checked" ) {
-	$str .= "{checked}";
+        $str .= "{checked}";
+      }
+      // used to alternate colors of rows
+      else if( $v == 'rowcolor' ) {
+        $str .= "{rowcolor}";
       }
       // this is another variable
       else {
-	$str .= $this->_getVar($v);
+        $str .= $this->_getVar($v);
       }
     }
     // fix return chars
@@ -288,16 +333,26 @@ class zenTemplate {
    ** @return string the value of the varname
    **/
   function _getVar($name) {
-    if( is_array($this->_vars) && isset($this->_vars["$name"]) )
-      return $this->_vars["$name"];
-    else
-      return "";
+    if( !is_array($this->_vars) ) { return ""; }
+    if( preg_match("@^([a-zA-Z0-9_]+)\\[([a-zA-Z0-9_]+)\\]$@", $name, $matches) ) {
+      $x = $matches[1];
+      $y = $matches[2];
+      if( array_key_exists($x, $this->_vars) && array_key_exists($y, $this->_vars[$x]) ) {
+        return $this->_vars[$x][$y];
+      }
+      else {
+        return "";
+      }
+    }
+    if( !isset($this->_vars["$name"]) ) { return ""; }
+    return $this->_vars["$name"];
   }
 
   var $_template; //the file we are using
   var $_zen;
   var $_text;  //the template data loaded and ready for parsing
   var $_vars;  //the variables to use for template parsing
+  var $_dir;
 }
 
 ?>

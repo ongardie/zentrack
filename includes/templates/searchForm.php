@@ -9,8 +9,7 @@ $hk = $hotkeys->activateButton("Search", "searchForm");
      (string)$view - the current view (probably project_list or ticket_list)
   **/  
   
-  $view = 'search_form';
-  $hotkeys->loadSection('search_form');
+  $hotkeys->loadSection($view);
   $GLOBALS['zt_hotkeys'] = $hotkeys;
   $fields = $map->getFieldMap($view);
   $text_fields = array();

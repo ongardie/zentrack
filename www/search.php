@@ -37,6 +37,7 @@
   
   include("$libDir/nav.php");
   $zen->printErrors($errs);
+  $view = 'search_form';
   include($inc);
   include("$libDir/footer.php");
 ?>

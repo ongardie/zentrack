@@ -47,6 +47,8 @@
     print $map->renderTicketField($context);
   }
   
+  $searchbox_vals = array();
+  
   $context = new ZenFieldMapRenderContext($context_vals);
   $context->set('force_label', $override_as_label);
   foreach($visible_fields as $f) {
@@ -66,6 +68,9 @@
       if( $map->isReadOnlyField($formview, $f, $context) ) {
         $hk = false;
       }
+      else if( $map->getFieldProp($formview, $f, 'field_type') == 'searchbox' ) {
+        $hk = $hotkeys->activateSearchbox($maplabel, $form_name, $f);
+      }
       else {
         $hk = $hotkeys->activateField($maplabel, $form_name, $f);
       }
@@ -75,13 +80,48 @@
       print "</td><td class='bars'>";
       if( $td && $page_type == 'project' && $f == 'type_id' ) {
         // do not allow type to be edited for projects
-        print $map->getTextValue($formview, $f, $ticket[$f]);
+        print Zen::ffv($map->getTextValue($formview, $f, $ticket[$f]));
       }
       else {
+        if( $map->getFieldProp($formview, $f, 'field_type') == 'searchbox' ) {
+          if( $ticket[$f] ) {
+            $searchbox_vals[$f] = explode(',',$ticket[$f]);
+          }
+          else {
+            $searchbox_vals[$f] = false;
+          }
+        }
         print $map->renderTicketField($context);
       }
       print "</td></tr>\n";
     }
   }
 
+  if( count($searchbox_vals) ) {
+    print "<script type='text/javascript'>\n";
+    print " var validateHidden = new Array();\n";
+    print "addToOnload( function() { \n";
+    foreach($searchbox_vals as $k=>$v) {
+      print " validateHidden['$k'] = true;\n";
+      if( !$v ) { continue; }
+      foreach($v as $val) {
+        if( $k == 'project_id' || $k == 'ticket_id' || $k == 'relations' ) {
+          $t = $zen->get_ticket($val);
+          $text = Zen::ffv($t['title']);
+        }
+        else {
+          $text = Zen::ffv($map->getTextValue($formview, $k, $val));
+        }
+        print "  addSearchboxVal(";
+        print $zen->fixJsVal($form_name).",";
+        print $zen->fixJsVal($k).",";
+        print $zen->fixJsVal($val).",";
+        print $zen->fixJsVal($text).',';
+        print $map->hasMultipleValues($formview, $k)? 1 : 0;
+        print ");\n";
+      }
+    }
+    print "} );";
+    print "</script>\n";
+  }
 ?>

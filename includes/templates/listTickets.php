@@ -278,15 +278,15 @@ print "</td></tr>";
         }
         else {
           $value = strpos($f, 'custom_')===0? $custom_fields[$t["id"]][$f] : $t[$f];
-          if( $f == 'title' ) { $val = $t['hotkey_label']; }
-          else { $val = $map->getTextValue($view, $f, $value); }
+          $val = $map->getTextValue($view, $f, $value);
           if( $view == 'search_list' && is_array($search_fields) && array_key_exists($f, $search_fields) ) {
-            if ( strpos($val,'</span>') === false ) {
-              $val = $zen->highlight( $val, $search_text );
-            } else {
-              $pos = strpos($val,'</span>');
-              $val = substr($val,0,$pos+7) . $zen->highlight( substr($val,$pos+7), $search_text );
-            }
+            $val = $zen->highlight( $value, $search_text );
+          }
+          else {
+            $val = Zen::ffv($val);
+          }
+          if( $f == 'title' && $t['hotkey_sup'] ) {
+            $val = $t['hotkey_sup'].$val;
           }
           print $val;
         }

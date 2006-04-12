@@ -54,7 +54,7 @@
   
   // check for required fields
   foreach($required as $r) {
-    if( !strlen($$r) ) {
+    if( !strlen($$r) || (ZenFieldMap::noZeroVal($r) && $$r === 0) ) {
       $errs[] = tr("Required field missing:") . " " . ucfirst($r);
     }
   }

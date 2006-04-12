@@ -163,10 +163,12 @@
   
   $sql_replacements['mysql'][0][] = '/CREATE SEQUENCE[^;]+;/';
   $sql_replacements['mysql'][1][] = '';
+  $sql_replacements['mysql'][0][] = '/^--/';
+  $sql_replacements['mysql'][1][] = '#';
   
   $sql_replacements['mssqlserver'][0][] = '/int *[(] *([0-9,]+) *[)]/i';
   $sql_replacements['mssqlserver'][1][] = 'NUMERIC(\\1)';
-  $sql_replacements['mssqlserver'][0][] = '/^ *INDEX.*/i';
+  $sql_replacements['mssqlserver'][0][] = '/^ *INDEX.*/';
   $sql_replacements['mssqlserver'][1][] = '';
   $sql_replacements['mssqlserver'][0][] = '/CREATE SEQUENCE[^;]+;/';
   $sql_replacements['mssqlserver'][1][] = '';
@@ -179,13 +181,13 @@
   
   $sql_replacements['oracle'][0][] = '/int *[(] *([0-9,]+) *[)]/i';
   $sql_replacements['oracle'][1][] = 'NUMBER(\\1)';
-  $sql_replacements['oracle'][0][] = '/VARCHAR/i';
+  $sql_replacements['oracle'][0][] = '/VARCHAR/';
   $sql_replacements['oracle'][1][] = 'VARCHAR2';
-  $sql_replacements['oracle'][0][] = '/\bTEXT\b/i';
+  $sql_replacements['oracle'][0][] = '/\bTEXT\b/';
   $sql_replacements['oracle'][1][] = 'VARCHAR2(4000)';
   $sql_replacements['oracle'][0][] = '/PRIMARY KEY *[(] *([^)]+) *[)]/i';
   $sql_replacements['oracle'][1][] = 'CONSTRAINT \\1_pk1 PRIMARY KEY (\\1)';
-  $sql_replacements['oracle'][0][] = '/^ *INDEX.*/i';
+  $sql_replacements['oracle'][0][] = '/^ *INDEX.*/';
   $sql_replacements['oracle'][1][] = '';
   $sql_replacements['oracle'][0][] = '/CREATE SEQUENCE *( *[a-zA-Z0-9_]+ *) +( *[0-9]+ *)/';
   $sql_replacements['oracle'][1][] = 'CREATE SEQUENCE \\1 start with \\2 nocache';
@@ -196,7 +198,7 @@
   $sql_replacements['mssqlserver'][0][] = "/`([^'`]+)`/";
   $sql_replacements['mssqlserver'][1][] = '"\\1"';
   
-  $sql_replacements['postgres'][0][] = '/^ *INDEX.*/i';
+  $sql_replacements['postgres'][0][] = '/^ *INDEX.*/';
   $sql_replacements['postgres'][1][] = '';
   $sql_replacements['postgres'][0][] = '/int *[(] *([0-9,]+) *[)]/ie';
   $sql_replacements['postgres'][1][] = "doPostgresInt('\\1')";

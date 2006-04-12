@@ -475,7 +475,7 @@ class DB {
       $text .= " $andor ";
       if( $p[0] == "AND" or $p[0] == "OR" ) {
         $t = $this->recursiveSearchClause( $p[1], $p[0] );
-        $text .= "($t)";
+        $text .= " ($t)";
       } else {
         $not = ereg("^!",$p[1]);
         $p[1] = ereg_replace("^!", "", $p[1]);
@@ -537,10 +537,10 @@ class DB {
     }
     
     if( $this->db_link ) {
-      $this->addDebug('db_connect', "Connected successfully to database", 3);
+      Zen::addDebug('db_connect', "Connected successfully to database", 3);
     }
     else {
-      $this->addDebug('db_connect', "Could not connect to $user@$host:$database", 1);
+      Zen::addDebug('db_connect', "Could not connect to $user@$host:$database", 1);
     }
     return( $this->db_link );      
   }

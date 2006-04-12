@@ -17,16 +17,19 @@ var controlWindow;
 
 function popupWindow(loadpos, theName, theWidth, theHieght ) {
 	controlWindow=window.open(loadpos,theName,"toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=yes,width="+theWidth+",height="+theHieght);
+  controlWindow.focus();
 	return(false);
 }
 
 function popupWindowScrolls(loadpos, theName, theWidth, theHieght ) {
 	controlWindow=window.open(loadpos,theName,"toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width="+theWidth+",height="+theHieght);
+  controlWindow.focus();
 	return(false);
 }
 
 function popupWindowFull(loadpos, theName, theWidth, theHieght ) {
 	controlWindow=window.open(loadpos,theName,"toolbar=yes,location=yes,directories=yes,status=yes,menubar=yes,scrollbars=yes,resizable=yes,width="+theWidth+",height="+theHieght);
+  controlWindow.focus();
 	return(false);
 }
 
@@ -36,7 +39,7 @@ function popupWindowCentered(loadpos, theName, w, h, scroll) {
   winprops = 'height='+h+',width='+w+',top='+wint+',left='+winl+',scrollbars='+scroll+',resizab\
   le'
   win = window.open(loadpos, theName, winprops)
-  if (parseInt(navigator.appVersion) >= 4) { win.window.focus(); }
+  win.focus();
   return(false);
 }
 
@@ -66,17 +69,24 @@ function mOut(src,clrIn,txtIn) {
 
 function mClk(src) {
   if( src.childNodes ) {
+    //alert('child nodes');//debug
     for( var i=0; i < src.childNodes.length; i++ ) {
       var n = src.childNodes[i];
       //alert(n+"|"+n.nodeName);//debug
       if( n.nodeName == "A" ) {
-        if( n.href != '#' ) {
-          window.location = n.href;
-          break;
-        }
-        else if( n.click ) {
+        if( n.click ) {
           //alert('clickage: '+n.click);//debug
           n.click(); 
+          break;
+        }
+        else if( n.onclick ) {
+          //alert('onclickage: '+n.onclick);//debug
+          n.onclick();
+          break;
+        }
+        else if( n.href != '#' ) {
+          //alert('hrefage: '+n.href);//debug
+          window.location = n.href;
           break;
         }
         else {
@@ -167,7 +177,7 @@ function checkMyBox(fieldName, event) {
   }
 }
 
-function checkMyRow(fieldName, event, checkedStyle, uncheckedStyle) {
+function checkMyRow(fieldName, event, uncheckedStyle, checkedStyle) {
   if( !checkedStyle ) { checkedStyle = 'invalidBars'; }
   if( !uncheckedStyle ) { uncheckedStyle = 'bars'; }
   var elem = window.document.getElementById(fieldName);
@@ -202,34 +212,34 @@ function toggleField( fieldObj, disabledBoolean ) {
   }       
 }
 
-/** 
- * Admin Functions 
- */ 
-function addToOnload( newFxn ) { 
-  if( window.onload ) { 
-    window.onload = mergeFunctions( window.onload, newFxn, true ); 
-  } 
-  else { 
-    window.onload = newFxn; 
-  } 
-} 
- 
-/** 
- * Merges two functions 
- */ 
- 
-function mergeFunctions( fxn1, fxn2, skipReturn ) { 
-  if( !fxn1 ) { return fxn2; } 
-  if( !fxn2 ) { return fxn1; } 
-  return function() { 
-    var res = fxn1(); 
-    if( !skipReturn && res === false ) { return false; } 
-    res = fxn2(); 
-    if( !skipReturn ) { 
-      if( res === false ) { return false; } 
-      if( res === true ) { return true; } 
-    } 
-  } 
+/**
+ * Admin Functions
+ */
+function addToOnload( newFxn ) {
+  if( window.onload ) {
+    window.onload = mergeFunctions( window.onload, newFxn, true );
+  }
+  else {
+    window.onload = newFxn;
+  }
+}
+
+/**
+ * Merges two functions
+ */
+
+function mergeFunctions( fxn1, fxn2, skipReturn ) {
+  if( !fxn1 ) { return fxn2; }
+  if( !fxn2 ) { return fxn1; }
+  return function() {
+    var res = fxn1();
+    if( !skipReturn && res === false ) { return false; }
+    res = fxn2();
+    if( !skipReturn ) {
+      if( res === false ) { return false; }
+      if( res === true ) { return true; }
+    }
+  }
 }
 
 function openHelpBox(divObj, relativeElement, offsetY) {
@@ -369,6 +379,102 @@ function fieldFocus(form, field) {
 function buttonClick(form, button) {
   var f = window.document.forms[form].elements[button];
   if( !f || f.disabled ) { return; }
-  if( !f.click ) { return; }
+  if( !f.click ) {
+    if( f.onclick ) { f.onclick(); }
+    return; 
+  }
   f.click();
+}
+
+function openSearchbox(form, field, mode, type, multi) {
+  var url = rootUrl+"/helpers/searchbox.php?form="+form+"&field="+field+"&mode="+mode+"&type="+type+"&multi="+multi;
+  //alert(url);
+  var w = 400;
+  if( mode == 'ticket' || mode == 'project' ) { w = 550; }
+  popupWindowScrolls(url, "searchbox", w, 300);
+}
+
+function getSearchbox(form, field) {
+  return window.document.getElementById(searchboxId(form,field));
+}
+
+function getSearchboxNode(form, field, key) {
+  return window.document.getElementById(searchboxNodeId(form,field,key));
+}
+
+function searchboxId(form, field) {
+  return "searchbox_"+form+"_"+field;
+}
+
+function searchboxNodeId(form, field, key) {
+  return "searchnode_"+form+"_"+field+"_"+key;
+}
+
+function clearSearchboxVals(form, field) {
+  var f = window.document.forms[form].elements[field];
+  var d = getSearchbox(form, field);
+  if( !f.value ) { return; }
+  var ids = f.value.split(',');
+  var i;
+  for(i=0; i < ids.length; i++) {
+    delSearchboxVal(form, field, ids[i]);
+  }
+  f.value = '';
+}
+
+function delSearchboxVal(form, field, key) {
+  var n = getSearchboxNode(form, field, key);
+  var f = window.document.forms[form].elements[field];
+  // remove node from innerHTML
+  n.parentNode.removeChild(n);
+  // remove value from hidden field
+  if( f.value ) {
+    var ids = f.value.split(',');
+    var newval = '';
+    var i;
+    for(i=0; i < ids.length; i++) {
+      if( ids[i] == key ) { continue; }
+      newval += newval? ','+ids[i] : ids[i];
+    }
+    f.value = newval;
+  }
+  // set innerHTML to -none- if no values
+  if( !f.value ) {
+    var d = getSearchbox(form,field);
+    d.innerHTML = '-none-';
+    d.onclick = function() { window.document.getElementById(searchboxId(form,field)+'_button').onclick(); }
+  }
+}
+
+function addSearchboxVal(form, field, key, text, multi) {
+  var f = window.document.forms[form].elements[field];
+  var d = getSearchbox(form,field);
+  if( !multi ) { clearSearchboxVals(form, field); }
+  if( f.value ) {
+    var ids = f.value.split(',');
+    for(var i=0; i < ids.length; i++) {
+      // the key is already listed, don't add it twice
+      if( ids[i] == key ) { return; }
+    }
+  }
+  if( !f.value ) { d.innerHTML = ''; d.onclick = function() {}; }
+  f.value = f.value? f.value + ',' + key : key;
+  var n1 = window.document.createElement("DIV");
+  var n2 = window.document.createElement("DIV");
+  var n3 = window.document.createElement("DIV");
+  n1.innerHTML = key;
+  n2.innerHTML = text;
+  setClassX(n1, 'searchbox_atom_c1');
+  setClassX(n2, 'searchbox_atom_c2');
+  n1.onmouseover = function() { mClassX(this, "searchbox_atom_c1 atomon", true); }
+  n1.onmouseout  = function() { mClassX(this); }
+  n2.onmouseover = function() { mClassX(this, "searchbox_atom_c2 atomon", true); }
+  n2.onmouseout  = function() { mClassX(this); }
+  var node = window.document.createElement("DIV");
+  node.id = searchboxNodeId(form,field,key);
+  node.onclick = function() { delSearchboxVal(form, field, key); }
+  setClassX(node, 'searchbox_atom');
+  node.appendChild(n1);
+  node.appendChild(n2);
+  d.appendChild(node);
 }

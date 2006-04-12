@@ -834,7 +834,7 @@ function pageLoadedBehavior() {
       $sep = false;
       foreach(explode(',',$_GET['formset']) as $b) {
       if( $sep ) { print ","; }
-        print "window.document.".$zen->checkAlphaNum($b,'_.');
+        print "window.document.".$zen->checkAlphaNum($b,'_');
         $sep = true;
       }
     }

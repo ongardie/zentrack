@@ -42,7 +42,7 @@
       else {
         $label = $map->getLabel($boxview, $f);
         $val = array_key_exists($f, $varfields)? $varfields[$f] : $ticket[$f];
-        $value = $map->getTextValue($boxview, $f, $val);
+        $value = Zen::ffv($map->getTextValue($boxview, $f, $val));
       }
       $vals[] = array('label'=>$label, 'value'=>$value);
 

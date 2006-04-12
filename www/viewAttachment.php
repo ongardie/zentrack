@@ -31,7 +31,8 @@
   //header("Content-type: text/plain");
   //print("Content-type: $att[filetype]\nContent-Disposition: $cd filename=$att[name]");
   //Zen::printArray($att);
-  header("Content-type: $att[filetype]\nContent-Disposition: $cd filename=$att[name]");
+  header("Content-type: {$att['filetype']}");
+  header("Content-Disposition: {$cd}; filename=\"{$att['name']}\"");
 
   readfile($zen->attachmentsDir."/$att[filename]");
 

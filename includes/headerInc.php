@@ -31,7 +31,7 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
   ** SESSION MANAGEMENT
   */
   include_once("$libDir/session_start.php");
-
+  
   /*
   **  URL DETERMINATIONS
   */
@@ -70,9 +70,6 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
   $zen = new zenTrack( $configFile );
   $map =& new ZenFieldMap($zen);
   
-  $GLOBALS['zt_zen'] = $zen;
-  $GLOBALS['zt_map'] = $map;
-
   /**
   * Translator Object Initialization (mlively)
   */
@@ -354,7 +351,7 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
      
      // render the div layers
      print "<div style='width: {$width}px;' class='actionButtonDiv'\n"; 
-     print " $clickmouse";
+     print " onclick='mClk(this)';";
      print " onmouseover='mClassX(this, \"actionButtonDiv abdDown\", true)'\n";
      print " onmouseout='mClassX(this, \"actionButtonDiv\")'\n";
      print " title='".$hotkeys->tooltip($key)."'>\n";
@@ -511,7 +508,7 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
   }
   
   function eLink($email) {
-    $zen = $GLOBALS['zen'];
+    $zen =& $GLOBALS['zen'];
     if( !$email ) { return '&nbsp;'; }
     if( !strpos($email,'@') ) { return $zen->ffv($email); }
     list($name,$dom) = explode('@',$email);
@@ -519,7 +516,7 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
   }
   
   function colorBox( $form, $field, $val = null ) {
-    $zen = $GLOBALS['zen'];
+    $zen =& $GLOBALS['zen'];
     $txt = '';
     $val = $zen->ffv($val);
     $txt .= "<input type='text' name='$field' value='$val' size='8' maxlength='7' onchange='colorChanged(this)'>";

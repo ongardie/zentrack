@@ -364,6 +364,12 @@ class ZenHotKeys {
     $this->_sections['search_form']['ALT+D'] = array('Description', "{$f}.elements['search_fields[description]'].click()", '', false);
     
     ////////////////////////
+    // searchbox
+    ////////////////////////
+    $this->_sections['searchbox'] = array();
+    $this->_sections['searchbox']['ESC'] = array('Close Window', "window.close()", 'Close window without changes', false);
+    
+    ////////////////////////
     // tab_attachments
     ////////////////////////
     $this->_sections['tab_attachments'] = array();
@@ -397,7 +403,7 @@ class ZenHotKeys {
     // ticket_view
     ////////////////////////
     $this->_sections['ticket_view'] = array();
-    $map = $GLOBALS['zt_map'];
+    $map =& $GLOBALS['map'];
     $t = 'ticket';
     $j = 1;
     for($i=1; $i<=8; $i++) {
@@ -415,7 +421,7 @@ class ZenHotKeys {
     // project_view
     ////////////////////////
     $this->_sections['project_view'] = array();
-    $map = $GLOBALS['zt_map'];
+    $map =& $GLOBALS['map'];
     $t = 'project';
     $j = 1;
     for($i=1; $i<=8; $i++) {
@@ -496,10 +502,10 @@ class ZenHotKeys {
   
   function newFxn( $name, $code ) {
     if( array_key_exists($name, $this->_fxns) ) {
-      $this->_zen->addDebug('ZenHotKeys->newFxn', "The fxn '$name' already exists", 1);
+      $this->_zen->addDebug('ZenHotKeys->newFxn', "The fxn '$name' already exists", 2);
       return;
     }
-    $this->_zen->addDebug('ZenHotKeys->assign', "Added fxn '$name'", 3);
+    $this->_zen->addDebug('ZenHotKeys->assign', "Added fxn '$name'", 4);
     $this->_fxns["$name"] = $code;
   }
   
@@ -529,7 +535,7 @@ class ZenHotKeys {
     // if the hot key doesn't exist, we fail and don't add anything
     $key = strtoupper($key);
     if( array_key_exists($key, $this->_keys) ) {
-      $this->_zen->addDebug('ZenHotKeys->assign', "The key '$key' already exists and will not have a hot key", 1);
+      $this->_zen->addDebug('ZenHotKeys->assign', "The key '$key' already exists and will not have a hot key", 2);
       return;
     }
 
@@ -550,7 +556,7 @@ class ZenHotKeys {
     $fxn = str_replace("{id}", $id, $fxn);
     
     // actually create the key assignment now
-    $this->_zen->addDebug('ZenHotKeys->assign', "Added key '$key' for label '$label' and fxn '$fxn'", 3);
+    $this->_zen->addDebug('ZenHotKeys->assign', "Added key '$key' for label '$label' and fxn '$fxn'", 4);
     $this->_keys["$key"] = array('label'=>$label, 'fxn'=>$fxn, 'description'=>$description, 'global'=>$global);
   }
   
@@ -575,7 +581,7 @@ class ZenHotKeys {
   function tt( $label ) {
     $key = $this->find($label);
     if( !$key ) {
-      $this->_zen->addDebug('ZenHotKeys->tt', "Invalid label '$label'", 1);
+      $this->_zen->addDebug('ZenHotKeys->tt', "Invalid label '$label'", 2);
       return $label;
     }
     return $this->tooltip($key, $override_text = '');
@@ -585,7 +591,7 @@ class ZenHotKeys {
   function ll( $label, $override_text = '', $supress_key = false ) {
     $key = $this->find($label);
     if( !$key ) {
-      $this->_zen->addDebug('ZenHotKeys->ll', "Invalid label '$label'", 1);
+      $this->_zen->addDebug('ZenHotKeys->ll', "Invalid label '$label'", 2);
       return $override_text? $override_text : $label;
     }
     return $this->label($key, $override_text, $supress_key);
@@ -768,6 +774,21 @@ class ZenHotKeys {
   }
   
   /**
+   * Activate a searchbox field by examining the label for the field and assigning
+   * it a hot key from the most appropriate letter available.
+   *
+   * @param string $label the text displayed to user (i.e. label) of the field to activate (translated)
+   * @param string $form the form containing the field
+   * @param string $field the actual field name inside the html form
+   * @param string $meta_key the meta key to use in conjunction with field (defaults to ALT)
+   * @return ZenHotKeyElement or (boolean)false if no key could be activated
+   */
+  function activateSearchbox( $label, $form, $field, $meta_key = 'ALT' ) {
+    $fxn = "buttonClick('$form', '{$field}_button')";
+    return $this->activate($label, $meta_key, $fxn);
+  }
+
+  /**
    * Activate a list of fields using the values given in the array.
    *
    * @param array $fields an associative array of (string)field_names -> (string)label
@@ -798,7 +819,7 @@ class ZenHotKeys {
       $fxn = "buttonClick('$form', '$button')";
     }
     else {
-      $fxn = "submitForm('$form')";
+      $fxn = "if( !$form.onsubmit || $form.onsubmit() ) { submitForm('$form'); }";
     }
     return $this->activate($label, $meta_key, $fxn);
   }
@@ -849,8 +870,8 @@ class ZenHotKeys {
       $key = "$j";
       $this->_sections['activated_list'][$key][1] = $this->_parseUrl( $list[$i], $url );
       $list[$i]['hotkey_key'] = Zen::ffv($key);
-      $list[$i]['hotkey_sup'] = $this->addZenTab($key)."<span class='listHotkey'>[$j]</span>";
-      $list[$i]['hotkey_label'] = $list[$i]['hotkey_sup']." ".Zen::ffv($name);
+      $list[$i]['hotkey_sup'] = $this->addZenTab($key)."<span class='listHotkey'>[$j]</span> ";
+      $list[$i]['hotkey_label'] = $list[$i]['hotkey_sup'].Zen::ffv($name);
       $list[$i]['hotkey_tooltip'] = Zen::ffv($name)." ($key)";
     }
     $this->loadSection('activated_list');

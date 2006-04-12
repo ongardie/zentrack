@@ -11,7 +11,11 @@ and user experience, internationalization, platform and database
 abstraction, and endless possibilities for project expansion. 
 --------------------
 
------ VERSION 2.6.1 (2006-03-12) -----
+----- VERSION 2.6.2 (development) -----
+
+2006-04-05, kato
+  Fixed problem with attachments displaying as garbage (due to warning in header)
+    - zentrack_2/www/viewAttachments.php
 
 2006-04-04, cfalonso
   TK #325: Multi-fields not showing values on edit screen
@@ -25,6 +29,7 @@ abstraction, and endless possibilities for project expansion.
     - zentrack_2/www/behavior_js.php 1.41
     - zentrack_2/www/javascript.js 1.27
 
+----- VERSION 2.6.1 (2006-03-12) -----
 
 2006-03-09, kato
   Prepared install/upgrade docs and scripts

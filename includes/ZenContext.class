@@ -27,7 +27,7 @@ class ZenContext {
   }
   
   function _debug( $method, $msg, $lvl ) {
-    $zen = $GLOBALS['zt_zen'];
+    $zen =& $GLOBALS['zen'];
     if( $zen ) {
       $zen->addDebug("ZenContext::$method", $msg, $lvl);
     }

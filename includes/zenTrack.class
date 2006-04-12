@@ -181,7 +181,7 @@ class zenTrack extends zen {
     return($vars);
   }
 
-  function get_projects( $params, $sort = 'priority, otime desc' ) {
+  function get_projects( $params, $sort = 'priority DESC, otime DESC' ) {
     // retrieves a list of projects
     // see get_tickets() for a list of valid params
     // (with the exception of 'type_id' which is set to
@@ -4353,7 +4353,28 @@ class zenTrack extends zen {
   /*
    *  SYSTEM UTILS 
    */
-
+   
+  function getDataTypeVals( $table ) {
+    switch( strtoupper($table) ) {
+      case "ZENTRACK_BINS":
+      case "BINS":
+        return $this->getBins();
+      case "ZENTRACK_PRIORITIES":
+      case "PRIORITIES":
+        return $this->getPriorities();
+      case "ZENTRACK_SYSTEMS":
+      case "SYSTEMS":
+        return $this->getSystems();
+      case "ZENTRACK_TASKS":
+      case "TASKS":
+        return $this->getTasks();
+      case "ZENTRACK_TYPES":
+      case "TYPES":
+        return $this->getTypes();
+    }
+    return null;
+  }
+   
   function getDataTypeFields( $table ) {
     switch( strtoupper($table) ) {
     case "ZENTRACK_BINS":
@@ -5650,11 +5671,12 @@ class zenTrack extends zen {
    */
   function getSetting( $key ) {
     $settings = $this->getSettings();
+    $key = Zen::checkAlphaNum($key);
     if( is_array($settings) && array_key_exists("$key", $settings) ) {
       return $settings["$key"];
     }
     else {
-      $this->addDebug('getSetting', "Setting not found for ".$key, 2);
+      $this->addDebug('getSetting', "Setting not found for ".$key, 1, false);
       return null;
     }
   }
@@ -5701,7 +5723,7 @@ class zenTrack extends zen {
       $vals["{$v['name']}"] = ($flag)? $v : $v["value"];
     }
     
-    $this->addDebug('getSettings', "Retrieved ".count($vals)." settings from database", 3);
+    $this->addDebug('getSettings', "Retrieved ".count($vals)." settings from database", 3, false);
     
     // store vals in session
     if( !$flag ) {
@@ -5860,7 +5882,7 @@ class zenTrack extends zen {
     return $this->projectTypeIDs;
   }
 
-  function notProjectTypeIds() {
+  function notProjectTypeIDs() {
     $vars = array();
     foreach( $this->getTypes() as $k=>$v ) {
       if( !preg_match("@project@i",$v) ) {
@@ -5917,9 +5939,14 @@ class zenTrack extends zen {
     // from the configVars file
     
     include("$file");
+    
+    // it is necessary to do this here since this object is referenced during
+    // this method by other calls, such as Zen::addDebug() and the $GLOBALS
+    // reference is not created until this method returns.
 
+    $GLOBALS['zen'] =& $this;
     $this->zen();
-    $this->_session =& new ZenSessionManager($this);
+    $this->_session =& new ZenSessionManager();
     $this->DB( $this->database_host, $this->database_login, 
                $this->database_password, $this->database_instance);
 

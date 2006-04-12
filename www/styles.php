@@ -80,7 +80,7 @@
     padding-right: 0px;
   }
   
-  .indent, .indented {
+  .indent, .indented, TD.indent, TD.indented {
     padding-left: 10px;
     padding-right: 10px;
   }
@@ -469,8 +469,9 @@ TD.bigger { font-size: 50px; }
 }
 
 .mark {
-   border:  1px solid <?=$zen->getSetting("color_highlight")?>;
-   font-weight: bold;
+   //border:  1px solid <?=$zen->getSetting("color_highlight")?>;
+   //font-weight: bold;
+   background: <?=$zen->getSetting('color_highlight')?>;
 }
 
 .hot {
@@ -853,4 +854,38 @@ TD.bigger { font-size: 50px; }
     margin-left: 5px;
   }
   
+  .searchbox {
+    float:       left;
+    width:       300px;
+    padding:     2px;
+    margin:      1px;
+    background:  <?=$zen->getSetting("color_bars")?>;
+    border:      1px solid <?=$zen->getSetting("color_text")?>;
+    color:       <?=$zen->getSetting("color_bar_text")?>;
+    max-height:  <?=$zen->getSetting('max_textbox_height')?>px;
+    height:      expression(this.scrollHeight > <?=$zen->getSetting('max_textbox_height')?>? "<?=$zen->getSetting('max_textbox_height')?>px" : "auto");	
+    overflow:    auto;
+  }
+  
+  .searchbox_atom {
+    font-size:  <?=$zen->getSetting('font_size_small')?>;
+  }
+  
+  .searchbox_atom_c1 {
+    border:     1px solid <?=$zen->getSetting("color_bars")?>;
+    width:        50px;
+    float:        left;
+    padding:      1px;
+    background:   <?=$zen->getSetting('color_background');?>;
+  }
+  
+  .atomon {
+    border:     1px solid <?=$zen->getSetting('color_highlight')?>;
+  }
+  
+  .searchbox_atom_c2 {
+    border:     1px solid <?=$zen->getSetting("color_bars")?>;
+    padding:    1px;
+    background: <?=$zen->getSetting('color_background');?>;
+  }
 -->

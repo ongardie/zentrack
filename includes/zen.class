@@ -138,13 +138,16 @@ class zen extends zenDate {
    function ffv( $val = '', $strlen = 0 ) {
      // we create a reference to the character_set setting for
      // use with htmlspecialchars
-     static $charset;
-     if( !isset($charset) || !$charset ) {
+     $charset = isset($GLOBALS['charset'])? $GLOBALS['charset'] : false;
+     if( !$charset ) {
        // this roundabout approach is used because ffv() needs to be available
        // in a static context (no $this) and it is possible to call ffv()
        // before $zen has been made available (although it should not happen this way)
-       global $zen;
-       if( $zen ) { $charset = $zen->getSetting('character_set'); }
+       if( isset($GLOBALS) && isset($GLOBALS['zen']) ) { 
+         $zen =& $GLOBALS['zen'];
+         $GLOBALS['charset'] = $zen->getSetting('character_set');
+         $charset = $GLOBALS['charset'];
+       }
      }
      // converts special characters to ascii codes
      // to be used in <input> fields
@@ -181,6 +184,7 @@ class zen extends zenDate {
    function fixJsVal( $val, $char = '"' ) {
      // escape any js sensitive characters for use in strings
      if( is_null($val) ) { return "null"; }
+     if( !strlen($val) ) { return "''"; }
      if( preg_match('@^[0-9]+$@', $val) ) {
        return $val;
      }
@@ -318,7 +322,7 @@ class zen extends zenDate {
         $match = array($match);
      for( $i=0; $i<count($text); $i++ ) {
        foreach($match as $m) {
-         $m = str_replace('/','\\/',$m);
+         $m = str_replace('/','\\/',Zen::ffv($m));
          $text[$i] = preg_replace("/($m)/i", "$h[0]\\1$h[1]", $text[$i]);
        }
      }
@@ -607,12 +611,19 @@ class zen extends zenDate {
     *  @param string $title is the name of the method/page calling addDebug
     *  @param string $msg is the text to display for the debug message
     *  @param integer $lvl 1-error, 2-warning, 3-notice
+    *  @param boolean $ffv set to false to disable security check for text
     */
-   function addDebug( $title, $msg, $lvl = 3 ) {
-     if( $lvl <= $this->debug )
-       $this->debugMessages[] = (is_array($msg))?
-     array($title,$msg,$lvl) :
-     array($title,$this->ffv($msg),$lvl);
+   function addDebug( $title, $msg, $lvl = 3, $ffv = true ) {
+     // make this a static method by finding the $zen instance without
+     // relying on $this
+     $zen = isset($GLOBALS['zen'])? $GLOBALS['zen'] : false;
+     if( !$zen ) { return; }
+     
+     // add the msg
+     if( $lvl <= $zen->debug ) {
+       if( $ffv ) { $msg = Zen::ffv($msg); }
+       $zen->debugMessages[] = array($title, $msg, $lvl);
+     }
    }
 
    /**

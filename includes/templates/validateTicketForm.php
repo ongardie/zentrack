@@ -27,6 +27,9 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
       case "select-multiple":
         return obj.selectedIndex? true : false;
       case "hidden":
+        if( validateHidden && validateHidden[obj.name] ) {
+          return obj.value != null && obj.value.length; 
+        }
       case "button":
       case "submit":
       case "password":

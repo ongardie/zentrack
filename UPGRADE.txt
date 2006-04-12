@@ -36,9 +36,9 @@ UPGRADE FROM 2.6.0.4
 
   2. Copy new downloads over existing files:
      /downloads/zentrack_2-6-1/includes/* -> /web/zentrack/includes/*
-     /donwloads/zentrack_2-6-1/www/* -> /web/zentrack/www/*
+     /downloads/zentrack_2-6-1/www/* -> /web/zentrack/www/*
      
-  1. Run the install/UPGRADE_yourdb.sql script
+  3. Run the install/UPGRADE_yourdb.sql script
      You may do this from the command line with something like:
        mysql -u username -p database < UPGRADE_mysql.sql (mysql)
        @c:\directory\UPGRADE_oracle.sql (oracle/sql+)
