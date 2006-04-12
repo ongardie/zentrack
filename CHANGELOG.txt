@@ -13,9 +13,55 @@ abstraction, and endless possibilities for project expansion.
 
 ----- VERSION 2.6.2 (development) -----
 
-2006-04-05, kato
+2006-04-12, kato
   Fixed problem with attachments displaying as garbage (due to warning in header)
-    - zentrack_2/www/viewAttachments.php
+    - zentrack_2/www/viewAttachment.php 1.7
+  Fixed Oracle SQL Syntax (and some other minor cleanup)
+    - zentrack_2/UPGRADE.txt 1.5
+    - zentrack_2/install/previous/2.6.UPGRADE_oracle.sql 1.2
+    - zentrack_2/install/seed_mssqlserver.sql 1.52
+    - zentrack_2/install/seed_mysql.sql 1.71
+    - zentrack_2/install/seed_oracle.sql 1.59
+    - zentrack_2/install/seed_postgres.sql 1.56
+    - zentrack_2/install/utils/upgrade_base.sql 1.5
+    - zentrack_2/install/utils/upgrade_prep.php 1.7
+  Added new helper UIs (some work to do on these yet, but they are functional)
+    - zentrack_2/includes/ZenContext.class 1.3
+    - zentrack_2/includes/ZenFieldMap.class 1.44
+    - zentrack_2/includes/ZenHotKeys.class 1.21
+    - zentrack_2/includes/ZenSessionManager.class 1.11
+    - zentrack_2/includes/db.class 1.46
+    - zentrack_2/includes/headerInc.php 1.71
+    - zentrack_2/includes/nav.php 1.33
+    - zentrack_2/includes/translator.class 1.13
+    - zentrack_2/includes/validateFields.php 1.10
+    - zentrack_2/includes/zen.class 1.46
+    - zentrack_2/includes/zenTemplate.class 1.15
+    - zentrack_2/includes/zenTrack.class 1.215
+    - zentrack_2/includes/ZenSearch.php 1.1
+    - zentrack_2/includes/ZenSearchBox.php 1.1
+    - zentrack_2/includes/searchboxResults.php 1.1
+    - zentrack_2/includes/templates/fields/searchbox.template 1.3
+    - zentrack_2/includes/templates/form_fields.php 1.7
+    - zentrack_2/includes/templates/listTickets.php 1.41
+    - zentrack_2/includes/templates/searchForm.php 1.23
+    - zentrack_2/includes/templates/ticket_fields_viewable.php 1.5
+    - zentrack_2/includes/templates/ticket_tabs.php 1.9
+    - zentrack_2/includes/templates/validateTicketForm.php 1.7
+    - zentrack_2/includes/templates/nav_body.php 1.1
+    - zentrack_2/includes/templates/nav_header.php 1.1
+    - zentrack_2/includes/templates/searchbox_dt.template 1.1
+    - zentrack_2/includes/templates/searchbox_dth.template 1.1
+    - zentrack_2/includes/templates/searchbox_form.template 1.1
+    - zentrack_2/includes/templates/searchbox_results.php 1.1
+    - zentrack_2/www/behavior_js.php 1.42
+    - zentrack_2/www/javascript.js 1.28
+    - zentrack_2/www/search.php 1.18
+    - zentrack_2/www/styles.php 1.38
+    - zentrack_2/www/helpers/searchbox.php 1.1
+    - zentrack_2/www/helpers/projectSearchbox.php 1.13
+    - zentrack_2/www/helpers/ticketSearchbox.php 1.11
+    - zentrack_2/www/helpers/userSearchbox.php 1.12
 
 2006-04-04, cfalonso
   TK #325: Multi-fields not showing values on edit screen
