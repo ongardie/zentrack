@@ -24,7 +24,8 @@
 </tr>
 <tr>
   <td class='leftNavCell' height='100%' valign='top'>
-    <div class='recentHistory'><?=tr("Recent Projects")?></div>
+    <div class='recentHistory'>
+      <div><?=tr("Recent Projects")?></div>
     <?
       $history =& $zen->getHistoryManager();
       $list = $history->getList('project');
@@ -36,6 +37,6 @@
       else {
         print "-none-";
       }
-    ?>
+    ?></div>
   </td>
 </tr>

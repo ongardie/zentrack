@@ -140,32 +140,6 @@ $ztf = array(
     "comments"        => array(  false,   array(2)              , 'text'   ,      null, false,  false,  true)
   ),
   
-  // "views" => array(//           disabled, view_only, has_behaviors, admin_view, multiple, sections, any_option, access_level
-    // "ticket_close"    => array(    false,    false,      true, false, false, true,  false, 'level_user' ), 
-    // "ticket_create"   => array(    false,    false,      true, false, false, true,  false, 'level_create' ), 
-    // "ticket_custom"   => array(    false,    false,      true, false, false, true,  false, 'level_view' ),
-    // "ticket_edit"     => array(    false,    false,      true,  true, false, true,  false, 'level_edit' ), 
-    // "ticket_list"     => array(    false,     true,     false, false, false, false, false, 'level_view' ),
-    // "ticket_options"  => array(    false,    false,     false, false, false, false, true , 'level_view' ),
-    // "ticket_view_top" => array(    false,     true,     false, false, false,  true, false, 'level_view' ),
-    // "ticket_tab_1"    => array(    false,     true,     false, false, false,  true, false, 'level_view' ),
-    // "ticket_tab_2"    => array(    false,     true,     false, false, false,  true, false, 'level_view' ),
-    // "ticket_tab_3"    => array(    false,     true,     false, false, false,  true, false, 'level_view' ),
-    // "ticket_tab_4"    => array(    false,     true,     false, false, false,  true, false, 'level_view' ),
-    // "ticket_tab_5"    => array(    false,     true,     false, false, false,  true, false, 'level_view' ),
-    // "ticket_tab_6"    => array(    false,     true,     false, false, false,  true, false, 'level_view' ),
-    // "ticket_tab_7"    => array(    false,     true,     false, false, false,  true, false, 'level_view' ),
-    // "ticket_tab_8"    => array(    false,     true,     false, false, false,  true, false, 'level_view' ),
-    // "project_close"   => array(    false,    false,      true, false, false, true,  false, 'level_user' ), 
-    // "project_create"  => array(    false,    false,      true, false, false, true,  false, 'level_create_proj' ),
-    // "project_custom"  => array(    false,    false,      true, false, false, true,  false, 'level_view' ),
-    // "project_edit"    => array(    false,    false,      true,  true, false, true,  false, 'level_edit' ),
-    // "project_list"    => array(    false,     true,     false, false, false, false, false, 'level_view' ),
-    // "project_options" => array(    false,    false,     false, false, false, false, true , 'level_view' ),
-    // "search_form"     => array(    false,    false,      true,  true, true , false, true , 'level_view' ),
-    // "search_list"     => array(    false,     true,     false, false, false, false, false, 'level_view' )
-  // ),
-  
   "types" => array(//   choices| multirows
     "hidden"   => array(  false, false ),
     "label"    => array(  false, false ),
@@ -384,12 +358,6 @@ class ZenFieldMap {
   /**
    * Returns the label specified for the field in question
    */
-/*old Function (wrong):
-  function getLabel( $view, $field_name ) {
-    $field = $this->getFieldFromMap($view,$field_name);
-    return $field['field_label']? $field['field_label'] : $field['field_name'];
-  }
-  new Function: */
   function getLabel( $view, $field_name) {
     $field = $this->getFieldFromMap($view,is_array($field_name)?$field_name['field_name']:$field_name);
     return $field['field_label']? tr($field['field_label']) : tr($field['field_name']);
@@ -633,24 +601,6 @@ class ZenFieldMap {
     
     // deal with special custom field problems
     if( ZenFieldMap::isVariableField($field_name) ) {
-      $f = $this->_zen->getCustomField($field_name);
-      if( $f['js_validation'] ) {
-        if( $vals['field_events'] ) {
-          if( preg_match("/onblur=(['\"])([^'\"]+)['\"]/", $vals['field_events'], $matches) ) {
-            $q = $matches[1];
-            $v = str_replace($q, "\\$q", $f['js_validation']);
-            if( !preg_match('@;$@', $v) ) { $v .= ';'; }
-            $val = "onblur='{$v};{$matches[2]}'";
-            $vals['field_events'] = preg_replace("/onblur=['\"]([^'\"]+)['\"]/", $val, $vals['field_events']);
-          }
-          else {
-            $vals['field_events'] .= " onblur=".$zen->fixJsVal($f['js_validation']);
-          }
-        }
-        else {
-          $vals['field_events'] = "onblur=".$zen->fixJsVal($f['js_validation']);
-        }
-      }
       if( strpos($field_name,'custom_date') === 0 ) {
         if( $vals['field_value'] == 'NULL' ) { $vals['field_value'] = ''; }
         if( $vals['field_value'] == 0 ) { $vals['field_value'] = ""; }
@@ -720,7 +670,9 @@ class ZenFieldMap {
   
   /** @static */
   function hasMultipleValues( $view, $field ) {
-    return ( $this->getFieldProp($view,$field,'multiple') || $this->getViewProp($view,'multiple') );
+    $fp = getFmFieldProps($view, $field);
+    $t = $this->getFieldProp($view,$field,'field_type');
+    return ( $fp['multiple'] || $this->getViewProp($view,'multiple') );
   }
   
   /**
@@ -967,8 +919,6 @@ class ZenFieldMap {
       case "custom_menu":
       case "custom_multi":
         $pts = explode("_", $view, 2);
-//          $vars = $this->_zen->getCustomField($field_name);
-//          $set = genDataGroupChoices($vars['field_value']);
         $vars = $this->getFieldFromMap($view, $field_name);
         $set = genDataGroupChoices($vars['default_val']);
         $vals = array();

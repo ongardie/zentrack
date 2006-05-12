@@ -386,12 +386,16 @@ function buttonClick(form, button) {
   f.click();
 }
 
+var searchboxRand = 0;
 function openSearchbox(form, field, mode, type, multi) {
   var url = rootUrl+"/helpers/searchbox.php?form="+form+"&field="+field+"&mode="+mode+"&type="+type+"&multi="+multi;
   //alert(url);
   var w = 400;
+  // generates a unique window id which will not accidentally be duplicated
+  // when calling this from multiple windows
+  var rand = "searchbox_"+window.name+"_"+searchboxRand++;
   if( mode == 'ticket' || mode == 'project' ) { w = 550; }
-  popupWindowScrolls(url, "searchbox", w, 300);
+  popupWindowScrolls(url, rand, w, 300);
 }
 
 function getSearchbox(form, field) {
@@ -477,4 +481,18 @@ function addSearchboxVal(form, field, key, text, multi) {
   node.appendChild(n1);
   node.appendChild(n2);
   d.appendChild(node);
+}
+
+function expandNav( link, etxt, ctxt ) {
+  // we pass etxt and ctxt here because we need to translate them...
+  // this is easiest to do in the php pages
+  var d = window.document.getElementById("navExpCell");
+  if( d && d.style && d.style.width == "500px" ) {
+    d.style.width = '';
+    link.innerHTML = etxt;
+  }
+  else if( d ) {
+    d.style.width = "500px";
+    link.innerHTML = ctxt;
+  }
 }

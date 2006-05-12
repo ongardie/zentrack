@@ -35,7 +35,7 @@ class DB {
   }
   
   //Paging Feature 
-  function db_getlimitedIndex($query,$nosofrows, $offset) {
+  function db_getlimitedIndex($query,$nosofrows, $offset = 0) {
     //retrieves an indexed array of results from $query which has a specified limit.
     $this->switchQueryMode(1);
     $recordSet = &$this->db_link->SelectLimit($query,$nosofrows,$offset);
@@ -292,7 +292,10 @@ class DB {
   function checkSlashes( $val = '' ) {
     // checks incoming data for proper escaped ' marks
     // to insure insertion integrity
-    if( is_array($val) ) {
+    if( $val == 'NULL' ) {
+      return $val;
+    }
+    else if( is_array($val) ) {
       foreach($val as $v) {
         $text .= ($text)? ",".$this->checkSlashes($v) : $this->checkSlashes($v);
       }
@@ -318,22 +321,14 @@ class DB {
       $vals = "";
       foreach($params as $k=>$v) {
         $cols .= ($cols)? ", $k" : "$k";
-        if( ereg("^(NULL|FALSE|TRUE)$", $v) ) {
-          $vals .= strlen($vals)? ", $v" : "$v"; 
-        } else {
-          $vals .= strlen($vals)? ", ".$this->checkSlashes($v) : $this->checkSlashes($v);
-        }
+        $vals .= strlen($vals)? ", ".$this->checkSlashes($v) : $this->checkSlashes($v);
       }
       return(array($cols,$vals));
     } else {
       $cols = "";
       $vals = "";
       foreach($params as $k=>$v) {
-        if( ereg("^(NULL|FALSE|TRUE)$", $v) ) {
-          $vals .= strlen($vals)? ", $k = $v" : "$k = $v"; 
-        } else {
-          $vals .= strlen($vals)? ", $k = ".$this->checkSlashes($v) : "$k = ".$this->checkSlashes($v);
-        }
+        $vals .= strlen($vals)? ", $k = ".$this->checkSlashes($v) : "$k = ".$this->checkSlashes($v);
       }
       return( $vals );
     }
@@ -351,20 +346,12 @@ class DB {
         $text .= "$k IN(";
         $i = 0;
         foreach($v as $vi) {
-          if( ereg("^(NULL|FALSE|TRUE|[0-9]+)$", $vi) ) {
-            $text .= ($i > 0)? ", ".$vi : $vi;
-          } else {
-            $text .= ($i > 0)? ", ".$this->checkSlashes($vi) : $this->checkSlashes($vi);
-          }
+          $text .= ($i > 0)? ", ".$this->checkSlashes($vi) : $this->checkSlashes($vi);
           $i++;
         }
         $text .= ")";
       } else {
-        if( ereg("^(NULL|FALSE|TRUE|[0-9]+)$", $v) ) {
-          $text .= "$k = $v";
-        } else {
-          $text .= "$k = ".$this->checkSlashes($v);
-        }
+        $text .= "$k = ".$this->checkSlashes($v);
       }
     }
     return($text);
@@ -385,7 +372,6 @@ class DB {
       if( is_array($v[1]) && $v[0] == "AND" || $v[0] == "OR" ) {
         $text .= " (".$this->complexWhere($v[1], $v[0]).") ";
       } else {
-        if( !ereg("^(NULL|FALSE|TRUE|[0-9]+)$", $v[2]) )
         $v[2] = $this->checkSlashes($v[2]);
         $text .= " $v[0] $v[1] $v[2] ";
       }

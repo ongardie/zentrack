@@ -8,6 +8,7 @@
   }
 
   $page_title = tr("Commit Edited Ticket");
+  
 
   // initiate default values
   if( !$tested )
@@ -20,11 +21,9 @@
   $is_project = $type == 'project' || $zen->inProjectTypeIds($type_id);
   $view = $is_project? 'project_edit' : 'ticket_edit';
 
-//  print "pre ctime: $ctime<br>\n";//debug
   
   include("$libDir/validateFields.php");
   
-//  print "post ctime: $ctime<br>\n";//debug
   
   if( !$errs ) {
      $params = array();
@@ -34,14 +33,15 @@
        if( $f == 'status' ) { continue; }
        // put the value into the updates array
        $params["$f"] = $$f;
-       if( $f == 'title' && strlen($params["$f"]) > 50 ) {
-         $params["$f"] = substr($params["$f"],0,50);
+       if( $f == 'title' && strlen($params["$f"]) > 150 ) {
+         $params["$f"] = substr($params["$f"],0,150);
        }
      }
 
      if ( !$varfields )  {
        $varfield_params=null;
      }
+     
 
      $zen->update_all_ticket_fields($id, $login_id, $bin_id, $params,
                                     $varfield_params, "EDIT", "Ticket edited", $edit_reason);

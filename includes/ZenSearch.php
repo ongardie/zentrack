@@ -171,8 +171,14 @@ class ZenSearch {
        else {
          $bv = array('bin_id', 'IN', $ubins);
        }
-       $parms = array( array($this->_andor, $parms), $bv );
-       $this->_andor = 'AND';
+       if( count($parms) ) {
+         $parms = array( array($this->_andor, $parms), $bv );
+         $this->_andor = 'AND';
+       }
+       else {
+         $parms = $bins;
+         $this->_andor = 'OR';
+       }
      }
      
      if( count($parms) ) {

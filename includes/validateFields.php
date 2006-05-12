@@ -32,12 +32,21 @@
       if( $field['is_required'] || $fprops["$f"]['always_required'] ) {
         $required[] = $f;
       }
-      if ( strpos($f,'custom_') === 0 ) { $varfields["$f"] = $field; }
+      if ( ZenFieldMap::isVariableField($f) ) { $varfields["$f"] = $field; }
+      else if( $f == 'relations' ) { $fields["$f"] = 'ignore'; }
       else { $fields["$f"] = $fprops["$f"]['data_type']; }
     }
   }
 
   $zen->cleanInput($fields);
+  
+  if( !empty($relations) ) {
+    // relations need special attention to insure all the values are valid ids
+    $relations = is_array($relations)? $relations : explode(',',$relations);
+    for($i=0; $i<count($relations); $i++) {
+      $relations[$i] = $zen->checkNum($relations[$i]);
+    }
+  }
   
   // insure that the user/bin combination provided is allowed
   // we aren't worried about user/bin combinations if the user will be stripped

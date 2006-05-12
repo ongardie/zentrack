@@ -65,6 +65,7 @@
     print "<td align='left' width='25%'>";
     if( $lastPage ) {       
       $v = $list[$lastPage];
+      if( is_array($v) ) { $v = $v[0]; }
       print "<b><a href='$helpUrl/$section/$lastPage'>&lt;&lt;</a></b>";
       print "&nbsp;<a href='$helpUrl/$section/$lastPage'>$v</a>";
     }
@@ -83,6 +84,7 @@
     print "<td align='right' width='25%'>";
     if( $nextPage ) {
       $v = $list[$nextPage];
+      if( is_array($v) ) { $v = $v[0]; }
       print "<a href='$helpUrl/$section/$nextPage'>$v</a>";
       print "&nbsp;<b><a href='$helpUrl/$section/$nextPage'>&gt;&gt;</a></b>";
     }

@@ -134,11 +134,11 @@ class zen extends zenDate {
      $val = nl2br($val);
      return $val;
    }
-
-   function ffv( $val = '', $strlen = 0 ) {
+   
+   function getCharSet() {
      // we create a reference to the character_set setting for
      // use with htmlspecialchars
-     $charset = isset($GLOBALS['charset'])? $GLOBALS['charset'] : false;
+     $charset = isset($GLOBALS['charset'])? $GLOBALS['charset'] : null;
      if( !$charset ) {
        // this roundabout approach is used because ffv() needs to be available
        // in a static context (no $this) and it is possible to call ffv()
@@ -149,6 +149,13 @@ class zen extends zenDate {
          $charset = $GLOBALS['charset'];
        }
      }
+     return $charset;
+   }
+
+   function ffv( $val = '', $strlen = 0 ) {
+     // we create a reference to the character_set setting for
+     // use with htmlspecialchars
+     $charset = Zen::getCharSet();
      // converts special characters to ascii codes
      // to be used in <input> fields
      if( is_array($val) ) {

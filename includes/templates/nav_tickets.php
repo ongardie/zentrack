@@ -24,18 +24,23 @@
 </tr>
 <tr>
   <td class='leftNavCell' height='100%' valign='top'>
-    <div class='recentHistory'><?=tr("Recent Tickets")?></div>
+    <div class='recentHistory'>
+      <div><?=tr("Recent Tickets")?></div>
     <?
       $history =& $zen->getHistoryManager();
       $list = $history->getList('ticket');
       if( count($list) ) {
         foreach($list as $k=>$v) {
-          print "<br><a href='$rootUrl/ticket.php?id=$k' title='".$zen->ffv($v)."'>$k".tr("-").substr($zen->ffv($v),0,12)."</a>\n";
+          $t = Zen::ffv($v);
+          //$t = strlen($v) > 15? substr(Zen::ffv($v),0,12)."..." : $tt;
+          print "<br><a href='$rootUrl/ticket.php?id=$k' title='$t'>$k".tr("-").$t."</a>\n";
         }
       }
       else {
         print "-none-";
       }    
     ?>
+    </div>
+    <p>&nbsp;</p>
   </td>
 </tr>

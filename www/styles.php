@@ -188,6 +188,10 @@
      padding: 2px;     
   }
   
+  .code {
+    font-family: Courier New, Courier, Helvetica, Arial;
+  }
+  
   .labelCell {
      font-weight: bold; 
   }
@@ -888,4 +892,29 @@ TD.bigger { font-size: 50px; }
     padding:    1px;
     background: <?=$zen->getSetting('color_background');?>;
   }
+  
+  DIV.recentHistory {
+    width: 100px;
+    white-space: nowrap;
+    overflow: hidden;
+    height: 100%;
+    <? if( $zen->settingOn('expand_history') ) { ?>
+    behavior: url('<?=$rootUrl?>/historyBox.htc');
+  }
+  
+  DIV.recentHistory:hover {
+    white-space: normal;
+    overflow: auto;
+    width: 250px;
+  }
+  
+  DIV.recentHistoryHover {
+    white-space: normal;
+    overflow: auto;
+    width: 250px;
+    height: 100%;
+    behavior: url('<?=$rootUrl?>/historyBox.htc');
+    <? } ?>
+  }
+  
 -->

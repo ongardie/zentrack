@@ -254,7 +254,7 @@ CREATE TABLE ZENTRACK_TASKS (
 
 CREATE TABLE ZENTRACK_TICKETS (
   id int(12) NOT NULL auto_increment,
-  title varchar(50) NOT NULL default 'untitled',
+  title varchar(150) NOT NULL default 'untitled',
   priority int(2) NOT NULL default '0',
   status varchar(25) NOT NULL default 'OPEN',
   description text,
@@ -438,25 +438,6 @@ CREATE TABLE ZENTRACK_VARFIELD (
   INDEX (ticket_id)
 );
 
-CREATE TABLE ZENTRACK_VARFIELD_IDX (
-  field_name varchar(25) NOT NULL,
-  field_label varchar(50),
-  field_value varchar(100),
-  sort_order int(3),
-  is_required int(1) default 0,
-  use_for_project int(1) default 0, 
-  use_for_ticket int(1) default 0,
-  show_in_search int(1) default 0,
-  show_in_list int(1) default 0,
-  show_in_custom int(1) default 0,
-  show_in_detail int(1) default 0,
-  show_in_new    int(1) default 0,
-  js_validation text,
-  INDEX (sort_order, field_name)
-);
-
-
-
 -- ADDED IN VERSION 2.6
 
 CREATE TABLE ZENTRACK_VIEW_MAP (
@@ -481,7 +462,4 @@ CREATE INDEX vf_multi_idx ON ZENTRACK_VARFIELD_MULTI(ticket_id);
 
 
 -- ADDED IN VERSION 2.6.0.1
-
-
-
 

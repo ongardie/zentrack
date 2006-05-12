@@ -15,6 +15,7 @@
   
   $inc = "$templateDir/searchForm.php";
   
+  $tickets = false;
   if( $TODO == 'SEARCH' ) {
     include("$templateDir/searchResults.php");
     if( is_array($tickets) ) {
@@ -28,16 +29,15 @@
           exit;
         }
       }
-      $view = "search_list";
       $inc = "$templateDir/listTickets.php";
     } else if( !$errs ) { 
       $msg[] = tr("There were no results for your search."); 
     }
   }
+  $view = strpos($inc, 'listTickets')>0? 'search_list' : 'search_form';
   
   include("$libDir/nav.php");
   $zen->printErrors($errs);
-  $view = 'search_form';
   include($inc);
   include("$libDir/footer.php");
 ?>

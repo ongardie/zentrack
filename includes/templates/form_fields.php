@@ -98,30 +98,6 @@
   }
 
   if( count($searchbox_vals) ) {
-    print "<script type='text/javascript'>\n";
-    print " var validateHidden = new Array();\n";
-    print "addToOnload( function() { \n";
-    foreach($searchbox_vals as $k=>$v) {
-      print " validateHidden['$k'] = true;\n";
-      if( !$v ) { continue; }
-      foreach($v as $val) {
-        if( $k == 'project_id' || $k == 'ticket_id' || $k == 'relations' ) {
-          $t = $zen->get_ticket($val);
-          $text = Zen::ffv($t['title']);
-        }
-        else {
-          $text = Zen::ffv($map->getTextValue($formview, $k, $val));
-        }
-        print "  addSearchboxVal(";
-        print $zen->fixJsVal($form_name).",";
-        print $zen->fixJsVal($k).",";
-        print $zen->fixJsVal($val).",";
-        print $zen->fixJsVal($text).',';
-        print $map->hasMultipleValues($formview, $k)? 1 : 0;
-        print ");\n";
-      }
-    }
-    print "} );";
-    print "</script>\n";
+    print renderSearchboxJs($formview, $form_name, $searchbox_vals);
   }
 ?>

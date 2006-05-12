@@ -43,6 +43,7 @@ function fixBgPng() {
 }
 
 function Hilite() {
+  if( !supported ) { return; }
   element.contentEditable = true;
   element.runtimeStyle.filter = "progid:DXImageTransform.Microsoft." +
         "AlphaImageLoader(src='"+window.imageUrl+"/16x16/arrow_green_right.png',sizingMethod='crop')";
@@ -51,6 +52,7 @@ function Hilite() {
 }
 
 function UnHilite() {
+  if( !supported ) { return; }
   element.contentEditable = true;
   element.runtimeStyle.filter = "progid:DXImageTransform.Microsoft." +
         "AlphaImageLoader(src='"+window.imageUrl+"/16x16/arrow_grey_right.png',sizingMethod='crop')";

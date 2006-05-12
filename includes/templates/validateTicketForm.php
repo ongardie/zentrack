@@ -52,7 +52,8 @@ foreach($fields as $f=>$field) {
     print "\tif( !validateField(formObj.elements['$f']) ) { errs[errs.length] = $tr; }\n";
   }
 }
-if ($td && $zen->settingOn('edit_reason_required') && $zen->settingOn('log_edit') ) {
+if ( ($formview == 'ticket_edit' || $formview == 'project_edit') && 
+      $zen->settingOn('edit_reason_required') && $zen->settingOn('log_edit') ) {
     $tr = $zen->fixJSVal(tr("? is required",array(tr("Edit Reason"))));
     print "\tif( !validateField(formObj.elements['edit_reason']) ) { errs[errs.length] = $tr; }\n";
 }

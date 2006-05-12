@@ -440,14 +440,14 @@ class zenTrack extends zen {
   function listTitles($table, $ids) {
     $selectFields = $this->getDataTypeFields( $table );
     $idField = $this->getTableId($table);
+    if( is_array($ids) ) { $ids = join(',',$ids); }
     $query = "SELECT $selectFields FROM $table WHERE $idField IN($ids)";
     $vals = $this->db_queryIndexed($query);
     $titles = array();
     if( $vals ) {
       foreach($vals as $v) {
         $id = $v[ $idField ];
-        $label = $zen->getDataTypeLabel($table, $vals);
-        $titles["$id"] = $label;
+        $titles["$id"] = $this->getDataTypeLabel($table, $v);
       }
     }
     return $titles;
@@ -1007,9 +1007,16 @@ class zenTrack extends zen {
    */
   function getBehaviorDestinationFieldsArray() {
     $field_list=$this->getStdBehaviorFieldsArray();
-    $custom=$this->getCustomFields(1);
-    foreach($custom as $k => $v) {
-      $field_list["{$v}"]=$k;
+    $custom = $this->db_getlimitedIndex("SELECT * FROM ".$this->table_varfield, 1);
+    $keys = $custom? array_keys($custom[0]) : array();
+    if( count($keys) ) {
+      foreach($keys as $k) {
+        if( $k == 'ticket_id' ) { continue; }
+        $field_list[$k] = $k;
+      }
+    }
+    foreach(ZenFieldMap::listMultiFields() as $k) {
+      $field_list[$k] = $k;
     }
     ksort($field_list);
     return($field_list);
@@ -1036,65 +1043,6 @@ class zenTrack extends zen {
                     );
     //natsort($beh_opers);
     //return($beh_opers);
-  }
-
-
-
-  /*
-   *  VARIABLE FIELDS
-   */
-
-
-  /**
-   * Get variable field properties from the index table.  These fields will be returned sorted
-   * and with all information needed to determine where fields are active and how to display them.
-   */
-  function getVarfieldIndex() { 
-    return $this->getCustomFields(1);
-  }
-
-
-  /**
-   * Update the properties for variable fields in the index table.
-   *
-   * @param array $fields is mapped (String)field_name -> array( (String)prop -> (mixed)value )
-   * @return integer count of fields updated
-   */
-  function updateVarfieldIndex( $fields ) { 
-    $count = 0;
-    foreach( $fields as $name=>$props ) {
-      $set = $this->makeInsertVals($props, 1);
-      if( $this->db_update($this->table_varfield_idx, "field_name", $name, $props) ) 
-        { $count++; }
-    }
-    return $count;
-  }
-
-
-  /**
-   * Removes an entry from the variable field index table.  Use this method with great care.  This
-   * is not used to disable fields, and should only be used for removing fields which do not exist
-   * in the database.
-   *
-   * @param string $field_name the variable field which no longer exists in the database
-   */
-  function removeVarfieldIndex( $field_name ) { 
-    $field_name = $this->checkAlpha($field_name);
-    return $this->db_delete( $this->table_varfield_idx, "field_name", $field_name );
-  }
-
-
-  /**
-   * Adds a new entry to the variable field index table
-   *
-   * @param array $props mapped (String)field -> (mixed)value
-   */
-  function addVarfieldIndex( $props ) { 
-    // we don't use the $this->db_insert() method here because it requires
-    // a sequence/auto_increment field, which isn't used in this table
-    list($cols,$vals) = $this->makeInsertVals($props);
-    $query = "INSERT INTO ".$this->table_varfield_idx." ($cols) VALUES($vals)";
-    return $this->db_result($query);
   }
 
   /**
@@ -1832,7 +1780,7 @@ class zenTrack extends zen {
    */
   function queryReferencesToDataGroup( $group_id ) {
     $qty=0;
-    $query = "SELECT count(*) FROM ".$this->table_varfield_idx
+    $query = "SELECT count(*) FROM ".$this->table_field_map
            . " where field_value='$group_id'"
            . " and field_name like 'custom_menu%'";
     $qty = $this->db_get($query);
@@ -1848,8 +1796,8 @@ class zenTrack extends zen {
    * @param integer $group_id The id of the group being deleted
    */
   function disableReferencesToDataGroup( $group_id ) {
-    $query = "UPDATE ".$this->table_varfield_idx
-           . " set use_for_project=0, use_for_ticket=0, field_value=NULL"
+    $query = "UPDATE ".$this->table_field_map
+           . " set field_value=NULL"
            . " where field_value='$group_id'"
            . " and field_name like 'custom_menu%'";
     $res = $this->db_result($query);
@@ -1870,7 +1818,7 @@ class zenTrack extends zen {
    * @param integer $new_data_group The id of the group that is replacing it
    */
   function moveReferencesToDataGroup( $old_group_id, $new_data_group ) {
-    $query = "UPDATE ".$this->table_varfield_idx
+    $query = "UPDATE ".$this->table_field_map
            . " set field_value = '$new_data_group'"
            . " where field_value = '$old_group_id'"
            . " and field_name like 'custom_menu%'";
@@ -2009,7 +1957,7 @@ class zenTrack extends zen {
           return true;
         }
       }
-      if( !(strpos($val[0], 'custom_') === false) ) {
+      if( ZenFieldMap::isVariableField($val[0]) ) {
         return true;
       }
     }
@@ -2300,136 +2248,18 @@ class zenTrack extends zen {
     return $res;
   }
 
-/*
-  function close_ticket( $id, $user_id = '', $hours = '', $comments = '' ) {
-    // closes the ticket (sets the status to CLOSED)
-    // if there is testing or approval yet required, then
-    // simply sets status to pending.
-    // however, if both of these are completed, then 
-    // closes out the ticket
-    $id = $this->checkNum($id);
-    if( $user_id ) { $user_id = $this->checkNum($user_id); }
-    
-    // get ticket info
-    if( is_array($id) ) {
-      $t = $id;
-      $id = $t["id"];
-    }
-    else {
-      $t = $this->get_ticket($id);
-    }
-    if( $this->check_status($t,"READY") ) {
-      // if ticket is ready to close, then close it
-      $params = array(
-		      "status"  =>  'CLOSED',
-		      "ctime"   =>  $this->currTime
-		      );
-      if( strlen($user_id) ) {
-	     $params["user_id"] = $user_id;
-      }
-      $res = $this->update_ticket($id, $params);
-      if( $this->settingOn("log_close") ) {
-	// create a log entry
-	$logParams = array(
-			   "action"   =>  'CLOSED',
-			   "ticket_id" =>  $id 
-			   );
-	// get the params
-	if( $user_id ) {
-	  $logParams["user_id"] = $user_id;
-	}
-	$logParams["bin_id"] = $t["bin_id"];
-	if( $hours )
-	  $logParams["hours"] = $hours;
-	if( $comments )
-	  $logParams["entry"] = $comments;
-	// send the log
-	$this->add_log($id, $logParams);    
-      }
-      if( $this->settingOn("email_closed") ) {
-	     // send email
-	     $recipients = $this->get_notify_recipients($id);
-        // make sure the manager gets a notification
-        $vals = $this->fetch_bin_role_emails($t['bin_id'],$this->getRoleId('manager'));
-        $this->checkIncludedRecipients($recipients,$vals);
-        // create email
-	     if( is_array($recipients) && count($recipients) ) {
-	       $bin = $t["bin_id"];
-	       $subject = $this->ptrans("Ticket #?: closed",array($id));
-	       $emailParams["Close Time"] = $this->showDateTime($this->currTime);
-	       if( $comments )
-	         $emailParams["body"] = $comments;
-	       $emailParams["tid"] = $t;
-	       $message = $this->formatEmailMessage($emailParams);
-	       $this->sendEmail($recipients,$subject,$message,$user_id);       
-	     }
-      } 
-    } else if( ($t["tested"] == 1 || $t["approved"] == 1) 
-	       && $t["status"] == "OPEN" ) {
-      // update status to pending
-      $params = array(
-		      "status"  =>  'PENDING',
-		      "user_id"  =>  'NULL'
-		      );
-      $res = $this->update_ticket($id, $params);
-      if( $this->settingOn("log_pending") ) {
-	     // make a log entry
-	     $logParams = array(
-			   "action"   =>  'PENDING',
-			   "ticket_id" =>  $id,
-			   "entry"    =>  $entry
-			   );
-	     if( $user_id ) {
-	       $logParams["user_id"] = $user_id;
-	     }
-	     $logParams["bin_id"] = $t["bin_id"];      
-	     if( $hours )
-	       $logParams["hours"] = $hours;
-	     if( $comments )
-	       $logParams["entry"] = $comments;
-	     $this->add_log($id, $logParams);    
-      }  
-      if( $this->settingOn("email_pending") ) {
-  	     // send an email
-	     $recipients = $this->get_notify_recipients($id);
-        // make sure the testers/managers gets a notification
-        if( $t['tested'] == 1 ) {
-          $vals = $this->fetch_bin_role_emails($t['bin_id'], $this->getRoleId('tester'));
-        }
-        if( $t['tested'] != 1 || !is_array($vals) ) {
-          $vals = $this->fetch_bin_role_emails($t['bin_id'], $this->getRoleId('manager'));
-        }        
-        $this->checkIncludedRecipients($recipients, $vals);
-        // create email
-	     if( is_array($recipients) && count($recipients) ) {
-	       $bin = $t["bin_id"];
-	       $subject = $this->ptrans("Ticket #?: closed",array($id));
-	       $emailParams["Close Time"] = $this->showDateTime($this->currTime);
-	       if( $comments )
-	         $emailParams["body"] = $this->ffv($comments);
-	       $emailParams["tid"] = $id;
-	       $message = $this->formatEmailMessage($emailParams);
-	       $this->sendEmail($recipients,$subject,$message,$user_id);
-	     } 
-      } 
-    }
-    return($res);
-  }
-*/
-
-
-    /**
-     * closes the ticket (sets the status to CLOSED)
-     * if there is testing or approval yet required, then
-     * simply sets status to pending.
-     * however, if both of these are completed, then
-     * closes out the ticket
-     *
-     * @param int $id Ticket's ID (can also be the an array with the whole information of the ticket (indexed by field names)
-     * @param int $user_id ID of the user who is closing the ticket
-     * @param float $hours Amount of time to be added to the ticket's worked hours
-     * @param string $comments Comments to add in the tickets log.
-     **/
+  /**
+   * closes the ticket (sets the status to CLOSED)
+   * if there is testing or approval yet required, then
+   * simply sets status to pending.
+   * however, if both of these are completed, then
+   * closes out the ticket
+   *
+   * @param int $id Ticket's ID (can also be the an array with the whole information of the ticket (indexed by field names)
+   * @param int $user_id ID of the user who is closing the ticket
+   * @param float $hours Amount of time to be added to the ticket's worked hours
+   * @param string $comments Comments to add in the tickets log.
+   **/
   function close_ticket( $id, $user_id = 0, $hours = '', $comments = '' ) {
     $id = $this->checkNum($id);
     if( $user_id ) { $user_id = $this->checkNum($user_id); }
@@ -2454,6 +2284,7 @@ class zenTrack extends zen {
         $params["user_id"] = NULL;
       }
       $res = $this->update_ticket($id, $params);
+      $this->addDebug('zenTrack->close_ticket', "Ticket was 'READY' and close attempted: ".($res? 'success' : 'failed'), ($res? 3 : 1));
       if( $this->settingOn("log_close") ) {
         // create a log entry
         $logParams = array(
@@ -2501,6 +2332,7 @@ class zenTrack extends zen {
         $params["ctime"]=$this->currTime;
       }
       $res = $this->update_ticket($id, $params);
+      $this->addDebug('zenTrack->close_ticket', "Ticket was not ready, attempted to move to 'PENDING' status: ".($res? 'success' : 'failed'), ($res? 3 : 1));
       if( $this->settingOn("log_pending") ) {
         // make a log entry
         $logParams = array(
@@ -2544,8 +2376,6 @@ class zenTrack extends zen {
     }
     return($res);
   }
-
-
   
   function log_ticket( $id, $user_id, $action = 'LOG', $hours = '', $comments = '' ) {
     // create an entry in the ticket log to track hours
@@ -3124,8 +2954,11 @@ class zenTrack extends zen {
           break;
         case "ctime":
         default:
-          $params["$k"] = "NULL";
+          $params["$k"] = null;
         }
+      }
+      else if( $k == 'relations' && is_array($v) ) {
+        $params["$k"] = join(',',$v);
       }
     }
     $set = $this->makeInsertVals($params,1);
@@ -3156,7 +2989,6 @@ class zenTrack extends zen {
     }
     $id = $this->checkNum($id);
     $res = $this->update_ticket($id, $params);
-//    Zen::printArray($params, 'edit_ticket');//debug
     if( $res && $this->settingOn('log_edit') ) {
       if ( $mode ) {
         $log_entry = "";
@@ -3728,16 +3560,6 @@ class zenTrack extends zen {
     return( $this->db_insert($this->table_types, $params) );
   }
 
-  function update_custom_field_idx( $field_name, $params ) {
-    // update properties for a given custom_field definition (key= field_name)
-    $field_name = $this->checkAlphaNum($field_name);
-    $set = $this->makeInsertVals($params,1);
-    $query = "UPDATE ".$this->table_varfield_idx." SET $set WHERE field_name = '$field_name'";
-    $this->addDebug("update_custom_field_idx()Query",$query,2);
-    $this->_session->clearCustomFields();
-    return( $this->db_result($query) );
-  }
-
   function update_bin( $bid, $params ) {
     // update properties for a given bid (bin id)
     $bid = $this->checkNum($bid);
@@ -4149,10 +3971,10 @@ class zenTrack extends zen {
         }
         $message .= "\n";          
       } else {
-	// just print whatever is indexed, since it didn't
-	// match any special settings
-	$v = strip_tags($v);
-	$message .= "$k:\t$v\n";
+        // just print whatever is indexed, since it didn't
+        // match any special settings
+        $v = strip_tags($v);
+        $message .= "$k:\t$v\n";
       }
     }
 
@@ -4355,50 +4177,44 @@ class zenTrack extends zen {
    */
    
   function getDataTypeVals( $table ) {
-    switch( strtoupper($table) ) {
-      case "ZENTRACK_BINS":
+    $table = preg_replace('/^ZENTRACK_/', '', strtoupper($table));
+    switch( $table ) {
       case "BINS":
         return $this->getBins();
-      case "ZENTRACK_PRIORITIES":
       case "PRIORITIES":
         return $this->getPriorities();
-      case "ZENTRACK_SYSTEMS":
       case "SYSTEMS":
         return $this->getSystems();
-      case "ZENTRACK_TASKS":
       case "TASKS":
         return $this->getTasks();
-      case "ZENTRACK_TYPES":
       case "TYPES":
         return $this->getTypes();
     }
+    $this->addDebug("zenTrack::getDataTypeVals", "Data type $table not implemented", 2);
     return null;
   }
    
   function getDataTypeFields( $table ) {
-    switch( strtoupper($table) ) {
-    case "ZENTRACK_BINS":
-    case "BINS":
-      return "bid,name";
-    case "ZENTRACK_PRIORITIES":
-    case "PRIORITIES":
-      return "pid,name";
-    case "ZENTRACK_SYSTEMS":
-    case "SYSTEMS":
-      return "sid,name";
-    case "ZENTRACK_TASKS":
-    case "TASKS":
-      return "task_id,name";
-    case "ZENTRACK_TYPES":
-    case "TYPES":
-      return "type_id,name";
-    case "ZENTRACK_USERS":
-    case "USERS":
-      return "user_id,lname,fname,initials";
-    case "ZENTRACK_FIELD_MAP":
-    case "FIELD_MAP":
-      return "field_name,field_label";
+    $table = preg_replace('/^ZENTRACK_/', '', strtoupper($table));
+    switch( $table ) {
+      case "TICKETS":
+        return "id,title";
+      case "BINS":
+        return "bid,name";
+      case "PRIORITIES":
+        return "pid,name";
+      case "SYSTEMS":
+        return "sid,name";
+      case "TASKS":
+        return "task_id,name";
+      case "TYPES":
+        return "type_id,name";
+      case "USERS":
+        return "user_id,lname,fname,initials";
+      case "FIELD_MAP":
+        return "field_name,field_label";
     }
+    $this->addDebug("zenTrack::getDataTypeFields", "Data type $table not implemented", 2);
     return null;
   }
 
@@ -4408,56 +4224,45 @@ class zenTrack extends zen {
     // this returns a formatted string representing the
     // name of this row: i.e. for users, last_name, first_name
     // and for bins, the name field
-    switch( strtoupper($table) ) {
-    case "ZENTRACK_TICKETS":
-    case "TICKETS":
-    case "ZENTRACK_COMPANY":
-    case "COMPANY":
-      return $vals['title'];
-    case "ZENTRACK_BINS":
-    case "BINS":
-    case "ZENTRACK_PRIORITIES":
-    case "PRIORITIES":
-    case "ZENTRACK_SYSTEMS":
-    case "SYSTEMS":
-    case "ZENTRACK_TASKS":
-    case "TASKS":
-    case "ZENTRACK_TYPES":
-    case "TYPES":
-      return $vals['name'];
-    case "ZENTRACK_EMPLOYEE":
-    case "EMPLOYEE":
-    case "ZENTRACK_USERS":
-    case "USERS":
-      return $this->formatName($vals);
-    case "ZENTRACK_FIELD_MAP":
-    case "FIELD_MAP":
-      return $vals['field_label'];
+    $table = preg_replace('/^ZENTRACK_/', '', strtoupper($table));
+    switch( $table ) {
+      case "TICKETS":
+      case "COMPANY":
+        return $vals['title'];
+      case "BINS":
+      case "PRIORITIES":
+      case "SYSTEMS":
+      case "TASKS":
+      case "TYPES":
+        return $vals['name'];
+      case "EMPLOYEE":
+      case "USERS":
+        return $this->formatName($vals);
+      case "FIELD_MAP":
+        return $vals['field_label'];
     }
+    $this->addDebug("zenTrack::getDataTypeLabel", "Data type $table not implemented", 2);
     return null;
   }
 
   function getDataTypeSort( $table ) {
+    $table = preg_replace('/^ZENTRACK_/', '', strtoupper($table));
     // be careful using this, it's still limited
-    switch( strtoupper($table) ) {
-    case "ZENTRACK_BINS":
+    switch( $table ) {
     case "BINS":
-    case "ZENTRACK_PRIORITIES":
     case "PRIORITIES":
-    case "ZENTRACK_SYSTEMS":
     case "SYSTEMS":
-    case "ZENTRACK_TASKS":
     case "TASKS":
-    case "ZENTRACK_TYPES":
     case "TYPES":
       return "priority, name";
-    case "ZENTRACK_USERS":
+    case "TICKETS":
+      return "title";
     case "USERS":
       return "lname, fname";
-    case "ZENTRACK_FIELD_MAP":
     case "FIELD_MAP":
       return "sort_order, field_name";
     }
+    $this->addDebug("zenTrack::getDataTypeSort", "Data type $table not implemented", 2);
     return null;
   }
 
@@ -4514,6 +4319,7 @@ class zenTrack extends zen {
       case "FIELD_MAP":
         return 'field_map_id';
       default:
+        $this->addDebug("zenTrack::getTableId", "Data type $table not implemented", 2);
         return '';
     }
   }
@@ -4793,7 +4599,7 @@ class zenTrack extends zen {
     }
     // find out what access our user has
     $access = $this->getAccess($user_id);
-
+    
     // store results
     $bool = null;
 
@@ -5323,90 +5129,6 @@ class zenTrack extends zen {
   }
   
   /**
-   * Returns a single custom field definition
-   */
-   function getCustomField( $field_name ) {
-     // this lookup is cached, so it is not expensive
-     $vals = $this->getCustomFields(2);
-     return $vals["$field_name"];
-   }
-
-  /**
-   * returns information about custom fields definition
-   *
-   * Returns an array with information about custom fields definition
-   * ordered by sort_order and field_label
-   * 
-   * The filterUse variable is used to filter for fields which apply only
-   * to tickets or projects, and the filterShow variable is used to filter
-   * for fields which only appear in certain areas (such as the search screen).
-   *
-   * @param int $indexedMode if set, returns the field_label indexed by field_name, otherwise all data is returned
-   * @param string $filterUse "P"roject, "T"icket or blank
-   * @param string $filterShow "S"earch, "L"ist, "C"ustom, "D"etail, "N"ew Ticket Screen, or blank
-   * @return array of custom fields
-   */
-  function getCustomFields($indexedMode = 1, $filterUse = "", $filterShow = "") {
-    // try to retrieve from memory first
-    $vars = $this->_session->getCustomFields();
-    if( !is_array($vars) ) {
-      $query = "SELECT * FROM ".$this->table_varfield_idx." ORDER BY sort_order, field_label";
-      $this->addDebug("getCustomFields", "Generating variable fields: ".$query, 3);
-      
-      // all columns from db, indexed by field name
-      $vars = $this->db_queryIndexed($query);
-      
-      // store session vals
-      $this->_session->storeCustomFields($vars);
-    }
-    
-    // if this is the default set, we are done
-    if( !$indexedMode && !strlen($filterUse) && !strlen($filterShow) ) {
-      return $vars;
-    }
-
-    // try to retrieve the subset from the global cache
-    $key = "$indexedMode:$filterUse:$filterShow";
-    $vals = $this->_session->getDataCache('customset',$key);
-    if( $vals ) { return $vals; }
-    
-    // now retrieve the specific values desired and return
-    $vals = array();
-    $use = $filterUse? strtoupper(substr($filterUse,0,1)) : '';
-    $show = $filterShow? strtoupper(substr($filterShow,0,1)) : '';
-    for($i=0; $i<count($vars); $i++) {
-      $v = $vars[$i];
-      // we filter based on whether this custom field is used
-      // in tickets or projects
-      if( $use == 'P' && $v['use_for_project'] < 1 ) { continue; }
-      if( $use == 'T' && $v['use_for_ticket'] < 1 ) { continue; }
-      if( $show == 'S' && $v['show_in_search'] < 1 ) { continue; }
-      if( $show == 'L' && $v['show_in_list'] < 1 ) { continue; }
-      if( $show == 'C' && $v['show_in_custom'] < 1 ) { continue; }
-      if( $show == 'D' && $v['show_in_detail'] < 1 ) { continue; }
-      if( $show == 'N' && $v['show_in_new'] < 1 ) { continue; }
-      
-      // create the appropriate array values
-      if ( $indexedMode == 1 ) {
-        // indexed key=>label pairs
-        $vals["{$v['field_name']}"] = $v['field_label'];
-      }
-      else if( $indexedMode == 2 ) {
-        $vals["{$v['field_name']}"] = $v;
-      }
-      else {
-        $vals[] = $v;
-      }
-    }
-    
-    // store our set in globals for the time
-    // this is particularly useful when calling rows one at a time
-    $this->_session->storeDataCache('customset',$key,$vals);
-    
-    return( $vals );
-  }
-
-  /**
    * returns information about available bins
    *
    * if flag is set, retrieves a full
@@ -5740,8 +5462,13 @@ class zenTrack extends zen {
     return $this->getSetting($setting_name) == "on";
   }
   
-  function hasSetting( $setting_name ) {
-    return strlen($this->getSetting($setting_name));
+  function hasSetting( $key ) {
+    $settings = $this->getSettings();
+    $key = Zen::checkAlphaNum($key);
+    if( is_array($settings) && array_key_exists("$key", $settings) ) {
+      return true;
+    }
+    return false;
   }
 
   function getTypeName($id) {
@@ -5959,7 +5686,6 @@ class zenTrack extends zen {
     $this->types       = $this->getTypes();
     $this->priorities  = $this->getPriorities();
     $this->tasks       = $this->getTasks();
-    $this->custom_fields = $this->getCustomFields(1);
 
     // set the date formatting
     $this->date_fmt_long  = $this->getSetting("date_fmt_long");
@@ -6609,7 +6335,6 @@ class zenTrack extends zen {
   var $table_group;
   var $table_group_detail;
   var $table_varfield;
-  var $table_varfield_idx;
    
   var $cleanTempReports;
   var $reportImageWidth;

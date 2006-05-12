@@ -19,21 +19,23 @@
 </tr>
 <tr>
   <td class='leftNavCell' height='25%' valign='top'>
-    <div class='recentHistory'><?=tr("Recent Companies")?></div>
+    <div class='recentHistory'>
+      <div><?=tr("Recent Companies")?></div>
     <?
       $history =& $zen->getHistoryManager();
       $list = $history->getList('company');
       if( count($list) ) {
         foreach($list as $k=>$v) {
-          print "<div><a href='$rootUrl/contact.php?cid=$k'>".$zen->ffv(substr($v,0,15))."</a></div>\n";
+          print "<div><a href='$rootUrl/contact.php?cid=$k'>".Zen::ffv($v)."</a></div>\n";
         }
       }
       else {
         print "-none-";
       }
-    ?>
+    ?></div>
     <P>
-    <div class='recentHistory'><?=tr("Recent Employees")?></div>
+    <div class='recentHistory'>
+      <div><?=tr("Recent Employees")?></div>
     <?
       $history =& $zen->getHistoryManager();
       $list = $history->getList('employee');
@@ -45,7 +47,7 @@
       else {
         print tr("-none-");
       }
-    ?>
+    ?></div>
   </td>
 </tr>
 <tr><td class='note'>&nbsp;</td></tr>
@@ -64,7 +66,8 @@
 </tr>
 <tr>
   <td class='leftNavCell' height='100%' valign='top'>
-    <div class='recentHistory'><?=tr("Recent Agreements")?></div>
+    <div class='recentHistory'>
+      <div><?=tr("Recent Agreements")?></div>
     <?
       $history =& $zen->getHistoryManager();
       $list = $history->getList('agreement');
@@ -76,6 +79,6 @@
       else {
         print "-none-";
       }
-    ?>
+    ?></div>
   </td>
 </tr>

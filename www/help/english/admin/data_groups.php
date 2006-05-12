@@ -137,19 +137,74 @@
     
     <p>You will not use the <?=tr('Entries')?> link with Javascript lists.
     
-    <p>The special property <b>{form}</b> can be used as a pointer to the current
-    form object (it gets translated to window.document.formName during 
-    evaluation).  This is useful for pointing to other fields in the form
-    using javascript.</p>
-    
-    <p>The special property <b>{field}</b> can be used as a pointer to the current
-    field object (it gets translated to window.document.formName.fieldName).
-    This can be useful for using the same javascript in multiple behaviors
-    (behaviors are discussed in the next section).
-    
     <p>The javascript code is expected to create an array named <b>x</b> which
     will contain a <b>simple array</b> of values or an <b>array of objects</b>
     with two properties:  label and value. 
+    
+    <p>Several special properties can be substituted into the javascript code to
+    reference variables dynamically at runtime.  They are described in the following
+    table:
+    <table width='80%' align='center'>
+    <tr><th class='subTitle'>Variable</th><th class='subTitle'>Description</th></tr>
+    <tr>
+      <td class='bars'>{form}</td>
+      <td class='bars'>
+        At runtime, this special reference is replaced by the complete form name,
+        such as window.document.forms['searchForm']
+      </td>
+    </tr>
+    <tr>
+      <td class='bars'>{field}</td>
+      <td class='bars'>
+        Like the {form} reference, but references the field that the data group
+        has been assigned to.
+      </td>
+    </tr>
+    <tr>
+      <td class='bars'>{id}</td>
+      <td class='bars'>
+        The id of the ticket being viewed (note that this may not always be
+        available, such as when creating a new ticket)
+      </td>
+    </tr>
+    <tr>
+      <td class='bars'>{view}</td>
+      <td class='bars'>
+        The current page being viewed.  This variable is considered untested
+        and may not always function as expected.
+      </td>
+    </tr>
+    <tr>
+      <td class='bars'>{login_id}</td>
+      <td class='bars'>
+        user_id for the logged in user
+      </td>
+    </tr>
+    <tr>
+      <td class='bars'>{login_name}</td>
+      <td class='bars'>
+        Full display name of the logged in user
+      </td>
+    </tr>
+    <tr>
+      <td class='bars'>{login_language}</td>
+      <td class='bars'>
+        Language currently being displayed
+      </td>
+    </tr>
+    <tr>
+      <td class='bars'>{login_inits}</td>
+      <td class='bars'>
+        Initials for the logged in user
+      </td>
+    </tr>
+    <tr>
+      <td class='bars'>{username}</td>
+      <td class='bars'>
+        The login name which was used by the current user to login.
+      </td>
+    </tr>
+    </table>
     
     <p>Here are some examples:</p>
     

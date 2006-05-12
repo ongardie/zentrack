@@ -16,6 +16,8 @@ $hk = $hotkeys->activateButton("Search", "searchForm");
   $other_fields = array();
   $hidden_fields = array();
   $date_fields = array();
+  $searchbox_fields = array();
+  $searchbox_names = array();
   foreach($fields as $f=>$field) {
     if( $field['field_type'] == 'hidden' ) {
       $hidden_fields[$f] = $field;
@@ -27,8 +29,16 @@ $hk = $hotkeys->activateButton("Search", "searchForm");
     else if( $field['field_type'] == 'date' ) {
       $date_fields[$f] = $field;
     }
-    else { $other_fields[$f] = $field; }
+    else { 
+      $other_fields[$f] = $field;
+      if( $field['field_type'] == 'searchbox' && !empty($search_params["$f"]) ) {
+        $searchbox_fields[$f] = explode(',',$search_params["$f"]);
+        $searchbox_names[$f] = "search_params[$f]";
+      }
+    }
   }
+  
+  print renderSearchboxJs( $view, 'searchForm', $searchbox_fields, $searchbox_names )
 ?>
 <form action="<?=$SCRIPT_NAME?>" name="searchForm" method='POST'>
 <input type="hidden" name="TODO" value="SEARCH">

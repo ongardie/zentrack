@@ -13,6 +13,50 @@ abstraction, and endless possibilities for project expansion.
 
 ----- VERSION 2.6.2 (development) -----
 
+2006-05-10, kato
+  333: Fixed translation issue with escaped chars becoming &nacute; (etc)
+    - zentrack_2/includes/translations/spanish.trans
+  223: Removed varfield_idx table, getCustomFields method, and other deprecated code
+    - zentrack_2/includes/zenTrack.class
+    - zentrack_2/www/exportSearch.php
+  94,201: Added new helper windows and created field maps
+    - zentrack_2/includes/headerInc.php
+    - zentrack_2/includes/searchbox_results.php
+    - zentrack_2/includes/ZenSearch.php
+    - zentrack_2/includes/ZenSearchBox.php
+    - zentrack_2/includes/ZenSearchBoxDatatype.php
+    - zentrack_2/includes/ZenSearchBoxTicket.php
+    - zentrack_2/includes/ZenSearchBoxUser.php
+    - zentrack_2/install/utils/upgrade_base.php
+    - zentrack_2/www/searchbox.php
+    - zentrack_2/www/javascript.js
+  263: Added dynamic variables to the documentation for data groups
+  Some cleanup of the dynamic references code
+    - zentrack_2/www/help/english/admin/data_groups.php
+    - zentrack_2/www/behavior_js.php
+  297: Added field map for search export so that it can be configured, cleaned
+  up deprecated getCustomFields logic
+    - zentrack_2/includes/zenTrack.class
+    - zentrack_2/www/exportSearch.php
+  263: Recent tickets now stored in user prefs so that they can be displayed the
+  next time the user logs in.
+    - zentrack_2/includes/ZenHistoryManager.class
+    - zentrack_2/includes/zenTrack.class
+  Recent history now expands onmouseover to show entire title of issues.  This
+  can be disabled by setting 'expand_history' to 'off'.
+    - zentrack_2/includes/nav_body.php
+    - zentrack_2/includes/nav_contacts.php
+    - zentrack_2/includes/nav_projects.php
+    - zentrack_2/includes/nav_tickets.php
+    - zentrack_2/www/javascript.js
+    - zentrack_2/www/styles.php
+  320: edit_reason_required javascript error corrected when editing in ticket tabs
+    - zentrack_2/includes/validateTicketForm.php
+  326: variable field documentation updated to reflect new field map model
+    - zentrack_2/www/help/english/admin/varfield.php
+    - zentrack_2/install/utils/add_to_map.sql
+  93: added documentation for field map
+
 2006-04-12, kato
   Fixed problem with attachments displaying as garbage (due to warning in header)
     - zentrack_2/www/viewAttachment.php 1.7

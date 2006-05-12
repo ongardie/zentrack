@@ -1295,7 +1295,7 @@ INSERT INTO ZENTRACK_VIEW_MAP (view_map_id, which_view, vm_name, vm_val, vm_type
 INSERT INTO ZENTRACK_VIEW_MAP (view_map_id, which_view, vm_name, vm_val, vm_type, vm_order) VALUES(101, 'project_view_top', 'view_only', '1', 'label', 0);
 INSERT INTO ZENTRACK_VIEW_MAP (view_map_id, which_view, vm_name, vm_val, vm_type, vm_order) VALUES(102, 'project_view_top', 'visible', '1', 'checkbox', 0);
 INSERT INTO ZENTRACK_VIEW_MAP (view_map_id, which_view, vm_name, vm_val, vm_type, vm_order) VALUES(103, 'project_view_top', 'width', '50', 'text', 0);
-INSERT INTO ZENTRACK_VIEW_MAP (view_map_id, which_view, vm_name, vm_val, vm_type, vm_order) VALUES(104, 'search_form', 'access_level', 'level_view', 'access', 0);
+INSERT INTO ZENTRACK_VIEW_MAP (view_map_id, which_view, vm_name, vm_val, vm_type, vm_order) VALUES(104, 'search_form', 'access_level', 'level_view', 'hidden', 0);
 INSERT INTO ZENTRACK_VIEW_MAP (view_map_id, which_view, vm_name, vm_val, vm_type, vm_order) VALUES(105, 'search_form', 'admin_view', '1', 'hidden', 0);
 INSERT INTO ZENTRACK_VIEW_MAP (view_map_id, which_view, vm_name, vm_val, vm_type, vm_order) VALUES(106, 'search_form', 'any_option', '1', 'label', 0);
 INSERT INTO ZENTRACK_VIEW_MAP (view_map_id, which_view, vm_name, vm_val, vm_type, vm_order) VALUES(107, 'search_form', 'has_behaviors', '1', 'label', 0);

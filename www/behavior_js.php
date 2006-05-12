@@ -151,7 +151,9 @@ function GroupMapField(value, label) {
                             'login_name',
                             'login_language',
                             'login_inits',
-                            'username');
+                            'username',
+                            'view',
+                            'id');
   print "var jsVarNames = new Array();\n";
   print "var jsVarValues = new Array();\n";
   foreach ($possible_variables as $vn) {
@@ -410,24 +412,11 @@ function setFormValsUsingGroup( fieldObj, group, setid ) {
 
   // handle javascript eval type
   if( group.evalType == 'Javascript' ) {
-    // we encode the eval text so it won't cause erros in js
-    // so we unencode it here and then replace occurences
-    // of {form} with the form name
-    var f = 'window.document.'+fieldObj.form.getAttribute('name');
-    var fn = f+'.'+fieldObj.name
-    var s = unescape(group.evalText);
-    behaviorDebug(3, "(setFormValsUsingGroup)initial evalText: "+s);
-    var myReplaceText;
-    var myRegExp;
-    for (var i=0; i < jsVarNames.length; i++) {
-      myReplaceText = '\{'+jsVarNames[i]+'\}';
-      myRegExp = new RegExp(myReplaceText, "ig")  
-      s = s.replace( myRegExp, jsVarValues[jsVarNames[i]] );
-      behaviorDebug(3, '(setFormValsUsingGroup)replacing evalText ('+myRegExp+' by '+jsVarValues[jsVarNames[i]]+') results in : '+s);
-    }
-    s = s.replace( /\{form\}.\{field\}/ig, "{field}" );
-    s = s.replace( /{form}/ig, f);
-    var vals = evalJsString( s.replace(/{field}/ig, fn) );
+    // we encode the eval text so it wont cause erros in js
+    // so we unencode it here and replace any runtime variables before we
+    // eval the final code
+    var s = replaceRuntimeRefs(fieldObj.form.getAttribute('name'), fieldObj.name, unescape(group.evalText));
+    var vals = evalJsString( s );
 
     // clear any existing values from fields array
     group.fields = new Array();
@@ -490,7 +479,7 @@ function setFormValsUsingGroup( fieldObj, group, setid ) {
       if( labelText ) {
         labelText.innerHTML = fields.length>0?fields[oldPos].label : "";
         if (fields.length>0) {
-          labelText.innerHTML = fields[oldPos].value;
+          labelText.innerHTML = fields[oldPos].label;
         } else {
           behaviorDebug(3, "(setFormValsUsingGroup) Empty string forced for "+fieldObj.name+"LabelText.innerHTML");
           labelText.innerHTML = "";
@@ -629,7 +618,7 @@ function checkBehaviorStatus( formObject, behaviorId ) {
   behaviorDebug(3, "(checkBehaviorStatus)Checking status: ["
 		+formName+"]"+behavior.name);
 
-  // make sure this behaviors field isn't listed in the
+  // make sure this behaviors field is not listed in the
   // flagged fields.  If it is, we return false to avoid
   // infinite recursion.
   if( behaviorFlags[ behavior.field ] ) { 
@@ -693,7 +682,7 @@ function checkBehaviorStatus( formObject, behaviorId ) {
 function matchBehaviorCriteria( formObject, behaviorMapField ) {
   var formField = formObject[ behaviorMapField.name ];
 
-  // if the field doesn't exist, it didn't match
+  // if the field does not exist, it did not match
   if( !formField ) { 
     behaviorDebug(1, "(matchBehaviorCriteria)Field not found in form: "
 		  +behaviorMapField.name);
@@ -753,11 +742,9 @@ function matchBehaviorCriteria( formObject, behaviorMapField ) {
     res = fieldVal <= behaviorMapField.value;
     break;
   case "js":
-    // evaluate js code
-    var f = 'window.document.'+formField.form.getAttribute('name');
-    behaviorMapField.value = behaviorMapField.value.replace(/{form}/ig, f);
-    behaviorMapField.value = behaviorMapField.value.replace(/{field}/ig, f+'.'+formField.name);
-    res = eval(behaviorMapField.value);
+    // replace runtime variables and then evaluate js code
+    var s = replaceRuntimeRefs(formField.form.getAttribute('name'), formField.name, behaviorMapField.value);
+    res = eval(s);
     break;
   default:
     behaviorDebug(1, "Invalid comparator: "+behaviorMapField.operator);
@@ -772,6 +759,24 @@ function matchBehaviorCriteria( formObject, behaviorMapField ) {
 	+" ["+res+"]");
   
   return res;
+}
+
+/**
+ * Replaces special reference names with runtime values
+ */
+function replaceRuntimeRefs( formName, fieldName, jsText ) {
+    var myReplaceText;
+    var myRegExp;
+    for (var i=0; i < jsVarNames.length; i++) {
+      myReplaceText = '\{'+jsVarNames[i]+'\}';
+      myRegExp = new RegExp(myReplaceText, "ig")  
+      jsText = jsText.replace( myRegExp, jsVarValues[jsVarNames[i]] );
+    }
+    var form = 'window.document.forms["'+formName+"']";
+    var field = form+".elements['"+fieldName+"']";
+    jsText = jsText.replace(/{form}/ig, form);
+    jsText = jsText.replace(/{field}/ig, field);
+    return jsText;
 }
 
 /**

@@ -257,8 +257,8 @@ class Translator {
             }
          }
          if (($currentMsgID != '')) {
-            $translationArray[$currentMsgID] = $currentMsgStr;
-            $currentMsgID = '';
+           $translationArray[$currentMsgID] = html_entity_decode($currentMsgStr, ENT_QUOTES, Zen::getCharSet());
+           $currentMsgID = '';
          }
          return $translationArray;
       }

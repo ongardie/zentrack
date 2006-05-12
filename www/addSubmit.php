@@ -34,8 +34,8 @@
     foreach(array_keys($fields) as $f) {
       if( strlen($$f) ) {
         $params["$f"] = $$f;
-        if( $f == 'title' && strlen($params["$f"]) > 50 ) {
-          $params["$f"] = substr($params["$f"],0,50);
+        if( $f == 'title' && strlen($params["$f"]) > 150 ) {
+          $params["$f"] = substr($params["$f"],0,150);
         }
         else if( $f == 'project_id' ) {
           $vs = isset($$f)? (is_array($$f)? $$f : explode(',',$$f)) : array();

@@ -253,7 +253,7 @@ CREATE TABLE ZENTRACK_TASKS (
 
 CREATE TABLE ZENTRACK_TICKETS (
   id number(12),
-  title varchar2(50) default 'untitled' CONSTRAINT tickets_title_not_null NOT NULL,
+  title varchar2(150) default 'untitled' CONSTRAINT tickets_title_not_null NOT NULL,
   priority number(2) DEFAULT 0 CONSTRAINT tickets_priority_not_null NOT NULL,
   status varchar2(25) default 'OPEN' CONSTRAINT tickets_status_not_null NOT NULL,
   description varchar2(4000),

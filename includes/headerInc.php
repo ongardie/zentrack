@@ -386,6 +386,48 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
      // genreate the div button now
      return renderDivButton($key,$onclick,$width,$override_label);
    }
+   
+  /**
+   * Generate javascript necessary to load searchbox vals into the appropriate
+   * fields as the page is rendered
+   *
+   * @param string $formview the view to use for field map props
+   * @param string $form_name name of the form fields are contained in
+   * @param array $vals an indexed array of (string)field -> (array)values to render
+   * @param array $names is an indexed array of (string)field -> (string)form_field_name, which overrides field names used
+   */
+  function renderSearchboxJs( $formview, $form_name, $vals, $names = false ) {
+    if( !$vals || !count($vals) ) { return ''; }
+    $zen = $GLOBALS['zen'];
+    $map = $GLOBALS['map'];
+    $txt = "<script type='text/javascript'>\n";
+    $txt .= " var validateHidden = new Array();\n";
+    $txt .= "addToOnload( function() { \n";
+    foreach($vals as $k=>$v) {
+      $n = $names? $names[$k] : $k;
+      $txt .= " validateHidden['$n'] = true;\n";
+      if( !$v ) { continue; }
+      foreach($v as $val) {
+        if( $k == 'project_id' || $k == 'ticket_id' || $k == 'relations' ) {
+          $t = $zen->get_ticket($val);
+          $text = Zen::ffv($t['title']);
+        }
+        else {
+          $text = Zen::ffv($map->getTextValue($formview, $k, $val));
+        }
+        $txt .= "  addSearchboxVal(";
+        $txt .= $zen->fixJsVal($form_name).",";
+        $txt .= $zen->fixJsVal($n).",";
+        $txt .= $zen->fixJsVal($val).",";
+        $txt .= $zen->fixJsVal($text).',';
+        $txt .= $map->hasMultipleValues($formview, $k)? 1 : 0;
+        $txt .= ");\n";
+      }
+    }
+    $txt .= "} );";
+    $txt .= "</script>\n";
+    return $txt;
+  }
 
   /**
    * Determines the current section based on the page being viewed:

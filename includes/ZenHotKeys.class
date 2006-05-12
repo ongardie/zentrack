@@ -8,6 +8,9 @@
  *
  * A singleton instance of this class is maintained in $hotkeys by the
  * includes/headerInc.php file.
+ *
+ * Initialization of this class requires that the (zenTrack)$zen and (ZenFieldMap)$map
+ * singletons be declared in the global scope before calling the constructor.
  */
 class ZenHotKeys {
   

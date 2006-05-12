@@ -13,11 +13,10 @@ class ZenHistoryManager {
    * @param zenTrack $zen
    */
   function ZenHistoryManager(&$zen) {
-    global $login_id;
     $this->_session =& $zen->getSessionManager();
     $this->_max = $zen->getSetting('recently_viewed_max');
     $this->_zen =& $zen;
-    $this->_user = $login_id;
+    $this->_user = $_SESSION['login_id'];
   }
   
   /**
@@ -78,12 +77,12 @@ class ZenHistoryManager {
   function getList( $type ) {
     // check the session
     $list = $this->_session->find("history_$type");
-    if( !$list ) {
+    if( empty($list) ) {
       // try to get our list from user prefs
-      $pref = $this->_zen->get_prefs($this->_login_id, "history_$type");
+      $pref = $this->_zen->get_prefs($this->_user, "history_$type");
       if( $pref ) {
         // build key/value set from the string of ids
-        $list = $this->_zen->listTitles($type, explode(",",$pref));
+        $list = $this->_zen->listTitles($this->_zen->table_tickets, explode(",",$pref));
         $this->_session->store("history_$type", $list);
       }
       else {
@@ -96,7 +95,7 @@ class ZenHistoryManager {
   var $_zen;
   var $_max;
   var $_session;
-  var $_login_id;
+  var $_user;
 
 }
 
