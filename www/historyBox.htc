@@ -1,0 +1,25 @@
+<public:component lightWeight="true">
+<PUBLIC:ATTACH EVENT="onmouseover" FOR="element" ONEVENT="expandHistory()" />
+<PUBLIC:ATTACH EVENT="onmouseout" FOR="element" ONEVENT="contractHistory()" />
+<script>
+/*
+ * Create a hover affect to expand history box during mouseover
+ */
+ 
+var supported = /MSIE ((5\.5)|[6789])/.test(navigator.userAgent) &&
+				navigator.platform == "Win32";
+				
+function expandHistory() {
+  if( !supported ) { return; }
+  element.className = 'recentHistoryHover';
+  element.style.width = "250px";
+}
+
+function contractHistory() {
+  if( !supported ) { return; }
+  element.className = 'recentHistory';
+  element.style.width = "100px";
+}
+
+</script>
+</public:component>
