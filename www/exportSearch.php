@@ -7,6 +7,8 @@
 
   // creates the csv file header, comment out for debugging
   //header("Content-type: application/vnd.ms-excel");
+  
+  //debug: fix these
   header("Content-disposition:  attachment; filename=".date("Y-m-d").".csv");
   header("Pragma: public");
   
@@ -36,8 +38,9 @@
     if( !is_array($values) ) { return "\n"; }
     $text = "";
     $i=1;
-    foreach(prepareColumnNames() as $k) {
+    foreach(prepareColumnNames() as $k=>$l) {
       $v = $values[$k];
+
       // escape content for each cell
       if( !$headings ) { $v = humanReadableValue($k,$v); }
       $text .= getCsvCell($v);
@@ -68,7 +71,7 @@
     // print column headings
     print "\n";
     print getCsvRow( prepareColumnNames(), true );
-    print "\n\n";
+    print "\n";
     
     // print the ticket contents
     foreach($tickets as $t) {

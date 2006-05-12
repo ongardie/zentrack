@@ -65,8 +65,8 @@
      
      5. Log in and configure:
         - log in as Administrator/Administrator and configure the system to taste.
-        - a guest account exists as Guest/Guest, you may wish to delete/edit permissions
-        - a user account exists as User/User, you may wish to delete/edit permissions
+        - a guest account exists as Guest/Guest, you may wish to delete/edit this account
+        - a user account exists as User/User, you may wish to delete/edit this account
 
      6. If you intend to use the email gateway, please read the online docs
         which give a thorough overview of how to set this up:

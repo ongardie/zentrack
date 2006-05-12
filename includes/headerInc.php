@@ -421,8 +421,9 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
         $txt .= $zen->fixJsVal($n).",";
         $txt .= $zen->fixJsVal($val).",";
         $txt .= $zen->fixJsVal($text).',';
-        $txt .= $map->hasMultipleValues($formview, $k)? 1 : 0.",";
-        $txt .= $map->getFieldProp($formview, $k, 'is_required');
+        $txt .= $map->hasMultipleValues($formview, $k)? 1 : 0;
+        $txt .= ",";
+        $txt .= $map->getFieldProp($formview, $k, 'is_required')? 1 : 0;
         $txt .= ");\n";
       }
     }

@@ -43,13 +43,13 @@
     $searchbox_type  = array_key_exists('type', $_POST)? 
       preg_replace('@[^0-9a-zA-Z_]@', '', $_POST['type']) : null;
     $searchbox_multi = array_key_exists('multi', $_POST) && $_POST['multi']? true : false;
-    $searchbox_req   = empty($_POST['searchbox_req']) 0 : 1;
+    $searchbox_req   = empty($_POST['searchbox_req'])? 0 : 1;
   }
   else {
     $searchbox_mode  = preg_replace('@[^0-9a-zA-Z_]@', '', $_GET['mode']);
     $searchbox_form  = preg_replace('@[^0-9a-zA-Z_]@', '', $_GET['form']);
     $searchbox_field = preg_replace('@[^0-9a-zA-Z_[]]@', '', $_GET['field']);
-    $searchbox_req   = empty($_GET['req']) 0 : 1;
+    $searchbox_req   = empty($_GET['req'])? 0 : 1;
     $searchbox_type  = array_key_exists('type', $_GET)? 
       preg_replace('@[^0-9a-zA-Z_]@', '', $_GET['type']) : null;
     $searchbox_multi = array_key_exists('multi', $_GET) && $_GET['multi']? true : false;

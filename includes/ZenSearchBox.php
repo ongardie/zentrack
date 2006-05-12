@@ -48,7 +48,7 @@ class ZenSearchBox {
     $this->_comps = array();
     $this->_matchany = false;
     $this->_multi = $multi;
-    $this->_queryLimit = isset($_POST['queryLimit'])? $_POST['queryLimit'] : 25;
+    $this->_queryLimit = isset($_POST['queryLimit'])? $_POST['queryLimit'] : 30;
     $this->_offset = isset($_POST['offset'])? $_POST['offset'] : 0;
   }
   
