@@ -2374,6 +2374,12 @@ class zenTrack extends zen {
         }
       }
     }
+    else {
+      $this->addDebug("zenTrack->close_ticket", "An illegal state has been "
+        ."detected in the ticket.  It is neither ready to be closed, "
+        ."nor ready to be pending: status={$t['status']}, tested={$t['tested']}, "
+        ."approved={$t['approved']}", 1);
+    }
     return($res);
   }
   
