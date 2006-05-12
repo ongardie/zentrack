@@ -40,9 +40,6 @@
    $this->table_logs_archived    = 'ZENTRACK_LOGS_ARCHIVED';    //archived log table
    $this->table_preferences      = 'ZENTRACK_PREFERENCES';      //preferences for users
    $this->table_priorities       = 'ZENTRACK_PRIORITIES';       //priorities of tickets
-   $this->table_reports          = 'ZENTRACK_REPORTS';          //reports table name
-   $this->table_reports_temp     = 'ZENTRACK_REPORTS_TEMP';     //temporary report storage
-   $this->table_reports_index    = 'ZENTRACK_REPORTS_INDEX';    //report ownership
    $this->table_settings         = 'ZENTRACK_SETTINGS';         //settings table
    $this->table_systems          = 'ZENTRACK_SYSTEMS';          //ticket systems   
    $this->table_tasks            = 'ZENTRACK_TASKS';            //task names
@@ -56,7 +53,6 @@
    $this->table_group            = 'ZENTRACK_GROUP';
    $this->table_group_detail     = 'ZENTRACK_GROUP_DETAIL';
    $this->table_varfield         = 'ZENTRACK_VARFIELD';
-   $this->table_varfield_idx     = 'ZENTRACK_VARFIELD_IDX';
    $this->table_varfield_multi   = 'ZENTRACK_VARFIELD_MULTI';
 
    //pre-constructed strings

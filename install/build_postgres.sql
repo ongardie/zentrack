@@ -10,8 +10,6 @@ CREATE SEQUENCE "tasks_task_id_seq"       start 1001 increment 1 maxvalue 214748
 CREATE SEQUENCE "tickets_id_seq"          start 1001 increment 1 maxvalue 2147483647 minvalue 1 cache 1;
 CREATE SEQUENCE "types_type_id_seq"       start 1001 increment 1 maxvalue 2147483647 minvalue 1 cache 1;
 CREATE SEQUENCE "users_user_id_seq"       start 1001 increment 1 maxvalue 2147483647 minvalue 1 cache 1;
-CREATE SEQUENCE "reports_id_seq"          start 1001 increment 1 maxvalue 2147483647 minvalue 1 cache 1;
-CREATE SEQUENCE "reports_temp_id_seq"     start 1001 increment 1 maxvalue 2147483647 minvalue 1 cache 1;
 CREATE SEQUENCE "notify_list_id_seq"      start 1001 increment 1 maxvalue 2147483647 minvalue 1 cache 1;
 CREATE SEQUENCE "behavior_id_seq"         start 1001 increment 1 maxvalue 2147483647 minvalue 1 cache 1;
 CREATE SEQUENCE "group_id_seq"            start 1001 increment 1 maxvalue 2147483647 minvalue 1 cache 1;
@@ -326,65 +324,6 @@ CREATE TABLE ZENTRACK_USERS (
   active int2 default '1'
 );
 
--- 
--- Table structure for table 'ZENTRACK_REPORTS' 
--- 
-
-CREATE TABLE ZENTRACK_REPORTS ( 
-   report_id int8 default nextval('"reports_id_seq"') NOT NULL PRIMARY KEY, 
-   report_name varchar(100) default NULL, 
-   report_type varchar(25) default NULL, 
-   date_selector varchar(25) default NULL, 
-   date_value int8 default NULL, 
-   date_range varchar(12) default NULL, 
-   date_low int8 default NULL, 
-   chart_title varchar(255) default NULL, 
-   chart_subtitle varchar(255) default NULL, 
-   chart_add_ttl int2 default NULL, 
-   chart_add_avg int2 default NULL, 
-   chart_type varchar(25) default NULL, 
-   chart_options text, 
-   data_set text, 
-   chart_combine int2 default NULL, 
-   text_output int2 default NULL, 
-   show_data_vals int2 default NULL
-);
-
--- 
--- Table structure for table 'ZENTRACK_REPORTS_INDEX' 
--- 
-
-CREATE TABLE ZENTRACK_REPORTS_INDEX ( 
-   report_id int8 default NULL, 
-   bid int8 default NULL, 
-   user_id int8 default NULL 
-);
-
--- 
--- Table structure for table 'ZENTRACK_REPORTS_TEMP' 
--- 
-
-CREATE TABLE ZENTRACK_REPORTS_TEMP ( 
-   report_id int8 default nextval('"reports_temp_id_seq"') NOT NULL PRIMARY KEY,
-   report_name varchar(100) default NULL, 
-   report_type varchar(25) default NULL, 
-   date_selector varchar(25) default NULL, 
-   date_value int8 default NULL, 
-   date_range varchar(12) default NULL, 
-   date_low int8 default NULL, 
-   chart_title varchar(255) default NULL, 
-   chart_subtitle varchar(255) default NULL, 
-   chart_add_ttl int2 default NULL, 
-   chart_add_avg int2 default NULL, 
-   chart_type varchar(25) default NULL, 
-   chart_options text, 
-   data_set text, 
-   created timestamp default NULL,
-   chart_combine int2 default NULL, 
-   text_output int2 default NULL, 
-   show_data_vals int2 default NULL
-);
-
 --
 -- Release 2.5 new tables
 --
@@ -428,7 +367,6 @@ CREATE TABLE ZENTRACK_GROUP_DETAIL (
 CREATE TABLE ZENTRACK_VARFIELD (
   ticket_id int8 NOT NULL,
 
-  -- CHANGES HERE MUST BE REFLECTED IN the values for ZENTRACK_VARFIELD_IDX
   custom_menu1 varchar(255) default NULL,
   custom_menu2 varchar(255) default NULL,
 
@@ -445,23 +383,6 @@ CREATE TABLE ZENTRACK_VARFIELD (
   custom_date2 int8 default NULL,
 
   custom_text1 text default NULL
-);
-
-CREATE TABLE ZENTRACK_VARFIELD_IDX (
-  field_name varchar(25) NOT NULL,
-  field_label varchar(50) default NULL,
-  field_value varchar(100) default NULL,
-  sort_order int8 default NULL,
-  is_required int2 default 0,
-  use_for_project int2 default 0, 
-  use_for_ticket int2 default 0,
-  show_in_search int2 default 0,
-  show_in_list int2 default 0,
-  show_in_custom int2 default 0,
-  show_in_detail int2 default 0,
-  show_in_new int2 default 0,
-  js_validation text default NULL
-
 );
 
 
@@ -487,10 +408,5 @@ CREATE INDEX view_map_idx ON ZENTRACK_VIEW_MAP(which_view,vm_order);
 CREATE INDEX vf_multi_idx ON ZENTRACK_VARFIELD_MULTI(ticket_id);
 CREATE SEQUENCE view_map_id_seq start 1001 increment 1 maxvalue 2147483647 minvalue 1 cache 1;
 CREATE SEQUENCE varfield_multi_id_seq start 1001 increment 1 maxvalue 2147483647 minvalue 1 cache 1;
-
-
--- ADDED IN VERSION 2.6.0.1
-
-
 
 

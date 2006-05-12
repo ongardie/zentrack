@@ -300,69 +300,6 @@ CREATE TABLE ZENTRACK_USERS (
  PRIMARY KEY (user_id)
 );
 
--- 
--- Table structure for table 'ZENTRACK_REPORTS' 
--- 
-
-CREATE TABLE ZENTRACK_REPORTS ( 
-  report_id NUMERIC(12) NOT NULL ,
-  report_name varchar(100) default NULL, 
-  report_type varchar(25) default NULL, 
-  date_selector varchar(25) default NULL, 
-  date_value NUMERIC(12) default NULL, 
-  date_range varchar(12) default NULL, 
-  date_low NUMERIC(12) default NULL, 
-  chart_title varchar(255) default NULL, 
-  chart_subtitle varchar(255) default NULL, 
-  chart_add_ttl NUMERIC(12) default NULL, 
-  chart_add_avg NUMERIC(12) default NULL, 
-  chart_type varchar(25) default NULL, 
-  chart_options text, 
-  data_set text, 
-  chart_combine NUMERIC(12) default NULL, 
-  text_output NUMERIC(12) default NULL, 
-  show_data_vals NUMERIC(12) default NULL, 
-  PRIMARY KEY (report_id) 
-);
-
--- 
--- Table structure for table 'ZENTRACK_REPORTS_INDEX' 
--- 
-
-CREATE TABLE ZENTRACK_REPORTS_INDEX ( 
-  report_id NUMERIC(12) default NULL, 
-  bid NUMERIC(12) default NULL, 
-  [user_id] NUMERIC(12) default NULL 
-);
-
--- 
--- Table structure for table 'ZENTRACK_REPORTS_TEMP' 
--- 
-
-CREATE TABLE ZENTRACK_REPORTS_TEMP ( 
-  report_id NUMERIC(12) NOT NULL ,
-  report_name varchar(100) default NULL, 
-  report_type varchar(25) default NULL, 
-  date_selector varchar(25) default NULL, 
-  date_value NUMERIC(12) default NULL, 
-  date_range varchar(12) default NULL, 
-  date_low NUMERIC(12) default NULL, 
-  chart_title varchar(255) default NULL, 
-  chart_subtitle varchar(255) default NULL, 
-  chart_add_ttl NUMERIC(12) default NULL, 
-  chart_add_avg NUMERIC(12) default NULL, 
-  chart_type varchar(25) default NULL, 
-  chart_options text, 
-  data_set text, 
-  created datetime NOT NULL default '0000-00-00 00:00:00', 
-  chart_combine NUMERIC(12) default NULL, 
-  text_output NUMERIC(12) default NULL, 
-  show_data_vals NUMERIC(12) default NULL, 
-  PRIMARY KEY (report_id), 
---  KEY tempreports_created(created) 
-);
-
-
 CREATE TABLE ZENTRACK_BEHAVIOR (
   behavior_id NUMERIC(12) NOT NULL,
   behavior_name VARCHAR(100),
@@ -403,7 +340,6 @@ CREATE TABLE ZENTRACK_GROUP_DETAIL (
 );
 
 
--- CHANGES HERE MUST BE REFLECTED IN the values for ZENTRACK_VARFIELD_IDX values
 CREATE TABLE ZENTRACK_VARFIELD (
   ticket_id NUMERIC(12) NOT NULL,
   custom_menu1 VARCHAR(255),
@@ -420,35 +356,15 @@ CREATE TABLE ZENTRACK_VARFIELD (
 );
 
 
-CREATE TABLE ZENTRACK_VARFIELD_IDX (
-  field_name VARCHAR(25) NOT NULL,
-  field_label VARCHAR(50),
-  field_value VARCHAR(200),
-  sort_order NUMERIC(3),
-  is_required NUMERIC(1) default 0,
-  use_for_project NUMERIC(1) default 0, 
-  use_for_ticket NUMERIC(1) default 0,
-  show_in_search NUMERIC(1) default 0,
-  show_in_list NUMERIC(1) default 0,
-  show_in_custom NUMERIC(1) default 0,
-  show_in_detail NUMERIC(1) default 0,
-  show_in_new    NUMERIC(1) default 0,
-  js_validation TEXT
-);
-
 CREATE INDEX fldmap_sort ON ZENTRACK_FIELD_MAP(sort_order);
 CREATE INDEX fldmap_label ON ZENTRACK_FIELD_MAP(field_label);
 CREATE INDEX fldmap_both ON ZENTRACK_FIELD_MAP(sort_order,field_label);
-CREATE NONCLUSTERED INDEX tempreports_created ON ZENTRACK_REPORTS_TEMP(created) ;
 CREATE NONCLUSTERED INDEX userprefs_user ON ZENTRACK_PREFERENCES(user_id);
 CREATE NONCLUSTERED INDEX group_idx ON ZENTRACK_GROUP (group_name);
 CREATE NONCLUSTERED INDEX grp_dtl_idx ON ZENTRACK_GROUP_DETAIL (group_id, sort_order);
 CREATE NONCLUSTERED INDEX varfield_tid_idx ON ZENTRACK_VARFIELD (ticket_id);
 CREATE NONCLUSTERED INDEX behavior_idx ON ZENTRACK_BEHAVIOR (is_enabled);
 CREATE NONCLUSTERED INDEX bdtl_idx ON ZENTRACK_BEHAVIOR_DETAIL (behavior_id);
-CREATE NONCLUSTERED INDEX var_idx_idx ON ZENTRACK_VARFIELD_IDX (sort_order, field_name);
-
-
 
 -- ADDED IN VERSION 2.6
 
@@ -474,6 +390,13 @@ CREATE INDEX vf_multi_idx ON ZENTRACK_VARFIELD_MULTI(ticket_id);
 
 
 -- ADDED IN VERSION 2.6.0.1
+
+
+
+
+
+
+-- ADDED IN VERSION 2.6.2
 
 
 

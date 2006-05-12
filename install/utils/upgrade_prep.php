@@ -225,7 +225,6 @@
   if( !$argv || count($argv) < 3 ) {
     print "\nUsage:  php upgrade.php old_version new_version [..options..]\n";
     print "\t-v                   verbose output\n";
-    print "\t-d=/some/directory   specify install directory\n";
     print "\t-b=/some/directory   specify location for backup files\n";
     exit;
   }
@@ -277,15 +276,15 @@
   
   // see if there is any upgrade sql to drop into the newly created files
   $t = "checking for upgrade_base.sql...";
-  if( file_exists("$dir/upgrade_base.sql") ) {
-    dlog("{$t}found");
+  if( file_exists("$dir/utils/upgrade_base.sql") ) {
+    $base_text = file_get_contents("$dir/utils/upgrade_base.sql");
+  }
+  else if( file_exists("$dir/upgrade_base.sql") ) {
     $base_text = file_get_contents("$dir/upgrade_base.sql");
   }
   else {
-    dlog("{$t}not found, no base text");
-    $base_text = false; 
+    die("upgrade_base.sql not found, aborting");
   }
-  
   
   //////////////////////////////////
   ////////////////////////////////////////////////////////////////////

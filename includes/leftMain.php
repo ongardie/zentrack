@@ -78,12 +78,6 @@
   </td>
   </tr>  
   <? 
-//we check also if login_level is a number because in first login it will be 'first_login' what would give access to all.
-     if( $zen->checkNum($login_level) >= $zen->getSetting("level_reports") ) {
-   include("$libDir/leftReports.php");
-      } 
-  ?>
-  <? 
      if( $zen->checkNum($login_level) >= $zen->getSetting("level_settings") ) {
    include("$libDir/leftAdmin.php");
       } 

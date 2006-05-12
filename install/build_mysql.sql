@@ -307,68 +307,6 @@ CREATE TABLE ZENTRACK_USERS (
   PRIMARY KEY (user_id)
 ) TYPE=MyISAM;
 
--- 
--- Table structure for table 'ZENTRACK_REPORTS' 
--- 
-
-CREATE TABLE ZENTRACK_REPORTS ( 
-   report_id int(12) NOT NULL auto_increment, 
-   report_name varchar(100) default NULL, 
-   report_type varchar(25) default NULL, 
-   date_selector varchar(25) default NULL, 
-   date_value int(3) default NULL, 
-   date_range varchar(12) default NULL, 
-   date_low int(12) default NULL, 
-   chart_title varchar(255) default NULL, 
-   chart_subtitle varchar(255) default NULL, 
-   chart_add_ttl int(1) default NULL, 
-   chart_add_avg int(1) default NULL, 
-   chart_type varchar(25) default NULL, 
-   chart_options text, 
-   data_set text, 
-   chart_combine int(1) default NULL, 
-   text_output int(1) default NULL, 
-   show_data_vals int(1) default NULL, 
-   PRIMARY KEY (report_id) 
-);
-
--- 
--- Table structure for table 'ZENTRACK_REPORTS_INDEX' 
--- 
-
-CREATE TABLE ZENTRACK_REPORTS_INDEX ( 
-   report_id int(12) default NULL, 
-   bid int(12) default NULL, 
-   user_id int(12) default NULL 
-);
-
--- 
--- Table structure for table 'ZENTRACK_REPORTS_TEMP' 
--- 
-
-CREATE TABLE ZENTRACK_REPORTS_TEMP ( 
-   report_id int(12) NOT NULL auto_increment, 
-   report_name varchar(100) default NULL, 
-   report_type varchar(25) default NULL, 
-   date_selector varchar(25) default NULL, 
-   date_value int(3) default NULL, 
-   date_range varchar(12) default NULL, 
-   date_low int(12) default NULL, 
-   chart_title varchar(255) default NULL, 
-   chart_subtitle varchar(255) default NULL, 
-   chart_add_ttl int(1) default NULL, 
-   chart_add_avg int(1) default NULL, 
-   chart_type varchar(25) default NULL, 
-   chart_options text, 
-   data_set text, 
-   created datetime NOT NULL default '0000-00-00 00:00:00', 
-   chart_combine int(1) default NULL, 
-   text_output int(1) default NULL, 
-   show_data_vals int(1) default NULL, 
-   PRIMARY KEY (report_id), 
-   KEY tempreports_created(created) 
-);
-
 --
 -- Release 2.5 new tables
 --
@@ -417,7 +355,6 @@ CREATE TABLE ZENTRACK_GROUP_DETAIL (
 CREATE TABLE ZENTRACK_VARFIELD (
   ticket_id int(12) NOT NULL,
 
-  /* CHANGES HERE MUST BE REFLECTED IN the values for ZENTRACK_VARFIELD_IDX */
   custom_menu1 varchar(255),
   custom_menu2 varchar(255),
 
@@ -462,4 +399,11 @@ CREATE INDEX vf_multi_idx ON ZENTRACK_VARFIELD_MULTI(ticket_id);
 
 
 -- ADDED IN VERSION 2.6.0.1
+
+
+
+-- ADDED IN VERSION 2.6.2
+
+
+
 

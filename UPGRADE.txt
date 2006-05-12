@@ -1,5 +1,5 @@
 
-UPGRADE INSTRUCTIONS FOR VERSION 2.6.1
+UPGRADE INSTRUCTIONS FOR VERSION 2.6.2
 
             !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             !!!! ALWAYS MAKE BACKUPS          !!!!
@@ -23,11 +23,11 @@ REQUIREMENTS
     Freetype libraray required to view reports
 
 ---------------------
-UPGRADE FROM 2.6.0.4
+UPGRADE FROM 2.6.1
 ---------------------
 
   0. For simplicity we will assume your newly downloaded ZT files are already 
-     unzipped and residing in a folder named "/downloads/zentrack_2-6-1/" 
+     unzipped and residing in a folder named "/downloads/zentrack_2-6-2/" 
      and that your current install is in a folder called "/web/zentrack/".
      
   1. Make backups of the following files (you will want these settings later)
@@ -35,8 +35,8 @@ UPGRADE FROM 2.6.0.4
      /web/zentrack/includes/egate_congif.php
 
   2. Copy new downloads over existing files:
-     /downloads/zentrack_2-6-1/includes/* -> /web/zentrack/includes/*
-     /downloads/zentrack_2-6-1/www/* -> /web/zentrack/www/*
+     /downloads/zentrack_2-6-2/includes/* -> /web/zentrack/includes/*
+     /downloads/zentrack_2-6-2/www/* -> /web/zentrack/www/*
      
   3. Run the install/UPGRADE_yourdb.sql script
      You may do this from the command line with something like:
@@ -53,7 +53,36 @@ UPGRADE FROM 2.6.0.4
      chmod 755 includes/egate.php
      chmod 755 includes/egate_create.php  
      
-  5. Check Priority Coloring
+  5. See AFTER UPGRADE below
+
+  6. Configure new features:
+     NEW FIELD MAPS:  There are now two new field maps for searchbox_ticket 
+     and searchbox_project, they control the behavior of searchbox windows.  
+     Have a look at these and configure to your liking:
+     Administration -> Edit Field Map -> searchbox_ticket|searchbox_project
+     
+     There is now an option to expand the left nav menu whenever the recent history
+     is pointed to with the mouse.  This allows the full ticket titles to be viewed
+     without using up screen real estate.  If this option is too radical of a change
+     from what you are used to, you can disable it:
+     Administration -> Configuration Settings -> expand_history
+     
+     The "export search results" option now has its own field map.  You will
+     probably want to set this up to look like your search_list field map, but
+     may wish to customize options to your liking:
+     Administration -> Edit Field Map -> search_export
+
+---------------------
+UPGRADE FROM 2.6.0.4
+---------------------
+
+  1. Run the 2.6.1.UPGRADE.sql script
+     You may do this from the command line with something like:
+       mysql -u username -p database < 2.6.1.UPGRADE_mysql.sql
+     Or you may do this by copying and pasting the contents of this script
+     into your sql interface
+     
+  2. Check Priority Coloring
      You will want to log into your system and check coloring of your priorities
      in the ticket list.  The background coloring for different priorities is now
      set under Administration -> Priorities.
@@ -65,8 +94,9 @@ UPGRADE FROM 2.6.0.4
       Medium:    #FFDDBB
       High:      #FFBBAA
       Very High: #FF9999
-  
-  6. See AFTER UPGRADE below
+
+  2. You now have the equivalent of 2.6.1 installed, so follow
+     instructions for UPGRADE FROM 2.6.1
 
 ---------------------
 UPGRADE FROM 2.6.0.3
@@ -77,6 +107,9 @@ UPGRADE FROM 2.6.0.3
        mysql -u username -p database < 2.6.0.4.UPGRADE_mysql.sql
      Or you may do this by copying and pasting the contents of this script
      into your sql interface
+     
+  2. You now have the equivalent of 2.6.0.4 installed, so follow
+     instructions for UPGRADE FROM 2.6.0.4
 
 ---------------------
 UPGRADE FROM 2.6.0.1

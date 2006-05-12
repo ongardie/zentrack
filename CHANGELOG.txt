@@ -13,7 +13,27 @@ abstraction, and endless possibilities for project expansion.
 
 ----- VERSION 2.6.2 (development) -----
 
-2006-05-10, kato
+2006-05-12, kato
+  Removed deprecated reports code/sql
+
+  Prepared install/upgrade docs and scripts
+    - zentrack_2/UPGRADE.readme
+    - zentrack_2/install/build_mysql.sql
+    - zentrack_2/install/build_mssqlserver.sql
+    - zentrack_2/install/build_postgres.sql
+    - zentrack_2/install/build_oracle.sql
+    - zentrack_2/install/seed_mssqlserver.sql
+    - zentrack_2/install/seed_mysql.sql
+    - zentrack_2/install/seed_oracle.sql
+    - zentrack_2/install/seed_postgres.sql
+    - zentrack_2/install/UPGRADE_mssqlserver.sql
+    - zentrack_2/install/UPGRADE_mysql.sql
+    - zentrack_2/install/UPGRADE_oracle.sql
+    - zentrack_2/install/UPGRADE_postgres.sql
+    - zentrack_2/install/previous/2.6.2.UPGRADE_mssqlserver.sql 1.1
+    - zentrack_2/install/previous/2.6.2.UPGRADE_mysql.sql 1.1
+    - zentrack_2/install/previous/2.6.2.UPGRADE_oracle.sql 1.1
+    - zentrack_2/install/previous/2.6.2.UPGRADE_postgres.sql 1.1
   333: Fixed translation issue with escaped chars becoming &nacute; (etc)
     - zentrack_2/includes/translator.class 1.14
     - zentrack_2/includes/translations/spanish.trans 1.14
