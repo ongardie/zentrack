@@ -450,7 +450,7 @@ function delSearchboxVal(form, field, key) {
   }
 }
 
-function addSearchboxVal(form, field, key, text, multi) {
+function addSearchboxVal(form, field, key, text, multi, required) {
   var f = window.document.forms[form].elements[field];
   var d = getSearchbox(form,field);
   if( !multi ) { clearSearchboxVals(form, field); }
@@ -476,7 +476,9 @@ function addSearchboxVal(form, field, key, text, multi) {
   n2.onmouseout  = function() { mClassX(this); }
   var node = window.document.createElement("DIV");
   node.id = searchboxNodeId(form,field,key);
-  node.onclick = function() { delSearchboxVal(form, field, key); }
+  if( !required ) {
+    node.onclick = function() { delSearchboxVal(form, field, key); }
+  }
   setClassX(node, 'searchbox_atom');
   node.appendChild(n1);
   node.appendChild(n2);

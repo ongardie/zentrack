@@ -389,7 +389,8 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
    
   /**
    * Generate javascript necessary to load searchbox vals into the appropriate
-   * fields as the page is rendered
+   * fields as the page is rendered.  This is only useful for searchboxes which
+   * have a field map, of course.
    *
    * @param string $formview the view to use for field map props
    * @param string $form_name name of the form fields are contained in
@@ -420,7 +421,8 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
         $txt .= $zen->fixJsVal($n).",";
         $txt .= $zen->fixJsVal($val).",";
         $txt .= $zen->fixJsVal($text).',';
-        $txt .= $map->hasMultipleValues($formview, $k)? 1 : 0;
+        $txt .= $map->hasMultipleValues($formview, $k)? 1 : 0.",";
+        $txt .= $map->getFieldProp($formview, $k, 'is_required');
         $txt .= ");\n";
       }
     }

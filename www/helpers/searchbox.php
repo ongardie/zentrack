@@ -43,11 +43,13 @@
     $searchbox_type  = array_key_exists('type', $_POST)? 
       preg_replace('@[^0-9a-zA-Z_]@', '', $_POST['type']) : null;
     $searchbox_multi = array_key_exists('multi', $_POST) && $_POST['multi']? true : false;
+    $searchbox_req   = empty($_POST['searchbox_req']) 0 : 1;
   }
   else {
     $searchbox_mode  = preg_replace('@[^0-9a-zA-Z_]@', '', $_GET['mode']);
     $searchbox_form  = preg_replace('@[^0-9a-zA-Z_]@', '', $_GET['form']);
     $searchbox_field = preg_replace('@[^0-9a-zA-Z_[]]@', '', $_GET['field']);
+    $searchbox_req   = empty($_GET['req']) 0 : 1;
     $searchbox_type  = array_key_exists('type', $_GET)? 
       preg_replace('@[^0-9a-zA-Z_]@', '', $_GET['type']) : null;
     $searchbox_multi = array_key_exists('multi', $_GET) && $_GET['multi']? true : false;
@@ -98,6 +100,7 @@
 var form = <?=$zen->fixJsVal($searchbox_form)?>;
 var field = <?=$zen->fixJsVal($searchbox_field)?>;
 var multi = <?=$zen->fixJsVal($searchbox_multi)?>;
+var required = <?=$searchbox_req?>;
 function closeWindow() {
   //window.opener.setSearchboxVals(form, field, pickedVals);
   window.close();
@@ -123,7 +126,7 @@ function pickRow(id, event, row) {
   else {
     pickedVals[key] = kv[1];
     newStyle = 'invalidBars';
-    window.opener.addSearchboxVal(form, field, key, kv[1], multi);
+    window.opener.addSearchboxVal(form, field, key, kv[1], multi, required);
   }
   if( !row ) {
     var f = window.document.getElementById(id);
