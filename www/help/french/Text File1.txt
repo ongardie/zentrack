@@ -1,0 +1,232 @@
+Description 
+Behaviors are a method of placing dynamic values into forms based on what the user selects from other fields. 
+There are two basic ways to use behaviors. The values loaded by a behavior will come from a Accepter (discussed in the previous section), and can be loaded from the database values or from javascript code. 
+
+Behaviors are not secure. They should not be relied upon to prevent or enforce user interaction with the system. They are only meant as a helpful tool to present useful choices to the user, since they can be overcome by disabling javascript from the browser. 
+
+It is very IMPORTANT to avoid overlapping the conditions and target fields of behaviors in overly complex ways. See the notes below on 'Champ à changer' for more details. 
+ 
+Creating a Behavior 
+Behaviors can be found on the nav menu: Section d'admin. -> Administration des configurations -> Éditer Les Mécanismes. 
+Choosing the 'Nouveau' button will bring up the form to create new behaviors. 
+
+The fields in the behavior form are detailed below. 
+ 
+Behavior Fields 
+Field  Purpose  
+Nom du casier A quick description of this behavior, such as "Priority Switcher" 
+Actif If unchecked, this behavior will be ignored 
+Accepter This is the group of values that will be switched if this behavior runs. 
+Ordre De Tri This controls the order that the behaviors will be run. 
+It is very important to order these correctly, since two behaviors cannot be run on the same field at the same time(more on this below). 
+ 
+Champ à changer This is the ticket field that will be targeted by the behavior and recieve the new ticket fields. 
+Consider your target fields carefully. The target fields for one behavior should be used with great caution as the rules for another behavior. 
+
+Consider, for instance, if I have one behavior which alters the bin each time the priority is updated and another which alters the priority each time the bin is updated. This may not produce a very desirable result. 
+
+However, they will not produce an infinite loop. Once the field is modified, any other behaviors which attempt to come in and modify the value of the same field again will be ignored. Thus the importance of the Ordre De Tri(above)! 
+
+If the Champ à changer is set to a text field (a form field which can only hold one entry) the first element of the list created will be placed here and the rest will be discarded. 
+ 
+Le champ est disponible This checkbox affects the disabled status of the target form field. 
+If this box is checked, then the field will be enabled by the behavior when it runs. If the box is not checked, then the form field will be disabled by the behavior when it runs. 
+ 
+Similitude par Le Type Used to determine how we will match rules for this behavior. 
+If this is set to 'Correspond à Tous', then the rules for this behavior are evaluated using an 'OR' condition. Thus, matching any one rule will trigger the behavior. 
+
+If this is set to 'Correspondance (similitude) totale', then the rules for this behavior are evaluated using an 'AND' condition. Thus, all rules must be met before the behavior will trigger. 
+ 
+ 
+Behavior Rules 
+The behavior rules specify conditions which must be met before this behavior is run. Once one or all of these conditions are true (based on the 'Similitude par Le Type' property), then this behavior will be evaluated and the new values loaded. 
+The rules can match the id or the text values from other menus, so it is safe to use the names of Bins, Priorities, and other data types in place of their ids as desired. 
+
+The 'Compare les valeurs' field may be left blank to match empty strings or null values. The 'Ordre De Tri' is used to determine which order the rules will be evaluated. 
+ 
+File Based Behaviors 
+File based behaviors use columns for a tab delimited file to specify the rules (conditions) which must be met, and which values will be used. 
+
+Let's assume that we want to create a new behavior that will change the priorities which can be selected based on the bin and type of issue. We will call this the 'Priority Behavior' for now. 
+
+Consider the following rules in our behavior: Rules 
+Compare Field Column Number 
+-value column- 3 
+type_id 1 
+bin_id 2 
+
+
+These rules would tell us that column 1 of our file will be matched against the type_id, that column 2 will be matched against the bin_id. If both of these conditions are met, then whatever appears in column 3 will added to the list of values which will appear in the priority dropdown. 
+
+If we have the following data in our tab delimited file: Data 
+Column 1 Column 2 Column 3 
+Project Engineering First 
+Project Engineering Second 
+Project Tech Support Customer Down 
+Project Tech Support Normal 
+Bug Engineering High 
+Bug Engineering Low 
+
+
+This data would produce the list or priorities First and Second any time that we create a Project in the Engineering bin. Alternately, if we move this project to the Tech Support team, the priority list would shift to Customer Down and Normal. 
+
+However, if we change this to a bug, the Engineering team would have the priorities High and Low to choose from. 
+
+Note that, since our file does not cover all possible combinations, we would want to create a 'backup' behavior to handle all other cases. We would give this lower priority (by giving it a higher sort order) and tell it to match anything which equals '' or does not equal '' (basically this means match anything at all). 
+
+If our Priority Behavior fell through, then this behavior would get run and would be expected to set the list of priorities to some sort of default set. 
+ 
+A Crash Course in Behaviors 
+What follows is an example of how to set up two behaviors. One which relies on database fields for values and one which generates values using javascript. 
+What follows is a simple step-by-step example of how to 
+create a "Match" behavior and how to create a "Javascript" 
+behavior and how to use them together.
+
+Step 1: Enable debugging
+  - Open www/header.php
+  - Set $Debug_Mode = 3;
+  - Save
+
+Step 2: Log in as Administrator
+
+Step 3: Create some variable fields (so we can use them for javascript)
+  - Go to Admin -> Ticket Administration -> Edit Variable Fields
+  - Find the custom_string1 and custom_string2 fields:
+      Change names to "Extra Priority 1" and "Extra Priority 2" respectively
+      Check the following boxes:  Tickets, New
+      Make sure the default is blank
+
+Step 4: Create a Group
+  - Go to Admin -> Settings Administration -> Edit Data Groups
+  - Click on New
+     Table Name: Priorities
+     Group Name: Pri Set 1
+     Description: Loads some priorities for fun
+     Eval Type:  Matches
+	  Eval Script: -blank-
+  - Create Group
+  - Edit Entries for Group
+     Check several entries and save results
+     
+Step 5: Create another group
+  - Go to Admin -> Settings Administration -> Edit Data Groups
+  - Click on New
+    Table Name: Priorities
+    Group Name: Pri Set 2
+    Description: Adds custom fields to priority list
+    Eval Type: Javascript
+    Eval Script:
+      // this script adds values placed in custom_string1 
+      // and custom_string2 to the priorities dropdown
+      
+      // create our array which will be used to populate fields
+      var x = new Array();
+      
+      // shortcut to the options in the priority menu
+      var options = {form}.priority.options;
+      
+      // shortcut to value of custom_string fields
+      var f1 = {form}.custom_string1.value;
+      var f2 = {form}.custom_string2.value;
+      
+      // recreate menu with existing values
+      for( var i=0; i < options.length; i++ ) {
+        // insert each value of the existing menu into our new array
+        x[ x.length ] = { label:options[i].text, value:options[i].value };
+        
+        // make sure the menu doesn't already contain our field values, if so,
+        // then make sure we don't add them again
+        if( options[i].value == f1 ) { f1 = null; }
+        if( options[i].value == f2 ) { f2 = null; }
+      }
+      
+      // add values of our custom fields to the array
+      if( f1 ) {
+        x[ x.length ] = f1;
+      }
+      if( f2 ) {
+        x[ x.length ] = f2;
+      }
+      
+      // now when this is evaluated, the array x will contain 
+      // the existing menu values plus anything we have 
+      // added via the custom_string fields!  
+  - Create Group
+  - DO NOT edit entries for the group
+  
+  
+Step 6: Create Behavior for when custom_strings are NOT empty
+  - Go to Admin -> Settings Administration -> Edit Behaviors
+  - Click on New
+    Behavior Name: priority set 2
+    Active: checked
+    Data Group: Pri Set 2
+    Sort Order: 10
+    Field to Change: Priority
+    Field is Enabled: checked
+    Match Type:  	Match ANY Rules
+  - Create Behavior
+  - Edit Matches
+     Row 1
+     -----
+     Compare Field: Custom String 1
+     Operator: Not Equal
+     Compare Value: [leave this blank]
+     Sort Order: 1
+     
+     Row 2
+     -----
+     Compare Field: Custom String 2
+     Operator: Not Equal
+     Compare Value: [leave this blank]
+     Sort Order: 2
+   - Save
+
+Step 7: Create Behavior for when custom_strings are empty
+  - Go to Admin -> Settings Administration -> Edit Behaviors
+  - Click on New
+    Behavior Name: priority set 1
+    Active: checked
+    Data Group: Pri Set 1
+    Sort Order: 20
+    Field to Change: Priority
+    Field is Enabled: checked
+    Match Type:  	Match ALL Rules
+  - Create Behavior
+  - Edit Matches
+     Row 1
+     -----
+     Compare Field: Custom String 1
+     Operator: Equals
+     Compare Value: [leave this blank]
+     Sort Order: 1
+     
+     Row 2
+     -----
+     Compare Field: Custom String 2
+     Operator: Equals
+     Compare Value: [leave this blank]
+     Sort Order: 2
+   - Save
+
+Step 8: Test results
+  - Go to Ticket -> Create New
+  - Examine the Priorities Menu
+  - Check the behavior output at the base of page 
+    (it is updated dynamically each time a behavior runs)
+  - Enter text into other_string1
+  - Enter text into other_string2
+  - Examine the Priorities Menu
+  - Check behavior output
+  - Change values of other_string1 or 2 as desired 
+    and note results
+  
+Result:
+  * You will see that when the page initially loads, the 
+    priorities are switched to Pri Set 1 because the 
+    custom_string1 is empty  
+  * You will note that when the custom_string1 and 
+    custom_string2 values are changed, the menu options 
+    are updated with these values.
+
+ 

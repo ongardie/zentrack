@@ -56,7 +56,7 @@
     if (strpos($f,"custom")===false) {
       $context->set('value', $ticket[$f]);
     } else {
-      $context->set('value', $$f);
+      $context->set('value', $varfields[$f]);
     }
     if( in_array($f, $sections) ) {
       print "<tr><td colspan='2' class='headerCell indent'>";

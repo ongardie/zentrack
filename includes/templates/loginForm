@@ -16,7 +16,7 @@
   
   <input type='hidden' name='TODO' value='Log On'>
 
-  <input type=text name=username value='<?=strip_tags($zentrackUsername)?>' width=20 maxlength=20 title="<?=$hotkeys->tt("Login Name")?>">&nbsp;<?=$hotkeys->ll("Login Name")?>
+  <input type='text' name='username' value='<?=strip_tags($zentrackUsername)?>' width=20 maxlength=20 title="<?=$hotkeys->tt("Login Name")?>">&nbsp;<?=$hotkeys->ll("Login Name")?>
 
   <br>
 
@@ -42,11 +42,8 @@
     if( f.username.value == "" ) {
       setFocalPoint( f.username );
     }
-    else if( f.passphrase.value == "" ) {
+    else {
       setFocalPoint( f.passphrase );
     }
-    else {
-      setFocalPoint( f.TODO );
-    }  
   }
 </script>

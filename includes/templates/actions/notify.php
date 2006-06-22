@@ -32,18 +32,28 @@ function printpopup(variable)
 <tr>
   <td class='bars'>
 <?
-  // make a user textarea and search button
-  print "<textarea cols='40' rows='1' name='user_accts'>\n";
-  print (isset($user_accts))? $zen->ffv($user_accts) : "";
-  print "</textarea>\n";
-  $onclick = "onClick='return popupWindowScrolls"
-    ."(\"$rootUrl/helpers/userSearchbox.php?return_form=notifyAddForm"
-    ."&return_field=user_accts\",\"popupHelper\",375,400)'";
-  print "&nbsp;<input type='button' class='searchbox' "
-    ." value=' ... ' $onclick>\n";
-  print "<br><span class='note'>"
-	.tr("Type ids separated by commas, or click on the button.")
-	."</span>\n";
+  $templateVars = array(
+    'field_name'   => 'user_accts',
+    'field_cols'   => '20',
+    'field_max'    => '9999',
+    'search_mode'  => 'user',
+    'search_type'  => '',
+    'form_name'    => 'notifyAddForm',
+    'search_multi' => '1',
+    'search_text'  => ''
+  );
+  $template = new ZenTemplate("$templateDir/fields/searchbox.template");
+  $template->values( $templateVars );
+  print $template->process();
+  if( $user_accts ) {
+    $vals = explode(',', $user_accts);
+    print "<script>";
+    foreach($vals as $v) {
+      $uname = $zen->formatName($v);
+      print "addSearchboxVal('notifyAddForm', 'user_accts', '$v', '$uname', true, false);\n";
+    }
+    print "</script";
+  }
 ?>
   </td>
 </tr>
@@ -84,9 +94,9 @@ function printpopup(variable)
 <td class='bars'>
 <br>
 <?
-  print tr("Company:");
   $company = $zen->get_contact_all();
   if (is_array($company)||count($company)) {
+    print tr("Company:");
 ?>
 
   <select name="company_id" onChange="printpopup(document.forms['notifyAddForm'].company_id.value)">
@@ -109,15 +119,15 @@ function printpopup(variable)
   }
 	
   $sort = "lname asc";
-  $company = $zen->get_contacts($parms,"ZENTRACK_EMPLOYEE",$sort);
+  $employee = $zen->get_contacts($parms,"ZENTRACK_EMPLOYEE",$sort);
 	
-  if (is_array($company)||count($company)) {
+  if (is_array($employee)||count($employee)) {
     echo "&nbsp;". tr("Or Person:");
 ?>
     <select name="person_id">
       <option value=''>--<?=tr("none")?>--</option>
 	<?
-	  foreach($company as $p) {
+	  foreach($employee as $p) {
             $val =($p['fname'])?ucfirst($p[lname])." ,".ucfirst($p[fname]):ucfirst($p[lname]);
 	    print "<option value='$p[person_id]' >".$zen->ffv($val)."</option>\n";
           }
@@ -126,6 +136,12 @@ function printpopup(variable)
     <br><br>
 <?
   } //if( is_array($company).. )
+  
+  if( !$employee && !$company ) {
+    print tr("No contacts found");
+  }
+  
+  
   } //if( $zen->getSetting('allow_contacts')... )
 ?>
 	

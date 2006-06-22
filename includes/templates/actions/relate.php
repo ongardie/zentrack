@@ -1,5 +1,6 @@
 <? 
-  if( !ZT_DEFINED ) { die("Illegal Access"); } 
+  if( !ZT_DEFINED ) { die("Illegal Access"); }
+  $relations = $ticket['relations'];
   if( is_array($relations) ) {
     $relations = join(',',$relations);
   }
@@ -23,11 +24,31 @@
 </tr>
 <tr>
  <td class='bars'>
-    <textarea cols='20' rows='4' title="<?=$hotkeys->tt("Enter Ticket IDs")?>" 
-      name='relations'><?=$zen->ffv($relations)?></textarea>
-     &nbsp;<input type='button' class='searchbox' value=' ... ' 
-	onClick='popupWindowScrolls("<?=$rootUrl?>/helpers/ticketSearchbox.php?return_form=relateTicketForm&return_field=relations","popupHelper",375,500)'>
-     <br><span class='note'> <?=tr("Enter ticket ids, separated by commas")?></span>
+<?
+  $templateVars = array(
+    'field_name'   => 'relations',
+    'field_cols'   => '20',
+    'field_max'    => '9999',
+    'search_mode'  => 'ticket',
+    'search_type'  => '',
+    'form_name'    => 'relateTicketForm',
+    'search_multi' => '1',
+    'search_text'  => ''
+  );
+  $template = new ZenTemplate("$templateDir/fields/searchbox.template");
+  $template->values( $templateVars );
+  print $template->process();
+  if( $relations ) {
+    $vals = explode(',', $relations);
+    print "<script>";
+    foreach($vals as $v) {
+      $ticket = $zen->get_ticket($v);
+      $ttl = Zen::ffv($ticket['title']);
+      print "addSearchboxVal('relateTicketForm', 'relations', '$v', '$ttl', true, false);\n";
+    }
+    print "</script>";
+  }
+?>
   </td>			     
 </tr>
 <tr>
@@ -37,7 +58,7 @@
   </td>
 </tr>
 <tr>
-  <td class='bars'
+  <td class='bars'>
     <textarea cols="50" rows="4" name="comments" title="<?=$hotkeys->tt("Comments")?>"><?=
       $zen->ffvText($comments)?></textarea>
   </td>

@@ -24,6 +24,10 @@
     foreach($customFieldsArray as $f=>$field) {
       // don't include sections
       if( $field['field_type'] == 'section' ) { continue; }
+      // titles need to be truncated to correct length
+      if( $f == 'title' && strlen($$f) > 250 ) {
+        $params["$f"] = substr($$f,0,250);
+      }
       // parse dates
       if( $fprops["$f"]['data_type'] == 'date' ) {
         $$f = $$f > 0? $zen->dateParse($$f) : null;
@@ -46,6 +50,7 @@
     for($i=0; $i<count($relations); $i++) {
       $relations[$i] = $zen->checkNum($relations[$i]);
     }
+    $relations = join(',',$relations);
   }
   
   // insure that the user/bin combination provided is allowed

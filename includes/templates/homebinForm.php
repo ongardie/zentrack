@@ -38,7 +38,7 @@
 <tr>
   <td class="bars" colspan="2">
   <?
-    $hotkeys->activateButton("Update Bin", "pwcForm");
+    $hotkeys->activateButton("Update Bin", "homebinForm");
     renderDivButtonFind("Update Bin");
   ?>
   </td>

@@ -192,7 +192,7 @@ class ZenSearch {
      if( $limit ) {
        $res = $zen->db_getLimitedIndex($query, $limit, $offset);
        $this->_total = count($res);
-       if( $this->_total == $limit ) {
+       if( $this->_total >= $limit || $offset + $limit > $this->_total ) {
          $this->_total = $zen->db_get("SELECT COUNT(*) FROM ".$this->_table." $where");
        }
      }

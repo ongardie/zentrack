@@ -75,6 +75,7 @@
   include("$libDir/nav.php");
   $zen->printErrors($errs);
   $ticket = $zen->get_ticket($id);
+  $varfields = $zen->getVarfieldVals($id);
   if( $zen->inProjectTypeIDs($ticket['type_id']) ) {
     include("$templateDir/projectView.php");
   } else {

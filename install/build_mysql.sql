@@ -254,7 +254,7 @@ CREATE TABLE ZENTRACK_TASKS (
 
 CREATE TABLE ZENTRACK_TICKETS (
   id int(12) NOT NULL auto_increment,
-  title varchar(150) NOT NULL default 'untitled',
+  title varchar(250) NOT NULL default 'untitled',
   priority int(2) NOT NULL default '0',
   status varchar(25) NOT NULL default 'OPEN',
   description text,

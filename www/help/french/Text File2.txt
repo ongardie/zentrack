@@ -1,0 +1,147 @@
+Les comportements de description sont une méthode de placer des
+valeurs dynamiques dans des formes basées sur ce que l'utilisateur
+choisit parmi d'autres champs.  Il y a deux manières de base
+d'employer des comportements.  Les valeurs chargées par un
+comportement viendront d'un Accepter (discuté dans la section
+précédente), et peuvent être chargées des valeurs de base de
+données ou du code de javascript.
+
+Les comportements ne sont pas bloqués.  Ils ne devraient pas être
+comptés au moment pour empêcher ou imposer l'interaction
+d'utilisateur avec le système.  Ils sont seulement censés comme
+outil utile pour présenter des choix utiles à l'utilisateur,
+puisqu'ils peuvent être surmontés en neutralisant le javascript du
+browser.
+
+Il est très IMPORTANT d'éviter de recouvrir les conditions et les
+champs de cible des comportements dans des manières excessivement
+complexes.  Voir les notes ci-dessous sur ' le commutateur de à de
+Champ ' pour plus de détails.
+
+Créer des comportements d'un comportement peut être trouvé sur le
+menu de nav:  Section d'admin. - > configurations de des
+d'administration - > Éditer Les Mécanismes.  Le choix du bouton de '
+Nouveau ' évoquera la forme pour créer de nouveaux comportements.
+
+Les champs sous la forme de comportement sont détaillés ci-dessous.
+
+
+La description rapide casier de 
+Nom du A de but de champ de champs de
+comportement de ce comportement, tel que commutateur " Actif le "
+prioritaire si non réprimée, ce comportement sera Accepter ignoré
+que c'est le groupe de valeurs qui seront commutées si ce
+comportement fonctionne.  Ordre De Tri This commande l'ordre que les
+comportements seront courus.  
+Il est très important de commander ces
+derniers correctement, puisque deux comportements ne peuvent pas être
+courus sur le même champ au même time(more sur ceci ci-dessous).
+
+Le commutateur de à de Champ ceci est le champ de billet qui sera
+visé par le comportement et recieve les nouveaux champs de billet.
+
+Considérer vos champs de cible soigneusement.  Les champs de cible
+pour un comportement devraient être employés avec la grande
+attention comme règles pour un autre comportement.
+
+Considérer, par exemple, si j'ai un comportement qui change le casier
+chaque fois la priorité est mis à jour et un autre qui changent la
+priorité chaque fois le casier est mis à jour.  Ceci peut ne pas
+produire un résultat très souhaitable.
+
+Cependant, ils ne produiront pas une boucle infinie.  Une fois que le
+champ est modifié, tous les autres comportements qui essayent
+d'entrer et modifient la valeur du même champ encore seront ignorés.
+Ainsi l'importance d'Ordre De Tri(above)!
+
+Si le commutateur de à de Champ est placé à un gisement des textes
+(un champ de forme qui peut seulement tenir une entrée) que le
+premier élément de la liste créée sera placé ici et le repos sera
+jeté.
+
+Le champ est disponible ce checkbox affecte le statut handicapé du
+champ de forme de cible.  Si cette boîte est vérifiée, alors le
+champ sera permis par le comportement quand il fonctionne.  Si la
+boîte n'est pas vérifiée, alors le champ de forme sera neutralisé
+par le comportement quand il fonctionne.
+
+Similitude Le Type Used par pour déterminer comment nous assortirons
+des règles pour ce comportement.  Si ceci est placé à '
+correspondent le à Tous, alors les règles pour ce comportement sont
+employer évalué ' OU ' condition.  Ainsi, l'assortiment de n'importe
+quelle une règle déclenchera le comportement.
+
+Si ceci est placé totale au ' de Correspondance (similitude) ', alors
+les règles pour ce comportement sont employer évalué ' ET '
+condition.  Ainsi, toutes les règles doivent être rencontrées avant
+que le comportement déclenche.
+
+Le comportement règne les règles de comportement indiquent les
+conditions qui doivent être rencontrées avant que ce comportement
+soit couru.  Une fois qu'une ou toutes ces conditions sont vraies
+(basé sur ' Similitude la propriété de Le Type par '), alors ce
+comportement sera évalué et les nouvelles valeurs seront chargées.
+  Les règles peuvent assortir l'identification ou les valeurs des
+textes d'autres menus, ainsi il est sûr d'employer les noms des
+casiers, des priorités, et d'autres types de données au lieu de
+leurs identifications comme désiré.
+
+' comparer les valeurs de les que le champ peut être laissé blanc
+aux cordes vides d'allumette ou aux valeurs nulles.  ' Ordre De Tri '
+est habitué pour déterminer quel ordre les règles seront évalué.
+
+
+Classer les comportements basés classent les colonnes basées
+d'utilisation de comportements pour qu'un dossier délimité par
+étiquette indique les règles (conditions) qui doivent être
+rencontrées, et qui évalue sera employé.
+
+supposons que nous voulons créer un nouveau comportement qui changera
+les priorités qui peuvent être choisies ont basé sur le casier et
+le type d'issue.  Nous appellerons ceci l'' comportement prioritaire '
+pour maintenant.
+
+Considérer les règles suivantes dans notre comportement:  Les
+règles comparent le nombre de colonne de champ - évaluer le bin_id 2
+du type_id 1 de la colonne 3
+
+
+Ces règles nous indiqueraient que que la colonne 1 de notre dossier
+sera assortie contre le type_id, cette colonne 2 sera assorti contre
+le bin_id.  Si tous les deux conditions sont réunies, puis celui qui
+apparaisse dans la volonté de la colonne 3 supplémentaire à la
+liste de valeurs qui apparaîtront dans le dropdown prioritaire.
+
+Si nous avons les données suivantes dans notre étiquette délimitée
+classent:  Client De Soutien De Technologie De Projet De Technologie
+Deuxièmes De Projet De Technologie De Projet De la Colonne 3 De la
+Colonne 2 De la Colonne 1 De Données Le Premier Projettent Vers le
+bas Le Bogue Normal De Soutien De Technologie Machinant Le Bas Élevé
+De Technologie De Bogue
+
+
+Ces données produiraient la liste ou des priorités d'abord et en
+second lieu n'importe quand cela nous créons un projet dans le casier
+de technologie.  Alternativement, si nous déplaçons ce projet à
+l'équipe de soutien de technologie, la liste prioritaire décalerait
+au client vers le bas et à la normale.
+
+Noter que, puisque notre dossier ne couvre pas toutes les combinaisons
+possibles, nous voudrions créer un comportement ' de secours ' pour
+manipuler tous autres cas.  Nous accorderions cette priorité
+inférieure (en lui donnant un ordre supérieur de sorte) et la
+dirions d'assortir n'importe quoi ce qui égale ' ' ou n'égale pas '
+' (fondamentalement ceci signifie l'allumette quelque chose du tout).
+
+
+Si notre comportement prioritaire tombait à travers, alors on
+s'attendrait à ce que ce comportement obtiendrait la course et place
+la liste de priorités à une certaine sorte d'ensemble de défaut.
+
+Un cours accéléré des comportements ce qui suit est un exemple de
+la façon installer deux comportements.  Un qui se fonde sur des
+champs de base de données pour des valeurs et un qui produisent des
+valeurs en utilisant le javascript.  Ce qui suit est un exemple
+étape-par-étape simple de la façon créer un comportement d'"
+allumette " et de la façon créer un comportement d'" Javascript " et
+comment les employer ensemble.

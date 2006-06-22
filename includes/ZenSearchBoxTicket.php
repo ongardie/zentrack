@@ -92,7 +92,7 @@ class ZenSearchBoxTicket extends ZenSearchBox {
       }
       
       // all other fields get rendered in the table
-      $txt .= '<tr class="cell">';
+      $txt .= '<tr class="bars">';
       $txt .= "<td>".$this->_map->getLabel($this->_view, $f)."</td>";
       $txt .= "<td>";
       if( $this->_map->getFieldProp($this->_view, $f, 'field_type') == 'date' ) {
@@ -202,7 +202,7 @@ class ZenSearchBoxTicket extends ZenSearchBox {
     $s = new ZenSearch();
     $s->initFromMap($this->_view, $this->_map);
     $s->setComparators($comps);
-    $rows = $s->search($vals, $this->_queryLimit, $this->_offset);
+    $rows = $s->search($vals, $this->limit(), $this->offset());
     
     for($i=0; $i<count($rows); $i++) {
       foreach($cols as $k=>$v) {
@@ -211,7 +211,8 @@ class ZenSearchBoxTicket extends ZenSearchBox {
     }
     
     // return results
-    Zen::addDebug('ZenSearchBoxTicket::getSearchResults', "returned ".count($rows)." rows", 3);
+    Zen::addDebug('ZenSearchBoxTicket::getSearchResults', "returned ".count($rows).
+        " rows using limit=".$this->limit().", offset=".$this->offset(), 3);
     return new ZenSearchboxResults($cols, $rows, 'id', 'title', $s->getTotal());
   }
   

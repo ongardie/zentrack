@@ -898,14 +898,6 @@ TD.bigger { font-size: 50px; }
     white-space: nowrap;
     overflow: hidden;
     height: 100%;
-    <? if( $zen->settingOn('expand_history') ) { ?>
-    behavior: url('<?=$rootUrl?>/historyBox.htc');
-  }
-  
-  DIV.recentHistory:hover {
-    white-space: normal;
-    overflow: auto;
-    width: 250px;
   }
   
   DIV.recentHistoryHover {
@@ -913,8 +905,6 @@ TD.bigger { font-size: 50px; }
     overflow: auto;
     width: 250px;
     height: 100%;
-    behavior: url('<?=$rootUrl?>/historyBox.htc');
-    <? } ?>
   }
   
 -->

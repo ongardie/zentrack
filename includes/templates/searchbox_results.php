@@ -18,11 +18,17 @@
   $res = $sb->getSearchResults();
   $searchbox_results = $res->rows() > 0;
   $labels = $res->labels();
+  $colspan= count($labels);
   if( !$searchbox_results ) { 
     print "<div class='error'>".tr("There were no results for your search.")."</div>";
   }
   else {
     print "<table width='100%' cellspacing='1' cellpadding='4'>\n";
+    if( $res->rows() < $res->total() ) {
+      print "<tr><td class='headerCell' colspan='$colspan'>";
+      print tr("Results ?-? of ?", array($offset+1, $offset+$res->rows(), $res->total()));
+      print "</td></tr>";
+    }
     print "<tr>\n";
     foreach( $labels as $l ) {
       print "<td class='headerCell'>".Zen::ffv($l)."</td>";
@@ -45,8 +51,32 @@
       print "<input type='hidden' name='{$rowid}_label' id='{$rowid}_label' value='$label'>";
       print "</tr>\n";
     }
+    
+    if( $res->rows() < $res->total() ) {
+      print "<tr class='headerCell'><td colspan='$colspan'>";
+      $rows = $res->rows();
+      $total = $res->total();
+      $step = $sb->limit();
+      $pages = floor($total/$step);
+      $offset = $sb->offset();
+      if( $offset > 0 ) {
+        print "<a href='javascript:pickPage(\"searchboxForm\",".($offset-$step).")'>".tr("Back")."</a>";
+      }
+      for($i=0; $i<=$pages; $i++) {
+        $o = $i*$step;
+        $p = $i+1;
+        if( $o == $offset ) { print "&nbsp;$p"; }
+        else { print "&nbsp;<a href='javascript:pickPage(\"searchboxForm\",$o)'>$p</a>"; }
+      }
+      if( $offset + $step < $total ) {
+        print "&nbsp;&nbsp;<a href='javascript:pickPage(\"searchboxForm\",".($offset+$step).")'>".tr("Next")."</a>";
+      }
+      
+      print "</td></tr>";
+    }
+    
     if( $searchbox_multi ) {
-      print "<tr><td colspan='".count($labels)."'>";
+      print "<tr class='headerCell'><td colspan='$colspan'>";
       print "<input type='button' onclick='closeWindow()' value='".Zen::ffv(tr("Close Window"))."'>\n";
       print "</td></tr>\n";
     }

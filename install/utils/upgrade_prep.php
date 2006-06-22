@@ -15,7 +15,7 @@
   *  - use \' to escape, this will be converted according to the db
   *
   * Comments:
-  *  -- my comment here (do not use /* my comment ...)
+  *  -- my comment here (do not use /* ... or #... )
   *
   * Primary Keys:
   *  - enter primary keys on a seperate line (not as part of a column definition)
@@ -23,13 +23,14 @@
   *      PRIMARY KEY(my_pk_field)
   *
   * Create Sequence:
-  *  - place auto_increment into the column and add a CREATE SEQUENCE.
+  *  - place auto_increment into the column and add a CREATE SEQUENCE too
   *  - this script will decide which one to use in the final version based on database
   *  - always do both!
   *
   * Other Limitations:
   *  - do not create indexes in tables, do them all as CREATE INDEX statements
   *  - do not attempt alter table or modify column statements
+  *  - never use NOT NULL and DEFAULT on same line (some dbs allow it, others fail)
   */
   
   
@@ -166,7 +167,7 @@
   $sql_replacements['mysql'][0][] = '/^--/';
   $sql_replacements['mysql'][1][] = '#';
   
-  $sql_replacements['mssqlserver'][0][] = '/int *[(] *([0-9,]+) *[)]/i';
+  $sql_replacements['mssqlserver'][0][] = '/INT *[(] *([0-9,]+) *[)]/i';
   $sql_replacements['mssqlserver'][1][] = 'NUMERIC(\\1)';
   $sql_replacements['mssqlserver'][0][] = '/^ *INDEX.*/';
   $sql_replacements['mssqlserver'][1][] = '';

@@ -11,6 +11,7 @@
   **    $zen - (zenTrack)
   **    $id - (integer)id of the ticket to view
   **    $ticket - (array)the ticket properties from get_ticket or get_project
+  **    $varfields - (array)variable field values for the ticket
   **    $page_mode - (string)page to load (ticket_tab_2, close, etc.. validate this!)
   **    $page_type - either 'ticket' or 'project'
   */

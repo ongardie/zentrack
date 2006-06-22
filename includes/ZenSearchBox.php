@@ -48,7 +48,7 @@ class ZenSearchBox {
     $this->_comps = array();
     $this->_matchany = false;
     $this->_multi = $multi;
-    $this->_queryLimit = isset($_POST['queryLimit'])? $_POST['queryLimit'] : 30;
+    $this->_queryLimit = isset($_POST['queryLimit'])? $_POST['queryLimit'] : 10;
     $this->_offset = isset($_POST['offset'])? $_POST['offset'] : 0;
   }
   
@@ -57,6 +57,10 @@ class ZenSearchBox {
   function multi() { return $this->_multi; }
   
   function type() { return $this->_type; }
+  
+  function offset() { return $this->_offset; }
+  
+  function limit() { return $this->_queryLimit; }
   
   /**
    * Change the search from an 'AND' context to an 'OR' context

@@ -34,6 +34,7 @@
     }
     $params['type_id'] = $zen->projectTypeID();
     $params["creator_id"] = $login_id;
+    $params['status'] = 'OPEN';
 /*
     // add the ticket to db
     $id = $zen->add_ticket($params);

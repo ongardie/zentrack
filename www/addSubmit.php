@@ -34,8 +34,8 @@
     foreach(array_keys($fields) as $f) {
       if( strlen($$f) ) {
         $params["$f"] = $$f;
-        if( $f == 'title' && strlen($params["$f"]) > 150 ) {
-          $params["$f"] = substr($params["$f"],0,150);
+        if( $f == 'title' && strlen($params["$f"]) > 250 ) {
+          $params["$f"] = substr($params["$f"],0,250);
         }
         else if( $f == 'project_id' ) {
           $vs = isset($$f)? (is_array($$f)? $$f : explode(',',$$f)) : array();
@@ -59,13 +59,11 @@
         }      
       }
 */
+      $id = 0;
       $errs = $zen->add_new_ticket($id,$params,$varfield_params);
       
       // check for errors
-      if( !$id ) {
-        $errs[] = tr("Could not create ticket."). " ".$zen->db_error;
-      }
-      else if( in_array($params["type_id"],$zen->noteTypeIDs()) ) {
+      if( in_array($params["type_id"],$zen->noteTypeIDs()) ) {
         $zen->close_ticket($id,null,null,'Notes closed automatically');
       }
     } // if( !$errs )

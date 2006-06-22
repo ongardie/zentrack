@@ -11,11 +11,49 @@ and user experience, internationalization, platform and database
 abstraction, and endless possibilities for project expansion. 
 --------------------
 
+----- VERSION 2.7 (development) -----
+
+2006-06-16, kato
+  Added new classes/code for user roles
+    
+
 ----- VERSION 2.6.2 (development) -----
+
+2006-06-10, kato
+  345: Ticket tabs and close screen loosing varfield values
+    - zentrack_2/includes/templates/fields/menunokeys.template
+    - zentrack_2/includes/templates/ticket_tab_form.php
+    - zentrack_2/includes/zenTrack.class
+    - zentrack_2/www/close.php
+    - zentrack_2/www/ticket.php
+  327: Missing logs in emailed tickets corrected
+    - zentrack_2/includes/zenTrack.class
+  344: Navigation tabs fixed for IE (clicking wasn't working well)
+    - zentrack_2/www/javascript.js
+  Added pagination for new searchbox windows
+    - zentrack_2/www/searchbox.php
+    - zentrack_2/www/javascript.js
+    - zentrack_2/includes/templates/searchbox_results.php
+  Changed title field length (new max is 250 chars)
+    - zentrack_2/includes/validateFields.php
+  Improved expansion of recent history items (more fluid open/close logic)
+    - zentrack_2/includes/templates/nav_tickets.php
+    - zentrack_2/includes/templates/nav_projects.php
+    - zentrack_2/www/javascript.js
+    - zentrack_2/www/styles.php
+
+2006-05-30, kato
+  Fixed upload for new PHP upgrades ($HTTP_POST_FILES isn't working anymore)
+  Config setting for attachment_types_allowed can now be set to 0 for all
+    - zentrack_2/www/actions/upload.php
+  Fixed bug with ticket contents not updating after pressing accept button
+    - zentrack_2/www/actions/accept.php
 
 2006-05-12, kato
   Removed deprecated reports code/sql
-
+    - zentrack_2/www/reports/*
+    - zentrack_2/includes/zenTrack.class
+    
   Prepared install/upgrade docs and scripts
     - zentrack_2/UPGRADE.readme
     - zentrack_2/install/build_mysql.sql

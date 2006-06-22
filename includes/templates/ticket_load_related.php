@@ -1,5 +1,7 @@
 <? if( !ZT_DEFINED ) { die("Illegal Access"); }
 
+include_once("$libDir/sorting.php");
+
 $tickets = false;
   $view = 'related_list';
   if( $page_type == "ticket" ) {
@@ -9,7 +11,7 @@ $tickets = false;
   }
   if( $ticket["relations"] ) {
      $tids = explode(",", $ticket["relations"]);
-     $tickets = $zen->get_tickets( array("id"=>$tids) );
+     $tickets = $zen->get_tickets( array("id"=>$tids), $sortstring );
   }
   if( is_array($tickets) && count($tickets) ) {
      include("$templateDir/listTickets.php");

@@ -43,6 +43,7 @@
       }
     }
   }
+  $varfields = $zen->getVarfieldVals($id);
   
   // if there is no ticket for this id, then load the list and
   // inform the user of the bad choice
@@ -117,22 +118,6 @@
 
       $errs = $zen->update_all_ticket_fields($id, $login_id, $bin_id, $params,
                                     $varfield_params, $action_name, $log_init, $edit_reason);
-/*
-      if (count($params)>0) {
-        $res = $zen->edit_ticket($id,$login_id,$params,$edit_reason);
-        // check for errors
-        if( !$res ) {
-          $errs[] = tr("System Error").": ".tr("Ticket could not be edited.")." ".$zen->db_error;
-        }
-      }
-      if( !$errs && count($varfield_params) ) {
-        $res = $zen->updateVarfieldVals($id, $varfield_params, $login_id, $bin_id);
-        if( !$res ) {
-          $errs[] = tr("? updated, but variable fields could not be saved", array(tr($x)));
-        }
-      }
-*/      
-      // update the variable field entries for this ticket
       if( $errs ) {
         $errs[] = tr("Unable to edit ticket due to system error"). " ".$zen->db_error;
       }
@@ -140,29 +125,7 @@
         if( in_array($params["type_id"],$zen->noteTypeIDs()) && $ticket['status'] == 'OPEN' ) {
           $zen->close_ticket($id,null,null,tr('Notes closed automatically'));
         }
-/*
-        $ticket = $zen->get_ticket($id);
-        if( $varfields && count($varfield_params) ) {
-          $vp = array();
-          foreach($varfield_params as $k=>$v) {
-            if( $map->getFieldProp($setmode,$k,'is_visible') ) {
-              $vp[$k] = $v;
-            }
-          }
-          $res = $zen->updateVarfieldVals($id, $vp);
-          if( !$res ) {
-            $errs[] = tr("? created, but variable fields could not be saved due to system error", array(tr('Ticket')));
-          }
-          else {
-            $msg[] = tr('All fields updated successfully');
-          }
-        }
-        else {
-*/
           $msg[] = tr('All fields updated successfully');          
-/*
-        }
-*/
       }
     }
     $ticket = $zen->get_ticket($id);
@@ -205,6 +168,7 @@
   */ 
   include_once("$libDir/nav.php");
   $zen->printErrors($errs);
+  
   include("$templateDir/ticketView.php");
   include("$libDir/footer.php");
 }?>

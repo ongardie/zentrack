@@ -74,23 +74,14 @@ function mClk(src) {
       var n = src.childNodes[i];
       //alert(n+"|"+n.nodeName);//debug
       if( n.nodeName == "A" ) {
-        if( n.click ) {
-          //alert('clickage: '+n.click);//debug
-          n.click(); 
-          break;
-        }
-        else if( n.onclick ) {
+        //alert(n);
+        if( n.onclick ) {
           //alert('onclickage: '+n.onclick);//debug
           n.onclick();
           break;
         }
         else if( n.href != '#' ) {
           //alert('hrefage: '+n.href);//debug
-          window.location = n.href;
-          break;
-        }
-        else {
-          //alert('locationage: '+n.href);//debug
           window.location = n.href;
           break;
         }
@@ -391,11 +382,12 @@ function openSearchbox(form, field, mode, type, multi) {
   var url = rootUrl+"/helpers/searchbox.php?form="+form+"&field="+field+"&mode="+mode+"&type="+type+"&multi="+multi;
   //alert(url);
   var w = 400;
+  var h = 300;
   // generates a unique window id which will not accidentally be duplicated
   // when calling this from multiple windows
   var rand = "searchbox_"+window.name+"_"+searchboxRand++;
-  if( mode == 'ticket' || mode == 'project' ) { w = 550; }
-  popupWindowScrolls(url, rand, w, 300);
+  if( mode == 'ticket' || mode == 'project' ) { w = 550; h = 450; }
+  popupWindowScrolls(url, rand, w, h);
 }
 
 function getSearchbox(form, field) {
@@ -485,16 +477,57 @@ function addSearchboxVal(form, field, key, text, multi, required) {
   d.appendChild(node);
 }
 
-function expandNav( link, etxt, ctxt ) {
-  // we pass etxt and ctxt here because we need to translate them...
-  // this is easiest to do in the php pages
-  var d = window.document.getElementById("navExpCell");
-  if( d && d.style && d.style.width == "500px" ) {
-    d.style.width = '';
-    link.innerHTML = etxt;
+function ZenUtils () {}
+
+ZenUtils.getSourceElement = function( e ) {
+  if( e.target ) {
+    return e.target;
   }
-  else if( d ) {
-    d.style.width = "500px";
-    link.innerHTML = ctxt;
+  else if( e.srcElement ) {
+    return e.srcElement;
   }
+}
+
+var recentHistoryTimer = false;
+var recentHistoryDivs = new Object();
+
+function setupHistoryDiv( element ) {
+  element.onmouseover = function() { mouseOverRecentHistory(element.id); }
+  element.onmouseout = function(event) { mouseOutRecentHistory(event, element.id); }
+  //element.onblur = function() { alert("blurred"); }
+}
+
+function mouseOverRecentHistory( id ) {
+  recentHistoryDivs[id] = true;
+  if( recentHistoryTimer ) { return ; }
+  recentHistoryTimer = window.setTimeout(function() { expandRecentHistory(id); }, 1000);
+}
+
+function mouseOutRecentHistory(event, id) {
+  recentHistoryDivs[id] = false;
+  window.setTimeout(function() { contractRecentHistory(id); }, 300);
+}
+
+function expandRecentHistory( id ) {
+  var element = getDocumentElement(id);
+  if( !element || element.className == 'recentHistoryHover' ) { return; }
+  element.className = 'recentHistoryHover';
+  element.style.width = "250px";
+}
+
+function contractRecentHistory( id ) {
+  if( recentHistoryDivs[id] ) { return; }
+  if( recentHistoryTimer ) { 
+    window.clearTimeout(recentHistoryTimer);
+    recentHistoryTimer = false;
+  }
+  var element = getDocumentElement(id);
+  if( !element || element.className == 'recentHistory' ) { return; }
+  element.className = 'recentHistory';
+  element.style.width = "100px";
+}
+
+function getDocumentElement( id ) {
+  if( !window.document || !window.document.getElementById ) { return null; }
+  return window.document.getElementById(id);
 }

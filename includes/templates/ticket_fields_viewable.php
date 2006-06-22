@@ -10,6 +10,7 @@
   *   $zen - instance of ZenTrack
   *   $boxview - (string)view to be loaded from field map
   *   $ticket - values for all columns in the ticket we are viewing
+  *   $varfields - values for custom fields in ticket we are viewing
   */
 
   $columns = $map->getViewProp($boxview,'columns');

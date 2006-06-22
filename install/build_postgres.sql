@@ -274,7 +274,7 @@ CREATE TABLE ZENTRACK_TASKS (
 
 CREATE TABLE ZENTRACK_TICKETS (
   id int8 default nextval('"tickets_id_seq"') NOT NULL PRIMARY KEY,
-  title varchar(150) NOT NULL default 'untitled',
+  title varchar(250) NOT NULL default 'untitled',
   priority int2 NOT NULL default '0',
   status varchar(25) NOT NULL default 'OPEN',
   description text,

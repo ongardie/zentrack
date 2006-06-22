@@ -24,7 +24,7 @@
 </tr>
 <tr>
   <td class='leftNavCell' height='100%' valign='top'>
-    <div class='recentHistory'>
+    <div class='recentHistory' id='projectHistoryDiv' onMouseOver='setupHistoryDiv(this)'>
       <div><?=tr("Recent Projects")?></div>
     <?
       $history =& $zen->getHistoryManager();

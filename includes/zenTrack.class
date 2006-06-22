@@ -2756,7 +2756,7 @@ class zenTrack extends zen {
    * @param string $log_init is extra notes to add at the beginning of the create log
    * @return integer returns the new ticket's id, if creation succeeded
    */
-  function add_new_ticket(&$id, $params, $varfield_params, $action="CREATE", $log_init="") {
+  function add_new_ticket(&$id, $params, $varfield_params, $action="CREATED", $log_init="") {
     $login_id=$params["creator_id"];
     $bin_id=$params["bin_id"];
     $this->log_buffer=$log_init."\n\n";
@@ -4094,6 +4094,7 @@ class zenTrack extends zen {
         $headers = str_replace("\n", "\r\n", $headers);
       }
       $this->addDebug("sendEmail","$recipient_address::$subject::$headers",3);
+      //print "<pre>"; print "mail( $recipient_address, $subject, \n$message\n, $headers )"; print "</pre>"; //debug
       if( !mail( $recipient_address, $subject, $message, $headers ) ) {
         return "System error: send failed";
       }

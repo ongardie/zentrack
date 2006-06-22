@@ -22,10 +22,15 @@
   /**
    * Show the searchbox form, extracted for easy duplication
    */
-  function showForm($sb, $form, $field, $hidden = false) {
+  function showForm($sb, $form, $field, $hidden = false, $text = false) {
     $vals = array('form'=>$form, 'field'=>$field, 'multi'=>$sb->multi(), 
                   'mode'=>$sb->mode(), 'type' => $sb->type(), 'hidden'=>$hidden);
-    $vals['search_text'] = $hidden? tr("Modify Search") : tr("Search");
+    if( $text ) { 
+      $vals['search_text'] = $text;
+    }
+    else {
+      $vals['search_text'] = $hidden? tr("Modify Search") : tr("Search");
+    }
     $vals['content'] = $sb->renderFormFields($form, $_POST, $hidden);
     $f = $GLOBALS['templateDir']."/searchbox_form.template";
     $t = new zenTemplate($f);
@@ -144,6 +149,13 @@ function getRowVals( id ) {
   var key = x.value;
   var label = y.value;
   return [key, label];
+}
+
+function pickPage(id, offset) {
+  var form = window.document.forms['searchboxForm'];
+  form.offset.value = offset;
+  form.repost.value = 0;
+  form.submit();
 }
 
 var pickedVals = new Object();

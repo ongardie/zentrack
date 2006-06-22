@@ -33,9 +33,6 @@
        if( $f == 'status' ) { continue; }
        // put the value into the updates array
        $params["$f"] = $$f;
-       if( $f == 'title' && strlen($params["$f"]) > 150 ) {
-         $params["$f"] = substr($params["$f"],0,150);
-       }
      }
 
      if ( !$varfields )  {

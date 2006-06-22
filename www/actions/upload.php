@@ -16,12 +16,12 @@
     // we will try to keep everything from breaking while they continue
     // to alter how everything works... while still maintaining some backwards
     // compatability
-    if( is_array($HTTP_POST_FILES) && is_array($HTTP_POST_FILES["userfile"]) ) {
-      $userfile_name = $HTTP_POST_FILES["userfile"]["name"];
-      $userfile_type = $HTTP_POST_FILES["userfile"]["type"];
-      $userfile = $HTTP_POST_FILES["userfile"]["tmp_name"];
-      $userfile_size = $HTTP_POST_FILES["userfile"]["size"];
-      $userfile_error = $HTTP_POST_FILES["userfile"]["error"];
+    if( is_array($_FILES) && is_array($_FILES["userfile"]) ) {
+      $userfile_name = $_FILES["userfile"]["name"];
+      $userfile_type = $_FILES["userfile"]["type"];
+      $userfile = $_FILES["userfile"]["tmp_name"];
+      $userfile_size = $_FILES["userfile"]["size"];
+      $userfile_error = $_FILES["userfile"]["error"];
     }
     
     // determine what the incoming data is, and format it
@@ -76,9 +76,11 @@
     if( !$errs ) {
       $ext = strtolower(preg_replace('@^.*[.]([a-zA-Z0-9]+)$@', '\\1', $userfile_name));
       $possibles = $zen->getSetting('attachment_types_allowed');
-      $vals = split(" *, *",$possibles);
-      if( !in_array($ext, $vals) ) {
-        $errs[] = tr("Invalid file type, the allowed types are: ?", $possibles);
+      if( $possibles ) {
+        $vals = split(" *, *",$possibles);
+        if( !in_array($ext, $vals) ) {
+          $errs[] = tr("Invalid file type, the allowed types are: ?", $possibles);
+        }
       }
     }
     

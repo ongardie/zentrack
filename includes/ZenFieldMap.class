@@ -318,6 +318,14 @@ class ZenFieldMap {
     }
     
     /**
+     * @return true if the field exists for the view in question
+     */
+    function hasField( $view, $field ) {
+      $map = $this->getFieldMap($view);
+      return $map && array_key_exists($field, $map[$view]);
+    }
+    
+    /**
      * Returns a single property from a field in the map
      */
    function getFieldProp( $view, $field, $prop ) {
@@ -378,62 +386,62 @@ class ZenFieldMap {
     Zen::addDebug("ZenFieldMap::getTextValue", "rendering $view, $field_name, $value", 3);
     $field = $this->getFieldFromMap($view,$field_name);
     $userBins = $this->_zen->getUsersBins($_SESSION['login_id']);
-    if( $field['is_visible'] && $field['field_type'] != 'hidden' ) {
-      if( !strlen($value) ) { return ' '; }
-      switch($this->fieldName($field_name)) {
-        case "priority":
-        case "status":
-        case "bin_id":
-        case "type_id":
-        case "system_id":
-          $vals = $this->_zen->getValsForTicketField($field_name,$userBins);
-          if( isset($vals["$value"]) ) { $val = tr($vals["$value"]); }
-          else {
-            Zen::addDebug("ZenFieldMap::getTextValue", "Unable to find choices for {$view}->{$field_name}", 1);
-            $val = $value;
-          }
-          break;
-        case "user_id":
-        case "creator_id":
-          $val = $this->_zen->formatName($value,1);
-          break;
-        case "tested":
-        case "approved":
-          $val = $value == 1? tr('Required') : ($value == 2? tr('Complete') : tr('n/a'));
-          break;
-        case "otime":
-        case "ctime":
-        case "deadline":
-        case "start_date":
-        case "custom_date":
-          if( preg_match('/[^0-9]/', $value) ) {
-            $val = $value;
-          }
-          else if( $value == 'NULL' ) { $value = ''; }
-          else if( $value == 0 ) { $value = ""; }
-          $val = $this->_zen->showDateTime($value);
-          break;
-        case "custom_boolean":
-          $val = $value == 1? tr('Yes') : tr('No');
-          break;
-        case "details":
-        case "title":
-        case "custom_text":
-          $val = $value;
-          break;
-        case "custom_multi":
-//          return str_replace("\t", "; ", $value);
-          $val = implode($this->_zen->multisep, $value);
-          break;
-        default:
-          $val = str_replace("\t",";",$value);
-          Zen::addDebug("ZenFieldMap::getTextValue", "rendering default: $val", 3);
-      }
-      if( $field['num_cols'] && strlen($val) > $field['num_cols'] ) { $val = substr($val, 0, $field['num_cols']); }
-      return $val;
+    if( !$field['is_visible'] || $field['field_type'] == 'hidden' ) {
+      // it's hidden, return nothing
+      return '';
     }
-    // it's hidden, return nothing
-    return '';
+    if( !strlen($value) ) { return ' '; }
+    switch($this->fieldName($field_name)) {
+      case "priority":
+      case "status":
+      case "bin_id":
+      case "type_id":
+      case "system_id":
+        $vals = $this->_zen->getValsForTicketField($field_name,$userBins);
+        if( isset($vals["$value"]) ) { $val = tr($vals["$value"]); }
+        else {
+          Zen::addDebug("ZenFieldMap::getTextValue", "Unable to find choices for {$view}->{$field_name}", 1);
+          $val = $value;
+        }
+        break;
+      case "user_id":
+      case "creator_id":
+        $val = $this->_zen->formatName($value,1);
+        break;
+      case "tested":
+      case "approved":
+        $val = $value == 1? tr('Required') : ($value == 2? tr('Complete') : tr('n/a'));
+        break;
+      case "otime":
+      case "ctime":
+      case "deadline":
+      case "start_date":
+      case "custom_date":
+        if( preg_match('/[^0-9]/', $value) ) {
+          $val = $value;
+        }
+        else if( $value == 'NULL' ) { $value = ''; }
+        else if( $value == 0 ) { $value = ""; }
+        $val = $this->_zen->showDateTime($value);
+        break;
+      case "custom_boolean":
+        $val = $value == 1? tr('Yes') : tr('No');
+        break;
+      case "details":
+      case "title":
+      case "custom_text":
+        $val = $value;
+        break;
+      case "custom_multi":
+//          return str_replace("\t", "; ", $value);
+        $val = implode($this->_zen->multisep, $value);
+        break;
+      default:
+        $val = str_replace("\t",";",$value);
+        Zen::addDebug("ZenFieldMap::getTextValue", "rendering default: $val", 3);
+    }
+    if( $field['num_cols'] && strlen($val) > $field['num_cols'] ) { $val = substr($val, 0, $field['num_cols']); }
+    return $val;
   }
   
   /**
