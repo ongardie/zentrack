@@ -15,59 +15,66 @@ abstraction, and endless possibilities for project expansion.
 
 2006-06-16, kato
   Added new classes/code for user roles
-    
+    - zentrack_2/includes/ZenPerson.php
+    - zentrack_2/includes/ZenRole.php
+    - zentrack_2/includes/ZenSearch.php
+    - zentrack_2/includes/ZenSearchBox.php
+    - zentrack_2/includes/ZenSearchBoxDataType.php
+    - zentrack_2/includes/ZenSearchBoxTicket.php
+    - zentrack_2/includes/ZenSearchBoxUser.php
+    - zentrack_2/includes/ZenUser.php
 
------ VERSION 2.6.2 (development) -----
+----- VERSION 2.6.2 (2006-06-21) -----
 
 2006-06-10, kato
   345: Ticket tabs and close screen loosing varfield values
-    - zentrack_2/includes/templates/fields/menunokeys.template
-    - zentrack_2/includes/templates/ticket_tab_form.php
-    - zentrack_2/includes/zenTrack.class
-    - zentrack_2/www/close.php
-    - zentrack_2/www/ticket.php
+    - zentrack_2/includes/templates/fields/menunokeys.template 1.3
+    - zentrack_2/includes/templates/ticket_tab_form.php 1.5
+    - zentrack_2/includes/zenTrack.class 1.219
+    - zentrack_2/www/actions/close.php 1.17
+    - zentrack_2/www/ticket.php 1.38
   327: Missing logs in emailed tickets corrected
-    - zentrack_2/includes/zenTrack.class
+    - zentrack_2/includes/zenTrack.class 1.219
   344: Navigation tabs fixed for IE (clicking wasn't working well)
-    - zentrack_2/www/javascript.js
+    - zentrack_2/www/javascript.js 1.31
   Added pagination for new searchbox windows
-    - zentrack_2/www/searchbox.php
-    - zentrack_2/www/javascript.js
+    - zentrack_2/www/helpers/searchbox.php 1.5
+    - zentrack_2/www/javascript.js 1.31
     - zentrack_2/includes/templates/searchbox_results.php
   Changed title field length (new max is 250 chars)
-    - zentrack_2/includes/validateFields.php
+    - zentrack_2/includes/validateFields.php 1.12
   Improved expansion of recent history items (more fluid open/close logic)
-    - zentrack_2/includes/templates/nav_tickets.php
-    - zentrack_2/includes/templates/nav_projects.php
-    - zentrack_2/www/javascript.js
-    - zentrack_2/www/styles.php
+    - zentrack_2/includes/templates/nav_tickets.php 1.10
+    - zentrack_2/includes/templates/nav_projects.php 1.10
+    - zentrack_2/www/javascript.js 1.31
+    - zentrack_2/www/styles.php 1.40
 
 2006-05-30, kato
   Fixed upload for new PHP upgrades ($HTTP_POST_FILES isn't working anymore)
   Config setting for attachment_types_allowed can now be set to 0 for all
-    - zentrack_2/www/actions/upload.php
+    - zentrack_2/www/actions/upload.php 1.17
   Fixed bug with ticket contents not updating after pressing accept button
-    - zentrack_2/www/actions/accept.php
+    - zentrack_2/www/actions/accept.php 1.10
 
 2006-05-12, kato
   Removed deprecated reports code/sql
     - zentrack_2/www/reports/*
-    - zentrack_2/includes/zenTrack.class
+    - zentrack_2/includes/zenTrack.class 1.216
     
   Prepared install/upgrade docs and scripts
     - zentrack_2/UPGRADE.readme
-    - zentrack_2/install/build_mysql.sql
-    - zentrack_2/install/build_mssqlserver.sql
-    - zentrack_2/install/build_postgres.sql
-    - zentrack_2/install/build_oracle.sql
-    - zentrack_2/install/seed_mssqlserver.sql
-    - zentrack_2/install/seed_mysql.sql
-    - zentrack_2/install/seed_oracle.sql
-    - zentrack_2/install/seed_postgres.sql
-    - zentrack_2/install/UPGRADE_mssqlserver.sql
-    - zentrack_2/install/UPGRADE_mysql.sql
-    - zentrack_2/install/UPGRADE_oracle.sql
-    - zentrack_2/install/UPGRADE_postgres.sql
+    - zentrack_2/install/build_mysql.sql 1.25
+    - zentrack_2/install/build_mssqlserver.sql 1.20
+    - zentrack_2/install/build_postgres.sql 1.27
+    - zentrack_2/install/build_oracle.sql 1.25
+    - zentrack_2/install/seed_mssqlserver.sql 1.54
+    - zentrack_2/install/seed_mysql.sql 1.74
+    - zentrack_2/install/seed_oracle.sql 1.61
+    - zentrack_2/install/seed_postgres.sql 1.58
+    - zentrack_2/install/UPGRADE_mssqlserver.sql 1.50
+    - zentrack_2/install/UPGRADE_mysql.sql 1.61
+    - zentrack_2/install/UPGRADE_oracle.sql 1.58
+    - zentrack_2/install/UPGRADE_postgres.sql 1.50
     - zentrack_2/install/previous/2.6.2.UPGRADE_mssqlserver.sql 1.1
     - zentrack_2/install/previous/2.6.2.UPGRADE_mysql.sql 1.1
     - zentrack_2/install/previous/2.6.2.UPGRADE_oracle.sql 1.1

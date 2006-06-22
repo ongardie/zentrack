@@ -1,3 +1,35 @@
+
+----- 2.6.2 Minor Release -----
+
+NEW FEATURES / ENHANCEMENTS
+  Searchbox fields now much more useful (looks up descriptions as well as ids)
+  Added new helper UIs for searchbox fields
+  Added field map for search export so that it can be configured
+  Recent tickets now stored in user prefs so that they can be displayed the
+    next time the user logs in.
+  Recent history now expands onmouseover to show entire title of issues.  This
+    can be disabled by setting 'expand_history' to 'off'.
+  Added documentation for field map
+
+BUG FIXES / MINOR CHANGES
+  Ticket tabs and close screen were loosing varfield values (fixed)
+  Fixed bug with ticket contents not updating after pressing accept button
+  Fixed upload for new PHP upgrades ($HTTP_POST_FILES isn't working anymore)
+  Config setting for attachment_types_allowed can now be set to 0 for all
+  Added dynamic variables to the documentation for data groups
+  Variable field documentation updated to reflect new field map model
+  edit_reason_required javascript error corrected when editing in ticket tabs
+  Fixed problem with attachments displaying as garbage (due to warning in header)
+  Fixed Oracle SQL Syntax (and some other minor cleanup)
+  Multi-fields not showing values on edit screen
+  Ticket list after search shows improperly
+  Fixed problems with behaviors not working for some users
+  Removed varfield_idx table, getCustomFields method, and other deprecated code
+  Fixed translation issue with escaped chars becoming &nacute; (etc)
+  Removed deprecated reports code/sql
+  Changed title field length (new max is 250 chars)
+  Missing logs in emailed tickets corrected
+  Navigation tabs fixed for IE (clicking wasn't working well)
   
 ----- 2.6.1 Minor Release -----
 
