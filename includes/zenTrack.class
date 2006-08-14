@@ -592,9 +592,9 @@ class zenTrack extends zen {
     // query for non-registered users
     $query2  = "SELECT email FROM ".$this->table_notify_list." WHERE ";
     $query2 .= "user_id IS NULL AND ticket_id = '".$ticket_id."' ";    
-   
+	
     // get the lists of recipients and merge them
-    $list = $this->mergeArrays($this->db_list($query),$this->db_list($query2));
+    $list = array_unique($this->mergeArrays($this->db_list($query),$this->db_list($query2)));
     // print a debug message
     $this->addDebug("get_notify_recipients","Found ".count($list)
                     ." recipients for ticket $ticket_id",3);

@@ -306,7 +306,7 @@ function updateUrl(k, v) {
 
 function submitForm( formNode ) {
   if( typeof(formNode) == "string" ) { formNode = window.document.forms[formNode]; }
-  formNode.submit();
+  if( !formNode.onsubmit || formNode.onsubmit() ) { formNode.submit(); }
 }
 
 function submitThisForm( obj ) {
@@ -317,7 +317,7 @@ function submitThisForm( obj ) {
   };
   if( formNode.submit ) {
     //alert("submitting "+formNode+"["+formNode.name+":"+formNode.nodeName+"]");
-    formNode.submit();
+    submitForm(formNode);
   };
 }
 

@@ -22,7 +22,6 @@
   TD {
      font-family:      <?=$zen->getSetting("font_face")?>;
      font-size:        <?=$zen->getSetting("font_size")?>px;
-     align-vertical:   top;
   }
   
   LI {
@@ -43,7 +42,7 @@
 
   .page_section {
      font-size:       <?=$zen->getSetting("font_size_large")?>px;
-     color:           <?=$zen->getSetting("color_alt_text")?>px;
+     color:           <?=$zen->getSetting("color_alt_text")?>;
      font-weight:     bold;     
   }
 
@@ -132,7 +131,7 @@
   A.subMenuLink:hover {
      text-decoration: none;
      color:           <?=$zen->getSetting("color_title_txt")?>;
-     font:            <?=$zen->getSetting("font_size_small")?>;
+     font-size:       <?=$zen->getSetting("font_size_small")?>;
   }
 
   A.rowLink {
@@ -381,9 +380,9 @@
   }
   
 
-  .navTab {
+  TD.navTab {
      font-weight:    bold;
-     font-size: <?=$zen->getSetting('font_size')?>;
+     font-size: <?=$zen->getSetting('font_size')?>px;
      padding: 5px;
      border-top: 1px outset <?=$zen->getSetting('color_bar_border')?>;
      border-left: 1px outset <?=$zen->getSetting('color_bar_border')?>;
@@ -535,14 +534,12 @@ TD.bigger { font-size: 50px; }
   }
 
   .smallSubmit {
-     color:      <?=$zen->getSetting("color_highlight")?>;
-     background: <?=$zen->getSetting("color_alt_text")?>;
-     font-face:  Courier;
-     font-size:  <?=$zen->getSetting("font_size_small")?>px;
+     color:       <?=$zen->getSetting("color_highlight")?>;
+     background:  <?=$zen->getSetting("color_alt_text")?>;
+     font-size:   <?=$zen->getSetting("font_size_small")?>px;
   }
 
   BUTTON, SUBMIT, .submit, .actionButton, .actionButtonDiv {
-     font-face:      Courier;
      color:          <?=$zen->getSetting("color_alt_background")?>;
      background:     <?=$zen->getSetting("color_alt_text")?>;
      font-size:      <?=$zen->getSetting("font_size_small")?>px;
@@ -738,7 +735,7 @@ TD.bigger { font-size: 50px; }
     text-align: left;
     text-decoration: none;
     font-weight: bold;
-    font-style: none;
+    font-style: normal;
   }
   
   .keySubLow {
@@ -829,7 +826,7 @@ TD.bigger { font-size: 50px; }
     height: 20px;
   }
   
-  .microTable INPUT, .microTable BUTTON, , .microTable SELECT, .microTable SUBMIT {
+  .microTable INPUT, .microTable BUTTON, .microTable SELECT, .microTable SUBMIT {
     font-size: <?=$zen->getSetting('font_size_small')-1?>px;
   }
   

@@ -13,7 +13,7 @@ class ZenSearchBoxDatatype extends ZenSearchBox {
   
   function init() {
     $k = $this->_key();
-    $zen =& $GLOBALS['zen'];
+    global $zen;
     $this->_possible = count($zen->getDataTypeVals($this->_table()));
   }
   
@@ -110,7 +110,7 @@ class ZenSearchBoxDatatype extends ZenSearchBox {
     $id = $this->_key();
     $where = "WHERE active = 1";
     $match = array_key_exists('name',$_POST)? $_POST['name'] : false;
-    $zen =& $GLOBALS['zen'];
+    global $zen;
     if( $match ) {
       $match = str_replace('*', '%', strtolower($match));
       $match = preg_replace('@^%@', '', $match);
@@ -140,7 +140,7 @@ class ZenSearchBoxDatatype extends ZenSearchBox {
   function getFocalPoint() { return 'name'; }
   
   function showSearchForm() {
-    $zen =& $GLOBALS['zen'];
+    global $zen;
     return $this->_possible > $this->_queryLimit;
   }
   

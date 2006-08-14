@@ -185,7 +185,9 @@ CREATE TABLE ZENTRACK_LOGS (
   action varchar(25) default NULL,
   hours decimal(10,2) default NULL,
   entry text,
-  PRIMARY KEY (lid)
+  PRIMARY KEY (lid),
+  INDEX (ticket_id),
+  INDEX (action)
 ) TYPE=MyISAM;
 
 --
@@ -273,7 +275,9 @@ CREATE TABLE ZENTRACK_TICKETS (
   deadline int(12) default NULL,
   start_date int(12) default NULL,
   wkd_hours decimal(10,2) default '0.00',
-  PRIMARY KEY (id)
+  PRIMARY KEY (id),
+  INDEX (priority),
+  INDEX (status)
 ) TYPE=MyISAM;
 
 --

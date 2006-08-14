@@ -21,7 +21,7 @@ class ZenSearchBoxUser extends ZenSearchBox {
       "login"    => array('label' => 'Login',      'type' => 'text', 'search' => true,  'show'=>false),
       "notes"    => array('label' => 'Notes',      'type' => 'text', 'search' => true,  'show'=>false)
     );
-    $zen =& $GLOBALS['zen'];
+    global $zen;
     $this->_possible = $zen->db_get("SELECT COUNT(*) FROM {$zen->table_users} WHERE ACTIVE = 1");
   }
 
@@ -70,7 +70,7 @@ class ZenSearchBoxUser extends ZenSearchBox {
    * @return ZenSearchBoxResults
    */
   function getSearchResults() {
-    $zen =& $GLOBALS['zen'];
+    global $zen;
     $showfields = array();
     $cols = array( 'active' );
     $vals = array( 'active'=>0 );

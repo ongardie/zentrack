@@ -553,7 +553,7 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
   }
   
   function eLink($email) {
-    $zen =& $GLOBALS['zen'];
+    global $zen;
     if( !$email ) { return '&nbsp;'; }
     if( !strpos($email,'@') ) { return $zen->ffv($email); }
     list($name,$dom) = explode('@',$email);
@@ -561,7 +561,7 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
   }
   
   function colorBox( $form, $field, $val = null ) {
-    $zen =& $GLOBALS['zen'];
+    global $zen;
     $txt = '';
     $val = $zen->ffv($val);
     $txt .= "<input type='text' name='$field' value='$val' size='8' maxlength='7' onchange='colorChanged(this)'>";

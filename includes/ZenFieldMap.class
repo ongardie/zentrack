@@ -664,13 +664,14 @@ class ZenFieldMap {
     
     // we escape the field_choices array here (values only) and try
     // to find the correct value to select if this is a variable field
-    if( $vf && isset($vals['field_choices']) ) {
-      foreach($vals['field_choices']  as $k=>$v) {
-        if( $v == $vals['field_value'] ) { 
-          $vals['field_selected'] = $v;
-        }
-      }
+    if( $vf && isset($vals['field_choices']) && !empty($vals['field_value']) ) {
+	  $vals['field_selected'] = $vals['field_value'];
+	  if( !in_array($vals['field_selected'], $vals['field_choices']) ) {
+	  	$vals['field_choices'][] = $vals['field_value'];
+	  }
     }
+    
+    Zen::addDebug("ZenFieldMap::renderTicketField", "rendering: $view, $field_name, $typename", 3);
     
     // parse and return 
     return $this->_template($templateDir, $typename, $vals);

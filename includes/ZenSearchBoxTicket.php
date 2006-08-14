@@ -12,8 +12,10 @@ class ZenSearchBoxTicket extends ZenSearchBox {
   function ZenSearchBoxTicket() { }
   
   function init() {
-    $this->_zen =& $GLOBALS['zen'];
-    $this->_map =& $GLOBALS['map'];
+    global $zen;
+    global $map;
+    $this->_zen =& $zen;
+    $this->_map =& $map;
     $this->_pids = $this->_zen->projectTypeIds();
     $this->_isproject = false;
     $this->_view = 'searchbox_ticket';
@@ -175,9 +177,15 @@ class ZenSearchBoxTicket extends ZenSearchBox {
         }
       }
       else if( $fp['field_type'] == 'text' || $f['field_type'] == 'string' ) {
-        if( isset($_POST[$f]) ) {
+        if( !empty($_POST[$f]) ) {
           $comps[$f] = 'co';
           $vals[$f] = $_POST[$f];
+        }
+      }
+      else {
+        if( !empty($_POST[$f]) ) {
+          $comps[$f] = 'eq';
+          $vals[$f] = Zen::checkNum($f);
         }
       }
     }

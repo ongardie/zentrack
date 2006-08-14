@@ -1,4 +1,9 @@
 
+CREATE INDEX zt_log_tid ON ZENTRACK_LOGS(ticket_id);
+CREATE INDEX zt_log_action ON ZENTRACK_LOGS(action);
+CREATE INDEX zt_ticket_pri ON ZENTRACK_TICKETS(priority);
+CREATE INDEX zt_ticket_stat ON ZENTRACK_TICKETS (status);
+
 create table ZENTRACK_ACTION (
   action_id   int(20)     not null,
   action_name varchar(50) not null,
@@ -53,3 +58,4 @@ CREATE TABLE ZENTRACK_LOGIN (
 
 CREATE INDEX zt_login_idx ON ZENTRACK_LOGIN(login_name, login_pass);
 
+DELETE FROM ZENTRACK_FIELD_MAP WHERE field_map_id = 106;

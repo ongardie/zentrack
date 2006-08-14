@@ -32,6 +32,7 @@
       if( $fprops["$f"]['data_type'] == 'date' ) {
         $$f = $$f > 0? $zen->dateParse($$f) : null;
       }
+      
       //if( !$field['is_visible'] ) { continue; }
       if( $field['is_required'] || $fprops["$f"]['always_required'] ) {
         $required[] = $f;

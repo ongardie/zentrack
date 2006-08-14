@@ -249,6 +249,26 @@
   </td>
 </tr>
 <tr>
+  <td class='titleCell'>Common Problems With Behaviors</td>
+  <td>
+    <p class='error'>It is significant to note that the behaviors do not run until after the
+    page has loaded.</p>
+    
+    <p>For variable fields (ones you create), you must still specify a default 
+    set of values to appear in the list before the behavior runs.  This is done 
+    using the field map's "default" column.  This list should include all 
+    possible values for the field under any condition.</p>
+    
+    <p>When values are not properly selected in your form, even though the value
+    is correct in the database, you may have put a value into one
+    of your behavior's data groups which is not in the default list given to the
+    field map.
+    
+    <p>This causes the value to be lost when the page loads initially, even though
+    a behavior may later the values to include the one that <i>should</i> be selected.
+  </td>
+</tr>
+<tr>
   <td class='titleCell'>A Crash Course in Behaviors</td>
 </tr>
 <tr>

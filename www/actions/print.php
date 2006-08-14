@@ -214,8 +214,8 @@
 	  <b><?php echo tr("RELATED TICKETS"); ?>:</b>
      <ul>
 <?
-  if( $ticket["related"] ) {
-     $rel = explode(",",$ticket["related"]);
+  if( $ticket["relations"] ) {
+     $rel = explode(",",$ticket["relations"]);
      foreach($rel as $r) {
 	$t = $zen->get_ticket($r);
 	print "$t[id] - $t[title] ($rootUrl/ticket.php?id=$t[id])<br>\n";

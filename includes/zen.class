@@ -144,7 +144,7 @@ class zen extends zenDate {
        // in a static context (no $this) and it is possible to call ffv()
        // before $zen has been made available (although it should not happen this way)
        if( isset($GLOBALS) && isset($GLOBALS['zen']) ) { 
-         $zen =& $GLOBALS['zen'];
+         global $zen;
          $GLOBALS['charset'] = $zen->getSetting('character_set');
          $charset = $GLOBALS['charset'];
        }
@@ -792,7 +792,7 @@ class zen extends zenDate {
    * @return array an empty array if both values are null or empty
    */
    function mergeArrays($arr1, $arr2) {
-     if( is_array($arr1) && is_array($arr2) ) { return $arr1 + $arr2; }
+     if( is_array($arr1) && is_array($arr2) ) { return array_merge($arr1,$arr2); }
      else if( is_array($arr1) ) { return $arr1; }
      else if( is_array($arr2) ) { return $arr2; }
      else { return array(); }

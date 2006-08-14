@@ -35,7 +35,7 @@ class DB {
   }
   
   //Paging Feature 
-  function db_getlimitedIndex($query,$nosofrows, $offset = 0) {
+  function db_getlimitedIndex($query, $nosofrows, $offset = -1) {
     //retrieves an indexed array of results from $query which has a specified limit.
     $this->switchQueryMode(1);
     $recordSet = &$this->db_link->SelectLimit($query,$nosofrows,$offset);

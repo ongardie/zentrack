@@ -184,6 +184,9 @@ CREATE TABLE ZENTRACK_LOGS (
   entry text
 );
 
+CREATE INDEX zt_log_action ON ZENTRACK_LOGS(action);
+CREATE INDEX zt_log_tid ON ZENTRACK_LOGS(ticket_id);
+
 --
 -- Table structure for table 'ZENTRACK_LOGS_ARCHIVED'
 --
@@ -294,6 +297,9 @@ CREATE TABLE ZENTRACK_TICKETS (
   start_date int8 default NULL,
   wkd_hours decimal(10,2) default '0.00'
 );
+
+CREATE INDEX zt_tk_status_idx ON ZENTRACK_TICKETS(status);
+CREATE INDEX zt_tk_pri_idx ON ZENTRACK_TICKETS(priority);
 
 --
 -- Table structure for table 'ZENTRACK_TYPES'

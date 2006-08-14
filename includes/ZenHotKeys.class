@@ -34,6 +34,8 @@ class ZenHotKeys {
    * Generates section information (right now it is just hard coded, later we will add this to the db)
    */
   function _initSections() {
+    global $zen;
+	global $map;
     $this->_sections = array();
     
     ////////////////////////
@@ -406,7 +408,6 @@ class ZenHotKeys {
     // ticket_view
     ////////////////////////
     $this->_sections['ticket_view'] = array();
-    $map =& $GLOBALS['map'];
     $t = 'ticket';
     $j = 1;
     for($i=1; $i<=8; $i++) {
@@ -424,7 +425,6 @@ class ZenHotKeys {
     // project_view
     ////////////////////////
     $this->_sections['project_view'] = array();
-    $map =& $GLOBALS['map'];
     $t = 'project';
     $j = 1;
     for($i=1; $i<=8; $i++) {
@@ -822,7 +822,7 @@ class ZenHotKeys {
       $fxn = "buttonClick('$form', '$button')";
     }
     else {
-      $fxn = "if( !$form.onsubmit || $form.onsubmit() ) { submitForm('$form'); }";
+      $fxn = "submitForm('$form');";
     }
     return $this->activate($label, $meta_key, $fxn);
   }

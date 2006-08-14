@@ -13,7 +13,7 @@
   */
   function getTabCounts( $id, $loads ) {
     static $stats;
-    $zen =& $GLOBALS['zen'];
+    global $zen;
     if( !$loads || !count($loads) ) { return ''; }
     if( !$stats ) { $stats = $zen->get_ticket_stats($id); }
     $tf = false;

@@ -13,6 +13,29 @@ abstraction, and endless possibilities for project expansion.
 
 ----- VERSION 2.7 (development) -----
 
+
+
+2006-08-05, kato
+  Fixed mergeArrays function, which was incorrectly removing elements from lists
+    - zentrack_2/includes/zen.class
+  Fixed problem with radio buttons and approve/test fields, which can make tickets
+  impossible to close under certain conditions.
+    - zentrack_2/includes/zenTrack.class
+
+2006-07-04, kato
+  Cleaned up the divbutton code, improved submitForm function
+    - zentrack_2/www/javascript.js
+    
+  Corrected error viewing related tickets in the print screen
+    - zentrack_2/www/actions/print.php
+    
+  Corrected stylesheet validation errors
+    - zentrack_2/www/styles.php
+
+2006-06-23, kato
+  Fixed error with hidden fields being lost in ticket tabs and close screen
+    - zentrack_2/includes/templates/form_fields.php
+
 2006-06-16, kato
   Added new classes/code for user roles
     - zentrack_2/includes/ZenPerson.php

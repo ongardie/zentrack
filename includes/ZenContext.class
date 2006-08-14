@@ -14,20 +14,20 @@ class ZenContext {
   }
   
   function set($prop, $val) {
-    $this->_debug('get', "Setting $prop to ".Zen::dval($val), 3);
+    $this->_debug('set', "Setting $prop to ".Zen::dval($val), 4);
     $this->_vals[$prop] = $val;
   }
   
   function get($prop) {
     if( !array_key_exists($prop, $this->_vals) ) {
-      $this->_debug('get', "Invalid property: $prop", 3);
+      $this->_debug('get', "Invalid property: $prop", 4);
       return null;
     }
     return $this->_vals[$prop];
   }
   
   function _debug( $method, $msg, $lvl ) {
-    $zen =& $GLOBALS['zen'];
+    global $zen;
     if( $zen ) {
       $zen->addDebug("ZenContext::$method", $msg, $lvl);
     }

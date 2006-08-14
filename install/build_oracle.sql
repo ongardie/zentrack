@@ -188,6 +188,9 @@ CREATE TABLE ZENTRACK_LOGS (
   CONSTRAINT logs_pk PRIMARY KEY (lid)
 ) ;
 
+CREATE INDEX zt_log_action ON ZENTRACK_LOGS(action);
+CREATE INDEX zt_log_tid ON ZENTRACK_LOGS(ticket_id);
+
 --
 -- Table structure for table 'ZENTRACK_PREFERENCES'
 --
@@ -274,6 +277,9 @@ CREATE TABLE ZENTRACK_TICKETS (
   wkd_hours number(10,2) default 0.00,
   CONSTRAINT tickets_pk PRIMARY KEY (id)
 ) ;
+
+CREATE INDEX zt_tk_status_idx ON ZENTRACK_TICKETS(status);
+CREATE INDEX zt_tk_pri_idx ON ZENTRACK_TICKETS(priority);
 
 --
 -- Table structure for table 'ZENTRACK_TYPES'

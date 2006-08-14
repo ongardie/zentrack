@@ -42,7 +42,7 @@
     if (strpos($f,"custom")===false) {
       $context->set('value', $ticket[$f]);
     } else {
-      $context->set('value', $$f);
+      $context->set('value', $varfields[$f]);
     }
     print $map->renderTicketField($context);
   }
