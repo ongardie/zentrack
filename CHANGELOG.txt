@@ -13,39 +13,71 @@ abstraction, and endless possibilities for project expansion.
 
 ----- VERSION 2.7 (development) -----
 
-
+2006-08-15, kato
+  Fixed mergeArrays yet again, still not working correctly... Oh PHP!  How
+  thy constantly changing ways bring me woe!
+   - zentrack_2/includes/zen.class 1.49
+  Some users reported problems with $GLOBALS array not working as expected
+  Replaced object references with global $obj;
+   - zentrack_2/includes/ZenFieldMap.class 1.48
+   - zentrack_2/includes/ZenSearch.php 1.4
+   - zentrack_2/includes/ZenSessionManager.class 1.12
+   - zentrack_2/includes/ZenUser.php 1.2
+   - zentrack_2/includes/headerInc.php 1.76
+   - zentrack_2/includes/nav.php 1.34
+   - zentrack_2/includes/paging.php 1.8
+   - zentrack_2/includes/zenTrack.class 1.221
+   - zentrack_2/includes/templates/accessForm.php 1.11
+   - zentrack_2/includes/templates/contact_buttonBox.php 1.6
+   - zentrack_2/includes/templates/contact_personBox.php 1.6
+   - zentrack_2/includes/templates/contact_titleBox.php 1.6
+   - zentrack_2/includes/templates/listTickets.php 1.42
+   - zentrack_2/includes/templates/loginForm 1.22
+   - zentrack_2/includes/templates/newAgreementForm.php 1.12
+   - zentrack_2/includes/templates/searchForm.php 1.25
+   - zentrack_2/includes/templates/ticket_actions.php 1.6
+   - zentrack_2/includes/templates/ticket_fields_editable.php 1.4
+   - zentrack_2/includes/templates/ticket_load_attachments.php 1.6
+   - zentrack_2/includes/templates/ticket_load_contacts.php 1.10
+   - zentrack_2/includes/templates/ticket_load_log.php 1.6
+   - zentrack_2/includes/templates/ticket_load_notify.php 1.6
+   - zentrack_2/includes/templates/ticket_load_tasks.php 1.6
+   - zentrack_2/includes/templates/actions/move.php 1.10
+   - zentrack_2/www/actions/action_header.php 1.23
+   - zentrack_2/www/agreement.php 1.6
+   - zentrack_2/www/exportSearch.php 1.5
+   - zentrack_2/www/newContact.php 1.7
+   - zentrack_2/www/ticket.php 1.39
+   - zentrack_2/www/help/help_header.php 1.13
 
 2006-08-05, kato
   Fixed mergeArrays function, which was incorrectly removing elements from lists
-    - zentrack_2/includes/zen.class
+   - zentrack_2/includes/zen.class 1.48
   Fixed problem with radio buttons and approve/test fields, which can make tickets
   impossible to close under certain conditions.
-    - zentrack_2/includes/zenTrack.class
+   - zentrack_2/includes/zenTrack.class 1.220
 
 2006-07-04, kato
   Cleaned up the divbutton code, improved submitForm function
-    - zentrack_2/www/javascript.js
+   - zentrack_2/www/javascript.js 1.32
+   - zentrack_2/includes/headerInc.php 1.75
     
   Corrected error viewing related tickets in the print screen
-    - zentrack_2/www/actions/print.php
+   - zentrack_2/www/actions/print.php 1.14
     
   Corrected stylesheet validation errors
-    - zentrack_2/www/styles.php
+   - zentrack_2/www/styles.php 1.41
 
 2006-06-23, kato
   Fixed error with hidden fields being lost in ticket tabs and close screen
-    - zentrack_2/includes/templates/form_fields.php
+   - zentrack_2/includes/templates/form_fields.php 1.10
 
 2006-06-16, kato
   Added new classes/code for user roles
-    - zentrack_2/includes/ZenPerson.php
-    - zentrack_2/includes/ZenRole.php
-    - zentrack_2/includes/ZenSearch.php
-    - zentrack_2/includes/ZenSearchBox.php
-    - zentrack_2/includes/ZenSearchBoxDataType.php
-    - zentrack_2/includes/ZenSearchBoxTicket.php
-    - zentrack_2/includes/ZenSearchBoxUser.php
-    - zentrack_2/includes/ZenUser.php
+    - zentrack_2/includes/ZenPerson.php 1.0
+    - zentrack_2/includes/ZenRole.php 1.0
+    - zentrack_2/includes/ZenSearch.php 1.0
+    - zentrack_2/includes/ZenUser.php 1.0
 
 ----- VERSION 2.6.2 (2006-06-21) -----
 
