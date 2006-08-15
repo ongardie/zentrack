@@ -2,8 +2,6 @@
 if( !ZT_DEFINED ) { die("Illegal Access"); }
 
 $hotkeys->loadSection('tab_contacts');
-$GLOBALS['zt_hotkeys'] = $hotkeys;
-
 $parms = array(array("ticket_id", "=", $id));
 $sort = "ticket_id asc";
 

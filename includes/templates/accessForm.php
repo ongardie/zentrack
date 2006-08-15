@@ -68,10 +68,9 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
     }
   }
   function opt_roles( $selected = '' ) {
+    global $zen;
     print "<option value=''>--".tr("none")."--</option>\n";
     // fetch the roles which can be picked from
-    if( isset($GLOBALS) ) { $zen = $GLOBALS["zen"]; }
-    else { global $zen; }
     $roles = $zen->getRoles();    
     // loop through the roles and print option tags
     foreach($roles as $r) {

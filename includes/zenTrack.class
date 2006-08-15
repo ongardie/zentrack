@@ -5652,7 +5652,6 @@ class zenTrack extends zen {
     // this method by other calls, such as Zen::addDebug() and the $GLOBALS
     // reference is not created until this method returns.
 
-    $GLOBALS['zen'] =& $this;
     $this->zen();
     $this->_session =& new ZenSessionManager();
     $this->DB( $this->database_host, $this->database_login, 
@@ -5923,7 +5922,8 @@ class zenTrack extends zen {
   //  . "off" - don't show the "Next" or "Previous" when it is not needed
   //  . "on"  - show the "Next" or "Previous" strings as plain text when it is not needed
   function get_links($option = "all", $show_blank = "off", $total_rows = null) {
-     $hk = $GLOBALS['zt_hotkeys'];
+     global $hotkeys;
+	 $hk =& $hotkeys;
      $numtoshow = $this->getSetting("paging_max_rows");
      list($extra_vars, $file) = $this->build_geturl();
      $pageNumber = array_key_exists('pageNumber', $_GET)? 

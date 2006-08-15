@@ -16,8 +16,6 @@
   }
   
   $hotkeys->loadSection('contacts_new_menu');
-  $GLOBALS['zt_hotkeys'] = $hotkeys;
-
   $page_title = tr("Create a new Contact");
   $page_section =  tr("Create a new Contact");
   $expand_contacts = 1;

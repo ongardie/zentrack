@@ -13,7 +13,6 @@
   */
   
   $hotkeys->loadSection('ticket_fields_editable');
-  $GLOBALS['zt_hotkeys'] = $hotkeys;
   $formview = $boxview;
   $formName = 'ticketForm';
   $actionName = $SCRIPT_NAME;

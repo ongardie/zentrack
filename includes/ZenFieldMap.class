@@ -169,7 +169,6 @@ class ZenFieldMap {
    * @param object $zen instance of zenTrack.class
    */
   function ZenFieldMap(&$zen) {
-    $GLOBALS['map'] =& $this;
     $this->_zen =& $zen;
     $this->_session =& $zen->getSessionManager();
     $this->_fieldVals = array();

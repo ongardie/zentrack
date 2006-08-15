@@ -3,7 +3,6 @@
 <tr>
 <?
   $hotkeys->loadSection('contacts_list');
-  $GLOBALS['zt_hotkeys'] = $hotkeys;
       
       $actions = array(
 			"company",			

@@ -16,7 +16,7 @@
   function prepareColumnNames() {
     static $names;
     if( !isset($names) ) {
-      $map = $GLOBALS['map'];
+      global $map;
       $names = array();
       foreach( $map->listFieldsForView('search_export') as $k ) {
         if( !$map->getFieldProp('search_export', $k, 'is_visible') ) { continue; }

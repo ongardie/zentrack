@@ -93,7 +93,6 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
   // this must be initialized after the translator is started
   include_once("$libDir/ZenHotKeys.class");
   $hotkeys =& new ZenHotKeys($zen);
-  $GLOBALS['zt_hotkeys'] = $hotkeys;
 
   function uptr($string, $vals = '') {
     $specials = array(
@@ -398,9 +397,9 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
    * @param array $names is an indexed array of (string)field -> (string)form_field_name, which overrides field names used
    */
   function renderSearchboxJs( $formview, $form_name, $vals, $names = false ) {
+    global $zen;
+    global $map;
     if( !$vals || !count($vals) ) { return ''; }
-    $zen = $GLOBALS['zen'];
-    $map = $GLOBALS['map'];
     $txt = "<script type='text/javascript'>\n";
     $txt .= " var validateHidden = new Array();\n";
     $txt .= "addToOnload( function() { \n";

@@ -1,6 +1,5 @@
 <? if( !ZT_DEFINED ) { die("Illegal Access"); } 
   $hotkeys->loadSection('agreement_form');
-  $GLOBALS['zt_hotkeys'] = $hotkeys;
   $button = $skip? "Update" : "Create";
   $hotkeys->activateButton($button, 'agreementForm');
 ?>

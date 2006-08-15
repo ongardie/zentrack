@@ -9,12 +9,6 @@
   $page_name = null;
   
   $tutImageUrl = "$imageUrl/help_screenshots/$helpLang";
-
-  // store our directory links in the global scope
-  // for functions and pages
-  $GLOBALS['helpDir'] = $helpDir;
-  $GLOBALS['helpBase'] = $helpBase;
-  $GLOBALS['helpUrl'] = $helpUrl;
   
   /**
    * Generates navigation links showing the previous page, next
@@ -27,8 +21,6 @@
     // collect the correct data array
     $s = "{$section}TOC";
     $list = $GLOBALS[$s];
-    $helpUrl = $GLOBALS['helpUrl'];
-    $helpBase = $GLOBALS['helpBase'];
 
     // find out where we are in the list
     $thisPage = basename($_SERVER['SCRIPT_NAME']);

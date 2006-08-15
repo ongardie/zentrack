@@ -6,7 +6,6 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
 */
 
 $hotkeys->loadSection('contacts_view_employee');
-$GLOBALS['zt_hotkeys'] = $hotkeys;
 ?>
 <table width='620'><tr><td>
 

@@ -258,7 +258,7 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
   /** Clears all session information which has been cached */
   function clearAll() {
     $_SESSION = array();
-    $GLOBALS = array();
+    //$GLOBALS = array();
   }
   
   /**

@@ -5,7 +5,6 @@
   $add = $on && $zen->checkAccess($login_id,$ticket["bin_id"],"notify_add");
   $colspan = $drop? 5 : 4;
   $hotkeys->loadSection('tab_notify');
-  $GLOBALS['zt_hotkeys'] = $hotkeys;
 
 ?>
 

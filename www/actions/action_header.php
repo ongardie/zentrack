@@ -90,6 +90,5 @@
   $page_mode = $setmode? $setmode : "{$page_type}_tab_1";
   $hotkeys->loadSection($view);
   $hotkeys->loadSection("action_$action");
-  $GLOBALS['zt_hotkeys'] = $hotkeys;
 
 ?>

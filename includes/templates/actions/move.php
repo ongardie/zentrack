@@ -1,6 +1,5 @@
 <? if( !ZT_DEFINED ) { die("Illegal Access"); } 
   $hotkeys->loadSection('move');
-  $GLOBALS['zt_hotkeys'] = $hotkeys;
 ?>
 
 <form method="post" name='moveForm' action="<?=$SCRIPT_NAME?>">

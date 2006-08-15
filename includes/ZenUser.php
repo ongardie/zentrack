@@ -18,9 +18,9 @@ class ZenUser extends ZenPerson {
    * @return true if login was valid and loaded from db
    */
   function loadByLogin( $login ) {
-    $z = $GLOBALS['zen'];
+    global $zen;
     $parms = new ZenSearchParms();
-    $where = $z->simpleWhere( array('login', $z) );
+    $where = $zen->simpleWhere( array('login', $login) );
     $query = "SELECT * FROM ZENTRACK_USERS WHERE $where";
     $vals = $z->db_quickIndexed($query);
     if( empty($vals) ) { return false; }

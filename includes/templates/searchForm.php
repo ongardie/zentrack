@@ -10,7 +10,6 @@ $hk = $hotkeys->activateButton("Search", "searchForm");
   **/  
   
   $hotkeys->loadSection($view);
-  $GLOBALS['zt_hotkeys'] = $hotkeys;
   $fields = $map->getFieldMap($view);
   $text_fields = array();
   $other_fields = array();

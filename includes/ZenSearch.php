@@ -122,7 +122,7 @@ class ZenSearch {
    * @return array containing rows of key/value pairs representing the columns of the table and their values
    */
    function search( $vals, $limit = 0, $offset = 0 ) {
-     $zen = $GLOBALS['zen'];
+     global $zen;
      // generate search params
      $parms = array();
      foreach($this->_fields as $f) {
