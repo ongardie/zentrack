@@ -25,7 +25,7 @@ $hotkeys->loadSection('contacts_view_employee');
 	  </tr>
 	  <tr>
 	   <td class="bars small"><?=tr("Department")?>:</td> 
-	   <td class="bars small"><?=$zen->fhv($t["department"])?></td>  
+	   <td class="bars small"><?=$zen->fhv($department)?></td>  
 	   <td class="bars small"><?=tr("Mobile")?>:</td>  
 	   <td class="bars small" width='30%'><?=$zen->fhv($mobiel)?></td>
 	  </tr>

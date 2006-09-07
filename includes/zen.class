@@ -192,11 +192,10 @@ class zen extends zenDate {
    function fixJsVal( $val, $char = '"' ) {
      // escape any js sensitive characters for use in strings
      if( is_null($val) ) { return "null"; }
-     if( !strlen($val) ) { return "''"; }
+     if( !strlen($val) ) { return "$char$char"; }
      if( preg_match('@^[0-9]+$@', $val) ) {
        return $val;
      }
-     if( strlen($val) == 0 ) { return "$char$char"; }
      $val = str_replace($char, "\\$char", str_replace("\\", "\\\\", $val));
      return $char.$val.$char;
    }

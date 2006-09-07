@@ -13,6 +13,17 @@ abstraction, and endless possibilities for project expansion.
 
 ----- VERSION 2.7 (development) -----
 
+2006-09-07, kato
+  Fixed date formatting error caused by passing "" instead of 0
+  Thanks to Eschatus for the find
+    - zentrack_2/includes/zenDate.class
+
+2006-08-17, kato
+  Department now displays correctly under contacts
+    - zentrack_2/includes/templates/contact_personBox.php
+  Fixed bug in javascript formatting tool
+    - zentrack_2/includes/zen.class
+  
 2006-08-15, kato
   Fixed mergeArrays yet again, still not working correctly... Oh PHP!  How
   thy constantly changing ways bring me woe!

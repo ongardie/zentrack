@@ -141,9 +141,9 @@ class ZenSearchBoxTicket extends ZenSearchBox {
   function getSearchResults() {
     if( $this->_matchany ) {
       // matchany is not allowed because we must restrict 
-      Zen::addDebug('ZenSearchBoxTicket::getSearchResults', 'matchAnyField not compatable for security reasons', 1);
+      Zen::addDebug('ZenSearchBoxTicket::getSearchResults', 'matchAnyField not implemented, ignored', 1);
     }
-    
+
     $comps = array();
     $vals = array();
     $cols = array();
@@ -185,7 +185,7 @@ class ZenSearchBoxTicket extends ZenSearchBox {
       else {
         if( !empty($_POST[$f]) ) {
           $comps[$f] = 'eq';
-          $vals[$f] = Zen::checkNum($f);
+          $vals[$f] = Zen::checkNum($_POST[$f]);
         }
       }
     }

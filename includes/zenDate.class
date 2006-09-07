@@ -315,7 +315,10 @@ class zenDate extends DB {
       // break up time
       list($hours, $mins, $seconds) = split('[.,:-]', $time);
       // create a unix timestamp and return
-      return mktime($hours, $mins, $seconds, $month, $day, $year);
+       if ($hours == "") $hours = 0;
+		if ($mins == "") $mins = 0;
+		if ($seconds == "") $seconds = 0;
+		return mktime($hours, $mins, $seconds, $month, $day, $year);
     }
     // otherwise it's english to treat it so
     else {
