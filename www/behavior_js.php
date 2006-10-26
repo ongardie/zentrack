@@ -772,7 +772,7 @@ function replaceRuntimeRefs( formName, fieldName, jsText ) {
       myRegExp = new RegExp(myReplaceText, "ig")  
       jsText = jsText.replace( myRegExp, jsVarValues[jsVarNames[i]] );
     }
-    var form = 'window.document.forms["'+formName+"']";
+    var form = 'window.document.forms["'+formName+'"]';
     var field = form+".elements['"+fieldName+'"]';
     jsText = jsText.replace(/{form}/ig, form);
     jsText = jsText.replace(/{field}/ig, field);
