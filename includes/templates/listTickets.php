@@ -319,7 +319,11 @@ print "</td></tr>";
 <tr>
    <td  align="right" valign='bottom' colspan='<?=$cols?>' class='subTitle'>
      <?
-       $links = $zen->get_links("all", "off", $atc);
+       if (strcmp($view,"project_tasks")===0) {
+         $links = $zen->get_links("all", "off", $atc, $id);
+       } else {
+         $links = $zen->get_links("all", "off", $atc);
+       }
        for ($y = 0; $y < count($links); $y++) {
           echo $links[$y] . "&nbsp;&nbsp;";
        }

@@ -5921,11 +5921,16 @@ class zenTrack extends zen {
   // $show_blank parameter (default to "off") :
   //  . "off" - don't show the "Next" or "Previous" when it is not needed
   //  . "on"  - show the "Next" or "Previous" strings as plain text when it is not needed
-  function get_links($option = "all", $show_blank = "off", $total_rows = null) {
+  function get_links($option = "all", $show_blank = "off", $total_rows = null, $project_id=0) {
      global $hotkeys;
 	 $hk =& $hotkeys;
      $numtoshow = $this->getSetting("paging_max_rows");
-     list($extra_vars, $file) = $this->build_geturl();
+     if ($project_id===0) {
+       list($extra_vars, $file) = $this->build_geturl();
+     } else {
+       $file="project.php";
+       $extra_vars="&id=".$project_id;
+     }
      $pageNumber = array_key_exists('pageNumber', $_GET)? 
                  $this->checkNum($_GET['pageNumber']) : 0;
      
@@ -5960,6 +5965,7 @@ class zenTrack extends zen {
        $maxrow = $number_of_pages;
        $current = 0;
      }
+     $this->addDebug('get_links', "Project ID: ".$project_id,3);
      $this->addDebug('get_links', "Total pages: ".$number_of_pages,3);
      $this->addDebug('get_links', "Back Nos: ".$backnos,3);
      $this->addDebug('get_links', "Max Row: ".$maxrow,3);
