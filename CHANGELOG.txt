@@ -12,6 +12,11 @@ abstraction, and endless possibilities for project expansion.
 --------------------
 
 ----- VERSION 2.7 (development) -----
+2006-11-04, cfalonso
+  Task #349: Pagination broken after search  -FIXED" zenTrack.class
+    - zentrack_2/includes/zenTrack.class 1.222
+    - zentrack_2/includes/templates/listTickets.php 1.43
+
 2006-10-26, cfalonso
   Fixed "Unterminated String Constant" bug for Evaluate type behaviors
     - zentrack_2/www/behavior_js.php 1.45
