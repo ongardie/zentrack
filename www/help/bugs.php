@@ -27,7 +27,7 @@
         .$_SERVER['REMOTE_ADDR']."\n"
         .$_SERVER['HTTP_USER_AGENT']."\n"
         .$_SERVER['HTTP_REFERER']."\n";
-     $headers = "From: {$email}\nReply-To: ".stripslashes($email)."\nCc: wulf@havenshade.com\n";
+     $headers = "From: {$email}\nReply-To: ".stripslashes($email)."\n";
      
      $res = mail($zen->bugTo, "Bug report from ".stripslashes($name),
                  $fullMessage);//, $headers);

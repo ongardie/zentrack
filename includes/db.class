@@ -219,7 +219,7 @@ class DB {
       if( !$res ) {
         $this->addDebug('db_result', "query failed: $query [" . $this->db_link->ErrorMsg()."]", 2);
       }
-      return $res; 
+      return $res && get_class($res) != 'ADORecordSet_empty';; 
     }
     else { return true; }
   }

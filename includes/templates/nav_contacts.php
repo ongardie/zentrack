@@ -33,7 +33,9 @@
         print "-none-";
       }
     ?></div>
-    <P>
+    </td></tr>
+    <tr>
+    <td class='leftNavCell' height='25%' valign='top'>
     <div class='recentHistory'>
       <div><?=tr("Recent Employees")?></div>
     <?

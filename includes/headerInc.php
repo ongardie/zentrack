@@ -481,6 +481,7 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
        if( $section ) {
          define('ZT_SECTION',$section);
        }
+       Zen::addDebug("headerInc::getZtSection()", "Set section to "+ZT_SECTION, 3);
      }
      return ZT_SECTION;
    }
