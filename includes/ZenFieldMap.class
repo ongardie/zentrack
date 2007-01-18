@@ -537,7 +537,6 @@ class ZenFieldMap {
     if( $tprops["has_choices"] ) {
       $vals["field_choices"] = $this->getChoices($view,$field_name);
     }
-    
     // deal with fields by checking 
     // the row count to make sure it is reasonable
     if( $field['num_rows'] == 1 ) { $vals['field_cols'] = $field['num_cols'] > 30? 30 : $field['num_cols']+2; }
@@ -665,10 +664,19 @@ class ZenFieldMap {
     // to find the correct value to select if this is a variable field
     if( $vf && isset($vals['field_choices']) && !empty($vals['field_value']) ) {
 	  $vals['field_selected'] = $vals['field_value'];
-	  if( !in_array($vals['field_selected'], $vals['field_choices']) ) {
-	  	$vals['field_choices'][] = $vals['field_value'];
+	  if (ZenFieldMap::isMultiField($field_name))  {
+		foreach($vals['field_value'] as $k=>$v) {
+		  	if( !in_array($v, $vals['field_choices']) ) {
+		  		$vals['field_choices'][$k] = $v;
+			}
+		}
+	  } else {
+	  	if( !in_array($vals['field_selected'], $vals['field_choices']) ) {
+	  		$vals['field_choices'][] = $vals['field_value'];
+		}
 	  }
     }
+    
     
     Zen::addDebug("ZenFieldMap::renderTicketField", "rendering: $view, $field_name, $typename", 3);
     

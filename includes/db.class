@@ -134,14 +134,14 @@ class DB {
     $val = $this->checkSlashes($val);
     $query = "UPDATE $table SET $set WHERE $key = $val";
     $r = $this->db_result($query);
-    $this->addDebug("db_update", "[$r]".$query, 3);
+    $this->_logResult("db_update", $r, $query, 3);
     return $r;
   }
   
   function db_delete( $table, $key, $val ) {
     $query = "DELETE FROM $table WHERE $key = '$val'";
     $r = $this->db_result($query);
-    $this->addDebug("db_delete", "[$r]".$query, 3);
+    $this->_logResult("db_delete", $r, $query, 3);
     return $r;
   }
   
@@ -180,7 +180,7 @@ class DB {
     list($cols,$vals) = $this->makeInsertVals($params);
     $query = "INSERT INTO $table ($cols) VALUES($vals)";
     $res = $this->db_link->Execute($query);
-    $this->addDebug("db_insert","[$res] ".$query,3);
+    $this->_logResult("db_insert",$res,$query,3);
     if( !$res && strlen(strpos($this->database_type,"mssql")) ) {
       // deal with sql server id issues by automagically
       // incrementing the counter when a problem occurs
@@ -219,7 +219,8 @@ class DB {
       if( !$res ) {
         $this->addDebug('db_result', "query failed: $query [" . $this->db_link->ErrorMsg()."]", 2);
       }
-      return $res && get_class($res) != 'ADORecordSet_empty';; 
+//      return $res; 
+      return is_object($res);
     }
     else { return true; }
   }
@@ -231,7 +232,7 @@ class DB {
     
     $this->switchQueryMode(0);
     $recordSet = &$this->db_link->Execute($query);
-    $this->addDebug('db_list','['.$recordSet.'] '.$query,3);
+    $this->_logResult('db_list', $recordSet, $query,3);
     $vals = array();
     if( $recordSet ) {
       $vars = $recordSet->getArray();
@@ -529,6 +530,19 @@ class DB {
       Zen::addDebug('db_connect', "Could not connect to $user@$host:$database", 1);
     }
     return( $this->db_link );      
+  }
+  
+  /*
+  **  LOG
+  */
+  
+  function _logResult( $method, $resultObject, $message, $level) {
+    if( is_object($resultObject) ) {
+      $resString = get_class($resultObject);
+    } else {
+      $resString = $resultObject;
+    }
+    $this->addDebug($method, "[".$resString."] $message", $level);
   }
   
   /*
