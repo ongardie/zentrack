@@ -13,6 +13,16 @@ abstraction, and endless possibilities for project expansion.
 
 ----- VERSION 2.6.3 (development) -----
 
+2007-02-07, cfalonso
+ Upgrading to new ADODB version (adodb494)
+    - zentrack_2/includes/adodb/* (every file and subfolder)
+
+2007-01-18, cfalonso
+ Working on several problems detected with PHP5
+    - zentrack_2/includes/ZenFieldMap.class 1.49
+    - zentrack_2/includes/zenTemplate.class 1.16
+    - zentrack_2/includes/db.class 1.16
+
 2006-12-13, kato
   Fixed "ADORecordSet_empty could not be converted to string" error
     - zentrack_2/includes/db.class
