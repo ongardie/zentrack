@@ -278,7 +278,7 @@ class ZenHotKeys {
     ////////////////////////
     $this->_sections['contacts_view_employee'] = array();
     $this->_sections['contacts_view_employee']['ALT+E'] = array('Edit', "window.document.forms['edit_form'].submit()", '', false);
-    $msg = Zen::fixJsVal(tr("Are you sure you want to delete this contact?"));
+    $msg = Zen::fixJsVal(tr("Are you sure you want to delete this contact?"),"'");
     $this->_sections['contacts_view_employee']['ALT+D'] = array('Delete', "confirmSubmit(window.document.forms['delete_form'],$msg)", '', false);
     $this->_sections['contacts_view_employee']['ALT+I'] = array('View Tickets', "window.document.forms['view_form'].submit()", '', false);
     

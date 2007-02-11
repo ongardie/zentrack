@@ -13,8 +13,12 @@ abstraction, and endless possibilities for project expansion.
 
 ----- VERSION 2.6.3 (development) -----
 
+2007-02-10, kato
+  355: fixed contacts, which were experiencing javascript error in IE
+    - zentrack_2/includes/ZenHotKeys.class 
+
 2007-02-07, cfalonso
- Upgrading to new ADODB version (adodb494)
+  Upgrading to new ADODB version (adodb494)
     - zentrack_2/includes/adodb/* (every file and subfolder)
 
 2007-01-18, cfalonso
