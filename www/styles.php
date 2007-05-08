@@ -593,6 +593,14 @@ TD.bigger { font-size: 50px; }
     border: 1px outset <?=$zen->getSetting('color_bar_border')?>;
   }
   
+  .leftNavMenuSel {
+    background: <?=$zen->getSetting('color_bar_darkest')?>;
+    font-weight: bold;
+    font-size:  <?=$zen->getSetting('font_size')?>px;
+    font-size:  <?=$zen->getSetting('font_size')?>px;
+    border: 1px outset <?=$zen->getSetting('color_bar_border')?>;
+  }
+  
   .leftNavTitle, TD.leftNavTitle {
     color: <?=$zen->getSetting('color_title_text')?>;
     font-weight: bold;

@@ -529,14 +529,54 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
 
   $nav_rollover_text = " onclick=\"if(window.document.body && mClk){mClk(this);return false;}\" ".$nav_rollover_eff;
 
-  $lnav_rollover = " onmouseout=\"if(window.document.body && mOut){mOut(this,'"
+  $lnav_rollover     = " onmouseout=\"if(window.document.body && mOut){mOut(this,'"
     .$zen->getSetting("color_bars")."');}\" "
+    ."onmouseover=\"if(window.document.body && mOvr){mOvr(this,'"
+    .$zen->getSetting("color_alt_background")."');}\" "
+    ." onclick=\"if(window.document.body && mClk){mClk(this);return false;}\" ";
+    
+  $lnav_rollover_sel = " onmouseout=\"if(window.document.body && mOut){mOut(this,'"
+    .$zen->getSetting("color_bar_darkest")."');}\" "
     ."onmouseover=\"if(window.document.body && mOvr){mOvr(this,'"
     .$zen->getSetting("color_alt_background")."');}\" "
     ." onclick=\"if(window.document.body && mClk){mClk(this);return false;}\" ";
     
   $row_rollover_eff = 'onmouseout="if(window.document.body && mClassX){mClassX(this);}" 
       onmouseover="if(window.document.body && mClassX){mClassX(this,\'altBars\',true);}"';
+
+  /**
+   * Returns a table row for the navigator (not to call directly)
+   */
+  function ztGetNavigatorRow($title, $a_ref, $a_text, $specialUrl=null) {
+    return( _ztGetNavigatorRow("leftNavMenu", "leftNavMenuSel", $lnav_rollover, $lnav_rollover_sel, $title,
+                     $a_ref, "leftNavLink", $a_text, $specialUrl) );
+  }
+  /**
+   * Returns a table row for the navigator (not to be called directly)
+   */
+  function _ztGetNavigatorRow($td_class_std, $td_class_sel, $rollover_std, $rollover_sel, $title, $a_ref, $a_class, $a_text, $specialUrl=null) {
+    global $rootUrl;
+    global $SCRIPT_NAME;
+    if (is_null($specialUrl)) {
+      $url=$rootUrl;
+    } else {
+      $url=$specialUrl;
+    }
+    if (  !empty($SCRIPT_NAME) && !empty($a_ref) && (strcmp($rootUrl.$SCRIPT_NAME,$url.$a_ref)===0)  )   {
+      $td_class=$td_class_sel;
+      $rollover=$rollover_sel;
+    } else {
+      $td_class=$td_class_std;
+      $rollover=$rollover_std;
+    }
+    $ret ="<tr>\n";
+//    $ret.="<!-- SCRIPT_NAME = $SCRIPT_NAME -->\n";
+    $ret.="  <td class='".$td_class."' ".$rollover." title='".$title."'>\n";
+    $ret.="    <a href='".$url.$a_ref."' class='".$a_class."'>".$a_text."</a>\n";
+    $ret.="  </td>\n";
+    $ret.="</tr>\n";
+    return $ret;
+  }
 
   /**
    * Returns true if a login is required to view the current page.

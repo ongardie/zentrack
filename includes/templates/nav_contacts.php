@@ -2,6 +2,10 @@
 <tr>
   <td class='leftNavTitle' height='25' valign='middle'><?=tr("Contacts")?></td>
 </tr>
+<?=ztGetNavigatorRow($hotkeys->tt("Contacts","Browse"), "/contacts.php", $hotkeys->ll("Contacts","Browse"));?>
+<?=ztGetNavigatorRow($hotkeys->tt("New Contact"), "/newContact.php", $hotkeys->ll("New Contact"));?>
+<?=ztGetNavigatorRow($hotkeys->tt("Find"), "/searchContacts.php", $hotkeys->ll("Find"));?>
+<!--
 <tr>
   <td class='leftNavMenu' <?=$lnav_rollover?> title='<?=$hotkeys->tt("Contacts","Browse")?>'>
     <a href='<?=$rootUrl?>/contacts.php' class='leftNavLink'><?=$hotkeys->ll("Contacts","Browse")?></a>
@@ -17,6 +21,7 @@
     <a href='<?=$rootUrl?>/searchContacts.php' class='leftNavLink'><?=$hotkeys->ll("Find")?></a>
   </td>
 </tr>
+-->
 <tr>
   <td class='leftNavCell' height='25%' valign='top'>
     <div class='recentHistory'>
@@ -56,6 +61,9 @@
 <tr>
   <td class='leftNavTitle' height='25' valign='middle'><?=tr("Agreements")?></td>
 </tr>
+<?=ztGetNavigatorRow($hotkeys->tt("Browse"), "/agreements.php", $hotkeys->ll("Browse"));?>
+<?=ztGetNavigatorRow($hotkeys->tt("New Agreement"), "/newAgreement.php", $hotkeys->ll("New Agreement"));?>
+<!--
 <tr>
   <td class='leftNavMenu' <?=$lnav_rollover?> title="<?=$hotkeys->tt('Browse')?>">
     <a href='<?=$rootUrl?>/agreements.php' class='leftNavLink'><?=$hotkeys->ll("Browse")?></a>
@@ -66,6 +74,7 @@
     <a href='<?=$rootUrl?>/newAgreement.php' class='leftNavLink'><?=$hotkeys->ll("New Agreement")?></a>
   </td>
 </tr>
+-->
 <tr>
   <td class='leftNavCell' height='100%' valign='top'>
     <div class='recentHistory'>
