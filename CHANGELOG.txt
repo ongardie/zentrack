@@ -15,6 +15,7 @@ abstraction, and endless possibilities for project expansion.
 
 2007-05-08, cfalonso
   Modifications to highlight in the Navigator the current used section.
+    - zentrack_2/includes/headerInc.php 1.79
     - zentrack_2/includes/headerInc.php 1.78
     - zentrack_2/includes/templates/nav_admin.php 1.6
     - zentrack_2/includes/templates/nav_contacts.php 1.8
