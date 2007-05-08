@@ -13,6 +13,17 @@ abstraction, and endless possibilities for project expansion.
 
 ----- VERSION 2.6.3 (development) -----
 
+2007-05-08, cfalonso
+  Modifications to highlight in the Navigator the current used section.
+    - zentrack_2/includes/headerInc.php 1.77
+    - zentrack_2/includes/templates/nav_admin.php 1.5
+    - zentrack_2/includes/templates/nav_contacts.php 1.7
+    - zentrack_2/includes/templates/nav_help.php 1.5
+    - zentrack_2/includes/templates/nav_options.php 1.6
+    - zentrack_2/includes/templates/nav_projects.php 1.10
+    - zentrack_2/includes/templates/nav_tickets.php 1.10
+    - zentrack_2/www/styles.php 1.41
+
 2007-02-10, kato
   355: fixed contacts, which were experiencing javascript error in IE
     - zentrack_2/includes/ZenHotKeys.class 
