@@ -15,14 +15,14 @@ abstraction, and endless possibilities for project expansion.
 
 2007-05-08, cfalonso
   Modifications to highlight in the Navigator the current used section.
-    - zentrack_2/includes/headerInc.php 1.77
-    - zentrack_2/includes/templates/nav_admin.php 1.5
-    - zentrack_2/includes/templates/nav_contacts.php 1.7
-    - zentrack_2/includes/templates/nav_help.php 1.5
-    - zentrack_2/includes/templates/nav_options.php 1.6
-    - zentrack_2/includes/templates/nav_projects.php 1.10
-    - zentrack_2/includes/templates/nav_tickets.php 1.10
-    - zentrack_2/www/styles.php 1.41
+    - zentrack_2/includes/headerInc.php 1.78
+    - zentrack_2/includes/templates/nav_admin.php 1.6
+    - zentrack_2/includes/templates/nav_contacts.php 1.8
+    - zentrack_2/includes/templates/nav_help.php 1.6
+    - zentrack_2/includes/templates/nav_options.php 1.7
+    - zentrack_2/includes/templates/nav_projects.php 1.11
+    - zentrack_2/includes/templates/nav_tickets.php 1.11
+    - zentrack_2/www/styles.php 1.42
 
 2007-02-10, kato
   355: fixed contacts, which were experiencing javascript error in IE
