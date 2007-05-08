@@ -545,7 +545,7 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
       onmouseover="if(window.document.body && mClassX){mClassX(this,\'altBars\',true);}"';
 
   /**
-   * Returns a table row for the navigator (not to call directly)
+   * Returns a table row for the navigator
    */
   function ztGetNavigatorRow($title, $a_ref, $a_text, $specialUrl=null) {
     return( _ztGetNavigatorRow("leftNavMenu", "leftNavMenuSel", $lnav_rollover, $lnav_rollover_sel, $title,
