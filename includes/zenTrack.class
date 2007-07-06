@@ -1701,6 +1701,8 @@ class zenTrack extends zen {
                  "Tasks"          =>  $this->table_tasks,
                  "Types"          =>  $this->table_types,
                  "Users"          =>  $this->table_users,
+                 "Companies"      =>  $this->table_company,
+                 "Employees"      =>  $this->table_employee,
                  "Custom"         =>  "");
   }
 
@@ -4218,6 +4220,10 @@ class zenTrack extends zen {
         return "type_id,name";
       case "USERS":
         return "user_id,lname,fname,initials";
+      case "EMPLOYEE":
+        return "person_id,lname,fname,initials";
+      case "COMPANY":
+        return "company_id,title";
       case "FIELD_MAP":
         return "field_name,field_label";
     }
@@ -4263,8 +4269,10 @@ class zenTrack extends zen {
     case "TYPES":
       return "priority, name";
     case "TICKETS":
+    case "COMPANY":
       return "title";
     case "USERS":
+    case "EMPLOYEE":
       return "lname, fname";
     case "FIELD_MAP":
       return "sort_order, field_name";
@@ -6072,6 +6080,8 @@ class zenTrack extends zen {
   var $table_group;
   var $table_group_detail;
   var $table_varfield;
+  var $table_employee;
+  var $table_company;
    
   var $database_type;
   var $database_instance;

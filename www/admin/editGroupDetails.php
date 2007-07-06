@@ -128,7 +128,13 @@
     // we fill the elements array this way and call
     // the groupDetailsForm template
     if ( $group['table_name'] ) {
-      $query     = "SELECT * FROM ".$group['table_name']." WHERE active=1";
+      $non_standard_tables=array($zen->table_employee    => "person_id, CONCAT(fname,' ',lname)",
+                                 $zen->table_company     => 'company_id, title');
+      if (!array_key_exists($group['table_name'], $non_standard_tables)) {
+        $query = "SELECT * FROM ".$group['table_name']." WHERE active=1";
+      } else {
+        $query = "SELECT ".$non_standard_tables[$group['table_name']]." FROM ".$group['table_name'].' ORDER BY 2';
+      }
       $elements  = $zen->db_query($query);
       include("$templateDir/groupDetailsForm.php");
     }
