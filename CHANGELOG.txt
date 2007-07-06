@@ -13,6 +13,11 @@ abstraction, and endless possibilities for project expansion.
 
 ----- VERSION 2.6.3 (development) -----
 
+2007-07-06, cfalonso
+  Add the Employee and Company tables to be available as data group tables
+    - zentrack_2/includes/zenTrack.class 1.223
+    - zentrack_2/www/admin/editGroupDetails.php 1.9
+
 2007-05-08, cfalonso
   Modifications to highlight in the Navigator the current used section.
     - zentrack_2/includes/headerInc.php 1.79
