@@ -54,6 +54,9 @@
    $this->table_group_detail     = 'ZENTRACK_GROUP_DETAIL';
    $this->table_varfield         = 'ZENTRACK_VARFIELD';
    $this->table_varfield_multi   = 'ZENTRACK_VARFIELD_MULTI';
+   $this->table_company          = 'ZENTRACK_COMPANY';
+   $this->table_employee         = 'ZENTRACK_EMPLOYEE';
+
 
    //pre-constructed strings
    $this->table_translation_strings = 'ZENTRACK_TRANSLATION_STRINGS'; 
