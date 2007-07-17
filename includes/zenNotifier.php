@@ -116,6 +116,7 @@
   }
   $mainQuery.="ORDER BY PID, status, id";
   $tickets = $zen->db_queryIndexed($mainQuery);
+  $notification=array();
   if( is_array($tickets) && count($tickets) ) {
     $ticketsByID=array();
     foreach($tickets as $t) {
@@ -137,18 +138,20 @@
   }
   $headers = "Subject: $mailSubject \n"
             ."Content-Type: text/html; charset=\"iso-8859-1\"\n";
-  foreach ($notification as $mailTo => $v)
-  {
-    if( !in_array(strtolower($mailTo), $ignoreMailsTo) )  {
+  if ( count($notification)>0 ) {
+//CFA
+    foreach ($notification as $mailTo => $v)
+    {
+      if( !in_array(strtolower($mailTo), $ignoreMailsTo) )  {
 
-      $message = "
+        $message = "
 <html>
   <head>
     <title>Overdue Notification</title>
   </head>
   <body><b>".$mailHeader."</b><br><br>";
-      foreach($v as $bin => $ids) {
-        $message.="<br><b>$bin</b><br>
+        foreach($v as $bin => $ids) {
+          $message.="<br><b>$bin</b><br>
     <table width='100%' cellspacing='1' cellpadding='2' bgcolor='".$zen->getSetting("color_alt_background")."'>
       <tr bgcolor='".$zen->getSetting("color_title_background")."'>
         <td height='25' valign='middle' width='32'>
@@ -177,16 +180,16 @@
         </td>
       </tr>";
 
-        foreach($ids as $id => $one) {  
-          $link=$rootUrl."/ticket.php?id=".$id;
-          if ( isset($users[$ticketsByID[$id]["user_id"]]["email"]) && strlen($users[$ticketsByID[$id]["user_id"]]["email"]) ) {
-            $userinfo="<a href='mailto:".$users[$ticketsByID[$id]["user_id"]]["email"]
-                     ."'>".$users[$ticketsByID[$id]["user_id"]]["lname"].", "
-                     .$users[$ticketsByID[$id]["user_id"]]["fname"]."</a>";
-          } else {
-            $userinfo=$users[$ticketsByID[$id]["user_id"]]["lname"].", ".$users[$ticketsByID[$id]["user_id"]]["fname"];
-          }
-          $message.="
+          foreach($ids as $id => $one) {  
+            $link=$rootUrl."/ticket.php?id=".$id;
+            if ( isset($users[$ticketsByID[$id]["user_id"]]["email"]) && strlen($users[$ticketsByID[$id]["user_id"]]["email"]) ) {
+              $userinfo="<a href='mailto:".$users[$ticketsByID[$id]["user_id"]]["email"]
+                       ."'>".$users[$ticketsByID[$id]["user_id"]]["lname"].", "
+                       .$users[$ticketsByID[$id]["user_id"]]["fname"]."</a>";
+            } else {
+              $userinfo=$users[$ticketsByID[$id]["user_id"]]["lname"].", ".$users[$ticketsByID[$id]["user_id"]]["fname"];
+            }
+            $message.="
       <tr>
         <td height='25' valign='middle'>
           <a href='$link'>$id</a>
@@ -213,17 +216,18 @@
           $userinfo
         </td>
       </tr>";
-        }
-        $message.="
+          }
+          $message.="
     </table>";
-      }
+        }
 
 
 
-      $message.="
+        $message.="
   </body>
 </html>";
-      mail($mailTo, $mailSubject, $message, $headers);
+        mail($mailTo, $mailSubject, $message, $headers);
+      }
     }
   }
 ?>
