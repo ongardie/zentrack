@@ -139,7 +139,6 @@
   $headers = "Subject: $mailSubject \n"
             ."Content-Type: text/html; charset=\"iso-8859-1\"\n";
   if ( count($notification)>0 ) {
-//CFA
     foreach ($notification as $mailTo => $v)
     {
       if( !in_array(strtolower($mailTo), $ignoreMailsTo) )  {
