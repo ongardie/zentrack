@@ -39,7 +39,7 @@
       }
       if ( ZenFieldMap::isVariableField($f) ) { $varfields["$f"] = $field; }
       else if( $f == 'relations' ) { $fields["$f"] = 'ignore'; }
-      else { $fields["$f"] = $fprops["$f"]['data_type']; }
+      else if( $f != 'contacts' )  { $fields["$f"] = $fprops["$f"]['data_type']; }
     }
   }
 

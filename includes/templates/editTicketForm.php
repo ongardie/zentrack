@@ -20,6 +20,11 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
       $varfields = $zen->getVarfieldVals($id);
       extract($varfields);
       extract($ticket);
+
+      $contacts_parms = array(array("ticket_id", "=", $id));
+      $contacts_sort = "ticket_id asc";
+      $contacts = $zen->get_contacts($contacts_parms,"ZENTRACK_RELATED_CONTACTS",$contacts_sort);
+
       $description = preg_replace("@<br ?/?>@","\n",$description); 
       if( $zen->inProjectTypeIDs($ticket["type_id"]) ) {
         $view = "project_edit";

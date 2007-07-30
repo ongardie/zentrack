@@ -38,10 +38,13 @@
      if ( !$varfields )  {
        $varfield_params=null;
      }
-     
 
-     $zen->update_all_ticket_fields($id, $login_id, $bin_id, $params,
-                                    $varfield_params, "EDIT", "Ticket edited", $edit_reason);
+     $indexed_params=array('standard'=>$params,
+                           'varfield'=>$varfield_params,
+                           'contacts'=>$contacts);
+
+     $zen->update_all_ticket_fields($id, $login_id, $bin_id, $indexed_params,
+                                    "EDIT", "Ticket edited", $edit_reason);
 /*
      // update the ticket info
      $res = $zen->edit_ticket($id,$login_id,$params,$edit_reason);

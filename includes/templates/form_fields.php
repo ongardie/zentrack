@@ -39,10 +39,21 @@
   $context = new ZenFieldMapRenderContext($context_vals);
   foreach($hidden_fields as $f) {
     $context->set('field', $f);
-    if (strpos($f,"custom")===false) {
+    if (strcmp($f,"contacts")==0) {
+      $contact_ids = array();
+      if (is_array($contacts)) {
+        foreach ($contacts as $contact) {
+          $contact_ids[]=$contact['type'].'-'.$contact['cp_id'];
+        }
+      } else {
+        $contact_ids[]=$contacts['type'].'-'.$contacts['cp_id'];
+      }
+      $context->set('value', $contact_ids);
+    } else if (strpos($f,"custom")===false) {
       $context->set('value', $ticket[$f]);
     } else {
-      $context->set('value', $varfields[$f]);
+      //$context->set('value', $varfields[$f]);
+      $context->set('value', $varfield_params[$f]);
     }
     print $map->renderTicketField($context);
   }
@@ -53,7 +64,17 @@
   $context->set('force_label', $override_as_label);
   foreach($visible_fields as $f) {
     $context->set('field', $f);
-    if (strpos($f,"custom")===false) {
+    if (strcmp($f,"contacts")==0) {
+      $contact_ids = array();
+      if (is_array($contacts)) {
+        foreach ($contacts as $contact) {
+          $contact_ids[]=$contact['type'].'-'.$contact['cp_id'];
+        }
+      } else {
+        $contact_ids[]=$contacts['type'].'-'.$contacts['cp_id'];
+      }
+      $context->set('value', $contact_ids);
+    } else if (strpos($f,"custom")===false) {
       $context->set('value', $ticket[$f]);
     } else {
       $context->set('value', $varfields[$f]);
@@ -84,7 +105,17 @@
       }
       else {
         if( $map->getFieldProp($formview, $f, 'field_type') == 'searchbox' ) {
-          if( $ticket[$f] ) {
+          if ( strcmp($f,'contacts')==0 && $contacts) {
+            $contact_ids=array();
+            if (is_array($contacts)) {
+              foreach ($contacts as $contact) {
+                $contact_ids[]=$contact['type'].'-'.$contact['cp_id'];
+              }
+            } else {
+              $contact_ids[]=$contacts['type'].'-'.$contacts['cp_id'];
+            }
+            $searchbox_vals[$f] = $contact_ids;
+          } else if( $ticket[$f] ) {
             $searchbox_vals[$f] = explode(',',$ticket[$f]);
           }
           else {

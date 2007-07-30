@@ -1236,13 +1236,15 @@ class zenTrack extends zen {
    * @param integer $id Ticket ID
    * @param integer $login_id user who is updating the ticket
    * @param integer $bin_id Ticket's current bin (I can get it from the ticket too...)
-   * @param array $params (only for standard fields) mapped field_name -> value
-   * @param array $varfield_params (only for custom fields) mapped field_name -> value
+   * @param array $idx_params array with 3 keys: 'standard','varfield', 'contacts' (first 2 containing an array mapped field_name -> value, and 3rd containing array of contacts)
    * @param string $action The action name to be logged (default EDIT)
    * @param string $edit_reason reason why the ticket is being edited (user entry)
    */
-  function update_all_ticket_fields($id, $login_id, $bin_id, $params,
-                                    $varfield_params, $action="EDIT", $log_init="", $edit_reason="") {
+  function update_all_ticket_fields($id, $login_id, $bin_id, $idx_params,
+                                    $action="EDIT", $log_init="", $edit_reason="") {
+    $params=$idx_params['standard'];
+    $varfield_params=$idx_params['varfield'];
+    $contact_params=$idx_params['contacts'];
     $this->log_buffer=$log_init."\n\n";
     $errs = array();
     // update the ticket info
@@ -1262,6 +1264,9 @@ class zenTrack extends zen {
                                    'bin_id'    => $bin_id) );
       }
     }
+    $errs2 = $this->sync_contacts($id, $contact_params);
+    $errs = array_merge ($errs, $errs2);
+    
     if(!$errs) {    
       $this->add_log( $id, array('user_id'   => $login_id,
                                  'action'    => $action,
@@ -5694,6 +5699,69 @@ class zenTrack extends zen {
   //#####################################################
   //##  CONTACTS
   //#####################################################
+  function sync_contacts($ticket_id, $contact_type_cpid_list) {
+echo "<!--contact_type_cpid_array:";
+print_r($contact_type_cpid_array);
+echo "-->";
+    $contact_type_cpid_array = explode(',' , $contact_type_cpid_list);
+    $errs=array();
+    $numdel=0;
+    $numadd=0;
+    $log = '';
+    $parms = array(array("ticket_id", "=", $ticket_id));
+    $currentContacts = $this->get_contacts($parms,"ZENTRACK_RELATED_CONTACTS");
+    $new_contacts = $contact_type_cpid_array;
+    if( $currentContacts ) {
+      foreach($currentContacts as $c) {
+        $contact_type_cpid = $c['type'].'-'.$c['cp_id'];
+        $pos=array_search($contact_type_cpid, $contact_type_cpid_array);
+        if ( $pos===FALSE ) {
+          //Though the contact was related to the ticket in the DB, it is no longer present throught the form
+          //so we will delete it from the database.
+          $n = $this->checkNum($c['clist_id']);
+          if( strlen($n) ) {
+            $res = $this->delete_contact( $n,"ZENTRACK_RELATED_CONTACTS","clist_id");
+            if( $res ) {
+              if ($numdel==0) {
+                $log .= '<br>'.tr('Contacts deleted').': ';
+              }
+              $log .= "[$contact_type_cpid]";
+              $numdel++;
+            } else {
+              $errs[] = tr("Contact #? could not be removed",$n);
+            }
+          }
+        } else {
+          //The contact was both in the database and in the form
+          //so we will delete it from the new_contacts array.
+          unset($new_contacts[$pos]);
+        }
+      }
+    }
+    foreach($new_contacts as $c) {
+      $contact_keys = explode('-',$c);
+      if (count($contact_keys)!=2) {
+        continue;
+      }
+      $contact_type = $contact_keys[0];
+      $contact_cpid = $contact_keys[1];
+      $params = array("type" => $contact_type, "cp_id"  => $contact_cpid, "ticket_id" => $ticket_id);
+      $res = $this->add_contact( $params,"ZENTRACK_RELATED_CONTACTS");
+      if( $res ) {
+        if ($numadd==0) {
+          $log .= '<br>'.tr('Contacts added').': ';
+        }
+        $log .= "[$c]";
+        $numadd++;
+      } else {
+        $errs[] = tr("Unable to add contact due to system error");
+      }
+    }
+    $this->log_buffer .= $log;
+    return $errs;
+  }
+
+
   function search_Contacts( $params, $andor, $order_by, $tables) {
     //search a contact
     $where = $this->build_search_clause($params, $andor);

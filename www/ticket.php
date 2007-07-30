@@ -115,8 +115,12 @@
       $label = $map->getViewProp($setmode,'label');
       $log_init=tr("Updated ticket in ?",array(tr("? tab",array($label))));
 
-      $errs = $zen->update_all_ticket_fields($id, $login_id, $bin_id, $params,
-                                    $varfield_params, $action_name, $log_init, $edit_reason);
+      $indexed_params=array('standard'=>$params,
+                            'varfield'=>$varfield_params,
+                            'contacts'=>$contacts);
+
+      $errs = $zen->update_all_ticket_fields($id, $login_id, $bin_id, $indexed_params,
+                                    $action_name, $log_init, $edit_reason);
       if( $errs ) {
         $errs[] = tr("Unable to edit ticket due to system error"). " ".$zen->db_error;
       }

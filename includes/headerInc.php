@@ -411,8 +411,32 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
         if( $k == 'project_id' || $k == 'ticket_id' || $k == 'relations' ) {
           $t = $zen->get_ticket($val);
           $text = Zen::ffv($t['title']);
-        }
-        else {
+        } else if ( $k == 'contacts' ) {
+          $contact_keys = explode('-',$val);
+          $contact_type = $contact_keys[0];
+          $contact_cpid = $contact_keys[1];
+          if ($contact_type=="1"){
+            $table = "ZENTRACK_COMPANY";
+            $col = "company_id";
+          } else {
+            $table = "ZENTRACK_EMPLOYEE";
+            $col = "person_id";
+          }
+          $u = $zen->get_contact($contact_cpid,$table,$col);
+          if ($contact_type=="1"){
+            $n1 = $u["title"];
+            $n2 = $u["office"];
+            $n3 = $u["website"];
+            $n4 = $u["telephone"];
+          } else {
+            $n1 = $u["lname"];
+            $n2 = $u["fname"];
+            $company = $zen->get_contact($u["company_id"],"ZENTRACK_COMPANY","company_id");
+            $n3 = $company["title"];
+            $n4 = $u["telephone"];
+          }
+          $text = Zen::ffv($n1.",".$n2.",".$n3.",".$n4);
+        } else {
           $text = Zen::ffv($map->getTextValue($formview, $k, $val));
         }
         $txt .= "  addSearchboxVal(";

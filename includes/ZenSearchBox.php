@@ -4,6 +4,7 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
 include_once("$libDir/ZenSearchBoxDatatype.php");
 include_once("$libDir/ZenSearchBoxUser.php");
 include_once("$libDir/ZenSearchBoxTicket.php");
+include_once("$libDir/ZenSearchBoxContact.php");
 
 /**
  * Container for the ZenSearchBox class and impls
