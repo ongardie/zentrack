@@ -5700,9 +5700,6 @@ class zenTrack extends zen {
   //##  CONTACTS
   //#####################################################
   function sync_contacts($ticket_id, $contact_type_cpid_list) {
-echo "<!--contact_type_cpid_array:";
-print_r($contact_type_cpid_array);
-echo "-->";
     $contact_type_cpid_array = explode(',' , $contact_type_cpid_list);
     $errs=array();
     $numdel=0;

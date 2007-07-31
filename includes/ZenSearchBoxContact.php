@@ -19,11 +19,13 @@ class ZenSearchBoxContact extends ZenSearchBox {
     $vars = $this->_zen->db_queryIndexed($query);
     if( is_array($vars) ) {
       foreach($vars as $v) {
-        $this->_company[$v['company_id']]=$v['title'];
+        $this->_company[$v['company_id']]=array('title'     => $v['title'],
+                                                'office'    => $v['office'],
+                                                'website'   => $v['website'],
+                                                'telephone' => $v['telephone']);
       }
     }
     $this->_possible = 1000;
-    Zen::addDebug("ZenSearchBoxContact::init _company",$this->_company, 3, false);
   }
   
   /**
@@ -43,10 +45,10 @@ class ZenSearchBoxContact extends ZenSearchBox {
    */
   function renderFormFields( $form, $vals, $hidden = false ) {
     $searchbox_vals = array();
-    $search_text=$_REQUEST['search_text'];
-    $cid=array_key_exists('cid',$_REQUEST) ? $_REQUEST['cid'] : '';
+    $search_text=$_POST['search_text'];
+    $cid=array_key_exists('cid',$_POST) ? $_POST['cid'] : '';
     Zen::addDebug("ZenSearchBoxContact::renderFormFields","cid='$cid'", 3);
-    $txt .= "<table><tr><td colspan='2' class='subTitle' width='600'>";
+    $txt .= "<table><tr><td colspan='3' class='subTitle' width='600'>";
     $txt .= tr("Search Employee");
     $txt .= "</td><tr><td class='bars'>".tr("Company").":</td><td class='bars'>";
     $txt .= "<select name='cid' size='1'>";
@@ -56,113 +58,47 @@ class ZenSearchBoxContact extends ZenSearchBox {
     $sel=(strcmp($cid,"0")==0)?'selected':'';
     Zen::addDebug("ZenSearchBoxContact::renderFormFields","cid['-none-'] selected='$sel'", 3);
     $txt .= "<option value='0' $sel>".tr('-none-')."</option>";
+    $jsvar = "var company = new Array();";
     if( is_array($this->_company) ) {
-      foreach($this->_company as $id=>$cname) {
+      foreach($this->_company as $id=>$c) {
+        $cname=$c['title'];
+        $cinfo=$c['title'].','.$c['office'].','.$c['website'].','.$c['telephone'];
         $sel=(strcmp($cid,$id)==0)?'selected':'';
         Zen::addDebug("ZenSearchBoxContact::renderFormFields","cid['$cname'] selected='$sel'", 3);
         $txt .= "<option value='$id' $sel>$cname</option>";
+        $jsvar .= "company[$id]='$cinfo';";
       }
     }
-    $txt .= "</select></td></tr>";
-    $txt .= "<tr><td>Filter:</td>";
-    $txt .= '<td class="bars">
+    $txt .= "</select></td>";
+    $txt .= '<td class="bars" colspan="2"><input type="button" onclick="pickCompany()" value="Contact is company">';
+    $txt .= "</td>";
+    $txt .= "</tr><tr><td>Filter:</td>";
+    $txt .= '<td class="bars" colspan="2">
                 <input type="text" name="search_text" title="'.tr("Filter text").'"
                  value="'.$this->_zen->ffv($search_text).'" size="25" maxlength="50">
              </td>
              </tr>
              </table>';
-    return $txt;
-  }
-
-  function obsoleto() {
-    $txt .= '</form>';
-    if( is_array($tickets) && count($tickets) ) {
-      $link = $zen->getSetting("url_view_ticket");
-      $c = count($tickets);
-//Begin table heading render
-      $txt .= '<table width="100%" cellspacing="1" cellpadding="2" bgcolor="'.$this->_zen->getSetting("color_alt_background").'">
-               <tr>
-               <td class="titleCell" colspan="9" align="center">'.(($c>1)? tr("? Matches",array($c)) : tr("1 Match")).'</td></tr>
-               <tr bgcolor="'.$this->_zen->getSetting("color_title_background").'" >
-
-               <td width="32" height="25" valign="middle" title="'.tr("ID of the contact").'">
-               <div align="center"><span style="color:'.$this->_zen->getSetting("color_title_txt").'"><b><span class="small">'.tr("ID");
-      if (!empty($image)) {
-        $txt .= '&nbsp;<IMG SRC="'.$imageUrl.$image.'" border="0">';
-      }
-      $txt .= '</span></b></span></div>
-               </td>
-
-               <td height="25" valign="middle" title="'.tr("The name of the contact").'">
-               <div align="center"><span style="color:'.$this->_zen->getSetting("color_title_txt").'"><b><span class="small"><'.tr("Name");
-      if (!empty($image)) {
-        $txt .= '&nbsp;<IMG SRC="'.$imageUrl.$image.'" border="0">';
-      }
-      $txt .= '</span></b></span></div>
-               </td>
-
-               <td height="25" valign="middle" title="'.tr("The company where the contact works").'">
-               <div align="center"><span style="color:'.$this->_zen->getSetting("color_title_txt").'"><b><span class="small">'.tr("Company");
-      if (!empty($image)) {
-        $txt .= '&nbsp;<IMG SRC="'.$imageUrl.$image.'" border="0">';
-      }
-      $txt .= '</span></b></span></div>
-               </td>
-
-               <td height="25" valign="middle" title="'.tr("The E-mail address of the contact").'">
-               <div align="center"><span style="color:'.$this->_zen->getSetting("color_title_txt").'"><b><span class="small">'.tr("E-mail");
-      if (!empty($image)) {
-        $txt .= '&nbsp;<IMG SRC="'.$imageUrl.$image.'" border="0">';
-      }
-      $txt .= '</span></b></span></div>
-               </td>
-
-               <td height="25" valign="middle" title="'.tr("The telephone number of the contact").'">
-               <div align="center"><span style="color:'.$this->_zen->getSetting("color_title_txt").'"><b><span class="small">'.tr("Telephone");
-      if (!empty($image)) {
-        $txt .= '&nbsp;<IMG SRC="'.$imageUrl.$image.'" border="0">';
-      }
-      $txt .= '</span></b></span></div>
-               </td>
-
-               </tr>';
-
-//End table header render
-//Begin table detail render
-      $link  = "$rootUrl/contact.php";
-      $td_ttl = "title='".tr("Click here to view the Contact")."'";
-      foreach($tickets as $t) {
-        $txt .= '<tr  class="priority1" onclick="ticketClk("'.$link.'?pid='.$t["person_id"].'")"
-                 onMouseOver="if(window.document.body && mClassX){mClassX(this, "priority1Over", true);}"
-                 onMouseOut="if(window.document.body && mClassX){mClassX(this, "priority1", false);}">
-                 <td height="25" width="5%" valign="middle" '.$td_ttl.'>    '.$t["person_id"].'
-                 </td>
-                 <td height="25" width="25%" valign="middle" '.$td_ttl.'>'.ucfirst($t["lname"]).'
-                 &nbsp;'.($t["fname"])?",".ucfirst($t["fname"]):",".ucfirst($t["initials"]).'
-                 </td>   <td height="25" width="25%" valign="middle" '.$td_ttl.'>';
-        if ( isset($t["company_id"])) {
-          $contact = $this->_zen->get_contact($t["company_id"],"ZENTRACK_COMPANY","company_id");
-          if( is_array($contact) ) {
-            $txt .= strtoupper($contact["title"]);
-            if ($contact["title"]){
-              $txt .= " " .strtolower($contact["office"]);
-            }
-          }
-        }
- 
-        $txt .= '</td>
-                 <td height="25" width="25%" valign="middle" '.$td_ttl.'>'.$t["email"].'
-                 </td>   <td width="20%" valign="middle" '.$td_ttl.'>'.strtolower($t["telephone"]).'
-                 </td>
-                 </tr>';
-    
-        unset($contact);
-      }
-    }
-
-
-//End table detail render
-
+    $txt .= "<script type='text/javascript'>
+               function pickCompany() {
+                 $jsvar
+                 var f = window.document.searchboxForm;
+                 var id = f.cid.options[f.cid.selectedIndex].value;
+                 if (id>0) {
+                   var key = '1-' + id;
+                   var value = company[id];
+                   if( pickedVals[key] ) { 
+                     pickedVals[key] = false;
+                     newStyle = 'bars';
+                     window.opener.delSearchboxVal(form, field, key);
+                   } else {
+                     pickedVals[key] = value;
+                     newStyle = 'invalidBars';
+                     window.opener.addSearchboxVal(form, field, key, value, multi, required);
+                   }
+                 }
+               }
+             </script>";
     return $txt;
   }
 
@@ -175,18 +111,18 @@ class ZenSearchBoxContact extends ZenSearchBox {
    * @return ZenSearchBoxResults
    */
   function getSearchResults() {
-    $search_text=$_REQUEST['search_text'];
-    $cid=$_REQUEST['cid'];
+    $search_text=$_POST['search_text'];
+    $cid=$_POST['cid'];
     $search_fields = array(
-                        "fname"       => "fname",
-                        "lname"    => "lname",
-                        "initials" => "initials",
-                        "jobtitle"       => "jobtitle",
+                        "fname"           => "fname",
+                        "lname"           => "lname",
+                        "initials"        => "initials",
+                        "jobtitle"        => "jobtitle",
                         "department"      => "department",
-                        "email"      => "email",
-                        "telephone"    => "telephone",
-                        "mobiel"      => "mobiel",
-                        "description"   => "description",
+                        "email"           => "email",
+                        "telephone"       => "telephone",
+                        "mobiel"          => "mobiel",
+                        "description"     => "description",
                   );
     $tables = "ZENTRACK_EMPLOYEE";
     //$orderby="person_id DESC";
@@ -218,7 +154,7 @@ class ZenSearchBoxContact extends ZenSearchBox {
         $contacts[]=array(
                          'pid'=>'2-'.$c['person_id'],
                          'fullname'=>$fullname,
-                         'company'=>$this->_company[$c['company_id']],
+                         'company'=>$this->_company[$c['company_id']['title']],
                          'telephone'=>$c['telephone']
                          );
       }
