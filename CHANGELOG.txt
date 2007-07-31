@@ -15,14 +15,16 @@ abstraction, and endless possibilities for project expansion.
 
 2007-07-31, cfalonso
   Added code to manage contacts field in ticket edit pages
+    - zentrack_2/includes/ZenSearchBoxContact.php 1.2
+    - zentrack_2/includes/ZenSearchBoxContact.php 1.1
+    - zentrack_2/includes/zenTrack.class 1.225
+    - zentrack_2/includes/zenTrack.class 1.224
     - zentrack_2/includes/ZenFieldMap.class 1.50
     - zentrack_2/includes/ZenSearchBox.php 1.5
-    - zentrack_2/includes/ZenSearchBoxContact.php 1.1
     - zentrack_2/includes/editTicketSubmit.php 1.25
     - zentrack_2/includes/headerInc.php 1.80
     - zentrack_2/includes/parseVarfields.php 1.8
     - zentrack_2/includes/validateFields.php 1.14
-    - zentrack_2/includes/zenTrack.class 1.224
     - zentrack_2/includes/templates/editTicketForm.php 1.11
     - zentrack_2/includes/templates/form_fields.php 1.11
     - zentrack_2/www/ticket.php 1.40
