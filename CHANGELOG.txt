@@ -13,6 +13,17 @@ abstraction, and endless possibilities for project expansion.
 
 ----- VERSION 2.6.3 (development) -----
 
+2007-08-01, cfalonso
+  Added code to manage contacts field in ticket edit pages
+    - zentrack_2/includes/ZenHotKeys.class 1.25
+    - zentrack_2/includes/zenTrack.class 1.226
+    - zentrack_2/includes/templates/contact_personBox.php 1.8
+    - zentrack_2/includes/templates/contact_titleBox.php 1.7
+    - zentrack_2/includes/templates/form_fields.php 1.12
+    - zentrack_2/www/addProjectSubmit.php 1.29
+    - zentrack_2/www/addSubmit.php 1.37
+    - zentrack_2/www/newTicket.php 1.11
+
 2007-07-31, cfalonso
   Added code to manage contacts field in ticket edit pages
     - zentrack_2/includes/ZenSearchBoxContact.php 1.2
