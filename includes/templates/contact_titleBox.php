@@ -98,7 +98,11 @@
     renderDivButtonFind($value);
     print "</td></tr>";
   }
-  
+
+  print "<tr><td>\n";
+  renderDivButtonFind("Add Ticket");
+  print "</td></tr>\n";
+
 ?>
 </table>
      </td>

@@ -60,7 +60,10 @@
       }
 */
       $id = 0;
-      $errs = $zen->add_new_ticket($id,$params,$varfield_params);
+      $indexed_params=array('standard'=>$params,
+                            'varfield'=>$varfield_params,
+                            'contacts'=>$contacts);
+      $errs = $zen->add_new_ticket($id,$indexed_params);
       
       // check for errors
       if( in_array($params["type_id"],$zen->noteTypeIDs()) ) {

@@ -272,6 +272,7 @@ class ZenHotKeys {
     $this->_sections['contacts_view']['ALT+I'] = array('View Tickets', "KeyEvent.loadUrl('{rootUrl}/contact.php?overview=tickets&cid={id}')", '', false);
     $this->_sections['contacts_view']['ALT+Y'] = array('View Employees', "KeyEvent.loadUrl('{rootUrl}/contact.php?cid={id}&overview=contact')", '', false);
     $this->_sections['contacts_view']['ALT+M'] = array('View Agreements', "KeyEvent.loadUrl('{rootUrl}/contact.php?cid={id}&overview=agreement')", '', false);
+    $this->_sections['contacts_view']['ALT+K'] = array('Add Ticket', "KeyEvent.loadUrl('{rootUrl}/newTicket.php?contacts=1-{id}')", '', false);
     
     ////////////////////////
     // contacts_view_employee
@@ -281,6 +282,7 @@ class ZenHotKeys {
     $msg = Zen::fixJsVal(tr("Are you sure you want to delete this contact?"),"'");
     $this->_sections['contacts_view_employee']['ALT+D'] = array('Delete', "confirmSubmit(window.document.forms['delete_form'],$msg)", '', false);
     $this->_sections['contacts_view_employee']['ALT+I'] = array('View Tickets', "window.document.forms['view_form'].submit()", '', false);
+    $this->_sections['contacts_view_employee']['ALT+K'] = array('Add Ticket', "KeyEvent.loadUrl('{rootUrl}/newTicket.php?contacts=2-{id}')", '', false);
     
     ////////////////////////
     // contacts_list

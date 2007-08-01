@@ -77,6 +77,10 @@ $hotkeys->loadSection('contacts_view_employee');
     print "<input type='hidden' name='pid' value='$idi'>\n";
     print "<input type='hidden' name='overview' value='tickets'>\n";	
     print "</td>\n</form>\n</tr>\n";
+    
+    print "<tr><td>\n";
+    renderDivButtonFind("Add Ticket");
+    print "</td></tr>\n";
 ?>
 </table>
 </td></tr></table>

@@ -2757,13 +2757,15 @@ class zenTrack extends zen {
    * create a new ticket
    *
    * @param integer $id returns the created ticket ID
-   * @param array $params (only for standard fields) mapped field_name -> value
-   * @param array $varfield_params (only for custom fields) mapped field_name -> value
+   * @param array $idx_params array with 3 keys: 'standard','varfield', 'contacts' (first 2 containing an array mapped field_name -> value, and 3rd containing array of contacts)
    * @param string $action The action name to be logged (default EDIT)
    * @param string $log_init is extra notes to add at the beginning of the create log
    * @return integer returns the new ticket's id, if creation succeeded
    */
-  function add_new_ticket(&$id, $params, $varfield_params, $action="CREATED", $log_init="") {
+  function add_new_ticket(&$id, $idx_params, $action="CREATED", $log_init="") {
+    $params=$idx_params['standard'];
+    $varfield_params=$idx_params['varfield'];
+    $contact_params=$idx_params['contacts'];
     $login_id=$params["creator_id"];
     $bin_id=$params["bin_id"];
     $this->log_buffer=$log_init."\n\n";
@@ -2774,18 +2776,22 @@ class zenTrack extends zen {
     // check for errors
     if( !$id ) {
       $errs[] = tr("System Error").": ".tr("Ticket could not be created.")." ".$zen->db_error;
-    }
-    else if( count($varfield_params) ) {
-      $res = $this->updateVarfieldVals($id, $varfield_params, $login_id, $bin_id, 1);
-      if( !$res ) {
-        $errs[] = tr("? created, but variable fields could not be saved", array(tr($x)));
-        $this->log_buffer.=tr("Variable fields could not be saved");
-        $this->add_log( $id, array('user_id'   => $login_id,
-                                   'action'    => $action,
-                                   'entry'     => $this->log_buffer,
-                                   'bin_id'    => $bin_id) );
+    } else {
+      if( count($varfield_params) ) {
+        $res = $this->updateVarfieldVals($id, $varfield_params, $login_id, $bin_id, 1);
+        if( !$res ) {
+          $errs[] = tr("? created, but variable fields could not be saved", array(tr($x)));
+          $this->log_buffer.=tr("Variable fields could not be saved");
+          $this->add_log( $id, array('user_id'   => $login_id,
+                                     'action'    => $action,
+                                     'entry'     => $this->log_buffer,
+                                     'bin_id'    => $bin_id) );
+        }
       }
+      $errs2 = $this->sync_contacts($id, $contact_params);
+      $errs = array_merge ($errs, $errs2);
     }
+
     if(!$errs) {
       $this->add_log( $id, array('user_id'   => $login_id,
                                  'action'    => $action,
@@ -5720,7 +5726,7 @@ class zenTrack extends zen {
             $res = $this->delete_contact( $n,"ZENTRACK_RELATED_CONTACTS","clist_id");
             if( $res ) {
               if ($numdel==0) {
-                $log .= '<br>'.tr('Contacts deleted').': ';
+                $log .= "\n- ".tr('Contacts deleted').': ';
               }
               $log .= "[$contact_type_cpid]";
               $numdel++;
@@ -5746,7 +5752,7 @@ class zenTrack extends zen {
       $res = $this->add_contact( $params,"ZENTRACK_RELATED_CONTACTS");
       if( $res ) {
         if ($numadd==0) {
-          $log .= '<br>'.tr('Contacts added').': ';
+          $log .= "\n- ".tr('Contacts added').': ';
         }
         $log .= "[$c]";
         $numadd++;

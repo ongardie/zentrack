@@ -46,9 +46,9 @@
           $contact_ids[]=$contact['type'].'-'.$contact['cp_id'];
         }
       } else {
-        $contact_ids[]=$contacts['type'].'-'.$contacts['cp_id'];
+        $contact_ids[]=$contacts;
       }
-      $context->set('value', $contact_ids);
+      $context->set('value', join(',',$contact_ids));
     } else if (strpos($f,"custom")===false) {
       $context->set('value', $ticket[$f]);
     } else {
@@ -71,7 +71,7 @@
           $contact_ids[]=$contact['type'].'-'.$contact['cp_id'];
         }
       } else {
-        $contact_ids[]=$contacts['type'].'-'.$contacts['cp_id'];
+        $contact_ids[]=$contacts;
       }
       $context->set('value', $contact_ids);
     } else if (strpos($f,"custom")===false) {
@@ -106,14 +106,6 @@
       else {
         if( $map->getFieldProp($formview, $f, 'field_type') == 'searchbox' ) {
           if ( strcmp($f,'contacts')==0 && $contacts) {
-            $contact_ids=array();
-            if (is_array($contacts)) {
-              foreach ($contacts as $contact) {
-                $contact_ids[]=$contact['type'].'-'.$contact['cp_id'];
-              }
-            } else {
-              $contact_ids[]=$contacts['type'].'-'.$contacts['cp_id'];
-            }
             $searchbox_vals[$f] = $contact_ids;
           } else if( $ticket[$f] ) {
             $searchbox_vals[$f] = explode(',',$ticket[$f]);
