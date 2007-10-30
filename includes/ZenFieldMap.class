@@ -178,13 +178,15 @@ class ZenFieldMap {
   /**
    * Return name and properties of each tab in the ticket view
    */
-  function getTabs( $type, $login_id, $bin_id ) {
+  function getTabs( $type, $login_id, $bin_id, $is_creator=false ) {
     $tabs = array();
     foreach($this->getViewProps() as $k=>$v) {
       if( !preg_match("@^{$type}_tab_[0-9]$@", $k) ) { continue; }
-      if( $this->_zen->checkAccess($login_id, $bin_id, $this->getViewProp($k,'access_level')) ) {
+      if( $this->_zen->checkAccess($login_id, $bin_id, $this->getViewProp($k,'access_level'))
+          || ( $is_creator && preg_match("@^ticket_cview$@", $k)) ) {
         $tabs["$k"] = array();
         foreach($v as $key=>$val) {
+$this->_zen->addDebug('ZenFieldMap::getTabs',"adding property '$key' for view '$k'",3);
           $tabs["$k"]["$key"] = $this->getViewProp($k,$key);
         }
       }

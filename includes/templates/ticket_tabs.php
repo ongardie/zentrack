@@ -28,7 +28,7 @@
     return '';
   }
 
-  $tabs = $map->getTabs($page_type, $login_id, $ticket['bin_id']);
+  $tabs = $map->getTabs($page_type, $login_id, $ticket['bin_id'], $zen->checkCreator($login_id, $id));
   $keys = $hotkeys->getTabKeys();
   print "<table cellpadding='0' cellspacing='0'><tr>";
   $n = 1;

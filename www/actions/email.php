@@ -86,6 +86,19 @@
            $logParams["entry"] = $entry;
            if( $message )
            $logParams["entry"] .= "";
+           if ( false ) {
+             if( $method == 1 ) {
+               $logParams["entry"] .=" (".tr("Link only").")";
+             } else if( $method == 2 ) {
+               $logParams["entry"] .=" (".tr("Ticket summary").")";
+             } else if( $method == 3 ) {
+               $logParams["entry"] .=" (".tr("Ticket and log").")";
+             }
+             if ( strlen($comments) ) {
+               $logParams["entry"] .="\n".tr("Subject").": $subject";
+               $logParams["entry"] .="\n$comments";
+             }
+           }
            $zen->add_log($id, $logParams);
            $zen->addDebug("www/actions/email.php", "Ticket emailed by $login_id", 3);
          }

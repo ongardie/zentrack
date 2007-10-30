@@ -149,16 +149,23 @@
   
   // load behavior js if needed
   if( preg_match("@^{$page_type}_tab_[0-9]$@", $page_mode) ) {
-    $tabs = $map->getTabs($page_type, $login_id, $ticket['bin_id']);
+    $tabs = $map->getTabs($page_type, $login_id, $ticket['bin_id'], $is_creator);  //Added parameter for is_creator (cview)
     if( !array_key_exists($page_mode, $tabs) ) {
       $zen->addDebug('ticket.php', "Invalid tab requested: $page_mode... defaulting", 1);
       $page_mode = key($tabs);
     }
-    while( !$tabs[$page_mode]['visible'] || 
-      !$zen->checkAccess($login_id,$ticket['bin_id'],
-        $tabs[$page_mode]['access_level']) ) {
-      next($tabs);
-      $page_mode = key($tabs);
+    if (is_array($tabs) && count($tabs)>0) {
+      $valid=true;
+    }
+    while( $valid !== false && (
+                !$tabs[$page_mode]['visible'] || 
+                !$zen->checkAccess($login_id,$ticket['bin_id'],
+                $tabs[$page_mode]['access_level']) 
+          )  ) {
+      $valid = next($tabs);
+      if ($valid !== false) {
+        $page_mode = key($tabs);
+      }
     }
     reset($tabs);
     if( !$map->getViewProp($page_mode, 'view_only') ) {

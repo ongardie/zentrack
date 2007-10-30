@@ -15,7 +15,6 @@
   **    $page_mode - (string)page to load (ticket_tab_2, close, etc.. validate this!)
   **    $page_type - either 'ticket' or 'project'
   */
-  
   if( !$page_type ) {
     preg_match("@^(project|ticket)_view$@", $view);
     $page_type = $matches[1];
@@ -64,7 +63,11 @@
     else if( preg_match("/^{$page_type}_tab_[0-9]$/", $page_mode) ) {
       $tabs = $map->getTabs($page_type, $login_id, $ticket['bin_id']);
       if( !array_key_exists($page_mode, $tabs) || !$map->getViewProp($page_mode,'visible') ) {
-        print "<div class='error'>".tr("Invalid page mode requested: ?", $zen->ffv($page_mode))."</div>";
+        if ( ! $zen->checkCreator($login_id,$id) ) {
+          print "<div class='error'>".tr("Invalid page mode requested: ? ($login_id,$id)", $zen->ffv($page_mode))."</div>";
+        } else {
+          $zen->addDebug('ticketView','Ticket_box not allowed for ticket_cview.',3);
+        }
       }
       else {
         $boxview = $page_mode;
@@ -72,7 +75,11 @@
       }
     }
     else {
-      print "<div class='error'>".tr("Invalid page mode requested: ?", $zen->ffv($page_mode))."</div>";
+      if ( ! $zen->checkCreator($login_id,$id) ) {
+        print "<div class='error'>".tr("Invalid page mode requested: ? ($login_id,$id)", $zen->ffv($page_mode))."</div>";
+      } else {
+        $zen->addDebug('ticketView','Ticket_box not allowed for ticket_cview.',3);
+      }
     }
   ?></td>
 </tr>

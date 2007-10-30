@@ -4572,10 +4572,14 @@ class zenTrack extends zen {
     // they have special priviledges
     $user_id = $this->checkNum($user_id);
     $ticket_id = $this->checkNum($ticket_id);
-    if( !$this->settingOn("allow_cview") )
+    if( !$this->settingOn("allow_cview") ) {
+      $this->addDebug('checkCreator','allow_cview is disabled',1);
       return false;
+    }
     $ticket = $this->get_ticket($ticket_id);
-    return( $user_id == $ticket["creator_id"] );
+    $r = ( $user_id == $ticket["creator_id"] );
+    $this->addDebug('checkCreator',($r?'true':'false'),3);
+    return $r;
   }
 
   function checkAccess( $user_id, $bin_id, $action = 'level_view' ) {

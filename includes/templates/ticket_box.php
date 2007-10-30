@@ -19,8 +19,13 @@
   $varfields = $zen->getVarfieldVals($id);
 
   if( !$zen->checkAccess($login_id, $ticket['bin_id'], $map->getViewProp($boxview,'access_level')) ) {
-    print("Illegal access");
-    return;
+    //if ( ! ( ( preg_match("@_view_top$@", $boxview) || preg_match("@^ticket_cview$@", $boxview) ) && $zen->checkCreator($login_id,$id) ) ) {
+    if ( ! $zen->checkCreator($login_id,$id) ) {
+      print("Illegal access");
+      return;
+    } else {
+      $boxview='ticket_cview';
+    }
   }
 
   //////////////////////////////////////////////////
