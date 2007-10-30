@@ -13,6 +13,18 @@ abstraction, and endless possibilities for project expansion.
 
 ----- VERSION 2.6.3 (development) -----
 
+2007-10-30, cfalonso
+    - zentrack_2/includes/ZenFieldMap.class 1.51
+    - zentrack_2/includes/zenTrack.class 1.227
+    - zentrack_2/includes/templates/fieldMapForm.php 1.22
+    - zentrack_2/includes/templates/ticketView.php 1.16
+    - zentrack_2/includes/templates/ticket_box.php 1.25
+    - zentrack_2/includes/templates/ticket_tabs.php 1.11
+    - zentrack_2/install/UPGRADE_mysql.sql 1.62
+    - zentrack_2/www/ticket.php 1.41
+    - zentrack_2/www/actions/action_header.php 1.24
+    - zentrack_2/www/actions/email.php 1.19
+
 2007-08-01, cfalonso
   Added code to manage contacts field in ticket edit pages
     - zentrack_2/includes/ZenHotKeys.class 1.25
