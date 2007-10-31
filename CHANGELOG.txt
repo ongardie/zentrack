@@ -12,8 +12,13 @@ abstraction, and endless possibilities for project expansion.
 --------------------
 
 ----- VERSION 2.6.3 (development) -----
+2007-10-31, cfalonso
+  Added functionality for log_email_details
+    - zentrack_2/install/UPGRADE_mysql.sql 1.63
+    - zentrack_2/www/actions/email.php 1.20
 
 2007-10-30, cfalonso
+  Improved ticket creator viewing permissions
     - zentrack_2/includes/ZenFieldMap.class 1.51
     - zentrack_2/includes/zenTrack.class 1.227
     - zentrack_2/includes/templates/fieldMapForm.php 1.22
