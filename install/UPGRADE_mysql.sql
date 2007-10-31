@@ -37,3 +37,4 @@ INSERT INTO ZENTRACK_VIEW_MAP (view_map_id, which_view, vm_name, vm_val, vm_type
 INSERT INTO ZENTRACK_VIEW_MAP (view_map_id, which_view, vm_name, vm_val, vm_type, vm_order) VALUES(234, 'ticket_cview', 'view_only', '1', 'checkbox', 0);
 INSERT INTO ZENTRACK_VIEW_MAP (view_map_id, which_view, vm_name, vm_val, vm_type, vm_order) VALUES(235, 'ticket_cview', 'visible', '1', 'checkbox', 0);
 INSERT INTO ZENTRACK_VIEW_MAP (view_map_id, which_view, vm_name, vm_val, vm_type, vm_order) VALUES(236, 'ticket_cview', 'width', '50', 'text', 0);
+INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (123,'log_email_details','off','Include email details in log (if log_email is active too)');

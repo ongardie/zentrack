@@ -86,7 +86,7 @@
            $logParams["entry"] = $entry;
            if( $message )
            $logParams["entry"] .= "";
-           if ( false ) {
+           if( $zen->settingOn("log_email_details") ) {
              if( $method == 1 ) {
                $logParams["entry"] .=" (".tr("Link only").")";
              } else if( $method == 2 ) {
