@@ -9,6 +9,7 @@
    *   $formview - view we are creating (ticket_create, project_edit, ticket_tab_3, etc)
    *   $form_name - name of the html form
    *   $ticket - the ticket object containing values
+   *   $varfield - the custom field values
    *   $td - true if this is an edit form, false if it is a new ticket
    */
    
@@ -52,8 +53,8 @@
     } else if (strpos($f,"custom")===false) {
       $context->set('value', $ticket[$f]);
     } else {
-      //$context->set('value', $varfields[$f]);
-      $context->set('value', $varfield_params[$f]);
+      $context->set('value', $varfields[$f]);
+      //$context->set('value', $varfield_params[$f]);
     }
     print $map->renderTicketField($context);
   }

@@ -146,27 +146,27 @@ class zenTemplate {
 	    $str = $this->_parseString($parts[2]);
 	    // loop the list and make output text
 	    foreach($vars as $k=>$v) {
-        $this->_rowColor();
-        if( preg_match('@^\\{include\\(([A-Za-z0-9/_.]+)\\)\\}$@', $str, $matches) ) {
-          $txt .= $this->_inc($matches[1], $v, $k);
-        }
-        else {
-          $fv = $this->_getVar("field_value");
-          $fl = $this->_getVar("field_label");
-          $tmp=$str;
-          if($fv==$k && strlen($fv) == strlen($k) || is_array($fv) && in_array($k, $fv) || 
+              $this->_rowColor();
+              if( preg_match('@^\\{include\\(([A-Za-z0-9/_.]+)\\)\\}$@', $str, $matches) ) {
+                $txt .= $this->_inc($matches[1], $v, $k);
+              }
+              else {
+                $fv = $this->_getVar("field_value");
+                $fl = $this->_getVar("field_label");
+                $tmp=$str;
+                if($fv==$k && strlen($fv) == strlen($k) || is_array($fv) && in_array($k, $fv) || 
                                        ( is_array($fv) && in_array($v,array_values($fv)) ) || 
                                        ( is_array($fl) && in_array($k, $fl) ) ||
                                        (!is_array($fv) && !strlen($k) && !strlen($fv))) {
-            $tmp = str_replace("{selected}", " selected", $tmp);
-            $tmp = str_replace("{checked}", " checked", $tmp);
-          } else {
-            $tmp = str_replace("{selected}", "", $tmp);
-            $tmp = str_replace("{checked}", "", $tmp);
-          }
-          $tmp = str_replace("{index}", $k, $tmp);
-          $txt .= str_replace("{value}", $v, $tmp);
-        }
+                  $tmp = str_replace("{selected}", " selected", $tmp);
+                  $tmp = str_replace("{checked}", " checked", $tmp);
+                } else {
+                  $tmp = str_replace("{selected}", "", $tmp);
+                  $tmp = str_replace("{checked}", "", $tmp);
+                }
+                $tmp = str_replace("{index}", $k, $tmp);
+                $txt .= str_replace("{value}", $v, $tmp);
+              }
 	    }
 	    return $txt;
 	  }
@@ -189,14 +189,14 @@ class zenTemplate {
         	$this->_rowColor();
 
 	        $tmp=$str;
-          	if($fv==$v && strlen($sel) == strlen($v) || is_array($sel) && in_array($v, $sel) || 
+          	if($sel==$v && strlen($sel) == strlen($v) || is_array($sel) && in_array($v, $sel) || 
                                        ( is_array($sel) && in_array($v,array_values($sel)) ) || 
                                        ( !is_array($sel) && !strlen($v) && !strlen($sel) ) ||
                                        ( !is_array($sel) && $sel && $sel == $v && strlen($sel) == strlen($v) ) ) {
             		$selected = " selected";
           	} else {
             		$selected = "";
-          }
+                }
 
 
         	//$selected = $sel && $sel == $v && strlen($sel) == strlen($v)? ' selected' : '';

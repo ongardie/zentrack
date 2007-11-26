@@ -10,7 +10,7 @@
   ** Creates the following variables:
   **    (Array)$fields - key/value pairs of (String)field => (String)data_type
   **    (Array)$required - array of (String)field names which are required for this view
-  **    (Array)$varfield_params - contains the values needed to run $zen->updateVarfieldVals() (if any)
+  **    (Array)$varfields - contains the values needed to run $zen->updateVarfieldVals() (if any)
   */
   if( !ZT_DEFINED ) { die("Illegal Access"); }
   
@@ -75,7 +75,7 @@
   }
   
   // parse variable fields which appear in new ticket screen, 
-  // store them in $varfield_params
+  // store them in $varfields
   // insure that all requirements are met before proceeding
   // with the ticket save process
   if( count($varfields) ) {
