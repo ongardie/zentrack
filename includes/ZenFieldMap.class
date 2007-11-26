@@ -560,6 +560,13 @@ $this->_zen->addDebug('ZenFieldMap::getTabs',"adding property '$key' for view '$
 
     if( $vals['field_multiple'] ) {
       $vals['field_name'] .= "[]";
+      $vals['field_multiple_clearvalues_js'] = "<a href='javascript:void()' onclick='var selObj=window.document.getElementById(\"".$vals['field_name']."\");
+                                                                                      for (i=0; i<selObj.options.length; i++) {
+                                                                                        selObj.options[i].selected=false;
+                                                                                      }';
+                                                                                      return false'>clear values</a>";
+    } else {
+      $vals['field_multiple_clearvalues_js'] = "";
     }
 
     // set up special searchbox properties such as url and instructions
@@ -973,7 +980,7 @@ $this->_zen->addDebug('ZenFieldMap::getTabs',"adding property '$key' for view '$
       $vals = Zen::mergeArrays( array('' => tr('-any-')), $vals );
       Zen::addDebug('ZenFieldMap::_getChoices', "Added '-any-' entry choices for {$view}->{$field_name}", 3);
       //$vals = array_merge(array(''=>'-any-'),$vals);
-    } else if ( $field['is_required']==0 && $field['field_type'] == 'menu') {
+    } else if ( $field['is_required']==0 && $field['field_type'] == 'menu' && $this->fieldName($field_name) != 'custom_multi') {
       $vals = Zen::mergeArrays( array('' => tr('-none-')), $vals );
       Zen::addDebug('ZenFieldMap::_getChoices', "Added '-none-' entry choices for {$view}->{$field_name}", 3);
     }

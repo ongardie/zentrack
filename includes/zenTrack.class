@@ -1177,12 +1177,14 @@ class zenTrack extends zen {
         }
       } else if ( ZenFieldMap::isMultiField($key) ) {
         if ( !is_array($oldVals[$key]) || count($oldVals[$key])==0 ) {
-          $v1 = 'NULL';
+          //$v1 = 'NULL';
+          $v1 = tr('-none-');
         } else {
           $v1 = implode($this->multisep, $oldVals[$key]);
         }
         if ( !is_array($val) || count($val)==0 ) {
-          $v2 = 'NULL';
+          //$v2 = 'NULL';
+          $v2 = tr('-none-');
         } else {
           $v2 = implode($this->multisep, $val);
         }

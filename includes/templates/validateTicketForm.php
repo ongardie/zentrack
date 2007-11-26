@@ -25,7 +25,13 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
         return val != null && val != "";    
       case "radio":
       case "select-multiple":
-        return obj.selectedIndex? true : false;
+        var val = 0;
+        for (i=0; i<obj.options.length; i++) {
+          if (obj.options[i].selected) {
+            val++;
+          }
+        }
+        return val>0;
       case "hidden":
         if( validateHidden && validateHidden[obj.name] ) {
           return obj.value != null && obj.value.length; 
@@ -49,7 +55,12 @@ foreach($fields as $f=>$field) {
       && $f != 'status') {
     $label = $map->getLabel($formview,$f);
     $tr = $zen->fixJSVal(tr("? is required",array(tr($label))));
-    print "\tif( !validateField(formObj.elements['$f']) ) { errs[errs.length] = $tr; }\n";
+    if ($map->fieldName($f) == 'custom_multi') {
+      $fm=$f.'[]';
+    } else {
+      $fm=$f;
+    }
+    print "\tif( !validateField(formObj.elements['$fm']) ) { errs[errs.length] = $tr; }\n";
   }
 }
 if ( ($formview == 'ticket_edit' || $formview == 'project_edit') && 
