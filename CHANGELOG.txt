@@ -12,6 +12,14 @@ abstraction, and endless possibilities for project expansion.
 --------------------
 
 ----- VERSION 2.6.3 (development) -----
+2007-11-26, cfalonso
+  Modified multi field clear values method in menu mode (#410)
+    - zentrack_2/includes/ZenFieldMap.class 1.52
+    - zentrack_2/includes/zenTrack.class 1.228
+    - zentrack_2/includes/templates/validateTicketForm.php 1.9
+    - zentrack_2/includes/templates/fields/menu.template 1.4
+    - zentrack_2/includes/templates/fields/menunokeys.template 1.4
+
 2007-10-31, cfalonso
   Added functionality for log_email_details
     - zentrack_2/install/UPGRADE_mysql.sql 1.63
