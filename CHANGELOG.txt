@@ -13,6 +13,12 @@ abstraction, and endless possibilities for project expansion.
 
 ----- VERSION 2.6.3 (development) -----
 2007-11-26, cfalonso
+  Bug fixes related to custom_multi fields
+    - zentrack_2/includes/validateFields.php 1.15
+    - zentrack_2/includes/zenTemplate.class 1.17
+    - zentrack_2/includes/templates/form_fields.php 1.13
+    - zentrack_2/includes/templates/listFiltersForm.php 1.5
+    - zentrack_2/includes/templates/searchForm.php 1.26
   Modified multi field clear values method in menu mode (#410)
     - zentrack_2/includes/ZenFieldMap.class 1.52
     - zentrack_2/includes/zenTrack.class 1.228
