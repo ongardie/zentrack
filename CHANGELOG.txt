@@ -12,6 +12,10 @@ abstraction, and endless possibilities for project expansion.
 --------------------
 
 ----- VERSION 2.6.3 (development) -----
+2007-11-27, cfalonso
+  Upgrade scripts for the database
+    - zentrack_2/install/utils/upgrade_base.sql 1.9
+
 2007-11-26, cfalonso
   Bug fixes related to custom_multi fields
     - zentrack_2/includes/validateFields.php 1.15
