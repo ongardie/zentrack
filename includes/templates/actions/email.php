@@ -72,7 +72,7 @@
 <tr>
   <td class='bars'>
     <textarea cols="50" rows="4" name="comments" title="<?=$hotkeys->tt('Comments or Instructions')?>"><?=
-      $zen->ffvText($comments)?></textarea>
+      $zen->ffv($comments)?></textarea>
   </td>
 </tr>
 <tr>

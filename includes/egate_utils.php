@@ -1284,7 +1284,20 @@
     // create the body elements
     $body = $egate_default_options;
     $body["title"] = $params->headers["subject"];
-    $body["details"] = trim($params->body);
+    // plain text body will appear as $params->body
+    if( isset($params->body) ) { $body["details"] = trim($params->body); }
+    else {
+      // if the message is sent as html&text or some other odd combination, it
+      // may still have a plain text message buried in the body.
+      // we'll pull out whatever we can
+      $body['details'] = '';
+      for($i=0; $i<count($params->parts); $i++) {
+        if( $params->parts[$i]->ctype_primary == "text" &&
+          $params->parts[$i]->ctype_secondary == "plain" ) {
+            $body['details'] .= trim($params->parts[$i]->body)."\n";
+          }
+      }
+    }
     $body["creator_id"] = $egate_user["user_id"];
 
     // add in overrides, if the user has specified any by putting
@@ -1293,9 +1306,9 @@
       $i=0;
       $match = '/^ *('.join('|',$egate_create_fields).') *: *(.+)/i';
       while( preg_match( $match, $body['details'], $matches) && $i < 1000 ) {
-	$body["{$matches[1]}"] = trim($matches[2]);
-	$body['details'] = trim(preg_replace($match, '', $body['details']));
-	$i++;
+        $body["{$matches[1]}"] = trim($matches[2]);
+        $body['details'] = trim(preg_replace($match, '', $body['details']));
+        $i++;
       }
     }
 

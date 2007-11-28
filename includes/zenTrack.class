@@ -4105,11 +4105,10 @@ class zenTrack extends zen {
         $message = (get_magic_quotes_gpc())? $message : addslashes($message);
       }
       $subject = (get_magic_quotes_gpc())? $subject : addslashes($subject);
-      if (strtoupper(substr(PHP_OS, 0, 3)) == 'WIN') {
-        $headers = str_replace("\n", "\r\n", $headers);
-      }
+      $headers = $this->_fixCrLf($headers);
+      $message = $this->_fixCrLf($message);
       $this->addDebug("sendEmail","$recipient_address::$subject::$headers",3);
-      //print "<pre>"; print "mail( $recipient_address, $subject, \n$message\n, $headers )"; print "</pre>"; //debug
+      //print "<pre>"; print str_replace("\r", "\\r", str_replace("\n", "\\n", "mail( $recipient_address, $subject, $message, $headers )")); print "</pre>"; //debug
       if( !mail( $recipient_address, $subject, $message, $headers ) ) {
         return "System error: send failed";
       }
@@ -4120,6 +4119,13 @@ class zenTrack extends zen {
       $this->addDebug("sendEmail",$str,1);
       return $str;
     }
+  }
+  
+  function _fixCrLf( $txt ) {
+    $txt = preg_replace("@([^\r])\n@", "\\1\r\n", $txt);
+    $txt = str_replace("\n\n", "\n\r\n", $txt);
+    if( strpos($txt, "\n") === 0 ) { $txt = "\r".$txt; }
+    return $txt;
   }
   
   function getTicketCount( $status = '', $bin_id = '' ) {
