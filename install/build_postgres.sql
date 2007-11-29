@@ -105,7 +105,7 @@ CREATE TABLE zentrack_employee (
 );
 
 CREATE TABLE ZENTRACK_FIELD_MAP (
-   field_map_id INT8 nextval('"field_map_seq_id"') NOT NULL PRIMARY KEY,
+   field_map_id INT8 default nextval('"field_map_seq_id"') NOT NULL PRIMARY KEY,
    field_name   VARCHAR(25) NOT NULL default '',
    field_label  VARCHAR(255) default '',
    is_visible   INT2 default 0,
@@ -115,7 +115,7 @@ CREATE TABLE ZENTRACK_FIELD_MAP (
    field_type   VARCHAR(50),
    num_cols     INT default 0,
    num_rows     INT2 default 0,
-   is_required  INT2 default 0,
+   is_required  INT2 default 0
 );
 
 --

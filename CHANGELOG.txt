@@ -11,7 +11,21 @@ and user experience, internationalization, platform and database
 abstraction, and endless possibilities for project expansion. 
 --------------------
 
------ VERSION 2.6.3 (development) -----
+----- VERSION 2.6.3 (2007-11-28) -----
+
+2007-11-19, kato
+  Fixed cr/lf problems with emails sent that included logs/ticket descriptions
+    - zentrack_2/includes/email.php 1.10
+  Fixed emails sent as plain text, but processed by Outlook in html format
+  (now accepted)
+    - zentrack_2/includes/egate_util.php 1.47
+  Fixed emails being rejected by qmail because of line feeds
+    - zentrack_2/includes/zenTrack.class 1.229
+
+2007-11-09, kato
+  Fixed build error in postgres
+    - zentrack_2/install/build_postgres.sql 1.4
+
 2007-11-27, cfalonso
   Upgrade scripts for the database
     - zentrack_2/install/utils/upgrade_base.sql 1.9
