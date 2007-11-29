@@ -9,14 +9,14 @@
   REQUIREMENTS
   --------------
     Basic Install
-       PHP >= 4.3 or PHP >= 5.0
+       PHP >= 5.0
        Mysql, Oracle, Postgres, or MS SQL Server
        A Basic knowledge of PHP is helpful
     Email Gateway (optional)
-       Some knowledge of SMTP and ability to set up email account
+       A fair knowledge of SMTP is REQUIRED
+	   The ability to set up email pipe(.forward) is REQUIRED
        Basic PHP knowledge required
-       PHP 4.3 or greater
-       PEAR Library Mail_Mime  (possibly imap support installed)
+       PEAR Library Mail_Mime  (and imap support if you use imap to check mail)
 
   --------------
   PHP.INI CONFIGURATION NOTES (for newbies)

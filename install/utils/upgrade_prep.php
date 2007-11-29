@@ -375,10 +375,10 @@
     }
   }
   
-  dlog("Updating UPGRADE.readme version",true);
-  $text = file_get_contents(realpath("$dir/../UPGRADE.readme"));
+  dlog("Updating UPGRADE.txt version",true);
+  $text = file_get_contents(realpath("$dir/../UPGRADE.txt"));
   $text = preg_replace("/UPGRADE INSTRUCTIONS FOR VERSION $old/", "UPGRADE INSTRUCTIONS FOR VERSION $new", $text);
-  $fh = fopen("$dir/../UPGRADE.readme",'w');
+  $fh = fopen("$dir/../UPGRADE.txt",'w');
   fputs($fh,$text);
   fclose($fh);
   

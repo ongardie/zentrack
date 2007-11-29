@@ -25,9 +25,16 @@ class ZenHotKeys {
     $this->_lh = '';
     $this->_alternate = $zen->getSetting('hotkeys_alternate_hints');
     $this->_alreadyLoaded = array();
-    $this->_initSections();
     $this->_urlMatches = array();
+	
+	// mozilla has changed their accesskey to alt+shift... so let's make sure we use that correctly.
+	// HTTP_USER_AGENT=>'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.10) Gecko/20071115 Firefox/2.0.0.10'
+    $this->isFirefox = !empty($_SERVER['HTTP_USER_AGENT']) && strpos($_SERVER['HTTP_USER_AGENT'], 'Firefox') > 0;
+	$this->accessKey = $this->isFirefox? "ALT+SHIFT" : "ALT";
+
+    $this->_initSections();
     $this->loadSection('globals');
+	
   }
   
   /**
@@ -44,36 +51,36 @@ class ZenHotKeys {
     $c = 1;
     $this->newFxn('quickFocus', 'window.document.quickIdForm.idText.focus(); quickHighlight("window.document.quickIdForm.idText","searchHelpBox");', '', true);
     $this->_sections['globals'] = array();
-    $this->_sections['globals']['ALT+'.$c++] = array('Projects', "KeyEvent.loadUrl('{rootUrl}/projects.php')", '', true);
-    $this->_sections['globals']['ALT+'.$c++] = array('Tickets', "KeyEvent.loadUrl('{rootUrl}/index.php')", '', true);
+    $this->_sections['globals'][$this->checkMetaKey('ALT', $c++)] = array('Projects', "KeyEvent.loadUrl('{rootUrl}/projects.php')", '', true);
+    $this->_sections['globals'][$this->checkMetaKey('ALT', $c++)] = array('Tickets', "KeyEvent.loadUrl('{rootUrl}/index.php')", '', true);
     if( $this->_zen->settingOn('allow_contacts') ) {
-      $this->_sections['globals']['ALT+'.$c++] = array('Contacts',    "KeyEvent.loadUrl('{rootUrl}/contacts.php')", '', true);
+      $this->_sections['globals'][$this->checkMetaKey('ALT', $c++)] = array('Contacts',    "KeyEvent.loadUrl('{rootUrl}/contacts.php')", '', true);
     }
-    $this->_sections['globals']['ALT+'.$c++] = array('Options', "KeyEvent.loadUrl('{rootUrl}/options.php')", '', true);  
-    $this->_sections['globals']['ALT+'.$c++] = array('Help', "KeyEvent.loadUrl('{rootUrl}/help/index.php')", '', true);  
-    $this->_sections['globals']['ALT+'.$c++] = array('Admin', "KeyEvent.loadUrl('{rootUrl}/admin/index.php')", '', true);  
-    $this->_sections['globals']['ALT+P'] = array('New Project', "KeyEvent.loadUrl('{rootUrl}/newProject.php')", '', true);  
-    $this->_sections['globals']['ALT+T'] = array('New Ticket',  "KeyEvent.loadUrl('{rootUrl}/newTicket.php')", '', true);  
-    $this->_sections['globals']['ALT+C'] = array('New Contact', "KeyEvent.loadUrl('{rootUrl}/newContact.php')", '', true);
-    $this->_sections['globals']['ALT+S'] = array('Search', "quickFocus()", 'Enter a ticket id or summary', true);
-    $this->_sections['globals']['ALT+V'] = array('Advanced Search', "KeyEvent.loadUrl('{rootUrl}/search.php')", "Advanced ticket search", true);
+    $this->_sections['globals'][$this->checkMetaKey('ALT', $c++)] = array('Options', "KeyEvent.loadUrl('{rootUrl}/options.php')", '', true);  
+    $this->_sections['globals'][$this->checkMetaKey('ALT', $c++)] = array('Help', "KeyEvent.loadUrl('{rootUrl}/help/index.php')", '', true);  
+    $this->_sections['globals'][$this->checkMetaKey('ALT', $c++)] = array('Admin', "KeyEvent.loadUrl('{rootUrl}/admin/index.php')", '', true);  
+    $this->_sections['globals'][$this->checkMetaKey('ALT', 'P')] = array('New Project', "KeyEvent.loadUrl('{rootUrl}/newProject.php')", '', true);  
+    $this->_sections['globals'][$this->checkMetaKey('ALT', 'T')] = array('New Ticket',  "KeyEvent.loadUrl('{rootUrl}/newTicket.php')", '', true);  
+    $this->_sections['globals'][$this->checkMetaKey('ALT', 'C')] = array('New Contact', "KeyEvent.loadUrl('{rootUrl}/newContact.php')", '', true);
+    $this->_sections['globals'][$this->checkMetaKey('ALT', 'S')] = array('Search', "quickFocus()", 'Enter a ticket id or summary', true);
+    $this->_sections['globals'][$this->checkMetaKey('ALT', 'V')] = array('Advanced Search', "KeyEvent.loadUrl('{rootUrl}/search.php')", "Advanced ticket search", true);
     
     ////////////////////////
     // ADMIN
     ////////////////////////
     $this->_sections['admin'] = array();
-    $this->_sections['admin']['ALT+N'] = array('New User', "KeyEvent.loadUrl('{rootUrl}/admin/addUser.php')", '', false);
-    $this->_sections['admin']['ALT+U'] = array('Edit Users', "KeyEvent.loadUrl('{rootUrl}/admin/listUsers.php')", '', false);
-    //$this->_sections['admin']['ALT+E'] = array('Edit Tickets', "KeyEvent.loadUrl('{rootUrl}/admin/editTicket.php')", '', false);
-    //$this->_sections['admin']['ALT+F'] = array('Edit Field Map', "KeyEvent.loadUrl('{rootUrl}/admin/fieldMap.php')", '', false);
-    //$this->_sections['admin']['ALT+B'] = array('Bins', "KeyEvent.loadUrl('{rootUrl}/admin/bins.php')", '', false);
-    //$this->_sections['admin']['ALT+P'] = array('Priorities', "KeyEvent.loadUrl('{rootUrl}/admin/priorities.php')", '', false);
-    //$this->_sections['admin']['ALT+S'] = array('Systems', "KeyEvent.loadUrl('{rootUrl}/admin/systems.php')", '', false);
-    //$this->_sections['admin']['ALT+T'] = array('Tasks', "KeyEvent.loadUrl('{rootUrl}/admin/tasks.php')", '', false);
-    //$this->_sections['admin']['ALT+Y'] = array('Types', "KeyEvent.loadUrl('{rootUrl}/admin/types.php')", '', false);
-    //$this->_sections['admin']['ALT+D'] = array('Data Groups', "KeyEvent.loadUrl('{rootUrl}/admin/groups.php')", '', false);
-    //$this->_sections['admin']['ALT+H'] = array('Behaviors', "KeyEvent.loadUrl('{rootUrl}/admin/behaviors.php')", '', false);
-    //$this->_sections['admin']['ALT+C'] = array('Configuration', "KeyEvent.loadUrl('{rootUrl}/admin/config.php')", '', false);
+    $this->_sections['admin'][$this->checkMetaKey('ALT', 'N')] = array('New User', "KeyEvent.loadUrl('{rootUrl}/admin/addUser.php')", '', false);
+    $this->_sections['admin'][$this->checkMetaKey('ALT', 'U')] = array('Edit Users', "KeyEvent.loadUrl('{rootUrl}/admin/listUsers.php')", '', false);
+    //$this->_sections['admin'][$this->checkMetaKey('ALT', 'E')] = array('Edit Tickets', "KeyEvent.loadUrl('{rootUrl}/admin/editTicket.php')", '', false);
+    //$this->_sections['admin'][$this->checkMetaKey('ALT', 'F')] = array('Edit Field Map', "KeyEvent.loadUrl('{rootUrl}/admin/fieldMap.php')", '', false);
+    //$this->_sections['admin'][$this->checkMetaKey('ALT', 'B')] = array('Bins', "KeyEvent.loadUrl('{rootUrl}/admin/bins.php')", '', false);
+    //$this->_sections['admin'][$this->checkMetaKey('ALT', 'P')] = array('Priorities', "KeyEvent.loadUrl('{rootUrl}/admin/priorities.php')", '', false);
+    //$this->_sections['admin'][$this->checkMetaKey('ALT', 'S')] = array('Systems', "KeyEvent.loadUrl('{rootUrl}/admin/systems.php')", '', false);
+    //$this->_sections['admin'][$this->checkMetaKey('ALT', 'T')] = array('Tasks', "KeyEvent.loadUrl('{rootUrl}/admin/tasks.php')", '', false);
+    //$this->_sections['admin'][$this->checkMetaKey('ALT', 'Y')] = array('Types', "KeyEvent.loadUrl('{rootUrl}/admin/types.php')", '', false);
+    //$this->_sections['admin'][$this->checkMetaKey('ALT', 'D')] = array('Data Groups', "KeyEvent.loadUrl('{rootUrl}/admin/groups.php')", '', false);
+    //$this->_sections['admin'][$this->checkMetaKey('ALT', 'H')] = array('Behaviors', "KeyEvent.loadUrl('{rootUrl}/admin/behaviors.php')", '', false);
+    //$this->_sections['admin'][$this->checkMetaKey('ALT', 'C')] = array('Configuration', "KeyEvent.loadUrl('{rootUrl}/admin/config.php')", '', false);
 
     ////////////////////////
     // ACTIONS
@@ -96,45 +103,45 @@ class ZenHotKeys {
     ////////////////////////
     $f = "window.document.formless['approveForm']";
     $this->_sections['action_approve'] = array();
-    $this->_sections['action_approve']['ALT+O'] = array('Comments', "{$f}.elements['comments'].select()", '', false);
-    $this->_sections['action_approve']['ALT+A'] = array('Approve', "{$f}.submit()", '', false);
+    $this->_sections['action_approve'][$this->checkMetaKey('ALT', 'O')] = array('Comments', "{$f}.elements['comments'].select()", '', false);
+    $this->_sections['action_approve'][$this->checkMetaKey('ALT', 'A')] = array('Approve', "{$f}.submit()", '', false);
 
     ////////////////////////
     // action_assign
     ////////////////////////
     $f = "window.document.forms['assignForm']";
     $this->_sections['action_assign'] = array();
-    $this->_sections['action_assign']['ALT+R'] = array('Recipient', "{$f}.elements['user_id'].focus()", '', false);
-    $this->_sections['action_assign']['ALT+O'] = array('Comments or Instructions', "{$f}.elements['comments'].select()", '', false);
-    $this->_sections['action_assign']['ALT+A'] = array('Assign', "{$f}.submit()", '', false);
+    $this->_sections['action_assign'][$this->checkMetaKey('ALT', 'R')] = array('Recipient', "{$f}.elements['user_id'].focus()", '', false);
+    $this->_sections['action_assign'][$this->checkMetaKey('ALT', 'O')] = array('Comments or Instructions', "{$f}.elements['comments'].select()", '', false);
+    $this->_sections['action_assign'][$this->checkMetaKey('ALT', 'A')] = array('Assign', "{$f}.submit()", '', false);
 
     ////////////////////////
     // action_close
     ////////////////////////
     $this->_sections['action_close'] = array();
-    $this->_sections['action_close']['ALT+H'] = array('Field: hours', "window.document.forms['ticketTabForm'].elements['hours'].select()", 'Hours', false);
-    $this->_sections['action_close']['ALT+O'] = array('Field: comments', "window.document.forms['ticketTabForm'].elements['comments'].select()", 'Comments', false);
-    $this->_sections['action_close']['ALT+L'] = array('Close', "window.document.forms['ticketTabForm'].submit()", '', false);
+    $this->_sections['action_close'][$this->checkMetaKey('ALT', 'H')] = array('Field: hours', "window.document.forms['ticketTabForm'].elements['hours'].select()", 'Hours', false);
+    $this->_sections['action_close'][$this->checkMetaKey('ALT', 'O')] = array('Field: comments', "window.document.forms['ticketTabForm'].elements['comments'].select()", 'Comments', false);
+    $this->_sections['action_close'][$this->checkMetaKey('ALT', 'L')] = array('Close', "window.document.forms['ticketTabForm'].submit()", '', false);
     
     ////////////////////////
     // action_contacts
     ////////////////////////
     $this->_sections['action_contacts'] = array();
-    $this->_sections['action_contacts']['ALT+N'] = array('Create New Contact', "window.document.forms['newContactForm'].submit()", '', false);
-    $this->_sections['action_contacts']['ALT+A'] = array('Add Contact', "window.document.forms['ContactsAddForm'].submit()", '', false);
-    $this->_sections['action_contacts']['ALT+D'] = array('Drop Contacts', "window.document.forms['dropContactsForm'].submit()", '', false);
-    $this->_sections['action_contacts']['ALT+Y'] = array('Field: company_id', "window.document.forms['ContactsAddForm'].elements['company_id'].focus()", 'Company', false);
-    $this->_sections['action_contacts']['ALT+E'] = array('Field: person_id', "window.document.forms['ContactsAddForm'].elements['person_id'].focus()", 'Person', false);
+    $this->_sections['action_contacts'][$this->checkMetaKey('ALT', 'N')] = array('Create New Contact', "window.document.forms['newContactForm'].submit()", '', false);
+    $this->_sections['action_contacts'][$this->checkMetaKey('ALT', 'A')] = array('Add Contact', "window.document.forms['ContactsAddForm'].submit()", '', false);
+    $this->_sections['action_contacts'][$this->checkMetaKey('ALT', 'D')] = array('Drop Contacts', "window.document.forms['dropContactsForm'].submit()", '', false);
+    $this->_sections['action_contacts'][$this->checkMetaKey('ALT', 'Y')] = array('Field: company_id', "window.document.forms['ContactsAddForm'].elements['company_id'].focus()", 'Company', false);
+    $this->_sections['action_contacts'][$this->checkMetaKey('ALT', 'E')] = array('Field: person_id', "window.document.forms['ContactsAddForm'].elements['person_id'].focus()", 'Person', false);
     
     ////////////////////////
     // action_notify
     ////////////////////////
     $this->_sections['action_notify'] = array();
     $f = "window.document.forms['notifyAddForm']";
-    $this->_sections['action_notify']['ALT+R'] = array('Enter Registered Users', "{$f}.elements['user_accts'].select()", '', false);
-    $this->_sections['action_notify']['ALT+U'] = array('Add an Unregistered User', "{$f}.elements['unreg_name'].select()", '', false);
-    $this->_sections['action_notify']['ALT+O'] = array('Add a Contact', "{$f}.elements['company_id'].focus()", '', false);
-    $this->_sections['action_notify']['ALT+A'] = array('Add Recipients', "{$f}.submit()", '', false);
+    $this->_sections['action_notify'][$this->checkMetaKey('ALT', 'R')] = array('Enter Registered Users', "{$f}.elements['user_accts'].select()", '', false);
+    $this->_sections['action_notify'][$this->checkMetaKey('ALT', 'U')] = array('Add an Unregistered User', "{$f}.elements['unreg_name'].select()", '', false);
+    $this->_sections['action_notify'][$this->checkMetaKey('ALT', 'O')] = array('Add a Contact', "{$f}.elements['company_id'].focus()", '', false);
+    $this->_sections['action_notify'][$this->checkMetaKey('ALT', 'A')] = array('Add Recipients', "{$f}.submit()", '', false);
     
     ////////////////////////
     // action_email
@@ -142,147 +149,147 @@ class ZenHotKeys {
     $this->_sections['action_email'] = array();
     $f = "window.document.forms['emailForm']";
     $this->newFxn('emailFormToggle', "var obj = {$f}.elements['method']; var newVal = arguments[0]; for(var i=0; i < obj.length; i++) { if( obj[i].value == newVal ) { obj[i].checked = true; break; } }");
-    $this->_sections['action_email']['ALT+U'] = array('Select a User', "{$f}.elements['users_to_email[]'].focus();", "Select one or more users, use CTRL or SHIFT key for multiples", false);
-    $this->_sections['action_email']['ALT+M'] = array('Manually Enter Addresses', "{$f}.elements['custom_email_addresses'].select();", "Manually enter an email address, use commas to separate multiple addresses", false);
-    $this->_sections['action_email']['ALT+O'] = array('Comments or Instructions', "{$f}.elements['comments'].select()", '', false);
-    $this->_sections['action_email']['ALT+E'] = array('Send Email', "{$f}.submit()", '', false);
-    $this->_sections['action_email']['ALT+L'] = array('send option: link', "emailFormToggle(1)", '', false);
-    $this->_sections['action_email']['ALT+Y'] = array('send option: summary', "emailFormToggle(2)", '', false);
-    $this->_sections['action_email']['ALT+G'] = array('send option: log', "emailFormToggle(3)", '', false);
+    $this->_sections['action_email'][$this->checkMetaKey('ALT', 'U')] = array('Select a User', "{$f}.elements['users_to_email[]'].focus();", "Select one or more users, use CTRL or SHIFT key for multiples", false);
+    $this->_sections['action_email'][$this->checkMetaKey('ALT', 'M')] = array('Manually Enter Addresses', "{$f}.elements['custom_email_addresses'].select();", "Manually enter an email address, use commas to separate multiple addresses", false);
+    $this->_sections['action_email'][$this->checkMetaKey('ALT', 'O')] = array('Comments or Instructions', "{$f}.elements['comments'].select()", '', false);
+    $this->_sections['action_email'][$this->checkMetaKey('ALT', 'E')] = array('Send Email', "{$f}.submit()", '', false);
+    $this->_sections['action_email'][$this->checkMetaKey('ALT', 'L')] = array('send option: link', "emailFormToggle(1)", '', false);
+    $this->_sections['action_email'][$this->checkMetaKey('ALT', 'Y')] = array('send option: summary', "emailFormToggle(2)", '', false);
+    $this->_sections['action_email'][$this->checkMetaKey('ALT', 'G')] = array('send option: log', "emailFormToggle(3)", '', false);
     
     ////////////////////////
     // action_log
     ////////////////////////
     $this->_sections['action_log'] = array();
     $f = "window.document.forms['logForm']";
-    $this->_sections['action_log']['ALT+Y'] = array('Select an Activity', "{$f}.elements['log_action'].focus()", '', false);
-    $this->_sections['action_log']['ALT+H'] = array('Enter Hours Worked', "{$f}.elements['hours'].select()", '', false);
-    $this->_sections['action_log']['ALT+O'] = array('Log Entry / Comments', "{$f}.elements['comments'].select()", '', false);
-    $this->_sections['action_log']['ALT+A'] = array('Save Log', "{$f}.submit()", '', false);
+    $this->_sections['action_log'][$this->checkMetaKey('ALT', 'Y')] = array('Select an Activity', "{$f}.elements['log_action'].focus()", '', false);
+    $this->_sections['action_log'][$this->checkMetaKey('ALT', 'H')] = array('Enter Hours Worked', "{$f}.elements['hours'].select()", '', false);
+    $this->_sections['action_log'][$this->checkMetaKey('ALT', 'O')] = array('Log Entry / Comments', "{$f}.elements['comments'].select()", '', false);
+    $this->_sections['action_log'][$this->checkMetaKey('ALT', 'A')] = array('Save Log', "{$f}.submit()", '', false);
     
     ////////////////////////
     // action_move
     ////////////////////////
     $this->_sections['action_move'] = array();
     $f = "window.document.forms['moveForm']";
-    $this->_sections['action_move']['ALT+B'] = array('New Bin', "{$f}.elements['newBin'].focus()", '', false);
-    $this->_sections['action_move']['ALT+O'] = array('Comments', "{$f}.elements['comments'].select()", '', false);
-    $this->_sections['action_move']['ALT+M'] = array('Move', "{$f}.submit()", '', false);
+    $this->_sections['action_move'][$this->checkMetaKey('ALT', 'B')] = array('New Bin', "{$f}.elements['newBin'].focus()", '', false);
+    $this->_sections['action_move'][$this->checkMetaKey('ALT', 'O')] = array('Comments', "{$f}.elements['comments'].select()", '', false);
+    $this->_sections['action_move'][$this->checkMetaKey('ALT', 'M')] = array('Move', "{$f}.submit()", '', false);
     
     ////////////////////////
     // action_reject
     ////////////////////////
     $this->_sections['action_reject'] = array();
     $f = "window.document.forms['rejectForm']";
-    $this->_sections['action_reject']['ALT+O'] = array('Reason', "{$f}.elements['comments'].select()", '', false);
-    $this->_sections['action_reject']['ALT+R'] = array('Reject', "{$f}.submit()", '', false);
+    $this->_sections['action_reject'][$this->checkMetaKey('ALT', 'O')] = array('Reason', "{$f}.elements['comments'].select()", '', false);
+    $this->_sections['action_reject'][$this->checkMetaKey('ALT', 'R')] = array('Reject', "{$f}.submit()", '', false);
     
     ////////////////////////
     // action_relate
     ////////////////////////
     $this->_sections['action_relate'] = array();
     $f = "window.document.forms['relateTicketForm']";
-    $this->_sections['action_relate']['ALT+I'] = array('Enter Ticket IDs', "{$f}.elements['relations'].select()", '', false);
-    $this->_sections['action_relate']['ALT+O'] = array('Comments', "{$f}.elements['comments'].select()", '', false);
-    $this->_sections['action_relate']['ALT+R'] = array('Relate', "{$f}.submit()", '', false);
+    $this->_sections['action_relate'][$this->checkMetaKey('ALT', 'I')] = array('Enter Ticket IDs', "{$f}.elements['relations'].select()", '', false);
+    $this->_sections['action_relate'][$this->checkMetaKey('ALT', 'O')] = array('Comments', "{$f}.elements['comments'].select()", '', false);
+    $this->_sections['action_relate'][$this->checkMetaKey('ALT', 'R')] = array('Relate', "{$f}.submit()", '', false);
     
     ////////////////////////
     // action_reopen
     ////////////////////////
     $this->_sections['action_reopen'] = array();
     $f = "window.document.forms['reopenForm']";
-    $this->_sections['action_reopen']['ALT+O'] = array('Comments or Instructions', "{$f}.elements['comments'].select()", '', false);
-    $this->_sections['action_reopen']['ALT+R'] = array('Reopen', "{$f}.submit()", '', false);
+    $this->_sections['action_reopen'][$this->checkMetaKey('ALT', 'O')] = array('Comments or Instructions', "{$f}.elements['comments'].select()", '', false);
+    $this->_sections['action_reopen'][$this->checkMetaKey('ALT', 'R')] = array('Reopen', "{$f}.submit()", '', false);
     
     ////////////////////////
     // action_test
     ////////////////////////
     $this->_sections['action_test'] = array();
     $f = "window.document.forms['testForm']";
-    $this->_sections['action_test']['ALT+H'] = array('Hours Worked', "{$f}.elements['hours'].select()", '', false);
-    $this->_sections['action_test']['ALT+O'] = array('Comments or Instructions', "{$f}.elements['comments'].select()", '', false);
-    $this->_sections['action_test']['ALT+E'] = array('Testing Complete', "{$f}.submit()", '', false);
+    $this->_sections['action_test'][$this->checkMetaKey('ALT', 'H')] = array('Hours Worked', "{$f}.elements['hours'].select()", '', false);
+    $this->_sections['action_test'][$this->checkMetaKey('ALT', 'O')] = array('Comments or Instructions', "{$f}.elements['comments'].select()", '', false);
+    $this->_sections['action_test'][$this->checkMetaKey('ALT', 'E')] = array('Testing Complete', "{$f}.submit()", '', false);
     
     ////////////////////////
     // action_upload
     ////////////////////////
     $this->_sections['action_upload'] = array();
     $f = "window.document.forms['addAttachmentForm']";
-    $this->_sections['action_upload']['ALT+U'] = array('Select a File to Upload', "{$f}.elements['userfile'].focus()", '', false);
-    $this->_sections['action_upload']['ALT+E'] = array('Description of Attachment', "{$f}.elements['comments'].select()", '', false);
-    $this->_sections['action_upload']['ALT+A'] = array('Add Attachment', "{$f}.submit()", '', false);
+    $this->_sections['action_upload'][$this->checkMetaKey('ALT', 'U')] = array('Select a File to Upload', "{$f}.elements['userfile'].focus()", '', false);
+    $this->_sections['action_upload'][$this->checkMetaKey('ALT', 'E')] = array('Description of Attachment', "{$f}.elements['comments'].select()", '', false);
+    $this->_sections['action_upload'][$this->checkMetaKey('ALT', 'A')] = array('Add Attachment', "{$f}.submit()", '', false);
     
     ////////////////////////
     // action_yank
     ////////////////////////
     $this->_sections['action_yank'] = array();
-    $this->_sections['action_yank']['ALT+O'] = array('Reason', "window.document.forms['pullForm'].elements['comments'].select()", '', false);
-    $this->_sections['action_yank']['ALT+U'] = array('Pull', "window.document.forms['pullForm'].submit()", '', false);
+    $this->_sections['action_yank'][$this->checkMetaKey('ALT', 'O')] = array('Reason', "window.document.forms['pullForm'].elements['comments'].select()", '', false);
+    $this->_sections['action_yank'][$this->checkMetaKey('ALT', 'U')] = array('Pull', "window.document.forms['pullForm'].submit()", '', false);
     
     ////////////////////////
     // agreement_view
     ////////////////////////
     $this->_sections['agreement_view'] = array();
-    $this->_sections['agreement_view']['ALT+E'] = array('Edit', "window.document.forms['editAgreementForm'].submit()", '', false);
+    $this->_sections['agreement_view'][$this->checkMetaKey('ALT', 'E')] = array('Edit', "window.document.forms['editAgreementForm'].submit()", '', false);
     $msg = Zen::fixJsHtml(tr("Are you sure you want to archive this agreement?"),"'");
-    $this->_sections['agreement_view']['ALT+A'] = array('Archive', "confirmSubmit(window.document.forms['archiveAgreementForm'],$msg)", '', false);
+    $this->_sections['agreement_view'][$this->checkMetaKey('ALT', 'A')] = array('Archive', "confirmSubmit(window.document.forms['archiveAgreementForm'],$msg)", '', false);
     $msg = Zen::fixJsHtml(tr("Are you sure you want to delete this agreement?"),"'");
-    $this->_sections['agreement_view']['ALT+D'] = array('Delete', "confirmSubmit(window.document.forms['deleteAgreementForm'],$msg)", '', false);
+    $this->_sections['agreement_view'][$this->checkMetaKey('ALT', 'D')] = array('Delete', "confirmSubmit(window.document.forms['deleteAgreementForm'],$msg)", '', false);
     
     ////////////////////////
     // agreement_form
     ////////////////////////
     $this->_sections['agreement_form'] = array();
     $f = "window.document.forms['agreementForm']";
-    $this->_sections['agreement_form']['ALT+A'] = array('Add Item', "rerouteAgreementForm('addItems')", '', false);
-    $this->_sections['agreement_form']['ALT+M'] = array('Name', "fieldFocus('agreementForm','name1')", '', false);
-    $this->_sections['agreement_form']['ALT+O'] = array('Drop Items', "rerouteAgreementForm('removeItems')", '', false);
-    $this->_sections['agreement_form']['ALT+I'] = array('Agreement ID', "{$f}.elements['contractnr'].select()", '', false);
-    $this->_sections['agreement_form']['ALT+E'] = array('Description', "{$f}.elements['description'].select()", '', false);
+    $this->_sections['agreement_form'][$this->checkMetaKey('ALT', 'A')] = array('Add Item', "rerouteAgreementForm('addItems')", '', false);
+    $this->_sections['agreement_form'][$this->checkMetaKey('ALT', 'M')] = array('Name', "fieldFocus('agreementForm','name1')", '', false);
+    $this->_sections['agreement_form'][$this->checkMetaKey('ALT', 'O')] = array('Drop Items', "rerouteAgreementForm('removeItems')", '', false);
+    $this->_sections['agreement_form'][$this->checkMetaKey('ALT', 'I')] = array('Agreement ID', "{$f}.elements['contractnr'].select()", '', false);
+    $this->_sections['agreement_form'][$this->checkMetaKey('ALT', 'E')] = array('Description', "{$f}.elements['description'].select()", '', false);
     
     ////////////////////////
     // auto_login
     ////////////////////////
     $this->_sections['auto_login'] = array();
-    $this->_sections['auto_login']['ALT+O'] = array('Turn On', "window.document.autoForm.submit()", 'Toggle setting on/off', false);
+    $this->_sections['auto_login'][$this->checkMetaKey('ALT', 'O')] = array('Turn On', "window.document.autoForm.submit()", 'Toggle setting on/off', false);
 
     ////////////////////////
     // contacts
     ////////////////////////
     $this->_sections['contacts'] = array();
-    $this->_sections['contacts']['ALT+N'] = array('Find', "KeyEvent.loadUrl('{rootUrl}/searchContacts.php')", '', false);
-    $this->_sections['contacts']['ALT+B'] = array('Browse', "KeyEvent.loadUrl('{rootUrl}/agreements.php')", '', false);
-    $this->_sections['contacts']['ALT+G'] = array('New Agreement', "KeyEvent.loadUrl('{rootUrl}/newAgreement.php')", '', false);
+    $this->_sections['contacts'][$this->checkMetaKey('ALT', 'N')] = array('Find', "KeyEvent.loadUrl('{rootUrl}/searchContacts.php')", '', false);
+    $this->_sections['contacts'][$this->checkMetaKey('ALT', 'B')] = array('Browse', "KeyEvent.loadUrl('{rootUrl}/agreements.php')", '', false);
+    $this->_sections['contacts'][$this->checkMetaKey('ALT', 'G')] = array('New Agreement', "KeyEvent.loadUrl('{rootUrl}/newAgreement.php')", '', false);
     
     ////////////////////////
     // contacts_new_menu
     ////////////////////////
     $this->_sections['contacts_new_menu'] = array();
-    $this->_sections['contacts_new_menu']['ALT+Y'] = array('New Company', "KeyEvent.loadUrl('{rootUrl}/newContact.php?mode2=1')", '', false);
-    $this->_sections['contacts_new_menu']['ALT+N'] = array('New Person', "KeyEvent.loadUrl('{rootUrl}/newContact.php?mode2=2')", '', false);
+    $this->_sections['contacts_new_menu'][$this->checkMetaKey('ALT', 'Y')] = array('New Company', "KeyEvent.loadUrl('{rootUrl}/newContact.php?mode2=1')", '', false);
+    $this->_sections['contacts_new_menu'][$this->checkMetaKey('ALT', 'N')] = array('New Person', "KeyEvent.loadUrl('{rootUrl}/newContact.php?mode2=2')", '', false);
     
     ////////////////////////
     // contacts_view
     ////////////////////////
     $this->_sections['contacts_view'] = array();
-    $this->_sections['contacts_view']['ALT+D'] = array('Edit', "KeyEvent.loadUrl('{rootUrl}/actions/contact_edit.php?cid={id}')", '', false);
-    $this->_sections['contacts_view']['ALT+L'] = array('Delete', "KeyEvent.loadUrl('{rootUrl}/actions/contact_delete.php?cid={id}')", '', false);
-    $this->_sections['contacts_view']['ALT+E'] = array('Add Employee', "KeyEvent.loadUrl('{rootUrl}/actions/contact_employee.php?cid={id}')", '', false);
-    $this->_sections['contacts_view']['ALT+A'] = array('Add Agreement', "KeyEvent.loadUrl('{rootUrl}/actions/contact_agreement.php?cid={id}')", '', false);
-    $this->_sections['contacts_view']['ALT+I'] = array('View Tickets', "KeyEvent.loadUrl('{rootUrl}/contact.php?overview=tickets&cid={id}')", '', false);
-    $this->_sections['contacts_view']['ALT+Y'] = array('View Employees', "KeyEvent.loadUrl('{rootUrl}/contact.php?cid={id}&overview=contact')", '', false);
-    $this->_sections['contacts_view']['ALT+M'] = array('View Agreements', "KeyEvent.loadUrl('{rootUrl}/contact.php?cid={id}&overview=agreement')", '', false);
-    $this->_sections['contacts_view']['ALT+K'] = array('Add Ticket', "KeyEvent.loadUrl('{rootUrl}/newTicket.php?contacts=1-{id}')", '', false);
+    $this->_sections['contacts_view'][$this->checkMetaKey('ALT', 'D')] = array('Edit', "KeyEvent.loadUrl('{rootUrl}/actions/contact_edit.php?cid={id}')", '', false);
+    $this->_sections['contacts_view'][$this->checkMetaKey('ALT', 'L')] = array('Delete', "KeyEvent.loadUrl('{rootUrl}/actions/contact_delete.php?cid={id}')", '', false);
+    $this->_sections['contacts_view'][$this->checkMetaKey('ALT', 'E')] = array('Add Employee', "KeyEvent.loadUrl('{rootUrl}/actions/contact_employee.php?cid={id}')", '', false);
+    $this->_sections['contacts_view'][$this->checkMetaKey('ALT', 'A')] = array('Add Agreement', "KeyEvent.loadUrl('{rootUrl}/actions/contact_agreement.php?cid={id}')", '', false);
+    $this->_sections['contacts_view'][$this->checkMetaKey('ALT', 'I')] = array('View Tickets', "KeyEvent.loadUrl('{rootUrl}/contact.php?overview=tickets&cid={id}')", '', false);
+    $this->_sections['contacts_view'][$this->checkMetaKey('ALT', 'Y')] = array('View Employees', "KeyEvent.loadUrl('{rootUrl}/contact.php?cid={id}&overview=contact')", '', false);
+    $this->_sections['contacts_view'][$this->checkMetaKey('ALT', 'M')] = array('View Agreements', "KeyEvent.loadUrl('{rootUrl}/contact.php?cid={id}&overview=agreement')", '', false);
+    $this->_sections['contacts_view'][$this->checkMetaKey('ALT', 'K')] = array('Add Ticket', "KeyEvent.loadUrl('{rootUrl}/newTicket.php?contacts=1-{id}')", '', false);
     
     ////////////////////////
     // contacts_view_employee
     ////////////////////////
     $this->_sections['contacts_view_employee'] = array();
-    $this->_sections['contacts_view_employee']['ALT+E'] = array('Edit', "window.document.forms['edit_form'].submit()", '', false);
+    $this->_sections['contacts_view_employee'][$this->checkMetaKey('ALT', 'E')] = array('Edit', "window.document.forms['edit_form'].submit()", '', false);
     $msg = Zen::fixJsVal(tr("Are you sure you want to delete this contact?"),"'");
-    $this->_sections['contacts_view_employee']['ALT+D'] = array('Delete', "confirmSubmit(window.document.forms['delete_form'],$msg)", '', false);
-    $this->_sections['contacts_view_employee']['ALT+I'] = array('View Tickets', "window.document.forms['view_form'].submit()", '', false);
-    $this->_sections['contacts_view_employee']['ALT+K'] = array('Add Ticket', "KeyEvent.loadUrl('{rootUrl}/newTicket.php?contacts=2-{id}')", '', false);
+    $this->_sections['contacts_view_employee'][$this->checkMetaKey('ALT', 'D')] = array('Delete', "confirmSubmit(window.document.forms['delete_form'],$msg)", '', false);
+    $this->_sections['contacts_view_employee'][$this->checkMetaKey('ALT', 'I')] = array('View Tickets', "window.document.forms['view_form'].submit()", '', false);
+    $this->_sections['contacts_view_employee'][$this->checkMetaKey('ALT', 'K')] = array('Add Ticket', "KeyEvent.loadUrl('{rootUrl}/newTicket.php?contacts=2-{id}')", '', false);
     
     ////////////////////////
     // contacts_list
@@ -307,21 +314,21 @@ class ZenHotKeys {
         $this->_sections['contacts_list'][$key] = array($t, "updateUrl('setmode','$t')", '', false);
       }
     }
-    $this->_sections['contacts_list']['ALT+O'] = array("Company",  "updateUrl('overview', 'company')", '', false);
-    $this->_sections['contacts_list']['ALT+E'] = array("External", "updateUrl('overview', 'external')", '', false);
-    $this->_sections['contacts_list']['ALT+I'] = array("Internal", "updateUrl('overview', 'internal')", '', false);
+    $this->_sections['contacts_list'][$this->checkMetaKey('ALT', 'O')] = array("Company",  "updateUrl('overview', 'company')", '', false);
+    $this->_sections['contacts_list'][$this->checkMetaKey('ALT', 'E')] = array("External", "updateUrl('overview', 'external')", '', false);
+    $this->_sections['contacts_list'][$this->checkMetaKey('ALT', 'I')] = array("Internal", "updateUrl('overview', 'internal')", '', false);
     
     /////////////////////////
     // field map form
     /////////////////////////
     $this->_sections['field_map_form'] = array();
-    $this->_sections['field_map_form']['ALT+D'] = array("Update", "submitForm('fieldMapForm')", 'Save changes to this view', false);
+    $this->_sections['field_map_form'][$this->checkMetaKey('ALT', 'D')] = array("Update", "submitForm('fieldMapForm')", 'Save changes to this view', false);
     
     ////////////////////////
     // log
     ////////////////////////
     $this->_sections['log'] = array();
-    $this->_sections['log']['ALT+L'] = array('Show All Logs', "window.document.getElementById('systemLogFilterCheckbox').click()", '', false);
+    $this->_sections['log'][$this->checkMetaKey('ALT', 'L')] = array('Show All Logs', "window.document.getElementById('systemLogFilterCheckbox').click()", '', false);
     
     ////////////////////////
     // login
@@ -329,46 +336,46 @@ class ZenHotKeys {
     $this->_sections['login'] = array();
     $f = "window.document.forms['loginForm']";
     $this->newFxn("loginAutoCheck", "{$f}.elements['save_my_password'].checked = !window.document.forms['loginForm'].elements['save_my_password'].checked;");
-    $this->_sections['login']['ALT+L'] = array('Log On', "{$f}.submit()", '', false);
-    $this->_sections['login']['ALT+A'] = array('In the future, log me in automatically (using a cookie)', "loginAutoCheck()", '', false);
-    $this->_sections['login']['ALT+N'] = array('Login Name', "{$f}.elements['username'].select()", '', false);
-    $this->_sections['login']['ALT+W'] = array('Password', "{$f}.elements['passphrase'].select()", '', false);
+    $this->_sections['login'][$this->checkMetaKey('ALT', 'L')] = array('Log On', "{$f}.submit()", '', false);
+    $this->_sections['login'][$this->checkMetaKey('ALT', 'A')] = array('In the future, log me in automatically (using a cookie)', "loginAutoCheck()", '', false);
+    $this->_sections['login'][$this->checkMetaKey('ALT', 'N')] = array('Login Name', "{$f}.elements['username'].select()", '', false);
+    $this->_sections['login'][$this->checkMetaKey('ALT', 'W')] = array('Password', "{$f}.elements['passphrase'].select()", '', false);
     
     ////////////////////////
     // options
     ////////////////////////
     $this->_sections['options'] = array();
-    $this->_sections['options']['ALT+L'] = array('Log Off',
+    $this->_sections['options'][$this->checkMetaKey('ALT', 'L')] = array('Log Off',
         "KeyEvent.loadUrl('{rootUrl}/index.php?logoff=1')", 
         "Log out of ".$this->_zen->getSetting('system_name'), false);
-    $this->_sections['options']['ALT+W'] = array('Change Password', "KeyEvent.loadUrl('{rootUrl}/misc/pwc.php')", '', false);
-    $this->_sections['options']['ALT+A'] = array('Set Auto-Login', "KeyEvent.loadUrl('{rootUrl}/misc/autologin.php')", '', false);
-    $this->_sections['options']['ALT+H'] = array('Change Home Bin', "KeyEvent.loadUrl('{rootUrl}/misc/homebin.php')", '', false);
-    $this->_sections['options']['ALT+G'] = array('Set Language', "KeyEvent.loadUrl('{rootUrl}/misc/language.php')", '', false);
+    $this->_sections['options'][$this->checkMetaKey('ALT', 'W')] = array('Change Password', "KeyEvent.loadUrl('{rootUrl}/misc/pwc.php')", '', false);
+    $this->_sections['options'][$this->checkMetaKey('ALT', 'A')] = array('Set Auto-Login', "KeyEvent.loadUrl('{rootUrl}/misc/autologin.php')", '', false);
+    $this->_sections['options'][$this->checkMetaKey('ALT', 'H')] = array('Change Home Bin', "KeyEvent.loadUrl('{rootUrl}/misc/homebin.php')", '', false);
+    $this->_sections['options'][$this->checkMetaKey('ALT', 'G')] = array('Set Language', "KeyEvent.loadUrl('{rootUrl}/misc/language.php')", '', false);
     
     ////////////////////////
     // paging
     ////////////////////////
     $this->_sections['paging'] = array();
-    $this->_sections['paging']['ALT+E'] = array('Prev', "window.location = window.document.getElementById('pagingPrevLink').href", '', false);
-    $this->_sections['paging']['ALT+X'] = array('Next', "window.location = window.document.getElementById('pagingNextLink').href", '', false);
+    $this->_sections['paging'][$this->checkMetaKey('ALT', 'E')] = array('Prev', "window.location = window.document.getElementById('pagingPrevLink').href", '', false);
+    $this->_sections['paging'][$this->checkMetaKey('ALT', 'X')] = array('Next', "window.location = window.document.getElementById('pagingNextLink').href", '', false);
     
     ////////////////////////
     // project_tasks
     ////////////////////////
     $this->_sections['project_tasks'] = array();
-    $this->_sections['project_tasks']['ALT+A'] = array('Add Ticket to Project', "window.document.forms['newTicketHotkey'].submit()", '', false);
-    $this->_sections['project_tasks']['ALT+R'] = array('Create Sub-Project', "window.document.forms['newProjectHotkey'].submit()", '', false);
+    $this->_sections['project_tasks'][$this->checkMetaKey('ALT', 'A')] = array('Add Ticket to Project', "window.document.forms['newTicketHotkey'].submit()", '', false);
+    $this->_sections['project_tasks'][$this->checkMetaKey('ALT', 'R')] = array('Create Sub-Project', "window.document.forms['newProjectHotkey'].submit()", '', false);
     
     ////////////////////////
     // search_form
     ////////////////////////
     $this->_sections['search_form'] = array();
     $f = "window.document.forms['searchForm']";
-    $this->_sections['search_form']['ALT+E'] = array('Search', "{$f}.submit()", '', false);
-    $this->_sections['search_form']['ALT+O'] = array('Containing', "{$f}.elements['search_text'].select()", '', false);
-    $this->_sections['search_form']['ALT+U'] = array('Summary', "{$f}.elements['search_fields[title]'].click()", '', false);
-    $this->_sections['search_form']['ALT+D'] = array('Description', "{$f}.elements['search_fields[description]'].click()", '', false);
+    $this->_sections['search_form'][$this->checkMetaKey('ALT', 'E')] = array('Search', "{$f}.submit()", '', false);
+    $this->_sections['search_form'][$this->checkMetaKey('ALT', 'O')] = array('Containing', "{$f}.elements['search_text'].select()", '', false);
+    $this->_sections['search_form'][$this->checkMetaKey('ALT', 'U')] = array('Summary', "{$f}.elements['search_fields[title]'].click()", '', false);
+    $this->_sections['search_form'][$this->checkMetaKey('ALT', 'D')] = array('Description', "{$f}.elements['search_fields[description]'].click()", '', false);
     
     ////////////////////////
     // searchbox
@@ -380,31 +387,31 @@ class ZenHotKeys {
     // tab_attachments
     ////////////////////////
     $this->_sections['tab_attachments'] = array();
-    $this->_sections['tab_attachments']['ALT+D'] = array('Delete Attachments', "window.document.forms['deleteAttachmentForm'].submit()", '', false);
-    $this->_sections['tab_attachments']['ALT+A'] = array('Add Attachment', "window.document.forms['addAttachmentForm'].submit()", '', false);
+    $this->_sections['tab_attachments'][$this->checkMetaKey('ALT', 'D')] = array('Delete Attachments', "window.document.forms['deleteAttachmentForm'].submit()", '', false);
+    $this->_sections['tab_attachments'][$this->checkMetaKey('ALT', 'A')] = array('Add Attachment', "window.document.forms['addAttachmentForm'].submit()", '', false);
     
     ////////////////////////
     // tab_contacts
     ////////////////////////
     $this->_sections['tab_contacts'] = array();
-    $this->_sections['tab_contacts']['ALT+N'] = array('Create New Contact', "window.document.forms['newContactForm'].submit()", '', false);
-    $this->_sections['tab_contacts']['ALT+A'] = array('Add Contact', "window.document.forms['ContactsAddForm'].submit()", '', false);
-    $this->_sections['tab_contacts']['ALT+D'] = array('Drop Contacts', "window.document.forms['dropContactsForm'].submit()", '', false);
-    $this->_sections['tab_contacts']['ALT+Y'] = array('Field: company_id', "window.document.forms['ContactsAddForm'].elements['company_id'].focus()", 'Company', false);
-    $this->_sections['tab_contacts']['ALT+E'] = array('Field: person_id', "window.document.forms['ContactsAddForm'].elements['person_id'].focus()", 'Person', false);
+    $this->_sections['tab_contacts'][$this->checkMetaKey('ALT', 'N')] = array('Create New Contact', "window.document.forms['newContactForm'].submit()", '', false);
+    $this->_sections['tab_contacts'][$this->checkMetaKey('ALT', 'A')] = array('Add Contact', "window.document.forms['ContactsAddForm'].submit()", '', false);
+    $this->_sections['tab_contacts'][$this->checkMetaKey('ALT', 'D')] = array('Drop Contacts', "window.document.forms['dropContactsForm'].submit()", '', false);
+    $this->_sections['tab_contacts'][$this->checkMetaKey('ALT', 'Y')] = array('Field: company_id', "window.document.forms['ContactsAddForm'].elements['company_id'].focus()", 'Company', false);
+    $this->_sections['tab_contacts'][$this->checkMetaKey('ALT', 'E')] = array('Field: person_id', "window.document.forms['ContactsAddForm'].elements['person_id'].focus()", 'Person', false);
     
     ////////////////////////
     // tab_notify
     ////////////////////////
     $this->_sections['tab_notify'] = array();
-    $this->_sections['tab_notify']['ALT+D'] = array('Drop Recipients', "window.document.forms['dropNotifyForm'].submit()", '', false);
-    $this->_sections['tab_notify']['ALT+A'] = array('Add Recipients', "window.document.forms['notifyAddForm'].submit()", '', false);
+    $this->_sections['tab_notify'][$this->checkMetaKey('ALT', 'D')] = array('Drop Recipients', "window.document.forms['dropNotifyForm'].submit()", '', false);
+    $this->_sections['tab_notify'][$this->checkMetaKey('ALT', 'A')] = array('Add Recipients', "window.document.forms['notifyAddForm'].submit()", '', false);
     
     ////////////////////////
     // ticket_fields_editable
     ////////////////////////
     $this->_sections['ticket_fields_editable'] = array();
-    $this->_sections['ticket_fields_editable']['ALT+A'] = array('Save', "window.document.forms['ticketTabForm'].submit()", '', false);
+    $this->_sections['ticket_fields_editable'][$this->checkMetaKey('ALT', 'A')] = array('Save', "window.document.forms['ticketTabForm'].submit()", '', false);
     
     ////////////////////////
     // ticket_view
@@ -444,18 +451,18 @@ class ZenHotKeys {
     // user search
     ////////////////////////
     $this->_sections['user_search'] = array();
-    $this->_sections['user_search']['ALT+L'] = array("List All Users", "KeyEvent.loadUrl('{rootUrl}/admin/listUsers.php?TODO=ALL');", 'Show all user accounts', false);
-    $this->_sections['user_search']['ALT+D'] = array("Find", "submitForm('searchUsersForm')", '', false);
-    $this->_sections['user_search']['ALT+I'] = array('User ID', "placeFocus(window.document.forms['searchUsersForm'].elements['search_params[user_id]'])", '', false);
-    $this->_sections['user_search']['ALT+M'] = array('Modify Search', "submitForm('searchModifyForm')", '', false);
+    $this->_sections['user_search'][$this->checkMetaKey('ALT', 'L')] = array("List All Users", "KeyEvent.loadUrl('{rootUrl}/admin/listUsers.php?TODO=ALL');", 'Show all user accounts', false);
+    $this->_sections['user_search'][$this->checkMetaKey('ALT', 'D')] = array("Find", "submitForm('searchUsersForm')", '', false);
+    $this->_sections['user_search'][$this->checkMetaKey('ALT', 'I')] = array('User ID', "placeFocus(window.document.forms['searchUsersForm'].elements['search_params[user_id]'])", '', false);
+    $this->_sections['user_search'][$this->checkMetaKey('ALT', 'M')] = array('Modify Search', "submitForm('searchModifyForm')", '', false);
     
     ////////////////////////
     // user form
     ////////////////////////
     $this->_sections['user_form'] = array();
-    $this->_sections['user_form']['ALT+L'] = array("Last Name", "fieldFocus('userForm','lname')", '', false);
-    $this->_sections['user_form']['ALT+I'] = array("Email", "fieldFocus('userForm','email')", '', false);
-    $this->_sections['user_form']['ALT+M'] = array("Make User", "submitForm('userForm')", '', false);
+    $this->_sections['user_form'][$this->checkMetaKey('ALT', 'L')] = array("Last Name", "fieldFocus('userForm','lname')", '', false);
+    $this->_sections['user_form'][$this->checkMetaKey('ALT', 'I')] = array("Email", "fieldFocus('userForm','email')", '', false);
+    $this->_sections['user_form'][$this->checkMetaKey('ALT', 'M')] = array("Make User", "submitForm('userForm')", '', false);
 
     /////////////////////////
     // useful for activating list of items (see ZenHotKeys::activateList())
@@ -719,7 +726,8 @@ class ZenHotKeys {
   
   /** Returns letter used to access this key if it is an accesskey */
   function _getAccessKey( $key ) {
-    preg_match('@^ALT[+](\w)$@', $key, $matches);
+    $meta = str_replace("+", "[+]", $this->accessKey)."[+]";
+    preg_match("@^{$meta}(\w)$@", $key, $matches);
     return count($matches)>1? $matches[1] : false;
   }
   
@@ -830,6 +838,23 @@ class ZenHotKeys {
   }
   
   /**
+   * Make sure the key assignment won't conflict with any reserved hotkeys. Firefox
+   * prevents them from working, so we have to really check carefully...
+   */
+  function checkMetaKey( $meta, $key ) {
+    // if there isn't a meta key, or the meta key contains SHIFT, it's not reserved
+	if( !$meta || strpos($meta, "SHIFT") !== FALSE ) { return "$meta+$key"; }
+  
+    $comb = "{$meta}+{$key}";
+	if( in_array($comb, self::$commonReservedKeys) || 
+	    ($this->isFirefox && in_array($comb, self::$firefoxReservedKeys)) ||
+		(!$this->isFirefox && in_array($comb, self::$microsoftReservedKeys)) ) {
+	  $meta = "{$meta}+SHIFT";
+	}
+    return "$meta+$key";
+  }
+  
+  /**
    * Activates hot keys for up to 10 items (0-9) for use with lists of
    * tickets/users/etc
    *
@@ -888,7 +913,7 @@ class ZenHotKeys {
     for($i=0; $i < strlen($label); $i++) {
       $letter = strtoupper($label{$i} );
       if( !preg_match('@[0-9A-Z]@', $letter) ) { continue; }
-      $key = $meta? $meta.'+'.$letter : $letter;
+      $key = $this->checkMetaKey($meta, $letter);
       if( array_key_exists($key, $this->_keys) ) { continue; }
       $this->assign($key, $label, $fxn);
       $hk = new ZenHotKeyElement($key, $this->label($key), $this->tooltip($key), $this->description($key));
@@ -927,6 +952,13 @@ class ZenHotKeys {
   var $_alreadyLoaded;
   var $_tabs;
   var $_keysRendered;
+  var $isFirefox;
+  var $accessKey;
+  
+  public static $commonReservedKeys = array('CTRL+L', 'CTRL+O', 'CTRL+P', 'ALT+D');
+  public static $firefoxReservedKeys = array('CTRL+K', 'ALT+F', 'ALT+E', 'ALT+V', 'ALT+S', 'ALT+B', 'ALT+T', 'ALT+H');
+  public static $microsoftReservedKeys = array('ALT+N', 'ALT+A');
+  
 }
 
 /** Must be declared outside of class to work with php */

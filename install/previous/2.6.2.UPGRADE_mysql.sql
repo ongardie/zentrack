@@ -1,11 +1,3 @@
-
-CREATE INDEX zt_log_tid ON ZENTRACK_LOGS(ticket_id);
-CREATE INDEX zt_log_action ON ZENTRACK_LOGS(action);
-CREATE INDEX zt_ticket_pri ON ZENTRACK_TICKETS(priority);
-CREATE INDEX zt_ticket_stat ON ZENTRACK_TICKETS(status);
-
-INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,which_view,default_val,sort_order,field_type,num_cols,num_rows,is_required) VALUES(1034,'contacts', 'Contacts', 1, 'ticket_edit',NULL,'300','searchbox', 200, 1, 0);
-INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,which_view,default_val,sort_order,field_type,num_cols,num_rows,is_required) VALUES(1035,'contacts', 'Contacts', 1, 'ticket_create',NULL,'300', 'searchbox', 200, 1, 0);
 INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,which_view,default_val,sort_order,field_type,num_cols,num_rows,is_required) VALUES(1036,'approved','Approval','0','ticket_cview',NULL,'30','label','10','1','0');
 INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,which_view,default_val,sort_order,field_type,num_cols,num_rows,is_required) VALUES(1037,'bin_id','Bin','0','ticket_cview',NULL,'22','label','10','1','0');
 INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,which_view,default_val,sort_order,field_type,num_cols,num_rows,is_required) VALUES(1038,'creator_id','Creator','0','ticket_cview',NULL,'56','label','20','1','0');
@@ -46,6 +38,3 @@ INSERT INTO ZENTRACK_VIEW_MAP (view_map_id, which_view, vm_name, vm_val, vm_type
 INSERT INTO ZENTRACK_VIEW_MAP (view_map_id, which_view, vm_name, vm_val, vm_type, vm_order) VALUES(235, 'ticket_cview', 'visible', '1', 'checkbox', 0);
 INSERT INTO ZENTRACK_VIEW_MAP (view_map_id, which_view, vm_name, vm_val, vm_type, vm_order) VALUES(236, 'ticket_cview', 'width', '50', 'text', 0);
 INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (123,'log_email_details','off','Include email details in log (if log_email is active too)');
-
--- Modify the version number
-UPDATE ZENTRACK_SETTINGS SET value='2.6.3' WHERE setting_id=74;

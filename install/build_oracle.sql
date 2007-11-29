@@ -432,3 +432,11 @@ CREATE INDEX vf_multi_idx ON ZENTRACK_VARFIELD_MULTI(ticket_id);
 CREATE SEQUENCE view_map_id_seq start with 1001 nocache;
 CREATE SEQUENCE varfield_multi_id_seq start with 1001 nocache;
 
+
+
+-- ADDED IN VERSION 2.6.3
+CREATE INDEX zt_log_tid ON ZENTRACK_LOGS(ticket_id);
+CREATE INDEX zt_log_action ON ZENTRACK_LOGS(action);
+CREATE INDEX zt_ticket_pri ON ZENTRACK_TICKETS(priority);
+CREATE INDEX zt_ticket_stat ON ZENTRACK_TICKETS(status);
+

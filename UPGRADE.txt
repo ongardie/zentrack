@@ -1,5 +1,5 @@
 
-UPGRADE INSTRUCTIONS FOR VERSION 2.6.2
+UPGRADE INSTRUCTIONS FOR VERSION 2.6.3
 
             !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             !!!! ALWAYS MAKE BACKUPS          !!!!
@@ -11,8 +11,7 @@ UPGRADE INSTRUCTIONS FOR VERSION 2.6.2
 --------------------
 REQUIREMENTS
 --------------------
-
-    PHP >= 4.3.10 or PHP >= 5.0
+    PHP >= 5.0
 
     Supported Servers: Apache 1.3, 2.0, IIS
     Supported OS: Windows 2000, Linux 
@@ -23,16 +22,17 @@ REQUIREMENTS
     Freetype libraray required to view reports
 
 ---------------------
-UPGRADE FROM 2.6.1
+UPGRADE FROM 2.6.2
 ---------------------
 
   0. For simplicity we will assume your newly downloaded ZT files are already 
      unzipped and residing in a folder named "/downloads/zentrack_2-6-2/" 
      and that your current install is in a folder called "/web/zentrack/".
      
+     
   1. Make backups of the following files (you will want these settings later)
      /web/zentrack/www/header.php 
-     /web/zentrack/includes/egate_congif.php
+     /web/zentrack/includes/egate_config.php
 
   2. Copy new downloads over existing files:
      /downloads/zentrack_2-6-2/includes/* -> /web/zentrack/includes/*
@@ -53,9 +53,30 @@ UPGRADE FROM 2.6.1
      chmod 755 includes/egate.php
      chmod 755 includes/egate_create.php  
      
-  5. See AFTER UPGRADE below
+  5. Configure new features:
+      NEW FIELD MAPS: There is a new field map that controls what the creator
+	  of a ticket can see, called ticket_cview.
+	  
+	  NEW SETTINGS: There is now a setting to control whether email activity
+	  is added into the log, called log_email_details
 
-  6. Configure new features:
+  6. See AFTER UPGRADE below
+
+---------------------
+UPGRADE FROM 2.6.1
+---------------------
+
+  0. For simplicity we will assume your newly downloaded ZT files are already 
+     unzipped and residing in a folder named "/downloads/zentrack_2-6-2/" 
+     and that your current install is in a folder called "/web/zentrack/".
+     
+  1. Run the install/previous/2.6.2.UPGRADE.sql script
+     You may do this from the command line with something like:
+       mysql -u username -p database < 2.6.1.UPGRADE_mysql.sql
+     Or you may do this by copying and pasting the contents of this script
+     into your sql interface
+
+  2. Configure new features:
      NEW FIELD MAPS:  There are now two new field maps for searchbox_ticket 
      and searchbox_project, they control the behavior of searchbox windows.  
      Have a look at these and configure to your liking:
@@ -72,11 +93,14 @@ UPGRADE FROM 2.6.1
      may wish to customize options to your liking:
      Administration -> Edit Field Map -> search_export
 
+  3. You now have the equivalent of 2.6.2 installed, so follow
+     instructions for UPGRADE FROM 2.6.2
+
 ---------------------
 UPGRADE FROM 2.6.0.4
 ---------------------
 
-  1. Run the 2.6.1.UPGRADE.sql script
+  1. Run the install/previous/2.6.1.UPGRADE.sql script
      You may do this from the command line with something like:
        mysql -u username -p database < 2.6.1.UPGRADE_mysql.sql
      Or you may do this by copying and pasting the contents of this script

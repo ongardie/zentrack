@@ -13,7 +13,29 @@ abstraction, and endless possibilities for project expansion.
 
 ----- VERSION 2.6.3 (2007-11-28) -----
 
-2007-11-19, kato
+2007-11-29, kato
+  Prepared install/upgrade docs and scripts
+    - zentrack_2/UPGRADE.txt
+    - zentrack_2/install/build_mysql.sql
+    - zentrack_2/install/build_mssqlserver.sql
+    - zentrack_2/install/build_postgres.sql
+    - zentrack_2/install/build_oracle.sql
+    - zentrack_2/install/seed_mssqlserver.sql
+    - zentrack_2/install/seed_mysql.sql
+    - zentrack_2/install/seed_oracle.sql
+    - zentrack_2/install/seed_postgres.sql
+    - zentrack_2/install/UPGRADE_mssqlserver.sql
+    - zentrack_2/install/UPGRADE_mysql.sql
+    - zentrack_2/install/UPGRADE_oracle.sql
+    - zentrack_2/install/UPGRADE_postgres.sql
+    - zentrack_2/install/previous/2.6.2.UPGRADE_mssqlserver.sql 1.1
+    - zentrack_2/install/previous/2.6.2.UPGRADE_mysql.sql 1.1
+    - zentrack_2/install/previous/2.6.2.UPGRADE_oracle.sql 1.1
+    - zentrack_2/install/previous/2.6.2.UPGRADE_postgres.sql 1.1
+  Fixed hot keys broken by Firefox changes (accesskey works with alt+shift instead of alt now)
+    - zentrack_2/includes/ZenHotKeys.class 1.26
+
+2007-11-28, kato
   Fixed cr/lf problems with emails sent that included logs/ticket descriptions
     - zentrack_2/includes/email.php 1.10
   Fixed emails sent as plain text, but processed by Outlook in html format

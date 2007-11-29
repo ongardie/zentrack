@@ -105,7 +105,7 @@ CREATE TABLE zentrack_employee (
 );
 
 CREATE TABLE ZENTRACK_FIELD_MAP (
-   field_map_id INT8 default nextval('"field_map_seq_id"') NOT NULL PRIMARY KEY,
+   field_map_id INT8 nextval('"field_map_seq_id"') NOT NULL PRIMARY KEY,
    field_name   VARCHAR(25) NOT NULL default '',
    field_label  VARCHAR(255) default '',
    is_visible   INT2 default 0,
@@ -115,7 +115,7 @@ CREATE TABLE ZENTRACK_FIELD_MAP (
    field_type   VARCHAR(50),
    num_cols     INT default 0,
    num_rows     INT2 default 0,
-   is_required  INT2 default 0
+   is_required  INT2 default 0,
 );
 
 --
@@ -415,4 +415,10 @@ CREATE INDEX vf_multi_idx ON ZENTRACK_VARFIELD_MULTI(ticket_id);
 CREATE SEQUENCE view_map_id_seq start 1001 increment 1 maxvalue 2147483647 minvalue 1 cache 1;
 CREATE SEQUENCE varfield_multi_id_seq start 1001 increment 1 maxvalue 2147483647 minvalue 1 cache 1;
 
+
+-- ADDED IN VERSION 2.6.3
+CREATE INDEX zt_log_tid ON ZENTRACK_LOGS(ticket_id);
+CREATE INDEX zt_log_action ON ZENTRACK_LOGS(action);
+CREATE INDEX zt_ticket_pri ON ZENTRACK_TICKETS(priority);
+CREATE INDEX zt_ticket_stat ON ZENTRACK_TICKETS(status);
 

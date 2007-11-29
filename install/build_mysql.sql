@@ -400,14 +400,11 @@ CREATE TABLE ZENTRACK_VARFIELD_MULTI (
 CREATE INDEX view_map_idx ON ZENTRACK_VIEW_MAP(which_view,vm_order);
 CREATE INDEX vf_multi_idx ON ZENTRACK_VARFIELD_MULTI(ticket_id);
 
-
-
 -- ADDED IN VERSION 2.6.0.1
-
-
-
 -- ADDED IN VERSION 2.6.2
-
-
-
+-- ADDED IN VERSION 2.6.3
+CREATE INDEX zt_log_tid ON ZENTRACK_LOGS(ticket_id);
+CREATE INDEX zt_log_action ON ZENTRACK_LOGS(action);
+CREATE INDEX zt_ticket_pri ON ZENTRACK_TICKETS(priority);
+CREATE INDEX zt_ticket_stat ON ZENTRACK_TICKETS(status);
 

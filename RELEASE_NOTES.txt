@@ -1,4 +1,44 @@
 
+----- 2.6.3 Maintenance Release ----
+
+NEW FEATURES / ENHANCEMENTS
+  Added functionality to log email activity (new setting: log_email_details)
+  Improved ticket creator viewing permissions
+  Can now add contacts from ticket create or edit (add in your field map)
+  Add the Employee and Company tables to be available as data group tables
+
+BUG FIXES / MINOR CHANGES
+  Fixed hot keys broken by Firefox changes (accesskey works with alt+shift instead of alt now)
+  Fixed cr/lf problems with emails sent that included logs/ticket descriptions
+  Fixed emails being rejected by qmail because of line feeds
+  Fixed emails sent as plain text, but processed by Outlook in html format(now accepted)
+  Fixed build error in postgres
+  Upgrade scripts for the database
+  Bug fixes related to custom_multi fields
+  Modified multi field clear values method in menu mode (#410)
+  Modifications to highlight in the Navigator the current used section.
+  355: fixed contacts, which were experiencing javascript error in IE
+  Upgrading to new ADODB version (adodb494), fixed PHP 5 compatability
+  Fixed "ADORecordSet_empty could not be converted to string" error
+  Fixed minor issue with employee list overlapping contact list in the contacts nav bar
+  Task #349: Pagination broken after search  -FIXED" zenTrack.class
+  Fixed "Unterminated String Constant" bug for Evaluate type behaviors
+  Fixed date formatting error caused by passing "" instead of 0
+    Thanks to Eschatus for the find
+  Department now displays correctly under contacts
+  Fixed bug in javascript formatting tool
+  Fixed mergeArrays yet again, still not working correctly... 
+    Oh PHP!  How thy constantly changing ways bring me woe!
+  Some users reported problems with $GLOBALS array not working as expected
+  Replaced object references with global $obj;
+  Fixed mergeArrays function, which was incorrectly removing elements from lists
+  Fixed problem with radio buttons and approve/test fields, which can make tickets
+    impossible to close under certain conditions.
+  Cleaned up the divbutton code, improved submitForm function
+  Corrected error viewing related tickets in the print screen
+  Corrected stylesheet validation errors
+  Fixed error with hidden fields being lost in ticket tabs and close screen
+
 ----- 2.6.2 Minor Release -----
 
 NEW FEATURES / ENHANCEMENTS
