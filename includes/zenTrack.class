@@ -4379,6 +4379,14 @@ class zenTrack extends zen {
         $vals = $this->systems;
         break;
       case "creator_id":
+        if( !$validBins ) { return null; }
+        $users = $this->get_users( $validBins, "level_create" );
+        $vals = array();
+        for($i=0; $i<count($users); $i++) {
+          $u = $users[$i];
+          $vals["{$u['user_id']}"] = $this->formatName($u,1);
+        }
+        break;
       case "user_id":
         if( !$validBins ) { return null; }
         $users = $this->get_users( $validBins, "level_user" );
