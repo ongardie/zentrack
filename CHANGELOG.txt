@@ -13,6 +13,11 @@ abstraction, and endless possibilities for project expansion.
 
 ----- VERSION 2.6.3 (2007-11-28) -----
 
+2007-12-17, cfalonso
+  Fix to allow creator_id as a menu in ticket_list_filters view
+    - zentrack_2/includes/ZenFieldMap.class 1.53
+    - zentrack_2/includes/zenTrack.class 1.230
+
 2007-11-29, kato
   Prepared install/upgrade docs and scripts
     - zentrack_2/UPGRADE.txt
