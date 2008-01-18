@@ -14,6 +14,14 @@ abstraction, and endless possibilities for project expansion.
 ----- VERSION 2.6.3 (2007-11-28) -----
 
 2007-12-17, cfalonso
+  Fixed problem of duplicate transactions in IE6 & IE7
+    - zentrack_2/includes/headerInc.php 1.81
+  Fixed problem of loosing custom_menu fields in IE6 & IE7
+    - zentrack_2/includes/templates/fields/menunokeys.template 1.5
+  Merge empty change (can be ignored)
+    - zentrack_2/www/javascript.js 1.33
+
+2007-12-17, cfalonso
   Fix to allow creator_id as a menu in ticket_list_filters view
     - zentrack_2/includes/ZenFieldMap.class 1.53
     - zentrack_2/includes/zenTrack.class 1.230
