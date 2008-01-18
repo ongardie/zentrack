@@ -349,12 +349,15 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
      $hotkeys = $GLOBALS['hotkeys'];
      
      // render the div layers
+     //Fixed for IE - Thanks to Ralph Emerson and Lawrence
      print "<div style='width: {$width}px;' class='actionButtonDiv'\n"; 
-     print " onclick='mClk(this)';";
+//     print " onclick='mClk(this)';";
+     print " $clickmouse\n";
      print " onmouseover='mClassX(this, \"actionButtonDiv abdDown\", true)'\n";
      print " onmouseout='mClassX(this, \"actionButtonDiv\")'\n";
      print " title='".$hotkeys->tooltip($key)."'>\n";
-     print "<a href='#' $clickmouse\n";
+     print "<a href='#' \n";
+//     print "<a href='#' $clickmouse\n";
      print " onfocus='mClassX(this.parentNode, \"actionButtonDiv abdDown\", true)'\n";
      print " onblur='mClassX(this.parentNode, \"actionButtonDiv\")'\n";
      print ">".$hotkeys->label($key, $label, true)."</a>\n";

@@ -1,4 +1,4 @@
 <select name='{field_name}' id='{field_name}' size='{field_rows}' {field_multiple} {field_events}>
-{foreach:field_choices:"<option "+selected+">"+value+"</option>"}
+{list:field_choices:"<option value='"+index+"'"+selected+">"+value+"</option>"}
 </select>
 {field_multiple_clearvalues_js}
