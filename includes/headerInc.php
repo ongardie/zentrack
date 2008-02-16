@@ -431,14 +431,16 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
             $n2 = $u["office"];
             $n3 = $u["website"];
             $n4 = $u["telephone"];
+            $n5 = trim(trim($u["address1"]." ".$u["address2"])." ".$u["address3"]);
           } else {
             $n1 = $u["lname"];
             $n2 = $u["fname"];
             $company = $zen->get_contact($u["company_id"],"ZENTRACK_COMPANY","company_id");
             $n3 = $company["title"];
-            $n4 = $u["telephone"];
+            $n4 = trim(trim($u["telephone"]." ".$u["mobiel"])." ".$company["telephone"]);
+            $n5 = trim(trim(trim(trim($company["address1"]." ".$company["address2"])." ".$company["address3"])." ".$u["jobtitle"])." ".$u["department"]);
           }
-          $text = Zen::ffv($n1.",".$n2.",".$n3.",".$n4);
+          $text = Zen::ffv($n1.chr(183).$n2.chr(183).$n3.chr(183).$n4.chr(183).$n5);
         } else {
           $text = Zen::ffv($map->getTextValue($formview, $k, $val));
         }
