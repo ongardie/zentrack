@@ -238,7 +238,7 @@ msgstr "Opciones de cuenta"
 #file "/home/ired/zentrack_2/includes/templates/userAdd.php"
 #args ""
 msgid "Account Settings"
-msgstr "Configuraci&oacuten de cuenta"
+msgstr "Configuración de cuenta"
 
 
 #file "/home/ired/zentrack_2/includes/templates/userSearchList.php"
@@ -1114,7 +1114,7 @@ msgstr "No se pudo crear el ticket"
 #file "/home/ired/zentrack_2/includes/templates/newContactForm.php"
 #args ""
 msgid "Country"
-msgstr "Pa&itilde;s"
+msgstr "País"
 
 
 #file "/home/ired/zentrack_2/includes/templates/newContactForm.php"
@@ -2254,7 +2254,7 @@ msgstr "Coincidencias ?-? de ?"
 #file "/home/ired/zentrack_2/includes/templates/searchLogForm.php"
 #args ""
 msgid "Maximum Age"
-msgstr "Antig&#0252;edad Máxima"
+msgstr "Antigüedad Máxima"
 
 
 #file "/home/ired/zentrack_2/includes/templates/contact_list.php"
@@ -3154,7 +3154,7 @@ msgstr "Restaurar la contraseña para el usuario ??"
 #file "/home/ired/zentrack_2/includes/templates/accessForm.php"
 #args ""
 msgid "Reset"
-msgstr "Resturar"
+msgstr "Restaurar"
 
 
 #file "/home/ired/zentrack_2/includes/templates/actions/reject.php"
@@ -5871,7 +5871,7 @@ msgstr "Tipo"
 #file "/home/ired/zentrack_2/includes/templates/configForm.php"
 #args ""
 msgid 'Use them only for tracking and documentation.'
-msgstr "Utilice solamente para seguimiento y documentaci&oaucte;n."
+msgstr "Utilice solamente para seguimiento y documentación."
 
 
 #file "/home/ired/zentrack_2/includes/templates/bugForm.php"
