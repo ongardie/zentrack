@@ -13,6 +13,10 @@ abstraction, and endless possibilities for project expansion.
 
 ----- VERSION 2.6.3 (2007-11-28) -----
 
+2008-02-16, cfalonso
+  Improve contact's info in searchbox
+    - zentrack_2/includes/headerInc.php 1.82
+
 2007-12-17, cfalonso
   Fixed problem of duplicate transactions in IE6 & IE7
     - zentrack_2/includes/headerInc.php 1.81

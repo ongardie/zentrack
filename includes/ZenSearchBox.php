@@ -167,7 +167,7 @@ class ZenSearchBoxResults {
     if( is_array($this->_label) ) {
       $txt = '';
       foreach($this->_label as $k) {
-        $txt .= $txt? ','.$row[$k] : $row[$k];
+        $txt .= $txt? chr(183).$row[$k] : $row[$k];
       }
       return $txt;
     }

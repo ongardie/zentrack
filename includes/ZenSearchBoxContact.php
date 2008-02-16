@@ -15,14 +15,15 @@ class ZenSearchBoxContact extends ZenSearchBox {
     global $zen;
     $this->_zen=$zen;
     $this->_company=array();
-    $query='SELECT company_id, title FROM ZENTRACK_COMPANY ORDER BY lower(title)';
+    $query='SELECT * FROM ZENTRACK_COMPANY ORDER BY lower(title)';
     $vars = $this->_zen->db_queryIndexed($query);
     if( is_array($vars) ) {
       foreach($vars as $v) {
         $this->_company[$v['company_id']]=array('title'     => $v['title'],
                                                 'office'    => $v['office'],
                                                 'website'   => $v['website'],
-                                                'telephone' => $v['telephone']);
+                                                'telephone' => $v['telephone'],
+                                                'full_address'   => trim(trim($v["address1"]." ".$v["address2"])." ".$v["address3"])  );
       }
     }
     $this->_possible = 1000;
@@ -62,7 +63,7 @@ class ZenSearchBoxContact extends ZenSearchBox {
     if( is_array($this->_company) ) {
       foreach($this->_company as $id=>$c) {
         $cname=$c['title'];
-        $cinfo=$c['title'].','.$c['office'].','.$c['website'].','.$c['telephone'];
+        $cinfo=$c['title'].chr(183).$c['office'].chr(183).$c['website'].chr(183).$c['telephone'].chr(183).$c['full_address'];
         $sel=(strcmp($cid,$id)==0)?'selected':'';
         Zen::addDebug("ZenSearchBoxContact::renderFormFields","cid['$cname'] selected='$sel'", 3);
         $txt .= "<option value='$id' $sel>$cname</option>";
@@ -155,16 +156,21 @@ class ZenSearchBoxContact extends ZenSearchBox {
                          'pid'=>'2-'.$c['person_id'],
                          'fullname'=>$fullname,
                          'company'=>$this->_company[$c['company_id']['title']],
-                         'telephone'=>$c['telephone']
+                         'job'=>trim($c["jobtitle"]." ".$c["department"]),
+                         'telephone'=>$c['telephone'],
+                         'address'=>trim(trim($this->_company[$c["address1"]]." "
+                                             .$this->_company[$c["address2"]])." "
+                                        .$this->_company[$c["address3"]])
                          );
       }
     }
 
     $total=count($contacts);
 
-    $sbr = new ZenSearchBoxResults( array('pid'=>tr("ID"), 'fullname'=>tr("Full Name"), 'company'=>tr('Company'), 'telephone'=>tr('Telephone') ), $contacts, 
-                                    'pid', array('fullname','company','telephone'), $total );
-    Zen::addDebug("ZenSearchBoxContact::_getSearchResults [".$sbr->rows()."]",$params, 3, false);
+    $sbr = new ZenSearchBoxResults( array('pid'=>tr("ID"), 'fullname'=>tr("Full Name"), 'company'=>tr('Company'), 'job'=>tr('Job Info'), 
+                                          'telephone'=>tr('Telephone'), 'address'=>tr('Company Address') ),
+                                    $contacts,'pid', array('fullname','company','job','telephone','address'), $total );
+    Zen::addDebug("ZenSearchBoxContact::_getSearchResults [".$sbr->rows()."]",$params, 5, false);
     $this->_possible=$sbr->rows();
     return $sbr;
   }

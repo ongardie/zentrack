@@ -433,12 +433,17 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
             $n4 = $u["telephone"];
             $n5 = trim(trim($u["address1"]." ".$u["address2"])." ".$u["address3"]);
           } else {
-            $n1 = $u["lname"];
-            $n2 = $u["fname"];
+            if (strlen($u['lname']) && strlen($u['fname'])) {
+              $fullname=$u['lname'].', '.$u['fname'];
+            } else {
+              $fullname=$u['lname'].$u['fname'];
+            }
+            $n1 = $fullname;
             $company = $zen->get_contact($u["company_id"],"ZENTRACK_COMPANY","company_id");
-            $n3 = $company["title"];
+            $n2 = $company["title"];
+            $n3 = trim($u["jobtitle"]." ".$u["department"]);
             $n4 = trim(trim($u["telephone"]." ".$u["mobiel"])." ".$company["telephone"]);
-            $n5 = trim(trim(trim(trim($company["address1"]." ".$company["address2"])." ".$company["address3"])." ".$u["jobtitle"])." ".$u["department"]);
+            $n5 = trim(trim(trim(trim($company["address1"]." ".$company["address2"])." ".$company["address3"])));
           }
           $text = Zen::ffv($n1.chr(183).$n2.chr(183).$n3.chr(183).$n4.chr(183).$n5);
         } else {
