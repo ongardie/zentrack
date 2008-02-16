@@ -14,6 +14,8 @@ abstraction, and endless possibilities for project expansion.
 ----- VERSION 2.6.3 (2007-11-28) -----
 
 2008-02-16, cfalonso
+  Minor translation fixes
+    - zentrack_2/includes/translations/spanish.trans 1.15
   Improved Searchbox info for contacts and changed field separator in searchbox table
     - zentrack_2/includes/ZenSearchBox.php 1.6
     - zentrack_2/includes/ZenSearchBoxContact.php 1.3
