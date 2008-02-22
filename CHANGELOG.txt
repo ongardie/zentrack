@@ -14,6 +14,8 @@ abstraction, and endless possibilities for project expansion.
 ----- VERSION 2.6.3 (2007-11-28) -----
 
 2008-02-22, cfalonso
+  Fixed a bug related to the "View Tickets" button (when company selected)
+    - zentrack_2/www/contact.php 1.6
   In function getTicketsByCompany fix a query that won't work if the employees table is empty
     - zentrack_2/includes/zenTrack.class 1.231
 
