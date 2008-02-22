@@ -69,7 +69,11 @@ $id = NULL;
           include_once("$libDir/sorting.php");
           
           // collect open tickets
-          $tickets = $zen->getTicketsByPerson($id, $sortstring);
+          if ($pid) {
+            $tickets = $zen->getTicketsByPerson($pid, $sortstring);
+          } else {
+            $tickets = $zen->getTicketsByCompany($cid, $sortstring);
+          }
 					
           //$tickets = $zen->get_open_tickets($id,"2");
           include("$templateDir/listTickets.php");
