@@ -13,6 +13,10 @@ abstraction, and endless possibilities for project expansion.
 
 ----- VERSION 2.6.3 (2007-11-28) -----
 
+2008-02-22, cfalonso
+  In function getTicketsByCompany fix a query that won't work if the employees table is empty
+    - zentrack_2/includes/zenTrack.class 1.231
+
 2008-02-16, cfalonso
   Minor translation fixes
     - zentrack_2/includes/translations/spanish.trans 1.15
