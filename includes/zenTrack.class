@@ -5866,11 +5866,21 @@ class zenTrack extends zen {
     // collect a list of tickets belonging to any contact within the current company
     // (or simply belonging to the company itself)
     $id = $this->checkNum($company_id);
-    $query = "SELECT ticket_id FROM ZENTRACK_RELATED_CONTACTS c, ZENTRACK_EMPLOYEE e"
-        ." WHERE (cp_id = '$id' AND c.type='1')"
-        ." OR (c.type='2' AND c.cp_id = e.person_id AND e.company_id = '$id')";
-    $ids = array_unique($this->db_list($query));
+
+    // The following (original) query won't work if the employees table is empty:
+    //$query = "SELECT ticket_id FROM ZENTRACK_RELATED_CONTACTS c, ZENTRACK_EMPLOYEE e"
+    //    ." WHERE (cp_id = '$id' AND c.type='1')"
+    //    ." OR (c.type='2' AND c.cp_id = e.person_id AND e.company_id = '$id')";
+    // So now we run 2 separate queries, one for the company and another for their employees:
+
+    $query = "SELECT ticket_id FROM ZENTRACK_RELATED_CONTACTS"
+        ." WHERE cp_id = '$id' AND type='1'";
+    $ids1 = array_unique($this->db_list($query));
     $this->addDebug("getTicketsByCompany","[".count($ids)."]".$query,3);
+    $query = "SELECT ticket_id FROM ZENTRACK_RELATED_CONTACTS c, ZENTRACK_EMPLOYEE e"
+        ." WHERE c.type='2' AND c.cp_id = e.person_id AND e.company_id = '$id'";
+    $ids2 = array_unique($this->db_list($query));
+    $ids = array_unique(array_merge($ids1, $ids2));
     // skip query if there are no ids to retrieve
     if( !count($ids) ) { return array(); }
     // using our list of ids, call the get_tickets method normally 
