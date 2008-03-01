@@ -13,6 +13,15 @@ abstraction, and endless possibilities for project expansion.
 
 ----- VERSION 2.6.3 (2007-11-28) -----
 
+2008-03-01, cfalonso
+  Fixing problem related to file data groups used as default for custom_menu, and keeping custom_menu selections with special characters. Also other contacts stuff.
+    - zentrack_2/includes/ZenFieldMap.class 1.54
+    - zentrack_2/includes/ZenSearchBoxContact.php 1.4
+    - zentrack_2/includes/headerInc.php 1.84
+    - zentrack_2/includes/zenTemplate.class 1.18
+    - zentrack_2/includes/zenTrack.class 1.232
+    - zentrack_2/includes/templates/fields/searchbox.template 1.4
+
 2008-02-22, cfalonso
   Fixed a bug related to the "View Tickets" button (when company selected)
     - zentrack_2/www/contact.php 1.6
