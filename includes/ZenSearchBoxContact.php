@@ -62,12 +62,13 @@ class ZenSearchBoxContact extends ZenSearchBox {
     $jsvar = "var company = new Array();";
     if( is_array($this->_company) ) {
       foreach($this->_company as $id=>$c) {
-        $cname=$c['title'];
-        $cinfo=$c['title'].chr(183).$c['office'].chr(183).$c['website'].chr(183).$c['telephone'].chr(183).$c['full_address'];
+        $cname=$this->_zen->ffv($c['title']);
+        $cinfo=$this->_zen->ffv($c['title'].chr(183).$c['office'].chr(183).$c['website'].chr(183).$c['telephone'].chr(183).$c['full_address']);
         $sel=(strcmp($cid,$id)==0)?'selected':'';
         Zen::addDebug("ZenSearchBoxContact::renderFormFields","cid['$cname'] selected='$sel'", 3);
         $txt .= "<option value='$id' $sel>$cname</option>";
-        $jsvar .= "company[$id]='$cinfo';";
+        $jsvar .= "
+                   company[$id]='$cinfo';";
       }
     }
     $txt .= "</select></td>";

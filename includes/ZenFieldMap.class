@@ -504,7 +504,7 @@ $this->_zen->addDebug('ZenFieldMap::getTabs',"adding property '$key' for view '$
     $vals['date_format']  = $this->_zen->popupDateFormat();
     $vals["field_name"]   = Zen::ffv($override_name);
     $vals["field_events"] = $field_events;
-    
+
     if( !isset($value) && ($view=="ticket_create" || $view=="project_create"
          || $view == 'search_form' || preg_match('@(ticket|project)_list_filters@',$view) )) {
       // if there is no value and this is a create page or search page then we will
@@ -949,6 +949,7 @@ $this->_zen->addDebug('ZenFieldMap::getTabs',"adding property '$key' for view '$
       case "custom_multi":
         $pts = explode("_", $view, 2);
         $vars = $this->getFieldFromMap($view, $field_name);
+        Zen::addDebug('ZenFieldMap::_getChoices', "Reading group ".$vars['default_val'], 3);
         $set = genDataGroupChoices($vars['default_val']);
         $vals = array();
         foreach($set as $s) {

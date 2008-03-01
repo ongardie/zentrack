@@ -994,7 +994,8 @@ class zenTrack extends zen {
                tr("Project") => "project_id",
                tr("Estimated Hours") => "est_hours",
                tr("Deadline") => "deadline",
-               tr("Start Date") => "start_date");
+               tr("Start Date") => "start_date",
+               tr("Contacts") => "contacts");
     ksort($field_list);
     return($field_list);
   }
@@ -1323,7 +1324,8 @@ class zenTrack extends zen {
       $t = $v['table_name'];
       $v['fields'] = array();
       $groups["$k"] = $v;
-      if( $v['eval_type'] == 'Matches' ) {
+      if( $v['eval_type'] == 'Matches' || $v['eval_type'] == 'File' ) {
+        $this->addDebug('generateDataGroupInfo', "group_id={$k}, table_name={$t}, eval_type={".$v['eval_type']."}", 3);
         if( $v['include_none'] ) {
           // make the select menu optional by including a -none- option
           $groups["$k"]['fields'][] = array('field_value'=>null, 'label'=>'-none-');
@@ -1337,10 +1339,28 @@ class zenTrack extends zen {
           $tables["$t"][] = $k;
         } 
         else {
-          $query = "SELECT field_value FROM ".$this->table_group_detail
-             ." WHERE group_id = {$k} ORDER BY sort_order, field_value";
-          $this->addDebug('generateDataGroupInfo', "custom: {$query}", 3);
-          $vars = $this->db_queryIndexed($query);
+          switch ($v['eval_type']) {
+          case "Matches":
+            $query = "SELECT field_value FROM ".$this->table_group_detail
+               ." WHERE group_id = {$k} ORDER BY sort_order, field_value";
+            $this->addDebug('generateDataGroupInfo', "custom: {$query}", 3);
+            $vars = $this->db_queryIndexed($query);
+            break;
+          case "File":
+            $fn = $this->libDir."/user_data/{$v['name_of_file']}";
+            $vars = array();
+            if( !@file_exists($fn) ) {
+              $this->addDebug('generateDataGroupInfo',"Invalid filename: $fn",1);
+              $contents = array();
+            } else {
+              $contents = file($fn);
+            }
+            foreach ($contents as $lineOfData) {
+              $dataRow = explode("\t",trim($lineOfData));
+              $vars[]['field_value'] = $dataRow[0];
+            }
+            break;
+          }
           if( is_array($vars) ) {
             foreach($vars as $v) {
               $g = $v['field_value'];

@@ -274,7 +274,7 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
     if( isset($_SESSION['data_groups']["$group_id"]) ) {
       // get the fields for our group
       $group = $_SESSION['data_groups']["$group_id"];
-      if( $group['eval_type'] == 'Matches' ) {
+      if( $group['eval_type'] == 'Matches' || $group['eval_type'] == 'File' ) {
         if( count($group['fields']) ) {
           return $group['fields'];
         }
