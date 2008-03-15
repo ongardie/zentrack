@@ -13,6 +13,10 @@ abstraction, and endless possibilities for project expansion.
 
 ----- VERSION 2.6.3 (2007-11-28) -----
 
+2008-03-15, cfalonso
+  Fixed company name displayed as "Array" in Contacts search box
+    - zentrack_2/includes/ZenSearchBoxContact.php 1.5
+
 2008-03-01, cfalonso
   Fixing problem related to file data groups used as default for custom_menu, and keeping custom_menu selections with special characters. Also other contacts stuff.
     - zentrack_2/includes/ZenFieldMap.class 1.54
