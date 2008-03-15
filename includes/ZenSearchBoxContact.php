@@ -156,7 +156,7 @@ class ZenSearchBoxContact extends ZenSearchBox {
         $contacts[]=array(
                          'pid'=>'2-'.$c['person_id'],
                          'fullname'=>$fullname,
-                         'company'=>$this->_company[$c['company_id']['title']],
+                         'company'=>$this->_company[$c['company_id']]['title'],
                          'job'=>trim($c["jobtitle"]." ".$c["department"]),
                          'telephone'=>$c['telephone'],
                          'address'=>trim(trim($this->_company[$c["address1"]]." "
