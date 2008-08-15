@@ -9,7 +9,7 @@
  *
  * @abstract
  */
-class ZenPerson extends ZenDataType {
+class ZenPerson extends ZenRecordBase {
   
   /**
    * Default constructor, included here so that implementing classes can
@@ -52,10 +52,10 @@ class ZenPerson extends ZenDataType {
  * the objects upon demand.  It can contain any type of person (user, contact,
  * etc) and can load/save them as well.
  */
-class ZenPersonList {
+class ZenPersonList extends ZenListBase {
   
   function ZenPersonList() { 
-    $this->ZenList(); 
+    //todo: construct ZenListBase
   }
 
   /**

@@ -11,6 +11,18 @@ and user experience, internationalization, platform and database
 abstraction, and endless possibilities for project expansion. 
 --------------------
 
+2008-08-14, Kato
+  Added support for html in egate_check_create.php utility
+   - zentrack_2/includes/egate_check_create.php 1.4
+  Added new script for simple log/create of emails
+   - zentrack_2/includes/egate_helpdesk.php 1.0
+   - zentrack_2/includes/egate_utils.php 1.48
+   - zentrack_2/install/egate_config.php.default 1.17
+
+2007-12-27, Kato
+  Added missing > on td cell
+    - zentrack_2/includes/templates/actions/email.php
+
 ----- VERSION 2.6.3 (2007-11-28) -----
 
 2008-03-15, cfalonso

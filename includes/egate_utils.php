@@ -342,7 +342,7 @@
     $valid = true;
     // validate the file parameters
     if( $params->headers["subject"] == "" ) {
-      $errors = false;
+      $valid = false;
       egate_log("ERROR: Subject was blank",2);
     }
     if( !$params->headers["from"] && !$params->headers["reply-to"] ) {
@@ -843,8 +843,8 @@
    * @param string $email the email of the sender
    * @param string $action the action to perform
    * @param array $ticket properties of the ticket
-   * @param array $body the parsed body properties (from parse_body())
-   * @param array $params the mail params from parse_contents()
+   * @param array $body the parsed body properties (from generate_ticket_attributes())
+   * @param array $params the mail params from decode_contents()
    * @return boolean succeeded
    */
   function perform_ticket_action($name,$email,$action,$ticket,$body,$params) {
@@ -1263,59 +1263,27 @@
   /**
    * process raw message and create new ticket from contents
    *
-   * @param string $input is the raw message data
+   * @param mixed $input either an array obtained from decode_contents or the raw email message as a string
    * @return boolen succeeded
    */
   function create_ticket_from_message($input) {
     // process the input data and return results
     $success = true;
-    global $zen;
-    global $egate_user;
-    global $egate_default_options;
-    global $egate_create_fields;
-    global $egate_create_overrides;
 
     // decode the data
-    $params = decode_contents($input);
+    if( is_array($input) ) { $params = $input; }
+    else { $params = decode_contents($input); }
     
     // validate the data
     if( !validate_params($params) ) { egate_log_write(); return false; }
-
-    // create the body elements
-    $body = $egate_default_options;
-    $body["title"] = $params->headers["subject"];
-    // plain text body will appear as $params->body
-    if( isset($params->body) ) { $body["details"] = trim($params->body); }
-    else {
-      // if the message is sent as html&text or some other odd combination, it
-      // may still have a plain text message buried in the body.
-      // we'll pull out whatever we can
-      $body['details'] = '';
-      for($i=0; $i<count($params->parts); $i++) {
-        if( $params->parts[$i]->ctype_primary == "text" &&
-          $params->parts[$i]->ctype_secondary == "plain" ) {
-            $body['details'] .= trim($params->parts[$i]->body)."\n";
-          }
-      }
-    }
-    $body["creator_id"] = $egate_user["user_id"];
-
-    // add in overrides, if the user has specified any by putting
-    // 'field:value' entries at the top of the message body
-    if( $egate_create_overrides == 1 && count($egate_create_fields) > 0 ) {
-      $i=0;
-      $match = '/^ *('.join('|',$egate_create_fields).') *: *(.+)/i';
-      while( preg_match( $match, $body['details'], $matches) && $i < 1000 ) {
-        $body["{$matches[1]}"] = trim($matches[2]);
-        $body['details'] = trim(preg_replace($match, '', $body['details']));
-        $i++;
-      }
-    }
 
     // determine who sent the email and make sure it has
     // a return address
     list($name,$email) = get_name_and_email($params);
     $user_id = find_user_id($name,$email);
+    
+    // generate the ticket's properties
+    $body = generate_ticket_attributes($params, $user_id);    
 
     // don't process tickets with no return address
     if( !$email ) {
@@ -1338,6 +1306,63 @@
     // close up shop
     egate_log_write();
     return $success;
+  }
+  
+  /**
+   * Create an array of parameters that will be passed to the ticket
+   * creation process as the attributes for the ticket
+   * @param array $params email properties obtain from decode_contents()
+   * @param int $user_id can be null, the id of the user owning from address
+   * @return array
+   */
+  function generate_ticket_attributes($params, $user_id) {
+    global $zen;
+    global $egate_default_options;
+    global $egate_create_fields;
+    global $egate_create_overrides;
+
+    // create the body elements
+    $body = $egate_default_options;
+    $body["title"] = $params->headers["subject"];
+    // plain text body will appear as $params->body
+    if( isset($params->body) ) { $body["details"] = trim($params->body); }
+    else {
+      // if the message is sent as html&text or some other odd combination, it
+      // may still have a plain text message buried in the body.
+      // we'll pull out whatever we can
+      $body['details'] = '';
+      for($i=0; $i<count($params->parts); $i++) {
+        if( $params->parts[$i]->ctype_primary == "text" &&
+          $params->parts[$i]->ctype_secondary == "plain" ) {
+            $body['details'] .= trim($params->parts[$i]->body)."\n";
+          }
+      }
+    }
+    
+    // trim reply text from email body
+    if( strpos($body['details'], '>') !== false ) {
+      $body['details'] = preg_replace('@^\s*>.*?\n@m', '', $body['details']);
+    }
+    if( !empty( $egate_originalemail_prefix ) ) {
+      preg_replace($egate_originalemail_prefix, "", $body['details']);
+    }
+
+    // add in overrides, if the user has specified any by putting
+    // 'field:value' entries at the top of the message body
+    if( $egate_create_overrides == 1 && count($egate_create_fields) > 0 ) {
+      $i=0;
+      $match = '/^ *('.join('|',$egate_create_fields).') *: *(.+)/i';
+      while( preg_match( $match, $body['details'], $matches) && $i < 1000 ) {
+        $body["{$matches[1]}"] = trim($matches[2]);
+        $body['details'] = trim(preg_replace($match, '', $body['details']));
+        $i++;
+      }
+    }
+
+    // if there is a user id, he created the ticket
+    $body['creator_id'] = $user_id;
+    
+    return $body;
   }
 
   /**
@@ -1474,9 +1499,10 @@
 	||(is_array($templates)&&count($templates)) ) {
       $text = "";
       
-      if( !is_array($templates) || !count($templates) ) {
-	$templates = array("reply.template");
-      }
+      // IS THIS NECESSARY??? (amikus)
+      //if( !is_array($templates) || !count($templates) ) {
+	//$templates = array("reply.template");
+      //}
 
       // grab the params
       $valid_actions = fetch_valid_actions($id);      
@@ -1532,11 +1558,13 @@
 
       // send messages
       $i=0;
-      $from = $egate_user["email"];
+      $from_address = $egate_user["email"];
+      $from_fname = $egate_user["fname"];
+      $from_lname = $egate_user["lname"];
       $bcc = $egate_bcc_address? "Bcc:$egate_bcc_address\r\n" : "";
       foreach($recipients as $r) {
         if( is_array($r) && count($r) && $r["email"] != $egate_user["email"] ) {
-        $res = mail($r['email'],$subject,$txt,"From:$from\r\nReply-to:$from\r\n$bcc");
+        $res = mail($r['email'],$subject,$txt,"From: $from_fname $from_lname <$from_address>\r\nReply-to:$from_address\r\n$bcc");
         if( $res )
           $i++;
         }

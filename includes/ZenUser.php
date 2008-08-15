@@ -58,13 +58,14 @@ class ZenUser extends ZenPerson {
  * involved in large lists.
  */
 class ZenUserList extends ZenPersonList {
-  
 
   function loadByRole( $role_ids ) { } //todo
-  
+
   function loadByAccess( $bins, $lvl, $types = null ) { } //todo
 
   function getDataType() { return 'ZenUser'; }
+  
+  function getSourceTable() { return 'ZENTRACK_USERS'; }
 
 }
 

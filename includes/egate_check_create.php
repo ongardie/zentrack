@@ -15,6 +15,18 @@
   // include utils and config
   include("egate_utils.php");
   
+  function fetch_imap_body($mbox, $messageid) {
+    $structure = imap_fetchstructure($mbox, $messageid);
+    if ($structure->type == 1) {
+      // GET THE BODY OF MULTI-PART MESSAGE
+      $body = imap_fetchbody($mbox,$messageid,"1");
+    }
+    else {
+     $body = imap_body($mbox, $messageid);
+    }  
+    return $body;
+  }
+  
   // check for imap install
   if( !function_exists("imap_open") ) {
     egate_log("Imap functions haven't been installed.  See installation section on email gateway for details",1);
@@ -46,7 +58,7 @@
   for($i=1; $i<=$number_of_messages; $i++) {
     // get the body and header for the message
     $header = imap_fetchheader($mb,$i);
-    $body = imap_body($mb,$i);
+    $body = fetch_imap_body($mb,$i);
     // process the message
     create_ticket_from_message($header."\n\r".$body);
     // flag messages for deletion

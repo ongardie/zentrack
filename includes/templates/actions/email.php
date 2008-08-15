@@ -81,7 +81,7 @@
   </td>
 </tr>
 <tr>
-  <td class='bars'
+  <td class='bars'>
    <input type="radio" name="method" value="1" <?=($method == 1)? "checked" : "";?>>
    &nbsp;<?=$hotkeys->ll('send option: link', "Send a link to this ticket only")?><br>
    <input type="radio" name="method" value="2" <?=($method == 2 || !isset($method))? "checked" : "";?>>

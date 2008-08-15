@@ -4,7 +4,7 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
 /**
  * Manage user roles and permissions for the system
  */
-class ZenRole extends ZenDataType {
+class ZenRole extends ZenRecordBase {
 
   /**
    * @static
@@ -37,7 +37,7 @@ class ZenRole extends ZenDataType {
   function checkAccess( &$action, $bin_id, $type_id ) { } //todo
 }
 
-class ZenRoleList {
+class ZenRoleList extends ZenListBase {
   
   function ZenRoleList( $ids = null ) { }//todo
   

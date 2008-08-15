@@ -36,6 +36,31 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
   // (provide the login name here, the password is not needed)
   $egate_account = "egate";
   
+  /**
+   * STRIP ORIGINAL MESSAGE FROM REPLIES.
+   *
+   * Removes text from emails based on a regexp. You can literally use
+   * this to remove anything from the email. The intention, of course,
+   * being to delete the quoted reply text when a reply email is sent.
+   *
+   * The default setting is to replace any text after the tag
+   * ---Original Message--- (surrounded by 3 or more dashes)
+   *
+   * This is a PHP regular expression. Note the .* at the end, this causes it to delete everything
+   * from the regexp to the end of the message. Also note the "s" modifier
+   * after the the closing bar. This causes the .* to match \n (returns)
+   * which would otherwise be excluded and allows it to reach the end of the
+   * message instead of just the end of the line.
+   *
+   * To add multiple bits of text, use the (...|...) notation, like this:
+   * "@\n\s*(-{3,}Original Message-{3,}|[*]{2,}Reply from [^*]+[*]{2,}).*$@s"
+   *
+   * The above example would match ---Original Message--- or ** Reply from name here **
+   *
+   * To disable this feature, simply set this variable to false.
+   */
+  $egate_originalemail_prefix = "@\n\s*-{3,}Original Message-{3,}.*$@s";
+  
   /*
   ** DEFAULT NEW TICKET PROPERTIES
   **
