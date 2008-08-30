@@ -1,0 +1,12 @@
+{title}
+
+ID:       {id}
+Status:   {status}
+Type:     {type}
+Priority: {priority}
+Deadline: {deadline}
+Bin:      {bin}
+Owner:    {owner}
+URL:      {url}
+
+{desc}

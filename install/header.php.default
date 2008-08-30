@@ -1,0 +1,156 @@
+<?{
+  
+  // zenTrack configuration settings
+  // it's a good idea to keep a backup
+  // of this file somewhere safe when upgrading!
+
+  /* DO NOT PUT ANYTHING, INCLUDING SPACES, OUTSIDE OF THE <? ?> marks */
+
+  /*
+  **  THE INCLUDES DIRECTORY
+  **
+  **  Use the complete system path from the root directory
+  **  Do not use a trailing slash
+  **  Use only a forward slash "/" since a backslash "\" has special meaning in php.
+  **
+  **  Valid samples:
+  **    $libDir = "c:/private_folder/includes";
+  **    $libDir = "/var/hidden/localhost/zentrack/includes";
+  */
+  $libDir = "/not_web_directory/zentrack/includes";
+
+  // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  // !!  EGATE USERS:  You must set this variable manually  !!
+  // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  // the base url used to reach zentrack
+  // you should only need to edit this if the auto-config fails or if you
+  // plan to use the egate interface.
+  $rootUrl = 'http://'.$_SERVER['HTTP_HOST'] . preg_replace( '@^'.str_replace("\\", "/", realpath(strtolower($_SERVER['DOCUMENT_ROOT']))).'@', '', str_replace("\\", "/", realpath(strtolower(dirname(__FILE__)))));
+  //$rootUrl = "http://www.yourhost.com/zentrack"; //uncomment and edit if the previous line fails
+
+  // the directory where the www files are stored
+  // you should only need to edit this if the auto-config fails
+  $rootWWW = dirname(__FILE__);
+  //$rootWWW = "/web/zentrack/www"; //uncomment and edit if the previous line fails
+
+  /*
+  **
+  **  DATABASE SETTINGS
+  **
+  **  Valid SQL Types:
+  **     mysql
+  **     mssqlpo
+  **     odbc_mssql (see below)
+  **     oci8po (see below)
+  **     postgres (postgres >= 7)
+  **     (see http://phplens.com/lens/adodb/docs-adodb.htm#drivers for more)
+  */
+  $Db_Type      = "mysql";      //sql type
+  $Db_Instance  = "zentrack";   //db name
+  $Db_Login     = "test";       //username
+  $Db_Pass      = "test";       //password
+  $Db_Host      = "localhost";  //host of database (localhost doesn't work with sqlserver)
+
+  // SQL SERVER >= 2000
+  // Here is a sample config
+  //$Db_Type = "odbc_mssql"; //sql type
+  //$Db_Instance = null; //db name
+  //$Db_Login = "test"; //username
+  //$Db_Pass = "test"; //password
+  //$Db_Host = "Driver={SQL Server};Server=123.321.123.321;Database=Zentrack;";
+
+  // ORACLE USERS! the order of items may be changed
+  // it may be that the entry will be:
+  //      $Db_Host: "serverip:port#"
+  //      $Db_Login: "scott"
+  //      $Db_Pass:  "tiger"
+  //      $Db_Instance: "servicename"
+  // or:
+  //      $Db_Host: ""
+  //      $Db_Login: "scott"
+  //      $Db_Pass:  "tiger"
+  //      $Db_Instance: "TNSName"
+  // hints for these entries:
+  // - for Oracle 8 and later, use "oci8po" as database_type
+  // - if using an Oracle Names Server, leave database_instance blank and put
+  //   the database alias into database_host
+  // - the same applies if you want to use a whole TNS connection string
+  // - to connect to a local instance, you may leave the database_host blank
+  // also... you may need to uncomment the following for oracle to work properly:
+  //   putenv("ORACLE_SID=ORACLE"); 
+  // the database instance
+  //   putenv("ORACLE_HOME=/opt/oracle/oracle/8.0.3"); 
+  // the oracle installation directory
+  //   putenv("TNS_ADMIN=/opt/oracle/product/8.1.5/network/admin"); 
+  // the directory of the tnsnames.ora file
+
+  /*
+  ** DEMO MODE AND DEBUG OUTPUT 
+  **
+  ** This will solve many of your troubles...
+  ** please turn it on, and copy and paste
+  ** useful portions of the output into any 
+  ** support requests
+  ** 
+  **  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  **  VERY VERY VERY VERY IMPORTANT!!!!!!!
+  **  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  **
+  ** Debugging is not for production use.  Use it during
+  ** setup and then be sure to turn it off.  It provides
+  ** information about your system that is not for public
+  ** consumption.
+  */
+
+  //set this from 0=off, 1=errors, 2=warnings, 3=notices(all)
+  $Debug_Mode = 0;  
+
+  //set this to "on" prevents users from doing anything you don't
+  //want them doing on a demo site
+  $Demo_Mode = "off"; 
+  
+  /*
+  **
+  ** MISC SETTINGS
+  **
+  */
+
+  // the prefix to appear in the browser title
+  $page_prefix = "zenTrack | ";
+
+  // the title to appear in the browser title
+  $page_title = "Welcome to zenTrack";
+  
+  // the configuration settings for the zenTrack functions
+  $configFile = "$libDir/configVars.php";
+  
+  // the maximum number of system messages to keep in memory
+  $system_message_limit = 20;
+
+   // LOCALE/DATE HELPERS
+   // WINDOWS USERS
+   //
+   // %T and %D will not work on Windows
+   // search http://msdn.microsoft.com/ for strftime().
+   // 
+   // Control Panel->International Settings
+   // You can set your locale and customize it
+   // And locale-related PHP functions work perfectly
+   // IF NEEDED, uncomment the following entry
+   // and set it to your location.. use locale -a 
+   // to see a list of possibilities
+   // see the php manual for more info on setlocale(): http://www.php.net/setlocale
+   // setlocale(LC_TIME, "C");
+   // setlocale(LC_TIME, "POSIX");
+   // setlocale(LC_TIME, "en_US");  // U.S.
+   // setlocale(LC_TIME, "fr_FR");  // french
+   // setlocale(LC_TIME, "de_DE");  // german
+   // setlocale(LC_TIME, "es_ES");  // spanish
+
+  /*
+  **  LEAVE THIS PART ALONE
+  */
+  define('ZT_DEFINED', true);
+  include_once("$libDir/headerInc.php");
+  
+}?>

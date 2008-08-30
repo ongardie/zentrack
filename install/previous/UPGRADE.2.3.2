@@ -1,0 +1,63 @@
+
+
+REQUIREMENTS
+
+    PHP: 4.2.0 or greater 
+    GD: [optional] 2.0 or higher needed to use reports
+    Freetype libraray required to view reports
+    Supported Servers: Apache 1.3, 2.0, IIS
+    Supported OS: Windows 2000, Linux 
+       Other Tested OS: FreeBSD, NT, MacOS, Debian, Gentoo
+    Supported DBs: Mysql, Oracle 8i/9i
+       Other Possible DBs: Postgres, DB2, SQLServer
+
+
+UPGRADE FROM 2.3.0
+
+  MAKE A BACKUP OF YOUR www/header.php file
+  
+  MAKE A BACKUP OF YOUR includes/attachments directory
+
+  REPLACE Your entire zentrack directory structure with the
+  included files: includes/ should overwrite your existing includes,
+  www/ should overwrite your existing www/
+
+  RESTORE YOUR www/header.php settings to the new file
+
+  RESTORE YOUR includes/attachments files to the new directory
+
+  RUN the following SQL command:  UPDATE ZENTRACK_SETTINGS SET value = '2.3.1' where name = 'version_xx';
+  
+
+UPGRADE FROM 2.2.2
+
+  MAKE A BACKUP OF YOUR www/header.php file
+  
+  MAKE A BACKUP OF YOUR includes/attachments directory
+
+  REPLACE Your entire zentrack directory structure with the
+  included files: includes/ should overwrite your existing includes,
+  www/ should overwrite your existing www/
+
+  RESTORE YOUR www/header.php settings to the new file
+
+  RESTORE YOUR includes/attachments files to the new directory
+
+  Locate and run the appropriate UPGRADE_[database].sql and 
+    UPGRADE_SEED_[database].sql files.
+
+  If you recieve an error describing a duplicate key, then update the
+  user_id for the INSERT INTO ZENTRACK_USERS statement to an id that hasn't
+  been used, or add this entry by hand.
+
+  If you intend to use the email gateway, please read the online docs
+      which give a thorough overview of how to set this up:
+      http://zendocs.phpzen.net/bin/view/Zentrack/ManualInstallation#Setting_Up_Email_Gateway
+ 
+  Please let us know!  
+      send an email, log into irc.sourceforge.net #zentrack, 
+      or visit our forum and tell us what platform your install
+      was successful on.  We can also add your company/url to our user list.  
+
+
+

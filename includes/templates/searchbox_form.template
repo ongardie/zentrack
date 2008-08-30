@@ -1,0 +1,12 @@
+<form method='post' name='searchboxForm'>
+  <input type='hidden' name='mode'  value='{mode}'>
+  <input type='hidden' name='form'  value='{form}'>
+  <input type='hidden' name='field' value='{field}'>
+  <input type='hidden' name='multi' value='{multi}'>
+  <input type='hidden' name='type'  value='{type}'>
+  <input type='hidden' name='offset' value='{offset}'>
+  {content}
+  <p>
+  <input type='submit' name='submitButton' value='{search_text}'>
+  <input type='hidden' name='repost' value='{if:hidden=1:"1"}{if:hidden=:"0"}'>
+</form>
