@@ -34,15 +34,23 @@
   
   // iterate over an array of values and create a row of csv data
   function getCsvRow( $values, $headings = false ) {
+    global $zen;
     // skip empty rows
     if( !is_array($values) ) { return "\n"; }
     $text = "";
     $i=1;
     foreach(prepareColumnNames() as $k=>$l) {
       $v = $values[$k];
-
-      // escape content for each cell
-      if( !$headings ) { $v = humanReadableValue($k,$v); }
+      
+      if( !$headings ) {
+        if( $k == 'elapsed' ) {
+          $v = $zen->showTimeElapsed($values["otime"],$values["ctime"],1,null);
+        }
+        else {
+          $v = humanReadableValue($k,$v);
+        }
+      }
+      
       $text .= getCsvCell($v);
       if( $i < count($values) ) {
         // print comma if this is not the last cell
@@ -84,4 +92,8 @@
   }
   
   //print "</pre>\n"; //debug
+
+  //print "<div class='note' id='debugContent'>\n";
+  //$zen->printDebugMessages();
+  //print "</div>\n";
 ?>

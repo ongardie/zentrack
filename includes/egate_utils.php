@@ -1575,4 +1575,201 @@
     return 0;
   }
 
+function getMultipartContent($msg) {
+  $body = '';
+  foreach ($msg->parts as $part) {
+    if (($part->ctype_primary == 'text') and ($part->ctype_secondary == 'plain')) {
+      $body .= $part->body;
+    }
+    if (isset ($part->parts) and (is_array($part->parts))) {
+      $body .= getMultipartContent($part);
+    }
+  }
+  if ($body == "") {
+    return false;
+  }
+  return $body;
+}
+
+/* function checkForMail - Check for the existence of email on the pop3 server. */
+function checkForMail($conn) {
+  fputs($conn, "STAT\r\n");
+  $output = fgets($conn, 128);
+  $ack = strtok($output, " "); // Bleed off +OK
+  $numMessages = strtok(" "); // Get what we wanted
+  
+  egate_log("Ack: $ack, Num Messages: $numMessages\n$output", 3);
+  
+  if ($numMessages > 0) {
+    egate_log("***New mail***",2);
+  } else {
+    egate_log("***No mail***", 2);
+  }
+  return $numMessages;
+}
+
+/* function getEmail - Collect each individual message and return to the getMessages function. */
+function getEmail($conn, $num) {
+  $message = "";
+  fputs($conn, "RETR $num\r\n");
+  $output = fgets($conn, 512);
+  
+  if (strtok($output, "+OK")) {
+    while (!ereg("^\.\r\n", $output)) {
+      $output = fgets($conn, 512);
+      $message .= $output;
+    }
+  }
+  
+  return $message;
+}
+
+/* function deleteMessage - Delete messages from pop3 server after downloading them. */
+function deleteMessage($conn, $message) {
+  fputs($conn, "DELE $message\r\n");
+}
+
+/* function popConnect - Connects to the designated pop3 mail server, using the supplied credentials. */
+function popConnect($host, $port, $user, $pass) {
+  $errno = "";
+  $errstr = "";
+  $conn = fsockopen($host, $port, $errno, $errstr, 90);
+  if (!$conn) {
+    egate_log("Connect Failed: $errstr($errno)",1);
+    return false;
+  } else {
+    egate_log(fgets($conn, 128), 3);
+    fputs($conn, "USER $user\r\n");
+    egate_log(fgets($conn, 128), 3);
+    fputs($conn, "PASS $pass\r\n");
+    egate_log(fgets($conn, 128), 3);
+    return $conn;
+  }
+}
+
+/* function getMessages - Collects email messages from a pop3 server, and returns them as an array of messages.
+ *                        Calls function getEmail to download each individual message. Returns an array of
+ *                        of email messages. */
+function getMessages($conn) {
+  $numMessages = checkForMail($conn);
+  
+  if ($numMessages > 0) {
+    $mailArray = array ();
+    for ($i = 0; $i < $numMessages; $i ++) {
+      $mailArray[$i] = getEmail($conn, $i + 1);
+      deleteMessage($conn, $i + 1);
+    }
+    return $mailArray;
+  }
+}
+
+/* function popDisconnect - Disconnects the pop3 session. */
+function popDisconnect($conn) {
+  fputs($conn, "QUIT\r\n");
+  egate_log(fgets($conn, 128), 3);
+  fclose($conn);
+  $conn = 0;
+}
+
+  /**
+   * @param string $subject
+   * @return int ticket id from subject or false if none
+   */
+  function get_ticket_id_from_subject($subject) {
+    preg_match( '@#([0-9]+)@', $subject, $matches );
+    if( count($matches > 1) ) { return $matches[1]; }
+    return false;
+  }
+  
+  /**
+   * @param int $id
+   * @return array containing ticket parms or false if not found
+   */
+   function get_ticket( $id ) {
+     global $zen;
+     // make sure we have a valid ticket and action
+     $ticket = $zen->get_ticket($id);    
+     if( !is_array($ticket) || !count($ticket) ) {
+	     egate_log("Ticket #$id is not a valid ticket",2);
+	     return false;
+     }
+     else { return $ticket; }
+   }
+  
+  /*
+  **  This function reads emails and does one of two things, based on the subject
+  **  of the email. If the email begins with #nn (where nn is a number), then
+  **  this function will add a log entry with the contents of the email as the message.
+  **
+  **  If the subject does not begin with #nn, then a new ticket is created with
+  **  the contents of the email as the descripion of the problem and the subject
+  **  as the title.
+  **
+  **  The default parameters for the ticket are specified in egate_config.php
+  **  using the $egate_default_options array.
+  **  
+  **  All activity is logged to includes/logs/egate_log
+  **
+  **  Note that if $egate_create_overrrides is set to 1 in egate_config.php, then
+  **  users can override any value in the array $egate_create_fields array by putting
+  **  "field_name: value" into the email at the beginning of a line
+  **
+  ** @param string $input the raw email message
+  ** @return boolean false on error or true if ok
+  */
+ function do_helpdesk_message($input) { 
+
+   // determine if the subject has a ticket id
+   $params = decode_contents($input);
+   
+   // extract the values of interest to us
+   $from = empty($params->headers['reply-to'])? $params->headers['from'] : $params->headers['reply-to'];
+   $subject = $params->headers['subject'];
+   $id = get_ticket_id_from_subject($subject);
+   if( $id ) { $ticket = get_ticket($id); }
+   
+   list($name,$email) = get_name_and_email($params);
+   $user_id = find_user_id($name,$email);
+   $attributes = generate_ticket_attributes($params, $user_id);
+   $body = $attributes['details'];
+   
+   // perform some simple validation
+   if( !$from || !$body || !$subject || ($id && !$ticket) ) {
+     if( !$from )    { egate_log('Malformed message, missing FROM address', 1);  }
+     if( !$subject ) { egate_log('Malformed message, missing Subject', 1);       }
+     if( !$body )    { egate_log('Malformed message, missing message body', 1);  }
+     if( !$ticket )  { egate_log("Ticket #$id not found", 1); }
+     if( !$from ) {
+       egate_log("unable to send reply message (no return address)", 1);
+       return false;
+     }
+     $email_subject = "Your message couldn't be processed";
+     $email_body = $email_subject . " due to the following errors:\n";
+     $error_text = "Unable to process message:\n";
+     foreach( egate_fetch_messages(1) as $m ) {
+       $error_text .= " - $m\n";
+       $email_body .= "\t$m\n";
+     }
+     $email_body .= "\nThe original message is below...\n------------------\n";
+     $email_body .= $input;
+     mail($from, $email_subject, $email_body, "From:".$egate_user['email']);
+     egate_log($error_text, 1);
+     return false;
+   }
+   
+   if( $id ) {
+     // we create a log message
+     perform_ticket_action($name, $email,'log',$ticket,$attributes,$params);
+     egate_log("Updated ticket #$id for $user_id/$name/$email",3);
+   }
+   else {
+     // we create a new ticket
+     $id = create_new_ticket($user_id, $name, $email, $attributes);
+     egate_log("Created ticket #$id for $user_id/$name/$email",3);
+     $rec = array(array("name"=>$name,"email"=>$email));
+     send_reply_mail($rec, $id, TRUE, "new ticket");
+   }
+   return true;
+ }
+
 }?>

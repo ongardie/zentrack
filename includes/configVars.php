@@ -54,9 +54,6 @@
    $this->table_group_detail     = 'ZENTRACK_GROUP_DETAIL';
    $this->table_varfield         = 'ZENTRACK_VARFIELD';
    $this->table_varfield_multi   = 'ZENTRACK_VARFIELD_MULTI';
-   $this->table_company          = 'ZENTRACK_COMPANY';
-   $this->table_employee         = 'ZENTRACK_EMPLOYEE';
-
 
    //pre-constructed strings
    $this->table_translation_strings = 'ZENTRACK_TRANSLATION_STRINGS'; 
@@ -112,8 +109,7 @@
   $this->fromuser   = "me@domain.com";
 
   // address to put in from field for bug reports
-  $host = empty($_SERVER['HTTP_HOST'])? 'localhost' : $_SERVER['HTTP_HOST'];
-  $this->bugFrom = "bot@$host";
+  $this->bugFrom = 'bot@'.$_SERVER['HTTP_HOST'];
   
   // address to put in to field for bug reports
   $this->bugTo = 'bugs@zentrack.net';
