@@ -11,6 +11,25 @@ and user experience, internationalization, platform and database
 abstraction, and endless possibilities for project expansion. 
 --------------------
 
+2008-08-30, Kato
+  Fixed search export date formats
+   - zentrack_2/www/exportSearch.php 1.5
+  Added new egate helpdesk scripts
+   - zentrack_2/includes/egate_helpdesk.php 1.1
+   - zentrack_2/includes/egate_pop3_helpdesk.php 1.1
+   - zentrack_2/includes/egate_utils.php 1.48
+  Added html support for egate
+   - zentrack_2/includes/egate_utils.php 1.48
+   - zentrack_2/install/configVars.php.default 1.16
+   - zentrack_2/install/egate_config.php.default 1.17
+  Added new class libs in prep for mass edit feature
+   - zentrack_2/includes/ZenList.php 1.1
+   - zentrack_2/includes/ZenListBase.php 1.1
+   - zentrack_2/includes/ZenRecord.php 1.1
+   - zentrack_2/includes/ZenRecordBase.php 1.1
+   - zentrack_2/includes/ZenTicket.php 1.1
+
+
 2008-08-14, Kato
   Added support for html in egate_check_create.php utility
    - zentrack_2/includes/egate_check_create.php 1.4
