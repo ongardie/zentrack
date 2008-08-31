@@ -11,6 +11,11 @@ and user experience, internationalization, platform and database
 abstraction, and endless possibilities for project expansion. 
 --------------------
 
+2008-08-31, cfalonso
+  Fixing a problem with a left join in MS SQL reported in http://www.zentrack.net/modules/newbb/viewtopic.php?viewmode=flat&topic_id=1067&forum=1
+   - zentrack_2/includes/zenNotifier.php 1.5
+
+
 2008-08-30, Kato
   Fixed search export date formats
    - zentrack_2/www/exportSearch.php 1.5
