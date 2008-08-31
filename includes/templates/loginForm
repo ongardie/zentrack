@@ -1,6 +1,7 @@
 <? 
   if( !ZT_DEFINED ) { die("Illegal Access"); }
   $hotkeys->loadSection('login');
+  $GLOBALS['zt_hotkeys'] = $hotkeys;
 ?>
 
 <blockquote><br>
@@ -15,7 +16,7 @@
   
   <input type='hidden' name='TODO' value='Log On'>
 
-  <input type='text' name='username' value='<?=strip_tags($zentrackUsername)?>' width=20 maxlength=20 title="<?=$hotkeys->tt("Login Name")?>">&nbsp;<?=$hotkeys->ll("Login Name")?>
+  <input type=text name=username value='<?=strip_tags($zentrackUsername)?>' width=20 maxlength=20 title="<?=$hotkeys->tt("Login Name")?>">&nbsp;<?=$hotkeys->ll("Login Name")?>
 
   <br>
 
@@ -33,16 +34,26 @@
 
   </form>
 
+  <p class='bold hot'>&nbsp;&nbsp;Dev site guests may use Guest / Guest to login.</p>
+  <p>
+  <P>Visit the zenTrack website site (<a href='http://www.zentrack.net'>http://www.zentrack.net</a>) for all things ZT related.</p>
+
+
+
 </blockquote>
 
 <script type='text/javascript'>
   var f = function() {
     var f = window.document.loginForm;
     if( f.username.value == "" ) {
-      setFocalPoint( f.username );
+      f.username.focus();
+    }
+    else if( f.passphrase.value == "" ) {
+      f.passphrase.focus();
     }
     else {
-      setFocalPoint( f.passphrase );
-    }
+      f.TODO.focus();
+    }  
   }
+  addToOnload( f );
 </script>

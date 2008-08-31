@@ -455,11 +455,11 @@ class DB {
     // INTERNAL USE ONLY
     // see the build_search_clause() method for more details
     // recursively prepare a search clause
-    
+    $text = '';
     foreach($params as $p) {
       $list = 0;
       if( $text )
-      $text .= " $andor ";
+	$text .= " $andor ";
       if( $p[0] == "AND" or $p[0] == "OR" ) {
         $t = $this->recursiveSearchClause( $p[1], $p[0] );
         $text .= " ($t)";
@@ -490,7 +490,7 @@ class DB {
           break;
         }
         $p[2] = $this->checkSlashes($p[2]);
-        if( !$p[3] && ereg("[a-zA-Z]",$p[2]) ) {
+        if( count($p)<4 && ereg("[a-zA-Z]",$p[2]) ) {
           if( !Zen::inString('mysql',$this->database_type) 
             && !Zen::inString('mssql',$this->database_type) ) {
             $p[0] = "lower($p[0])";

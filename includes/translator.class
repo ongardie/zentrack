@@ -195,9 +195,12 @@ class Translator {
 	if( !isset($this->_translationCache[$translationFile][$string]) ) {
 	  // translation string doesn't exist, send an error
 	  $this->_zenObj->addDebug("Translator->trans", "Translation does Not Exist: '$string'\n", 4);
-	  $error = true;	  
+	  $error = true;
+	  $translatedString = '';
 	}
-	$translatedString = $this->_translationCache[$translationFile][$string];
+	else {
+	  $translatedString = $this->_translationCache[$translationFile][$string];
+	}
 	if ($translatedString == '') {
 	  //Translated string exists, but isn't filled out, so send a notice
 	  if( $this->_locale != "english" )

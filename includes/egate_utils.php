@@ -191,7 +191,7 @@
   $translator_init = array(
      'domain' => 'translator',
      'path' => "$libDir/translations",
-     'locale' => $login_language
+     'locale' => (empty($login_language)? 'english' : $login_language)
   );
   $translator_init['zen'] =& $zen;
   tr($translator_init);
@@ -298,11 +298,13 @@
 	  }
 	}
       }
+      // this is a "So-and-so Wrote: " line in the body
+      else if( preg_match("/^[a-zA-Z][a-z.@_ -]+ wrote:$/m", $l) ) { continue; }
       // this is some junk text returned by the user hitting the reply
       // button, or an @end comment so skip it
       else if( preg_match("/^( *>| *@end)/", $l) ) { continue; }
       // all other text becomes part of the details
-      else { $params["details"] .= $l."\n"; }      
+      else if( strlen($l) ) { $params["details"] .= $l."\n"; }      
     }
     $params["details"] = trim($params["details"]);
     return( $params );
@@ -326,7 +328,7 @@
     
     // record what we recieved
     egate_log( "From: ".$structure->headers["from"]
-	       ."\nReply-to: ".$structure->headers["reply-to"]
+	       ."\nReply-to: ".(empty($structure->headers["reply-to"])? '' : $structure->headers['reply-to'])
 	       ."\nSubject: ".$structure->headers["subject"], 2 );
     
     return $structure;
@@ -624,7 +626,7 @@
       }      
     }
     
-    $vals = check_magic_quotes($vals);
+    //$vals = check_magic_quotes($vals);
 
     // include the proper template
     //egate_store_subject("Create New Ticket");
@@ -666,7 +668,7 @@
 	return 0;
       }
     }
-    return 0;
+    return false;
   }
 
   /**
@@ -692,7 +694,7 @@
 	egate_log("invalid login name ignored: $login",2);
       }
     }
-    if( !$user_id && $email ) {
+    if( empty($user_id) && $email ) {
       egate_log("locating user by email '$email'", 3);
       $users_by_email = $zen->get_users_by_email($email);
       if( is_array($users_by_email) ) {
@@ -723,8 +725,8 @@
 	}
       }
     }
-    if( !$user_id ) {
-      egate_log("selected default user (egate account): $user_id",3);
+    if( empty($user_id) ) {
+      egate_log("selected default user (egate account): {$egate_user['user_id']}",3);
       $user_id = $egate_user["user_id"];
     }
     return $user_id;
@@ -769,14 +771,14 @@
     $text = trim($text);
     // check for #nnnn
     $text = preg_replace("/^#([0-9]+)$/", "\\1", $text);
-    if( !preg_match("/[^0-9]/", $text) && strlen($text) && intval($text) > 0 ) {
+    if( preg_match("/^[0-9]+$/", $text) && strlen($text) && intval($text) > 0 ) {
       // here we look for an id, if found, we validate it
-      $ticket = $zen->get_ticket($text);
+      $ticket = $zen->get_ticket(intval($text));
       if( is_array($ticket) ) {
 	return $ticket["id"];
       }
       else {
-	egate_log("Ticket #$text not found",2);
+	egate_log("Ticket #$text not found",3);
 	return 0;
       }
     }
@@ -792,10 +794,10 @@
 	}
       }
       if( is_array($vals) ) {
-	if( count($vals) > 0 ) {
+	if( count($vals) > 1 ) {
 	  // if we have more than one, we return an error, since
 	  // we aren't sure what the right one is
-	  egate_log("More than one ticket with that title, please try the id",2);
+	  egate_log("More than one ticket found with title $text",2);
 	  return 0;
 	}
 	else {
@@ -804,7 +806,7 @@
 	}
       }
       else {
-	egate_log("Title didn't match any active tickets",2);
+	egate_log("Title didn't match any active tickets",3);
 	return 0;
       }
     }
@@ -878,7 +880,7 @@
     if( !isset($body["details"]) )
       $body["details"] = "";
     
-    $body = check_magic_quotes($body);
+    //$body = check_magic_quotes($body);
 
     // format a name entry for logging
     $fullname = ($name)? "\"$name\" <$email>" : $email;
@@ -1298,7 +1300,7 @@
 
     // todo: send a reply email
     $rec = array(array("name"=>$name,"email"=>$email));
-    $rep = send_reply_mail( $rec, $id, $success, "new ticket" );
+    $rep = send_reply_mail( $rec, $id, $success && $id, "new ticket" );
     if( !$rep ) {
       egate_log("reply email failed to $name <$email>",2);
     }
@@ -1346,7 +1348,12 @@
     if( !empty( $egate_originalemail_prefix ) ) {
       preg_replace($egate_originalemail_prefix, "", $body['details']);
     }
-
+    // removes "so-and-so wrote:" lines from the email
+    $body['details'] = preg_replace("/^[a-zA-Z][a-zA-Z.@_ -]+? wrote: *\r?\n?$/m", "", $body['details']);
+    // the spacing is very pesky and hard to trim because of \r and . characters. Do this one
+    // last time to try and clean it up
+    $body['details'] = preg_replace("@[\r\n ]+\\.?$@s", "", trim($body['details']));
+    
     // add in overrides, if the user has specified any by putting
     // 'field:value' entries at the top of the message body
     if( $egate_create_overrides == 1 && count($egate_create_fields) > 0 ) {
@@ -1378,7 +1385,7 @@
     
     // set up the return email address
     // and the user's name, if it can be found
-    $email = $params->headers["reply-to"]? 
+    $email = !empty($params->headers["reply-to"])? 
       trim($params->headers["reply-to"]) : trim($params->headers["from"]);
     if( preg_match("/([^<]*)<([a-zA-Z0-9_@.-]+)>/", $email, $matches) ) {
       $name = trim($matches[1]);
@@ -1495,15 +1502,9 @@
     $templates = egate_fetch_templates();
     
     // send an email if we have data
-    if( (is_array($messages)&&count($messages))
-	||(is_array($templates)&&count($templates)) ) {
+    if( !empty($messages) || !empty($templates) ) {
       $text = "";
       
-      // IS THIS NECESSARY??? (amikus)
-      //if( !is_array($templates) || !count($templates) ) {
-	//$templates = array("reply.template");
-      //}
-
       // grab the params
       $valid_actions = fetch_valid_actions($id);      
       $vals = array("success"  =>   $success,
@@ -1515,15 +1516,18 @@
       // create header
       $temp = new zenTemplate("$libDir/templates/email/heading.template");
       $temp->values($vals);
-      $txt .= $temp->process();
+      $text .= $temp->process();
 
-      if( $id > 0 && !in_array($action,array("help","template")) ) {
-	// create reply
-	$temp = new zenTemplate("$libDir/templates/email/reply.template");
-	$temp->values($vals);
-	$txt .= $temp->process();
-	$subject = "Ticket #$id: results";
-	$subject .= ($success)? " (successful)" : " (failed)";
+      if( $id ) {
+	// create a subject
+        $ticket = $zen->get_ticket($id);
+	if( $ticket ) {
+	  $subject = "Re: #$id - {$ticket['title']}";
+	}
+	else {
+	  $subject = "Re: #$id ($action)";
+	}
+	$templates[] = "reply.template";
       }
       else if( $action == "template" ) {
 	$subject = egate_get_subject();
@@ -1531,27 +1535,28 @@
 	$vals = fetch_template_vals($vals);
       }
       else if( $action ) {
-	$subject = "Re: $action ";
-	$subject .= ($success)? " (successful)" : " (failed)";
+	$subject = "Re: $action (".($success? "successful" : "failed").")";
       } else {
-	$subject = "request ".($success? "(successful)":"(failed)");
+	$subject = "request ".($success? "successfull":"failed");
+      }
+
+      if( empty($templates) ) {
+	$templates = array("messages.template");
       }
       
       // include extra footer templates
-      if( is_array($templates) ) {
-	// run through templates
-	foreach( $templates as $t ) {
-	  $temp = new zenTemplate("$libDir/templates/email/$t");
-	  $temp->values($vals);
-	  $txt .= $temp->process();
-	}
+      // run through templates
+      foreach( $templates as $t ) {
+	$temp = new zenTemplate("$libDir/templates/email/$t");
+	$temp->values($vals);
+	$text .= $temp->process();
       }
       
       if( $action != "help" && $action != "template" ) {
 	// create footer	
 	$temp = new zenTemplate("$libDir/templates/email/footer.template");
 	$temp->values($vals);	
-	$txt .= $temp->process();
+	$text .= $temp->process();
       }
 
       $subject = "[".$zen->getSetting("bot_name")."] ".$subject;
@@ -1564,7 +1569,7 @@
       $bcc = $egate_bcc_address? "Bcc:$egate_bcc_address\r\n" : "";
       foreach($recipients as $r) {
         if( is_array($r) && count($r) && $r["email"] != $egate_user["email"] ) {
-        $res = mail($r['email'],$subject,$txt,"From: $from_fname $from_lname <$from_address>\r\nReply-to:$from_address\r\n$bcc");
+        $res = mail($r['email'],$subject,$text,"From: $from_fname $from_lname <$from_address>\r\nReply-to:$from_address\r\n$bcc");
         if( $res )
           $i++;
         }
@@ -1601,9 +1606,9 @@ function checkForMail($conn) {
   egate_log("Ack: $ack, Num Messages: $numMessages\n$output", 3);
   
   if ($numMessages > 0) {
-    egate_log("***New mail***",2);
+    egate_log("***New mail***",3);
   } else {
-    egate_log("***No mail***", 2);
+    egate_log("***No mail***", 3);
   }
   return $numMessages;
 }
@@ -1620,13 +1625,16 @@ function getEmail($conn, $num) {
       $message .= $output;
     }
   }
+  else {
+    egate_log($output, 2);
+  }
   
   return $message;
 }
 
 /* function deleteMessage - Delete messages from pop3 server after downloading them. */
 function deleteMessage($conn, $message) {
-  fputs($conn, "DELE $message\r\n");
+  //fputs($conn, "DELE $message\r\n");
 }
 
 /* function popConnect - Connects to the designated pop3 mail server, using the supplied credentials. */
@@ -1677,7 +1685,7 @@ function popDisconnect($conn) {
    */
   function get_ticket_id_from_subject($subject) {
     preg_match( '@#([0-9]+)@', $subject, $matches );
-    if( count($matches > 1) ) { return $matches[1]; }
+    if( count($matches) > 1 ) { return $matches[1]; }
     return false;
   }
   
@@ -1765,9 +1773,14 @@ function popDisconnect($conn) {
    else {
      // we create a new ticket
      $id = create_new_ticket($user_id, $name, $email, $attributes);
-     egate_log("Created ticket #$id for $user_id/$name/$email",3);
+     if( $id ) {
+       egate_log("Created ticket #$id for $user_id/$name/$email",3);
+     }
+     else {
+       egate_log("Failed to create ticket",1);
+     }
      $rec = array(array("name"=>$name,"email"=>$email));
-     send_reply_mail($rec, $id, TRUE, "new ticket");
+     send_reply_mail($rec, $id, $id !== false, "new ticket");
    }
    return true;
  }

@@ -210,8 +210,7 @@ class zenTrack extends zen {
     
     // load from database
     $id = $this->checkNum($id);
-    $table = ($archive_flag)? 
-      $this->table_tickets_archived : $this->table_tickets;
+    $table = $this->table_tickets;
     $query = "SELECT * FROM $table WHERE id = $id";
     $vals = $this->db_quickIndexed($query);
     $this->addDebug("get_ticket","result: ".(is_array($vals)?"success":"failed")
@@ -1443,8 +1442,9 @@ class zenTrack extends zen {
           $valueColumnIndex = $f['field_value']-1;
           $fn = $behavior['field_name'];
        }
-       else {
-          $fn = $f['field_name'];
+       else if( !empty($f['field_name']) ) {
+         //todo: if it is empty, is that a bug?
+         $fn = $f['field_name'];
        }
        $possibleValues[$fn] = $this->getValsForTicketField( $fn, $validBins );
      }
@@ -4042,7 +4042,6 @@ class zenTrack extends zen {
     $subject = "[".$this->getSetting("bot_name")."] ".$subject;
     
     // figure out who sent it
-    $message = (get_magic_quotes_gpc())? stripslashes($message) : $message;
     $message = preg_replace(
                             array("#&amp;#", "#&lt;#", "#&gt;#", "#&quot;#"),
                             array("&", "<",">",'"'), $message);
@@ -4100,7 +4099,6 @@ class zenTrack extends zen {
         $s = $egate_user;
         if( !is_array($s) ) {
           $this->addDebug("sendEmail", "Egate login not found!",1);
-          $message = (get_magic_quotes_gpc())? $message : addslashes($message);
         }
         else {
           $sender = $s["email"];
@@ -4117,14 +4115,9 @@ class zenTrack extends zen {
           }
           $ft_tmp->values(array("id"=>$id));
           // finalize and send the message
-          $message = (get_magic_quotes_gpc())? $message : addslashes($message);
           $message = $hd_tmp->process().$message.$ft_tmp->process();
         }
       }
-      else {
-        $message = (get_magic_quotes_gpc())? $message : addslashes($message);
-      }
-      $subject = (get_magic_quotes_gpc())? $subject : addslashes($subject);
       $headers = $this->_fixCrLf($headers);
       $message = $this->_fixCrLf($message);
       $this->addDebug("sendEmail","$recipient_address::$subject::$headers",3);
@@ -4644,7 +4637,7 @@ class zenTrack extends zen {
     $bool = null;
 
     // if they have a bin specific access check that
-    if( strlen($access["$bin_id"]) ) {
+    if( isset($access["$bin_id"]) && strlen($access["$bin_id"]) ) {
       $bool = $access["$bin_id"] >= $level;
     } 
     // otherwise just check against their default access
@@ -4753,22 +4746,14 @@ class zenTrack extends zen {
       }
     } else if( $c["owner"] > 0 ) {
       // here we must be the owner (or there is an override)
-      // see if we can override this
-      // if so, we need to find out if we are a super
-      if( $c["override"] ) {
+      // if we aren't the owner, check for super
+      if( $ticket["user_id"] != $user_id ) {
         $user = $this->get_user($user_id);
         $access = $this->getAccess($user_id);
-      }
-      // if we aren't the owner, check special conditions
-      // then return false if not met
-      if( $ticket["user_id"] != $user_id ) {
-        if( !$c["override"] 
-            || ( strlen($access["$bin_id"]) 
-                 && $access["$bin_id"] < $this->getSetting("level_super") )
-            || ( !strlen($access["$bin_id"]) 
-                 && $user["access_level"] < $this->getSetting("level_super") )
-                 ) {
-          $this->addDebug('actionApplicable', "[{$action}]must be owner or meet override", 3);                   
+        $bin_access = isset($access["bin_id"])? $access["$bin_id"] : $user["access_level"];
+        $access_prevents = $bin_access < $this->getSetting("level_super");
+        if( empty($c["override"]) || $access_prevents ) { 
+          $this->addDebug('actionApplicable', "[{$action}]must be owner or meet override", 3);
           return false;
         }
       }

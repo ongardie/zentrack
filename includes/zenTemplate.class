@@ -207,7 +207,7 @@ class zenTemplate {
         	else {
           		$s = str_replace("{selected}", $selected, $str);
           		$s = str_replace("{value}", $v, $s);
-          		$s = str_replace("{rowcolor}", $c, $s);
+          		$s = str_replace("{rowcolor}", $this->_vars['rowcolor'], $s);
 		        $txt .= $s;
         	}
 	    }
