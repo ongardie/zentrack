@@ -15,11 +15,13 @@ abstraction, and endless possibilities for project expansion.
   Fixing a problem with a left join in MS SQL reported in http://www.zentrack.net/modules/newbb/viewtopic.php?viewmode=flat&topic_id=1067&forum=1
    - zentrack_2/includes/zenNotifier.php 1.5
   Setting in configVars the field separator used when returning an item from a searchbox
+   - zentrack_2/includes/ZenSearchBox.php 1.8
    - zentrack_2/includes/ZenSearchBox.php 1.7
+   - zentrack_2/includes/ZenSearchBoxContact.php 1.7
    - zentrack_2/includes/ZenSearchBoxContact.php 1.6
+   - zentrack_2/includes/headerInc.php 1.86
    - zentrack_2/includes/headerInc.php 1.85
    - zentrack_2/install/configVars.php.default 1.18
-
 
 
 2008-08-30, Kato
