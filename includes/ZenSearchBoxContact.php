@@ -61,6 +61,9 @@ class ZenSearchBoxContact extends ZenSearchBox {
     $txt .= "<option value='0' $sel>".tr('-none-')."</option>";
     $jsvar = "var company = new Array();";
     if( is_array($this->_company) ) {
+      if (strlen($this->_zen->searchbox_FS)==0) {
+        $this->_zen->searchbox_FS=",";
+      }
       foreach($this->_company as $id=>$c) {
         $cname=$this->_zen->ffv($c['title']);
         $cinfo=$this->_zen->ffv($c['title'].$this->_zen->searchbox_FS.$c['office'].$this->_zen->searchbox_FS

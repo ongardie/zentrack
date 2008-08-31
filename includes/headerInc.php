@@ -445,6 +445,9 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
             $n4 = trim(trim($u["telephone"]." ".$u["mobiel"])." ".$company["telephone"]);
             $n5 = trim(trim(trim(trim($company["address1"]." ".$company["address2"])." ".$company["address3"])));
           }
+          if (strlen($zen->searchbox_FS)==0) {
+            $zen->searchbox_FS=",";
+          }
           $text = Zen::ffv($n1.$zen->searchbox_FS.$n2.$zen->searchbox_FS.$n3.$zen->searchbox_FS.$n4.$zen->searchbox_FS.$n5);
         } else {
           $text = Zen::ffv($map->getTextValue($formview, $k, $val));

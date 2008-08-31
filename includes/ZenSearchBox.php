@@ -167,6 +167,9 @@ class ZenSearchBoxResults {
     global $zen;
     if( is_array($this->_label) ) {
       $txt = '';
+      if (strlen($zen->searchbox_FS)==0) {
+        $zen->searchbox_FS=",";
+      }
       foreach($this->_label as $k) {
         $txt .= $txt? $zen->searchbox_FS.$row[$k] : $row[$k];
       }
