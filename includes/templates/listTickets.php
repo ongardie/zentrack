@@ -218,7 +218,9 @@ print "</td></tr>";
    $ttl_est = 0;
    $ttl_wkd = 0;
    $ttl_ext = "";
+   $idlist = array();
    foreach($tickets as $t) {
+     $idlist[] = $t['id'];
      $est = null;
      $wkd = null;
      $per = "n/a";
@@ -370,6 +372,12 @@ print "</td></tr>";
           }
            ?>
      </form>
+	 <? if( $zen->checkNum($login_level) >= $zen->getSetting('level_settings') ) { ?>
+     <form method="post" action="admin/deleteTicket.php" style="display: inline; margin: 0px;">
+	 <input type='hidden' name="tickets_to_delete" value="<?=join(" ",$idlist)?>">
+          <input type="submit" class="smallSubmit" value="<?=tr("Delete Tickets")?>">
+     </form>
+          <? } ?>
      <form method="post" action="exportSearch.php" style="display: inline; margin: 0px;">
           <input type="submit" class="smallSubmit" value="<?=tr("Export Results")?>">
           <input type="hidden" name="search_text" value="<?=$zen->ffv($search_text)?>">

@@ -2033,24 +2033,25 @@ class zenTrack extends zen {
     return( $this->add_ticket($params) );
   }
 
-  function delete_project( $pid, $archive_flag = 0 ) {
+  function delete_project( $pid ) {
     // drop project, all associated tickets
     // all log entries of those tickets, and
     // all their data from the db
-    // if $archive_flag = 1, then deletes from the
-    // archive table
     $pid = $this->checkNum($pid);
-    $children = $this->getProjectChildren($pid, array('id'), $archive_flag);
+    $children = $this->getProjectChildren($pid, array('id'));
+    $ids = array($pid);
+    $c = 0;
     for($i=0; $i<count($children); $i++) {
-      $ids[] = $children["id"];
+      if( $this->delete_ticket($children[$i]["id"]) !== false ) {
+        $c++;
+      }
     }
-    //drop the tickets under this project      
-    $this->delete_ticket($ids, $archive_flag); 
-    $this->delete_log($pid, NULL, $archive_flag);
-    $table = ($archive_flag)? $this->table_tickets_archived : $this->table_tickets;
-    $query = "DELETE FROM $table WHERE id = $pid";
-    $this->_session->clearDataCache('tickets',$id);
-    return( $this->db_result($query) );
+
+    // drop the actual project
+    $res = $this->delete_ticket($pid);
+
+    //drop the tickets under this project
+    return $res !== false? $c : false;
   }
 
   function close_project( $pid, $params = '', $override = 0 ) {
@@ -2926,28 +2927,42 @@ class zenTrack extends zen {
   }
 
    
-  function delete_ticket( $id, $archive_flag = 0 ) {
+  function delete_ticket( $id ) {
     // drop a ticket, its log entries, and 
     // all associated data from the db
     // $id can be an array
-    $this->delete_log($id, $archive_flag);
-    $table = ($flag)? 
-      $this->table_tickets_archived : $this->table_tickets;
-    if( is_array($id) ) {
-      $where = ' id IN(';
-      for($i=0; $i<count($id); $i++) {
-        if( $i > 0 ) { $where .= ','; }
-        $where .= $this->checkNum($id[$i]);
-      }
-      $where .= ')';
+
+    // check for projects, they need additional processing
+    $ticket = $this->get_ticket($id);
+    if( $this->inProjectTypeIDs($ticket['type_id']) ) {
+      return $this->delete_project($id);
     }
-    else {
-      $where = " id = ".$this->checkNum($id);
-    }
+
+    // set up the query
+    $table = $this->table_tickets;
+    $where = " id = ".$this->checkNum($id);
     $query = "DELETE FROM $table WHERE $where";
+
+    // perform the delete
     $this->addDebug("delete_ticket",$query,2);
+    $res = $this->db_result($query);
+
+    // remove the log
+    $this->delete_log($id);
+    
+    // delete varfields
+    $where = " ticket_id = ".$this->checkNum($id);
+    $query = "DELETE FROM {$this->table_varfield} WHERE $where";
+    $res = $res !== false && $this->db_result($query) !== false;
+    $query = "DELETE FROM {$this->table_varfield_multi} WHERE $where";
+    $res = $res !== false && $this->db_result($query) !== false;      
+    $query = "DELETE FROM {$this->table_attachments} WHERE $where";
+    $res = $res !== false && $this->db_result($query) !== false;      
+    $query = "DELETE FROM ZENTRACK_RELATED_CONTACTS WHERE $where";
+    $res = $res !== false && $this->db_result($query) !== false;
     $this->_session->clearDataCache('tickets',$id);
-    return( $this->db_result($query) );
+
+    return $res;
   }
 
   /**

@@ -43,6 +43,7 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
     <input type="text" name="id" size="8" maxlength="12">
    </form>
    <script>setFocalPoint('ticketIdForm','id');</script>
+   </blockquote>
    <?
   }
 ?>

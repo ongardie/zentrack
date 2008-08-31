@@ -25,6 +25,7 @@
   <td class='leftNavTitle' height='25' valign='middle'><?=tr("Tickets")?></td>
 </tr>
 <?=ztGetNavigatorRow($hk->tt('Edit Tickets'), "/admin/editTicket.php", $hk->ll("Edit Tickets"));?>
+<?=ztGetNavigatorRow($hk->tt('Delete Tickets'), "/admin/deleteTicket.php", $hk->ll("Delete Tickets"));?>
 <?=ztGetNavigatorRow($hk->tt('Edit Field Map'), "/admin/fieldMap.php", $hk->ll("Edit Field Map"));?>
 <!--
 <tr>
