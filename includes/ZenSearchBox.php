@@ -164,10 +164,11 @@ class ZenSearchBoxResults {
   function id( $row ) { return $row[$this->_id]; }
   
   function label( $row ) {
+    global $zen;
     if( is_array($this->_label) ) {
       $txt = '';
       foreach($this->_label as $k) {
-        $txt .= $txt? chr(183).$row[$k] : $row[$k];
+        $txt .= $txt? $zen->searchbox_FS.$row[$k] : $row[$k];
       }
       return $txt;
     }
