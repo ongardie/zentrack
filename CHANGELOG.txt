@@ -11,6 +11,24 @@ and user experience, internationalization, platform and database
 abstraction, and endless possibilities for project expansion. 
 --------------------
 
+2008-09-13, cfalonso, Revision 25:
+  Fixing a problem with a left join in MS SQL reported in http://www.zentrack.net/modules/newbb/viewtopic.php?viewmode=flat&topic_id=1067&forum=1
+   - zentrack_2/includes/zenNotifier.php
+
+2008-09-13, cfalonso, Revision 24:
+  Making the contacts searchbox wider
+   - zentrack_2/www/javascript.js
+
+2008-09-13, cfalonso, Revision 23:
+  Setting in configVars the field separator used when returning an item from a searchbox
+   - zentrack_2/includes/ZenSearchBox.php 
+   - zentrack_2/includes/ZenSearchBox.php
+   - zentrack_2/includes/ZenSearchBoxContact.php 
+   - zentrack_2/includes/ZenSearchBoxContact.php
+   - zentrack_2/includes/headerInc.php
+   - zentrack_2/includes/headerInc.php
+   - zentrack_2/install/configVars.php.default
+
 2008-08-30, Kato
   Fixed search export date formats
    - zentrack_2/www/exportSearch.php 1.5
