@@ -2842,7 +2842,7 @@ class zenTrack extends zen {
       // create an entry in the varfield table
       $query = "INSERT INTO ".$this->table_varfield." (ticket_id) VALUES($id)";
       if( !$this->db_result($query) ) {
-        $this->addDebug('add_ticket', 'varfield query failed: $query', 1);
+        $this->addDebug('add_ticket', "varfield query failed: $query", 1);
       }
 
       // create the notify list for this ticket
@@ -5930,7 +5930,7 @@ class zenTrack extends zen {
     $query = "SELECT company_id,title,office,email FROM ZENTRACK_COMPANY ORDER BY title asc";
     $this->addDebug("get_contact_all",$query,3);
     return( $this->db_queryIndexed($query) );
-  }  
+  }
   
   function get_contact($id,$t,$c) {
     //get a single contact
