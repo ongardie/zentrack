@@ -58,7 +58,7 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
     }
     $zen->addDebug("searchResults.php-params[]",join("|",$dp),3);
     // debug
-    $logs = $zen->search_logs($params, "AND");
+    $logs = $zen->search_logs($params);
   } else {
     // set an error message
     $errs[] = tr("No valid fields were provided to conduct a search");

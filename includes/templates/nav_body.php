@@ -5,7 +5,7 @@
   * Requirements:
   *   $imageUrl - (String)http url to access images directory
   *   $rootUrl - (String)http url for the root ZT directory
-  *   $zen - (zenTrack.class instance)
+  *   $zen - (zenTrack instance)
   *   $hotkeys - (ZenHotkeys) instance of hot key util
   *   $load_section - (boolean)true if a left nav will be displayed
   *   $sect - (string)name of left nav to display

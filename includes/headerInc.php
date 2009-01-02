@@ -62,10 +62,10 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
 
   // if these change, they will need to be changed
   // in egate_utils.php as well!
-  include_once("$libDir/translator.class");
-  include_once("$libDir/zenTrack.class");
-  include_once("$libDir/ZenFieldMap.class");
-  include_once("$libDir/zenTemplate.class");
+  include_once("$libDir/translator.class.php");
+  include_once("$libDir/zenTrack.class.php");
+  include_once("$libDir/ZenFieldMap.class.php");
+  include_once("$libDir/zenTemplate.class.php");
   
   $zen = new zenTrack( $configFile );
   $map =& new ZenFieldMap($zen);
@@ -91,7 +91,7 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
   unset($translator_init);
   
   // this must be initialized after the translator is started
-  include_once("$libDir/ZenHotKeys.class");
+  include_once("$libDir/ZenHotKeys.class.php");
   $hotkeys =& new ZenHotKeys($zen);
 
   function uptr($string, $vals = '') {
@@ -445,10 +445,7 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
             $n4 = trim(trim($u["telephone"]." ".$u["mobiel"])." ".$company["telephone"]);
             $n5 = trim(trim(trim(trim($company["address1"]." ".$company["address2"])." ".$company["address3"])));
           }
-          if (strlen($zen->searchbox_FS)==0) {
-            $zen->searchbox_FS=",";
-          }
-          $text = Zen::ffv($n1.$zen->searchbox_FS.$n2.$zen->searchbox_FS.$n3.$zen->searchbox_FS.$n4.$zen->searchbox_FS.$n5);
+          $text = Zen::ffv($n1.chr(183).$n2.chr(183).$n3.chr(183).$n4.chr(183).$n5);
         } else {
           $text = Zen::ffv($map->getTextValue($formview, $k, $val));
         }
@@ -626,7 +623,7 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
    */
   function ztLoginRequired() {
     $section = getZtSection();
-    return $section != 'help' && $section != 'js' && $section != 'css';
+    return $section != 'help' && $section != 'js' && $section != 'css' && $section != 'api';
   }
   
   function eLink($email) {
@@ -662,7 +659,7 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
   * This array is reset when a logoff occurs, so make sure this
   * is after the login include
   */
-  if( !array_key_exists('data_groups', $_SESSION) || !$_SESSION['data_groups'] ) {
+  if( !array_key_exists('data_groups', $_SESSION) || !is_array($_SESSION['data_groups']) ) {
     $_SESSION['data_groups'] = $zen->generateDataGroupInfo();
   }
 

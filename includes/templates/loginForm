@@ -15,21 +15,19 @@
   
   <input type='hidden' name='TODO' value='Log On'>
 
-  <input type='text' name='username' value='<?=strip_tags($zentrackUsername)?>' width=20 maxlength=20 title="<?=$hotkeys->tt("Login Name")?>">&nbsp;<?=$hotkeys->ll("Login Name")?>
+  <label for='username'><?=$hotkeys->ll("Login Name")?></label>
+  <input type='text' id='username' name='username' value='<?=strip_tags($zentrackUsername)?>' width=20 maxlength=20 title="<?=$hotkeys->tt("Login Name")?>">
 
-  <br>
+  <label for="passphrase"><?=$hotkeys->ll("Password")?></label>
+  <input type="password" name="passphrase" id='passphrase' width=20 maxlength=20 title="<?=$hotkeys->tt("Password")?>">
 
-  <input type="password" name="passphrase" width=20 maxlength=20 title="<?=$hotkeys->tt("Password")?>">&nbsp;<?=$hotkeys->ll("Password")?>
-
-  <p>
-  
   <? if( $zen && $zen->settingOn('allow_pwd_save') ) { ?>
-  <p>
+  <label>
   <input type='checkbox' name='save_my_password' value='1'> <?=$hotkeys->ll("In the future, log me in automatically (using a cookie)")?>
-  </p>
+  </label>
   <?  }  ?>
 
-  <? renderDivButton( $hotkeys->find('Log On'), 'window.document.loginForm.submit()' ); ?>
+  <p><? renderDivButton( $hotkeys->find('Log On'), 'window.document.loginForm.submit()' ); ?></p>
 
   </form>
 

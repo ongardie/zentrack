@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Form xmlns:mx="http://www.adobe.com/2006/mxml" creationComplete="init()">
+
+	<mx:Script>
+		<![CDATA[
+			import com.zentrack.control.events.logon.ConfigRequestEvent;
+			import com.zentrack.control.events.data.GetTicketListRequestEvent;
+			import com.zentrack.model.ModelLocator;
+			import com.zentrack.control.events.logon.LogOnRequestEvent;
+
+			[Bindable]
+			private var __model:ModelLocator = ModelLocator.getInstance();
+
+			private function init() : void {
+				txtUserName.setFocus();
+			}
+
+			private function onLogOn():void {
+				new LogOnRequestEvent(txtUserName.text, txtPassword.text).dispatch();
+			}
+		]]>
+	</mx:Script>
+	<mx:FormItem label="User Name">
+		<mx:TextInput id="txtUserName"/>
+	</mx:FormItem>
+	<mx:FormItem label="Password">
+		<mx:TextInput id="txtPassword" displayAsPassword="true" enter="onLogOn()"/>
+	</mx:FormItem>
+	<mx:FormItem>
+		<mx:Button label="Log On" click="onLogOn()"/>
+	</mx:FormItem>
+	
+</mx:Form>

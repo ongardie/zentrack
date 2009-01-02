@@ -13,7 +13,7 @@
   else if( file_exists("../header.php") ) {
     include_once("../header.php");
   }
-  
+
   // determine if we are viewing a project or a ticket
   if( !isset($view) || $view != 'project_view' ) {
     $view = 'ticket_view';
@@ -172,6 +172,9 @@
       $onLoad[] = "behavior_js.php?formset=".$zen->ffv($page_mode);
     }
   }
+
+  // load javascript for the yui tree used in ticket_load_projecttree.php
+  $onLoad[] = "http://yui.yahooapis.com/combo?2.5.2/build/yahoo/yahoo-min.js&2.5.2/build/event/event-min.js&2.5.2/build/treeview/treeview-min.js";
   
   /*
   ** PRINT OUT THE PAGE

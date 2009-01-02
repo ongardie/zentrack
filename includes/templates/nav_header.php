@@ -7,7 +7,7 @@
   *   $imageUrl - (String)http url to access images directory
   *   $rootUrl - (String)http url for the root ZT directory
   *   $id - (integer)ticket id, if applicable
-  *   $zen - (zenTrack.class instance)
+  *   $zen - (zenTrack instance)
   *   $onLoad - (array)javascripts to load with this page
   *   $Debug_Mode - (integer) debug output level to utilize
   */
@@ -33,14 +33,18 @@
   <?
   for($i=0; $i<count($onLoad); $i++) {
     $s = $onLoad[$i];
-    if( strpos($s, '?') > 0 ) { $s .= "&v=$jsv"; }
-    else { $s .= "?v=$jsv"; }
-    print "<script language='javascript' src='$rootUrl/$s'></script>\n";
+    if( strpos($s, "http://") !== 0 ) {
+      if( strpos($s, '?') > 0 ) { $s .= "&v=$jsv"; }
+      else { $s .= "?v=$jsv"; }
+      $s = "$rootUrl/$s";
+    }
+    print "<script language='javascript' src='$s'></script>\n";
   }
   ?>
 
   <LINK HREF="<?=$rootUrl?>/styles.php?v=<?=$jsv?>" REL="STYLESHEET" TYPE="text/css">
 	<link rel="stylesheet" href="<?=$rootUrl?>/js_color_picker_v2.php?v=<?=$jsv?>" type="text/css" media="screen">
+  <link rel="stylesheet" type="text/css" href="<?=$rootUrl?>/css/yui/folder/tree.css">
   <script type='text/javascript'>
     var focusField = false;
     

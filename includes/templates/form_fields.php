@@ -13,6 +13,20 @@
    *   $td - true if this is an edit form, false if it is a new ticket
    */
    
+   /**
+    * GENERATES an addbox, which is a special field used to enter values in a
+    * form that will require a lookup and special processing later. Addbox is
+    * currently only implemented for the ticket_create screen's notify list.
+    * 
+    * Using it for other things could be catastrophic.
+    *
+    * @param ZenFieldMapRenderContext $context
+    */
+   function renderAddbox($context) {
+     global $templateDir;
+     include("$templateDir/addBoxForm.php");
+   }
+   
   // calculate the bins which this user can access
   $access_level = $map->getViewProp($formview, 'access_level');
   $userBins = $zen->getUsersBins($login_id, $access_level);
@@ -27,13 +41,13 @@
   $fields = $map->listFieldsForView($formview);
   $hidden_fields = array();
   $visible_fields = array();
-  $sections = array();
   foreach($fields as $f) {
     $field = $map->getFieldFromMap($formview,$f);
-    if( !$field['is_visible'] ) { $hidden_fields[] = $f; }
+    $t = $field['field_type'];
+    // addboxes can't be stored as hidden values -- not implemented
+    if( !$field['is_visible'] && $t != 'addbox' ) { $hidden_fields[] = $f; }
     else { 
       $visible_fields[] = $f;
-      if( $field['field_type'] == 'section' ) { $sections[] = $f; }
     }
   }
   
@@ -65,7 +79,12 @@
   $context->set('force_label', $override_as_label);
   foreach($visible_fields as $f) {
     $context->set('field', $f);
-    if (strcmp($f,"contacts")==0) {
+    $type = $map->getFieldProp($formview, $f, 'field_type');
+    if( $type == 'addbox' ) {
+      // no stored values for contact boxes
+      $context->set('value', '');
+    }
+    else if (strcmp($f,"contacts")==0) {
       $contact_ids = array();
       if (is_array($contacts)) {
         foreach ($contacts as $contact) {
@@ -80,7 +99,7 @@
     } else {
       $context->set('value', $varfields[$f]);
     }
-    if( in_array($f, $sections) ) {
+    if( $type == 'section' ) {
       print "<tr><td colspan='2' class='headerCell indent'>";
       print $map->renderTicketField($context);
       print "</td></tr>\n";
@@ -90,7 +109,7 @@
       if( $map->isReadOnlyField($formview, $f, $context) ) {
         $hk = false;
       }
-      else if( $map->getFieldProp($formview, $f, 'field_type') == 'searchbox' ) {
+      else if( $type == 'searchbox' ) {
         $hk = $hotkeys->activateSearchbox($maplabel, $form_name, $f);
       }
       else {
@@ -105,7 +124,7 @@
         print Zen::ffv($map->getTextValue($formview, $f, $ticket[$f]));
       }
       else {
-        if( $map->getFieldProp($formview, $f, 'field_type') == 'searchbox' ) {
+        if( $type == 'searchbox' ) {
           if ( strcmp($f,'contacts')==0 && $contacts) {
             $searchbox_vals[$f] = $contact_ids;
           } else if( $ticket[$f] ) {

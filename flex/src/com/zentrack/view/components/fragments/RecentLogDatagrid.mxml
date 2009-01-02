@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:DataGrid xmlns:mx="http://www.adobe.com/2006/mxml"
+	width="100%" height="100%" wordWrap="true" variableRowHeight="true"
+	sortableColumns="false" showHeaders="false" dataProvider="{__model.recentLogs}"
+	styleName="latestLogText" itemClick="onSelectRow(event)"
+	showEffect="Dissolve">
+
+	<mx:Script>
+		<![CDATA[
+			import mx.controls.Alert;
+			import com.zentrack.control.events.ticket.ViewTicketRequestEvent;
+			import mx.events.ListEvent;
+			import com.zentrack.model.ModelLocator;
+
+			[Bindable]
+			private var __model:ModelLocator = ModelLocator.getInstance();
+
+			private function onSelectRow(itemClickEvent:ListEvent) : void {
+				var selectedTicetID:int = itemClickEvent.currentTarget.dataProvider[itemClickEvent.rowIndex].ticketID;
+				if (__model.allTickets[selectedTicetID] != null) {
+					new ViewTicketRequestEvent(__model.allTickets[selectedTicetID]).dispatch();
+				} else {
+					Alert.show("Sorry, you do not have permission to access ticket #" + selectedTicetID,"Permission Denied");
+				}
+			}
+		]]>
+	</mx:Script>
+
+	<mx:columns>
+		<mx:DataGridColumn dataField="summary"/>
+	</mx:columns>
+
+</mx:DataGrid>

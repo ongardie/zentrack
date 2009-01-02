@@ -1,0 +1,52 @@
+/* These styles are important! Without them the SuperTabNavigator will 
+   look pretty crappy.
+ */
+	SuperTabNavigator {
+        popupButtonStyleName: "popupButton";
+        tabStyleName: "firefoxLikeTabs";
+        leftButtonStyleName: "leftButton";
+        rightButtonStyleName: "rightButton";
+	}
+	
+	.leftButton {
+		icon: Embed("../assets/tab_assets/tab_assets.swf#left_arrow");
+		fillAlphas: 1, 1, 1, 1;
+		cornerRadius:0;
+	}
+	
+	.rightButton {
+		icon: Embed("../assets/tab_assets/tab_assets.swf#right_arrow");
+		fillAlphas: 1, 1, 1, 1;
+		cornerRadius:0;
+	}
+	
+	.closeButton {
+		upSkin: Embed("../assets/tab_assets/tab_assets.swf#firefox_close_up");
+		downSkin: Embed("../assets/tab_assets/tab_assets.swf#firefox_close_down");	
+		overSkin: Embed("../assets/tab_assets/tab_assets.swf#firefox_close_over");
+		disabledSkin: Embed("../assets/tab_assets/tab_assets.swf#firefox_close_disabled");		
+	}
+	
+	.popupButton {
+		upSkin: ClassReference("com.dougmccune.skins.TabPopUpButtonSkin");
+		popUpDownSkin: ClassReference("com.dougmccune.skins.TabPopUpButtonSkin");	
+		popUpOverSkin: ClassReference("com.dougmccune.skins.TabPopUpButtonSkin");	
+		disabledSkin: ClassReference("com.dougmccune.skins.TabPopUpButtonSkin");		
+	}
+	
+	.firefoxLikeTabs {
+		highlightAlphas:   0, 0;
+		fillAlphas:        1, 1;
+/*
+	headerColors:         #ff0000, #f5d7d7;
+*/
+	   	fillColors:           #ffffff, #eeeeee;
+	   	backgroundColor:      #ff0000;
+	   	borderColor:          #ff0000;
+	   	borderThickness:      1;
+	   	color:                #000000;
+	   	textRollOverColor:    #000000;	
+	   	textAlign:            left;
+	   	indicatorClass:       Embed("../assets/tab_assets/tab_assets.swf#indicator");	
+		closeButtonStyleName: "closeButton";
+	}

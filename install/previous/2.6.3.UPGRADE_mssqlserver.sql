@@ -1,0 +1,51 @@
+
+CREATE INDEX zt_log_tid ON ZENTRACK_LOGS(ticket_id);
+CREATE INDEX zt_log_action ON ZENTRACK_LOGS(action);
+CREATE INDEX zt_ticket_pri ON ZENTRACK_TICKETS(priority);
+CREATE INDEX zt_ticket_stat ON ZENTRACK_TICKETS(status);
+
+INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,which_view,default_val,sort_order,field_type,num_cols,num_rows,is_required) VALUES(1034,'contacts', 'Contacts', 1, 'ticket_edit',NULL,'300','searchbox', 200, 1, 0);
+INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,which_view,default_val,sort_order,field_type,num_cols,num_rows,is_required) VALUES(1035,'contacts', 'Contacts', 1, 'ticket_create',NULL,'300', 'searchbox', 200, 1, 0);
+INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,which_view,default_val,sort_order,field_type,num_cols,num_rows,is_required) VALUES(1036,'approved','Approval','0','ticket_cview',NULL,'30','label','10','1','0');
+INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,which_view,default_val,sort_order,field_type,num_cols,num_rows,is_required) VALUES(1037,'bin_id','Bin','0','ticket_cview',NULL,'22','label','10','1','0');
+INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,which_view,default_val,sort_order,field_type,num_cols,num_rows,is_required) VALUES(1038,'creator_id','Creator','0','ticket_cview',NULL,'56','label','20','1','0');
+INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,which_view,default_val,sort_order,field_type,num_cols,num_rows,is_required) VALUES(1039,'ctime','Close Time','0','ticket_cview',NULL,'20','label','20','1','0');
+INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,which_view,default_val,sort_order,field_type,num_cols,num_rows,is_required) VALUES(1040,'custom_boolean1',NULL,'0','ticket_cview',NULL,'100','label','1','1','0');
+INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,which_view,default_val,sort_order,field_type,num_cols,num_rows,is_required) VALUES(1041,'custom_boolean2',NULL,'0','ticket_cview',NULL,'100','label','1','1','0');
+INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,which_view,default_val,sort_order,field_type,num_cols,num_rows,is_required) VALUES(1042,'custom_date1','Date 1','0','ticket_cview',NULL,'52','label','20','1','0');
+INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,which_view,default_val,sort_order,field_type,num_cols,num_rows,is_required) VALUES(1043,'custom_date2','Date 2','0','ticket_cview',NULL,'50','label','20','1','0');
+INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,which_view,default_val,sort_order,field_type,num_cols,num_rows,is_required) VALUES(1044,'custom_menu1',NULL,'0','ticket_cview',NULL,'100','menu','100','1','0');
+INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,which_view,default_val,sort_order,field_type,num_cols,num_rows,is_required) VALUES(1045,'custom_menu2',NULL,'0','ticket_cview',NULL,'100','menu','100','1','0');
+INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,which_view,default_val,sort_order,field_type,num_cols,num_rows,is_required) VALUES(1046,'custom_multi1', NULL, 0, 'ticket_cview', NULL, 100, 'label', 50, 8, 0);
+INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,which_view,default_val,sort_order,field_type,num_cols,num_rows,is_required) VALUES(1047,'custom_multi2', NULL, 0, 'ticket_cview', NULL, 100, 'label', 50, 8, 0);
+INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,which_view,default_val,sort_order,field_type,num_cols,num_rows,is_required) VALUES(1048,'custom_number1',NULL,'0','ticket_cview',NULL,'100','text','10','1','0');
+INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,which_view,default_val,sort_order,field_type,num_cols,num_rows,is_required) VALUES(1049,'custom_number2',NULL,'0','ticket_cview',NULL,'100','text','10','1','0');
+INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,which_view,default_val,sort_order,field_type,num_cols,num_rows,is_required) VALUES(1050,'custom_string1',NULL,'0','ticket_cview',NULL,'100','text','200','1','0');
+INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,which_view,default_val,sort_order,field_type,num_cols,num_rows,is_required) VALUES(1051,'custom_string2',NULL,'0','ticket_cview',NULL,'100','text','200','1','0');
+INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,which_view,default_val,sort_order,field_type,num_cols,num_rows,is_required) VALUES(1052,'custom_text1',NULL,'0','ticket_cview',NULL,'100','text','50','4','0');
+INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,which_view,default_val,sort_order,field_type,num_cols,num_rows,is_required) VALUES(1053,'deadline','Deadline','0','ticket_cview',NULL,'12','label','20','1','0');
+INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,which_view,default_val,sort_order,field_type,num_cols,num_rows,is_required) VALUES(1054,'elapsed','Elapsed','0','ticket_cview',NULL,'14','section','10','1','0');
+INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,which_view,default_val,sort_order,field_type,num_cols,num_rows,is_required) VALUES(1055,'est_hours','Estimated Hours','0','ticket_cview',NULL,'16','label','10','1','0');
+INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,which_view,default_val,sort_order,field_type,num_cols,num_rows,is_required) VALUES(1056,'otime','Open Time','0','ticket_cview',NULL,'8','label','20','1','0');
+INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,which_view,default_val,sort_order,field_type,num_cols,num_rows,is_required) VALUES(1057,'priority','Priority','0','ticket_cview',NULL,'2','label','50','1','0');
+INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,which_view,default_val,sort_order,field_type,num_cols,num_rows,is_required) VALUES(1058,'project_id','Project','0','ticket_cview',NULL,'32','label','30','1','0');
+INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,which_view,default_val,sort_order,field_type,num_cols,num_rows,is_required) VALUES(1059,'start_date','Start Date','0','ticket_cview',NULL,'10','label','20','1','0');
+INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,which_view,default_val,sort_order,field_type,num_cols,num_rows,is_required) VALUES(1060,'status','Status','0','ticket_cview',NULL,'4','label','10','1','0');
+INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,which_view,default_val,sort_order,field_type,num_cols,num_rows,is_required) VALUES(1061,'system_id','System','0','ticket_cview',NULL,'26','label','10','1','0');
+INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,which_view,default_val,sort_order,field_type,num_cols,num_rows,is_required) VALUES(1062,'tested','Testing','0','ticket_cview',NULL,'28','label','10','1','0');
+INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,which_view,default_val,sort_order,field_type,num_cols,num_rows,is_required) VALUES(1063,'type_id','Type','0','ticket_cview',NULL,'24','label','10','1','0');
+INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,which_view,default_val,sort_order,field_type,num_cols,num_rows,is_required) VALUES(1064,'user_id','Owner','0','ticket_cview',NULL,'6','label','20','1','0');
+INSERT INTO ZENTRACK_FIELD_MAP (field_map_id,field_name,field_label,is_visible,which_view,default_val,sort_order,field_type,num_cols,num_rows,is_required) VALUES(1065,'wkd_hours','Hours Worked','0','ticket_cview',NULL,'18','label','10','1','0');
+INSERT INTO ZENTRACK_VIEW_MAP (view_map_id, which_view, vm_name, vm_val, vm_type, vm_order) VALUES(228, 'ticket_cview', 'access_level', 'level_view', 'access', 0);
+INSERT INTO ZENTRACK_VIEW_MAP (view_map_id, which_view, vm_name, vm_val, vm_type, vm_order) VALUES(229, 'ticket_cview', 'columns', '10', 'text', 0);
+INSERT INTO ZENTRACK_VIEW_MAP (view_map_id, which_view, vm_name, vm_val, vm_type, vm_order) VALUES(230, 'ticket_cview', 'label', 'Details', 'text', 0);
+INSERT INTO ZENTRACK_VIEW_MAP (view_map_id, which_view, vm_name, vm_val, vm_type, vm_order) VALUES(231, 'ticket_cview', 'postload', '', 'load', 0);
+INSERT INTO ZENTRACK_VIEW_MAP (view_map_id, which_view, vm_name, vm_val, vm_type, vm_order) VALUES(232, 'ticket_cview', 'preload', '', 'load', 0);
+INSERT INTO ZENTRACK_VIEW_MAP (view_map_id, which_view, vm_name, vm_val, vm_type, vm_order) VALUES(233, 'ticket_cview', 'sections', '1', 'hidden', 0);
+INSERT INTO ZENTRACK_VIEW_MAP (view_map_id, which_view, vm_name, vm_val, vm_type, vm_order) VALUES(234, 'ticket_cview', 'view_only', '1', 'checkbox', 0);
+INSERT INTO ZENTRACK_VIEW_MAP (view_map_id, which_view, vm_name, vm_val, vm_type, vm_order) VALUES(235, 'ticket_cview', 'visible', '1', 'checkbox', 0);
+INSERT INTO ZENTRACK_VIEW_MAP (view_map_id, which_view, vm_name, vm_val, vm_type, vm_order) VALUES(236, 'ticket_cview', 'width', '50', 'text', 0);
+INSERT INTO ZENTRACK_SETTINGS (setting_id, name, value, description) VALUES (123,'log_email_details','off','Include email details in log (if log_email is active too)');
+
+-- Modify the version number
+UPDATE ZENTRACK_SETTINGS SET value='2.6.3' WHERE setting_id=74;

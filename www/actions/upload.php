@@ -74,12 +74,13 @@
     }
     
     if( !$errs ) {
-      $ext = strtolower(preg_replace('@^.*[.]([a-zA-Z0-9]+)$@', '\\1', $userfile_name));
-      $possibles = $zen->getSetting('attachment_types_allowed');
-      if( $possibles ) {
-        $vals = split(" *, *",$possibles);
-        if( !in_array($ext, $vals) ) {
+      if( !$zen->checkAttachmentExt($userfile_name) ) {
+        $possibles = $zen->getSetting('attachment_types_allowed');
+        if( $possibles ) {
           $errs[] = tr("Invalid file type, the allowed types are: ?", $possibles);
+        }
+        else {
+          $errs[] = tr("There are no attachment types allowed by your administrator");
         }
       }
     }
@@ -88,18 +89,7 @@
     if( !$errs ) {
       // perform the file transfer to move it to the directory where we 
       // want to keep it
-      
-      // seed with microseconds to create a random filename
-      function make_seed() {
-        list($usec, $sec) = explode(' ', microtime());
-        return (float) $sec + ((float) $usec * 100000);
-      }
-      mt_srand(make_seed());
-      $randval = mt_rand();	          	          		
-      $file_name = $ticket_id."_$randval";
-      while( file_exists( $zen->attachmentsDir."/$file_name" ) ) {
-        $file_name = $ticket_id."_$randval";	   
-      }
+      $file_name = $zen->getAttachmentName($ticket_id);
       $file_type = ereg_replace(".*[.]", "", $userfile_name);
       if( preg_match("/\b$file_type\b/i",$zen->getSetting("attachment_text_types")) ) {
         $userfile_type = "text/plain";

@@ -1,3 +1,4 @@
+var Zen = function() { }
 
 function placeFocus(newFocalPoint) {
   if( isFormField(newFocalPoint) && !isEditableField(newFocalPoint) ) { return; }
@@ -387,7 +388,6 @@ function openSearchbox(form, field, mode, type, multi) {
   // when calling this from multiple windows
   var rand = "searchbox_"+window.name+"_"+searchboxRand++;
   if( mode == 'ticket' || mode == 'project' ) { w = 550; h = 450; }
-  if( mode == 'contact') { w = 700; h = 350; }
   popupWindowScrolls(url, rand, w, h);
 }
 
@@ -532,3 +532,5 @@ function getDocumentElement( id ) {
   if( !window.document || !window.document.getElementById ) { return null; }
   return window.document.getElementById(id);
 }
+
+

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:page="com.zentrack.view.components.pages.*"
+	xmlns:components="com.zentrack.view.components.*"
+	width="100%" height="100%"
+	styleName="mainWindow">
+
+	<mx:Script>
+		<![CDATA[
+			import com.zentrack.control.events.logon.LogOffRequestEvent;
+			import mx.core.Container;
+			import com.zentrack.model.ModelLocator;
+
+			[Bindable]
+			private var __model:ModelLocator = ModelLocator.getInstance();
+		]]>
+	</mx:Script>
+
+	<components:Header creationCompleteEffect="Dissolve"/>
+
+	<mx:ViewStack id="vwsMain" selectedIndex="{__model.applicationState}" 
+		width="100%" height="100%" styleName="mainWindowVS"
+		creationCompleteEffect="Dissolve">
+
+		<page:LogOnPage id="pgeLogOn" width="100%" height="100%" showEffect="Dissolve"/>
+		<page:ApplicationPage id="pgeApplication" width="100%" height="100%" showEffect="Dissolve"/>
+
+	</mx:ViewStack>
+	
+</mx:VBox>

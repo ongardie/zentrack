@@ -54,20 +54,16 @@
    $sfi = is_array($search_fields) && in_array("initials",$search_fields);
    $sfn = (is_array($search_fields) && in_array("notes",$search_fields)) || !is_array($search_fields);
   ?>
-  <input id="field_lname" type="checkbox" name="search_fields[lname]" value="lname"<?=($sfl)?" checked":""?>>
-   &nbsp;<label for='field_lname'><?=tr("Last Name")?></label>
-  <br>
-  <input id="field_fname" type="checkbox" name="search_fields[fname]" value="fname"<?=($sff)?" checked":""?>>
-   &nbsp;<label for='field_fname'><?=tr("First Name")?></label>
-  <br>
-  <input id="field_email" type="checkbox" name="search_fields[email]" value="email"<?=($sfe)?" checked":""?>>
-   &nbsp;<label for='field_email'><?=tr("Email")?></label>
-  <br>
-  <input id="field_notes" type="checkbox" name="search_fields[notes]" value="notes"<?=($sfn)?" checked":""?>>
-   &nbsp;<label for='field_notes'><?=tr("Notes")?></label>
-  <br>
-  <input id="field_initials" type="checkbox" name="search_fields[initials]" value="initials"<?=($sfi)?" checked":""?>>
-   &nbsp;<label for='field_initials'><?=tr("Initials")?></label>
+  <label for='field_lname'><input id="field_lname" type="checkbox" name="search_fields[lname]" value="lname"<?=($sfl)?" checked":""?>>
+   &nbsp;<?=tr("Last Name")?></label>
+  <label for='field_fname'><input id="field_fname" type="checkbox" name="search_fields[fname]" value="fname"<?=($sff)?" checked":""?>>
+   &nbsp;<?=tr("First Name")?></label>
+  <label for='field_email'><input id="field_email" type="checkbox" name="search_fields[email]" value="email"<?=($sfe)?" checked":""?>>
+   &nbsp;<?=tr("Email")?></label>
+  <label for='field_notes'><input id="field_notes" type="checkbox" name="search_fields[notes]" value="notes"<?=($sfn)?" checked":""?>>
+   &nbsp;<?=tr("Notes")?></label>
+  <label for='field_initials'><input id="field_initials" type="checkbox" name="search_fields[initials]" value="initials"<?=($sfi)?" checked":""?>>
+   &nbsp;<?=tr("Initials")?></label>
   </td>
 </tr>
 

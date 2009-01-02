@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:forms="com.zentrack.view.components.forms.*" height="710"
+	xmlns:panels="com.zentrack.view.components.panels.*"
+	creationComplete="init()"
+	creationCompleteEffect="Dissolve"
+	showEffect="Dissolve">
+
+	<mx:Script>
+		<![CDATA[
+			import mx.controls.PopUpButton;
+			import com.zentrack.view.components.popups.AddLogPopUp;
+			import mx.managers.PopUpManager;
+			import mx.controls.Alert;
+			import mx.collections.ArrayCollection;
+			import com.zentrack.control.events.data.GetLogListRequestEvent;
+			import mx.formatters.DateFormatter;
+			import com.zentrack.control.events.ticket.RemoveTicketUITabEvent;
+			import com.zentrack.valueObjects.Ticket;
+			import com.zentrack.control.events.ticket.CreateTicketRequestEvent;
+			import com.zentrack.model.ModelLocator;
+
+			[Bindable]
+			private var __model:ModelLocator = ModelLocator.getInstance();
+
+			[Bindable]
+			public var globalTicket:Ticket;
+
+			[Bindable]
+			private var ticketDetails:Object;
+
+			[Bindable]
+			private var titleLabelText:String;
+
+			[Bindable]
+			private var descriptionText:String;
+
+			private var addLogPopUp:AddLogPopUp;
+
+			private function init() : void {
+
+				new GetLogListRequestEvent(globalTicket).dispatch();
+
+				if (globalTicket.status == 'CLOSED') {
+					btnAddLog.enabled = false;
+				}
+
+				ticketDetails = new Object();
+
+				ticketDetails.creator      = globalTicket.creator;
+				ticketDetails.system       = globalTicket.system;
+				ticketDetails.bin          = globalTicket.bin;
+				ticketDetails.status       = globalTicket.status;
+				ticketDetails.owner        = globalTicket.owner;
+				ticketDetails.openTime     = formatDate(globalTicket.openTime);
+				ticketDetails.startDate    = formatDate(globalTicket.startDate);
+				ticketDetails.deadlineTime = formatDate(globalTicket.deadlineTime);
+				ticketDetails.closeTime    = formatDate(globalTicket.closeTime);
+
+				titleLabelText = globalTicket.type + " #" +
+					globalTicket.ticketID + ": " + globalTicket.summary;
+
+				descriptionText = globalTicket.description;
+			}
+
+			private function formatDate(inDate : Date) : String {
+				var myDate:DateFormatter = new DateFormatter();
+				myDate.formatString = __model.ticketDetailDateFormat;
+				return myDate.format(inDate);
+			}
+
+			private function popUpLog() : void {
+				addLogPopUp = new AddLogPopUp();
+				PopUpManager.addPopUp(addLogPopUp, this, true);
+				PopUpManager.centerPopUp(addLogPopUp);
+				addLogPopUp.ticket = globalTicket;
+			}
+
+			private function closeTab() : void {
+				new RemoveTicketUITabEvent().dispatch();
+			}
+		]]>
+	</mx:Script>
+
+	<mx:VDividedBox width="100%" height="100%">
+		<mx:Canvas width="100%" horizontalScrollPolicy="off" verticalScrollPolicy="off"
+			minHeight="32" height="200">
+			<mx:HBox height="30" right="100" top="2" left="2"
+				styleName="viewTicketTitleLabelBackground">
+				<mx:Label text="{titleLabelText}" styleName="viewTicketTitleLabelText"/>
+			</mx:HBox>
+
+			<mx:Button id="btnAddLog" right="2" width="96" top="2" height="30"
+				label="Add Log" click="popUpLog()"/>		
+	
+			<mx:DataGrid rowCount="1" selectable="false"
+				draggableColumns="false" sortableColumns="false"
+				right="2" left="2" top="34" height="45"
+				dataProvider="{ticketDetails}"
+				styleName="viewTicketDataGrid"
+				headerStyleName="viewTicketDataGridHeader">
+				<mx:columns>
+					<mx:DataGridColumn dataField="creator" headerText="Created by"/>
+					<mx:DataGridColumn dataField="bin" width="150" headerText="Bin"/>
+					<mx:DataGridColumn dataField="status" headerText="Status"/>
+					<mx:DataGridColumn dataField="owner" headerText="Owner"/>
+					<mx:DataGridColumn dataField="openTime" headerText="Open Time"/>
+				</mx:columns>
+			</mx:DataGrid>
+		
+			<mx:Panel layout="absolute" top="82" right="2" bottom="0" left="2"
+				styleName="viewTicketDetailsPanelTitle" title="Details">
+				<mx:TextArea height="100%" width="100%" editable="false"
+					styleName="viewTicketDetailsPanel" text="{descriptionText}"/>
+			</mx:Panel>
+		</mx:Canvas>
+		<mx:Canvas width="100%" height="100%" minHeight="20"
+			horizontalScrollPolicy="off" verticalScrollPolicy="off">
+			<panels:LogPanel id="pnlLogs" title="Log History" ticket="{globalTicket}"
+				top="1" left="2" bottom="1" right="2"/>
+		</mx:Canvas>		
+	</mx:VDividedBox>
+
+</mx:Canvas>

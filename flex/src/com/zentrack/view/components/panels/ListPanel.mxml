@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml" layout="vertical" 
+	width="100%" height="100%" titleStyleName="ticketListPanelTitleText"
+	styleName="ticketListPanel">
+
+	<mx:Script>
+		<![CDATA[
+			import mx.events.CollectionEvent;
+			import com.zentrack.valueObjects.Ticket;
+			import mx.events.ListEvent;
+			import com.zentrack.control.events.ticket.ViewTicketRequestEvent;
+			import mx.collections.ArrayCollection;
+
+			[Bindable]
+			public var listData:ArrayCollection;
+
+			private function onSelectRow(itemClickEvent:ListEvent) : void {
+				new ViewTicketRequestEvent(
+					itemClickEvent.currentTarget.dataProvider[itemClickEvent.rowIndex]
+				).dispatch();
+			}
+		]]>
+	</mx:Script>
+
+	<mx:DataGrid width="100%" height="100%" wordWrap="false"
+		variableRowHeight="true" sortableColumns="true"
+		showHeaders="true" dataProvider="{listData}"
+		itemClick="onSelectRow(event)" draggableColumns="false"
+		styleName="ticketListPanelText">
+		<mx:columns>
+			<mx:DataGridColumn dataField="ticketID" width="50" headerText="ID"/>
+			<mx:DataGridColumn dataField="summary" headerText="Summary"/>
+		</mx:columns>
+	</mx:DataGrid>
+
+</mx:Panel>

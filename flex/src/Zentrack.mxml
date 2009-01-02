@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="vertical"
+	xmlns:control="com.zentrack.control.*"
+	xmlns:delegates="com.zentrack.control.delegates.*"
+	xmlns:view="com.zentrack.view.*"
+	minWidth="900" minHeight="500"
+	initialize="init()"
+	creationComplete="creationComplete()">
+
+<!--
+	<mx:Style source="../assets/css/SuperTabStyles.css" />
+-->
+	<mx:Style source="../assets/css/ZentrackStyles.css" />
+
+	<mx:Script>
+		<![CDATA[
+			import com.zentrack.control.events.data.GetRecentLogListRequestEvent;
+			import com.zentrack.control.events.data.GetTicketListRequestEvent;
+			import mx.controls.Alert;
+			import com.zentrack.model.ModelLocator;
+			import mx.managers.BrowserManager;
+			import mx.managers.IBrowserManager;
+
+			private var refreshTimer:Timer;
+
+			private var __model:ModelLocator = ModelLocator.getInstance();
+			
+			private function init() : void {
+				__model.bm = BrowserManager.getInstance();
+				__model.bm.init("", "Authorization Required");
+			}
+
+			private function creationComplete() : void {
+				__model.apiLocation = Application.application.parameters.APIRootUrl + "/http-xml.php";
+
+				__model.refreshTimer = new Timer(__model.refreshInterval);
+				__model.refreshTimer.addEventListener(TimerEvent.TIMER, timedRefresh);
+			}
+
+			private function timedRefresh(event:TimerEvent) : void {
+				new GetTicketListRequestEvent().dispatch();
+				new GetRecentLogListRequestEvent().dispatch();
+			}
+		]]>
+	</mx:Script>
+
+	<control:ZTController/>
+
+	<delegates:Services/>
+
+	<view:Main/>
+
+</mx:Application>

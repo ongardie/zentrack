@@ -1,0 +1,14 @@
+
+<input type="hidden" name="{field_name}" id="{field_name}" value="">
+<div class='addbox' id="addbox_{form_name}_{field_name}" tabindex='-1'></div>
+<input type='text' size="{field_cols}" maxlength="{field_max}" 
+		name="{field_name}_addbox" id="addbox_{form_name}_{field_name}_input"
+		onkeypress="return Zen.Addbox.keyCheck(event, 'addbox_{form_name}_{field_name}_button')">
+&nbsp;<input type='button' name="{field_name}_button" value=' Find ' id="addbox_{form_name}_{field_name}_button">
+  
+<div class='note'>Enter any company, employee, user name, user/employee's initials, or email address</div>
+
+<script type="text/javascript">
+var a = "addbox_{form_name}_{field_name}_button";
+YAHOO.util.Event.on(a,'click',Zen.Addbox.doAddbox,document.getElementById(a));
+</script>

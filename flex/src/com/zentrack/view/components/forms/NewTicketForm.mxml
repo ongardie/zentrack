@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Form xmlns:mx="http://www.adobe.com/2006/mxml">
+
+	<mx:Script>
+		<![CDATA[
+			import com.zentrack.control.events.data.GetRecentLogListRequestEvent;
+			import com.zentrack.control.events.data.GetTicketListRequestEvent;
+			import com.zentrack.control.events.ticket.RemoveTicketUITabEvent;
+			import com.zentrack.valueObjects.Ticket;
+			import com.zentrack.control.events.ticket.CreateTicketRequestEvent;
+			import com.zentrack.model.ModelLocator;
+
+			private const fieldWidth:int = 400;
+
+			[Bindable]
+			private var __model:ModelLocator = ModelLocator.getInstance();
+
+			[Bindable]
+			private var homeBin : String = __model.userInfo.homeBinName;
+
+			private function addContactString() : String {
+				return "\n\n-----------------------------------------------\n" +
+					"Contact Name:" + txtContactName.text + "\n" + 
+					"Contact No:" + txtContactNumber.text;
+			}
+
+			private function onCreate():void {
+				var newTicket:Ticket = new Ticket(
+					-1, // Ticket does not have an ID yet
+					txtSummary.text,
+					txtDescription.text + addContactString(),
+					__model.userInfo.homeBinID
+				);
+				new CreateTicketRequestEvent(newTicket).dispatch();
+
+				refreshDashboardTickets();
+				closeTab();
+			}
+
+			private function onCancel():void {
+				closeTab();
+			}
+
+			private function refreshDashboardTickets() : void {
+				new GetTicketListRequestEvent().dispatch();
+				new GetRecentLogListRequestEvent().dispatch();
+			}
+
+			private function closeTab() : void {
+				var event:RemoveTicketUITabEvent = null;
+				event = new RemoveTicketUITabEvent();
+				event.dispatch();
+			}
+		]]>
+	</mx:Script>
+	<mx:FormItem>
+		<mx:FormHeading label="Enter Ticket Details" width="{fieldWidth}"/>
+	</mx:FormItem>
+	<mx:FormItem label="Summary">
+		<mx:TextInput id="txtSummary" width="{fieldWidth}"/>
+	</mx:FormItem>
+	<mx:FormItem label="Contact Name">
+		<mx:TextInput id="txtContactName" width="{fieldWidth}"/>
+	</mx:FormItem>
+	<mx:FormItem label="Contact Number">
+		<mx:TextInput id="txtContactNumber" width="{fieldWidth}"/>
+	</mx:FormItem>
+	<mx:FormItem label="Department">
+		<mx:TextInput id="txtDepartment" width="{fieldWidth}"
+			editable="false" text="{homeBin}" focusEnabled="false"/>
+	</mx:FormItem>
+	<mx:FormItem label="Description">
+		<mx:TextArea id="txtDescription" width="{fieldWidth}" height="100"/>
+	</mx:FormItem>
+
+	<mx:FormItem>
+		<mx:HBox width="{fieldWidth}" horizontalAlign="right">
+			<mx:LinkButton label="Cancel" click="onCancel()"/>
+			<mx:Spacer width="10"/>
+			<mx:Button label="Create" click="onCreate()"/>
+		</mx:HBox>
+	</mx:FormItem>
+	
+</mx:Form>

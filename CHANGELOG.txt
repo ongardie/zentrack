@@ -11,23 +11,198 @@ and user experience, internationalization, platform and database
 abstraction, and endless possibilities for project expansion. 
 --------------------
 
-2008-09-13, cfalonso, Revision 25:
-  Fixing a problem with a left join in MS SQL reported in http://www.zentrack.net/modules/newbb/viewtopic.php?viewmode=flat&topic_id=1067&forum=1
-   - zentrack_2/includes/zenNotifier.php
+2009-01-01, Kato -- REVISION 48
+  Integrated DPD branch, including: egate fixes, new REST API,
+  flex customer portal
+    - branches/DPD-2.7 [many files]
 
-2008-09-13, cfalonso, Revision 24:
-  Making the contacts searchbox wider
-   - zentrack_2/www/javascript.js
+2008-11-03, Kato -- REVISION 46
+  Finished ticket create via api
+  Corrected success="true" in list_users
+   - branches/DPD-2.7/includes/ZenHttpApi.php
+  Added install files and updated instructions
+    - branches/DPD-2.7/UPGRADE.txt
+    - branches/DPD-2.7/INSTALL.txt
+    - branches/DPD-2.7/RELEASE_NOTES.txt
+    - branches/DPD-2.7/install/build_mysql.sql
+    - branches/DPD-2.7/install/build_mssqlserver.sql
+    - branches/DPD-2.7/install/build_postgres.sql
+    - branches/DPD-2.7/install/build_oracle.sql
+    - branches/DPD-2.7/install/seed_mssqlserver.sql
+    - branches/DPD-2.7/install/seed_mysql.sql
+    - branches/DPD-2.7/install/seed_oracle.sql
+    - branches/DPD-2.7/install/seed_postgres.sql
+    - branches/DPD-2.7/install/UPGRADE_mssqlserver.sql
+    - branches/DPD-2.7/install/UPGRADE_mysql.sql
+    - branches/DPD-2.7/install/UPGRADE_oracle.sql
+    - branches/DPD-2.7/install/UPGRADE_postgres.sql
+    - branches/DPD-2.7/install/previous/2.6.3.UPGRADE_mssqlserver.sql 1.1
+    - branches/DPD-2.7/install/previous/2.6.3.UPGRADE_mysql.sql 1.1
+    - branches/DPD-2.7/install/previous/2.6.3.UPGRADE_oracle.sql 1.1
+    - branches/DPD-2.7/install/previous/2.6.3.UPGRADE_postgres.sql 1.1  
 
-2008-09-13, cfalonso, Revision 23:
-  Setting in configVars the field separator used when returning an item from a searchbox
-   - zentrack_2/includes/ZenSearchBox.php 
-   - zentrack_2/includes/ZenSearchBox.php
-   - zentrack_2/includes/ZenSearchBoxContact.php 
-   - zentrack_2/includes/ZenSearchBoxContact.php
-   - zentrack_2/includes/headerInc.php
-   - zentrack_2/includes/headerInc.php
-   - zentrack_2/install/configVars.php.default
+2008-11-02, Kato -- REVISION 44
+  added homebin to filter data
+  added field map for api_view
+  fixed user passphrase
+  fixed ticket create
+  added cache clearing to api tests
+   - branches/DPD-2.7/includes/ZenHttpApi.php
+   - branches/DPD-2.7/includes/zenTrack.class.php
+   - branches/DPD-2.7/install/utils/upgrade_base.sql
+
+2008-11-01, Kato -- REVISION 43
+  recent_bins in http api now filters by users valid bins
+  list_users now only shows public instead of hiding private
+   - branches/DPD-2.7/includes/ZenHttpApi.php
+  fixed styling on checkboxes for list users screen
+   - branches/DPD-2.7/includes/templates/userSearchForm.php
+
+2008-10-31, Kato -- REVISION 42
+  Added list_users method to http api
+  Debugged api and tested all methods
+   - branches/DPD-2.7/includes/ZenHttpApi.php
+   - branches/DPD-2.7/www/api/test-form.php
+
+2008-10-23, Kato -- REVISION 39
+  Added recent_logs to http api
+  Added debug output to http api
+  Added user args to debug output
+   - branches/DPD-2.7/includes/ZenHttpApi.php
+   - branches/DPD-2.7/www/api/test-form.php
+   - branches/DPD-2.7/includes/templates/searchLogs.php
+  Fixed caching error with data_groups
+   - branches/DPD-2.7/includes/headerInc.php
+  Enhanced search_logs to work with empty search args
+   - branches/DPD-2.7/includes/zenTrack.class.php
+   - branches/DPD-2.7/includes/db.class.php
+
+2008-09-30, Kato -- REVISION 36
+  Made a couple install procedure fixes and fixed a bug with php4 support
+   - branches/DPD-2.7/includes/ZenHotKeys.php
+   - branches/DPD-2.7/install/build_mysql.sql
+   - branches/DPD-2.7/setup_from_cvs
+
+2008-09-29, Kato -- REVISION 34
+  Fixed data type nodes in API's XML output (no longer just a number)
+   - branches/DPD-2.7/includes/ZenHttpApi.class.php
+  432: Added new Project Tree view
+   - branches/DPD-2.7/includes/templates/nav_header.php
+   - branches/DPD-2.7/includes/templates/ticket_load_projecttree.php
+   - branches/DPD-2.7/includes/zenTrack.class.php
+   - branches/DPD-2.7/www/css
+   - branches/DPD-2.7/www/css/yui
+   - branches/DPD-2.7/www/css/yui/folder
+   - branches/DPD-2.7/www/css/yui/folder/lm.gif
+   - branches/DPD-2.7/www/css/yui/folder/lmh.gif
+   - branches/DPD-2.7/www/css/yui/folder/ln.gif
+   - branches/DPD-2.7/www/css/yui/folder/loading.gif
+   - branches/DPD-2.7/www/css/yui/folder/lp.gif
+   - branches/DPD-2.7/www/css/yui/folder/lph.gif
+   - branches/DPD-2.7/www/css/yui/folder/tm.gif
+   - branches/DPD-2.7/www/css/yui/folder/tmh.gif
+   - branches/DPD-2.7/www/css/yui/folder/tn.gif
+   - branches/DPD-2.7/www/css/yui/folder/tp.gif
+   - branches/DPD-2.7/www/css/yui/folder/tph.gif
+   - branches/DPD-2.7/www/css/yui/folder/tree.css
+   - branches/DPD-2.7/www/css/yui/folder/vline.gif
+   - branches/DPD-2.7/www/images/bottom.png
+   - branches/DPD-2.7/www/images/collapse.png
+   - branches/DPD-2.7/www/projects.php
+   - branches/DPD-2.7/www/styles.php
+   - branches/DPD-2.7/www/ticket.php
+
+2008-09-28, Kato -- REVISION 33
+  Revised HTTP API Framework and tests
+   - branches/DPD-2.7/includes/zen.class.php
+   - branches/DPD-2.7/includes/zenTrack.class.php
+   - branches/DPD-2.7/includes/ZenHttpApi.class.php
+   - branches/DPD-2.7/www/api/http-json.php
+   - branches/DPD-2.7/www/api/http-xml.php
+
+2008-09-23, Kato -- REVISION 31
+  CC #10 Review Fixes - Formatting, Extra $ in code, etc
+   - branches/DPD-2.7/includes/ZenHttpApi.class.php
+   - branches/DPD-2.7/www/api/http-json.php
+   - branches/DPD-2.7/www/api/http-xml.php
+
+2008-09-23, Kato -- REVISION 30
+  Added HTTP API Framework and tests
+   - branches/DPD-2.7/includes/ZenHttpApi.class.php
+   - branches/DPD-2.7/www/api/http-json.php
+   - branches/DPD-2.7/www/api/http-xml.php
+   - branches/DPD-2.7/www/api/test.php
+   - branches/DPD-2.7/www/api/test-form.php
+   - branches/DPD-2.7/www/api/test-submit.php
+
+2008-09-21, Kato -- REVISION 29
+  Finished addbox additions, tested and cleaned up, works for projects now
+   - branches/DPD-2.7/includes/templates/fields/addbox.template
+   - branches/DPD-2.7/www/addProjectSubmit.php
+   - branches/DPD-2.7/www/addSubmit.php
+   - branches/DPD-2.7/www/styles.php
+   - branches/DPD-2.7/www/newProject.php
+   - branches/DPD-2.7/www/js/addBoxFunctions.js
+  Somehow devTrack logo was submitted to DPD branch; repaired
+   - branches/DPD-2.7/www/images/zenTrack_logo.jpg
+  Revisions to the login UI (made it prettier)
+   - branches/DPD-2.7/includes/templates/loginForm
+
+2008-09-12, Kato -- REVISION 27
+  Fixed problems with searchbox permissions--returning all users and bins
+  instead of filtering according to user's access permissions (tickets
+  already handled this correctly)
+   - branches/DPD-2.7/includes/ZenSearch.php
+   - branches/DPD-2.7/includes/ZenSearchBoxUsers.php
+
+2008-09-05, Kato -- REVISION 27
+  Debugged and prepped ZenRecordBase.php and ZenListBase.php scripts
+  Renamed all .class files to .class.php for syntax highlighting
+   - branches/DPD-2.7/includes/*.class.php
+   - branches/DPD-2.7/includes/ZenRecordBase.php
+   - branches/DPD-2.7/includes/ZenListBase.php
+  Created new notify recipients lists for use with devtrack #431 (notify on create screen)
+   - branches/DPD-2.7/includes/ZenNotifyRecipient.php
+
+2008-09-05, Kato -- REVISION 20
+  Egate now sets default bin based on project when appropriate
+  Egate now reads worked hours properly for logs
+   - branches/DPD-2.7/includes/egate_utils.php
+
+2008-09-02, Kato -- REVISION 19
+  Fixed egate to accept hours worked in any format allowed by egate_utils's
+  $egate_create_fields array.
+   - branches/DPD-2.7/includes/egate_utils.php
+
+2008-09-01, Kato -- REVISION 18
+  Completed egate helpdesk revisions
+  Added attachments to egate
+   - branches/DPD-2.7/includes/egate.php (deleted)
+   - branches/DPD-2.7/includes/egate_check.php (deleted)
+   - branches/DPD-2.7/includes/egate_check_create.php (deleted)
+   - branches/DPD-2.7/includes/egate_helpdesk.php (deleted)
+   - branches/DPD-2.7/includes/egate_pipe_helpdesk.php (added)
+   - branches/DPD-2.7/includes/egate_utils.php
+   - branches/DPD-2.7/includes/zenTrack.class
+   - branches/DPD-2.7/www/actions/upload.php
+  Fixed numerous warnings and minor bugs
+   - branches/DPD-2.7/setup_from_cvs.cmd
+   - branches/DPD-2.7/install/build_mssqlserver.sql
+   - branches/DPD-2.7/install/utils/zenTrack_logo.psd (added)
+   - branches/DPD-2.7/includes/zenTrack.class
+   - branches/DPD-2.7/includes/egate_utils.php
+
+2008-09-01, Kato -- REVISION 9
+  AS OF TODAY, THE REPO IS NOW STORED IN SUBVERSION (SVN)
+  CVS VERSION NUMBERS AND CODE ARE NO LONGER VALID
+  
+2008-09-01, Kato -- REVISION 14
+  Fixed php notices and related bugs
+  Updated helpdesk scripts
+  Added delete capability
+   - branches/DPD-2.7/includes/zenTrack.class
+   - branches/DPD-2.7/includes/templates/listTickets.php
+   - branches/DPD-2.7/www/admin/deleteTicket.php 
 
 2008-08-30, Kato
   Fixed search export date formats
@@ -46,7 +221,6 @@ abstraction, and endless possibilities for project expansion.
    - zentrack_2/includes/ZenRecord.php 1.1
    - zentrack_2/includes/ZenRecordBase.php 1.1
    - zentrack_2/includes/ZenTicket.php 1.1
-
 
 2008-08-14, Kato
   Added support for html in egate_check_create.php utility

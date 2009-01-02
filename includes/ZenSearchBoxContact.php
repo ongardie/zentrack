@@ -61,13 +61,9 @@ class ZenSearchBoxContact extends ZenSearchBox {
     $txt .= "<option value='0' $sel>".tr('-none-')."</option>";
     $jsvar = "var company = new Array();";
     if( is_array($this->_company) ) {
-      if (strlen($this->_zen->searchbox_FS)==0) {
-        $this->_zen->searchbox_FS=",";
-      }
       foreach($this->_company as $id=>$c) {
         $cname=$this->_zen->ffv($c['title']);
-        $cinfo=$this->_zen->ffv($c['title'].$this->_zen->searchbox_FS.$c['office'].$this->_zen->searchbox_FS
-              .$c['website'].$this->_zen->searchbox_FS.$c['telephone'].$this->_zen->searchbox_FS.$c['full_address']);
+        $cinfo=$this->_zen->ffv($c['title'].chr(183).$c['office'].chr(183).$c['website'].chr(183).$c['telephone'].chr(183).$c['full_address']);
         $sel=(strcmp($cid,$id)==0)?'selected':'';
         Zen::addDebug("ZenSearchBoxContact::renderFormFields","cid['$cname'] selected='$sel'", 3);
         $txt .= "<option value='$id' $sel>$cname</option>";

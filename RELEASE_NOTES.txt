@@ -1,4 +1,27 @@
 
+---- 2.6.4 Liger Release ----
+
+This is a beta release and not for the general public. The official release
+of these features will be the 2.7 Release.
+
+NEW FEATURES / ENHANCEMENTS
+  Added new customer help desk style interface
+  Enhanced and simplified email gateway: html, attachments, no more php imap module
+  Fixed php4 compatability
+  Added new Project Tree view (see field maps)
+  Added notify list to ticket create screen
+  Added delete capability for admins
+
+BUG FIXES / MINOR CHANGES
+  Pretty-fied the login screen
+  Fixed search export date formats
+  Fixed styling on checkboxes for list users screen
+  Enhanced search_logs to work with empty search args
+  Fixed caching error with data_groups
+  Fixed problems with searchbox permissions--returning all users and bins
+  Fixed php notices and related bugs
+  Updated helpdesk scripts
+  
 ----- 2.6.3 Maintenance Release ----
 
 NEW FEATURES / ENHANCEMENTS

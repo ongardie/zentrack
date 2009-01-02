@@ -24,7 +24,7 @@
   }
   
   //initialize zen base object
-  include_once("$libDir/zenTrack.class");
+  include_once("$libDir/zenTrack.class.php");
   $zen = new zenTrack( "$libDir/configVars.php" );
   
   $date = strtotime($argv[1]);

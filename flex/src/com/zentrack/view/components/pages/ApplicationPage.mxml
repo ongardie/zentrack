@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<flexlib:SuperTabNavigator
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:tabs="com.zentrack.view.components.tabs.*"
+	xmlns:flexlib="flexlib.containers.*"
+	xmlns:controls="flexlib.controls.*"
+	initialize="init()"
+	closePolicy="{SuperTab.CLOSE_NEVER}">
+
+	<mx:Script>
+		<![CDATA[
+			import flash.utils.setTimeout;
+			import flexlib.controls.tabBarClasses.SuperTab;
+			import com.zentrack.view.components.tabs.Dashboard;
+			import com.zentrack.control.events.ui.CloseApplicationTabEvent;
+			import com.adobe.cairngorm.control.CairngormEventDispatcher;
+			import com.zentrack.control.events.ui.NewApplicationTabEvent;
+			import com.zentrack.view.components.tabs.ViewTicket;
+			import mx.binding.utils.ChangeWatcher;
+			import mx.controls.Alert;
+			import mx.events.FlexEvent;
+			import mx.binding.utils.BindingUtils;
+			import com.zentrack.view.components.tabs.NewTicket;
+			import com.zentrack.model.ModelLocator;
+
+			[Bindable]
+			private var __model:ModelLocator = ModelLocator.getInstance();
+
+			private function init() : void {
+				__model.bm.setTitle("IT Service Desk");
+				
+				// A binding to register when a new application tag needs to 
+				// be created
+				CairngormEventDispatcher.getInstance().addEventListener(
+					NewApplicationTabEvent.EVENT_ID, createApplicationTab);
+
+				// A binding to register when an application tag needs to 
+				// be removed
+				CairngormEventDispatcher.getInstance().addEventListener(
+					CloseApplicationTabEvent.EVENT_ID, removeApplicationTab);
+			}
+
+			private function createApplicationTab(event:NewApplicationTabEvent) : void {
+				if (event.tabType == "newTicket") {
+					var newTicketPage:NewTicket = new NewTicket();
+					newTicketPage.label = "New Ticket";
+					addChild(newTicketPage);
+					selectedChild = newTicketPage;
+				} else if (event.tabType == "viewTicket") {
+					var viewTicketPage:ViewTicket = new ViewTicket;
+					viewTicketPage.label = "Ticket #" + event.ticket.ticketID;
+					viewTicketPage.globalTicket = event.ticket;
+					addChild(viewTicketPage);
+					selectedChild = viewTicketPage;
+				}
+				setClosePolicyForTab(selectedIndex, SuperTab.CLOSE_ALWAYS);
+			}
+
+			private function removeApplicationTab(event : CloseApplicationTabEvent) : void {
+				removeChild(selectedChild);
+				selectedIndex = 0;
+			}
+		]]>
+	</mx:Script>
+
+	<tabs:Dashboard id="tabDashboard" label="Dashboard" showEffect="Dissolve"/>
+
+</flexlib:SuperTabNavigator>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:form="com.zentrack.view.components.forms.*"
+	width="100%" height="100%"
+	verticalAlign="middle" horizontalAlign="center">
+
+	<mx:Script>
+		<![CDATA[
+			import com.zentrack.model.ModelLocator;
+
+			[Bindable]
+			private var __model:ModelLocator = ModelLocator.getInstance();
+		]]>
+	</mx:Script>
+
+	<mx:Text htmlText="{__model.welcomeText}" width="500"
+		styleName="welcomeText"/>
+	<form:LogOnForm/>
+
+</mx:VBox>

@@ -184,9 +184,6 @@ CREATE TABLE ZENTRACK_LOGS (
   entry text
 );
 
-CREATE INDEX zt_log_action ON ZENTRACK_LOGS(action);
-CREATE INDEX zt_log_tid ON ZENTRACK_LOGS(ticket_id);
-
 --
 -- Table structure for table 'ZENTRACK_LOGS_ARCHIVED'
 --
@@ -298,9 +295,6 @@ CREATE TABLE ZENTRACK_TICKETS (
   wkd_hours decimal(10,2) default '0.00'
 );
 
-CREATE INDEX zt_tk_status_idx ON ZENTRACK_TICKETS(status);
-CREATE INDEX zt_tk_pri_idx ON ZENTRACK_TICKETS(priority);
-
 --
 -- Table structure for table 'ZENTRACK_TYPES'
 --
@@ -410,15 +404,37 @@ CREATE TABLE ZENTRACK_VARFIELD_MULTI (
   field_value varchar(255) default NULL,
   PRIMARY KEY  (multi_id)
 );
-CREATE INDEX view_map_idx ON ZENTRACK_VIEW_MAP(which_view,vm_order);
-CREATE INDEX vf_multi_idx ON ZENTRACK_VARFIELD_MULTI(ticket_id);
 CREATE SEQUENCE view_map_id_seq start 1001 increment 1 maxvalue 2147483647 minvalue 1 cache 1;
 CREATE SEQUENCE varfield_multi_id_seq start 1001 increment 1 maxvalue 2147483647 minvalue 1 cache 1;
 
 
 -- ADDED IN VERSION 2.6.3
-CREATE INDEX zt_log_tid ON ZENTRACK_LOGS(ticket_id);
+CREATE INDEX behavior_idx ON ZENTRACK_BEHAVIOR (is_enabled);
+CREATE INDEX bdtl_idx ON ZENTRACK_BEHAVIOR_DETAIL (behavior_id);
+CREATE INDEX group_idx ON ZENTRACK_GROUP (group_name);
+CREATE INDEX grp_dtl_idx ON ZENTRACK_GROUP_DETAIL (group_id, sort_order);
+CREATE INDEX fldmap_both ON ZENTRACK_FIELD_MAP(sort_order,field_label);
+CREATE INDEX fldmap_label ON ZENTRACK_FIELD_MAP(field_label);
+CREATE INDEX fldmap_sort ON ZENTRACK_FIELD_MAP(sort_order);
+CREATE INDEX USERPREF_USER ON ZENTRACK_PREFERENCES (user_id);
+CREATE INDEX vf_multi_idx ON ZENTRACK_VARFIELD_MULTI(ticket_id);
+CREATE INDEX view_map_idx ON ZENTRACK_VIEW_MAP(which_view,vm_order);
 CREATE INDEX zt_log_action ON ZENTRACK_LOGS(action);
-CREATE INDEX zt_ticket_pri ON ZENTRACK_TICKETS(priority);
-CREATE INDEX zt_ticket_stat ON ZENTRACK_TICKETS(status);
+CREATE INDEX zt_log_tid ON ZENTRACK_LOGS(ticket_id);
+CREATE INDEX zt_tk_pri_idx ON ZENTRACK_TICKETS(priority);
+CREATE INDEX zt_tk_status_idx ON ZENTRACK_TICKETS(status);
+CREATE INDEX varfield_tid_idx ON ZENTRACK_VARFIELD (ticket_id);
+
+
+-- ADDED IN VERSION 2.6.4
+
+
+CREATE INDEX zt_user_init_idx ON ZENTRACK_USERS(initials);
+CREATE INDEX zt_user_name_idx ON ZENTRACK_USERS(fname,lname);
+CREATE INDEX zt_user_email_idx ON ZENTRACK_USERS(email);
+CREATE INDEX zt_comp_title_idx ON ZENTRACK_COMPANY(title);
+CREATE INDEX zt_comp_email_idx ON ZENTRACK_COMPANY(email);
+CREATE INDEX zt_emp_name_idx ON ZENTRACK_EMPLOYEE(fname,lname);
+CREATE INDEX zt_notf_name_idx ON ZENTRACK_NOTIFY_LIST(name);
+CREATE INDEX zt_notf_email_idx ON ZENTRACK_NOTIFY_LIST(email);
 

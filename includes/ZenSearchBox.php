@@ -49,7 +49,7 @@ class ZenSearchBox {
     $this->_comps = array();
     $this->_matchany = false;
     $this->_multi = $multi;
-    $this->_queryLimit = isset($_POST['queryLimit'])? $_POST['queryLimit'] : 10;
+    $this->_queryLimit = 2;//isset($_POST['queryLimit'])? $_POST['queryLimit'] : 10;
     $this->_offset = isset($_POST['offset'])? $_POST['offset'] : 0;
   }
   
@@ -164,14 +164,10 @@ class ZenSearchBoxResults {
   function id( $row ) { return $row[$this->_id]; }
   
   function label( $row ) {
-    global $zen;
     if( is_array($this->_label) ) {
       $txt = '';
-      if (strlen($zen->searchbox_FS)==0) {
-        $zen->searchbox_FS=",";
-      }
       foreach($this->_label as $k) {
-        $txt .= $txt? $zen->searchbox_FS.$row[$k] : $row[$k];
+        $txt .= $txt? chr(183).$row[$k] : $row[$k];
       }
       return $txt;
     }

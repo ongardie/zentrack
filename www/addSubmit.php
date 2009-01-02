@@ -32,6 +32,7 @@
     // create an array of existing fields
     // to be inserted for the ticket
     foreach(array_keys($fields) as $f) {
+      if( $f == 'notify' ) { continue; } //notify list processed seperately
       if( strlen($$f) ) {
         $params["$f"] = $$f;
         if( $f == 'title' && strlen($params["$f"]) > 250 ) {
@@ -69,6 +70,21 @@
       if( in_array($params["type_id"],$zen->noteTypeIDs()) ) {
         $zen->close_ticket($id,null,null,'Notes closed automatically');
       }
+      
+      if( !$errs && $id && !empty($_POST['notify']) ) {
+        $emails = explode("\t", $_POST['notify']);
+        // notify recipients to add
+        foreach($emails as $e) {
+          if( strpos($e, '|') > 0 ) {
+            list($n,$e) = explode("|", $e);
+            $parms = array('name'=>$n, 'email'=>Zen::checkEmail($e));
+          }
+          else {
+            $parms = array('email'=>Zen::checkEmail($e));
+          }
+          $zen->add_to_notify_list($id, $parms);
+        }
+      }
     } // if( !$errs )
     
   } // if( !$errs )
@@ -81,7 +97,14 @@
     exit;
     //header("Location:$rootUrl/ticket.php?id=$id");
   } else {
-    $onLoad[] = "behavior_js.php?formset=ticketForm";
+    $onLoad[] = "behavior_js.php?formset=ticketForm&mode=create";
+  
+    // yahoo libs for addbox
+    $ext = $Debug_Mode == 3? "-debug" : "-min";
+    $onLoad[] = "js/addBoxFunctions.js";
+    // we load them as a single file from the yui network
+    $onLoad[] = "http://yui.yahooapis.com/combo?2.5.2/build/yahoo-dom-event/yahoo-dom-event.js&2.5.2/build/connection/connection{$ext}.js&2.5.2/build/json/json{$ext}.js";
+
     include("$libDir/nav.php");
     $zen->print_errors($errs);
     $view = "ticket_create";

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml"
+	width="400" height="300"
+	title="Please Add a Log Entry"
+	creationComplete="creationComplete()">
+
+	<mx:Script>
+		<![CDATA[
+			import com.zentrack.control.events.data.GetLogListRequestEvent;
+			import com.zentrack.control.events.data.GetRecentLogListRequestEvent;
+			import mx.controls.Alert;
+			import com.zentrack.valueObjects.Ticket;
+			import com.zentrack.control.events.ticket.CreateLogRequestEvent;
+			import com.zentrack.valueObjects.LogEntry;
+			import mx.managers.PopUpManager;
+
+			public var ticket:Ticket;
+
+			private function creationComplete() : void {
+				focusManager.setFocus(txtLogEntry);
+			}
+
+			private function addLogClicked() : void {
+
+				if (txtLogEntry.text != null) {
+					var newLog:LogEntry = new LogEntry();
+					newLog.binID        = ticket.binID;
+					newLog.ticketID     = ticket.ticketID;
+					newLog.entry        = txtLogEntry.text;
+	
+					new CreateLogRequestEvent(newLog).dispatch();
+					new GetRecentLogListRequestEvent().dispatch();
+					new GetLogListRequestEvent(ticket).dispatch();
+					closePopUp();
+				} else {
+					Alert.show("Please Enter Some Text, or clicke \"Cancel\"",
+						"No Text in Log");
+				}
+			}
+
+			private function cancelClicked() : void {
+				closePopUp();
+			}
+
+			private function closePopUp() : void {
+				PopUpManager.removePopUp(this);
+			}
+		]]>
+	</mx:Script>
+
+	<mx:TextArea id="txtLogEntry" width="100%" height="100%" wordWrap="true"/>
+	<mx:HBox width="100%" horizontalAlign="right">
+		<mx:LinkButton label="Cancel" click="cancelClicked()"/>
+		<mx:Button label="Create" click="addLogClicked()"/>
+	</mx:HBox>
+</mx:Panel>

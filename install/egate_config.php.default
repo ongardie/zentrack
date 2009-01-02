@@ -59,7 +59,7 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
    *
    * To disable this feature, simply set this variable to false.
    */
-@@  $egate_originalemail_prefix = "@\n\s*-{3,}Original Message-{3,}.*$@s";
+  $egate_originalemail_prefix = "@\n\s*-{3,}Original Message-{3,}.*$@s";
   
   /*
   ** DEFAULT NEW TICKET PROPERTIES

@@ -140,45 +140,30 @@ class ZenSearch {
          // instead of the normal process
          $parms[] = array('AND', array( array($f, '>=', $v[0]), array($f, '<', $v[0]) ));
        }
-       
-       if( is_array($v) ) {
-         $c = ($c == '!=')? '!IN' : 'IN';
+       else {
+         if( is_array($v) ) {
+           $c = ($c == '!=')? '!IN' : 'IN';
+         }
+         if( $c == 'contains' ) { $v = str_replace('*', '%', $v); } 
+         // generate our parameter
+         $parms[] = array($f, $c, $v);
        }
-       
-       if( $c == 'contains' ) { $v = str_replace('*', '%', $v); }
-       
-       // generate our parameter
-       $parms[] = array($f, $c, $v);
      }
      
-     if( $this->_table == 'ZENTRACK_TICKETS' ) {
-       // always observe bin access rights
-       $login_id = ZenSessionManager::getSession('login_id');
-       $ubins = $zen->getUsersBins($login_id);
-       if( count($ubins) > 100 ) {
-         // split IN(..) statements into groups of 100, required for db2 and sql server
-         $bins = array();
-         $i=0;
-         $j = 100;
-         while( $i < count($ubins) ) {
-           // observe upper limit (may not be exactly 100 records)
-           if( $i+$j >= count($ubins) ) { $j = count($ubins)-$i; }
-           $bins[] = array('bin_id', 'IN', array_slice($ubins, $i, $j));
-           $i = $i+$j;
-         }
-         $bv = array('OR', $bins);
-       }
-       else {
-         $bv = array('bin_id', 'IN', $ubins);
-       }
-       if( count($parms) ) {
-         $parms = array( array($this->_andor, $parms), $bv );
-         $this->_andor = 'AND';
-       }
-       else {
-         $parms = $bins;
-         $this->_andor = 'OR';
-       }
+     // set the table, we may need a join
+     $table = $this->_table;
+     
+     // always observe bin access rights
+     $login_id = ZenSessionManager::getSession('login_id');
+     $validBins = $zen->getUsersBins($login_id, 'level_view');
+     if($this->_table == $zen->table_tickets || $this->_table == $zen->table_bins) {
+       $bins = $this->_inClause('bin_id', $validBins);
+       $this->_mergeParmSets( $bins, 'OR', $parms );
+     }
+     else if( $table == $zen->table_users ) {
+       $vusers = $this->_findValidUsers($validBins);
+       $users = $this->_inClause('user_id', $vusers);
+       $this->_mergeParmSets( $users, 'OR', $parms );
      }
      
      if( count($parms) ) {
@@ -186,7 +171,7 @@ class ZenSearch {
      }
      
      // create sql query
-     $query = "SELECT * FROM ".$this->_table." $where ORDER BY ".$this->_order();
+     $query = "SELECT * FROM $table $where ORDER BY ".$this->_order();
      
      // get results and return
      if( $limit ) {
@@ -202,6 +187,58 @@ class ZenSearch {
      }
      Zen::addDebug('ZenSearch::search', "[".count($res)."]$query", 3);
      return $res;
+   }
+   
+   /**
+    * Find the valid users for this set of bins; not the most effecient, but
+    * it is reliable.
+    */
+   function _findValidUsers($validBins) {
+     global $zen;
+     $vusers = $zen->get_users($validBins, 'level_user');
+     $ids = array();
+     foreach($vusers as $v) {
+       $ids[] = $v['user_id'];
+     }
+     return $ids;
+   }
+   
+   /**
+    * Given a new set of parms and an old one, join them with an AND clause
+    * if the second set of parms is empty, then just return the first set,
+    * joined with the clause provided.
+    */
+   function _mergeParmSets($newparms, $new_andor, &$parms) {
+     if( !empty($parms) ) {
+       $bv = array($new_andor, $newparms);
+       $parms = array( $bv, array($this->_andor, $parms) );
+       $this->_andor = 'AND';
+     }
+     else {
+       $parms = $newparms;
+       $this->_andor = $new_andor;
+     }
+   }
+   
+   /**
+    * Enter values into an IN clause, if more than 100 values exist, then
+    * split the values by 100s and create seperate in clauses for sql server
+    * and db2 compatability
+    */
+   function _inClause( $field, $vals ) {
+     if( count($vals) < 100 ) {
+       return array( array($field, 'IN', $vals) );
+     }
+     $newvals = array();
+     $i=0;
+     $j = 100;
+     while( $i < count($vals) ) {
+       // observe upper limit (may not be exactly 100 records)
+       if( $i+$j >= count($vals) ) { $j = count($vals)-$i; }
+       $newvals[] = array($field, 'IN', array_slice($vals, $i, $j));
+       $i = $i+$j;
+     }
+     return $newvals;
    }
    
    /**

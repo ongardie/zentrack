@@ -30,9 +30,9 @@
   setlocale(LC_TIME, "es_AR.iso88591");
 //You shouldn't touch anything after here
 //==============================================================
-  include_once("$libDir/translator.class");
-  include_once("$libDir/zenTrack.class");
-  include_once("$libDir/zenTemplate.class");
+  include_once("$libDir/translator.class.php");
+  include_once("$libDir/zenTrack.class.php");
+  include_once("$libDir/zenTemplate.class.php");
   $zen = new zenTrack( $configFile );
   $managers=array();
   $testers=array();
@@ -101,10 +101,9 @@
   }
 
   $mainQuery="SELECT id, title, otime, status, bin_id, deadline, bin_id, ZB.name BIN_NAME, ZY.name TYPE_NAME, "
-//            ."       ZT.user_id, ZT.priority PID, email, ZP.name PRIORITY_NAME "
-            ."       ZT.user_id, ZT.priority PID, ZP.name PRIORITY_NAME "
+            ."       ZT.user_id, ZT.priority PID, email, ZP.name PRIORITY_NAME "
             ."FROM ".$zen->table_tickets." ZT, ".$zen->table_types." ZY, ".$zen->table_bins." ZB, ".$zen->table_priorities." ZP "
-//            ."     LEFT JOIN ".$zen->table_users." ZU ON ZT.user_id=ZU.user_id "
+            ."     LEFT JOIN ".$zen->table_users." ZU ON ZT.user_id=ZU.user_id "
             ."WHERE ZT.bin_id=ZB.bid AND ZT.type_id=ZY.type_id AND ZB.active=1 AND ZT.priority=ZP.pid"
             ."     AND deadline<".$zen->currTime." AND deadline>0 AND (ctime IS NULL OR ctime=0) ";
   if ($includeProjects==0) {
@@ -121,9 +120,6 @@
   if( is_array($tickets) && count($tickets) ) {
     $ticketsByID=array();
     foreach($tickets as $t) {
-      if (array_key_exists($t['user_id'], $users)) {
-        $t['email']=$users[$t['user_id']]['email'];
-      }
       $ticketsByID[$t["id"]]=$t;
       if($mailOwner==1 && isset($t["email"])) {
         $notification[$t["email"]][$t["BIN_NAME"]][intval($t["id"])]=1;

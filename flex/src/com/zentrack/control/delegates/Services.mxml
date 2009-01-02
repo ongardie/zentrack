@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ServiceLocator xmlns="com.adobe.cairngorm.business.*"
+	xmlns:mx="http://www.adobe.com/2006/mxml">
+
+	<mx:Script>
+		<![CDATA[
+			import com.zentrack.model.ModelLocator;
+			import mx.core.Application;
+
+			[Bindable]
+			private var __model:ModelLocator = ModelLocator.getInstance();
+		]]>
+	</mx:Script>
+
+	<mx:HTTPService id="tickets" url="{__model.apiLocation}"
+		resultFormat="e4x" showBusyCursor="true" method="POST"/>
+
+</ServiceLocator>

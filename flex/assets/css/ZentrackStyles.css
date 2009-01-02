@@ -1,0 +1,282 @@
+/* START: General Layout Styling */
+Application {
+   backgroundColor:          #777777;
+   backgroundGradientColors: #666666, #aaaaaa;
+   backgroundGradientAlphas: 1, 1;
+   themeColor:               #ff0000;
+   color:                    #000000;
+}
+
+ApplicationControlBar {
+	backgroundColor:   #ffffff;
+	backgroundAlpha:   1;   
+	borderStyle:       solid;
+	borderColor:       #e41125;
+	borderThickness:   1;
+	dropShadowEnabled: true;
+	shadowDistance:    2;
+	shadowDirection:   right;
+}
+
+DataGrid {
+	backgroundColor:   #ffffff;
+	headerColors:      #ffffff, #e6eeee;
+	rollOverColor:     #ff0000;
+	textRollOverColor: #fbfbfb;
+	selectionColor:    #dddddd;
+}
+
+Panel { 
+	borderAlpha:          1;
+	borderColor:          #ff0000;
+	borderThicknessLeft:  1;
+	borderThicknessRight: 1;
+
+	headerHeight:         17;
+	borderThickness:      0;
+	headerColors:         #ff0000, #ff6666;
+	titleStyleName:       "panelTitleStyle";
+	dropShadowEnabled:    false;
+	highlightAlphas:      0, 0;
+}
+
+.panelTitleStyle {
+	color: #222222;
+}
+
+HRule {
+	strokeColor: #e41125;
+}
+
+SuperTabNavigator {
+   tabStyleName:             "mainTabs";
+   backgroundColor:          #ffffff;
+   selectedTabTextStyleName: "selectedMainTab";
+}
+
+.mainTabs {
+   fillAlphas:      1, 1;
+   fillColors:      #ff0000, #ff6666;
+   backgroundColor: #ffffff;
+   color:           #000000;
+   fontFamily:      Arial;
+   fontSize:        12;
+   fontWeight:      bold;
+   dragEnabled:     false;
+}
+
+.selectedMainTab {
+	color: #000000;
+}
+
+VDividedBox {
+   dividerAffordance: 5;
+   dividerAlpha:      1;
+   dividerColor:      #e41125;
+   dividerThickness:  4;
+}
+/* END: General Layout Styling */
+
+/* START: General Button Styling */
+Button {
+	/*
+	fillAlphas: 1, 1, 1, 1;
+	fillColors: #e41125, #cc0000, #ff0000, #ff0033;
+	*/
+}
+
+LinkButton {
+	rollOverColor:     #e41125;
+	textRollOverColor: #ffffff;
+}
+/* END: General Button Styling */
+
+/* START: General Font Styling */
+FormItem {
+	fontSize: 12;
+}
+
+TextArea {
+	fontSize:    12;
+	borderColor: #e41125;
+}
+
+TextInput {
+	fontSize:    12;
+	borderColor: #e41125;
+}
+/* END: General Font Styling */
+
+/* START: Header Styling */
+.headingBox {
+	paddingLeft:      10;
+	paddingTop:       10;
+	paddingBottom:    10;
+	paddingRight:     10;
+	verticalAlign:    middle;
+	/*
+	backgroundColor:  #e41125;
+	borderStyle:      none;
+	border-thickness: 10;
+	*/
+}
+
+.headingText {
+	fontFamily: Arial;
+	fontSize:   20;
+	fontWeight: bold;
+}
+/* END: Header Styling */
+
+/* START: Main Application Window VBox */
+.mainWindow {
+	horizontalAlign: center;
+}
+
+	/* START: Main Application Window ViewStack*/
+	.mainWindowVS {
+		paddingTop:        2;
+		paddingLeft:       2;
+		paddingRight:      2;
+		paddingBottom:     2;
+
+		backgroundColor:   #ffffff;
+		backgroundAlpha:   0.9;
+
+		borderStyle:       solid;
+		borderColor:       #e41125;
+		borderThickness:   1;
+		cornerRadius:      3;
+		dropShadowEnabled: true;
+		shadowDistance:    2;
+		shadowDirection:   right;
+	}
+	/* END: Main Application Window ViewStack*/
+	
+		/* START: Login Screen */
+		.welcomeText {
+			fontSize:   16;
+			fontWeight: bold;
+			textAlign:  center;
+		}
+		/* END: Login Screen */
+
+		/* START: Dashboard */
+		.dashHBox {
+			paddingTop:    0;
+			paddingRight:  2;
+			paddingBottom: 2;
+			paddingLeft:   2;
+			horizontalGap: 3;
+		}
+
+		.titleText {
+			 fontWeight: bold;
+			 fontSize:   14;
+			 fontFamily: Arial;
+		}
+
+		.statusText {
+			 fontWeight: normal;
+			 fontSize:   12;
+			 fontFamily: Arial;
+		}
+
+		.latestLogText {
+			 fontWeight: normal;
+			 fontSize:   12;
+			 fontFamily: Arial;
+		}
+
+		.ticketListPanel {
+			 headerHeight: 21;
+		}
+
+		.ticketListPanelTitleText {
+			 fontWeight: bold;
+			 fontSize:   13;
+			 fontFamily: Arial;
+			 color:      #ffffff;
+		}
+
+		.ticketListPanelText {
+			 fontWeight:              normal;
+			 fontSize:                12;
+			 fontFamily:              Arial;
+			 selectionColor:          #ffffff;
+			 alternatingItemColors:   #ffffff, #ffffff;
+			 horizontalGridLines:     true;
+			 horizontalGridLineColor: #eeeeee;
+		}
+		/* END: Dashboard */
+
+		/* START: ViewTicket Screen */
+		.viewTicketTitleLabelBackground {
+			background-color: #eeeeee;
+			verticalAlign:    middle;
+			borderStyle:      solid; 
+		}
+
+		.viewTicketDataGridHeader {
+			 fontWeight: normal;
+			 fontSize:   12;
+			 fontFamily: Verdana;
+		}
+
+		.viewTicketDataGrid {
+			backgroundColor:   #f60000;
+			headerColors:      #ff0000, #ff6666;
+			rollOverColor:     #ff0000;
+			selectionColor:    #bd071c;
+			textSelectedColor: #efc2c7;
+		}
+
+		.viewTicketTitleLabelText {
+			 fontWeight: normal;
+			 fontSize:   12;
+			 fontFamily: Verdana;
+		}
+
+		.viewTicketDetailsPanelTitle {
+			 fontWeight: normal;
+			 fontSize:   12;
+			 fontFamily: Verdana;
+		}
+
+		.viewTicketDetailsPanel {
+			 fontWeight: normal;
+			 fontSize:   12;
+			 fontFamily: Verdana;
+		}
+
+		.viewTicketLogPanel {
+			 fontWeight: normal;
+			 fontSize:   12;
+			 fontFamily: Verdana;
+		}
+
+		.viewTicketLogPanelVBox {
+			paddingTop:    2;
+			paddingBottom: 2;
+			verticalGap:   2;
+		}
+
+		.viewTicketLogBox {
+			 borderStyle:     solid;
+			 backgroundColor: #eeeeee;
+		}
+
+		.viewTicketLogTitleTextBackground {
+			 backgroundColor: #dddddd;
+		}
+
+		.viewTicketLogTitleText {
+			 color: #000000;
+		}
+
+		.viewTicketLogEntryText {
+			 fontWeight: normal;
+		}
+		/* END: ViewTicket Screen */
+
+/* END: Main Application Window VBox */

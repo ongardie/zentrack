@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml"
+	layout="absolute"
+	creationComplete="init()"
+	horizontalScrollPolicy="off"
+	styleName="viewTicketLogPanel">
+	<mx:Script>
+		<![CDATA[
+			import com.zentrack.control.events.ui.LogsUpdatedEvent;
+			import com.adobe.cairngorm.control.CairngormEventDispatcher;
+			import com.zentrack.valueObjects.Ticket;
+			import com.zentrack.model.ModelLocator;
+			import mx.events.CollectionEvent;
+			import mx.binding.utils.BindingUtils;
+			import mx.binding.utils.ChangeWatcher;
+			import com.zentrack.view.components.fragments.LogEntryFragment;
+			import mx.logging.Log;
+			import com.zentrack.valueObjects.LogEntry;
+			import mx.collections.ArrayCollection;
+
+			private var __model:ModelLocator = ModelLocator.getInstance();
+
+			public var ticket:Ticket;
+
+			private function init() : void {
+				// A binding to when the log entries have returned from the delegate.
+				CairngormEventDispatcher.getInstance().addEventListener(
+					LogsUpdatedEvent.EVENT_ID, createLogFragments);
+			}
+
+			public function createLogFragments(event : LogsUpdatedEvent) : void {
+				vbcContainer.removeAllChildren();
+				for each (var log:LogEntry in ticket.getLogEntries()) {
+					var guiLog:LogEntryFragment = new LogEntryFragment();
+					guiLog.log = log;
+					vbcContainer.addChild(guiLog);
+				}
+			}
+		]]>
+	</mx:Script>
+
+	<mx:VBox id="vbcContainer" styleName="viewTicketLogPanelVBox"
+		width="100%" height="100%"/>
+
+</mx:Panel>

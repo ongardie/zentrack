@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:panels="com.zentrack.view.components.panels.*"
+	width="100%" height="100%"
+	styleName="dashHBox" xmlns:fragments="com.zentrack.view.components.fragments.*">
+
+	<mx:Script>
+		<![CDATA[
+			import mx.events.ListEvent;
+			import com.zentrack.control.events.data.GetTicketListRequestEvent;
+			import com.zentrack.control.events.ticket.CreateTicketUITabEvent;
+			import com.zentrack.valueObjects.Ticket;
+			import com.zentrack.control.events.ticket.CreateTicketRequestEvent;
+			import com.zentrack.model.ModelLocator;
+
+			[Bindable]
+			private var __model:ModelLocator = ModelLocator.getInstance();
+
+			private function onCreateTicket() : void {
+				new CreateTicketUITabEvent().dispatch();
+			}
+		]]>
+	</mx:Script>
+
+	<mx:VBox width="100%" height="100%">
+		<mx:HRule width="100%"/>
+		<mx:Label text="Status" styleName="titleText"/>
+		<mx:HRule width="100%"/>
+		<mx:Text htmlText="{__model.summaryText}"
+			width="100%" styleName="statusText"/>
+		<mx:LinkButton label="Create a new ticket ..." textAlign="right"
+			click="onCreateTicket()" width="100%"/>
+		<mx:HRule width="100%"/>
+		<mx:Label text="Recent Logs" styleName="titleText"/>
+		<fragments:RecentLogDatagrid/>
+	</mx:VBox>
+	<panels:ListPanel title="My Open Tickets" listData="{__model.userOpenTickets}"/>
+	<panels:ListPanel title="Tickets Affecting All Depots" listData="{__model.allDepotOpenTickets}"/>
+
+</mx:HBox>

@@ -90,6 +90,18 @@ class ZenSearchBoxUser extends ZenSearchBox {
       $comps[$f] = $this->_getCompVal($f);
     }
     
+    // construct a list of filtered bins, check to make sure
+    // that the bins are in the search parms, or no search parm
+    // was set for the bin
+    $bins = $zen->getUsersBins($_SESSION['login_id'], 'level_user');
+    $newvals = array();
+    foreach($bins as $b) {
+      if( empty($comps['bin_id']) || in_array($comps['bin_id'], $b) ) {
+        $newvals[] = $b;
+      }
+    }
+    $comps['bin_id'] = $newvals;
+    
     // set up search parameters and run
     $s = new ZenSearch();
     $s->init( $zen->table_users, $cols );

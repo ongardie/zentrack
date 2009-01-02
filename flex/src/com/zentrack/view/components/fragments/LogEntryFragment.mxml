@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml"
+	width="100%"
+	creationCompleteEffect="Dissolve"
+	styleName="viewTicketLogBox">
+	<mx:Script>
+		<![CDATA[
+			import mx.formatters.NumberFormatter;
+			import mx.formatters.DateFormatter;
+			import com.zentrack.model.ModelLocator;
+			import com.zentrack.valueObjects.LogEntry;
+
+			[Bindable]
+			public var log:LogEntry;
+
+			private var __model:ModelLocator = ModelLocator.getInstance();
+
+			private function formatDate(inDate : Date) : String {
+				var myDate:DateFormatter = new DateFormatter();
+				myDate.formatString = __model.ticketDetailLogDateFormat;
+				return myDate.format(inDate);
+			}
+
+			private function formatHours(inHours : Number) : String {
+				var hoursFormatter : NumberFormatter = new NumberFormatter();
+				hoursFormatter.precision = 2;
+				return hoursFormatter.format(inHours);
+			}
+
+			private function formatTitle() : String {
+				return "<b>" + formatDate(log.createTime) + 
+					" - " + log.action + "</b> [" +
+					__model.bins[log.binID] + " | " + log.user +
+					" | Hours: " + log.hours + "]";
+			}
+
+			private function formatEntry() : String {
+				return log.entry;
+			}
+		]]>
+	</mx:Script>
+
+	<mx:Canvas width="100%" styleName="viewTicketLogTitleTextBackground">
+		<mx:Text id="txtTitle" width="100%" htmlText="{formatTitle()}"
+			styleName="viewTicketLogTitleText"/>
+	</mx:Canvas>
+	<mx:Text id="txtEntry" htmlText="{formatEntry()}" width="100%"
+		styleName="viewTicketLogEntryText"/>
+</mx:VBox>

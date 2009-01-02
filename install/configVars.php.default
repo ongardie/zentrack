@@ -120,9 +120,4 @@
   
   // seperator to use for splitting/joining multifield values
   $this->multisep = '; ';
-
-  // the field separator used when returning an item from a searchbox
-  //$this->searchbox_FS = chr(183);
-  $this->searchbox_FS = ",";
-
 }?>

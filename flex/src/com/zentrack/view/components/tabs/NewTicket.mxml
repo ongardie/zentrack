@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:forms="com.zentrack.view.components.forms.*"
+	width="100%" height="100%"
+	horizontalAlign="center" verticalAlign="middle"
+	creationCompleteEffect="Dissolve"
+	showEffect="Dissolve">
+
+	<mx:Script>
+		<![CDATA[
+			import com.zentrack.valueObjects.Ticket;
+			import com.zentrack.control.events.ticket.CreateTicketRequestEvent;
+			import com.zentrack.model.ModelLocator;
+
+			[Bindable]
+			private var __model:ModelLocator = ModelLocator.getInstance();
+		]]>
+	</mx:Script>
+
+	<forms:NewTicketForm />
+</mx:HBox>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:ApplicationControlBar xmlns:mx="http://www.adobe.com/2006/mxml"
+	width="100%" styleName="headingBox">
+
+	<mx:Script>
+		<![CDATA[
+			import com.zentrack.model.ModelLocator;
+			import com.zentrack.control.events.logon.LogOffRequestEvent;
+
+			[Bindable]
+			private var __model:ModelLocator = ModelLocator.getInstance();
+
+			private function onLogOff() : void {
+				var event:LogOffRequestEvent = null;
+				event = new LogOffRequestEvent();
+				event.dispatch();
+			}
+
+			private function loggedIn(inState:uint) : Boolean {
+				if (inState == 0) {
+					return false;
+				}
+				return true;
+			}
+		]]>
+	</mx:Script>
+
+	<mx:Image source="../assets/gifs/logo.gif"/>
+	<mx:Spacer width="30"/>
+	<mx:Label text="IT Service Desk" styleName="headingText"/>
+	<mx:Spacer width="100%"/>
+	<mx:LinkButton label="Log Out" id="btnLogout" click="onLogOff()"
+		visible="{loggedIn(__model.applicationState)}"/>
+
+</mx:ApplicationControlBar>

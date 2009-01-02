@@ -372,13 +372,19 @@ print "</td></tr>";
           }
            ?>
      </form>
-	 <? if( $zen->checkNum($login_level) >= $zen->getSetting('level_settings') ) { ?>
+
+	 <? 
+    // this block allows administrators to transfer search results to the
+    // delete ticket screen for review and possible deletion
+    if( $zen->checkNum($login_level) >= $zen->getSetting('level_settings') ) { 
+   ?>
      <form method="post" action="admin/deleteTicket.php" style="display: inline; margin: 0px;">
-	 <input type='hidden' name="tickets_to_delete" value="<?=join(" ",$idlist)?>">
-          <input type="submit" class="smallSubmit" value="<?=tr("Delete Tickets")?>">
+	     <input type='hidden' name="tickets_to_delete" value="<?=join(" ",$idlist)?>">
+       <input type="submit" class="smallSubmit" value="<?=tr("Delete Tickets")?>">
      </form>
-          <? } ?>
-     <form method="post" action="exportSearch.php" style="display: inline; margin: 0px;">
+   <? } ?>
+
+   <form method="post" action="exportSearch.php" style="display: inline; margin: 0px;">
           <input type="submit" class="smallSubmit" value="<?=tr("Export Results")?>">
           <input type="hidden" name="search_text" value="<?=$zen->ffv($search_text)?>">
           <?
