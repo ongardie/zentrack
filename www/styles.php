@@ -1,5 +1,5 @@
 <?
-  include_once(dirname(__FILE__)."/header.php");  
+  include_once(dirname(__FILE__)."/header.php");
   header("Content-Type: text/css");
 ?>
 /*** PAGE PROPERTIES ***/
@@ -23,7 +23,7 @@ TD {
 }
 
 LI {
-  margin-top: 5px; 
+  margin-top: 5px;
 }
 
 FORM {
@@ -51,7 +51,7 @@ LABEL:hover {
 .page_section {
   font-size:       <?=$zen->getSetting("font_size_large")?>px;
   color:           <?=$zen->getSetting("color_alt_text")?>;
-  font-weight:     bold;     
+  font-weight:     bold;
 }
 
 .mainContent {
@@ -120,7 +120,7 @@ A:hover {
 }
 
 A.menuLink {
-  color:       <?=$zen->getSetting("color_title_txt")?>; 
+  color:       <?=$zen->getSetting("color_title_txt")?>;
   font-size:   <?=$zen->getSetting("font_size")?>;
   font-weight: bold;
   font-family: <?=$zen->getSetting("font_face")?>;
@@ -131,8 +131,8 @@ A.menuLink:hover{
   color: <?=$zen->getSetting("color_title_txt")?>;
 }
 
-A.subMenuLink {     
-  color:      <?=$zen->getSetting("color_title_txt")?>; 
+A.subMenuLink {
+  color:      <?=$zen->getSetting("color_title_txt")?>;
   font-size:  <?=$zen->getSetting("font_size_small")?>;
 }
 
@@ -153,7 +153,7 @@ A.rowLink:Hover {
 
 A.tabsOn {
   color:           <?=$zen->getSetting("color_text")?>;
-  text-decoration: none;     
+  text-decoration: none;
 }
 
 A.tabsOn:hover {
@@ -162,7 +162,7 @@ A.tabsOn:hover {
 
 A.tabsOff {
   color:           <?=$zen->getSetting("color_title_text")?>;
-  text-decoration: none;     
+  text-decoration: none;
 }
 
 A.tabsOff:hover {
@@ -192,7 +192,7 @@ include("$libDir/priorityColors.php");
 .cell, .invalidCell, .content, .labelCell {
   color:       <?=$zen->getSetting("color_alt_text")?>;
   background-color:  <?=$zen->getSetting("color_background")?>;
-  padding: 2px;     
+  padding: 2px;
 }
 
 .code {
@@ -200,11 +200,11 @@ include("$libDir/priorityColors.php");
 }
 
 .labelCell {
-  font-weight: bold; 
+  font-weight: bold;
 }
 
 .content {
-  padding: 10px; 
+  padding: 10px;
 }
 
 .invalidCell {
@@ -235,7 +235,7 @@ include("$libDir/priorityColors.php");
   background-color: <?=$zen->getSetting('color_bar_darkest')?> !important;
 }
 
-.disabled, .disabled INPUT, .disabled BUTTON, .disabled SUBMIT, 
+.disabled, .disabled INPUT, .disabled BUTTON, .disabled SUBMIT,
 .disabled SELECT, .inputDisabled {
   color:      <?=$zen->getSetting('color_grey')?> !important;
   background-color: <?=$zen->getSetting('color_bars')?> !important;
@@ -255,7 +255,7 @@ include("$libDir/priorityColors.php");
     print "padding-top: 2px;";
     print "padding-bottom: 2px;";
   }
-  ?>     
+  ?>
   padding-left:   2px;
   border:         1px solid <?=$zen->getSetting("color_alt_text")?>;
   font-weight:    Bold;
@@ -268,7 +268,7 @@ include("$libDir/priorityColors.php");
 
 .subTitle {
   color:          <?=$zen->getSetting("color_bar_text")?>;
-  background-color:     <?=$zen->getSetting("color_bar_darkest")?>;  
+  background-color:     <?=$zen->getSetting("color_bar_darkest")?>;
   font-weight:    Bold;
   padding: 2px;
   /* border: 1px solid <?=$zen->getSetting('color_bar_text')?>; */
@@ -280,7 +280,7 @@ include("$libDir/priorityColors.php");
 
 .navCell {
   color:          <?=$zen->getSetting("color_bar_text")?>;
-  background-color:     <?=$zen->getSetting("color_bar_darkest")?>;  
+  background-color:     <?=$zen->getSetting("color_bar_darkest")?>;
   font-weight:    Bold;
   border: 1px solid <?=$zen->getSetting('color_bar_border')?>;
   padding: 3px;
@@ -334,7 +334,7 @@ TABLE.slimPad {
     print "padding-top: 2px;";
     print "padding-bottom: 2px;";
   }
-  ?>     
+  ?>
   padding-left:   2px;
   font-size:      <?=$zen->getSetting("font_size_small")?>px;
 }
@@ -458,12 +458,12 @@ A.navTab { border: none; }
 }
 
 .bigBold {
-  font-size:    <?=$zen->getSetting("font_size_large")?>px;  
+  font-size:    <?=$zen->getSetting("font_size_large")?>px;
   font-weight:  bold;
 }
 
 .big {
-  font-size:   <?=$zen->getSetting("font_size_large")?>px;  
+  font-size:   <?=$zen->getSetting("font_size_large")?>px;
 }
 
 TD.bigger { font-size: 50px; }
@@ -557,7 +557,7 @@ BUTTON, SUBMIT, .submit, .actionButton, .actionButtonDiv {
   padding-bottom: 2px;
   text-align:     center;
   /** This width is overridden by renderDivButton() */
-  width:          100px; 
+  width:          100px;
 }
 
 .submit, SUBMIT {
@@ -642,6 +642,10 @@ BUTTON, SUBMIT, .submit, .actionButton, .actionButtonDiv {
   margin-bottom: 5px;
 }
 
+.borderBox label {
+  display: inline; /*Fixes tt#8821 */
+}
+
 .borderLabel {
   position: absolute;
   top: -12px;
@@ -664,7 +668,7 @@ BUTTON, SUBMIT, .submit, .actionButton, .actionButtonDiv {
   border:     1px solid <?=$zen->getSetting('color_bar_darkest')?>;
   padding: 5px;
   max-height: <?=$zen->getSetting('max_textbox_height')?>px;
-  height: expression(this.scrollHeight > <?=$zen->getSetting('max_textbox_height')?> ? "<?=$zen->getSetting('max_textbox_height')?>px" : "auto");	
+  height: expression(this.scrollHeight > <?=$zen->getSetting('max_textbox_height')?> ? "<?=$zen->getSetting('max_textbox_height')?>px" : "auto");
   overflow: auto;
 }
 
@@ -789,7 +793,7 @@ BUTTON, SUBMIT, .submit, .actionButton, .actionButtonDiv {
   padding: 0px;
 }
 
-.menuBox P {     
+.menuBox P {
   margin-top: 8px;
   margin-bottom: 5px;
   margin-left: 8px;
@@ -881,7 +885,7 @@ A.pinIcon:hover {
 
 .searchbox {
   max-height:  <?=$zen->getSetting('max_textbox_height')?>px;
-  height:      expression(this.scrollHeight > <?=$zen->getSetting('max_textbox_height')?>? "<?=$zen->getSetting('max_textbox_height')?>px" : "auto");	
+  height:      expression(this.scrollHeight > <?=$zen->getSetting('max_textbox_height')?>? "<?=$zen->getSetting('max_textbox_height')?>px" : "auto");
   overflow:    auto;
   border:      1px solid <?=$zen->getSetting("color_text")?>;
   float:       left;
