@@ -11,9 +11,19 @@ and user experience, internationalization, platform and database
 abstraction, and endless possibilities for project expansion.
 --------------------
 
+----- VERSION 2.6.4 (2009-01-24) -----
+
+2009-01-24, Kato -- REVISION 50
+  Final release prep
+    - trunk/install/README.txt
+    - trunk/install/utils/upgrade_base.sql
+    - trunk/INSTALL.txt
+    - trunk/RELEASE_NOTES.txt
+    - trunk/UPGRADE.txt
+
 2009-01-23, alberts -- REVISION 49
   CSS fix for 'show all logs' label and checkbox tt#8221
-    - zentrack_2/www/styles.php
+    - trunk/www/styles.php
 
 2009-01-01, Kato -- REVISION 48
   Integrated DPD branch, including: egate fixes, new REST API,

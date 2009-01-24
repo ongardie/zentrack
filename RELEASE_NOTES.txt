@@ -1,11 +1,7 @@
 
----- 2.6.4 Liger Release ----
-
-This is a beta release and not for the general public. The official release
-of these features will be the 2.7 Release.
+---- 2.6.4 Release ----
 
 NEW FEATURES / ENHANCEMENTS
-  Added new customer help desk style interface
   Enhanced and simplified email gateway: html, attachments, no more php imap module
   Fixed php4 compatability
   Added new Project Tree view (see field maps)

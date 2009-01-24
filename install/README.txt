@@ -1,2 +1,2 @@
 
-SEE ..\INSTALL.readme file for instructions
+SEE ../INSTALL.readme file for instructions

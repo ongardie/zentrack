@@ -5,21 +5,18 @@
   ZT install up and running.  Please read it line by line!  If you encounter
   problems then try the HELP doc in this same directory.
  
+--------------------
+REQUIREMENTS
+--------------------
+    PHP >= 4.3.9 (PHP > 5.2 recommended)
+    Supported Servers: Apache 2, IIS
+    Supported OS: Windows 2000/XP/Vista/Server, CentOS, Any Linux 
+       User Tested OS: FreeBSD, NT, MacOS, Debian, Gentoo
+    Supported DBs: Mysql, Oracle 8i/9i, SQLServer
+       User Tested DBs: DB2, Postgres
+       
   --------------
-  REQUIREMENTS
-  --------------
-    Basic Install
-       PHP >= 5.0
-       Mysql, Oracle, Postgres, or MS SQL Server
-       A Basic knowledge of PHP is helpful
-    Email Gateway (optional)
-       A fair knowledge of SMTP is REQUIRED
-	   The ability to set up email pipe(.forward) is REQUIRED
-       Basic PHP knowledge required
-       PEAR Library Mail_Mime  (and imap support if you use imap to check mail)
-
-  --------------
-  PHP.INI CONFIGURATION NOTES (for newbies)
+  PHP.INI CONFIGURATION NOTES
   --------------
     - Make sure you turn off notices in your php.ini file: 
         error_reporting = E_ALL & ~E_NOTICE
