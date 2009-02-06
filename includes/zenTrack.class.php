@@ -5598,7 +5598,7 @@ class zenTrack extends zen {
     // unsorted if using $columns (sorry!)
 
     $pid = $this->checkNum($pid);
-    $params = array("project_id"=>$pid);
+    $params = array("project_id"=>$pid, "bin_id"=>$this->getBins());
     $vars = $this->get_tickets($params, $sort, $columns, -1);
     $this->addDebug('getProjectChildren', "pid=$pid, columns=$columns, sort=$sort, results=".count($vars), 3);
     return( $vars );

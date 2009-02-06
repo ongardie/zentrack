@@ -11,6 +11,10 @@ and user experience, internationalization, platform and database
 abstraction, and endless possibilities for project expansion.
 --------------------
 
+2009-02-06, alberts -- REVISION 51
+  Fix incorrect totals in project task list, tt#8222
+    - trunk/includes/zenTrack.class.php
+
 ----- VERSION 2.6.4 (2009-01-24) -----
 
 2009-01-24, Kato -- REVISION 50
