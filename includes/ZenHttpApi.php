@@ -427,16 +427,6 @@ class ZenHttpApi {
     
     $tickets = $this->zen->search_tickets($parms, 'OR', 0, $sort, $limit);
 
-    // The client will need the entire user, not just the id
-    // so we'll look up each ticket's user and add them to the results
-    foreach($tickets as $tid=>$t) {
-      if( !empty($t['user_id']) ) {
-        $tickets[$tid]['user'] = $this->zen->getUser($t['user_id'], $this->usercols);
-      }
-      // we don't want to store the user_id twice
-      unset($tickets[$tid]['user_id']);
-    }
-
     return $this->_generateTransaction(
         'Search Results',
         true,

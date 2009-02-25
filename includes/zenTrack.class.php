@@ -652,8 +652,12 @@ class zenTrack extends zen {
    */
   function add_to_notify_list( $ticket_id, $params ) {
     // check for existing entry (avoid dups)
-    $ticket_id = $this->checkNum($ticket_id);
+  	$ticket_id = $this->checkNum($ticket_id);
     $list = $this->get_notify_list($ticket_id);
+    $uids = $this->get_users_by_email( $params["email"] );
+    if( !empty($uids) && count($uids) == 1 ) {
+      $params["user_id"] = $uids[0];
+    }
     if( is_array($list) ) {
       foreach($list as $l) {
         if( $params["user_id"] && $params["user_id"] == $l["user_id"] ) {
@@ -2769,11 +2773,12 @@ class zenTrack extends zen {
    *
    * @param integer $id returns the created ticket ID
    * @param array $idx_params array with 3 keys: 'standard','varfield', 'contacts' (first 2 containing an array mapped field_name -> value, and 3rd containing array of contacts)
-   * @param string $action The action name to be logged (default EDIT)
+   * @param string $action The action name to be logged (default CREATED)
    * @param string $log_init is extra notes to add at the beginning of the create log
+   * @param string $notify_list is a string of notify email addresses and/or users and contacts separated by tabs
    * @return integer returns the new ticket's id, if creation succeeded
    */
-  function add_new_ticket(&$id, $idx_params, $action="CREATED", $log_init="") {
+  function add_new_ticket(&$id, $idx_params, $action="CREATED", $log_init="", $notify_list=null) {
     $params=$idx_params['standard'];
     $varfield_params=$idx_params['varfield'];
     $contact_params=$idx_params['contacts'];
@@ -2782,7 +2787,7 @@ class zenTrack extends zen {
     $this->log_buffer=$log_init."\n\n";
     $errs = array();
     // create the ticket
-    $id = $this->add_ticket( $params, "", 1 );
+    $id = $this->add_ticket( $params, "", 1, $notify_list );
 
     // check for errors
     if( !$id ) {
@@ -2819,9 +2824,10 @@ class zenTrack extends zen {
    * @param array $params is an indexed array("database_column"=>value), the values will be quoted and checked
    * @param string $log_notes is extra notes to add to create log
    * @param integer $mode if not null, don't log but use log_buffer
+   * @param string $new_notify_list is a string of notify email addresses and/or users and contacts separated by tabs
    * @return integer returns the new ticket's id, if creation succeeded
    */
-  function add_ticket( $params, $log_notes = '', $mode=null ) {
+  function add_ticket( $params, $log_notes = '', $mode=null, $new_notify_list=null ) {
     // Do otime rounding here to avoid confusion in the logs when the edit roundes to date_fmt_time:
     $params['otime']=$this->dateParse($this->showDateTime($params['otime']));
     // perform the ticket insert
@@ -2830,18 +2836,19 @@ class zenTrack extends zen {
       // create an entry in the varfield table
       $query = "INSERT INTO ".$this->table_varfield." (ticket_id) VALUES($id)";
       if( !$this->db_result($query) ) {
-        $this->addDebug('add_ticket', 'varfield query failed: $query', 1);
+        $this->addDebug('add_ticket', "varfield query failed: $query", 1);
       }
 
       // create the notify list for this ticket
       $notify_list = array();
+      $notify_idx  = 0;
 
       // the bin managers
       if( $this->settingOn("default_notify_manager") ) {
         $vars = $this->fetch_bin_roles($params["bin_id"],"manager");
         if( is_array($vars) && count($vars) ) {
           foreach($vars as $v) {
-            $notify_list[]["user_id"] = $v["user_id"];
+            $notify_list[$notify_idx++]["user_id"] = $v["user_id"];
           }
         }
       }
@@ -2851,17 +2858,32 @@ class zenTrack extends zen {
         $vars = $this->fetch_bin_roles($params["bin_id"],"tester");
         if( is_array($vars) && count($vars) ) {
           foreach($vars as $v) {
-            $notify_list[]["user_id"] = $v["user_id"];
+            $notify_list[$notify_idx++]["user_id"] = $v["user_id"];
           }
         }
       }
       // the ticket creator
       if( $this->settingOn("default_notify_creator") ) {
-        $notify_list[]["user_id"] = $params["creator_id"];
+        $notify_list[$notify_idx++]["user_id"] = $params["creator_id"];
       }
       // the ticket owner
       if( $this->settingOn("default_notify_owner") && !empty($params["user_id"]) ) {
-        $notify_list[]["user_id"] = $params["user_id"];
+        $notify_list[$notify_idx++]["user_id"] = $params["user_id"];
+      }
+      // the list of users/contacts/email addresses from the notify list (usually from the addTicket screen)
+      if( !empty($new_notify_list) ) {
+        $emails = explode("\t", $new_notify_list);
+        // notify recipients to add
+        foreach($emails as $e) {
+        	if( strpos($e, '|') > 0 ) {
+            list($n,$e) = explode("|", $e);
+            $parms = array('name'=>Zen::cleanValue('string',$n), 'email'=>Zen::checkEmail($e));
+            $notify_list[$notify_idx++] = $parms;
+          }
+          else {
+            $notify_list[$notify_idx++]['email'] = Zen::checkEmail($e);
+          }
+        }
       }
       // create the list
       $this->set_notify_list($id,$notify_list);

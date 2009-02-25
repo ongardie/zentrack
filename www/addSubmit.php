@@ -47,43 +47,19 @@
       }
     }
     $params["creator_id"] = $login_id;
-    
+
     if( !$errs ) {
-      // add the ticket to database
-/*
-      $id = $zen->add_ticket($params);
-      // update the variable field entries for this ticket
-      if( $id && $varfields && count($varfield_params) ) {
-        $res = $zen->updateVarfieldVals($id, $varfield_params);
-        if( !$res ) {
-          $errs[] = tr("? created, but variable fields could not be saved", array(tr('Ticket')));
-        }      
-      }
-*/
+
+      // Add the ticket to the database
       $id = 0;
       $indexed_params=array('standard'=>$params,
                             'varfield'=>$varfield_params,
                             'contacts'=>$contacts);
-      $errs = $zen->add_new_ticket($id,$indexed_params);
-      
-      // check for errors
+      $errs = $zen->add_new_ticket($id,$indexed_params,'CREATED','',$_POST['notify']);
+
+      // Close the ticket if it is of type "Note"
       if( in_array($params["type_id"],$zen->noteTypeIDs()) ) {
         $zen->close_ticket($id,null,null,'Notes closed automatically');
-      }
-      
-      if( !$errs && $id && !empty($_POST['notify']) ) {
-        $emails = explode("\t", $_POST['notify']);
-        // notify recipients to add
-        foreach($emails as $e) {
-          if( strpos($e, '|') > 0 ) {
-            list($n,$e) = explode("|", $e);
-            $parms = array('name'=>$n, 'email'=>Zen::checkEmail($e));
-          }
-          else {
-            $parms = array('email'=>Zen::checkEmail($e));
-          }
-          $zen->add_to_notify_list($id, $parms);
-        }
       }
     } // if( !$errs )
     

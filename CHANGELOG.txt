@@ -11,6 +11,15 @@ and user experience, internationalization, platform and database
 abstraction, and endless possibilities for project expansion.
 --------------------
 
+2009-02-13, donkeybandit -- REVISION 52
+  Javascript fix email notifier tt#8226
+    - trunk/www/misc/find_recipient.php
+
+  Updated notification code to send emails on ticket create to notify list 
+    - trunk/includes/zenTrack.class.php
+    - trunk/www/addSubmit.php
+    - trunk/www/addProjectSubmit.php
+
 2009-02-06, alberts -- REVISION 51
   Fix incorrect totals in project task list, tt#8222
     - trunk/includes/zenTrack.class.php

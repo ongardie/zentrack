@@ -36,48 +36,15 @@
     $params['type_id'] = $zen->projectTypeID();
     $params["creator_id"] = $login_id;
     $params['status'] = 'OPEN';
-/*
-    // add the ticket to db
-    $id = $zen->add_ticket($params);
-    // check for errors
-    if( !$id ) {
-      $errs[] = tr("Could not create project.") . " " .$zen->db_error;
-    }
-    else {
-      if( $varfields && count($varfield_params) ) {
-        $res = $zen->updateVarfieldVals($id, $varfield_params, $login_id, $bin_id);
-        if( !$res ) {
-          $errs[] = tr("? created, but variable fields could not be saved", array(tr('Project')));
-        }
-      }
-      if( in_array($params["type_id"],$zen->noteTypeIDs()) ) {
-        $zen->close_ticket($id,null,null,'Notes closed automatically');
-      }      
-    }
-*/
 
+    // add the ticket to the database
     $indexed_params=array('standard'=>$params,
                           'varfield'=>$varfield_params,
                           'contacts'=>$contacts);
-    $errs = $zen->add_new_ticket($id,$indexed_params);
+    $errs = $zen->add_new_ticket($id,$indexed_params,'CREATED','',$_POST['notify']);
     if( in_array($params["type_id"],$zen->noteTypeIDs()) ) {
       $zen->close_ticket($id,null,null,'Notes closed automatically');
     }
-    
-    if( !$errs && $id && !empty($_POST['notify']) ) {
-      $emails = explode("\t", $_POST['notify']);
-      // notify recipients to add
-      foreach($emails as $e) {
-        if( strpos($e, '|') > 0 ) {
-          list($n,$e) = explode("|", $e);
-          $parms = array('name'=>$n, 'email'=>Zen::checkEmail($e));
-        }
-        else {
-          $parms = array('email'=>Zen::checkEmail($e));
-        }
-        $zen->add_to_notify_list($id, $parms);
-      }
-    }    
   }
   
   if( !$errs ) {

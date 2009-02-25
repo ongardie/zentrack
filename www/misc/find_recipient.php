@@ -22,18 +22,13 @@
     while(($u = $list->next()) !== false) {
       $values[] = $u->createDataArray();
     }
-    if( empty($values) ) { $values = array("email"=>$_GET['q']); }
+    if( empty($values) ) {
+    	$email_address = Zen::checkEmail($_GET['q']);
+        if ($email_address) {
+            $values[0] = array("email"=>$email_address);
+        }
+    }
   }
-  
-  
-  //todo strip all values and check for security problems
-  //todo
-  //todo
-  //todo
-  //todo
-  //todo
-  //todo
-  //todo
   
   print $json->encode($values);
  
