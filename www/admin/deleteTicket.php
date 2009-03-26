@@ -48,7 +48,7 @@
 
 if( !empty($_POST['confirmed_deletions']) ) {
   // here we will actually perform the deletions
-  $idsToDelete = split_from_ids($_POST['confirmed_deletions']);
+  $idsToDelete = split_form_ids($_POST['confirmed_deletions']);
   $idsWithErrors = do_delete_tickets($zen, $idsToDelete);
   foreach($idsToDelete as $id) {
     if( in_array($id, $idsWithErrors) ) {

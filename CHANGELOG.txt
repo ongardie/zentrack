@@ -11,6 +11,11 @@ and user experience, internationalization, platform and database
 abstraction, and endless possibilities for project expansion.
 --------------------
 
+2009-03-25, alberts -- REVISION 59
+  Fix delete ticket functionality not working tt#8239
+   -   trunk/www/admin/deleteTicket.php
+   -   trunk/includes/templates/deleteTicketsConfirmation.php
+
 2009-02-13, donkeybandit -- REVISION 52
   Javascript fix email notifier tt#8226
     - trunk/www/misc/find_recipient.php

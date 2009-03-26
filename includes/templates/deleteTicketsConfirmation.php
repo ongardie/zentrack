@@ -68,7 +68,7 @@ foreach($ids as $id) {
 <td colspan='4' align='right' class='subTitle'>
 <form method='post' action='<?=$SCRIPT_NAME?>' name='ticketConfirmForm'>
 <input type='submit' value=' Permanently Remove These Tickets '>
-<input type='hidden' name='confirmed_deletions' value='".$zen->ffv(join(" ", $validids))."'>
+<input type='hidden' name='confirmed_deletions' value='"<?= $zen->ffv(join(" ", $validids)) ?>'>
 </form>
 </td>
 </tr>
