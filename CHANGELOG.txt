@@ -10,6 +10,9 @@ It features a simple interface, fully adaptable administration
 and user experience, internationalization, platform and database
 abstraction, and endless possibilities for project expansion.
 --------------------
+2009-03-29, alberts -- REVISION 62
+  Fix "My Tickets" pagination no working properly tt#8240
+   -  includes/templates/listTickets.php
 
 2009-03-25, alberts -- REVISION 59
   Fix delete ticket functionality not working tt#8239

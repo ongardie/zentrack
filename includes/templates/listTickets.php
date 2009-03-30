@@ -29,12 +29,14 @@ else {
 include_once("$libDir/sorting.php");
 
 // create ticket list using filters (if applicable)
-if( $view == 'ticket_list' || $view == 'project_list' ) {
+if( in_array($view, array('ticket_list', 'project_list', 'assigned_list')) ) {
   $sm =& $zen->getSessionManager();
   // creates the $params array specifying how we will filter tickets
   include("$libDir/listFilters.php");
-  // retrieves the list of tickets filtered and sorted
-  $tickets = $zen->get_tickets($filter_params,$sortstring);
+  if( $view == 'ticket_list' || $view == 'project_list' ) {
+     // retrieves the list of tickets filtered and sorted
+     $tickets = $zen->get_tickets($filter_params,$sortstring);
+  }
   // total records in list
   $atc = $zen->total_records;
   // create the form for filtering results
