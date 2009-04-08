@@ -246,24 +246,25 @@ class zenDate extends DB {
   }
   
   function secondsIn( $measure, $num = 1 ) {
+  //todo: is month/year really useful here? rethink this
     switch( strtolower(substr($measure,0,3)) ) {
       case "min":
-      $conv = 60 * $num;
+      $conv = 60 * $num;  //60 seconds in a minute
       break;
       case "hou":
-      $conv = 3600 * $num;
+      $conv = 3600 * $num;  //60*60 seconds in a hour
       break;
       case "day":
-      $conv = 86400 * $num;
+      $conv = 86400 * $num;  //3600*24 seconds in a day
       break;
       case "wee":
-      $conv = 604800 * $num;
+      $conv = 604800 * $num;  //86400*7 seconds in a week
       break;
       case "mon":
-      $conv = 365 / 12 * $num;
+      $conv = 2628000 * $num;  //31536000 seconds/year / 12 months/year
       break;
       case "yea":
-      $conv = 31536000 * $num;
+      $conv = 31536000 * $num;  //86400 seconds/day * 365 days
       break;
       default:
       $conv = 1 * $num;
