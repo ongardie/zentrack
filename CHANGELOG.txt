@@ -10,12 +10,18 @@ It features a simple interface, fully adaptable administration
 and user experience, internationalization, platform and database
 abstraction, and endless possibilities for project expansion.
 --------------------
+2009-04-11, alberts -- REVISION 64
+  Fixed contacts not being listed properly, tt#8272
+   -   includes/ZenHotKeys.class.php
+   -   includes/templates/contact_box.php
+   -   includes/templates/contactView.php
+
 2009-04-08, alberts -- REVISION 63
-  Fix bug in year calculation for SecondIn function in zenDate class tt#8276
+  Fixed bug in year calculation for SecondIn function in zenDate class tt#8276
    -  includes/zenDate.class.php
 
 2009-03-29, alberts -- REVISION 62
-  Fix "My Tickets" pagination no working properly tt#8240
+  Fixed "My Tickets" pagination no working properly tt#8240
    -  includes/templates/listTickets.php
 
 2009-03-25, alberts -- REVISION 59

@@ -295,7 +295,7 @@ class ZenHotKeys {
     // contacts_list
     ////////////////////////
     $this->_sections['contacts_list'] = array();
-    $tabs = array('all',"abc","def","ghi","jkl","mno","pqrs","tuv","wxyz","!19");
+    $tabs = array('all',"abc","def","ghi","jkl","mno","pqrs","tuv","wxyz","other");
     foreach($tabs as $t) {
       $c = $t == 'all'? 1 : 0;
       $k = false;

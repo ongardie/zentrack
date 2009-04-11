@@ -34,10 +34,10 @@
 			"pqrs",
 			"tuv",
  			"wxyz",
-			"!19" 
+			"other" 
       );
       
-   $letters ="abcdefghijklmnopqrstuvwxyz";
+   $letters ="!0123456789abcdefghijklmnopqrstuvwxyz";
   
   // set the page mode, for viewing tickets
   if( $setmode && in_array($setmode, $tabs) || $setmode == 'all' ) {    
