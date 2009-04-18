@@ -19,6 +19,6 @@ chmod 755 www/*.js
 chmod 755 www/styles.php
 chmod 755 www/pngbehavior.htc
 chmod 755 www/js_color_picker_v2.php
-chmod 755 includes/egate_pop3_create.php
+chmod 755 includes/egate_pop3_helpdesk.php
 chmod 755 includes/egate_pipe_helpdesk.php
 chmod 755 includes/users

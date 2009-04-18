@@ -10,6 +10,10 @@ It features a simple interface, fully adaptable administration
 and user experience, internationalization, platform and database
 abstraction, and endless possibilities for project expansion.
 --------------------
+2009-04-18, alberts -- REVISION 65
+  Fixed file name in setup_from_cvs file
+   -   setup_from_cvs
+
 2009-04-11, alberts -- REVISION 64
   Fixed contacts not being listed properly, tt#8272
    -   includes/ZenHotKeys.class.php
