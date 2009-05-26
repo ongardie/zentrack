@@ -10,31 +10,40 @@ It features a simple interface, fully adaptable administration
 and user experience, internationalization, platform and database
 abstraction, and endless possibilities for project expansion.
 --------------------
+
+2009-05-26, Kato -- REVISION 69
+  Fixed bug in projects recent history list
+    - trunk/includes/ZenHistoryManager.class.php
+  Fixed debug error in ZenFieldMap (thanks Mark Walton!)
+    - trunk/includes/ZenFieldMap.class.php
+  Cleaned up egate config directives
+    - trunk/install/egate_config.php.default
+
 2009-04-18, alberts -- REVISION 65
   Fixed file name in setup_from_cvs file
    -   setup_from_cvs
 
 2009-04-11, alberts -- REVISION 64
-  Fixed contacts not being listed properly, tt#8272
+  8272: Fixed contacts not being listed properly
    -   includes/ZenHotKeys.class.php
    -   includes/templates/contact_box.php
    -   includes/templates/contactView.php
 
 2009-04-08, alberts -- REVISION 63
-  Fixed bug in year calculation for SecondIn function in zenDate class tt#8276
+  8276: Fixed bug in year calculation for SecondIn function in zenDate class
    -  includes/zenDate.class.php
 
 2009-03-29, alberts -- REVISION 62
-  Fixed "My Tickets" pagination no working properly tt#8240
+  8240: Fixed "My Tickets" pagination no working properly
    -  includes/templates/listTickets.php
 
 2009-03-25, alberts -- REVISION 59
-  Fix delete ticket functionality not working tt#8239
+  8239: Fix delete ticket functionality not working
    -   trunk/www/admin/deleteTicket.php
    -   trunk/includes/templates/deleteTicketsConfirmation.php
 
 2009-02-13, donkeybandit -- REVISION 52
-  Javascript fix email notifier tt#8226
+  8226: Javascript fix email notifier
     - trunk/www/misc/find_recipient.php
 
   Updated notification code to send emails on ticket create to notify list 
@@ -43,7 +52,7 @@ abstraction, and endless possibilities for project expansion.
     - trunk/www/addProjectSubmit.php
 
 2009-02-06, alberts -- REVISION 51
-  Fix incorrect totals in project task list, tt#8222
+  8222: Fix incorrect totals in project task list
     - trunk/includes/zenTrack.class.php
 
 ----- VERSION 2.6.4 (2009-01-24) -----
@@ -57,7 +66,7 @@ abstraction, and endless possibilities for project expansion.
     - trunk/UPGRADE.txt
 
 2009-01-23, alberts -- REVISION 49
-  CSS fix for 'show all logs' label and checkbox tt#8221
+  8221: CSS fix for 'show all logs' label and checkbox
     - trunk/www/styles.php
 
 2009-01-01, Kato -- REVISION 48
@@ -5102,9 +5111,9 @@ Included field_map for close page
 ----- CHANGE LOG FORMAT ------
 The version should appear with dashes and indicated in the example, above all corresponding entries.
 
-The username, and date should appear before any entry
+The username, and date should appear before any entry, followed by the revision number
 
-The update comments should appear just after this.
+The update comments should appear just after this, prefixed with the ticket number.
 
 A list of files changed, and the new version should be included with dashes under the comments. This can be used by other developers to quick-reference what has changed, and the versions to diff in CVS to find the changes.. for testing and bug tracking.
 
@@ -5116,19 +5125,21 @@ Example
 
 ----- Vx.x.y ------
 
-yyyy-mm-dd, YourName
-  Your comments about the update, indented 2 spaces, it can be
-  multiple lines and very long, and should be kept to about this
-  with, which is around 60-80 columns
-    - includes/subdir/filename2.php 2.21
-    - www/subdir/filename2.php 3.01
+yyyy-mm-dd, YourName -- REVISION nn
+  1234: Your comments about the update, indented 2 spaces, it can be
+        multiple lines and very long, and should be kept to about this
+        width, which is around 60-80 columns
+    - trunk/includes/subdir/filename2.php
+    - trunk/www/subdir/filename2.php
 
-yyyy-mm-dd, MyName
-  My comments about the update, indented 2 spaces, it can be
-  multiple lines and very long, and should be kept to about this
-  with, which is around 60-80 columns
-    - includes/subdir/filename.php 1.21
-    - www/subdir/filename.php 2.01 (tagged SPECIAL_TAG)
+yyyy-mm-dd, MyName -- REVISION nn
+  1235: The first ticket I completed
+    - branches/2.7/includes/subdir/filename.php 1.21
+    - branches/2.7/www/subdir/filename.php 2.01 (tagged SPECIAL_TAG)
+  4569: The second ticket I fixed
+    - trunk/includes/subdir/filename.php 1.21
+    - trunk/www/subdir/filename.php 2.01 (tagged SPECIAL_TAG)
+  
 
 ----- Vx.x.x ------
 more......

@@ -36,12 +36,38 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
   // (provide the login name here, the password is not needed)
   $egate_account = "egate";
   
+  /*
+  ** DEFAULT NEW TICKET PROPERTIES
+  **
+  ** These are used by the egate_create.php and egate_check_create.php scripts.
+  **
+  ** If you are using these scripts, set the values below, otherwise, you may skip these.
+  */
+  $egate_default_options = array(
+				 "Type"              => "Support Request",
+				 "Bin"               => "Tech Support",
+				 "Priority"          => "None",
+				 "System"            => "Website",
+				 "Testing Required"  => 0,      //0=no, 1=yes
+				 "Approval Required" => 0       //0=no, 1=yes
+				 );
+
+  /**
+   * ALLOW USERS TO SET PROPERTIES IN EMAIL
+   * 
+   * allows users to customize the ticket properties by putting 'field:value' at the beginning of the email
+   */
+  $egate_create_overrides = 1;
+
   /**
    * STRIP ORIGINAL MESSAGE FROM REPLIES.
    *
-   * Removes text from emails based on a regexp. You can literally use
+   * This is primarily for Outlook, which does not prefix quoted text in emails, so
+   * we use this to match a prefix outlook puts before the replied-to text.
+   *
+   * It removes text from emails based on a regexp. You can literally use
    * this to remove anything from the email. The intention, of course,
-   * being to delete the quoted reply text when a reply email is sent.
+   * being to delete the quoted reply text only.
    *
    * The default setting is to replace any text after the tag
    * ---Original Message--- (surrounded by 3 or more dashes)
@@ -62,22 +88,8 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
   $egate_originalemail_prefix = "@\n\s*-{3,}Original Message-{3,}.*$@s";
   
   /*
-  ** DEFAULT NEW TICKET PROPERTIES
+  **  POP3/SMTP SETTINGS
   **
-  ** These are used by the egate_create.php and egate_check_create.php scripts.
-  **
-  ** If you are using these scripts, set the values below, otherwise, you may skip these.
-  */
-  $egate_default_options = array(
-				 "Type"              => "Support Request",
-				 "Bin"               => "Tech Support",
-				 "Priority"          => "None",
-				 "System"            => "Website",
-				 "Testing Required"  => 0,      //0=no, 1=yes
-				 "Approval Required" => 0       //0=no, 1=yes
-				 );
-  
-  /*
   **  IF USING A PIPE FROM THE MAIL SERVER, you are done
   **
   **  IF CHECKING A POP MAIL BOX, configure the settings below
@@ -96,34 +108,15 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
   // the password to log in with
   $smtp_pass = "password";    
 
-  // this is a basic pop3 config
-  // you probably don't need to change this at all
-  // there are others for imap, ssl, etc
-  // see http://www.php.net/manual/en/function.imap-open.php for more options
-
-  $smtp_string = "{".$smtp_host.":".$smtp_port."/pop3}INBOX";  // note that the { and $ separation is critical!
-
-  // RED HAT USERS!!
-  // you may need to use one of the following strings to get this working on redhat
-  // due to yet another redhat bug
-  // $smtp_string = "{".$smtp_host.":".$smtp_port."/pop3/notls}INBOX";
-  // $smtp_string = "{".$smtp_host.":".$smtp_port."/notls}INBOX";
-
-
-  /**
-   * You probably don't need to change this, unless you specifically want to disallow some fields
-   * from being settable.
-   */
-  
-  // allows users to customize the ticket properties by putting 'field:value' at the beginning of the email
-  // this is only used by the egate_create script (not the admin script)
-  $egate_create_overrides = 1;
-
+  // CONTROL WHICH FIELDS CAN BE SET BY USER
+  //
   // if $egate_create_overrides is on, this will determine which fields can be set
   // this list also includes valid aliases.
   //
   // YOU CANNOT ADD ITEMS TO THIS ARRAY, and you should probably never edit it, 
   // other than to comment out fields which you do not want the user to override
+  //
+  // In general, just change $egate_create_overrides instead
   $egate_create_fields = array(
 			      "parent",
 			      "project",                //project name or id
@@ -149,5 +142,4 @@ if( !ZT_DEFINED ) { die("Illegal Access"); }
 			      "approval required",
 			      "approval_required"       //is approval required (1=yes)
   );
-
 ?>

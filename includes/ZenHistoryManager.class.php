@@ -82,7 +82,7 @@ class ZenHistoryManager {
       $pref = $this->_zen->get_prefs($this->_user, "history_$type");
       if( $pref ) {
         // build key/value set from the string of ids
-		$t = "table_$type";
+		  $t = $type=="project"? "table_tickets" : "table_{$type}";
         $list = $this->_zen->listTitles($this->_zen->$t, explode(",",$pref));
         $this->_session->store("history_$type", $list);
       }

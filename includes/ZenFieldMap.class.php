@@ -1040,7 +1040,7 @@ $this->_zen->addDebug('ZenFieldMap::getTabs',"adding property '$key' for view '$
 	     return "addbox";
        default:
          if( isset($this) && isset($this->_zen) ) {       
-           $this->_zen->debug("getTypeString", "Invalid fieldMap type! $field_type", 1);
+           $this->_zen->addDebug("getTypeString", "Invalid fieldMap type! $field_type", 1);
          }
          return null;
      }
