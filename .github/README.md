@@ -1,8 +1,9 @@
 # ZenTrack issue tracker
 
 This is an unofficial import of the ZenTrack Subversion repository located at
-<https://sourceforge.net/p/zentrack/code/HEAD/tree/zentrack-2/>. As of this
-writing in 2020, the last update to the project was in 2009 or 2010.
+<https://sourceforge.net/p/zentrack/code/HEAD/tree/zentrack-2/> and the
+ZenTrack CVS repository located at <http://zentrack.cvs.sourceforge.net/>. As
+of this writing in 2020, the last update to the project was in 2009 or 2010.
 
 This README describes this GitHub mirror of the ZenTrack code. The top-level
 [README.txt](../README.txt) file describes the upstream project. The project's
@@ -26,4 +27,24 @@ This mirror was created following these steps:
 
 2. Rename the default branch to `trunk`.
 
-3. Add this README.
+3. Download the CVS repository (since the Subversion history only starts
+   around version 2.7):
+   ```sh
+   rsync -ai a.cvs.sourceforge.net::cvsroot/zentrack/ zentrack.cvs
+   ```
+
+4. Import the CVS repository into two new Git repos:
+   ```sh
+   mkdir cvsimport-zentrack_2
+   cd cvsimport-zentrack_2
+   git cvsimport -d $(pwd)/../zentrack.cvs zentrack_2
+   cd ..
+   mkdir cvsimport-zentrack
+   cd cvsimport-zentrack
+   git cvsimport -d $(pwd)/../zentrack.cvs zentrack
+   ```
+
+5. Fetch from those into a clone of GitHub's Subversion import, and push
+   everything up.
+
+6. Add this README.
